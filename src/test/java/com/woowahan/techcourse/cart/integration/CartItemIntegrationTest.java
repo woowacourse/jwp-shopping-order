@@ -43,10 +43,10 @@ class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        long member1Id = memberDao.addMember(new Member(null, "email1", "password1"));
-        long member2Id = memberDao.addMember(new Member(null, "email2", "password2"));
-        member = memberDao.getMemberById(member1Id);
-        member2 = memberDao.getMemberById(member2Id);
+        long member1Id = memberDao.insert(new Member(null, "email1", "password1"));
+        long member2Id = memberDao.insert(new Member(null, "email2", "password2"));
+        member = memberDao.findById(member1Id).get();
+        member2 = memberDao.findById(member2Id).get();
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

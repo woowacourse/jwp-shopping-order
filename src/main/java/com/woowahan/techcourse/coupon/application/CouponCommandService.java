@@ -24,14 +24,14 @@ public class CouponCommandService {
 
     public void addCoupon(Long couponId, Long memberId) {
         Coupon coupon = couponDao.findById(couponId).orElseThrow(CouponNotFoundException::new);
-        CouponMember couponMember = couponMemberDao.findByIdMemberId(memberId)
+        CouponMember couponMember = couponMemberDao.findByMemberId(memberId)
                 .orElseThrow(CouponMemberNotFoundException::new);
         couponMember.addCoupon(coupon);
         couponMemberDao.update(couponMember);
     }
 
     public void expireCoupon(CouponExpireRequestDto requestDto) {
-        CouponMember couponMember = couponMemberDao.findByIdMemberId(requestDto.getMemberId())
+        CouponMember couponMember = couponMemberDao.findByMemberId(requestDto.getMemberId())
                 .orElseThrow(CouponMemberNotFoundException::new);
         couponMember.expireCouponIds(requestDto.getCouponIds());
         couponMemberDao.update(couponMember);

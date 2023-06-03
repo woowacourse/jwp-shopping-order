@@ -18,7 +18,7 @@ public class MemberQueryService {
     }
 
     public List<Member> getAllMembers() {
-        return memberDao.getAllMembers();
+        return memberDao.findAll();
     }
 
     public Optional<Member> findByEmailAndPassword(String email, String password) {

@@ -24,8 +24,8 @@ class CouponAcceptanceTest extends IntegrationTest {
     @BeforeEach
     void setDummyData() {
         super.setUp();
-        long memberId3 = memberDao.addMember(new Member(3L, "3@woowahan.com", "password"));
-        memberDao.addMember(new Member(4L, "4@woowahan.com", "password"));
+        long memberId3 = memberDao.insert(new Member(3L, "3@woowahan.com", "password"));
+        memberDao.insert(new Member(4L, "4@woowahan.com", "password"));
 
         jdbcTemplate.execute("INSERT INTO amount_discount (id, rate) VALUES (1, 10)");
         jdbcTemplate.execute(

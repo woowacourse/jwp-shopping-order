@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,12 +22,6 @@ public class CouponMemberDao {
         this.couponDao = couponDao;
     }
 
-    public boolean exists(Long couponId, Long memberId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT EXISTS (SELECT * FROM coupon_member WHERE coupon_id = ? AND member_id = ?)", Boolean.class,
-                couponId, memberId);
-    }
-
     public void insert(Long couponId, Long memberId) {
         jdbcTemplate.update("INSERT INTO coupon_member (coupon_id, member_id) VALUES (?, ?)", couponId, memberId);
     }
@@ -37,23 +30,7 @@ public class CouponMemberDao {
         jdbcTemplate.update("DELETE FROM coupon_member WHERE coupon_id = ? AND member_id = ?", couponId, memberId);
     }
 
-    public void deleteByMemberId(long memberId, List<Long> couponIds) {
-        String sql = "DELETE FROM coupon_member WHERE member_id =(:memberId) AND coupon_id IN (:couponIds)";
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("memberId", memberId);
-        mapSqlParameterSource.addValue("couponIds", couponIds);
-        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
-    }
-
-    public int countByMemberIdAndCouponIds(long memberId, List<Long> couponIds) {
-        String sql = "SELECT COUNT(*) FROM coupon_member WHERE member_id =(:memberId) AND coupon_id IN (:couponIds)";
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("memberId", memberId);
-        mapSqlParameterSource.addValue("couponIds", couponIds);
-        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
-    }
-
-    public Optional<CouponMember> findByIdMemberId(Long memberId) {
+    public Optional<CouponMember> findByMemberId(Long memberId) {
         List<Coupon> coupons = couponDao.findAllByMemberId(memberId);
         return Optional.of(new CouponMember(memberId, coupons));
     }
