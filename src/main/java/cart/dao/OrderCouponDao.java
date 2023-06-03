@@ -1,11 +1,15 @@
 package cart.dao;
 
+import cart.entity.CouponEntity;
 import cart.entity.OrderCouponEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class OrderCouponDao {
@@ -40,5 +44,27 @@ public class OrderCouponDao {
         String sql = "select exists(select * from order_coupon where order_id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, orderId);
+    }
+
+    public Optional<CouponEntity> findCouponByOrderId(Long orderId) {
+        try {
+            String sql = "SELECT * " +
+                    "FROM order_coupon " +
+                    "INNER JOIN member_coupon ON order_coupon.member_coupon_id = member_coupon.id " +
+                    "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
+                    "WHERE order_coupon.order_id = ?";
+
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                    new CouponEntity(
+                            rs.getLong("order_coupon.id"),
+                            rs.getString("coupon.name"),
+                            rs.getString("coupon.discount_type"),
+                            rs.getInt("coupon.minimum_price"),
+                            rs.getInt("coupon.discount_price"),
+                            rs.getDouble("coupon.discount_rate")
+                    ), orderId));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

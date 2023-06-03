@@ -1,7 +1,5 @@
 package cart.domain.coupon;
 
-import cart.exception.CouponException;
-
 import java.util.Objects;
 
 public class Coupon {
@@ -16,7 +14,7 @@ public class Coupon {
     public static Coupon empty() {
         return new Coupon(
                 null,
-                "EMPTY_COUPON",
+                "",
                 new EmptyDiscount()
                 , 0, 0, 0
         );
@@ -36,19 +34,12 @@ public class Coupon {
     }
 
     public Coupon(Long id, String name, CouponTypes couponTypes, int minimumPrice, int discountPrice, double discountRate) {
-        validate(name);
         this.id = id;
         this.name = name;
         this.couponTypes = couponTypes;
         this.minimumPrice = minimumPrice;
         this.discountPrice = discountPrice;
         this.discountRate = discountRate;
-    }
-
-    private void validate(String name) {
-        if (name.length() < MINIMUM_NAME_LENGTH) {
-            throw new CouponException("쿠폰의 이름은 최소 1글자 이상입니다.");
-        }
     }
 
     public int applyCouponPrice(int totalPrice) {

@@ -1,7 +1,4 @@
-package cart.dto;
-
-import cart.dto.response.CouponResponse;
-import cart.dto.response.ProductQuantityResponse;
+package cart.dto.response;
 
 import java.util.List;
 

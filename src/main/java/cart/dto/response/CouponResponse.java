@@ -20,6 +20,9 @@ public class CouponResponse {
     }
 
     public static CouponResponse of(Coupon coupon) {
+        if(coupon.getId() == null){
+            return null;
+        }
         return new CouponResponse(
                 coupon.getId(), coupon.getName(), coupon.getCouponTypes().getCouponTypeName(),
                 coupon.getMinimumPrice(), coupon.getDiscountRate(), coupon.getDiscountPrice());

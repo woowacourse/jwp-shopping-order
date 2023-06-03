@@ -5,7 +5,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.*;
-import cart.dto.OrderResponse;
+import cart.dto.response.OrderResponse;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.CouponConfirmResponse;
 import cart.dto.response.CouponResponse;

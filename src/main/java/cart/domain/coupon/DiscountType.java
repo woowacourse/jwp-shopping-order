@@ -19,6 +19,9 @@ public enum DiscountType {
     }
 
     public static CouponTypes from(String input) {
+        if(input.equals(Coupon.empty().getName())){
+            return new EmptyDiscount();
+        }
         return Arrays.stream(DiscountType.values())
                 .filter(it -> it.typeName.equalsIgnoreCase(input))
                 .map(it -> it.type)

@@ -1,14 +1,14 @@
 package cart.repository;
 
-import cart.dao.MemberDao;
-import cart.dao.OrderDao;
-import cart.dao.OrderProductDao;
+import cart.dao.*;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.DiscountType;
 import cart.domain.repository.OrderRepository;
+import cart.entity.CouponEntity;
 import cart.entity.OrderEntity;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Repository;
@@ -22,11 +22,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final OrderDao orderDao;
     private final MemberDao memberDao;
     private final OrderProductDao orderProductDao;
+    private final OrderCouponDao orderCouponDao;
 
-    public OrderRepositoryImpl(OrderDao orderDao, MemberDao memberDao, OrderProductDao orderProductDao) {
+    public OrderRepositoryImpl(OrderDao orderDao, MemberDao memberDao, OrderProductDao orderProductDao, OrderCouponDao orderCouponDao) {
         this.orderDao = orderDao;
         this.memberDao = memberDao;
         this.orderProductDao = orderProductDao;
+        this.orderCouponDao = orderCouponDao;
     }
 
     @Override
@@ -74,7 +76,9 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .map(it -> new CartItem(it.getId(), it.getQuantity(),
                         new Product(it.getId(), it.getName(), it.getPrice(), it.getImage_url()), member))
                 .collect(Collectors.toList());
-
-        return new Order(orderEntity.getId(), member, products, orderEntity.getConfirmState(), Coupon.empty());
+        CouponEntity couponEntity = orderCouponDao.findCouponByOrderId(orderEntity.getId()).orElse(CouponEntity.EMPTY);
+        Coupon coupon = new Coupon(couponEntity.getId(), couponEntity.getName(), DiscountType.from(couponEntity.getDiscountType()),
+                couponEntity.getMinimumPrice(), couponEntity.getDiscountPrice(), couponEntity.getDiscountRate());
+        return new Order(orderEntity.getId(), member, products, orderEntity.getConfirmState(), coupon);
     }
 }

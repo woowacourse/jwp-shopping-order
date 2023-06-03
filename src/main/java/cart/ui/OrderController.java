@@ -2,7 +2,7 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.OrderResponse;
+import cart.dto.response.OrderResponse;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.CouponConfirmResponse;
 import cart.dto.response.OrdersResponse;
