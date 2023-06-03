@@ -22,9 +22,9 @@ public class CartItems {
         final boolean isValid = cartItems.stream()
                 .allMatch(cartItem -> createOrderItemDtos.stream()
                         .anyMatch(createOrderItemDto -> {
-                            cartItem.validateProduct(createOrderItemDto.getProductId(), memberId);
-                            cartItem.validateQuantity(createOrderItemDto.getQuantity());
-                            return true;
+                            final boolean isValidProduct = cartItem.validateProduct(createOrderItemDto.getProductId(), memberId);
+                            final boolean isValidQuantity = cartItem.validateQuantity(createOrderItemDto.getQuantity());
+                            return isValidProduct && isValidQuantity;
                         }));
 
         if (!isValid) {
