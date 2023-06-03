@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 
@@ -13,7 +15,7 @@ import static org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 class ProductTest {
 
     private String 상품_이름 = "validName";
-    private int 상품_가격 = 1_000;
+    private BigDecimal 상품_가격 = BigDecimal.valueOf(1_000);
     private String 상품_이미지_주소 = "https://imageUrl";
 
     @Nested

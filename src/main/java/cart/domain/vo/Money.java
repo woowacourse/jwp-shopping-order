@@ -13,7 +13,7 @@ public class Money {
 
     private Money(BigDecimal value) {
         validate(value);
-        this.value = value;
+        this.value = value.setScale(1);
     }
 
     private void validate(BigDecimal value) {
@@ -73,7 +73,7 @@ public class Money {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Money money = (Money) o;
-        return Objects.equals(value, money.value);
+        return value.compareTo(money.value) == 0;
     }
 
     @Override

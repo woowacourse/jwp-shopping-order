@@ -8,6 +8,7 @@ import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class ProductService {
 
     @Transactional
     public Long createProduct(CreateProductRequest request) {
-        ProductEntity productEntity = new ProductEntity(request.getName(), request.getPrice(), request.getImageUrl());
+        ProductEntity productEntity = new ProductEntity(request.getName(), BigDecimal.valueOf(request.getPrice()), request.getImageUrl());
 
         return productRepository.saveProduct(productEntity);
     }
@@ -44,7 +45,10 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(Long productId, CreateProductRequest request) {
-        ProductEntity productEntity = new ProductEntity(request.getName(), request.getPrice(), request.getImageUrl());
+        ProductEntity productEntity = new ProductEntity(
+                request.getName(),
+                BigDecimal.valueOf(request.getPrice()),
+                request.getImageUrl());
 
         productRepository.updateProduct(productId, productEntity);
     }

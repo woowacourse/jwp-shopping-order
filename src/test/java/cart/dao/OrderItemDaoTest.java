@@ -98,10 +98,11 @@ class OrderItemDaoTest extends DaoTestConfig {
         List<OrderItemEntity> 주문한_장바구니_상품_엔티티_목록 = orderItemDao.getByOrderId(주문_식별자값);
         // then
         assertThat(주문한_장바구니_상품_엔티티_목록)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .contains(
-                    OrderItemEntity.from(주문_식별자값, 장바구니_계란),
-                    OrderItemEntity.from(주문_식별자값, 장바구니_치킨)
-                );
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(List.of(
+                        OrderItemEntity.from(주문_식별자값, 장바구니_계란),
+                        OrderItemEntity.from(주문_식별자값, 장바구니_치킨)
+                ));
     }
 }

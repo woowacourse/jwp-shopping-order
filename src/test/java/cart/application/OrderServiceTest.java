@@ -68,7 +68,7 @@ class OrderServiceTest {
         Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
         CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
 
-        OrderRequest 주문_장바구니_상품_식별자값_목록 = new OrderRequest(List.of(장바구니_계란.getId()), 1001);
+        OrderRequest 주문_장바구니_상품_식별자값_목록 = new OrderRequest(List.of(장바구니_계란.getId()), 1001, 3000);
 
         // expect
         assertThatThrownBy(() -> orderService.createOrder(회원, 주문_장바구니_상품_식별자값_목록))
@@ -82,7 +82,7 @@ class OrderServiceTest {
         Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
         CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
 
-        OrderRequest 주문_장바구니_상품_식별자값_목록 = new OrderRequest(List.of(장바구니_계란.getId()), 100);
+        OrderRequest 주문_장바구니_상품_식별자값_목록 = new OrderRequest(List.of(장바구니_계란.getId()), 100, 3000);
 
         // expect
         assertThatThrownBy(() -> orderService.createOrder(회원, 주문_장바구니_상품_식별자값_목록))
@@ -96,7 +96,7 @@ class OrderServiceTest {
         Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
         CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
 
-        OrderRequest 주문_요청 = new OrderRequest(List.of(장바구니_계란.getId()), 1000);
+        OrderRequest 주문_요청 = new OrderRequest(List.of(장바구니_계란.getId()), 1000, 3000);
 
         // when
         Long 주문_식별자값 = orderService.createOrder(회원, 주문_요청);
@@ -109,7 +109,7 @@ class OrderServiceTest {
                 .ignoringExpectedNullFields()
                 .isEqualTo(new OrderHistory(
                         주문_식별자값,
-                        new Member(회원.getId(), "a@a.com", "1234", Money.from(91000), Money.from(90)),
+                        new Member(회원.getId(), "a@a.com", "1234", Money.from(88000), Money.from(90)),
                         OrderItems.from(List.of( new OrderItem(null, 계란, Quantity.from(10), 회원.getId()))),
                         Money.from("10000"),
                         Money.from("1000"),

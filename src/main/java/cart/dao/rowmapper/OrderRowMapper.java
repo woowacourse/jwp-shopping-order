@@ -10,7 +10,6 @@ import cart.domain.vo.Money;
 import cart.domain.vo.Quantity;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,9 @@ public class OrderRowMapper {
         return new OrderEntity(
                 rs.getLong("id"),
                 rs.getLong("member_id"),
-                BigDecimal.valueOf(rs.getInt("total_price")),
-                BigDecimal.valueOf(rs.getInt("use_point")),
+                rs.getBigDecimal("total_price"),
+                rs.getBigDecimal("use_point"),
+                rs.getBigDecimal("use_point"),
                 rs.getTimestamp("created_at").toLocalDateTime()
         );
     };
@@ -35,12 +35,12 @@ public class OrderRowMapper {
                 rs.getLong("member.id"),
                 rs.getString("member.email"),
                 rs.getString("member.password"),
-                Money.from(rs.getInt("member.money")),
-                Money.from(rs.getInt("member.point")));
+                Money.from(rs.getBigDecimal("member.money")),
+                Money.from(rs.getBigDecimal("member.point")));
 
         Long orderId = rs.getLong("orders.id");
-        Money totalPrice = Money.from(rs.getInt("orders.total_price"));
-        Money usePoint = Money.from(rs.getInt("orders.use_point"));
+        Money totalPrice = Money.from(rs.getBigDecimal("orders.total_price"));
+        Money usePoint = Money.from(rs.getBigDecimal("orders.use_point"));
         LocalDateTime createdAt = rs.getTimestamp("orders.created_at").toLocalDateTime();
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -52,7 +52,7 @@ public class OrderRowMapper {
             Product product = new Product(
                     rs.getLong("order_item.product_id"),
                     rs.getString("order_item.name"),
-                    rs.getInt("order_item.price"),
+                    rs.getBigDecimal("order_item.price"),
                     rs.getString("order_item.image_url"));
 
             orderItems.add(new OrderItem(orderItemId, product, Quantity.from(orderItemQuantity), memberId));

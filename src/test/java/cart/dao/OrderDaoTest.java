@@ -37,10 +37,10 @@ class OrderDaoTest extends DaoTestConfig {
     @BeforeEach
     void setUp() {
         orderDao = new OrderDao(jdbcTemplate);
-        memberDaoFixture = new MemberDaoFixture( new MemberDao(jdbcTemplate));
+        memberDaoFixture = new MemberDaoFixture(new MemberDao(jdbcTemplate));
         productDaoFixture = new ProductDaoFixture(new ProductDao(jdbcTemplate));
         cartItemDaoFixture = new CartItemDaoFixture(new CartItemDao(jdbcTemplate));
-        orderItemDaoFixture = new OrderItemDaoFixture( new OrderItemDao(jdbcTemplate));
+        orderItemDaoFixture = new OrderItemDaoFixture(new OrderItemDao(jdbcTemplate));
     }
 
     @Test
@@ -49,7 +49,7 @@ class OrderDaoTest extends DaoTestConfig {
         Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "1000", "1000");
 
         // when
-        Long 주문_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "1000", "1000", now()));
+        Long 주문_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "1000", "1000", "3000", now()));
 
         // then
         assertThat(주문_식별자값)
@@ -64,7 +64,7 @@ class OrderDaoTest extends DaoTestConfig {
         CartItem 장바구니_상품 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
 
         LocalDateTime 주문_시간 = now();
-        Long 주문_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "1000", 주문_시간));
+        Long 주문_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "1000", "3000", 주문_시간));
 
         orderItemDaoFixture.주문_장바구니_상품을_등록한다(주문_식별자값, 장바구니_상품);
 
@@ -99,9 +99,9 @@ class OrderDaoTest extends DaoTestConfig {
         LocalDateTime 주문1_시간 = now();
         LocalDateTime 주문2_시간 = now();
         LocalDateTime 주문3_시간 = now();
-        Long 주문1_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "1000", 주문1_시간));
-        Long 주문2_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "0", 주문2_시간));
-        Long 주문3_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "0", 주문3_시간));
+        Long 주문1_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "1000", "3000", 주문1_시간));
+        Long 주문2_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "0", "3000", 주문2_시간));
+        Long 주문3_식별자값 = orderDao.insertOrder(주문_엔티티(회원.getId(), "10000", "0", "3000", 주문3_시간));
 
         Long 주문1_장바구니_식별자값 = orderItemDaoFixture.주문_장바구니_상품을_등록한다(주문1_식별자값, 장바구니1_상품);
         Long 주문2_장바구니_식별자값 = orderItemDaoFixture.주문_장바구니_상품을_등록한다(주문2_식별자값, 장바구니2_상품);

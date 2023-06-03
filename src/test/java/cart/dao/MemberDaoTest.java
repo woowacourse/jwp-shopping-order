@@ -35,7 +35,8 @@ class MemberDaoTest extends DaoTestConfig {
         // then
         assertAll(
                 () -> assertThat(아마도_회원).isPresent(),
-                () -> assertThat(아마도_회원.get().getMoney()).isEqualTo(BigDecimal.ZERO)
+                () -> assertThat(아마도_회원.get().getMoney())
+                        .isEqualByComparingTo(BigDecimal.ZERO)
         );
     }
 
@@ -52,7 +53,8 @@ class MemberDaoTest extends DaoTestConfig {
         // then
         assertAll(
                 () -> assertThat(아마도_회원).isPresent(),
-                () -> assertThat(아마도_회원.get().getPoint()).isEqualTo(BigDecimal.ZERO)
+                () -> assertThat(아마도_회원.get().getPoint())
+                        .isEqualByComparingTo(BigDecimal.ZERO)
         );
     }
 
@@ -69,7 +71,8 @@ class MemberDaoTest extends DaoTestConfig {
         // then
         assertAll(
                 () -> assertThat(아마도_회원).isPresent(),
-                () -> assertThat(아마도_회원.get().getPoint()).isEqualTo(BigDecimal.valueOf(2000))
+                () -> assertThat(아마도_회원.get().getPoint())
+                        .isEqualByComparingTo(BigDecimal.valueOf(2000))
         );
     }
 }

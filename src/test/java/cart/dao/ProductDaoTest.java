@@ -5,6 +5,7 @@ import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ class ProductDaoTest extends DaoTestConfig {
 
         // then
         assertThat(아마_계란).contains(
-                new ProductEntity(계란_식별자값, "계란", 1000, "https://image.png")
+                new ProductEntity(계란_식별자값, "계란", BigDecimal.valueOf(1000), "https://image.png")
         );
     }
 
@@ -56,8 +57,8 @@ class ProductDaoTest extends DaoTestConfig {
 
         // then
         assertThat(전체_상품_목록).contains(
-                new ProductEntity(계란_식별자값, "계란", 1000, "https://image.png"),
-                new ProductEntity(치킨_식별자값, "치킨", 20000, "https://image.png")
+                new ProductEntity(계란_식별자값, "계란", BigDecimal.valueOf(1000), "https://image.png"),
+                new ProductEntity(치킨_식별자값, "치킨", BigDecimal.valueOf(20000), "https://image.png")
         );
     }
 
@@ -73,7 +74,7 @@ class ProductDaoTest extends DaoTestConfig {
 
         // then
         assertThat(아마_계란).contains(
-                new ProductEntity(계란_식별자값, "계란", 20000, "https://image.png")
+                new ProductEntity(계란_식별자값, "계란", BigDecimal.valueOf(20000), "https://image.png")
         );
     }
 

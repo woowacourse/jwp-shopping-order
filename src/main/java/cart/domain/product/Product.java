@@ -4,6 +4,7 @@ import cart.domain.vo.Money;
 import cart.domain.vo.Name;
 import cart.exception.ProductException;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
@@ -19,11 +20,11 @@ public class Product {
     private Money price;
     private String imageUrl;
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(Long id, String name, BigDecimal price, String imageUrl) {
         this(id, Name.from(name), Money.from(price), imageUrl);
     }
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(String name, BigDecimal price, String imageUrl) {
         this(null, Name.from(name), Money.from(price), imageUrl);
     }
 

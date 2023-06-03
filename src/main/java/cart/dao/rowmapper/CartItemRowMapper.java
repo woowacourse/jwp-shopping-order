@@ -26,7 +26,7 @@ public final class CartItemRowMapper {
 
         Long productId = rs.getLong("product.id");
         String name = rs.getString("product.name");
-        int price = rs.getInt("product.price");
+        BigDecimal price = rs.getBigDecimal("product.price");
         String imageUrl = rs.getString("product.image_url");
         Product product = new Product(productId, name, price, imageUrl);
 

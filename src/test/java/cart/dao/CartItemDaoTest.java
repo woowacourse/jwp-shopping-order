@@ -11,6 +11,7 @@ import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,7 +72,7 @@ class CartItemDaoTest extends DaoTestConfig {
         assertThat(아마_장바구니_계란).contains(
                 new CartItem(
                         장바구니_계란_식별자값,
-                        new Product(계란_식별자값, "계란", 1000, "https://image.png"),
+                        new Product(계란_식별자값, "계란", BigDecimal.valueOf(1000), "https://image.png"),
                         new Member(회원_식별자값, "a@a.com", "1234", Money.from(1000), Money.from(1000)),
                         10
                 )
@@ -97,7 +98,7 @@ class CartItemDaoTest extends DaoTestConfig {
         assertThat(회원_장바구니_상품_목록).contains(
                 new CartItem(
                         장바구니_계란_식별자값,
-                        new Product(계란_식별자값, "계란", 1000, "https://image.png"),
+                        new Product(계란_식별자값, "계란", BigDecimal.valueOf(1000), "https://image.png"),
                         new Member(회원_식별자값, "a@a.com", "1234", Money.from(1000), Money.from(1000)),
                         10
                 )
@@ -125,7 +126,7 @@ class CartItemDaoTest extends DaoTestConfig {
         assertThat(아마_장바구니_계란).contains(
                 new CartItem(
                         장바구니_계란_식별자값,
-                        new Product(계란_식별자값, "계란", 1000, "https://image.png"),
+                        new Product(계란_식별자값, "계란", BigDecimal.valueOf(1000), "https://image.png"),
                         new Member(회원_식별자값, "a@a.com", "1234", Money.from(1000), Money.from(1000)),
                         5
                 )

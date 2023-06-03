@@ -4,20 +4,21 @@ import cart.domain.product.Product;
 import cart.domain.vo.Money;
 import cart.domain.vo.Name;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class ProductEntity {
 
     private final Long id;
     private final String name;
-    private final int money;
+    private final BigDecimal money;
     private final String imageUrl;
 
-    public ProductEntity(String name, int money, String imageUrl) {
+    public ProductEntity(String name, BigDecimal money, String imageUrl) {
         this(null, name, money, imageUrl);
     }
 
-    public ProductEntity(Long id, String name, int money, String imageUrl) {
+    public ProductEntity(Long id, String name, BigDecimal money, String imageUrl) {
         this.id = id;
         this.name = name;
         this.money = money;
@@ -36,7 +37,7 @@ public class ProductEntity {
         return name;
     }
 
-    public int getMoney() {
+    public BigDecimal getMoney() {
         return money;
     }
 

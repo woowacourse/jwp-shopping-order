@@ -12,7 +12,7 @@ public final class ProductRowMapper {
         return new ProductEntity(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getInt("price"),
+                rs.getBigDecimal("price"),
                 rs.getString("image_url")
         );
     };
