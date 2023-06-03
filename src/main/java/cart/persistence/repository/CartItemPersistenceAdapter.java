@@ -19,10 +19,7 @@ import java.util.List;
 public class CartItemPersistenceAdapter implements CartItemRepository {
 
     private static final String JOIN_QUERY =
-            "SELECT cart_item.id, cart_item.member_id, member.email, member.point, " +
-                    "product.id, product.name, product.price, product.image_url, cart_item.quantity, " +
-                    "product.point_ratio, product.point_available " +
-                    "FROM cart_item " +
+            "SELECT * FROM cart_item " +
                     "INNER JOIN member ON cart_item.member_id = member.id " +
                     "INNER JOIN product ON cart_item.product_id = product.id ";
 
@@ -74,8 +71,8 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
     public void update(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("quantity", cartItem.getQuantity())
-                .addValue("id", cartItem.getId());
+                .addValue("cart_item.quantity", cartItem.getQuantity())
+                .addValue("cart_item.id", cartItem.getId());
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
@@ -93,19 +90,19 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
     }
 
     private Product makeProduct(ResultSet rs) throws SQLException {
-        Long productId = rs.getLong("id");
-        String name = rs.getString("name");
-        int price = rs.getInt("price");
-        String imageUrl = rs.getString("image_url");
-        Double pointRatio = rs.getDouble("point_ratio");
-        Boolean pointAvailable = rs.getBoolean("point_available");
+        Long productId = rs.getLong("product.id");
+        String name = rs.getString("product.name");
+        int price = rs.getInt("product.price");
+        String imageUrl = rs.getString("product.image_url");
+        Double pointRatio = rs.getDouble("product.point_ratio");
+        Boolean pointAvailable = rs.getBoolean("product.point_available");
         return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
     }
 
     private Member makeMember(ResultSet rs) throws SQLException {
-        Long memberId = rs.getLong("member_id");
-        String email = rs.getString("email");
-        Integer point = rs.getInt("point");
+        Long memberId = rs.getLong("member.id");
+        String email = rs.getString("member.email");
+        Integer point = rs.getInt("member.point");
         return new Member(memberId, email, null, point);
     }
 }
