@@ -7,15 +7,19 @@ import java.util.Objects;
 public class CartItem {
 
     private final Long id;
-    private final long quantity;
     private final Product product;
     private final Member member;
+    private long quantity;
 
     public CartItem(Long id, long quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public void updateQuantity(long quantity) {
+        this.quantity = quantity;
     }
 
     public void validateIsOwnedBy(Member member) {

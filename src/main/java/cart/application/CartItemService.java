@@ -47,16 +47,13 @@ public class CartItemService {
             return;
         }
         CartItem cartItem = cartItemRepository.findById(id);
-
         cartItem.validateIsOwnedBy(member);
-        CartItem updated = new CartItem(cartItem.getId(), request.getQuantity(),
-                cartItem.getProduct(), cartItem.getMember());
-        cartItemRepository.update(updated);
+        cartItem.updateQuantity(request.getQuantity());
+        cartItemRepository.update(cartItem);
     }
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
-
         cartItem.validateIsOwnedBy(member);
         cartItemRepository.deleteById(id);
     }
