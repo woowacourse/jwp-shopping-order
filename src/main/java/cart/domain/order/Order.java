@@ -2,6 +2,7 @@ package cart.domain.order;
 
 import cart.domain.Member;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Order {
@@ -10,17 +11,19 @@ public class Order {
     private final int paymentPrice;
     private final int totalPrice;
     private final int point;
+    private final Timestamp createdAt;
 
-    public Order(Long id, int paymentPrice, int totalPrice, int point, Member member) {
+    public Order(Long id, int paymentPrice, int totalPrice, int point, Member member, Timestamp createdAt) {
         this.id = id;
         this.paymentPrice = paymentPrice;
         this.totalPrice = totalPrice;
         this.point = point;
         this.member = member;
+        this.createdAt = createdAt;
     }
 
     public Order(int paymentPrice, int totalPrice, int point, Member member) {
-        this(null, paymentPrice, totalPrice, point, member);
+        this(null, paymentPrice, totalPrice, point, member, null);
     }
 
     public Long getId() {
@@ -41,6 +44,10 @@ public class Order {
 
     public int getPoint() {
         return point;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     @Override

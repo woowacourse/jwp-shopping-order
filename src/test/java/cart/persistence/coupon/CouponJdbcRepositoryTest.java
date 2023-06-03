@@ -99,7 +99,7 @@ class CouponJdbcRepositoryTest {
     @Test
     @DisplayName("사용자가 주문에 사용한 쿠폰을 저장한다.")
     void createOrderedCoupon() {
-        Order order = new Order(1L, 10000, 11000, 1000, 비버_ID포함);
+        Order order = new Order(1L, 10000, 11000, 1000, 비버_ID포함, null);
         assertThat(couponJdbcRepository.createOrderedCoupon(order.getId(), 2L)).isPositive();
     }
 

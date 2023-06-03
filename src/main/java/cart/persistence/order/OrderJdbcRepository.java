@@ -38,7 +38,8 @@ public class OrderJdbcRepository implements OrderRepository {
                     rs.getInt("orders.payment_price"),
                     rs.getInt("orders.total_price"),
                     rs.getInt("orders.point"),
-                    memberRowMapper.mapRow(rs, rowNum)
+                    memberRowMapper.mapRow(rs, rowNum),
+                    rs.getTimestamp("orders.created_at")
             ));
 
 

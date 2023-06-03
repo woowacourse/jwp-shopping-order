@@ -54,14 +54,12 @@ public class OrderWriteService {
 
         validateIsOwner(member, cartItems);
 
+        // 할인, 포인트 적용 후 경제 금액 계산
         int totalPrice = cartItems.calculateTotalPrice();
         List<Long> couponIds = createOrderDto.getCouponIds();
         List<CouponPolicy> couponPolicies = makeCoupon(couponIds);
-        int paymentPrice = calculateApplyCoupon(totalPrice, couponPolicies);
-
         int usedPoint = createOrderDto.getPoint();
-        validatePointAmount(paymentPrice, usedPoint);
-        paymentPrice -= usedPoint;
+        int paymentPrice = applyDiscount(totalPrice, couponPolicies, usedPoint);
 
         // 주문, 주문 상품 저장
         Long orderId = saveOrder(member, totalPrice, paymentPrice, usedPoint);
@@ -79,6 +77,14 @@ public class OrderWriteService {
         // cartitem삭제
         removeCartItems(cartItems);
         return orderId;
+    }
+
+    private int applyDiscount(int totalPrice, List<CouponPolicy> couponPolicies, int usedPoint) {
+        int paymentPrice = calculateApplyCoupon(totalPrice, couponPolicies);
+
+        validatePointAmount(paymentPrice, usedPoint);
+        paymentPrice -= usedPoint;
+        return paymentPrice;
     }
 
     private Long saveOrder(Member member, int totalPrice, int paymentPrice, int usedPoint) {

@@ -4,6 +4,7 @@ import cart.application.service.order.dto.OrderResultDto;
 import cart.application.service.order.dto.OrderedItemResult;
 import cart.application.service.order.dto.UsedCoupon;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class OrderResponse {
@@ -13,16 +14,18 @@ public class OrderResponse {
     private List<UsedCoupon> usedCoupons;
     private int usedPoint;
     private int paymentPrice;
+    private Timestamp createdAt;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(Long orderId, List<OrderedItemResult> orderItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice) {
+    public OrderResponse(Long orderId, List<OrderedItemResult> orderItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice, Timestamp createdAt) {
         this.orderId = orderId;
         this.orderItems = orderItems;
         this.usedCoupons = usedCoupons;
         this.usedPoint = usedPoint;
         this.paymentPrice = paymentPrice;
+        this.createdAt = createdAt;
     }
 
     public static OrderResponse from(OrderResultDto orderResultDto) {
@@ -31,7 +34,8 @@ public class OrderResponse {
                 orderResultDto.getOrderedItems(),
                 orderResultDto.getUsedCoupons(),
                 orderResultDto.getUsedPoint(),
-                orderResultDto.getPaymentPrice()
+                orderResultDto.getPaymentPrice(),
+                orderResultDto.getCreatedAt()
         );
     }
 
@@ -55,4 +59,7 @@ public class OrderResponse {
         return paymentPrice;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
 }

@@ -47,7 +47,7 @@ public class OrderReadService {
         Order order = orderRepository.findOrderBy(orderId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 주문입니다."));
         List<OrderedItemResult> orderedItemResults = makeOrderItemResults(order);
         List<UsedCoupon> usedCoupons = makeUsedCoupons(order);
-        return new OrderResultDto(order.getId(), orderedItemResults, usedCoupons, order.getPoint(), order.getPaymentPrice());
+        return new OrderResultDto(order.getId(), orderedItemResults, usedCoupons, order.getPoint(), order.getPaymentPrice(), order.getCreatedAt());
     }
 
     private List<OrderedItemResult> makeOrderItemResults(Order order) {
