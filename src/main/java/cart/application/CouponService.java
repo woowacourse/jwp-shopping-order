@@ -6,12 +6,12 @@ import cart.domain.coupon.MemberCoupon;
 import cart.domain.discountpolicy.DiscountPolicy;
 import cart.domain.discountpolicy.DiscountPolicyProvider;
 import cart.domain.discountpolicy.DiscountType;
+import cart.dto.apidatamapper.DiscountAmountMapper;
+import cart.dto.apidatamapper.DiscountTypeMapper;
 import cart.dto.request.CouponIssueRequest;
 import cart.dto.request.CouponRequest;
 import cart.dto.response.CouponResponse;
 import cart.dto.response.CouponsResponse;
-import cart.dto.apidatamapper.DiscountAmountMapper;
-import cart.dto.apidatamapper.DiscountTypeMapper;
 import cart.exception.CouponException;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
@@ -93,12 +93,16 @@ public class CouponService {
     public CouponsResponse getAllUnusedCoupons(Member member) {
         List<MemberCoupon> allCoupons = memberCouponRepository.findAllByMemberId(member.getId());
 
-        List<CouponResponse> unUsedCouponResponses = allCoupons.stream()
+        List<CouponResponse> unusedCouponResponses = allCoupons.stream()
                 .filter(coupon -> !coupon.isUsed())
-                .map(MemberCoupon::getCoupon)
-                .map(this::couponToResponse)
+                .map(this::memberCouponToResponse)
                 .collect(Collectors.toList());
-        return new CouponsResponse(unUsedCouponResponses);
+        return new CouponsResponse(unusedCouponResponses);
+    }
+
+    private CouponResponse memberCouponToResponse(MemberCoupon coupon) {
+        DiscountType discountType = discountPolicyProvider.getDiscountType(coupon.getDiscountPolicy());
+        return CouponResponse.of(coupon, discountType);
     }
 
 }

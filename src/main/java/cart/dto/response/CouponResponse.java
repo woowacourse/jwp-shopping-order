@@ -1,6 +1,7 @@
 package cart.dto.response;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.domain.discountpolicy.DiscountType;
 import cart.dto.apidatamapper.DiscountAmountMapper;
 import cart.dto.apidatamapper.DiscountTypeMapper;
@@ -27,6 +28,14 @@ public class CouponResponse {
         int amount = DiscountAmountMapper.domainValueToApiBodyAmount(discountType, coupon.getDiscountValue());
 
         return new CouponResponse(coupon.getId(), coupon.getName(), type, amount);
+    }
+
+    public static CouponResponse of(MemberCoupon memberCoupon, DiscountType discountType) {
+        String type = DiscountTypeMapper.domainToApiBodyString(discountType);
+        Coupon coupon = memberCoupon.getCoupon();
+        int amount = DiscountAmountMapper.domainValueToApiBodyAmount(discountType, coupon.getDiscountValue());
+
+        return new CouponResponse(memberCoupon.getId(), coupon.getName(), type, amount);
     }
 
     public Long getId() {
