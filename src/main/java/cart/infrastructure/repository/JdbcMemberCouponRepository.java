@@ -6,6 +6,7 @@ import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.infrastructure.dao.CouponDao;
 import cart.infrastructure.dao.MemberCouponDao;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,11 @@ public class JdbcMemberCouponRepository implements MemberCouponRepository {
                 .orElseThrow(NoSuchElementException::new);
         return new MemberCoupon(memberCouponEntity.getId(), memberId, couponEntity.toDomain(),
                 memberCouponEntity.isUsed());
+    }
+
+    @Override
+    public List<Long> findCouponIdsByMemberId(final Long memberId) {
+        return memberCouponDao.findCouponIdsByMemberId(memberId);
     }
 
     @Override

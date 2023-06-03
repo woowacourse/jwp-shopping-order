@@ -1,6 +1,7 @@
 package cart.infrastructure.dao;
 
 import cart.entity.CouponEntity;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +32,11 @@ public class CouponDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<CouponEntity> findAll() {
+        final String sql = "SELECT * FROM coupon";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void update(final CouponEntity coupon) {

@@ -30,7 +30,7 @@ public class CouponIntegrationTest extends IntegrationTest {
 
     @DisplayName("전체 쿠폰 목록을 사용자에 맞게 조회할 수 있다.")
     @Test
-    void getCouponByMember() {
+    void showCouponByMember() {
         // given
         // when
         final ExtractableResponse<Response> response = getCouponsResponse();
