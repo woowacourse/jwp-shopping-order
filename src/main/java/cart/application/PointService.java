@@ -5,6 +5,8 @@ import cart.domain.Member.Member;
 import cart.domain.Order.Order;
 import cart.domain.Point;
 import cart.domain.Product.Price;
+import cart.dto.OrderPointResponse;
+import cart.dto.UserPointResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,12 +17,13 @@ public class PointService {
         this.pointRepository = pointRepository;
     }
 
-    public Point findByMemberId(Long memberId) {
-        return pointRepository.getPointByMemberId(memberId);
+    public UserPointResponse findByMemberId(Long memberId) {
+        Point point = pointRepository.getPointByMemberId(memberId);
+        return UserPointResponse.of(point);
     }
 
     public void checkUsePointLessThanUserPoint(Member member, Point usePoint, Price totalPrice) {
-        Point memberPoint = findByMemberId(member.getId());
+        Point memberPoint = pointRepository.getPointByMemberId(member.getId());
         memberPoint.validateIsSameOrBiggerThan(usePoint);
 
         if (usePoint.point() > totalPrice.price()) {
@@ -34,5 +37,10 @@ public class PointService {
                 .subtract(usePoint);
         Point savePoint = Point.makePointFrom(realPrice);
         pointRepository.update(usePoint, savePoint, order);
+    }
+
+    public OrderPointResponse findSavedPointByOrderId(Long orderId) {
+        Point savedPoint = pointRepository.findSavedPointByOrderId(orderId);
+        return OrderPointResponse.of(savedPoint);
     }
 }

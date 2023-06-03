@@ -5,6 +5,7 @@ import cart.dao.PointHistoryDao;
 import cart.domain.Order.Order;
 import cart.domain.Point;
 import cart.entity.PointEntity;
+import cart.entity.PointHistoryEntity;
 import org.springframework.stereotype.Repository;
 
 import static cart.Repository.mapper.PointMapper.toPointEntity;
@@ -34,5 +35,11 @@ public class PointRepository {
 
         pointDao.update(toPointEntity(order, updatePoint));
         pointHistoryDao.save(toPointHistoryEntity(order, usePoint, savePoint));
+    }
+
+    public Point findSavedPointByOrderId(Long orderId) {
+        PointHistoryEntity pointHistoryEntity = pointHistoryDao.findByOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문내역에 해당하는 포인트가 없습니다."));
+        return new Point(pointHistoryEntity.getPointSaved());
     }
 }
