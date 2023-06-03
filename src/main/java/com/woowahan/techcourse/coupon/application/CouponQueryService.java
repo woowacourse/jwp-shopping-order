@@ -30,9 +30,10 @@ public class CouponQueryService {
         return couponDao.findAllByMemberId(memberId);
     }
 
+    //todo 리팩토링
     public CalculateActualPriceResponseDto calculateActualPrice(
             CalculateActualPriceRequestDto calculateActualPriceRequestDto) {
-        Coupons coupons = getCoupons(calculateActualPriceRequestDto);
+        Coupons coupons = findCoupons(calculateActualPriceRequestDto.getCouponIds());
 
         Order targetOrder = calculateActualPriceRequestDto.getOrderRequest().toOrder();
 
@@ -41,9 +42,9 @@ public class CouponQueryService {
         return new CalculateActualPriceResponseDto(money.getValue());
     }
 
-    private Coupons getCoupons(CalculateActualPriceRequestDto calculateActualPriceRequestDto) {
-        List<Coupon> coupons = couponDao.findAllByIds(calculateActualPriceRequestDto.getCouponIds());
-        if (coupons.size() != calculateActualPriceRequestDto.getCouponIds().size()) {
+    private Coupons findCoupons(List<Long> couponIds) {
+        List<Coupon> coupons = couponDao.findAllByIds(couponIds);
+        if (coupons.size() != couponIds.size()) {
             throw new CouponNotFoundException();
         }
         return new Coupons(coupons);

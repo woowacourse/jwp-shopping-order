@@ -49,13 +49,13 @@ public class OrderDao {
 
     public OrderResult findById(long orderId) {
         try {
-            return findOrderResult(orderId);
+            return findOrderResultById(orderId);
         } catch (Exception e) {
             throw new OrderNotFoundException();
         }
     }
 
-    private OrderResult findOrderResult(long orderId) {
+    private OrderResult findOrderResultById(long orderId) {
         List<OrderCoupon> orderCoupons = orderCouponDao.findAllByOrderId(orderId);
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
 
