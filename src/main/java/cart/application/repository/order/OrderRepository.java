@@ -8,5 +8,8 @@ public interface OrderRepository {
 
     Long createOrder(Order order);
 
-    List<Order> findAllByMemberId(Long id);
+    List<Order> findAllByMemberId(Long memberId);
+
+    Order findById(Long id);
+
 }

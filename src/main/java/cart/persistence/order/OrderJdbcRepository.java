@@ -67,7 +67,9 @@ public class OrderJdbcRepository implements OrderRepository {
                 .map(it -> {
                     List<OrderItem> findOrderItems = orderedItemRepository.findOrderItemsByOrderId(it.getId());
 
-                    return new Order(it.getId(), findMember, findOrderItems,
+                    return new Order(it.getId(),
+                            findMember,
+                            findOrderItems,
                             couponRepository.findAllByOrderId(it.getId()),
                             it.getPaymentPrice(),
                             it.getTotalPrice(),
@@ -75,6 +77,22 @@ public class OrderJdbcRepository implements OrderRepository {
                             it.getCreatedAt());
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Order findById(final Long id) {
+        final String sql = "SELECT * FROM orders WHERE orders.id = ?";
+        OrderInfoDto orderInfoDto = jdbcTemplate.queryForObject(sql, orderInfoDtoRowMapper, id);
+        Member member = getMember(orderInfoDto.getMemberId());
+        return new Order(orderInfoDto.getId(),
+                member,
+                orderedItemRepository.findOrderItemsByOrderId(id),
+                couponRepository.findAllByOrderId(id),
+                orderInfoDto.getPaymentPrice(),
+                orderInfoDto.getTotalPrice(),
+                orderInfoDto.getPoint(),
+                orderInfoDto.getCreatedAt()
+        );
     }
 
     private Member getMember(Long memberId) {
