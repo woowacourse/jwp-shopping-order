@@ -34,29 +34,16 @@ public class Order {
         return new Order(member, orderItems);
     }
 
-    public Payment calculatePayment(Point usePoint) {
-        int totalProductPrice = 0;
-        for (OrderItem orderItem : orderItems) {
-            totalProductPrice += orderItem.calculatePrice();
-        }
-        int deliveryFee = DeliveryPolicy.calculateDeliveryFee(totalProductPrice);
-        PointPolicy.usePoint(member, usePoint);
-        PointPolicy.earnPoint(member, totalProductPrice);
-        int totalPrice = totalProductPrice + deliveryFee - usePoint.getValue();
-
-        return new Payment(totalProductPrice, deliveryFee, usePoint.getValue(), totalPrice);
-    }
-
-    public int getTotalProductPrice() {
-        return orderItems.stream()
-                .mapToInt(OrderItem::calculatePrice)
-                .sum();
-    }
-
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new AuthorizationException("해당 member의 order이 아닙니다.");
         }
+    }
+
+    public int calculateTotalProductPrice() {
+        return orderItems.stream()
+                .mapToInt(OrderItem::calculatePrice)
+                .sum();
     }
 
     public Long getId() {

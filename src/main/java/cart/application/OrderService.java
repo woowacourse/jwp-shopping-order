@@ -1,7 +1,6 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.dao.PaymentDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -13,15 +12,14 @@ import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderDto;
 import cart.dto.OrderRequest;
-import cart.dto.ProductDto;
 import cart.exception.OrderException;
 import cart.exception.notFound.CartItemNotFountException;
-import cart.exception.notFound.PaymentNotFoundException;
 import cart.exception.notFound.ProductNotFoundException;
 import cart.exception.payment.TotalDeliveryFeeDoesNotMatchException;
 import cart.exception.payment.TotalPriceDoesNotMatchException;
 import cart.exception.payment.TotalProductPriceDoesNotMatchException;
 import cart.repository.OrderRepository;
+import cart.repository.PaymentRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,14 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
-    private final PaymentDao paymentDao;
+    private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
 
-    public OrderService(ProductDao productDao, CartItemDao cartItemDao, PaymentDao paymentDao,
+    public OrderService(ProductDao productDao, CartItemDao cartItemDao, PaymentRepository paymentRepository,
                         OrderRepository orderRepository) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
-        this.paymentDao = paymentDao;
+        this.paymentRepository = paymentRepository;
         this.orderRepository = orderRepository;
     }
 
@@ -49,36 +47,40 @@ public class OrderService {
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItemDto requestCartItem : requestCartItems) {
-            // 요청에 문제가 없는지
-            CartItem realCartItem = cartItemDao.findById(requestCartItem.getCartItemId())
-                    .orElseThrow(CartItemNotFountException::new);
-            realCartItem.checkOwner(member);
-            realCartItem.checkQuantity(requestCartItem.getQuantity());
+            validateCartItem(member, requestCartItem);
+            validateProductInCartItem(requestCartItem);
 
-            Product requestProduct = requestCartItem.getProduct().toDomain();
-            Product realProduct = productDao.findById(requestProduct.getId()).orElseThrow(ProductNotFoundException::new);
-            if (!requestProduct.equals(realProduct)) {
-                throw new OrderException("product 정보가 업데이트 되었습니다. 다시 확인해주세요.");
-            }
-
-            orderItems.add(OrderItem.of(realProduct, requestCartItem.getQuantity()));
+            Product product = productDao.findById(requestCartItem.getProduct().getProductId()).get();
+            orderItems.add(OrderItem.of(product, requestCartItem.getQuantity()));
         }
 
-        // 주문
         Order order = Order.makeOrder(member, orderItems);
-        //Payment.makePayment(order, member, new Point(orderRequest.getUsePoint()))
-
-        Payment payment = order.calculatePayment(new Point(orderRequest.getUsePoint()));
+        Payment payment = Payment.makePayment(order, member, new Point(orderRequest.getUsePoint()));
         validatePayment(orderRequest, payment);
 
-        // 저장
         List<Long> cartItemIds = requestCartItems.stream()
                 .map(CartItemDto::getCartItemId)
                 .collect(Collectors.toList());
-        Long orderId = orderRepository.order(cartItemIds, member, order);
-        paymentDao.save(orderId, payment);
+        Long orderId = orderRepository.order(cartItemIds, member.getId(), order);
+        paymentRepository.payment(orderId, payment, member);
 
         return orderId;
+    }
+
+    private void validateCartItem(Member member, CartItemDto requestCartItem) {
+        CartItem realCartItem = cartItemDao.findById(requestCartItem.getCartItemId())
+                .orElseThrow(CartItemNotFountException::new);
+        realCartItem.checkOwner(member);
+        realCartItem.checkQuantity(requestCartItem.getQuantity());
+    }
+
+    private void validateProductInCartItem(CartItemDto requestCartItem) {
+        Product requestProduct = requestCartItem.getProduct().toDomain();
+        Product realProduct = productDao.findById(requestProduct.getId())
+                .orElseThrow(ProductNotFoundException::new);
+        if (!requestProduct.equals(realProduct)) {
+            throw new OrderException("product 정보가 일치하지 않습니다. 다시 확인해주세요.");
+        }
     }
 
     private static void validatePayment(OrderRequest request, Payment payment) {
@@ -99,8 +101,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId);
         order.checkOwner(member);
 
-        Payment payment = paymentDao.findByOrderId(orderId)
-                .orElseThrow(PaymentNotFoundException::new);
+        Payment payment = paymentRepository.findByOrderId(orderId);
 
         return toDto(order, payment);
     }
@@ -110,8 +111,7 @@ public class OrderService {
 
         List<OrderDto> orderDtos = new ArrayList<>();
         for (Order order : orders) {
-            Payment payment = paymentDao.findByOrderId(order.getId())
-                    .orElseThrow(PaymentNotFoundException::new);
+            Payment payment = paymentRepository.findByOrderId(order.getId());
             orderDtos.add(toDto(order, payment));
         }
 

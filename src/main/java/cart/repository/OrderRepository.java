@@ -1,12 +1,10 @@
 package cart.repository;
 
 import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PaymentDao;
 import cart.dao.ProductDao;
-import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
@@ -19,30 +17,25 @@ import org.springframework.stereotype.Repository;
 public class OrderRepository {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
-    private final MemberDao memberDao;
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
-    private final PaymentDao paymentDao;
 
-    public OrderRepository(ProductDao productDao, CartItemDao cartItemDao, MemberDao memberDao, OrderDao orderDao,
-                           OrderItemDao orderItemDao, PaymentDao paymentDao) {
+    public OrderRepository(ProductDao productDao, CartItemDao cartItemDao, OrderDao orderDao,
+                           OrderItemDao orderItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
-        this.memberDao = memberDao;
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
-        this.paymentDao = paymentDao;
     }
 
-    public Long order(List<Long> cartItemIds, Member member, Order order) {
+    public Long order(List<Long> cartItemIds, Long memberId, Order order) {
         cartItemDao.deleteByIds(cartItemIds);
         List<Product> products = order.getOrderItems()
                 .stream()
                 .map(OrderItem::getOriginalProduct)
                 .collect(Collectors.toList());
         productDao.updateStocks(products);
-        memberDao.updatePoint(member);
-        Long orderId = orderDao.save(member.getId());
+        Long orderId = orderDao.save(memberId);
         orderItemDao.saveAll(orderId, order.getOrderItems());
         return orderId;
     }
