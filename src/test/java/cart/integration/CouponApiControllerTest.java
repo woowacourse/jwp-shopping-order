@@ -8,7 +8,6 @@ import cart.dao.MemberDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
-import cart.dto.CouponDiscountRequest;
 import cart.dto.CouponDiscountResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
@@ -95,15 +94,12 @@ class CouponApiControllerTest extends IntegrationTest {
     @DisplayName("쿠폰 할인 금액을 조회한다.")
     void testCalculateDiscount() {
         //given
-        final CouponDiscountRequest request = new CouponDiscountRequest(coupon1.getId(), 15_000);
-
         //when
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
-            .body(request)
             .when()
-            .get("/coupons/discount")
+            .get("/coupons/" + coupon1.getId() + "/discount" + "?total=" + 15_000)
             .then()
             .log().all()
             .extract();

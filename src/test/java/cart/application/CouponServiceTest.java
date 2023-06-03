@@ -10,7 +10,6 @@ import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
-import cart.dto.CouponDiscountRequest;
 import cart.dto.CouponDiscountResponse;
 import cart.dto.CouponResponse;
 import cart.dto.PossibleCouponResponse;
@@ -88,10 +87,9 @@ class CouponServiceTest {
         //given
         given(couponDao.findById(anyLong()))
             .willReturn(Optional.of(coupon1));
-        final CouponDiscountRequest request = new CouponDiscountRequest(1L, 30_000);
 
         //when
-        final CouponDiscountResponse response = couponService.calculateCouponDiscount(request);
+        final CouponDiscountResponse response = couponService.calculateCouponDiscount(1L, 30_000);
 
         //then
         assertThat(response.getDiscountedProductAmount()).isEqualTo(29_000);
@@ -103,10 +101,9 @@ class CouponServiceTest {
         //given
         given(couponDao.findById(anyLong()))
             .willReturn(Optional.of(coupon1));
-        final CouponDiscountRequest request = new CouponDiscountRequest(1L, 8_000);
 
         //when
-        assertThatThrownBy(() -> couponService.calculateCouponDiscount(request))
+        assertThatThrownBy(() -> couponService.calculateCouponDiscount(1L, 8_000))
             .isInstanceOf(BusinessException.class);
     }
 }

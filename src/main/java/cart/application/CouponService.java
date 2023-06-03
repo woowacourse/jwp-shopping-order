@@ -4,7 +4,6 @@ import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
-import cart.dto.CouponDiscountRequest;
 import cart.dto.CouponDiscountResponse;
 import cart.dto.CouponResponse;
 import cart.dto.PossibleCouponResponse;
@@ -68,9 +67,10 @@ public class CouponService {
         return new PossibleCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
     }
 
-    public CouponDiscountResponse calculateCouponDiscount(final CouponDiscountRequest request) {
-        final Coupon coupon = findCoupon(request.getCouponId());
-        final Amount amount = coupon.calculateProduct(Amount.of(request.getTotalProductAmount()));
-        return new CouponDiscountResponse(amount.getValue());
+    public CouponDiscountResponse calculateCouponDiscount(final Long couponId, final int totalProductAmount) {
+        final Coupon coupon = findCoupon(couponId);
+        final Amount discountedAmount = coupon.calculateProduct(Amount.of(totalProductAmount));
+        return new CouponDiscountResponse(discountedAmount.getValue(),
+            totalProductAmount - discountedAmount.getValue());
     }
 }

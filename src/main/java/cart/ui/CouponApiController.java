@@ -2,7 +2,6 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
-import cart.dto.CouponDiscountRequest;
 import cart.dto.CouponDiscountResponse;
 import cart.dto.CouponResponse;
 import java.util.List;
@@ -11,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,9 +36,10 @@ public class CouponApiController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/discount")
-    public ResponseEntity<CouponDiscountResponse> calculateDiscount(@RequestBody final CouponDiscountRequest request) {
-        final CouponDiscountResponse response = couponService.calculateCouponDiscount(request);
+    @GetMapping("/{id}/discount")
+    public ResponseEntity<CouponDiscountResponse> calculateDiscount(@PathVariable final Long id,
+        @RequestParam final Integer total) {
+        final CouponDiscountResponse response = couponService.calculateCouponDiscount(id, total);
         return ResponseEntity.ok(response);
     }
 }
