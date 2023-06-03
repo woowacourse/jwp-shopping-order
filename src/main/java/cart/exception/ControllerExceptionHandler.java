@@ -18,8 +18,18 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler(ProductException.NotFoundProduct.class)
+    @ExceptionHandler({
+            ProductException.NotFoundProduct.class,
+            CartItemException.NotFound.class,
+            MemberException.NotFound.class,
+            OrderException.NotFound.class
+    })
     public ResponseEntity<Void> handleNotFoundException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(UnKnownException.class)
+    public ResponseEntity<Void> handleUnknownException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
