@@ -31,7 +31,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .param("size", pageRequest.getSize())
                 .when()
                 .get("/products")
-                .then()
+                .then().log().all()
                 .extract();
 
         //then
