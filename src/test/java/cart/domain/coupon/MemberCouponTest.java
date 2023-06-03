@@ -50,8 +50,12 @@ class MemberCouponTest {
         Money originalPrice = new Money(900);
 
         // when
+        Money couponUsedPrice = coupon.use(originalPrice);
+
         // then
-        assertThatThrownBy(() -> coupon.use(originalPrice))
-                .isInstanceOf(CouponException.OverOriginalPrice.class);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(couponUsedPrice).isEqualTo(new Money(0));
+            softly.assertThat(coupon.getDiscountedPrice()).isEqualTo(originalPrice);
+        });
     }
 }

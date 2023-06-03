@@ -2,7 +2,6 @@ package cart.domain.coupon;
 
 import cart.domain.Money;
 import cart.exception.CouponException;
-import cart.exception.IllegalMoneyAmountException;
 
 public class MemberCoupon {
 
@@ -34,14 +33,10 @@ public class MemberCoupon {
 
     public Money use(Money originalPrice) {
         validateIsUsable();
-        try {
-            Money couponUsedPrice = coupon.apply(originalPrice);
-            discountedPrice = originalPrice.subtract(couponUsedPrice);
-            isUsed = true;
-            return couponUsedPrice;
-        } catch (IllegalMoneyAmountException exception) {
-            throw new CouponException.OverOriginalPrice();
-        }
+        Money couponUsedPrice = coupon.apply(originalPrice);
+        discountedPrice = originalPrice.subtract(couponUsedPrice);
+        isUsed = true;
+        return couponUsedPrice;
     }
 
     private void validateIsUsable() {

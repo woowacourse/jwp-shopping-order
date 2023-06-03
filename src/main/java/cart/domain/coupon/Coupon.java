@@ -32,7 +32,7 @@ public class Coupon {
         try {
             return discountPolicy.apply(money,  discountValue);
         } catch (IllegalMoneyAmountException exception) {
-            throw new CouponException.OverOriginalPrice();
+            return new Money(0);
         }
     }
 

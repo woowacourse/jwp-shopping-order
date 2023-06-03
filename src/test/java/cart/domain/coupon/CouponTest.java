@@ -1,14 +1,12 @@
 package cart.domain.coupon;
 
 import cart.domain.Money;
-import cart.exception.CouponException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static cart.domain.fixture.CouponFixture.AMOUNT_1000_COUPON;
 import static cart.domain.fixture.CouponFixture.RATE_10_COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CouponTest {
 
@@ -48,8 +46,9 @@ class CouponTest {
         Coupon coupon = AMOUNT_1000_COUPON;
 
         // when
+        Money usedPrice = coupon.apply(originalPrice);
+
         // then
-        assertThatThrownBy(() -> coupon.apply(originalPrice))
-                .isInstanceOf(CouponException.OverOriginalPrice.class);
+        assertThat(usedPrice).isEqualTo(new Money(0));
     }
 }
