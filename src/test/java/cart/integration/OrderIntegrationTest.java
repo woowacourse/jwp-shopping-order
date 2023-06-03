@@ -2,7 +2,9 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.repository.CouponRepository;
 import cart.domain.repository.MemberRepository;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderRequest;
@@ -24,6 +26,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private CouponRepository couponRepository;
 
     private Member member;
     private CartItemRequest cartItemRequest1;
@@ -59,6 +63,26 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(orderResponse.getTotalProductAmount()).isEqualTo(65_000);
         assertThat(orderResponse.getDiscountedProductAmount()).isEqualTo(65_000);
+        assertThat(orderResponse.getDeliveryAmount()).isEqualTo(2_000);
+    }
+
+    @DisplayName("쿠폰을 사용하여 주문한다.")
+    @Test
+    void orderWithCoupon() {
+        // given
+        final Coupon coupon = couponRepository.findAll().get(0);
+        postCoupon(coupon.getId());
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+                65_000, 2_000, "서울특별시 송파구", coupon.getId());
+
+        // when
+        final ExtractableResponse<Response> response = order(orderRequest);
+
+        // then
+        final OrderResponse orderResponse = response.as(OrderResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(orderResponse.getTotalProductAmount()).isEqualTo(65_000);
+        assertThat(orderResponse.getDiscountedProductAmount()).isEqualTo(coupon.calculateDiscountedAmount(65_000));
         assertThat(orderResponse.getDeliveryAmount()).isEqualTo(2_000);
     }
 
@@ -116,6 +140,14 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(orderRequest)
                 .when().post("/orders")
+                .then().extract();
+    }
+
+    private ExtractableResponse<Response> postCoupon(final Long id) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().post("/coupons/{id}", id)
                 .then().extract();
     }
 }
