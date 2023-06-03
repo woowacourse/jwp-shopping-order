@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import cart.domain.order.dto.OrderResponse;
+import cart.domain.order.application.dto.OrderResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

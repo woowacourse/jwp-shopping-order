@@ -12,7 +12,7 @@ import java.util.List;
 
 import cart.domain.cartitem.domain.CartItem;
 import cart.domain.cartitem.domain.CartItems;
-import cart.domain.order.dto.OrderCartItemDto;
+import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.product.domain.Product;
 import cart.global.exception.CartItemNotFoundException;
 import org.junit.jupiter.api.DisplayName;

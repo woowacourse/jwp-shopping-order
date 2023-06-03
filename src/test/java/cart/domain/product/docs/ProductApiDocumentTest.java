@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.member.application.MemberService;
 import cart.domain.product.application.ProductService;
-import cart.domain.product.dto.ProductPagingResponse;
+import cart.domain.product.application.dto.ProductPagingResponse;
 import cart.domain.product.presentation.ProductApiController;
 import cart.global.config.AuthMember;
 import cart.global.config.MemberArgumentResolver;

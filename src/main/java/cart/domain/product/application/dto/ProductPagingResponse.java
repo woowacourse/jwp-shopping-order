@@ -1,4 +1,4 @@
-package cart.domain.product.dto;
+package cart.domain.product.application.dto;
 
 import java.util.ArrayList;
 import java.util.List;

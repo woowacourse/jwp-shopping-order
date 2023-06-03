@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.AcceptanceTest;
-import cart.domain.cartitem.dto.CartItemQuantityUpdateRequest;
-import cart.domain.cartitem.dto.CartItemRequest;
+import cart.domain.cartitem.application.dto.CartItemQuantityUpdateRequest;
+import cart.domain.cartitem.application.dto.CartItemRequest;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

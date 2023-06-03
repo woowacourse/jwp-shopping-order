@@ -13,9 +13,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.member.application.MemberService;
-import cart.domain.member.dto.MemberCashChargeRequest;
-import cart.domain.member.dto.MemberCashChargeResponse;
-import cart.domain.member.dto.MemberShowCurrentCashResponse;
+import cart.domain.member.application.dto.MemberCashChargeRequest;
+import cart.domain.member.application.dto.MemberCashChargeResponse;
+import cart.domain.member.application.dto.MemberShowCurrentCashResponse;
 import cart.domain.member.persistence.MemberDao;
 import cart.domain.member.presentation.MemberApiController;
 import cart.global.config.AuthMember;

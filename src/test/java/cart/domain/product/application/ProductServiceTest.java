@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import cart.domain.cartitem.persistence.CartItemDao;
 import cart.domain.member.persistence.MemberDao;
-import cart.domain.product.dto.ProductRequest;
+import cart.domain.product.application.dto.ProductRequest;
 import cart.domain.product.persistence.ProductDao;
 import cart.fixtures.MemberFixtures.Dooly;
 import cart.global.config.AuthMember;

@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import cart.domain.cartitem.application.CartItemService;
-import cart.domain.cartitem.dto.CartItemQuantityUpdateRequest;
-import cart.domain.cartitem.dto.CartItemRequest;
+import cart.domain.cartitem.application.dto.CartItemQuantityUpdateRequest;
+import cart.domain.cartitem.application.dto.CartItemRequest;
 import cart.domain.cartitem.persistence.CartItemDao;
 import cart.domain.member.persistence.MemberDao;
 import cart.domain.product.persistence.ProductDao;

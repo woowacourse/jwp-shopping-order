@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.domain.order.dto.OrderCartItemDto;
+import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.product.domain.Product;
 import cart.global.exception.CartItemNotFoundException;
 

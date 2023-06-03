@@ -6,10 +6,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import cart.domain.product.application.ProductService;
-import cart.domain.product.dto.ProductCartItemResponse;
-import cart.domain.product.dto.ProductPagingResponse;
-import cart.domain.product.dto.ProductRequest;
-import cart.domain.product.dto.ProductResponse;
+import cart.domain.product.application.dto.ProductCartItemResponse;
+import cart.domain.product.application.dto.ProductPagingResponse;
+import cart.domain.product.application.dto.ProductRequest;
+import cart.domain.product.application.dto.ProductResponse;
 import cart.global.config.AuthMember;
 import cart.global.config.AuthPrincipal;
 import org.springframework.http.HttpStatus;

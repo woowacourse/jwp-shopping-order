@@ -4,10 +4,10 @@ import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
 
 import java.util.List;
 
+import cart.domain.product.application.dto.ProductCartItemResponse;
+import cart.domain.product.application.dto.ProductRequest;
+import cart.domain.product.application.dto.ProductResponse;
 import cart.domain.product.domain.Product;
-import cart.domain.product.dto.ProductCartItemResponse;
-import cart.domain.product.dto.ProductRequest;
-import cart.domain.product.dto.ProductResponse;
 
 public class ProductFixtures {
 

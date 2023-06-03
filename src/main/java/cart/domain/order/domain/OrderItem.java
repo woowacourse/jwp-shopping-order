@@ -1,7 +1,7 @@
 package cart.domain.order.domain;
 
-import cart.domain.order.dto.OrderedProductDto;
-import cart.domain.product.dto.ProductResponse;
+import cart.domain.order.domain.dto.OrderedProductDto;
+import cart.domain.product.application.dto.ProductResponse;
 
 public class OrderItem {
 

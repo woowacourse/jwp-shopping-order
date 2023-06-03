@@ -1,6 +1,6 @@
-package cart.domain.order.dto;
+package cart.domain.order.domain.dto;
 
-import cart.domain.product.dto.ProductResponse;
+import cart.domain.product.application.dto.ProductResponse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class OrderedProductDto {

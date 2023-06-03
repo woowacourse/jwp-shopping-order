@@ -5,7 +5,7 @@ import java.util.List;
 
 import cart.domain.cartitem.domain.CartItem;
 import cart.domain.cartitem.domain.CartItems;
-import cart.domain.product.dto.ProductCartItemResponse;
+import cart.domain.product.application.dto.ProductCartItemResponse;
 
 public class Products {
 

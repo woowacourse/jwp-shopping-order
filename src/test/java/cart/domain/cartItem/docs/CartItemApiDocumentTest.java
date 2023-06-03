@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 
 import cart.domain.cartitem.application.CartItemService;
-import cart.domain.cartitem.dto.CartItemQuantityUpdateRequest;
-import cart.domain.cartitem.dto.CartItemRequest;
+import cart.domain.cartitem.application.dto.CartItemQuantityUpdateRequest;
+import cart.domain.cartitem.application.dto.CartItemRequest;
 import cart.domain.cartitem.presentation.CartItemApiController;
 import cart.domain.member.application.MemberService;
 import cart.domain.member.persistence.MemberDao;

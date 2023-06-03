@@ -6,8 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.domain.order.dto.OrderResponse;
-import cart.domain.order.dto.OrderedProductDto;
+import cart.domain.order.application.dto.OrderResponse;
+import cart.domain.order.domain.dto.OrderedProductDto;
 
 public class OrderItems {
 

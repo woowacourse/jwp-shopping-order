@@ -1,7 +1,7 @@
-package cart.domain.product.dto;
+package cart.domain.product.application.dto;
 
+import cart.domain.cartitem.application.dto.CartItemQuantityResponse;
 import cart.domain.cartitem.domain.CartItem;
-import cart.domain.cartitem.dto.CartItemQuantityResponse;
 import cart.domain.product.domain.Product;
 
 public class ProductCartItemResponse {

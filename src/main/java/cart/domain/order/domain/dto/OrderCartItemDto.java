@@ -1,4 +1,4 @@
-package cart.domain.order.dto;
+package cart.domain.order.domain.dto;
 
 public class OrderCartItemDto {
 

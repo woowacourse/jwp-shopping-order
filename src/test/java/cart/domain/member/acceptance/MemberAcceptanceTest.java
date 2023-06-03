@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.AcceptanceTest;
-import cart.domain.member.dto.MemberCashChargeRequest;
+import cart.domain.member.application.dto.MemberCashChargeRequest;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

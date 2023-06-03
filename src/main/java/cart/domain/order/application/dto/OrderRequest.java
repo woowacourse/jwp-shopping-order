@@ -1,6 +1,8 @@
-package cart.domain.order.dto;
+package cart.domain.order.application.dto;
 
 import java.util.List;
+
+import cart.domain.order.domain.dto.OrderCartItemDto;
 
 public class OrderRequest {
 

@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.Map;
 
 import cart.AcceptanceTest;
+import cart.domain.product.application.dto.ProductRequest;
 import cart.domain.product.domain.Product;
-import cart.domain.product.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

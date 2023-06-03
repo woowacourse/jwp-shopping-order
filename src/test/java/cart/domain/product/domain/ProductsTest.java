@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import cart.domain.cartitem.domain.CartItems;
-import cart.domain.product.dto.ProductCartItemResponse;
+import cart.domain.product.application.dto.ProductCartItemResponse;
 import cart.fixtures.CartItemFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -10,9 +10,9 @@ import java.util.List;
 
 import cart.domain.cartitem.domain.CartItem;
 import cart.domain.member.application.MemberService;
-import cart.domain.member.dto.MemberCashChargeRequest;
-import cart.domain.order.dto.OrderCartItemDto;
-import cart.domain.order.dto.OrderRequest;
+import cart.domain.member.application.dto.MemberCashChargeRequest;
+import cart.domain.order.application.dto.OrderRequest;
+import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.product.domain.Product;
 import cart.global.config.AuthMember;
 import org.assertj.core.api.Assertions;

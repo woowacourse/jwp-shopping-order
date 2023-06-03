@@ -1,4 +1,4 @@
-package cart.domain.cartitem.dto;
+package cart.domain.cartitem.application.dto;
 
 import javax.validation.constraints.Positive;
 
