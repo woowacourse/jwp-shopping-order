@@ -9,8 +9,8 @@ public class OrderFixture {
             List.of(OrderItemFixture.firstOrderItem),
             List.of(OrderCouponFixture.firstOrderCoupon));
 
-    public static final Order secondOrder = new Order(1L,
-            2L,
+    public static final Order secondOrder = new Order(2L,
+            1L,
             List.of(OrderItemFixture.secondOrderItem),
             List.of(OrderCouponFixture.secondOrderCoupon));
 }

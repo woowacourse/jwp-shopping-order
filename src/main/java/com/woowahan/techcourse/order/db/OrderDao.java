@@ -73,8 +73,8 @@ public class OrderDao {
         return (rs, rowNum) -> new OrderResult(
                 rs.getInt("original_price"),
                 rs.getInt("actual_price"), new Order(
-                rs.getLong("member_id"),
                 rs.getLong("id"),
+                rs.getLong("member_id"),
                 orderItems,
                 orderCoupons
         ));
