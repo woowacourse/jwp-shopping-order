@@ -45,7 +45,7 @@ class CouponDaoTest {
         assertSoftly(softly -> {
             softly.assertThat(result).isPresent();
             softly.assertThat(result.get().getCouponId()).isEqualTo(1L);
-            softly.assertThat(result.get().getName().getValue()).isEqualTo("10% 할인 쿠폰");
+            softly.assertThat(result.get().getName()).isEqualTo("10% 할인 쿠폰");
             softly.assertThat(result.get().getDiscountCondition().isSatisfiedBy(null)).isTrue();
         });
     }

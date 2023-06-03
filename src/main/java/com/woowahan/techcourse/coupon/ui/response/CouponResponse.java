@@ -21,7 +21,7 @@ public class CouponResponse {
 
     public CouponResponse(Coupon coupon) {
         this(coupon.getCouponId(), coupon.getDiscountPolicy().getName(), coupon.getAmount(),
-                coupon.getName().getValue());
+                coupon.getName());
     }
 
     public long getId() {

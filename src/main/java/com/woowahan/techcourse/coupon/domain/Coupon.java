@@ -2,24 +2,34 @@ package com.woowahan.techcourse.coupon.domain;
 
 import com.woowahan.techcourse.coupon.domain.discountcondition.DiscountCondition;
 import com.woowahan.techcourse.coupon.domain.discountpolicy.DiscountPolicy;
+import com.woowahan.techcourse.coupon.exception.CouponException;
 import java.util.Objects;
 
 public class Coupon {
 
+    private static final int MAX_NAME_LENGTH = 255;
+
     private final Long couponId;
-    private final CouponName name;
+    private final String name;
     private final DiscountCondition discountCondition;
     private final DiscountPolicy discountPolicy;
 
     public Coupon(Long couponId, String name, DiscountCondition discountCondition, DiscountPolicy discountPolicy) {
+        validate(name);
         this.couponId = couponId;
-        this.name = new CouponName(name);
+        this.name = name;
         this.discountCondition = discountCondition;
         this.discountPolicy = discountPolicy;
     }
 
     public Coupon(String name, DiscountCondition discountCondition, DiscountPolicy discountPolicy) {
         this(null, name, discountCondition, discountPolicy);
+    }
+
+    private void validate(String name) {
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new CouponException("쿠폰 이름은 " + MAX_NAME_LENGTH + "자를 초과할 수 없습니다.");
+        }
     }
 
     public Money calculateDiscountAmount(OriginalAmount originalAmount) {
@@ -29,7 +39,7 @@ public class Coupon {
         return Money.ZERO;
     }
 
-    public CouponName getName() {
+    public String getName() {
         return name;
     }
 
