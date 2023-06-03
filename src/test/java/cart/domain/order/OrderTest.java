@@ -13,6 +13,7 @@ import cart.domain.product.ImageUrl;
 import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
+import cart.exception.OrderException;
 import java.sql.Timestamp;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -81,7 +82,6 @@ class OrderTest {
 
         // expect
         assertThatThrownBy(() -> order.checkOwner(new Member(2L, new Email("b@b.com"), new Password("1234"))))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 멤버의 주문이 아닙니다.");
+                .isInstanceOf(OrderException.IllegalMember.class);
     }
 }

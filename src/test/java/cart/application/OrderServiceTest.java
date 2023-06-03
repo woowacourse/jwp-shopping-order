@@ -21,6 +21,7 @@ import cart.domain.product.Price;
 import cart.domain.product.Product;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderResponse;
+import cart.exception.OrderException;
 import cart.repository.CartRepository;
 import cart.repository.OrderRepository;
 import java.sql.Timestamp;
@@ -110,8 +111,7 @@ class OrderServiceTest {
 
         // expect
         assertThatThrownBy(() -> orderService.findByOrderId(member1, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 멤버의 주문이 아닙니다.");
+                .isInstanceOf(OrderException.IllegalMember.class);
     }
 
     @Test

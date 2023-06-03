@@ -28,6 +28,7 @@ import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.ProductEntity;
+import cart.exception.OrderException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -117,8 +118,8 @@ class OrderRepositoryTest {
         given(orderDao.findById(MAX_VALUE)).willReturn(Optional.empty());
 
         // expect
-        assertThatThrownBy(() -> orderRepository.findByOrderId(MAX_VALUE)).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(MAX_VALUE + "id를 가진 주문을 찾을 수 없습니다.");
+        assertThatThrownBy(() -> orderRepository.findByOrderId(MAX_VALUE))
+                .isInstanceOf(OrderException.NotFound.class);
     }
 
     @Test
