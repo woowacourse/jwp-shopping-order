@@ -92,6 +92,37 @@ public class PaymentIntegrationTest extends IntegrationTest {
 
     }
 
+    @DisplayName("선택한 장바구니 아이템의 예상 결제 금액을 조회한다 - 기본 할인 정책이 적용되지 않는 경우")
+    @Test
+    void getPaymentWithoutDefaultDiscountPolicy() {
+        final ExtractableResponse<Response> response = given(this.spec).log().all()
+                .queryParam("cartItemIds", this.cartItemIds.get(0), this.cartItemIds.get(1))
+                .filter(
+                        document("get-payment-without-default-discount-policy",
+                                requestParameters(parameterWithName("cartItemIds").description("선택한 장바구니의 아이템 id")),
+                                responseFields(
+                                        fieldWithPath("originalPrice").description("주문 금액"),
+                                        fieldWithPath("discounts[]").description("적용된 할인 정책"),
+                                        fieldWithPath("discountedPrice").description("할인 적용 금액"),
+                                        fieldWithPath("deliveryFee").description("배송비"),
+                                        fieldWithPath("finalPrice").description("예상 결제 금액")
+                                )
+                        )
+                )
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(this.member.getEmail(), this.member.getPassword())
+                .when()
+                .get("/total-cart-price")
+                .then()
+                .log().all()
+                .extract();
+
+        final PaymentResponse responseBody = response.body().as(PaymentResponse.class);
+
+        System.out.println("responseBody = " + responseBody);
+
+    }
+
     private Long createProduct(final ProductRequest productRequest) {
         final ExtractableResponse<Response> response = given(this.spec)
                 .filter(document("create-product"))

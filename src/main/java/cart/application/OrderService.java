@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.exception.CartItemException;
+import cart.exception.OrderException;
 import cart.exception.OrderException.EmptyItemInput;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
@@ -51,14 +52,11 @@ public class OrderService {
     @Transactional
     public Long createOrderAndSave(final Member member, final List<Long> cartItemIds) {
         final Order draftOrder = this.createDraftOrder(member, cartItemIds);
-        final Long savedOrderId = this.orderRepository.create(draftOrder);
-        cartItemIds.forEach(this.cartItemRepository::deleteById);
-        return savedOrderId;
+        return this.orderRepository.create(draftOrder);
     }
 
-    // TODO: 예외 정리하기
     public Order retrieveOrderById(final Long orderId) {
-        return this.orderRepository.findById(orderId).orElseThrow();
+        return this.orderRepository.findById(orderId).orElseThrow(() -> new OrderException.NotFound(orderId));
     }
 
     public List<Order> retrieveMemberOrders(final Member member) {

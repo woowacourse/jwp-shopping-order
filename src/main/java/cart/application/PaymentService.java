@@ -26,9 +26,7 @@ public class PaymentService {
     public PaymentRecord createDraftPaymentRecord(final Order order) {
         final List<DiscountPolicy> discountPolicies = this.discountPolicyRepository.findDefault();
         final List<DeliveryPolicy> deliveryPolicies = this.deliveryPolicyRepository.findDefault();
-
         final Payment payment = new Payment(discountPolicies, deliveryPolicies);
-
         return payment.createPaymentRecord(order);
     }
 

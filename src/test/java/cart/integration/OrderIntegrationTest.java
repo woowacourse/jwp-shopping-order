@@ -173,6 +173,33 @@ public class OrderIntegrationTest extends IntegrationTest {
         );
     }
 
+    @Test
+    @DisplayName("주문 상세 조회하기 - 할인이 적용되지 않은 경우")
+    void getOrderDetailWithoutDiscount() {
+        final ExtractableResponse<Response> postResponse = given(this.spec).log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new OrderRequest(List.of(this.cartItemIds.get(0), this.cartItemIds.get(1))))
+                .auth().preemptive().basic(this.member.getEmail(), this.member.getPassword())
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+        final long orderId = this.getIdFromCreatedResponse(postResponse);
+
+        final ExtractableResponse<Response> response = given(this.spec).log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(this.member.getEmail(), this.member.getPassword())
+                .when()
+                .get("/orders/{orderId}", orderId)
+                .then()
+                .log().all()
+                .extract();
+
+        final OrderDetailResponse orderDetailResponseBody = response.body().as(OrderDetailResponse.class);
+        System.out.println("orderDetailResponseBody = " + orderDetailResponseBody);
+    }
+
     private Long createProduct(final ProductRequest productRequest) {
         final ExtractableResponse<Response> response = given(this.spec)
                 .filter(document("create-product"))

@@ -48,7 +48,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         this.productId2 = this.createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
         this.member = this.memberDao.getMemberById(1L).orElseThrow(AuthenticationException.NotFound::new);
-        this.member2 = this.memberDao.getMemberById(1L).orElseThrow(AuthenticationException.NotFound::new);
+        this.member2 = this.memberDao.getMemberById(2L).orElseThrow(AuthenticationException.NotFound::new);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
