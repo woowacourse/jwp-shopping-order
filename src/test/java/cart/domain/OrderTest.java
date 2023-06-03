@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class OrderTest {
 
     @Test
-    void order을_생성한다() {
+    void order을_생성하면_product의_재고가_감소한다() {
         // given
         Member member = new Member(1L, "a@a.com", "1234", new Point(3000));
 
@@ -29,7 +29,9 @@ class OrderTest {
         Order order = Order.makeOrder(member, List.of(chickenOrder, pizzaOrder));
 
         // then
-        assertThat(order.getOrderItems().size()).isEqualTo(2);
+        List<OrderItem> orderItems = order.getOrderItems();
+        assertThat(orderItems.get(0).getOriginalProduct().getStock()).isEqualTo(27);
+        assertThat(orderItems.get(1).getOriginalProduct().getStock()).isEqualTo(25);
     }
 
     @Test
