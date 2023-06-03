@@ -26,7 +26,7 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
-    public List<CouponResponseDto> findAll(final Member member) {
+    public List<CouponResponseDto> findAllByMember(final Member member) {
         List<MemberCoupon> memberCouponByMember = couponRepository.findMemberCouponByMember(member);
 
         return memberCouponByMember.stream()

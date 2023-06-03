@@ -30,7 +30,7 @@ public class CouponController {
     @GetMapping
     public ResponseEntity<List<CouponResponseDto>> getAllCoupon(Member member) {
         return ResponseEntity.ok()
-                .body(couponService.findAll(member));
+                .body(couponService.findAllByMember(member));
     }
 
 }
