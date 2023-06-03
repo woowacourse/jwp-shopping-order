@@ -31,6 +31,8 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("`order`")
+                .usingColumns("member_id", "total_price",
+                        "discounted_total_price", "delivery_price", "order_at")
                 .usingGeneratedKeyColumns("id");
     }
 
