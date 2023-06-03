@@ -5,27 +5,27 @@ public class OrderedItem {
     private Long id;
     private Long orderId;
     private String name;
-    private int orice;
+    private int price;
     private String imageUrl;
     private int quantity;
     //private boolean isDiscounted;
     private int discountRate;
 
-    public OrderedItem(Long id, Long orderId, String name, int orice, String imageUrl, int quantity, int discountRate) {
+    public OrderedItem(Long id, Long orderId, String name, int price, String imageUrl, int quantity, int discountRate) {
         this.id = id;
         this.orderId = orderId;
         this.name = name;
-        this.orice = orice;
+        this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         //this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
     }
 
-    public OrderedItem(Long orderId, String name, int orice, String imageUrl, int quantity, int discountRate) {
+    public OrderedItem(Long orderId, String name, int price, String imageUrl, int quantity, int discountRate) {
         this.orderId = orderId;
         this.name = name;
-        this.orice = orice;
+        this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         //this.isDiscounted = isDiscounted;
@@ -34,10 +34,10 @@ public class OrderedItem {
 
     public int calculateDiscountedPrice(){
         if(discountRate > 0){
-            return (discountRate * orice / 100 - orice) * -1;
+            return (discountRate * price / 100 - price) * -1;
         }
 
-        return orice;
+        return price;
     }
 
     public Long getId() {
@@ -52,8 +52,8 @@ public class OrderedItem {
         return name;
     }
 
-    public int getOrice() {
-        return orice;
+    public int getPrice() {
+        return price;
     }
 
     public String getImageUrl() {

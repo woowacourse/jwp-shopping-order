@@ -30,7 +30,7 @@ public class OrderItemDao {
             );
 
             ps.setString(1, orderedItem.getName());
-            ps.setInt(2, orderedItem.getOrice());
+            ps.setInt(2, orderedItem.getPrice());
             ps.setString(3, orderedItem.getImageUrl());
             ps.setInt(4, orderedItem.getQuantity());
             ps.setInt(5, orderedItem.getDiscountRate());

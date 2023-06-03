@@ -8,7 +8,7 @@ public class ProductResponse {
     private String name;
     private int price;
     private String imageUrl;
-    //private boolean isDiscounted;
+    private int quantity;
     private int discountRate;
     private int discountedPrice;
 
@@ -26,7 +26,6 @@ public class ProductResponse {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        //this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
         this.discountedPrice = discountedPrice;
     }

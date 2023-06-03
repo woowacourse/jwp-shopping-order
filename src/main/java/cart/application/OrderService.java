@@ -12,7 +12,6 @@ import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedItemResponse;
-import cart.dto.ProductResponse;
 import cart.exception.PriceValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -158,9 +157,8 @@ public class OrderService {
     }
 
     private OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
-        return new OrderedItemResponse(orderedItem.getQuantity(),
-                new ProductResponse(orderedItem.getName(), orderedItem.getOrice(), orderedItem.getImageUrl(),
-                        orderedItem.getDiscountRate(), orderedItem.calculateDiscountedPrice()));
+        return new OrderedItemResponse(orderedItem.getName(), orderedItem.getPrice(), orderedItem.getImageUrl(), orderedItem.getQuantity(),
+                        orderedItem.getDiscountRate(), orderedItem.calculateDiscountedPrice());
     }
 
     public List<OrderResponse> getAllOrders(Long memberId) {
@@ -176,7 +174,7 @@ public class OrderService {
     }
 
     private OrderResponse createOrderResponse(Order order, List<OrderedItem> orderedItems) {
-        return new OrderResponse(order.getId(), convertToResponse(orderedItems), null, order.getTotalItemPrice(),
+        return new OrderResponse(order.getId(), convertToResponse(orderedItems), order.getOrderedAt(), order.getTotalItemPrice(),
                 order.getDiscountedTotalItemPrice(), order.getShippingFee(),
                 order.getDiscountedTotalItemPrice() + order.getShippingFee());
     }

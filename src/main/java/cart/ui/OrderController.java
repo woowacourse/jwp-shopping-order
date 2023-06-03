@@ -28,6 +28,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderCreateRequest orderCreateRequest){
+        System.out.println(member.getEmail());
         Long id = orderService.createOrder(member, orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }

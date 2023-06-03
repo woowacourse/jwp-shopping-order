@@ -2,21 +2,61 @@ package cart.dto;
 
 public class OrderedItemResponse {
 
+    private Long id;
+    private String name;
+    private int price;
+    private String imageUrl;
     private int quantity;
-    //TODO: OrderedItemsResponse? OrderedItemResponse로 변경(quantity필드 안에 넣기)
-    //TODO: Cost Controller... 삭제
-    private ProductResponse productResponse;
+    private int discountRate;
+    private int discountedPrice;
 
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public OrderedItemResponse(Long id, String name, int price, String imageUrl, int quantity, int discountRate, int discountedPrice) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.discountRate = discountRate;
+        this.discountedPrice = discountedPrice;
     }
 
-    public OrderedItemResponse(int quantity, ProductResponse productResponse) {
+    public OrderedItemResponse(String name, int price, String imageUrl, int quantity, int discountRate, int discountedPrice) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
         this.quantity = quantity;
-        this.productResponse = productResponse;
+        this.discountRate = discountRate;
+        this.discountedPrice = discountedPrice;
+    }
+
+    public OrderedItemResponse() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public int getDiscountRate() {
+        return discountRate;
+    }
+
+    public int getDiscountedPrice() {
+        return discountedPrice;
     }
 }

@@ -19,10 +19,38 @@ INSERT INTO member (email, password, grade, total_purchase_amount)
 SELECT 'b@b.com', '1234', 'gold', 0
 WHERE NOT EXISTS (SELECT 1 FROM member WHERE email = 'b@b.com');
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 5);
+INSERT INTO cart_item (member_id, product_id, quantity)
+SELECT 1, 1, 2
+WHERE NOT EXISTS (
+  SELECT 1 FROM cart_item WHERE member_id = 1 AND product_id = 1
+);
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 1);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 2, 1);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 1);
+INSERT INTO cart_item (member_id, product_id, quantity)
+SELECT 1, 2, 4
+WHERE NOT EXISTS (
+  SELECT 1 FROM cart_item WHERE member_id = 1 AND product_id = 2
+);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+SELECT 1, 3, 5
+WHERE NOT EXISTS (
+  SELECT 1 FROM cart_item WHERE member_id = 1 AND product_id = 3
+);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+SELECT 2, 1, 1
+WHERE NOT EXISTS (
+  SELECT 1 FROM cart_item WHERE member_id = 2 AND product_id = 1
+);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+SELECT 2, 2, 1
+WHERE NOT EXISTS (
+  SELECT 1 FROM cart_item WHERE member_id = 2 AND product_id = 2
+);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+SELECT 2, 3, 1
+WHERE NOT EXISTS (
+  SELECT 1 FROM cart_item WHERE member_id = 2 AND product_id = 3
+);
