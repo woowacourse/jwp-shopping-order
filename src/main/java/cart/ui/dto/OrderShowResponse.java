@@ -8,7 +8,7 @@ import java.util.List;
 public class OrderShowResponse {
 
     private Long id;
-    private List<OrderItemDto> orderItems;
+    private List<OrderItemDto> orderedItems;
     private LocalDateTime orderedAt;
     private int totalItemDiscountAmount;
     private int totalMemberDiscountAmount;
@@ -19,7 +19,7 @@ public class OrderShowResponse {
 
     public OrderShowResponse(
             final Long id,
-            final List<OrderItemDto> orderItems,
+            final List<OrderItemDto> orderedItems,
             final LocalDateTime orderedAt,
             final int totalItemDiscountAmount,
             final int totalMemberDiscountAmount,
@@ -29,7 +29,7 @@ public class OrderShowResponse {
             final int totalPrice
     ) {
         this.id = id;
-        this.orderItems = orderItems;
+        this.orderedItems = orderedItems;
         this.orderedAt = orderedAt;
         this.totalItemDiscountAmount = totalItemDiscountAmount;
         this.totalMemberDiscountAmount = totalMemberDiscountAmount;
@@ -61,8 +61,8 @@ public class OrderShowResponse {
         return id;
     }
 
-    public List<OrderItemDto> getOrderItems() {
-        return orderItems;
+    public List<OrderItemDto> getOrderedItems() {
+        return orderedItems;
     }
 
     public LocalDateTime getOrderedAt() {
