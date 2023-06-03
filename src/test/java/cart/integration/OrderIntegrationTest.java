@@ -61,7 +61,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(ORDER_REQUEST_WITH_COUPON)
+                .body(ORDER_REQUEST_WITHOUT_COUPON)
                 .when()
                 .post("/orders")
                 .then()
