@@ -1,14 +1,12 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.product.Product;
 import cart.dto.history.OrderedProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import cart.exception.CartItemNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CartItems {
@@ -21,44 +19,6 @@ public class CartItems {
         this.cartItems = cartItems;
     }
 
-    public CartItem add(final Product product) {
-        Optional<CartItem> cartItem = cartItems.stream()
-                .filter(item -> item.hasProduct(product))
-                .findAny();
-
-        if (cartItem.isPresent()) {
-            CartItem insertItem = cartItem.get();
-            insertItem.addQuantity();
-            return insertItem;
-        }
-
-        CartItem insertItem = new CartItem(product);
-        cartItems.add(insertItem);
-        return insertItem;
-    }
-
-    public void remove(final CartItem cartItem) {
-        cartItems.remove(cartItem);
-    }
-
-    public void changeQuantity(final long cartItemId, final int quantity) {
-        CartItem cartItem = findCartItemByCartItemId(cartItemId);
-
-        if (quantity == EMPTY_COUNT) {
-            this.remove(cartItem);
-            return;
-        }
-
-        cartItem.changeQuantity(quantity);
-    }
-
-    private CartItem findCartItemByCartItemId(final long cartItemId) {
-        return cartItems.stream()
-                .filter(item -> item.isSame(cartItemId))
-                .findAny()
-                .orElseThrow(CartItemNotFoundException::new);
-    }
-
     public void validateBuyingProduct(final List<Long> productIds, final List<Integer> quantities) {
         for (int i = 0; i < productIds.size(); i++) {
             Long productId = productIds.get(i);
@@ -67,17 +27,6 @@ public class CartItems {
 
             cartItem.validateQuantity(quantities.get(i));
         }
-    }
-
-    public boolean hasCartItem(final CartItem cartItem) {
-        return cartItems.stream()
-                .anyMatch(item -> item.isSame(cartItem.getId()));
-    }
-
-    public int getTotalOriginPrice() {
-        return cartItems.stream()
-                .mapToInt(CartItem::getOriginPrice)
-                .sum();
     }
 
     public List<ProductPriceAppliedAllDiscountResponse> getProductPricesAppliedAllDiscount(final List<Coupon> usingCoupons) {

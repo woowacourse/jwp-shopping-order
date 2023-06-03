@@ -25,10 +25,6 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public boolean hasProduct(final Product product) {
-        return this.product.equals(product);
-    }
-
     public void validateQuantity(final int quantity) {
         if (this.quantity < quantity) {
             throw new QuantityExceedsCartException();

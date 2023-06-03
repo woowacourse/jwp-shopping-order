@@ -6,6 +6,7 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
+import cart.exception.MemberNotOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import static cart.fixture.CartItemFixture.createCartItem;
 import static cart.fixture.MemberFixture.createMember;
 import static cart.fixture.ProductFixture.createProduct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -93,6 +95,24 @@ public class CartServiceUnitTest {
 
         // then
         verify(cartRepository).updateCartItemQuantity(any(CartItem.class), eq(req.getQuantity()));
+    }
+
+    @DisplayName("멤버가 일치하지 않으면 예외를 발생시킨다.")
+    @Test
+    void throws_exception_when_member_not_equals() {
+        // given
+        Member member = createMember();
+        Cart cart = createCart();
+        CartItem cartItem = createCartItem();
+        CartItemQuantityUpdateRequest req = new CartItemQuantityUpdateRequest(100);
+
+        given(cartRepository.findCartItemById(any())).willReturn(cartItem);
+        given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
+        given(cartRepository.hasCartItem(cart, cartItem)).willReturn(false);
+
+        // when & then
+        assertThatThrownBy(() -> cartService.updateQuantity(member, 1L, req))
+                .isInstanceOf(MemberNotOwnerException.class);
     }
 
     @DisplayName("아이템을 제거한다.")

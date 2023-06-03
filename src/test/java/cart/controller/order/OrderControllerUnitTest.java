@@ -10,7 +10,6 @@ import cart.dto.order.OrdersResponse;
 import cart.repository.coupon.CouponRepository;
 import cart.repository.member.MemberRepository;
 import cart.service.order.OrderService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,14 +58,9 @@ public class OrderControllerUnitTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private Member member;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @BeforeEach
-    void init() throws Exception {
-        member = createMember();
+    void init() {
+        Member member = createMember();
         member.initCoupons(createCoupons());
 
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
@@ -78,7 +72,6 @@ public class OrderControllerUnitTest {
     @Test
     void find_all_orders() throws Exception {
         // given
-
         OrderHistory orderHistory = new OrderHistory(
                 1L,
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),

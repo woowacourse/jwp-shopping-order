@@ -1,7 +1,6 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupons;
-import cart.domain.product.Product;
 import cart.dto.history.OrderedProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -17,73 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 class CartTest {
-
-    @DisplayName("카트에 아이템을 추가한다.")
-    @Test
-    void add_item_success() {
-        // given
-        Cart cart = createCart();
-
-        // when
-        cart.addItem(new Product(3L, "족발", 10000, "", false, 0));
-
-        // then
-        assertThat(cart.getCartItems().size()).isEqualTo(3);
-    }
-
-    @DisplayName("카트에 아이템을 제거한다.")
-    @Test
-    void delete_item_success() {
-        // given
-        Cart cart = createCart();
-        CartItem cartItem = cart.getCartItems().get(0);
-
-        // when
-        cart.removeItem(cartItem);
-
-        // then
-        assertThat(cart.getCartItems().size()).isEqualTo(1);
-    }
-
-    @DisplayName("장바구니에 상품 수량을 변경한다.")
-    @Test
-    void update_quantity() {
-        // given
-        Cart cart = createCart();
-
-        // when
-        cart.changeQuantity(1, 20);
-
-        // then
-        assertThat(cart.getCartItems().get(0).getQuantity()).isEqualTo(20);
-    }
-
-    @DisplayName("장바구니에 아이템이 존재하는지 확인한다.")
-    @Test
-    void check_is_exist_item() {
-        // given
-        Cart cart = createCart();
-        CartItem cartItem = cart.getCartItems().get(0);
-
-        // when
-        boolean result = cart.hasCartItem(cartItem);
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @DisplayName("장바구니에 담긴 상품의 가격을 조회한다. (할인 전 가격)")
-    @Test
-    void returns_origin_prices_of_products() {
-        // given
-        Cart cart = createCart();
-
-        // when
-        int price = cart.calculateOriginPrice();
-
-        // then
-        assertThat(price).isEqualTo(30000);
-    }
 
     @DisplayName("쿠폰 적용 후 배달료를 계산한다.")
     @Test
