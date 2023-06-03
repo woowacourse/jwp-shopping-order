@@ -16,7 +16,7 @@ public class Points implements Iterable<Point> {
                 .collect(Collectors.toList());
     }
 
-    public Points getUsablePoints(Point usePoint) {
+    public Points getUsePoints(Point usePoint) {
         validate(usePoint);
         List<Point> usablePoint = new ArrayList<>();
         for (Point point : points) {
@@ -41,7 +41,7 @@ public class Points implements Iterable<Point> {
     private void validate(Point usePoint) {
         Point totalPoint = Point.from(getTotalPoints());
         if (usePoint.isGreaterThan(totalPoint)) {
-            throw new OrderException("사용할 수 있는 포인트보다 더 많은 포인트를 사용했습니다.");
+            throw new OrderException("사용가능한 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
         }
     }
 
@@ -53,6 +53,26 @@ public class Points implements Iterable<Point> {
 
     public List<Point> getPoints() {
         return points;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Points points1 = (Points) o;
+        return Objects.equals(points, points1.points);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(points);
+    }
+
+    @Override
+    public String toString() {
+        return "Points{" +
+                "points=" + points +
+                '}';
     }
 
     @Override

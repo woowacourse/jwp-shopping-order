@@ -1,7 +1,7 @@
 package cart;
 
 import cart.dao.MemberDao;
-import cart.domain.OrderPage;
+import cart.domain.*;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,5 +29,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public OrderPage getOrderPage() {
         return new OrderPage(LIMIT);
+    }
+
+    @Bean
+    public PointExpirePolicy getPointExpirePolicy() {
+        return new OrderPointExpirePolicy();
+    }
+
+    @Bean
+    public PointAccumulationPolicy getPointAccumulationPolicy() {
+        return new OrderPointAccumulationPolicy(getPointExpirePolicy());
     }
 }
