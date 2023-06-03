@@ -16,7 +16,7 @@ public class OrderCouponRepositoryImpl implements OrderCouponRepository {
 
     @Override
     public void saveOrderCoupon(Long orderId, Order order) {
-        if (DiscountType.NONE.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
+        if (DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
             return;
         }
         orderCouponDao.saveOrderCoupon(orderId, order.getCoupon().getId());

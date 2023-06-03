@@ -34,7 +34,7 @@ class OrderCouponRepositoryTest {
         Member member = new Member(1L, "a@a", "123");
         Coupon coupon = couponRepository.findAllCoupons().get(0);
         Order order = new Order(member, List.of(new CartItem(member, new Product("오션", 10000, "ocean.com"))), coupon);
-        couponRepository.publishUserCoupon(member, 1L);
+        couponRepository.publishUserCoupon(member, coupon.getId());
         Long orderId = orderRepository.saveOrder(order);
         assertDoesNotThrow(() -> orderCouponRepository.saveOrderCoupon(orderId, order));
     }

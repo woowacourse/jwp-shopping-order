@@ -55,7 +55,7 @@ class MemberCouponRepositoryTest {
 
         memberCouponRepository.changeUserUsedCouponAvailability(coupon);
 
-        assertThat(memberCouponRepository.findAvailableCouponByMember(member, couponId)).usingRecursiveComparison().isEqualTo(Coupon.empty());
+        assertThat(memberCouponRepository.findAvailableCouponByMember(member, couponId)).usingRecursiveComparison().isEqualTo(Coupon.EMPTY);
     }
 
     @Test

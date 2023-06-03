@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.domain.coupon.DiscountType;
+
 public class CouponEntity {
     private final Long id;
     private final String name;
@@ -9,8 +11,8 @@ public class CouponEntity {
     private final Double discountRate;
 
     public static final CouponEntity EMPTY = new CouponEntity(
-            null,
-            "", "", 0, 0, 0.0
+            null,"", DiscountType.EMPTY_DISCOUNT.getTypeName(),
+            0, 0, 0.0
     );
 
     public CouponEntity(String name, String discountType, Integer minimumPrice, Integer discountPrice, Double discountRate) {

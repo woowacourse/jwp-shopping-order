@@ -51,7 +51,7 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
 
     @Override
     public Coupon publishBonusCoupon(Long id, Member member) {
-        Coupon coupon = toDomain(couponDao.findCouponByName(toEntity(Coupon.bonusCoupon())).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다.")));
+        Coupon coupon = toDomain(couponDao.findCouponByName(toEntity(Coupon.BONUS_COUPON)).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다.")));
         Long userCouponId = memberCouponDao.createUserCoupon(new MemberCouponEntity(coupon.getId(), member.getId(), true));
         return new Coupon(userCouponId, coupon.getName(),
                 DiscountType.from(coupon.getCouponTypes().getCouponTypeName()),
@@ -68,7 +68,7 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
 
     private Coupon toDomain(CouponEntity entity) {
         if (entity.equals(CouponEntity.EMPTY)) {
-            return Coupon.empty();
+            return Coupon.EMPTY;
         }
         CouponTypes couponType = DiscountType.from(entity.getDiscountType());
         return new Coupon(entity.getId(), entity.getName(), couponType,

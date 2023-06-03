@@ -3,7 +3,7 @@ package cart.domain.coupon;
 
 import cart.exception.CouponException;
 
-public class PriceDiscount implements CouponTypes {
+public class DeductionDiscount implements CouponTypes {
     private static final int MINIMUM = 0;
 
     @Override
@@ -16,7 +16,6 @@ public class PriceDiscount implements CouponTypes {
 
     @Override
     public String getCouponTypeName() {
-        return DiscountType.reductionDiscount.getTypeName();
+        return DiscountType.DEDUCTION_DISCOUNT.getTypeName();
     }
-
 }

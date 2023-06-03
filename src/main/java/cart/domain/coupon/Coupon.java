@@ -3,7 +3,6 @@ package cart.domain.coupon;
 import java.util.Objects;
 
 public class Coupon {
-    private static final int MINIMUM_NAME_LENGTH = 1;
     private final Long id;
     private final String name;
     private final CouponTypes couponTypes;
@@ -11,23 +10,11 @@ public class Coupon {
     private final int discountPrice;
     private final double discountRate;
 
-    public static Coupon empty() {
-        return new Coupon(
-                null,
-                "",
-                new EmptyDiscount()
-                , 0, 0, 0
-        );
-    }
+    public static Coupon EMPTY =
+            new Coupon(null,"",DiscountType.EMPTY_DISCOUNT.getType(),0,0,0);
 
-    public static Coupon bonusCoupon() {
-        return new Coupon(
-                null,
-                "주문확정_1000원_할인_보너스쿠폰",
-                new PriceDiscount(),
-                5000, 1000, 0
-        );
-    }
+    public static Coupon BONUS_COUPON = new Coupon(null,
+            "주문확정_1000원_할인_보너스쿠폰", DiscountType.DEDUCTION_DISCOUNT.getType(), 5000, 1000, 0);
 
     public Coupon(String name, CouponTypes couponTypes, int minimumPrice, int discountPrice, double discountRate) {
         this(null, name, couponTypes, minimumPrice, discountPrice, discountRate);

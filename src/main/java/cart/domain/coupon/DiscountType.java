@@ -6,9 +6,9 @@ import cart.exception.CouponException;
 import java.util.Arrays;
 
 public enum DiscountType {
-    percentDiscount("percentage", new PercentDiscount()),
-    reductionDiscount("deduction", new PriceDiscount()),
-    NONE("none", new EmptyDiscount());
+    PERCENT_DISCOUNT("percentage", new PercentageDiscount()),
+    DEDUCTION_DISCOUNT("deduction", new DeductionDiscount()),
+    EMPTY_DISCOUNT("", new EmptyDiscount());
 
     private final String typeName;
     private final CouponTypes type;
@@ -19,9 +19,6 @@ public enum DiscountType {
     }
 
     public static CouponTypes from(String input) {
-        if(input.equals(Coupon.empty().getName())){
-            return new EmptyDiscount();
-        }
         return Arrays.stream(DiscountType.values())
                 .filter(it -> it.typeName.equalsIgnoreCase(input))
                 .map(it -> it.type)

@@ -9,7 +9,7 @@ public class EmptyDiscount implements CouponTypes {
 
     @Override
     public String getCouponTypeName() {
-        return DiscountType.NONE.getTypeName();
+        return DiscountType.EMPTY_DISCOUNT.getTypeName();
     }
 }
 

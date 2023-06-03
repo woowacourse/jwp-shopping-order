@@ -45,7 +45,7 @@ class OrderRepositoryTest {
         Long 카트_바다 = cartItemRepository.save(new CartItem(member, productRepository.getProductById(바다)));
         List<CartItem> cartItems = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
-        assertDoesNotThrow(() -> orderRepository.saveOrder(new Order(member, cartItems, Coupon.empty())));
+        assertDoesNotThrow(() -> orderRepository.saveOrder(new Order(member, cartItems, Coupon.EMPTY)));
     }
 
     @Test
@@ -67,8 +67,8 @@ class OrderRepositoryTest {
         Long 카트_동해 = cartItemRepository.save(cartItem3);
         Long 카트_서해 = cartItemRepository.save(cartItem4);
         List<CartItem> cartItems2 = List.of(cartItemRepository.findById(카트_동해), cartItemRepository.findById(카트_서해));
-        Order order1 = new Order(member, cartItems1, Coupon.empty());
-        Order order2 = new Order(member, cartItems2, Coupon.empty());
+        Order order1 = new Order(member, cartItems1, Coupon.EMPTY);
+        Order order2 = new Order(member, cartItems2, Coupon.EMPTY);
         Long orderId1 = orderRepository.saveOrder(order1);
         Long orderId2 = orderRepository.saveOrder(order2);
         orderProductRepository.saveOrderProductsByOrderId(orderId1,order1);
@@ -100,7 +100,7 @@ class OrderRepositoryTest {
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
-        Order requestOrder = new Order(member, cartItems1, Coupon.empty());
+        Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.saveOrder(requestOrder);
         orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
 
@@ -125,7 +125,7 @@ class OrderRepositoryTest {
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
-        Order requestOrder = new Order(member, cartItems1, Coupon.empty());
+        Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.saveOrder(requestOrder);
         orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
 
@@ -144,7 +144,7 @@ class OrderRepositoryTest {
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
-        Order requestOrder = new Order(member, cartItems1, Coupon.empty());
+        Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.saveOrder(requestOrder);
         orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
 

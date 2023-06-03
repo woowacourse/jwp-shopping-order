@@ -2,7 +2,7 @@ package cart.domain.coupon;
 
 import cart.exception.CouponException;
 
-public class PercentDiscount implements CouponTypes {
+public class PercentageDiscount implements CouponTypes {
 
     @Override
     public int calculatePrice(int totalPrice, int minimumPrice, int discountPrice, double discountRate) {
@@ -15,7 +15,7 @@ public class PercentDiscount implements CouponTypes {
 
     @Override
     public String getCouponTypeName() {
-        return DiscountType.percentDiscount.getTypeName();
+        return DiscountType.PERCENT_DISCOUNT.getTypeName();
     }
 
 

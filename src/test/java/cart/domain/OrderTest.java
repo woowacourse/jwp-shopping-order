@@ -47,7 +47,7 @@ class OrderTest {
         Member member = new Member(1L, "ocean@ocena", "1234");
         Product product = new Product("오션", 10000, "ocean");
         CartItem cartItem = new CartItem(member, product);
-        Coupon coupon = new Coupon("50%할인쿠폰", DiscountType.percentDiscount.getType(), 0, 0, 0.5);
+        Coupon coupon = new Coupon("50%할인쿠폰", DiscountType.PERCENT_DISCOUNT.getType(), 0, 0, 0.5);
         Order order = new Order(member, List.of(cartItem), coupon);
         assertThat(order.calculateDiscountPrice()).isEqualTo(5000);
     }
