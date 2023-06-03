@@ -33,7 +33,7 @@ public class MemberApiController {
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "회원 정보 조회 실패 - 권한이 없음",
+            description = "인증 실패",
             content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
         )
     })

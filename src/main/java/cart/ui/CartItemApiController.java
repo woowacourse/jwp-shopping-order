@@ -36,10 +36,17 @@ public class CartItemApiController {
     }
 
     @Operation(summary = "장바구니 상품 조회", description = "장바구니의 상품을 조회한다.")
-    @ApiResponse(
-        responseCode = "200",
-        description = "장바구니 상품 조회 성공"
-    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "장바구니 상품 조회 성공"
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        )
+    })
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
@@ -48,12 +55,17 @@ public class CartItemApiController {
     @Operation(summary = "장바구니 상품 추가", description = "장바구니에 상품을 추가한다.")
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "201",
+            responseCode = "200",
             description = "장바구니 상품 추가 성공"
         ),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "400",
             description = "장바구니 상품 추가 실패",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
             content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
         )
     })
@@ -71,8 +83,18 @@ public class CartItemApiController {
             description = "장바구니 상품 수량 수정 성공"
         ),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "400",
             description = "장바구니 상품 수량 수정 실패",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "권한 없음",
             content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
         )
     })
@@ -91,8 +113,18 @@ public class CartItemApiController {
             description = "장바구니 상품 삭제 성공"
         ),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "400",
             description = "장바구니 상품 삭제 실패",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "권한 없음",
             content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
         )
     })

@@ -2,5 +2,5 @@ package cart.exception;
 
 public enum ExceptionType {
     LOGIN_FAIL,
-    FORBIDDEN, UNAUTHORIZED
+    FORBIDDEN, PRODUCT_NO_EXIST, INVALID_FORM, UNAUTHORIZED
 }

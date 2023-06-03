@@ -9,6 +9,8 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
+import cart.exception.BadRequestException;
+import cart.exception.ExceptionType;
 
 @Service
 public class ProductService {
@@ -26,6 +28,9 @@ public class ProductService {
 
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
+        if (product == null) {
+            throw new BadRequestException(ExceptionType.PRODUCT_NO_EXIST);
+        }
         return ProductResponse.of(product);
     }
 
@@ -36,12 +41,21 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
+        Product product = productDao.getProductById(productId);
+        if (product == null) {
+            throw new BadRequestException(ExceptionType.PRODUCT_NO_EXIST);
+        }
+
+        Product newProduct = new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        productDao.updateProduct(productId, newProduct);
     }
 
     public void deleteProduct(Long productId) {
+        Product product = productDao.getProductById(productId);
+        if (product == null) {
+            throw new BadRequestException(ExceptionType.PRODUCT_NO_EXIST);
+        }
         productDao.deleteProduct(productId);
     }
 }
