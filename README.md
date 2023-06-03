@@ -22,7 +22,7 @@
 ### discount
 | HTTP Method | URL                                           | 설명       | HTTP Status |
 |-------------|-----------------------------------------------|----------|-------------|
-| get         | /discount?price=price&memberGrade=memberGrade | 최단 경로 조회 | 200         |
+| get         | /discount?price=price&memberGrade=memberGrade | 할인 정보 조회 | 200         |
 
 ### member
 | HTTP Method | URL      | 설명          | HTTP Status |
