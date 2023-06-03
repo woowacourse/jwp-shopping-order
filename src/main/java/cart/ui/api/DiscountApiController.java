@@ -20,8 +20,8 @@ public class DiscountApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DiscountResponse>> getDiscountedPrice(@RequestParam("price") final int price, @RequestParam("memberGrade") final String grade) {
-        final List<DiscountResponse> discountResponses = discountService.getPrice(price, grade);
+    public ResponseEntity<List<DiscountResponse>> getDiscount(@RequestParam("price") final int price, @RequestParam("memberGrade") final String grade) {
+        final List<DiscountResponse> discountResponses = discountService.getDiscount(price, grade);
         return ResponseEntity.ok(discountResponses);
     }
 }
