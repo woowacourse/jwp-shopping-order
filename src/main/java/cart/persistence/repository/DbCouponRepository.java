@@ -5,6 +5,7 @@ import cart.domain.coupon.CouponRepository;
 import cart.exception.NoSuchCouponException;
 import cart.persistence.dao.CouponDao;
 import cart.persistence.entity.CouponEntity;
+import cart.persistence.mapper.CouponMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,37 +23,23 @@ public class DbCouponRepository implements CouponRepository {
     public List<Coupon> findAll() {
         List<CouponEntity> couponEntities = couponDao.findAll();
         return couponEntities.stream()
-                .map(this::mapToCoupon)
+                .map(CouponMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Coupon findById(Long id) {
         CouponEntity couponEntity = couponDao.findById(id).orElseThrow(() -> new NoSuchCouponException());
-        return mapToCoupon(couponEntity);
+        return CouponMapper.toDomain(couponEntity);
     }
 
     @Override
     public Long add(Coupon coupon) {
-        return couponDao.add(mapToCouponEntity(coupon));
+        return couponDao.add(CouponMapper.toEntity(coupon));
     }
 
     @Override
     public void delete(Long id) {
         couponDao.delete(id);
-    }
-
-    public CouponEntity mapToCouponEntity(Coupon coupon) {
-        return new CouponEntity(
-                coupon.getId(),
-                coupon.getName(),
-                coupon.getDiscountType().getName(),
-                coupon.getDiscountPercent(),
-                coupon.getDiscountAmount(),
-                coupon.getMinimumPrice());
-    }
-
-    public Coupon mapToCoupon(CouponEntity couponEntity) {
-        return CouponMapper.mapToCoupon(couponEntity);
     }
 }

@@ -1,7 +1,10 @@
 package cart.persistence.repository;
 
-import cart.domain.*;
 import cart.domain.coupon.Coupon;
+import cart.domain.order.Order;
+import cart.domain.order.OrderRepository;
+import cart.domain.orderProduct.OrderProduct;
+import cart.domain.product.Product;
 import cart.exception.NoSuchCouponException;
 import cart.exception.NoSuchMemberException;
 import cart.exception.NoSuchOrderException;
@@ -11,6 +14,8 @@ import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
 import cart.persistence.entity.OrderProductEntity;
+import cart.persistence.mapper.CouponMapper;
+import cart.persistence.mapper.MemberMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -65,30 +70,24 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
         return orderDao.update(mapToOrderEntity(order));
     }
 
+    private OrderProduct mapToOrderProduct(OrderProductEntity orderProductEntity) {
+        Product product = productDao.getProductById(orderProductEntity.getProductId()).orElseThrow(() -> new NoSuchProductException());
+        return new OrderProduct(
+                orderProductEntity.getId(),
+                orderProductEntity.getName(),
+                orderProductEntity.getPrice(),
+                orderProductEntity.getImageUrl(),
+                orderProductEntity.getQuantity(),
+                product);
+    }
+
     private Order mapToOrder(OrderEntity orderEntity) {
         List<OrderProductEntity> orderProductEntities = orderProductDao.findOrderProductsByOrderId(orderEntity.getId());
-        List<OrderProduct> orderProducts = orderProductEntities.stream() // TODO entity to model 로직 개선 필요
-                .map(orderProductEntity -> {
-                    Product product = productDao.getProductById(orderProductEntity.getProductId()).orElseThrow(() -> new NoSuchProductException()); // TODO
-                    return new OrderProduct(
-                            orderProductEntity.getId(),
-                            orderProductEntity.getName(),
-                            orderProductEntity.getPrice(),
-                            orderProductEntity.getImageUrl(),
-                            orderProductEntity.getQuantity(),
-                            product);
-                }).collect(Collectors.toList());
+        List<OrderProduct> orderProducts = orderProductEntities.stream()
+                .map(this::mapToOrderProduct)
+                .collect(Collectors.toList());
 
-
-        // TODO coupon null처리
-        Coupon coupon = null;
-        try {
-            CouponEntity couponEntity = couponDao.findById(orderEntity.getUsedCouponId()).orElseThrow(() -> new NoSuchCouponException());
-            coupon = CouponMapper.mapToCoupon(couponEntity);
-        } catch (NoSuchCouponException exception) {
-            coupon = null;
-        }
-
+        Coupon coupon = getUsedCoupon(orderEntity);
         MemberEntity memberEntity = memberDao.findById(orderEntity.getMemberId()).orElseThrow(() -> new NoSuchMemberException());
         return new Order(
                 orderEntity.getId(),
@@ -97,8 +96,19 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
                 orderProducts,
                 coupon,
                 orderEntity.getConfirmState(),
-                new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword())
+                MemberMapper.toDomain(memberEntity)
         );
+    }
+
+    private Coupon getUsedCoupon(OrderEntity orderEntity) {
+        Coupon coupon = null;
+        try {
+            CouponEntity couponEntity = couponDao.findById(orderEntity.getUsedCouponId()).orElseThrow(() -> new NoSuchCouponException());
+            coupon = CouponMapper.toDomain(couponEntity);
+        } catch (NoSuchCouponException exception) {
+            coupon = null;
+        }
+        return coupon;
     }
 
     private OrderEntity mapToOrderEntity(Order order) {

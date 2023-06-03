@@ -1,6 +1,5 @@
 package cart.persistence.repository;
 
-import cart.domain.Member;
 import cart.domain.memberCoupon.MemberCoupon;
 import cart.domain.memberCoupon.MemberCouponRepository;
 import cart.exception.NoSuchCouponException;
@@ -12,6 +11,8 @@ import cart.persistence.dao.MemberDao;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
+import cart.persistence.mapper.CouponMapper;
+import cart.persistence.mapper.MemberMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class DbMemberCouponRepository implements MemberCouponRepository {
     }
 
     @Override
-    public MemberCoupon findByCouponId(Long couponId) { // TODO findOne null 예외 처리 추가
+    public MemberCoupon findByCouponId(Long couponId) {
         MemberCouponEntity memberCouponEntity = memberCouponDao.findOneByCouponId(couponId).orElseThrow(() -> new NoSuchMemberCouponException());
         return mapToMemberCoupon(memberCouponEntity);
     }
@@ -80,8 +81,8 @@ public class DbMemberCouponRepository implements MemberCouponRepository {
 
         return new MemberCoupon(
                 memberCouponEntity.getId(),
-                new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword()), // TODO mapper 방식 개선 필요
-                CouponMapper.mapToCoupon(couponEntity)
+                MemberMapper.toDomain(memberEntity),
+                CouponMapper.toDomain(couponEntity)
         );
     }
 }

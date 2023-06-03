@@ -1,10 +1,11 @@
 package cart.persistence.repository;
 
-import cart.domain.Member;
-import cart.domain.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import cart.exception.NoSuchMemberException;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.entity.MemberEntity;
+import cart.persistence.mapper.MemberMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,42 +23,34 @@ public class DbMemberRepository implements MemberRepository {
     public List<Member> findAll() {
         List<MemberEntity> memberEntities = memberDao.findAll();
         return memberEntities.stream()
-                .map(this::mapToMember)
+                .map(MemberMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Member findById(Long id) {
-        MemberEntity memberEntity = memberDao.findById(id).orElseThrow(() -> new NoSuchMemberException()); // TODO null 예외 처리
-        return mapToMember(memberEntity);
+        MemberEntity memberEntity = memberDao.findById(id).orElseThrow(() -> new NoSuchMemberException());
+        return MemberMapper.toDomain(memberEntity);
     }
 
     @Override
     public Member findByEmail(String email) {
         MemberEntity memberEntity = memberDao.findByEmail(email).orElseThrow(() -> new NoSuchMemberException());
-        return mapToMember(memberEntity);
+        return MemberMapper.toDomain(memberEntity);
     }
 
     @Override
     public Long add(Member member) {
-        return memberDao.add(mapToMemberEntity(member));
+        return memberDao.add(MemberMapper.toEntity(member));
     }
 
     @Override
     public Long update(Member member) {
-        return memberDao.update(mapToMemberEntity(member));
+        return memberDao.update(MemberMapper.toEntity(member));
     }
 
     @Override
     public void delete(Long id) {
         memberDao.delete(id);
-    }
-
-    public MemberEntity mapToMemberEntity(Member member) {
-        return new MemberEntity(member.getId(), member.getEmail(), member.getPassword());
-    }
-
-    public Member mapToMember(MemberEntity memberEntity) {
-        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 }

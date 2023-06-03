@@ -1,4 +1,4 @@
-package cart.persistence.repository;
+package cart.persistence.mapper;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeductionCoupon;
@@ -30,7 +30,18 @@ public enum CouponMapper {
         this.mapper = mapper;
     }
 
-    public static Coupon mapToCoupon(CouponEntity couponEntity) {
+    public static CouponEntity toEntity(Coupon coupon) {
+        return new CouponEntity(
+                coupon.getId(),
+                coupon.getName(),
+                coupon.getDiscountType().getName(),
+                coupon.getDiscountPercent(),
+                coupon.getDiscountAmount(),
+                coupon.getMinimumPrice()
+        );
+    }
+
+    public static Coupon toDomain(CouponEntity couponEntity) {
         CouponMapper couponMapper = CouponMapper.findByTypeName(couponEntity.getDiscountType());
         return couponMapper.map(couponEntity);
     }
