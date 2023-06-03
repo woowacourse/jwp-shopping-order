@@ -2,8 +2,8 @@ package com.woowahan.techcourse.order.db;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowahan.techcourse.order.domain.OrderResult;
-import com.woowahan.techcourse.order.domain.OrderResultFixture;
+import com.woowahan.techcourse.order.domain.Order;
+import com.woowahan.techcourse.order.domain.OrderFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,7 +30,7 @@ class OrderDaoTest {
     void 저장한_이후에_id_를_잘_불러온다() {
         // given
         // when
-        Long result = orderDao.insert(OrderResultFixture.firstOrderResult);
+        Long result = orderDao.insert(OrderFixture.firstOrder);
 
         // then
         assertThat(result).isPositive();
@@ -43,24 +43,24 @@ class OrderDaoTest {
 
         @BeforeEach
         void setUp() {
-            orderId = orderDao.insert(OrderResultFixture.firstOrderResult);
+            orderId = orderDao.insert(OrderFixture.firstOrder);
         }
 
         @Test
         void 저장한_데이터를_잘_불러온다() {
             // given
             // when
-            OrderResult result = orderDao.findById(orderId);
+            Order result = orderDao.findById(orderId);
 
             // then
-            assertThat(result.getId()).isEqualTo(orderId);
+            assertThat(result.getOrderId()).isEqualTo(orderId);
         }
 
         @Test
         void 멤버_id_를_통해_조회할_수_있다() {
             // given
             // when
-            List<OrderResult> result = orderDao.findAllByMemberId(1L);
+            List<Order> result = orderDao.findAllByMemberId(1L);
 
             // then
             assertThat(result).hasSize(1);
@@ -70,7 +70,7 @@ class OrderDaoTest {
         void 없는_멤버일_경우_빈_리스트가_나온다() {
             // given
             // when
-            List<OrderResult> result = orderDao.findAllByMemberId(2L);
+            List<Order> result = orderDao.findAllByMemberId(2L);
 
             // then
             assertThat(result).isEmpty();

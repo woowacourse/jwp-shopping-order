@@ -1,10 +1,7 @@
 package com.woowahan.techcourse.order.service.dto.request;
 
-import com.woowahan.techcourse.order.domain.Order;
-import com.woowahan.techcourse.order.domain.OrderCoupon;
 import com.woowahan.techcourse.order.domain.OrderItem;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,19 +11,19 @@ public class CreateOrderRequestDto {
 
     @NotNull
     @NotEmpty
-    private List<@NotNull CreateOrderCartItem> cartItems;
+    private List<@NotNull CreateOrderCartItemRequestDto> cartItems;
     @NotNull
     private List<@NotNull Long> couponIds;
 
     private CreateOrderRequestDto() {
     }
 
-    public CreateOrderRequestDto(List<CreateOrderCartItem> cartItems, List<Long> couponIds) {
+    public CreateOrderRequestDto(List<CreateOrderCartItemRequestDto> cartItems, List<Long> couponIds) {
         this.cartItems = cartItems;
         this.couponIds = couponIds;
     }
 
-    public List<CreateOrderCartItem> getCartItems() {
+    public List<CreateOrderCartItemRequestDto> getCartItems() {
         return cartItems;
     }
 
@@ -34,29 +31,19 @@ public class CreateOrderRequestDto {
         return couponIds;
     }
 
-    public Order toOrder(long memberId) {
-        List<OrderItem> orderItems = cartItems.stream()
-                .map(CreateOrderCartItem::toOrderItem)
-                .collect(Collectors.toList());
-        List<OrderCoupon> orderCoupons = couponIds.stream()
-                .map(OrderCoupon::new)
-                .collect(Collectors.toList());
-        return new Order(memberId, orderItems, orderCoupons);
-    }
-
-    public static class CreateOrderCartItem {
+    public static class CreateOrderCartItemRequestDto {
 
         @NotNull
         private Long id;
         @Positive
         private Integer quantity;
         @NotNull
-        private CreateOrderProduct product;
+        private CreateOrderRequestDto.CreateOrderCartItemRequestDto.CreateOrderProductRequestDto product;
 
-        private CreateOrderCartItem() {
+        private CreateOrderCartItemRequestDto() {
         }
 
-        public CreateOrderCartItem(Long id, Integer quantity, CreateOrderProduct product) {
+        public CreateOrderCartItemRequestDto(Long id, Integer quantity, CreateOrderProductRequestDto product) {
             this.id = id;
             this.quantity = quantity;
             this.product = product;
@@ -75,11 +62,11 @@ public class CreateOrderRequestDto {
             return quantity;
         }
 
-        public CreateOrderProduct getProduct() {
+        public CreateOrderProductRequestDto getProduct() {
             return product;
         }
 
-        public static class CreateOrderProduct {
+        public static class CreateOrderProductRequestDto {
 
             @NotNull
             private Long id;
@@ -93,14 +80,14 @@ public class CreateOrderRequestDto {
             @NotEmpty
             private String imageUrl;
 
-            public CreateOrderProduct(Long id, Integer price, String name, String imageUrl) {
+            public CreateOrderProductRequestDto(Long id, Integer price, String name, String imageUrl) {
                 this.id = id;
                 this.price = price;
                 this.name = name;
                 this.imageUrl = imageUrl;
             }
 
-            private CreateOrderProduct() {
+            private CreateOrderProductRequestDto() {
             }
 
             public Long getId() {

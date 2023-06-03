@@ -1,6 +1,6 @@
 package com.woowahan.techcourse.order.ui.dto.response;
 
-import com.woowahan.techcourse.order.domain.OrderResult;
+import com.woowahan.techcourse.order.domain.Order;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,7 @@ public class OrdersResponse {
         this.orders = orders;
     }
 
-    public static OrdersResponse from(List<OrderResult> orderResults) {
+    public static OrdersResponse from(List<Order> orderResults) {
         return new OrdersResponse(orderResults.stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toList()));

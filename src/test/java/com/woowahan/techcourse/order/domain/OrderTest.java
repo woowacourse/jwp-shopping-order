@@ -13,13 +13,13 @@ class OrderTest {
     void 총_금액_계산을_정상적으로_수행한다() {
         Order given = OrderFixture.firstOrder;
 
-        assertThat(given.calculateOriginalPrice()).isEqualTo(1000L);
+        assertThat(given.calculateOriginalPrice().longValue()).isEqualTo(1000L);
     }
 
     @Test
     void 총_금액_계산을_정상적으로_수행한다2() {
         Order given = OrderFixture.secondOrder;
 
-        assertThat(given.calculateOriginalPrice()).isEqualTo(4000L);
+        assertThat(given.calculateOriginalPrice().longValue()).isEqualTo(4000L);
     }
 }

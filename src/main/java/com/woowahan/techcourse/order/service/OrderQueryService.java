@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.order.service;
 
 import com.woowahan.techcourse.order.db.OrderDao;
-import com.woowahan.techcourse.order.domain.OrderResult;
+import com.woowahan.techcourse.order.domain.Order;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +16,11 @@ public class OrderQueryService {
         this.orderDao = orderDao;
     }
 
-    public List<OrderResult> findAllByMemberId(long memberId) {
+    public List<Order> findAllByMemberId(long memberId) {
         return orderDao.findAllByMemberId(memberId);
     }
 
-    public OrderResult findById(long orderId) {
+    public Order findById(long orderId) {
         return orderDao.findById(orderId);
     }
 }

@@ -2,6 +2,7 @@ package com.woowahan.techcourse.coupon.domain;
 
 import com.woowahan.techcourse.coupon.exception.CouponException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public final class Money {
@@ -36,7 +37,9 @@ public final class Money {
     }
 
     public Money subtractAmountByPercentage(int percentage) {
-        return new Money(value.subtract(value.divide(new BigDecimal(percentage))));
+        BigDecimal dividedResult = value.divide(new BigDecimal(percentage), RoundingMode.CEILING);
+        BigDecimal resultAmount = value.subtract(dividedResult);
+        return new Money(resultAmount);
     }
 
     public Money add(Money money) {

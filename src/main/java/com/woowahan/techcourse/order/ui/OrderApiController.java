@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.order.ui;
 
 import com.woowahan.techcourse.member.domain.Member;
-import com.woowahan.techcourse.order.domain.OrderResult;
+import com.woowahan.techcourse.order.domain.Order;
 import com.woowahan.techcourse.order.service.OrderCommandService;
 import com.woowahan.techcourse.order.service.OrderQueryService;
 import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto;
@@ -31,13 +31,13 @@ public class OrderApiController {
 
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderResponse> findById(@PathVariable long orderId) {
-        OrderResult result = orderQueryService.findById(orderId);
+        Order result = orderQueryService.findById(orderId);
         return ResponseEntity.ok(OrderResponse.from(result));
     }
 
     @GetMapping("/orders")
     public ResponseEntity<OrdersResponse> findAllByMemberId(Member member) {
-        List<OrderResult> result = orderQueryService.findAllByMemberId(member.getId());
+        List<Order> result = orderQueryService.findAllByMemberId(member.getId());
         return ResponseEntity.ok(OrdersResponse.from(result));
     }
 

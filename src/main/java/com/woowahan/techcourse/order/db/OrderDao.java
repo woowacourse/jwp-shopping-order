@@ -3,7 +3,6 @@ package com.woowahan.techcourse.order.db;
 import com.woowahan.techcourse.order.domain.Order;
 import com.woowahan.techcourse.order.domain.OrderCoupon;
 import com.woowahan.techcourse.order.domain.OrderItem;
-import com.woowahan.techcourse.order.domain.OrderResult;
 import com.woowahan.techcourse.order.exception.OrderNotFoundException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,22 +30,22 @@ public class OrderDao {
         orderItemDao = new OrderItemDao(jdbcTemplate);
     }
 
-    public Long insert(OrderResult orderResult) {
-        MapSqlParameterSource parameters = orderResultToParameters(orderResult);
+    public Long insert(Order order) {
+        MapSqlParameterSource parameters = orderToParameters(order);
         long orderId = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-        orderCouponDao.insertAll(orderId, orderResult.getOrder().getCouponIds());
-        orderItemDao.insertAll(orderId, orderResult.getOrder().getOrderItems());
+        orderCouponDao.insertAll(orderId, order.getCouponIds());
+        orderItemDao.insertAll(orderId, order.getOrderItems());
         return orderId;
     }
 
-    private MapSqlParameterSource orderResultToParameters(OrderResult orderResult) {
+    private MapSqlParameterSource orderToParameters(Order order) {
         return new MapSqlParameterSource()
-                .addValue("member_id", orderResult.getOrder().getMemberId())
-                .addValue("original_price", orderResult.getOriginalPrice())
-                .addValue("actual_price", orderResult.getActualPrice());
+                .addValue("member_id", order.getMemberId())
+                .addValue("original_price", order.getOriginalPrice())
+                .addValue("actual_price", order.getActualPrice());
     }
 
-    public OrderResult findById(long orderId) {
+    public Order findById(long orderId) {
         try {
             return findOrderResultById(orderId);
         } catch (Exception e) {
@@ -54,12 +53,12 @@ public class OrderDao {
         }
     }
 
-    public List<OrderResult> findAllByMemberId(long memberId) {
+    public List<Order> findAllByMemberId(long memberId) {
         return jdbcTemplate.query("SELECT id FROM orders WHERE member_id = ?",
                 (rs, rowNum) -> findById(rs.getLong("id")), memberId);
     }
 
-    private OrderResult findOrderResultById(long orderId) {
+    private Order findOrderResultById(long orderId) {
         List<OrderCoupon> orderCoupons = orderCouponDao.findAllByOrderId(orderId);
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
 
@@ -68,15 +67,15 @@ public class OrderDao {
                 getOrderResultRowMapper(orderCoupons, orderItems), orderId);
     }
 
-    private RowMapper<OrderResult> getOrderResultRowMapper(List<OrderCoupon> orderCoupons,
+    private RowMapper<Order> getOrderResultRowMapper(List<OrderCoupon> orderCoupons,
             List<OrderItem> orderItems) {
-        return (rs, rowNum) -> new OrderResult(
-                rs.getInt("original_price"),
-                rs.getInt("actual_price"), new Order(
+        return (rs, rowNum) -> new Order(
                 rs.getLong("id"),
                 rs.getLong("member_id"),
                 orderItems,
-                orderCoupons
-        ));
+                orderCoupons,
+                rs.getBigDecimal("original_price"),
+                rs.getBigDecimal("actual_price")
+        );
     }
 }

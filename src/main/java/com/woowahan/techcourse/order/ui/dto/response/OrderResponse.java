@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.order.ui.dto.response;
 
+import com.woowahan.techcourse.order.domain.Order;
 import com.woowahan.techcourse.order.domain.OrderItem;
-import com.woowahan.techcourse.order.domain.OrderResult;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,23 +9,23 @@ import java.util.stream.Collectors;
 public class OrderResponse {
 
     private final long id;
-    private final long originalPrice;
+    private final BigDecimal originalPrice;
     private final BigDecimal actualPrice;
     private final List<OrderItemDto> cartItems;
 
-    public OrderResponse(long id, long originalPrice, BigDecimal actualPrice, List<OrderItemDto> cartItems) {
+    public OrderResponse(long id, BigDecimal originalPrice, BigDecimal actualPrice, List<OrderItemDto> cartItems) {
         this.id = id;
         this.originalPrice = originalPrice;
         this.actualPrice = actualPrice;
         this.cartItems = cartItems;
     }
 
-    public static OrderResponse from(OrderResult orderResult) {
+    public static OrderResponse from(Order orderResult) {
         return new OrderResponse(
-                orderResult.getId(),
+                orderResult.getOrderId(),
                 orderResult.getOriginalPrice(),
                 orderResult.getActualPrice(),
-                OrderItemDto.from(orderResult.getOrder().getOrderItems())
+                OrderItemDto.from(orderResult.getOrderItems())
         );
     }
 
@@ -33,7 +33,7 @@ public class OrderResponse {
         return id;
     }
 
-    public long getOriginalPrice() {
+    public BigDecimal getOriginalPrice() {
         return originalPrice;
     }
 

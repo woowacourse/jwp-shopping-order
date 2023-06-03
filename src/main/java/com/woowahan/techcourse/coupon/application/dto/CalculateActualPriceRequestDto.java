@@ -1,5 +1,6 @@
 package com.woowahan.techcourse.coupon.application.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CalculateActualPriceRequestDto {
@@ -22,13 +23,13 @@ public class CalculateActualPriceRequestDto {
 
     public static class OrderRequest {
 
-        private final long originalPrice;
+        private final BigDecimal originalPrice;
 
-        public OrderRequest(long originalPrice) {
+        public OrderRequest(BigDecimal originalPrice) {
             this.originalPrice = originalPrice;
         }
 
-        public long getOriginalPrice() {
+        public BigDecimal getOriginalPrice() {
             return originalPrice;
         }
     }
