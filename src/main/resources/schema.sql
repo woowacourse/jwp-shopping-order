@@ -32,13 +32,13 @@ CREATE TABLE if not exists cart_item (
 
 CREATE TABLE if not exists orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL, ㅌ
-    ordered_at DATETIME NOT NULL default current_timestamp,ㅌ
+    member_id BIGINT NOT NULL,
+    ordered_at DATETIME NOT NULL default current_timestamp,
     total_item_discount_amount INT NOT NULL,
     total_member_discount_amount INT NOT NULL,
-    total_item_price INT NOT NULL, ㅌ
-    discounted_total_item_price INT NOT NULL,ㅌ
-    shipping_fee INT NOT NULL, ㅌ
+    total_item_price INT NOT NULL,
+    discounted_total_item_price INT NOT NULL,
+    shipping_fee INT NOT NULL,
     total_price INT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
