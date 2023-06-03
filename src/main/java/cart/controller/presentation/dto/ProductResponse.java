@@ -11,13 +11,28 @@ public class ProductResponse {
     private boolean isOnSale;
     private int salePrice;
 
-    public ProductResponse(Long id, String name, int price, String imageUrl, boolean isOnSale, int salePrice) {
+    private ProductResponse(Long id, String name, int price, String imageUrl, boolean isOnSale, int salePrice) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.isOnSale = isOnSale;
         this.salePrice = salePrice;
+    }
+
+    public static ProductResponse from(Long id, String name, int price, String imageUrl, boolean isOnSale, int salePrice) {
+        return new ProductResponse(id, name, price, imageUrl, isOnSale, salePrice);
+    }
+
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getDiscountPrice() != 0,
+                product.getDiscountPrice()
+        );
     }
 
     public Long getId() {

@@ -27,7 +27,7 @@ public class CartItemResponse {
     }
 
     public static CartItemResponse from(CartItem cartItem) {
-        final var productResponse = new ProductResponse(
+        final var productResponse = ProductResponse.from(
                 cartItem.getProductId(),
                 cartItem.getName(),
                 cartItem.getOriginalPrice(),

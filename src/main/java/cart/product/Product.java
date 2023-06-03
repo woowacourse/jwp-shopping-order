@@ -3,14 +3,17 @@ package cart.product;
 import java.util.Objects;
 
 public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private int discountPrice;
+    private final String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
+        this.id = null;
         this.name = name;
         this.price = price;
+        this.discountPrice = 0;
         this.imageUrl = imageUrl;
     }
 
@@ -18,7 +21,12 @@ public class Product {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.discountPrice = 0;
         this.imageUrl = imageUrl;
+    }
+
+    public void addDiscountPrice(int discountPrice) {
+        this.discountPrice += discountPrice;
     }
 
     public Long getId() {
@@ -35,6 +43,10 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getDiscountPrice() {
+        return discountPrice;
     }
 
     @Override

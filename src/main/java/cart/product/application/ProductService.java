@@ -1,16 +1,20 @@
 package cart.product.application;
 
+import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.product.Product;
 import cart.controller.presentation.dto.ProductRequest;
 import cart.controller.presentation.dto.ProductResponse;
+import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private SaleService saleService;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -18,12 +22,18 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.getAllProducts();
-        return null;
+        for (Product product : products) {
+            saleService.applySales(product, DiscountTarget.TOTAL);
+        }
+        return products.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.getProductById(productId);
-        return null;
+        saleService.applySales(product);
+        return ProductResponse.from(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {

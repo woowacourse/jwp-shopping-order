@@ -40,16 +40,16 @@ public class CartItem {
         }
     }
 
-    public void addDiscountPrice(int discountPrice) {
-        this.discountPrice += discountPrice;
-    }
-
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
 
     public boolean isOnSale() {
         return this.discountPrice != 0;
+    }
+
+    public void addDiscountPrice(int discountPrice) {
+        this.discountPrice += discountPrice;
     }
 
     public int getDiscountedPrice() {

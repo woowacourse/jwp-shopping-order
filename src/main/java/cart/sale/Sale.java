@@ -2,6 +2,7 @@ package cart.sale;
 
 import cart.cart.Cart;
 import cart.discountpolicy.DiscountPolicy;
+import cart.product.Product;
 
 public class Sale {
     private final Long id;
@@ -16,5 +17,9 @@ public class Sale {
 
     public void apply(Cart cart) {
         this.discountPolicy.discount(cart);
+    }
+
+    public void apply(Product product) {
+        this.discountPolicy.discount(product);
     }
 }
