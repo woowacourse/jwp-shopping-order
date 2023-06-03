@@ -91,7 +91,7 @@ class ProductDaoTest {
         Long id = productDao.save(new ProductEntity("밀리", BigDecimal.valueOf(1_000_000_000), "http://millie.com"));
 
         // when
-        productDao.deleteProduct(id);
+        productDao.deleteById(id);
 
         // then
         Optional<ProductEntity> productEntity = productDao.findById(id);

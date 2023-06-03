@@ -50,7 +50,7 @@ public class ProductRepository {
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productDao.deleteById(productId);
     }
 
 }

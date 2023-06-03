@@ -99,6 +99,6 @@ class ProductRepositoryTest {
         productRepository.deleteProduct(product.getId());
 
         // then
-        verify(productDao, times(1)).deleteProduct(eq(product.getId()));
+        verify(productDao, times(1)).deleteById(eq(product.getId()));
     }
 }

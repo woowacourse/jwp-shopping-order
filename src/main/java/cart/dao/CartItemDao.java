@@ -46,7 +46,7 @@ public class CartItemDao {
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id AND product.is_deleted = false " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.member_id = ? ";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
@@ -78,7 +78,7 @@ public class CartItemDao {
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id AND product.is_deleted = false " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ? ";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));

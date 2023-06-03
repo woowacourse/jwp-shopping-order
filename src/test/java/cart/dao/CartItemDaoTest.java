@@ -71,7 +71,7 @@ class CartItemDaoTest {
         MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
         Long cartItemId = cartItemDao.save(cartItemEntity);
-        productDao.deleteProduct(product.getId());
+        productDao.deleteById(product.getId());
 
         // when
         List<CartItemEntity> cartItems = cartItemDao.findByMemberId(member.getId());

@@ -22,8 +22,7 @@ public class ProductDao {
         String name = rs.getString("name");
         BigDecimal price = rs.getBigDecimal("price");
         String imageUrl = rs.getString("image_url");
-        boolean isDeleted = rs.getBoolean("is_deleted");
-        return new ProductEntity(productId, name, price, imageUrl, isDeleted);
+        return new ProductEntity(productId, name, price, imageUrl);
     });
 
     private final JdbcTemplate jdbcTemplate;
@@ -33,12 +32,12 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findAll() {
-        String sql = "SELECT * FROM product WHERE is_deleted = false";
+        String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Optional<ProductEntity> findById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ? AND is_deleted = false ";
+        String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
         } catch (EmptyResultDataAccessException e) {
@@ -70,8 +69,8 @@ public class ProductDao {
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
-    public void deleteProduct(Long productId) {
-        String sql = "UPDATE product SET is_deleted = true WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM product WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

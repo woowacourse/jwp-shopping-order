@@ -3,8 +3,7 @@ CREATE TABLE product
     id         BIGINT PRIMARY KEY AUTO_INCREMENT,
     name       VARCHAR(255)  NOT NULL,
     price      BIGINT        NOT NULL,
-    image_url  VARCHAR(2048) NOT NULL,
-    is_deleted BOOL DEFAULT false
+    image_url  VARCHAR(2048) NOT NULL
 );
 
 CREATE TABLE member
@@ -39,7 +38,6 @@ CREATE TABLE member_coupon
     member_id    BIGINT    NOT NULL,
     coupon_id    BIGINT    NOT NULL,
     expired_date DATE NOT NULL,
-    is_used      BOOL DEFAULT false,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
     FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
 );
