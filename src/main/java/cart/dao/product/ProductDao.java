@@ -3,6 +3,7 @@ package cart.dao.product;
 import cart.domain.product.Product;
 import cart.entity.product.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,16 @@ public class ProductDao {
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
+            new ProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url"),
+                    rs.getBoolean("isOnSale"),
+                    rs.getInt("salePrice")
+            );
 
     public List<ProductEntity> getAllProducts() {
         String sql = "SELECT * FROM product";
@@ -44,6 +55,11 @@ public class ProductDao {
             int salePrice = rs.getInt("salePrice");
             return new ProductEntity(productId, name, price, imageUrl, isOnSale, salePrice);
         });
+    }
+
+    public ProductEntity findById(final Long productId) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
     public Long createProduct(final Product product) {

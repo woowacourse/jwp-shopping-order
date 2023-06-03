@@ -25,7 +25,7 @@ public class ProductRepository {
     }
 
     public Product findProductById(final long id) {
-        ProductEntity productEntity = productDao.getProductById(id);
+        ProductEntity productEntity = productDao.findById(id);
 
         return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
     }

@@ -482,6 +482,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_멤버_삭제">5.4. 멤버 삭제</a></li>
 </ul>
 </li>
+<li><a href="#_장바구니">6. 장바구니</a>
+<ul class="sectlevel2">
+<li><a href="#_장바구니_전체_조회">6.1. 장바구니 전체 조회</a></li>
+<li><a href="#_장바구니_아이템_추가">6.2. 장바구니 아이템 추가</a></li>
+<li><a href="#_장바구니_품목_수량_변경">6.3. 장바구니 품목 수량 변경</a></li>
+<li><a href="#_장바구니_품목_삭제">6.4. 장바구니 품목 삭제</a></li>
+<li><a href="#_장바구니_품목_전체_삭제">6.5. 장바구니 품목 전체 삭제</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1635,9 +1644,6 @@ Content-Length: 70
 Host: localhost:8080</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>;</p>
-</div>
 </div>
 <div class="sect3">
 <h4 id="_응답_20"><a class="link" href="#_응답_20">5.3.2. 응답</a></h4>
@@ -1684,11 +1690,272 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_장바구니"><a class="link" href="#_장바구니">6. 장바구니</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_장바구니_전체_조회"><a class="link" href="#_장바구니_전체_조회">6.1. 장바구니 전체 조회</a></h3>
+<div class="sect3">
+<h4 id="_요청_22"><a class="link" href="#_요청_22">6.1.1. 요청</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic auth credentials</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /cart-items HTTP/1.1
+Authorization: Basic YUBhLmNvbToxMjM0
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_22"><a class="link" href="#_응답_22">6.1.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 196
+
+[ {
+  "cartItemId" : 1,
+  "quantity" : 10,
+  "product" : {
+    "id" : 1,
+    "name" : "치킨",
+    "price" : 20000,
+    "imageUrl" : "img.img",
+    "isOnSale" : false,
+    "salePrice" : 0
+  }
+} ]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_장바구니_아이템_추가"><a class="link" href="#_장바구니_아이템_추가">6.2. 장바구니 아이템 추가</a></h3>
+<div class="sect3">
+<h4 id="_요청_23"><a class="link" href="#_요청_23">6.2.1. 요청</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic Auth</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /cart-items HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 21
+Host: localhost:8080
+
+{
+  "productId" : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_23"><a class="link" href="#_응답_23">6.2.2. 응답</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/products/{createdId}</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Location: /cart-items/0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_장바구니_품목_수량_변경"><a class="link" href="#_장바구니_품목_수량_변경">6.3. 장바구니 품목 수량 변경</a></h3>
+<div class="sect3">
+<h4 id="_요청_24"><a class="link" href="#_요청_24">6.3.1. 요청</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic Auth</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /cart-items/1 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 21
+Host: localhost:8080
+
+{
+  "quantity" : 10
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_24"><a class="link" href="#_응답_24">6.3.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_장바구니_품목_삭제"><a class="link" href="#_장바구니_품목_삭제">6.4. 장바구니 품목 삭제</a></h3>
+<div class="sect3">
+<h4 id="_요청_25"><a class="link" href="#_요청_25">6.4.1. 요청</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic Auth</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /cart-items/1 HTTP/1.1
+Authorization: Basic YUBhLmNvbToxMjM0
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_25"><a class="link" href="#_응답_25">6.4.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_장바구니_품목_전체_삭제"><a class="link" href="#_장바구니_품목_전체_삭제">6.5. 장바구니 품목 전체 삭제</a></h3>
+<div class="sect3">
+<h4 id="_요청_26"><a class="link" href="#_요청_26">6.5.1. 요청</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic Auth</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /cart-items/1 HTTP/1.1
+Authorization: Basic YUBhLmNvbToxMjM0
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_26"><a class="link" href="#_응답_26">6.5.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-06-01 23:41:30 +0900
+Last updated 2023-06-02 00:59:37 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -234,8 +234,6 @@ include::{snippets}/member-controller-unit-test/find_all_members/http-response.a
 
 include::{snippets}/member-controller-unit-test/find_member/http-request.adoc[]
 
-;
-
 ==== 응답
 
 include::{snippets}/member-controller-unit-test/find_member/http-response.adoc[]
@@ -249,3 +247,61 @@ include::{snippets}/member-controller-unit-test/delete_member/http-request.adoc[
 ==== 응답
 
 include::{snippets}/member-controller-unit-test/delete_member/http-response.adoc[]
+
+== 장바구니
+
+=== 장바구니 전체 조회
+
+==== 요청
+
+include::{snippets}/cart-controller-unit-test/find_all_cart_items/request-headers.adoc[]
+include::{snippets}/cart-controller-unit-test/find_all_cart_items/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/cart-controller-unit-test/find_all_cart_items/http-response.adoc[]
+
+=== 장바구니 아이템 추가
+
+==== 요청
+
+include::{snippets}/cart-controller-unit-test/add_cart_item/request-headers.adoc[]
+include::{snippets}/cart-controller-unit-test/add_cart_item/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/cart-controller-unit-test/add_cart_item/response-headers.adoc[]
+include::{snippets}/cart-controller-unit-test/add_cart_item/http-response.adoc[]
+
+=== 장바구니 품목 수량 변경
+
+==== 요청
+
+include::{snippets}/cart-controller-unit-test/update_quantity/request-headers.adoc[]
+include::{snippets}/cart-controller-unit-test/update_quantity/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/cart-controller-unit-test/update_quantity/http-response.adoc[]
+
+=== 장바구니 품목 삭제
+
+==== 요청
+
+include::{snippets}/cart-controller-unit-test/delete_cart_item/request-headers.adoc[]
+include::{snippets}/cart-controller-unit-test/delete_cart_item/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/cart-controller-unit-test/delete_cart_item/http-response.adoc[]
+
+=== 장바구니 품목 전체 삭제
+
+==== 요청
+
+include::{snippets}/cart-controller-unit-test/delete_all_cart_item/request-headers.adoc[]
+include::{snippets}/cart-controller-unit-test/delete_all_cart_item/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/cart-controller-unit-test/delete_all_cart_item/http-response.adoc[]

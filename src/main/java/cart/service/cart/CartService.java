@@ -30,7 +30,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemResponse> findByMember(final Member member) {
+    public List<CartItemResponse> findAllCartItems(final Member member) {
         return cartRepository.findCartByMemberId(member.getId()).getCartItems().stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());

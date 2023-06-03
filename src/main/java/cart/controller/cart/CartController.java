@@ -31,8 +31,8 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth final Member member) {
-        return ResponseEntity.ok(cartService.findByMember(member));
+    public ResponseEntity<List<CartItemResponse>> findAllCartItems(@Auth final Member member) {
+        return ResponseEntity.ok(cartService.findAllCartItems(member));
     }
 
     @PostMapping
