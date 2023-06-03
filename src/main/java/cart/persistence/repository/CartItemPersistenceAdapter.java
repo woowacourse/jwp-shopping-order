@@ -52,7 +52,7 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
         });
         return cartItems.stream()
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("DB 예외"));
+                .orElseThrow();
     }
 
     @Override

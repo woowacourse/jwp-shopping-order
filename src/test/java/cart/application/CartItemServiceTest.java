@@ -6,6 +6,7 @@ import cart.application.domain.Product;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.ProductRepository;
+import cart.application.service.CartItemService;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.request.CartItemRequest;
 import cart.presentation.dto.response.CartItemResponse;

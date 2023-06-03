@@ -1,7 +1,6 @@
 package cart.presentation.controller;
 
-import cart.application.OrderService;
-import cart.application.domain.Member;
+import cart.application.service.OrderService;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.OrderResponse;

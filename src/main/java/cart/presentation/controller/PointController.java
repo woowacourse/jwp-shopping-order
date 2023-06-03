@@ -1,7 +1,6 @@
 package cart.presentation.controller;
 
-import cart.application.MemberService;
-import cart.application.domain.Member;
+import cart.application.service.MemberService;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
 import org.springframework.http.ResponseEntity;

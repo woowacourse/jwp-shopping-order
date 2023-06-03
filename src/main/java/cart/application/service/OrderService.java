@@ -1,4 +1,4 @@
-package cart.application;
+package cart.application.service;
 
 import cart.application.domain.OrderInfo;
 import cart.application.domain.OrderInfos;
@@ -39,8 +39,7 @@ public class OrderService {
         Member member = memberRepository.findByEmail(authInfo.getEmail());
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
-        order.usePoint();
-        order.earnPoint();
+        order.adjustPoint();
         memberRepository.update(order.getMember());
         Order inserted = orderRepository.insert(order);
         cartItemRepository.deleteByMemberId(member.getId());

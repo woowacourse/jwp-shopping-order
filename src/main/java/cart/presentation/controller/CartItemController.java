@@ -1,7 +1,6 @@
 package cart.presentation.controller;
 
-import cart.application.CartItemService;
-import cart.application.domain.Member;
+import cart.application.service.CartItemService;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.request.CartItemQuantityRequest;
 import cart.presentation.dto.request.CartItemRequest;

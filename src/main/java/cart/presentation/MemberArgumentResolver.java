@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.application.MemberService;
+import cart.application.service.MemberService;
 import cart.application.exception.AuthenticationException;
 import cart.presentation.dto.request.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
