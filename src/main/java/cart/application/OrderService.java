@@ -12,7 +12,6 @@ import cart.presentation.dto.response.OrderDto;
 import cart.presentation.dto.response.OrderResponse;
 import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.SpecificOrderResponse;
-import cart.application.exception.PointExceedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +23,6 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     // TODO: MEMBER 검증로직 추가(service에서 할지, resolver에서 할지)
-    // TODO: 도메인 로직 가능한 캡슐화
-
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
@@ -40,20 +37,11 @@ public class OrderService {
     public long issue(Member member, OrderRequest request) {
         Order order = new Order(null, member, makeOrderInfoFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
-        adjustMemberPoint(member, request);
+        order.adjustPoint();
+        memberRepository.update(order.getMember());
         Order inserted = orderRepository.insert(order);
-        cartItemRepository.deleteById(member.getId());
+        cartItemRepository.deleteByMemberId(member.getId());
         return inserted.getId();
-    }
-
-    private void adjustMemberPoint(Member member, OrderRequest request) {
-        useMemberPoint(member, request.getUsedPoint());
-        long pointToAdd = calculatePointToAdd(makeCartItemsFromRequest(request));
-        long maximumAvailablePoint = calculateMaximumAvailablePoint(makeCartItemsFromRequest(request));
-        if (maximumAvailablePoint < request.getUsedPoint()) {
-            throw new IllegalArgumentException(); // TODO: 예외 변경
-        }
-        addMemberPoint(member, pointToAdd);
     }
 
     private List<OrderInfo> makeOrderInfoFromRequest(Member member, OrderRequest request) {
@@ -78,41 +66,6 @@ public class OrderService {
         Product product = cartItem.getProduct();
         return new OrderInfo(null, product, product.getName(), product.getPrice(),
                 product.getImageUrl(), cartItem.getQuantity());
-    }
-
-    private long calculatePointToAdd(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .filter(cartItem -> cartItem.getProduct().isPointAvailable())
-                .mapToLong(this::calculateMaximumPoint)
-                .sum();
-    }
-
-    private long calculateMaximumPoint(CartItem cartItem) {
-        Product product = cartItem.getProduct();
-        double pointRatio = product.getPointRatio() / 100;
-        long price = product.getPrice() * cartItem.getQuantity();
-        return (long) Math.ceil(pointRatio * price);
-    }
-
-    private void useMemberPoint(Member member, long usedPoint) {
-        if (member.getPoint() - usedPoint < 0) {
-            throw new PointExceedException();
-        }
-        Member updatedMember = new Member(member.getId(), member.getEmail(),
-                member.getPassword(), member.getPoint() - usedPoint);
-        memberRepository.update(updatedMember);
-    }
-
-    private void addMemberPoint(Member member, Long pointToAdd) {
-        Member updatedMember = new Member(member.getId(), member.getEmail(),
-                member.getPassword(), member.getPoint() + pointToAdd);
-        memberRepository.update(updatedMember);
-    }
-
-    private long calculateMaximumAvailablePoint(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .mapToLong(cartItem -> cartItem.getProduct().getPrice() * cartItem.getQuantity())
-                .sum();
     }
 
     @Transactional(readOnly = true)

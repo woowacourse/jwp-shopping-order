@@ -21,6 +21,28 @@ public class Order {
         this.pointToAdd = pointToAdd;
     }
 
+    public void adjustPoint() {
+        usePoint();
+        earnPoint();
+    }
+
+    public void usePoint() {
+        long availablePoint = orderInfo.stream()
+                .mapToLong(OrderInfo::calculateAvailablePoint)
+                .sum();
+        if (availablePoint < usedPoint) {
+            throw new IllegalArgumentException(); // TODO: 예외 변경
+        }
+        member.usePoint(usedPoint);
+    }
+
+    public void earnPoint() {
+        long earnedPoint = orderInfo.stream()
+                .mapToLong(OrderInfo::calculateEarnedPoint)
+                .sum();
+        member.addPoint(earnedPoint);
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,14 @@ public class OrderInfo {
         this.quantity = quantity;
     }
 
+    public long calculateAvailablePoint() {
+        return quantity * product.calculateAvailablePoint();
+    }
+
+    public long calculateEarnedPoint() {
+        return quantity * product.calculatePointToEarn();
+    }
+
     public Long getId() {
         return id;
     }

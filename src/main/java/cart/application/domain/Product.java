@@ -18,6 +18,21 @@ public class Product {
         this.pointAvailable = pointAvailable;
     }
 
+    public long calculateAvailablePoint() {
+        if (pointAvailable) {
+            return price;
+        }
+        return 0;
+    }
+
+    public long calculatePointToEarn() {
+        if (pointAvailable) {
+            double point = pointRatio / 100 * price;
+            return (long) Math.ceil(point);
+        }
+        return 0;
+    }
+
     public Long getId() {
         return id;
     }
