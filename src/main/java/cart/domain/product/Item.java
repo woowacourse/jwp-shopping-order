@@ -10,6 +10,11 @@ public abstract class Item {
         this.product = product;
     }
 
+    public Item(final Product product, final int quantity) {
+        this.quantity = quantity;
+        this.product = product;
+    }
+
     public Item(Long id, int quantity, Product product) {
         this.id = id;
         this.quantity = quantity;

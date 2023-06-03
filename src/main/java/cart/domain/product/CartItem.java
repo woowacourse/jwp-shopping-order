@@ -1,6 +1,7 @@
 package cart.domain.product;
 
 import cart.domain.Member;
+import cart.domain.Money;
 import cart.exception.ItemException;
 
 import java.util.Objects;
@@ -25,10 +26,14 @@ public class CartItem extends Item {
         this.quantity = quantity;
     }
 
-    public final void checkOwner(Member member) {
+    public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new ItemException.IllegalMember(this, member);
         }
+    }
+
+    public Money getTotalPrice() {
+        return new Money(product.getPrice() * quantity);
     }
 
     public Member getMember() {

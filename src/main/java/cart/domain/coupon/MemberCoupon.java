@@ -1,6 +1,7 @@
 package cart.domain.coupon;
 
 import cart.domain.Money;
+import cart.domain.discountpolicy.DiscountPolicy;
 import cart.exception.CouponException;
 
 public class MemberCoupon {
@@ -51,6 +52,10 @@ public class MemberCoupon {
 
     public String getCouponName() {
         return coupon.getName();
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return coupon.getDiscountPolicy();
     }
 
     public Long getId() {
