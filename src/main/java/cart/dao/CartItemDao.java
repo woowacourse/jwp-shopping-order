@@ -102,7 +102,7 @@ public class CartItemDao {
     }
 
     public List<CartItemEntity> findAllByIds(Long memberId, List<Long> cartProductIds) {
-        String sql = "SELECT * FROM cart_item WHERE member_id IN (:memberId) and product_id IN (:cartProductIds)";
+        String sql = "SELECT * FROM cart_item WHERE member_id IN (:memberId) and id IN (:cartProductIds)";
         SqlParameterSource source = new MapSqlParameterSource().addValue("memberId", memberId).addValue("cartProductIds", cartProductIds);
 
         return namedParameterJdbcTemplate.query(sql, source, rowMapper);
