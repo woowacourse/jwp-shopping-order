@@ -8,10 +8,10 @@ public class BasicAuthExtractor {
     private BasicAuthExtractor() {
     }
 
-    public static String[] extractDecodedCredentials(String header) {
+    public static AuthCredentials extractDecodedCredentials(String header) {
         String[] credentials = extractCredentials(header);
         String decodedString = decodeCredentials(credentials);
-        return decodedString.split(":");
+        return new AuthCredentials(decodedString.split(":"));
     }
 
     private static String[] extractCredentials(String header) {

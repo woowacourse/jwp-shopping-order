@@ -12,8 +12,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final int EMAIL_CREDENTIAL_INDEX = 0;
-    private static final int PASSWORD_CREDENTIAL_INDEX = 1;
     private final MemberQueryService memberQueryService;
 
     public MemberArgumentResolver(MemberQueryService memberQueryService) {
@@ -29,14 +27,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        String[] credentials = BasicAuthExtractor.extractDecodedCredentials(authorization);
-        return findUserByCredentials(credentials);
+        AuthCredentials authCredentials = BasicAuthExtractor.extractDecodedCredentials(authorization);
+        return findUserByCredentials(authCredentials);
     }
 
-    private Member findUserByCredentials(String[] credentials) {
-        String email = credentials[EMAIL_CREDENTIAL_INDEX];
-        String password = credentials[PASSWORD_CREDENTIAL_INDEX];
-        return memberQueryService.findByEmailAndPassword(email, password)
+    private Member findUserByCredentials(AuthCredentials authCredentials) {
+        return memberQueryService.findByEmailAndPassword(authCredentials.getEmail(), authCredentials.getPassword())
                 .orElseThrow(AuthenticationException::new);
     }
 }
