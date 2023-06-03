@@ -40,35 +40,45 @@ public class OrderService {
   }
 
   public OrderResponse order(final Member member, final OrderRequest orderRequest) {
-    //Product들 찾기
     final List<CartItemRequest> requestProducts = orderRequest.getProducts();
-    final List<Product> products = requestProducts.stream()
-        .map(product -> productDao.getProductById(product.getProductId())
-            .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다.")))
-        .collect(Collectors.toList());
-    //Coupon 찾기
-    final Coupon coupon = couponDao.findById(orderRequest.getCouponId())
-        .orElseThrow(() -> new BusinessException("찾는 쿠폰이 존재하지 않습니다"));
+    final List<Product> products = findProducts(requestProducts);
+    final Coupon coupon = findCoupon(orderRequest);
 
-    //주문 save
     final Order order = new Order(new Products(products), coupon, new Amount(orderRequest.getDeliveryAmount()),
         orderRequest.getAddress(), member);
     final Long orderId = orderDao.createOrder(order);
+    final List<Integer> quantities = saveProductOrder(requestProducts, products, orderId);
+
+    memberCouponDao.use(member.getId(), coupon.getId());
+
+    final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(products, quantities);
+    
+    return new OrderResponse(orderId, order.calculateTotalProductAmount(quantities).getValue(),
+        order.getDeliveryAmount().getValue(), order.calculateDiscountedAmount(quantities).getValue(),
+        order.getAddress(), orderProductResponses);
+  }
+
+  private List<Integer> saveProductOrder(List<CartItemRequest> requestProducts, List<Product> products, Long orderId) {
     final List<Long> productIds = products.stream().map(Product::getId).collect(Collectors.toList());
     final List<Integer> quantities = requestProducts.stream().map(CartItemRequest::getQuantity)
         .collect(Collectors.toList());
     for (int index = 0; index < productIds.size(); index++) {
       productOrderDao.createProductOrder(productIds.get(index), orderId, quantities.get(index));
     }
+    return quantities;
+  }
 
-    //사용자 쿠폰 used변경
-    memberCouponDao.use(member.getId(), coupon.getId());
+  private Coupon findCoupon(OrderRequest orderRequest) {
+    return couponDao.findById(orderRequest.getCouponId())
+        .orElseThrow(() -> new BusinessException("찾는 쿠폰이 존재하지 않습니다"));
+  }
 
-    //response 생성
-    final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(products, quantities);
-
-    return new OrderResponse(orderId, order.calculateTotalProductAmount(quantities).getValue(), order.getDeliveryAmount().getValue(),
-        order.calculateDiscountedAmount(quantities).getValue(), order.getAddress(), orderProductResponses);
+  private List<Product> findProducts(List<CartItemRequest> requestProducts) {
+    final List<Product> products = requestProducts.stream()
+        .map(product -> productDao.getProductById(product.getProductId())
+            .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다.")))
+        .collect(Collectors.toList());
+    return products;
   }
 
   private List<OrderProductResponse> makeOrderProductResponses(final List<Product> products,
