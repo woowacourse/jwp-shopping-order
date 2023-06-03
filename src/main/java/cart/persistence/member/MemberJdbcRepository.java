@@ -70,12 +70,5 @@ public class MemberJdbcRepository implements MemberRepository {
             return Optional.empty();
         }
     }
-    @Override
-    public Boolean isMemberExist(final String email, final String password) {
-        final String sql = "SELECT EXISTS(SELECT id, name, email, password FROM member WHERE email = ? AND password = ?) AS isExist";
-
-        return jdbcTemplate.queryForObject(sql, booleanRowMapper, email, password);
-    }
-
 }
 

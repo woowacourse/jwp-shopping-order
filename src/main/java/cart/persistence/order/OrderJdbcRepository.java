@@ -54,7 +54,7 @@ public class OrderJdbcRepository implements OrderRepository {
             new OrderDto(
                     rs.getLong("id"),
                     memberRowMapper.mapRow(rs, rowNum),
-                    rs.getInt("paymentPrice"),
+                    rs.getInt("payment_price"),
                     new Point(rs.getInt("point")),
                     rs.getTimestamp("created_at")
             );
@@ -71,7 +71,10 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM order WHERE member_id = ?";
+        final String sql = "SELECT o.*, m.name, m.email, m.password " +
+                "FROM orders o " +
+                "JOIN member m ON o.member_id = m.id " +
+                "WHERE o.member_id = ?";
         List<OrderDto> orderDtos = jdbcTemplate.query(sql, orderDtoRowMapper, memberId);
 
         return orderDtos.stream()
@@ -84,7 +87,10 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public Optional<Order> findByOrderId(final Long memberId, final Long orderId) {
-        final String sql = "SELECT * FROM order WHERE id = ?";
+        final String sql = "SELECT o.*, m.name, m.email, m.password " +
+                "FROM orders o " +
+                "JOIN member m ON o.member_id = m.id " +
+                "WHERE o.id = ?";
         try {
             final OrderDto orderDto = jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId);
             Coupons coupons = couponRepository.findCouponByOrderId(memberId, orderId);

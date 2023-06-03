@@ -76,10 +76,10 @@ public class CouponJdbcRepository implements CouponRepository {
 
     @Override
     public Coupons findCouponByOrderId(final Long memberId, final Long orderId) {
-        String sql = "SELECT c.id, c.name, c.min_amount, c.discount_percent, c.discount_amount" +
-                "FROM member_coupon mc" +
-                "JOIN coupon c ON mc.coupon_id = c.id" +
-                "JOIN ordered_coupon oc ON mc.id = oc.member_coupon_id" +
+        String sql = "SELECT c.id, c.name, c.min_amount, c.discount_percent, c.discount_amount " +
+                "FROM member_coupon mc " +
+                "JOIN coupon c ON mc.coupon_id = c.id " +
+                "JOIN ordered_coupon oc ON mc.id = oc.member_coupon_id " +
                 "WHERE mc.member_id = ? AND oc.order_id = ? AND mc.status = 1;";
         return new Coupons(jdbcTemplate.query(sql, couponRowMapper, memberId, orderId));
     }

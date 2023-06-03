@@ -49,14 +49,14 @@ class MemberJdbcRepositoryTest {
         final Member leo = 레오;
 
         memberRepository.createMember(beaver);
-        memberRepository.createMember(dino);
         memberRepository.createMember(leo);
 
         // when
         final List<Member> members = memberRepository.findAllMembers();
 
         // then
-        assertThat(members).usingRecursiveComparison().ignoringFields("id").isEqualTo(List.of(beaver, dino, leo));
+        assertThat(members.get(0)).usingRecursiveComparison().ignoringFields("id").isEqualTo(beaver);
+        assertThat(members.get(1)).usingRecursiveComparison().ignoringFields("id").isEqualTo(leo);
     }
 
     @Test
@@ -64,33 +64,14 @@ class MemberJdbcRepositoryTest {
     void findMemberByIdTest() {
         // given
         final Member beaver = 비버;
-        final Member dino = 디노;
 
         final Long beaverId = memberRepository.createMember(beaver);
-        final Long dinoId = memberRepository.createMember(dino);
 
         // when
         final Optional<Member> member = memberRepository.findMemberById(beaverId);
 
         // then
         assertThat(member.get()).usingRecursiveComparison().ignoringFields("id").isEqualTo(beaver);
-    }
-
-    @Test
-    @DisplayName("이메일에 따른 사용자 조회")
-    void findMemberByEmailTest() {
-        // given
-        final Member beaver = 비버;
-        final Member dino = 디노;
-
-        final Long beaverId = memberRepository.createMember(beaver);
-        final Long dinoId = memberRepository.createMember(dino);
-
-        // when
-        final Boolean result = memberRepository.isMemberExist(beaver.getEmail(), beaver.getPassword());
-
-        // then
-        assertThat(result).isTrue();
     }
 
 }

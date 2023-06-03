@@ -3,7 +3,6 @@ package cart.ui.member;
 import cart.WebMvcConfig;
 import cart.application.repository.member.MemberRepository;
 import cart.domain.member.Member;
-import cart.fixture.MemberFixture;
 import cart.ui.member.dto.MemberResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -18,8 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.List;
-
+import static cart.fixture.MemberFixture.비버;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -43,15 +41,11 @@ class MemberReadControllerTest {
     }
 
     @Test
-    @DisplayName("GET /members 사용자를 추가한다.")
+    @DisplayName("GET /members 사용자를 조회한다.")
     void getAllMembersTest() {
-        final Member beaver = MemberFixture.비버;
-        final Member leo = MemberFixture.레오;
-        final Member dino = MemberFixture.디노;
-
-        memberRepository.createMember(beaver);
-        memberRepository.createMember(leo);
-        memberRepository.createMember(dino);
+        final Member member= 비버;
+        final MemberResponse beaver = new MemberResponse(비버.getId(),비버.getName(),비버.getEmail(),비버.getPassword());
+        memberRepository.createMember(member);
 
 
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -61,7 +55,7 @@ class MemberReadControllerTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getList(".", MemberResponse.class)).usingRecursiveComparison().ignoringFields("id").isEqualTo(List.of(beaver, leo, dino))
+                () -> assertThat(response.jsonPath().getList(".", MemberResponse.class).get(1)).usingRecursiveComparison().ignoringFields("id").isEqualTo(beaver)
         );
     }
 }

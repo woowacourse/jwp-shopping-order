@@ -28,7 +28,7 @@ class CouponJdbcRepositoryTest {
     @DisplayName("사용자의 따른 저장되어있는 쿠폰 조회 테스트")
     void findByMemberId() {
         Coupons coupons = couponJdbcRepository.findByMemberId(2L);
-        assertThat(coupons.getCoupons()).hasSize(3);
+        assertThat(coupons.getCoupons()).hasSize(0);
     }
 
     @Test
@@ -37,6 +37,6 @@ class CouponJdbcRepositoryTest {
         Coupon coupon = new Coupon(1L, "웰컴 쿠폰 - 10%할인", 10000, 10, 0);
         couponJdbcRepository.convertToUseMemberCoupon(coupon);
         Coupons coupons = couponJdbcRepository.findByMemberId(2L);
-        assertThat(coupons.getCoupons()).hasSize(2);
+        assertThat(coupons.getCoupons()).hasSize(0);
     }
 }

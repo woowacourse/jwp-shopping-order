@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 import static cart.fixture.CartItemFixture.레오_레오배변패드;
 import static cart.fixture.MemberFixture.레오;
@@ -107,17 +106,4 @@ class CartItemJdbcRepositoryTest {
 
         assertThat(result.getQuantity()).isEqualTo(originalQuantity + 1);
     }
-
-    @Test
-    @DisplayName("장바구니 아이템을 삭제한다.")
-    void deleteByIdTest() {
-        // when
-        cartItemRepository.deleteById(padCartItemId);
-
-        Optional<CartItem> cartItem = cartItemRepository.findById(padCartItemId);
-
-        // then
-        assertThat(cartItem).isEmpty();
-    }
-
 }

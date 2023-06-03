@@ -38,9 +38,4 @@ public class MemberReadService {
                 .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
         return MemberResultDto.from(member);
     }
-
-    public boolean isMemberExist(final String email, final String password) {
-        return memberRepository.isMemberExist(email, password);
-    }
-
 }

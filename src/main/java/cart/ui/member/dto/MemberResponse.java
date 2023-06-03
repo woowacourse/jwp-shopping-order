@@ -10,7 +10,7 @@ public class MemberResponse {
     private final String password;
 
 
-    private MemberResponse(final Long id, final String name, final String email, final String password) {
+    public MemberResponse(final Long id, final String name, final String email, final String password) {
         this.id = id;
         this.name = name;
         this.email = email;

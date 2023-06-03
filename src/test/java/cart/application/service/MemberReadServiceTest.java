@@ -69,26 +69,4 @@ class MemberReadServiceTest {
                 .hasMessage("해당하는 사용자가 존재하지 않습니다.");
     }
 
-    @Test
-    @DisplayName("이메일로 특정 사용자 정보를 조회한다.")
-    void findMemberByEmailTest() {
-        // given
-        given(memberRepository.isMemberExist(any(), any()))
-                .willReturn(true);
-
-        // when, then
-        assertThat(memberReadService.isMemberExist(any(), any())).isTrue();
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 이메일로 사용자 조회 시 예외 처리한다.")
-    void findMemberByEmailExceptionTest() {
-        // given
-        given(memberRepository.isMemberExist(any(), any()))
-                .willReturn(false);
-
-        // when, then
-        assertThat(memberReadService.isMemberExist(any(), any())).isFalse();
-    }
-
 }

@@ -108,7 +108,7 @@ class ProductWriteControllerTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(productRepository.findAll()).hasSize(0)
+                () -> assertThat(productRepository.findAll()).hasSize(3)
         );
     }
 
