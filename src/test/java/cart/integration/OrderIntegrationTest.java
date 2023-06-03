@@ -107,6 +107,23 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(isEmpty).isTrue();
     }
 
+    @DisplayName("단일 주문에 대해 상세 정보를 조회할 수 있다.")
+    @Test
+    void showOrderDetail() {
+        // given
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+                65_000, 2_000, "서울특별시 송파구", null);
+        final OrderResponse orderResponse = order(orderRequest).as(OrderResponse.class);
+
+        // when
+        final ExtractableResponse<Response> response = getOrderDetailResponse(orderResponse.getId());
+
+        // then
+        final OrderResponse result = response.as(OrderResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(result).usingRecursiveComparison().isEqualTo(orderResponse);
+    }
+
     private Long createProduct(final ProductRequest productRequest1) {
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -148,6 +165,14 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().post("/coupons/{id}", id)
+                .then().extract();
+    }
+
+    private ExtractableResponse<Response> getOrderDetailResponse(final Long id) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders/{id}", id)
                 .then().extract();
     }
 }
