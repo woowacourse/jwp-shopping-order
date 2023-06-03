@@ -2,12 +2,14 @@ package cart.application;
 
 import cart.domain.*;
 import cart.dto.AllOrderCouponResponse;
+import cart.dto.MemberCouponRequest;
 import cart.dto.OrderCouponResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,5 +65,10 @@ public class CouponService {
                 null,
                 couponInfo.getExpiredAt()
         );
+    }
+
+    public Long issueCouponToMemberByCouponId(final Long couponId, final MemberCouponRequest request, final Member member) {
+        LocalDateTime expiredAt = request.getExpiredAt();
+        return couponRepository.save(couponId, expiredAt, member);
     }
 }

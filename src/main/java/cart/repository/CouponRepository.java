@@ -8,8 +8,10 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -20,6 +22,19 @@ public class CouponRepository {
     public CouponRepository(final CouponDao couponDao, final MemberCouponDao memberCouponDao) {
         this.couponDao = couponDao;
         this.memberCouponDao = memberCouponDao;
+    }
+
+    public Long save(final Long couponId, final LocalDateTime expiredAt, final Member member) {
+        CouponEntity couponEntity = couponDao.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰 존재하지 않습니다."));
+
+        MemberCouponEntity memberCouponEntity = new MemberCouponEntity(
+                null,
+                member.getId(),
+                couponEntity.getId(),
+                expiredAt
+        );
+        return memberCouponDao.save(memberCouponEntity);
     }
 
     public List<Coupon> findUsableByMember(final Member member) {
