@@ -13,11 +13,11 @@ WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = '피자');
 
 
 INSERT INTO member (email, password, grade, total_price)
-SELECT 'a@a.com', '1234', '일반', 0
+SELECT 'a@a.com', '1234', '일반', 0L
 WHERE NOT EXISTS (SELECT 1 FROM member WHERE email = 'a@a.com');
 
 INSERT INTO member (email, password, grade, total_price)
-SELECT 'b@b.com', '1234', 'gold', 0
+SELECT 'b@b.com', '1234', 'gold', 0L
 WHERE NOT EXISTS (SELECT 1 FROM member WHERE email = 'b@b.com');
 
 

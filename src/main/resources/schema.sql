@@ -18,7 +18,7 @@ CREATE TABLE if not exists member (
      email VARCHAR(255) NOT NULL UNIQUE,
      password VARCHAR(255) NOT NULL,
      grade VARCHAR(255),
-     total_price BIGINT NOT NULL
+     total_price BIGINT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE if not exists cart_item (
