@@ -9,6 +9,7 @@ import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -27,6 +28,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Void> postOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
         final Long orderId = this.orderService.createOrderAndSave(member, orderRequest.getCartItemIds());
         this.paymentService.createPaymentRecordAndSave(this.orderService.retrieveOrderById(orderId));
