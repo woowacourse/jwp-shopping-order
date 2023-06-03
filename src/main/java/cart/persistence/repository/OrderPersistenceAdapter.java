@@ -2,8 +2,6 @@ package cart.persistence.repository;
 
 import cart.application.domain.Member;
 import cart.application.domain.Order;
-import cart.application.domain.OrderInfo;
-import cart.application.domain.Product;
 import cart.application.repository.OrderRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,10 +20,9 @@ public class OrderPersistenceAdapter implements OrderRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final OrderInfoPersistenceAdapter orderInfoPersistenceAdapter;
 
-    public OrderPersistenceAdapter(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                   OrderInfoPersistenceAdapter orderInfoPersistenceAdapter) {
+    public OrderPersistenceAdapter(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.orderInfoPersistenceAdapter = orderInfoPersistenceAdapter;
+        this.orderInfoPersistenceAdapter = new OrderInfoPersistenceAdapter(namedParameterJdbcTemplate);
     }
 
     @Override
