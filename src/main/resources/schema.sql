@@ -36,3 +36,22 @@ CREATE TABLE if not exists order_item (
       FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
+
+CREATE TABLE  if not exists point
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    point     INT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
+);
+
+CREATE TABLE if not exists point_history
+(
+    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT NOT NULL,
+    points_used  INT    NOT NULL,
+    points_saved INT    NOT NULL,
+    order_id     BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
+);

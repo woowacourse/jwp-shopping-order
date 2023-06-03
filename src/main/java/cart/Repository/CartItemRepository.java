@@ -52,6 +52,7 @@ public class CartItemRepository {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
+        //TODO: 멤버도 매핑해주기...
         MemberEntity memberEntity = memberDao.getMemberById(cartItemEntities.get(0).getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
 

@@ -8,6 +8,7 @@ import cart.entity.ProductEntity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static cart.Repository.mapper.MemberMapper.toMember;
 import static cart.Repository.mapper.ProductMapper.productMappingById;
@@ -45,5 +46,9 @@ public class CartItemMapper {
                 cartItem.getProduct().getId(),
                 cartItem.getMember().getId()
         );
+    }
+
+    public static List<Long> toCartIds(List<CartItem> cartItems) {
+        return cartItems.stream().map(CartItem::getId).collect(Collectors.toUnmodifiableList());
     }
 }

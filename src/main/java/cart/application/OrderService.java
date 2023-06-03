@@ -21,27 +21,30 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemService cartItemService;
+    private final PointService pointService;
 
 
-    public OrderService(OrderRepository orderRepository, CartItemService cartItemService) {
+    public OrderService(OrderRepository orderRepository, CartItemService cartItemService, PointService pointService) {
         this.orderRepository = orderRepository;
         this.cartItemService = cartItemService;
+        this.pointService = pointService;
     }
 
     @Transactional
     public Long add(Member member, OrderRequest orderRequest) {
         List<CartItem> cartItems = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
         cartItems.forEach(it -> it.checkOwner(member));
-        
-        List<OrderItem> orderItems = toOrderItemsFrom(cartItems);
+        Order order = new Order(toOrderItemsFrom(cartItems));
+        Point usePoint = new Point(orderRequest.getUsePoint());
 
-        Order order = new Order(orderItems);
+        pointService.checkUsePointLessThanUserPoint(member, usePoint, order.getTotalPrice());
+
         Long orderId = orderRepository.save(member, order);
+        Order savedOrder = orderRepository.findById(orderId);
 
-        List<Long> cartIds = cartItems.stream().map(CartItem::getId).collect(Collectors.toUnmodifiableList());
-        cartItemService.removeByIds(cartIds);
-
-        return orderId;
+        pointService.savePoint(usePoint, savedOrder);
+        cartItemService.removeByIds(toCartIds(cartItems));
+        return savedOrder.getId();
     }
 
     public List<OrderResponse> findByMember(Member member) {
