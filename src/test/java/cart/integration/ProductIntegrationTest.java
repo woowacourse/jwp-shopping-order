@@ -38,6 +38,52 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("상품을 페이지 단위로 조회한다.")
+    void getProductsByPage() {
+        // given
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg");
+        final ProductRequest 피자_등록_요청 = new ProductRequest("피자", 25_000, "http://example.com/pizza.jpg");
+        final ProductRequest 스테이크_등록_요청 = new ProductRequest("스테이크", 50_000, "http://example.com/steak.jpg");
+        final ProductRequest 아이스크림_등록_요청 = new ProductRequest("아이스크림", 1_000, "http://example.com/icecream.jpg");
+        final ProductRequest 김밥_등록_요청 = new ProductRequest("김밥", 3_000, "http://example.com/gimbap.jpg");
+        상품_저장(치킨_등록_요청);
+        상품_저장(피자_등록_요청);
+        상품_저장(스테이크_등록_요청);
+        상품_저장(아이스크림_등록_요청);
+        상품_저장(김밥_등록_요청);
+
+        // expected
+        /** 첫 번째 페이지 조회 */
+        given().log().all()
+            .when()
+            .get("/products/pages?page=1&size=3")
+            .then()
+            .body("totalPage", equalTo(2))
+            .body("productResponse[0].name", equalTo("치킨"))
+            .body("productResponse[0].price", equalTo(20_000))
+            .body("productResponse[0].imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("productResponse[1].name", equalTo("피자"))
+            .body("productResponse[1].price", equalTo(25_000))
+            .body("productResponse[1].imageUrl", equalTo("http://example.com/pizza.jpg"))
+            .body("productResponse[2].name", equalTo("스테이크"))
+            .body("productResponse[2].price", equalTo(50_000))
+            .body("productResponse[2].imageUrl", equalTo("http://example.com/steak.jpg"));
+
+        /** 두 번째 페이지 조회 */
+        given().log().all()
+            .when()
+            .get("/products/pages?page=2&size=3")
+            .then()
+            .body("totalPage", equalTo(2))
+            .body("productResponse[0].name", equalTo("아이스크림"))
+            .body("productResponse[0].price", equalTo(1_000))
+            .body("productResponse[0].imageUrl", equalTo("http://example.com/icecream.jpg"))
+            .body("productResponse[1].name", equalTo("김밥"))
+            .body("productResponse[1].price", equalTo(3_000))
+            .body("productResponse[1].imageUrl", equalTo("http://example.com/gimbap.jpg"));
+    }
+
+    @Test
     @DisplayName("상품을 추가한다.")
     public void createProduct() {
         // given

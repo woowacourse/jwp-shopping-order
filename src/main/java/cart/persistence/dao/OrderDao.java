@@ -2,7 +2,6 @@ package cart.persistence.dao;
 
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.OrderEntity;
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.List;

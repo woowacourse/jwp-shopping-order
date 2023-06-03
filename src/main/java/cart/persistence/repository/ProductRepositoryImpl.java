@@ -40,6 +40,18 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public List<ProductWithId> getProductsByPage(final int page, final int size) {
+        return productDao.getProductsByPage(page, size).stream()
+            .map(ProductMapper::convertProductWithId)
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public long getAllProductCount() {
+        return productDao.getAllProductCount();
+    }
+
+    @Override
     public Long save(final Product product) {
         final ProductEntity productEntity = convertProductEntity(product);
         return productDao.insert(productEntity);

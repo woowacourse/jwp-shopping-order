@@ -25,5 +25,6 @@ public interface Order {
     BigDecimal getDiscountedTotalPrice();
 
     Boolean isValid();
+
     boolean isOwner(final String memberName);
 }

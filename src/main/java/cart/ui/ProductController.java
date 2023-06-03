@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.ProductService;
+import cart.application.dto.product.ProductPageResponse;
 import cart.application.dto.product.ProductRequest;
 import cart.application.dto.product.ProductResponse;
 import java.net.URI;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,6 +32,12 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<ProductPageResponse> getProductsByPage(@RequestParam("page") final int page,
+                                                                 @RequestParam("size") final int size) {
+        return ResponseEntity.ok(productService.getProductsByPage(page, size));
     }
 
     @GetMapping("/{id}")

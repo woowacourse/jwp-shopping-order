@@ -8,7 +8,6 @@ import static cart.exception.ErrorCode.ORDER_QUANTITY_EXCEED;
 import static cart.exception.ErrorCode.PRODUCT_DELETED;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.cartitem.CartRequest;

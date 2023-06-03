@@ -3,6 +3,7 @@ package cart.application;
 import static cart.application.mapper.ProductMapper.convertProduct;
 import static cart.application.mapper.ProductMapper.convertProductResponse;
 
+import cart.application.dto.product.ProductPageResponse;
 import cart.application.dto.product.ProductRequest;
 import cart.application.dto.product.ProductResponse;
 import cart.application.mapper.ProductMapper;
@@ -36,6 +37,17 @@ public class ProductService {
         return convertProductResponse(productId, product);
     }
 
+    public ProductPageResponse getProductsByPage(final int page, final int size) {
+        final List<ProductWithId> products = productRepository.getProductsByPage(page, size);
+        final List<ProductResponse> productResponses = products.stream()
+            .map(ProductMapper::convertProductResponse)
+            .collect(Collectors.toList());
+
+        final long totalProductCount = productRepository.getAllProductCount();
+        final long totalPage = calculateTotalPage(size, totalProductCount);
+        return new ProductPageResponse(totalPage, productResponses);
+    }
+
     @Transactional
     public Long createProduct(ProductRequest productRequest) {
         final Product product = convertProduct(productRequest);
@@ -51,5 +63,14 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         productRepository.deleteProduct(productId);
+    }
+
+    private long calculateTotalPage(final int size, final long totalProductCount) {
+        long totalPage = totalProductCount / size;
+
+        if (totalProductCount % size > 0) {
+            totalPage++;
+        }
+        return totalPage;
     }
 }

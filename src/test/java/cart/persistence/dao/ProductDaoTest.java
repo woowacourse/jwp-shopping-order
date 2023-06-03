@@ -143,4 +143,73 @@ class ProductDaoTest extends DaoTestHelper {
         assertThat(product)
             .isEmpty();
     }
+
+    @Test
+    @DisplayName("상품 리스트를 페이지 단위로 반환한다.")
+    void getProductsByPage() {
+        // given
+        final ProductEntity 치킨 = new ProductEntity("치킨", "chicken_image_url", 20000, false);
+        final Long 저장된_치킨_아이디 = productDao.insert(치킨);
+
+        final ProductEntity 치킨2 = new ProductEntity("치킨2", "chicken_image_url", 20000, false);
+        final Long 저장된_치킨_아이디2 = productDao.insert(치킨2);
+
+        final ProductEntity 치킨3 = new ProductEntity("치킨3", "chicken_image_url", 20000, false);
+        final Long 저장된_치킨_아이디3 = productDao.insert(치킨3);
+
+        final ProductEntity 치킨4 = new ProductEntity("치킨4", "chicken_image_url", 20000, false);
+        final Long 저장된_치킨_아이디4 = productDao.insert(치킨4);
+
+        final ProductEntity 치킨5 = new ProductEntity("치킨5", "chicken_image_url", 20000, false);
+        final Long 저장된_치킨_아이디5 = productDao.insert(치킨5);
+
+        // when
+        final List<ProductEntity> 첫번째_페이지 = productDao.getProductsByPage(1, 3);
+        final List<ProductEntity> 두번째_페이지 = productDao.getProductsByPage(2, 3);
+
+        // then
+        assertThat(첫번째_페이지).hasSize(3);
+        assertThat(첫번째_페이지)
+            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice,
+                ProductEntity::getImageUrl, ProductEntity::isDeleted)
+            .containsExactly(
+                tuple(저장된_치킨_아이디, "치킨", 20000, "chicken_image_url", false),
+                tuple(저장된_치킨_아이디2, "치킨2", 20000, "chicken_image_url", false),
+                tuple(저장된_치킨_아이디3, "치킨3", 20000, "chicken_image_url", false));
+
+        assertThat(두번째_페이지).hasSize(2);
+        assertThat(두번째_페이지)
+            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice,
+                ProductEntity::getImageUrl, ProductEntity::isDeleted)
+            .containsExactly(
+                tuple(저장된_치킨_아이디4, "치킨4", 20000, "chicken_image_url", false),
+                tuple(저장된_치킨_아이디5, "치킨5", 20000, "chicken_image_url", false));
+    }
+
+    @Test
+    @DisplayName("전체 상품의 개수를 구한다.")
+    void getAllProductCount() {
+        // given
+        final ProductEntity 치킨 = new ProductEntity("치킨", "chicken_image_url", 20000, false);
+        productDao.insert(치킨);
+
+        final ProductEntity 치킨2 = new ProductEntity("치킨2", "chicken_image_url", 20000, false);
+        productDao.insert(치킨2);
+
+        final ProductEntity 치킨3 = new ProductEntity("치킨3", "chicken_image_url", 20000, false);
+        productDao.insert(치킨3);
+
+        final ProductEntity 치킨4 = new ProductEntity("치킨4", "chicken_image_url", 20000, false);
+        productDao.insert(치킨4);
+
+        final ProductEntity 치킨5 = new ProductEntity("치킨5", "chicken_image_url", 20000, false);
+        productDao.insert(치킨5);
+
+        // when
+        final long productCount = productDao.getAllProductCount();
+
+        // then
+        assertThat(productCount)
+            .isEqualTo(5);
+    }
 }

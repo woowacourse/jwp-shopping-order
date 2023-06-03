@@ -7,8 +7,8 @@ import cart.domain.coupon.CouponWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
-import cart.domain.member.NaturalPassword;
 import cart.domain.member.MemberWithId;
+import cart.domain.member.NaturalPassword;
 import cart.domain.security.SHA256Service;
 import java.time.LocalDateTime;
 

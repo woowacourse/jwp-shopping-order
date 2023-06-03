@@ -44,7 +44,7 @@ class MemberCouponServiceTest {
     @DisplayName("회원 가입 축하 쿠폰을 발행한다.")
     void saveJoinMemberCoupon() {
         // given
-        final String 져니_이름 = "journey";
+        final String 져니_이름 = "journey1";
         final Long 저장된_져니_아이디 = 사용자를_저장한다(져니_이름);
         final JoinMemberCouponEvent 회원_가입_쿠폰_발행_이벤트 = new JoinMemberCouponEvent(저장된_져니_아이디);
 

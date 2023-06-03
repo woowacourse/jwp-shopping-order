@@ -15,4 +15,8 @@ public interface ProductRepository {
     void deleteProduct(final Long id);
 
     boolean existById(final Long id);
+
+    List<ProductWithId> getProductsByPage(final int page, final int size);
+
+    long getAllProductCount();
 }

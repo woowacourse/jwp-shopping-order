@@ -37,6 +37,18 @@ public class ProductDao {
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
+    public List<ProductEntity> getProductsByPage(final int page, final int size) {
+        final int offset = calculateOffset(page, size);
+        final String sql = "SELECT id, name, image_url, price, is_deleted FROM product "
+            + "ORDER BY id LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, productEntityRowMapper, size, offset);
+    }
+
+    public long getAllProductCount() {
+        final String sql = "SELECT COUNT(*) FROM product";
+        return jdbcTemplate.queryForObject(sql, Long.class);
+    }
+
     public Optional<ProductEntity> getProductById(final Long productId) {
         String sql = "SELECT id, name, image_url, price, is_deleted FROM product WHERE id = ? and is_deleted = 0";
         try {
@@ -75,5 +87,12 @@ public class ProductDao {
     public int updateProductDeleted(final Long productId) {
         final String sql = "UPDATE product SET is_deleted = 1 WHERE id = ?";
         return jdbcTemplate.update(sql, productId);
+    }
+
+    private int calculateOffset(final int page, final int size) {
+        if (page == 1) {
+            return 0;
+        }
+        return (page - 1) * size;
     }
 }

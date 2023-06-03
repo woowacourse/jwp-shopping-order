@@ -1,7 +1,6 @@
 package cart.domain.order;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import cart.domain.cartitem.CartItemWithId;
 import cart.domain.member.EncryptedPassword;
@@ -11,9 +10,6 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductWithId;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 

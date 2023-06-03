@@ -1,7 +1,7 @@
 package cart.domain.refund;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.cartitem.CartItemWithId;
 import cart.domain.member.EncryptedPassword;
