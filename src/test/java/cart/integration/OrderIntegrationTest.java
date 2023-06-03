@@ -40,9 +40,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     void createOrder() {
         // given, when
         final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
-                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -59,8 +58,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // when
         final ExtractableResponse<Response> response = 주문_정보_추가(illegalMember, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -71,9 +69,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     void addOrderByIllegalCartItem() {
         // given, when
         final ExtractableResponse<Response> response = 주문_정보_추가(member2, new OrderRequest(
-                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -84,9 +81,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void addNotExistingCartItem() {
         // given, when
         final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
-                List.of(-1L),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                List.of(-1L), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -97,9 +92,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void addByIllegalTotalPrice() {
         // given, when
         final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
-                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                4000L,
-                3000L));
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), 4000L, 3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
@@ -110,7 +103,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void showOrders() {
         // given
         final List<Long> cartItemIdsToOrder = List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2);
-        주문_정보_추가(member, new OrderRequest(cartItemIdsToOrder, DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L));
+        주문_정보_추가(member, new OrderRequest(cartItemIdsToOrder, DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
         final ExtractableResponse<Response> response = 주문_정보_목록_조회(member);
@@ -128,8 +121,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, 1L));
 
         // when
         final ExtractableResponse<Response> response = 주문_정보_상세_조회(member, 1L);
@@ -144,8 +136,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
         final ExtractableResponse<Response> response = 주문_정보_상세_조회(member, -1L);
@@ -160,8 +151,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
         final ExtractableResponse<Response> response = 주문_삭제(member, 1L);
@@ -176,8 +166,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
         final ExtractableResponse<Response> response = 주문_삭제(member, 2L);
@@ -192,8 +181,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
         final ExtractableResponse<Response> response = 주문_삭제(member2, 1L);
@@ -208,8 +196,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
         final ExtractableResponse<Response> response = 주문_취소(member, 1L);
@@ -217,8 +204,9 @@ public class OrderIntegrationTest extends IntegrationTest {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         final ExtractableResponse<Response> result = 주문_정보_목록_조회(member);
-        assertThat(result.jsonPath().get("orderStatus").toString())
-                .isEqualTo("[" + OrderStatus.CANCEL.getValue() + "]");
+        final String orderStatus = result.jsonPath().get("orderStatus").toString();
+        assertThat(orderStatus.substring(1, orderStatus.length() - 1))
+                .isEqualTo(OrderStatus.CANCEL.getValue());
     }
 
     private ExtractableResponse<Response> 주문_정보_추가(final Member member, final OrderRequest orderRequest) {

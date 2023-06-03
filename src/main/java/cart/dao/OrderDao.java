@@ -13,12 +13,20 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderDao {
 
-    private static final RowMapper<OrderEntity> ROW_MAPPER = (resultSet, rowNum) -> new OrderEntity(
-            resultSet.getLong("id"),
-            resultSet.getLong("member_id"),
-            resultSet.getLong("delivery_fee"),
-            resultSet.getString("status")
-    );
+    private static final RowMapper<OrderEntity> ROW_MAPPER = (resultSet, rowNum) -> {
+        Long couponId = resultSet.getLong("coupon_id");
+        if (resultSet.wasNull()) {
+            couponId = null;
+        }
+        return new OrderEntity(
+                resultSet.getLong("id"),
+                resultSet.getLong("member_id"),
+                couponId,
+                resultSet.getLong("delivery_fee"),
+                resultSet.getString("status"),
+                resultSet.getTimestamp("created_at")
+        );
+    };
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -28,7 +36,7 @@ public class OrderDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "delivery_fee", "status");
+                .usingColumns("member_id", "coupon_id", "delivery_fee", "status");
     }
 
     public Long save(final OrderEntity orderEntity) {
@@ -37,7 +45,7 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findByMemberId(final long memberId) {
-        final String sql = "SELECT id, member_id, delivery_fee, status "
+        final String sql = "SELECT id, coupon_id, member_id, delivery_fee, status, created_at "
                 + "FROM orders "
                 + "WHERE member_id = ? "
                 + "ORDER BY created_at DESC";
@@ -45,12 +53,12 @@ public class OrderDao {
     }
 
     public Optional<OrderEntity> findById(final Long id) {
-        final String sql = "SELECT id, member_id, delivery_fee, status "
+        final String sql = "SELECT id, coupon_id, member_id, delivery_fee, status, created_at "
                 + "FROM orders "
                 + "WHERE id = ? "
                 + "ORDER BY created_at DESC";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

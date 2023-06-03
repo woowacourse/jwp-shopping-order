@@ -117,3 +117,23 @@ INSERT INTO order_item (order_id, name, price, image_url, quantity)
 VALUES (4, 'PET보틀-납작(260ml)', 41000,
         'https://cdn-mart.baemin.com/sellergoods/main/d07bec18-ce84-41c2-8903-61cbd10712b6.jpg?h=300&w=300',
         3);
+
+-- 발행 쿠폰 (coupon이 member_id 가지도록 수정하기)
+INSERT INTO coupon (coupon_type_id)
+VALUES (1);
+INSERT INTO coupon (coupon_type_id)
+VALUES (2);
+INSERT INTO coupon (coupon_type_id)
+VALUES (3);
+INSERT INTO coupon (coupon_type_id)
+VALUES (4);
+INSERT INTO coupon (coupon_type_id)
+VALUES (5);
+INSERT INTO coupon (coupon_type_id)
+VALUES (6);
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 1);
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 2);
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 3);

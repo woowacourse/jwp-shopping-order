@@ -3,8 +3,10 @@ package cart.infrastructure;
 import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.CouponException;
 import cart.exception.MoneyException;
 import cart.exception.OrderException;
+import cart.exception.ProductException;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +57,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 
-    @ExceptionHandler(OrderException.IllegalId.class)
-    public ResponseEntity<ErrorResponse> handleOrderException(final OrderException.IllegalId exception) {
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<ErrorResponse> handleProductException(final ProductException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(CouponException.class)
+    public ResponseEntity<ErrorResponse> handleCouponException(final CouponException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 }

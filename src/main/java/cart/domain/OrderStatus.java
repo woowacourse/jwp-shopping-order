@@ -15,11 +15,11 @@ public enum OrderStatus {
         this.value = value;
     }
 
-    public static OrderStatus find(final String name) {
+    public static OrderStatus find(final String statusValue) {
         return Arrays.stream(values())
-                .filter(value -> Objects.equals(value.value, name))
+                .filter(value -> Objects.equals(value.value, statusValue))
                 .findAny()
-                .orElseThrow(() -> new OrderException.IllegalOrderStatus(name));
+                .orElseThrow(() -> new OrderException.IllegalOrderStatus(statusValue));
     }
 
     public String getValue() {

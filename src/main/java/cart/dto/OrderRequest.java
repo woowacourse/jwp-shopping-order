@@ -9,14 +9,17 @@ public class OrderRequest {
     private List<Long> cartItemIds;
     private Long totalPrice;
     private Long deliveryFee;
+    private Long couponId;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(final List<Long> cartItemIds, final Long totalPrice, final Long deliveryFee) {
+    public OrderRequest(final List<Long> cartItemIds, final Long totalPrice, final Long deliveryFee,
+                        final Long couponId) {
         this.cartItemIds = cartItemIds;
         this.totalPrice = totalPrice;
         this.deliveryFee = deliveryFee;
+        this.couponId = couponId;
     }
 
     public List<Long> getCartItemIds() {
@@ -29,5 +32,9 @@ public class OrderRequest {
 
     public Long getDeliveryFee() {
         return deliveryFee;
+    }
+
+    public Long getCouponId() {
+        return couponId;
     }
 }

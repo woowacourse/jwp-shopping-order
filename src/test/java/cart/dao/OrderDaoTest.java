@@ -1,6 +1,5 @@
 package cart.dao;
 
-import static cart.domain.OrderStatus.COMPLETE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.entity.OrderEntity;
@@ -28,7 +27,7 @@ class OrderDaoTest {
     @Test
     void save() {
         // given, when
-        final Long createdId = orderDao.save(new OrderEntity(1L, 3000L));
+        final Long createdId = orderDao.save(new OrderEntity(1L, 1L, 3000L));
 
         // then
         assertThat(createdId).isNotNull();
@@ -39,31 +38,37 @@ class OrderDaoTest {
     @Test
     void findByMemberId() {
         // given
-        final Long createdId = orderDao.save(new OrderEntity(1L, 3000L));
-        final Long createdId2 = orderDao.save(new OrderEntity(1L, 3000L));
+        final OrderEntity createEntity = new OrderEntity(1L, 1L, 3000L);
+        final OrderEntity createEntity2 = new OrderEntity(1L, 2L, 3000L);
+        final Long createdId = orderDao.save(createEntity);
+        final Long createdId2 = orderDao.save(createEntity2);
 
         // when
         final List<OrderEntity> found = orderDao.findByMemberId(1L);
 
         // then
-        assertThat(found)
-                .containsExactly(new OrderEntity(createdId2, 1L, 3000L, COMPLETE.getValue()),
-                        new OrderEntity(createdId, 1L, 3000L, COMPLETE.getValue()));
+        final OrderEntity firstShown = found.get(0);
+        final OrderEntity secondShown = found.get(1);
+        assertThat(firstShown.getCouponId()).isEqualTo(2L);
+        assertThat(secondShown.getCouponId()).isEqualTo(1L);
     }
 
     @DisplayName("특정 주문 상세 정보(상품 목록 제외)를 DB에서 조회한다.")
     @Test
     void findDetailById() {
         // given
-        final long deliveryFee = 3000L;
-        final long memberId = 1L;
-        final Long createdId = orderDao.save(new OrderEntity(memberId, deliveryFee));
+        final OrderEntity create = new OrderEntity(1L, 1L, 3000L);
+        final Long createdId = orderDao.save(create);
 
         // when
-        final OrderEntity order = orderDao.findById(createdId).get();
+        final OrderEntity found = orderDao.findById(createdId).get();
 
         // then
-        assertThat(order).isEqualTo(new OrderEntity(createdId, memberId, deliveryFee, COMPLETE.getValue()));
+        assertThat(found).isNotNull();
+        assertThat(found.getMemberId()).isEqualTo(create.getMemberId());
+        assertThat(found.getCouponId()).isEqualTo(create.getCouponId());
+        assertThat(found.getDeliveryFee()).isEqualTo(create.getDeliveryFee());
+        assertThat(found.getStatus()).isEqualTo(create.getStatus());
     }
 
 
@@ -71,7 +76,7 @@ class OrderDaoTest {
     @Test
     void deleteById() {
         // given
-        final Long createdId = orderDao.save(new OrderEntity(1L, 3000L));
+        final Long createdId = orderDao.save(new OrderEntity(1L, 1L, 3000L));
 
         // when
         orderDao.deleteById(createdId);

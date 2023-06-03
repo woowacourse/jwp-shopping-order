@@ -18,6 +18,14 @@ public class Money {
         }
     }
 
+    public Money minus(final Money money) {
+        return new Money(value - money.value);
+    }
+
+    public Money plus(final Money money) {
+        return new Money(value + money.value);
+    }
+
     public long getValue() {
         return value;
     }

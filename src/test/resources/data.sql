@@ -1,3 +1,4 @@
+-- 상품
 INSERT INTO product (name, price, image_url)
 VALUES ('PET보틀-정사각(420ml)', 43400,
         'https://cdn-mart.baemin.com/sellergoods/main/2ddb9f04-c15d-4647-b6e7-30afb9e8d072.jpg?h=300&w=300');
@@ -35,11 +36,13 @@ INSERT INTO product (name, price, image_url)
 VALUES ('PET보틀-힙 플라스크(500ml)', 21500,
         'https://cdn-mart.baemin.com/sellergoods/main/d07bec18-ce84-41c2-8903-61cbd10712b6.jpg?h=300&w=300');
 
+-- 사용자
 INSERT INTO member (id, email, password)
 VALUES (1, 'a@a.com', '1234');
 INSERT INTO member (id, email, password)
 VALUES (2, 'b@b.com', '1234');
 
+-- 장바구니
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity)
@@ -47,3 +50,36 @@ VALUES (1, 2, 4);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 3, 5);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (2, 3, 5);
+
+-- 쿠폰 종류
+INSERT INTO coupon_type (name, discount_type, discount_amount)
+VALUES ('배송비 3000원 할인', '정액제', 3000);
+
+INSERT INTO coupon_type (name, discount_type, discount_amount)
+VALUES ('신규 가입 할인', '정액제', 5000);
+
+INSERT INTO coupon_type (name, discount_type, discount_amount)
+VALUES ('여름 맞이 할인', '정액제', 2000);
+
+-- 발행 쿠폰 (coupon이 member_id 가지도록 수정하기)
+INSERT INTO coupon (coupon_type_id)
+VALUES (1);
+INSERT INTO coupon (coupon_type_id)
+VALUES (2);
+INSERT INTO coupon (coupon_type_id)
+VALUES (3);
+INSERT INTO coupon (coupon_type_id)
+VALUES (4);
+INSERT INTO coupon (coupon_type_id)
+VALUES (5);
+INSERT INTO coupon (coupon_type_id)
+VALUES (6);
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 1);
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 2);
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 3);

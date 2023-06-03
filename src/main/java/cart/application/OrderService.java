@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.CartItem;
+import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
@@ -34,9 +35,12 @@ public class OrderService {
                 .map(id -> cartItemService.checkMember(member, id))
                 .collect(Collectors.toList());
 
-        final Order order = new Order(member, new Money(orderRequest.getDeliveryFee()), OrderItem.convert(cartItems));
-        order.checkTotalPrice(orderRequest.getTotalPrice());
-
+        final Order order = new Order(
+                member,
+                new Coupon(orderRequest.getCouponId()),
+                new Money(orderRequest.getTotalPrice()),
+                OrderItem.convert(cartItems));
+        order.checkTotalPrice(new Money(orderRequest.getTotalPrice()));
         cartItemService.remove(member, cartItemIds);
         return orderRepository.add(order);
     }
@@ -56,6 +60,11 @@ public class OrderService {
         orderRepository.remove(orderId);
     }
 
+    public void cancel(final Member member, final Long orderId) {
+        final Order order = checkMember(member, orderId);
+        orderRepository.update(order.cancel());
+    }
+
     private Order checkMember(final Member member, final Long orderId) {
         final Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderException.IllegalId(orderId));
@@ -63,10 +72,5 @@ public class OrderService {
             throw new OrderException.IllegalMember(order, member);
         }
         return order;
-    }
-
-    public void cancel(final Member member, final Long orderId) {
-        final Order order = checkMember(member, orderId);
-        orderRepository.update(order.cancel());
     }
 }
