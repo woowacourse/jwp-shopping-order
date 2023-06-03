@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.domain.OrderItem;
+
 public class OrderItemEntity {
     private final Long id;
     private final String name;
@@ -8,7 +10,8 @@ public class OrderItemEntity {
     private final Integer quantity;
     private final Long orderId;
 
-    public OrderItemEntity(final String name, final long price, final String imageUrl, final Integer quantity, final Long orderId) {
+    public OrderItemEntity(final String name, final long price, final String imageUrl, final Integer quantity,
+                           final Long orderId) {
         this(null, name, price, imageUrl, quantity, orderId);
     }
 
@@ -20,6 +23,11 @@ public class OrderItemEntity {
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.orderId = orderId;
+    }
+
+    public static OrderItemEntity ofOrderItemAndOrderId(final OrderItem orderItem, final Long orderId) {
+        return new OrderItemEntity(orderItem.getName(), orderItem.getPrice(), orderItem.getImageUrl(),
+                orderItem.getQuantity(), orderId);
     }
 
     public Long getId() {

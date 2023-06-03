@@ -18,7 +18,6 @@ import cart.entity.OrderItemEntity;
 import cart.entity.OrdersEntity;
 import cart.exception.CouponNotFoundException;
 import cart.exception.MemberNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,23 +50,7 @@ public class OrderRepository {
         final OrdersEntity savedOrders = ordersDao.insert(ordersEntity);
         final Long savedOrderId = savedOrders.getId();
 
-        List<OrderItem> savedOrderItems = new ArrayList<>();
-        for (OrderItem orderItem : order.getOrderItems()) {
-            final OrderItemEntity orderItemEntity = new OrderItemEntity(
-                    orderItem.getName(),
-                    orderItem.getPrice(),
-                    orderItem.getImageUrl(),
-                    orderItem.getQuantity(),
-                    savedOrderId);
-            final OrderItemEntity savedOrderItem = orderItemDao.insert(orderItemEntity);
-            savedOrderItems.add(new OrderItem(
-                    savedOrderItem.getId(),
-                    savedOrderItem.getName(),
-                    savedOrderItem.getPrice(),
-                    savedOrderItem.getImageUrl(),
-                    savedOrderItem.getQuantity()
-            ));
-        }
+        final List<OrderItem> savedOrderItems = saveOrderItem(order, savedOrderId);
 
         return new Order(
                 savedOrderId,
@@ -75,6 +58,14 @@ public class OrderRepository {
                 order.getMember(),
                 savedOrderItems
         );
+    }
+
+    private List<OrderItem> saveOrderItem(final Order order, final Long savedOrderId) {
+        return order.getOrderItems().stream()
+                .map(orderItem -> OrderItemEntity.ofOrderItemAndOrderId(orderItem, savedOrderId))
+                .map(orderItemDao::insert)
+                .map(OrderItem::fromEntity)
+                .collect(Collectors.toList());
     }
 
     public Order findByOrderIdAndMemberId(final Long orderId, final Long memberId) {
@@ -93,13 +84,13 @@ public class OrderRepository {
     }
 
     private MemberCoupon getMemberCoupon(final Member member, final Long memberCouponId) {
-        Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
+        final Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
                 member.getId(), memberCouponId);
 
         if (findMemberCoupon.isEmpty()) {
             return MemberCoupon.makeNonMemberCoupon();
         }
-        Coupon coupon = getCoupon(findMemberCoupon.get().getCouponId());
+        final Coupon coupon = getCoupon(findMemberCoupon.get().getCouponId());
         return new MemberCoupon(findMemberCoupon.get().getId(), member, coupon, findMemberCoupon.get().getUsed());
     }
 
@@ -110,7 +101,7 @@ public class OrderRepository {
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
-        List<OrdersEntity> findOrderEntities = ordersDao.findByMemberId(memberId);
+        final List<OrdersEntity> findOrderEntities = ordersDao.findByMemberId(memberId);
         return findOrderEntities.stream()
                 .map(this::makeOrder)
                 .collect(Collectors.toList());
@@ -136,8 +127,8 @@ public class OrderRepository {
     }
 
     private Coupon getCoupon(final Long couponId) {
-        CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
-        DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
+        final CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
+        final DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
                 couponEntity.getDiscountPrice());
 
         return new Coupon(couponEntity.getId(), couponEntity.getName(), discountPolicy, couponEntity.getMinimumPrice());
