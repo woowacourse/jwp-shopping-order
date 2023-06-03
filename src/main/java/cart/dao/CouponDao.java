@@ -49,8 +49,6 @@ public class CouponDao {
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
-    // TODO updateStatus
-
     // TODO findByMember
 
     // TODO add, findAll, remove (admin)

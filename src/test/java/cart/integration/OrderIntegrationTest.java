@@ -38,7 +38,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         member2 = memberRepository.findById(2L).get();
     }
 
-    @DisplayName("주문을 추가한다.")
+    @DisplayName("쿠폰 없이 주문을 추가한다.")
     @Test
     void createOrder() {
         // given, when
@@ -54,15 +54,17 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("쿠폰을 적용하여 주문을 추가한다.")
     @Test
     void createOrderUsingCoupon() {
-        // given, when
+        // given
+        final long couponId = 1L;
+        // when
         final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L, 1L));
+                3000L, couponId));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isEqualTo("/orders/1");
-        assertThat(couponRepository.findById(1L).get().isUsed()).isTrue();
+        assertThat(couponRepository.findById(couponId).get().isUsed()).isTrue();
     }
 
     @DisplayName("잘못된 사용자 정보로 주문 정보 추가 요청시 실패한다.")
