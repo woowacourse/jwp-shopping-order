@@ -25,12 +25,13 @@ public class OrderedItemJdbcRepository implements OrderedItemRepository {
 
     private final RowMapper<OrderItem> orderItemRowMapper = ((rs, rowNum) ->
             new OrderItem(
+                    rs.getLong("id"),
                     rs.getLong("order_id"),
                     rs.getString("product_name"),
                     rs.getString("product_image"),
                     rs.getInt("product_price"),
                     rs.getInt("product_quantity")
-                    ));
+            ));
 
     @Override
     public void createOrderItems(final List<OrderItem> orderItems) {

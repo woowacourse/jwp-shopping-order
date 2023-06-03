@@ -12,8 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @JdbcTest
 class OrderedItemJdbcRepositoryTest {
 
@@ -30,9 +28,9 @@ class OrderedItemJdbcRepositoryTest {
     @Test
     void createOrderItemsTest() {
         List<OrderItem> orderItems = List.of(
-                OrderItem.of(2, ProductFixture.통구이_ID포함, 1L),
-                OrderItem.of(3, ProductFixture.배변패드_ID포함, 1L),
-                OrderItem.of(1, ProductFixture.꼬리요리_ID포함, 1L)
+                OrderItem.of(1L, 2, ProductFixture.통구이_ID포함),
+                OrderItem.of(1L, 3, ProductFixture.배변패드_ID포함),
+                OrderItem.of(1L, 1, ProductFixture.꼬리요리_ID포함)
         );
 
         orderedItemJdbcRepository.createOrderItems(orderItems);
