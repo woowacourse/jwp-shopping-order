@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `COUPON`
     `id`             long PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `name`           varchar(255)     NOT NULL,
     `policy_type`    varchar(255)     NOT NULL,
-    `discount_value` long             NOT NULL,
+    `discount_price` long             NOT NULL,
     `minimum_price`  long             NOT NULL,
     `created_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)

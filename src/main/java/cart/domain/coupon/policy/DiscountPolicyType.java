@@ -10,19 +10,22 @@ public enum DiscountPolicyType {
     DELIVERY((value) -> new DeliveryDiscountPolicy()),
     NONE((value) -> new NonDiscountPolicy());
 
-    private final Function<Long, DiscountPolicy> discountPolicyTriFunction;
+    private final Function<Long, DiscountPolicy> discountPolicyFunction;
 
     DiscountPolicyType(final Function<Long, DiscountPolicy> discountPolicyFunction) {
-        this.discountPolicyTriFunction = discountPolicyFunction;
+        this.discountPolicyFunction = discountPolicyFunction;
     }
 
     public static DiscountPolicy findDiscountPolicy(final String type, final Long value
     ) {
+        if (type == null) {
+            return NONE.discountPolicyFunction.apply(0L);
+        }
         DiscountPolicyType findType = Arrays.stream(values())
                 .filter(it -> it.name().equalsIgnoreCase(type))
                 .findFirst()
                 .orElseThrow(DiscountPolicyNotFoundException::new);
 
-        return findType.discountPolicyTriFunction.apply(value);
+        return findType.discountPolicyFunction.apply(value);
     }
 }

@@ -19,16 +19,16 @@ public class CouponDao {
         final Long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String policyType = rs.getString("policy_type");
-        final Long discountValue = rs.getLong("discount_value");
+        final Long discountPrice = rs.getLong("discount_price");
         final Long minimumPrice = rs.getLong("minimum_price");
-        return new CouponEntity(id, name, policyType, discountValue, minimumPrice);
+        return new CouponEntity(id, name, policyType, discountPrice, minimumPrice);
     };
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
-                .usingColumns("name", "policy_type", "discount_value", "minimum_price")
+                .usingColumns("name", "policy_type", "discount_price", "minimum_price")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -45,7 +45,7 @@ public class CouponDao {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(couponEntity);
         long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return new CouponEntity(id, couponEntity.getName(), couponEntity.getPolicyType(),
-                couponEntity.getDiscountValue(),
+                couponEntity.getDiscountPrice(),
                 couponEntity.getMinimumPrice());
     }
 }

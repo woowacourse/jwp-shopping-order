@@ -1,5 +1,5 @@
 INSERT INTO PRODUCT (name, image_url, price)
-VALUES ('피자스쿨 치즈피자', 'https://t1.daumcdn.net/cfile/tistory/2647BE3754B7E8B733', 8900);
+VALUES ('피자스쿨 치즈피자', 'https://t1.daumcdn.net/cfile/tistory/2647BE3754B7E8B733', 10000);
 INSERT INTO PRODUCT (name, image_url, price)
 VALUES ('도미노 치즈피자', 'https://cdn.dominos.co.kr/admin/upload/goods/20200311_TI57KvOH.jpg', 23900);
 INSERT INTO PRODUCT (name, image_url, price)
@@ -12,12 +12,12 @@ VALUES ('pizza1@pizza.com', 'pizza');
 INSERT INTO MEMBER (email, password)
 VALUES ('pizza2@pizza.com', 'pizza');
 
-INSERT INTO COUPON (name, policy_type, discount_value, minimum_price)
+INSERT INTO COUPON (name, policy_type, discount_price, minimum_price)
 VALUES ('30000원 이상 3000원 할인 쿠폰', 'PRICE', 3000, 30000);
-INSERT INTO COUPON (name, policy_type, discount_value, minimum_price)
+INSERT INTO COUPON (name, policy_type, discount_price, minimum_price)
 VALUES ('30000원 이상 4000원 할인 쿠폰', 'PRICE', 4000, 30000);
 
-INSERT INTO COUPON (name, policy_type, discount_value, minimum_price)
+INSERT INTO COUPON (name, policy_type, discount_price, minimum_price)
 VALUES ('10퍼센트 할인', 'RATE', 10, 0);
 
 INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)

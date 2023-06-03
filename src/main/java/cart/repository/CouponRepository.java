@@ -31,7 +31,7 @@ public class CouponRepository {
     private Coupon makeCoupon(final CouponEntity couponEntity) {
         DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(
                 couponEntity.getPolicyType(),
-                couponEntity.getDiscountValue()
+                couponEntity.getDiscountPrice()
         );
 
         return new Coupon(couponEntity.getId(), couponEntity.getName(), discountPolicy, couponEntity.getMinimumPrice());
