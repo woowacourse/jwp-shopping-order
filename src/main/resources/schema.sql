@@ -18,10 +18,11 @@ CREATE TABLE IF NOT EXISTS  cart_item
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL
+    quantity   INT    NOT NULL,
+    UNIQUE KEY member_id_and_product_id (member_id, product_id),
+    KEY cart_item_member_id_index (member_id),
+    KEY cart_item_product_id_index (product_id)
 );
-CREATE INDEX IF NOT EXISTS  cart_item_member_id_index ON cart_item (member_id);
-CREATE INDEX IF NOT EXISTS  cart_item_product_id_index ON cart_item (product_id);
 
 CREATE TABLE IF NOT EXISTS  orders
 (
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS  coupon_member
     id        BIGINT  NOT NULL PRIMARY KEY AUTO_INCREMENT,
     coupon_id BIGINT  NOT NULL,
     member_id BIGINT  NOT NULL,
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id),
+    KEY coupon_member_coupon_id_index (coupon_id),
+    KEY coupon_member_member_id_index (member_id)
 );
-CREATE INDEX IF NOT EXISTS  coupon_member_coupon_id_index ON coupon_member (coupon_id);
-CREATE INDEX IF NOT EXISTS  coupon_member_member_id_index ON coupon_member (member_id);
