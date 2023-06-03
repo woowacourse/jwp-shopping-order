@@ -5,6 +5,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.Point;
 import cart.dto.OrderRequest;
 import cart.repository.OrderRepository;
 import java.util.List;
@@ -18,17 +19,23 @@ public class OrderService {
 
     private final CartItemService cartItemService;
     private final OrderRepository orderRepository;
+    private final PointService pointService;
 
-    public OrderService(CartItemService cartItemService, OrderRepository orderRepository) {
+    public OrderService(CartItemService cartItemService, OrderRepository orderRepository,
+        PointService pointService) {
         this.cartItemService = cartItemService;
         this.orderRepository = orderRepository;
+        this.pointService = pointService;
     }
 
     public long createOrder(OrderRequest request, Member member) {
         Cart cart = cartItemService.findAllByIds(request.getCartItemIds(), member);
         Order order = mapCartToOrderProducts(cart, member);
-        cartItemService.removeOrderedItems(cart);
-        return orderRepository.save(order);
+        Point pointToUse = new Point(request.getUsePoint());
+        pointService.checkPointAbleToUse(pointToUse, order);
+        Order savedOrder = saveOrderAndRemoveCart(cart, order);
+        pointService.savePointHistory(pointToUse, savedOrder);
+        return savedOrder.getId();
     }
 
     private Order mapCartToOrderProducts(Cart cart, Member member) {
@@ -41,6 +48,12 @@ public class OrderService {
 
     private OrderItem cartItemToOrderItem(CartItem cartItem) {
         return new OrderItem(cartItem.getProduct(), cartItem.getQuantity());
+    }
+
+    private Order saveOrderAndRemoveCart(Cart cart, Order order) {
+        cartItemService.removeOrderedItems(cart);
+        long savedOrderId = orderRepository.save(order);
+        return new Order(savedOrderId, order.getItems(), order.getMember());
     }
 
     @Transactional(readOnly = true)

@@ -24,12 +24,13 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     private Member member1 = new Member(1L, "a@a.com", "1234");
     private Member member2 = new Member(2L, "b@b.com", "1234");
+    private final int pointToUseNotUsed = 0;
 
     @Test
     @DisplayName("사용자는 장바구니에 있는 상품을 선택해 주문할 수 있다.")
     void order_success() {
         // given, when
-        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(1L), member1);
+        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(1L), member1, pointToUseNotUsed);
 
         // then
         assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -40,8 +41,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("사용자는 전체 주문 내역을 확인할 수 있다.")
     void findAllOrderHistories_success() {
         // given
-        createOrder(List.of(1L), member1);
-        createOrder(List.of(2L), member1);
+        createOrder(List.of(1L), member1, pointToUseNotUsed);
+        createOrder(List.of(2L), member1, pointToUseNotUsed);
         Timestamp time = Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 2, 45, 0));
 
         // when
@@ -70,7 +71,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("사용자는 상세 주문 내역을 확인할 수 있다.")
     void findDetailOrderHistory_success() {
         // given
-        createOrder(List.of(1L, 2L), member1);
+        createOrder(List.of(1L, 2L), member1, pointToUseNotUsed);
 
         // when
         ExtractableResponse<Response> detailOrderHistory = findDetailOrderHistory(1L, member1);
@@ -91,7 +92,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("자신의 장바구니에 없는 장바구니 상품을 주문하면 주문에 실패한다.")
     void order_noCartItemOfMember_fail() {
         // when
-        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(3L), member1);
+        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(3L), member1, pointToUseNotUsed);
 
         // then
         assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -103,7 +104,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("존재하지 않는 장바구니 상품을 주문하면 주문에 실패한다.")
     void order_noCartItemId_fail() {
         // when
-        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(4L), member1);
+        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(4L), member1, pointToUseNotUsed);
 
         // then
         assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
@@ -115,7 +116,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("주문한 장바구니 상품은 장바구니에서 삭제된다.")
     void order_deleteCartItems() {
         // when
-        createOrder(List.of(1L), member1);
+        createOrder(List.of(1L), member1, pointToUseNotUsed);
         ExtractableResponse<Response> cartItemsOfMember = findCartItemsOfMember(member1);
 
         // then
@@ -127,8 +128,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(resultCartItemIds).containsExactly(2L);
     }
 
-    private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member) {
-        OrderRequest orderRequest = new OrderRequest(cartItemIds);
+    private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member, int pointToUse) {
+        OrderRequest orderRequest = new OrderRequest(cartItemIds, pointToUse);
 
         return given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
