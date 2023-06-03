@@ -3,7 +3,10 @@ package com.woowahan.techcourse.coupon.application;
 import com.woowahan.techcourse.coupon.application.dto.CouponExpireRequestDto;
 import com.woowahan.techcourse.coupon.db.dao.CouponDao;
 import com.woowahan.techcourse.coupon.db.dao.CouponMemberDao;
-import com.woowahan.techcourse.coupon.exception.CouponException;
+import com.woowahan.techcourse.coupon.domain.Coupon;
+import com.woowahan.techcourse.coupon.domain.CouponMember;
+import com.woowahan.techcourse.coupon.exception.CouponMemberNotFoundException;
+import com.woowahan.techcourse.coupon.exception.CouponNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +23,17 @@ public class CouponCommandService {
     }
 
     public void addCoupon(Long couponId, Long memberId) {
-        couponDao.findById(couponId).orElseThrow(() -> new CouponException("존재하지 않는 쿠폰입니다."));
-        if (couponMemberDao.exists(couponId, memberId)) {
-            throw new CouponException("멤버가 이미 쿠폰을 가지고 있습니다");
-        }
-        couponMemberDao.insert(couponId, memberId);
+        Coupon coupon = couponDao.findById(couponId).orElseThrow(CouponNotFoundException::new);
+        CouponMember couponMember = couponMemberDao.findByIdMemberId(memberId)
+                .orElseThrow(CouponMemberNotFoundException::new);
+        couponMember.addCoupon(coupon);
+        couponMemberDao.update(couponMember);
     }
 
     public void expireCoupon(CouponExpireRequestDto requestDto) {
-        int count = couponMemberDao.countByMemberIdAndCouponIds(requestDto.getMemberId(), requestDto.getCouponIds());
-        if (count != requestDto.getCouponIds().size()) {
-            throw new CouponException("존재하지 않는 쿠폰이 있습니다.");
-        }
-        couponMemberDao.deleteByMemberId(requestDto.getMemberId(), requestDto.getCouponIds());
+        CouponMember couponMember = couponMemberDao.findByIdMemberId(requestDto.getMemberId())
+                .orElseThrow(CouponMemberNotFoundException::new);
+        couponMember.expireCouponIds(requestDto.getCouponIds());
+        couponMemberDao.update(couponMember);
     }
 }

@@ -19,7 +19,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         this.memberQueryService = memberQueryService;
     }
 
-
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberQueryService));

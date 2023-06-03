@@ -20,7 +20,7 @@ class CouponMemberDaoTest {
     @Autowired
     void setUp(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        couponMemberDao = new CouponMemberDao(jdbcTemplate);
+        couponMemberDao = new CouponMemberDao(jdbcTemplate, new CouponDao(jdbcTemplate));
     }
 
     @BeforeEach

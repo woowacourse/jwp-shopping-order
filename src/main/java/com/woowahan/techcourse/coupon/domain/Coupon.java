@@ -2,6 +2,7 @@ package com.woowahan.techcourse.coupon.domain;
 
 import com.woowahan.techcourse.coupon.domain.discountcondition.DiscountCondition;
 import com.woowahan.techcourse.coupon.domain.discountpolicy.DiscountPolicy;
+import java.util.Objects;
 
 public class Coupon {
 
@@ -46,5 +47,22 @@ public class Coupon {
 
     public int getAmount() {
         return discountPolicy.getAmount();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Coupon coupon = (Coupon) o;
+        return Objects.equals(couponId, coupon.couponId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(couponId);
     }
 }

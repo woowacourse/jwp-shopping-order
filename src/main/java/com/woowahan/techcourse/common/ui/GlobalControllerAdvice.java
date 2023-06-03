@@ -1,5 +1,6 @@
 package com.woowahan.techcourse.common.ui;
 
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -32,19 +33,23 @@ public class GlobalControllerAdvice {
     public ResponseEntity<ErrorResponse> processValidationError(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
 
-        StringBuilder message = new StringBuilder();
-        for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            message.append("[");
-            message.append(fieldError.getField());
-            message.append("](은)는 ");
-            message.append(fieldError.getDefaultMessage());
-            message.append(" 입력된 값: [");
-            message.append(fieldError.getRejectedValue());
-            message.append("]");
-        }
+        String message = generateFieldErrorMessages(bindingResult);
 
         return ResponseEntity.badRequest()
-                .body(new ErrorResponse(message.toString()));
+                .body(new ErrorResponse(message));
     }
 
+    private String generateFieldErrorMessages(BindingResult bindingResult) {
+        return bindingResult.getFieldErrors()
+                .stream()
+                .map(this::generateFieldErrorMessage)
+                .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    private String generateFieldErrorMessage(FieldError fieldError) {
+        return String.format("[%s](은)는 %s 입력된 값: [%s]",
+                fieldError.getField(),
+                fieldError.getDefaultMessage(),
+                fieldError.getRejectedValue());
+    }
 }
