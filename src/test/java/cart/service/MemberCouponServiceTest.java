@@ -71,7 +71,7 @@ class MemberCouponServiceTest {
                                 savedMemberCouponId,
                                 savedCoupon.getName(),
                                 savedCoupon.getType(),
-                                savedCoupon.getDiscountPolicy().getDiscountPrice(),
+                                savedCoupon.getDiscountPolicy().getDiscountValue(),
                                 savedCoupon.getMinimumPrice()
                         )));
     }

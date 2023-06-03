@@ -161,7 +161,7 @@ class OrderControllerTest {
         assertThat(findOrder.getOrderItems()).hasSize(2);
         assertThat(findOrder.getTotalPrice()).isEqualTo(19000);
         assertThat(findOrder.getDeliveryFee()).isEqualTo(3000);
-        assertThat(findOrder.getDiscountPrice()).isEqualTo(1000);
+        assertThat(findOrder.getDiscountValue()).isEqualTo(1000);
         assertThat(findOrder.getCalculateDiscountPrice().longValue()).isEqualTo(18000);
     }
 

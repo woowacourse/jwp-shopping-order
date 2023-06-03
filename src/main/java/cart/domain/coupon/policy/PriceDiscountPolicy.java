@@ -18,7 +18,7 @@ public class PriceDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public Long getDiscountPrice() {
+    public Long getDiscountValue() {
         return price;
     }
 

@@ -6,7 +6,7 @@ public interface DiscountPolicy {
 
     BigDecimal calculatePrice(final Long price);
 
-    Long getDiscountPrice();
+    Long getDiscountValue();
 
     DiscountPolicyType getPolicyType();
 }

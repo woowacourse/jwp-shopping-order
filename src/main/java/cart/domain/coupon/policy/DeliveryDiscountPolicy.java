@@ -17,7 +17,7 @@ public class DeliveryDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public Long getDiscountPrice() {
+    public Long getDiscountValue() {
         return 0L;
     }
 

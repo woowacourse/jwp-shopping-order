@@ -20,7 +20,7 @@ public class CouponRepository {
         CouponEntity couponEntity = new CouponEntity(
                 coupon.getName(),
                 coupon.getType(),
-                coupon.getDiscountPolicy().getDiscountPrice(),
+                coupon.getDiscountPolicy().getDiscountValue(),
                 coupon.getMinimumPrice()
         );
 

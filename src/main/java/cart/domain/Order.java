@@ -69,7 +69,7 @@ public class Order {
         return orderItems;
     }
 
-    public Long getDiscountPrice() {
-        return memberCoupon.getDiscountPrice();
+    public Long getDiscountValue() {
+        return memberCoupon.getDiscountValue();
     }
 }

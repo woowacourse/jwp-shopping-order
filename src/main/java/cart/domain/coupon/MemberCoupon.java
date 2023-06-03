@@ -49,8 +49,8 @@ public class MemberCoupon {
         return coupon.getType();
     }
 
-    public Long getDiscountPrice() {
-        return coupon.getDiscountPolicy().getDiscountPrice();
+    public Long getDiscountValue() {
+        return coupon.getDiscountPolicy().getDiscountValue();
     }
 
     public Long getMinimumPrice() {
