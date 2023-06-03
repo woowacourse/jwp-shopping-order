@@ -37,6 +37,10 @@ public class Member {
         this.point = this.point.add(earningPoint);
     }
 
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -51,10 +55,6 @@ public class Member {
 
     public Point getPoint() {
         return point;
-    }
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
     }
 
     @Override

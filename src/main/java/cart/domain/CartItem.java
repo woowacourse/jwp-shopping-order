@@ -1,7 +1,7 @@
 package cart.domain;
 
-import cart.exception.OrderException;
 import cart.exception.auth.AuthorizationException;
+import cart.exception.order.CartItemQuantityDoesNotMatchException;
 import java.util.Objects;
 
 public class CartItem {
@@ -31,7 +31,7 @@ public class CartItem {
 
     public void checkQuantity(int quantity) {
         if (!Objects.equals(this.quantity, quantity)) {
-            throw new OrderException("cartItem의 quantity가 일치하지 않습니다. 다시 확인해주세요.");
+            throw new CartItemQuantityDoesNotMatchException();
         }
     }
 

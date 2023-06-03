@@ -12,9 +12,9 @@ import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderDto;
 import cart.dto.OrderRequest;
-import cart.exception.OrderException;
 import cart.exception.notFound.CartItemNotFountException;
 import cart.exception.notFound.ProductNotFoundException;
+import cart.exception.order.ProductInfoDoesNotMatchException;
 import cart.exception.payment.TotalDeliveryFeeDoesNotMatchException;
 import cart.exception.payment.TotalPriceDoesNotMatchException;
 import cart.exception.payment.TotalProductPriceDoesNotMatchException;
@@ -79,7 +79,7 @@ public class OrderService {
         Product realProduct = productDao.findById(requestProduct.getId())
                 .orElseThrow(ProductNotFoundException::new);
         if (!requestProduct.equals(realProduct)) {
-            throw new OrderException("product 정보가 일치하지 않습니다. 다시 확인해주세요.");
+            throw new ProductInfoDoesNotMatchException();
         }
     }
 

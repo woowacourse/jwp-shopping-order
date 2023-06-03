@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.OrderException;
+import cart.exception.order.OutOfStockException;
 import java.util.Objects;
 
 public class Product {
@@ -27,7 +27,7 @@ public class Product {
 
     public void sold(int quantity) {
         if (this.stock < quantity) {
-            throw new OrderException("상품 재고가 부족합니다.");
+            throw new OutOfStockException();
         }
         this.stock -= quantity;
     }

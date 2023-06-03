@@ -1,4 +1,4 @@
-package cart.exception;
+package cart.exception.order;
 
 public class OrderException extends RuntimeException {
 

@@ -3,7 +3,7 @@ package cart.ui;
 import cart.dto.ErrorResponse;
 import cart.exception.auth.AuthenticationException;
 import cart.exception.auth.AuthorizationException;
-import cart.exception.OrderException;
+import cart.exception.order.OrderException;
 import cart.exception.payment.PaymentException;
 import cart.exception.notFound.NotFoundException;
 import org.slf4j.Logger;
