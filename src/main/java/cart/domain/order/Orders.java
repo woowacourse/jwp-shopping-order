@@ -1,5 +1,6 @@
 package cart.domain.order;
 
+import cart.domain.member.Member;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,5 +14,9 @@ public class Orders {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public void checkOwner(final Member member) {
+        orders.forEach(it -> it.checkOwner(member));
     }
 }
