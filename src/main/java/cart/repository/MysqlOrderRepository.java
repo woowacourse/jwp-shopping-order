@@ -56,7 +56,7 @@ public class MysqlOrderRepository implements OrderRepository {
 
     @Override
     public List<Order> findMemberOrders(final Member member) {
-        final List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+        final List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
         return orderEntities.stream()
                 .map(orderEntity -> findById(orderEntity.getId(), member))
                 .collect(Collectors.toList());

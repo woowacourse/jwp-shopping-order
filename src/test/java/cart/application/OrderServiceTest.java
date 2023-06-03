@@ -21,9 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.annotation.DirtiesContext;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class OrderServiceTest {
 
@@ -47,6 +49,8 @@ class OrderServiceTest {
 
     @Test
     void 장바구니에_담긴_상품을_주문할_수_있다() {
+        final MemberEntity memberEntity = memberDao.findById(2L);
+        member = Member.from(memberEntity);
         // given
         final long productId = productDao.createProduct(
                 new ProductEntity("피자", 10_000, "피자사진")
@@ -65,14 +69,20 @@ class OrderServiceTest {
     @Test
     void 회원의_모든_주문_목록을_확인할_수_있다() {
         // given
-        final long productId = productDao.createProduct(
+        final long firstProductId = productDao.createProduct(
                 new ProductEntity("피자", 10_000, "피자사진")
         );
-        final long cartItemId = cartItemDao.createCartItem(
-                new CartItemEntity(null, member.getId(), productId, 3)
+        final long firstCartItemId = cartItemDao.createCartItem(
+                new CartItemEntity(null, member.getId(), firstProductId, 2)
+        );
+        final long secondProductId = productDao.createProduct(
+                new ProductEntity("치킨", 20_000, "치킨사진")
+        );
+        final long secondCartItemId = cartItemDao.createCartItem(
+                new CartItemEntity(null, member.getId(), secondProductId, 3)
         );
 
-        final Long orderId = orderService.buy(member, new OrderRequest(List.of(cartItemId)));
+        final Long orderId = orderService.buy(member, new OrderRequest(List.of(firstCartItemId, secondCartItemId)));
 
         // when
         final List<OrderResponse> orderResponses = orderService.selectAll(member);
@@ -85,7 +95,7 @@ class OrderServiceTest {
                         OrderResponse::getTotalPrice,
                         orderResponse -> orderResponse.getCartItemResponse().size()
                 ).contains(
-                        tuple(orderId, 30_000, 1)
+                        tuple(orderId, 80_000, 2)
                 )
         );
     }

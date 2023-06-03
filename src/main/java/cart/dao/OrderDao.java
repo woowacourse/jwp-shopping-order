@@ -36,7 +36,7 @@ public class OrderDao {
         return new OrderEntity(id, orderEntity.getMemberId(), orderEntity.getPrice());
     }
 
-    public List<OrderEntity> findByMemberId(final Long memberId) {
+    public List<OrderEntity> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT * from `order` where member_id = ?";
         return jdbcTemplate.query(sql, MAPPER, memberId);
     }
