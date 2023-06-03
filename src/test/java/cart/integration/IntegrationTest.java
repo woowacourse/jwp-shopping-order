@@ -18,6 +18,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public class IntegrationTest {
+
     public RequestSpecification spec;
     @LocalServerPort
     private int port;
@@ -25,11 +26,11 @@ public class IntegrationTest {
     @BeforeEach
     void setUp(final RestDocumentationContextProvider restDocumentation) {
         this.spec = new RequestSpecBuilder().addFilter(
-                        documentationConfiguration(restDocumentation)
-                                .operationPreprocessors()
-                                .withRequestDefaults(prettyPrint())
-                                .withResponseDefaults(prettyPrint()))
-                .build();
+                documentationConfiguration(restDocumentation)
+                    .operationPreprocessors()
+                    .withRequestDefaults(prettyPrint())
+                    .withResponseDefaults(prettyPrint()))
+            .build();
         this.spec.port(this.port);
     }
 

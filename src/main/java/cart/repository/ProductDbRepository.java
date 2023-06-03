@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDbRepository implements ProductRepository {
+
     private final ProductDao productDao;
 
     public ProductDbRepository(ProductDao productDao) {

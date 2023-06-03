@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Component
 public class PaymentRecordDao {
+
     public static final RowMapper<PaymentRecordEntity> rowMapper = (rs, rowNum) -> {
         long id = rs.getLong("id");
         long orderId = rs.getLong("order_id");
@@ -24,8 +25,8 @@ public class PaymentRecordDao {
     public PaymentRecordDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("payment_record")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("payment_record")
+            .usingGeneratedKeyColumns("id");
     }
 
 

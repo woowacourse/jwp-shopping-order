@@ -18,9 +18,9 @@ class DefaultDiscountPolicyTest {
         //given
         //when
         Order order = new Order(null, List.of(
-                new OrderItem("치킨", 1, "http://example.com/chicken.jpg", new Money(10_000)),
-                new OrderItem("피자", 2, "http://example.com/pizza.jpg", new Money(30_000)),
-                new OrderItem("보쌈", 1, "http://example.com/pizza.jpg", new Money(15_000))
+            new OrderItem("치킨", 1, "http://example.com/chicken.jpg", new Money(10_000)),
+            new OrderItem("피자", 2, "http://example.com/pizza.jpg", new Money(30_000)),
+            new OrderItem("보쌈", 1, "http://example.com/pizza.jpg", new Money(15_000))
         ));
         Money money = defaultDiscountPolicy.calculateDiscountAmount(order);
 

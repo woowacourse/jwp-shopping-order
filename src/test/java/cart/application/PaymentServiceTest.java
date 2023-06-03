@@ -41,12 +41,17 @@ class PaymentServiceTest {
         //given
         final PaymentRecord expectedPaymentRecord = PaymentRecordFixture.paymentRecord;
         //when
-        final PaymentRecord draftPaymentRecord = this.paymentService.createDraftPaymentRecord(orderWithoutId);
+        final PaymentRecord draftPaymentRecord = this.paymentService.createDraftPaymentRecord(
+            orderWithoutId);
         //then
-        assertThat(draftPaymentRecord.getOriginalTotalPrice()).isEqualTo(expectedPaymentRecord.getOriginalTotalPrice());
-        assertThat(draftPaymentRecord.calculateDiscountedPrice()).isEqualTo(expectedPaymentRecord.calculateDiscountedPrice());
-        assertThat(draftPaymentRecord.calculateDeliveryFee()).isEqualTo(expectedPaymentRecord.calculateDeliveryFee());
-        assertThat(draftPaymentRecord.calculateFinalPrice()).isEqualTo(expectedPaymentRecord.calculateFinalPrice());
+        assertThat(draftPaymentRecord.getOriginalTotalPrice()).isEqualTo(
+            expectedPaymentRecord.getOriginalTotalPrice());
+        assertThat(draftPaymentRecord.calculateDiscountedPrice()).isEqualTo(
+            expectedPaymentRecord.calculateDiscountedPrice());
+        assertThat(draftPaymentRecord.calculateDeliveryFee()).isEqualTo(
+            expectedPaymentRecord.calculateDeliveryFee());
+        assertThat(draftPaymentRecord.calculateFinalPrice()).isEqualTo(
+            expectedPaymentRecord.calculateFinalPrice());
     }
 
     @Test
@@ -55,25 +60,35 @@ class PaymentServiceTest {
         //given
         final PaymentRecord expectedPaymentRecord = PaymentRecordFixture.paymentRecord;
         //when
-        final PaymentRecord actualPaymentRecord = this.paymentService.createPaymentRecordAndSave(this.order);
+        final PaymentRecord actualPaymentRecord = this.paymentService.createPaymentRecordAndSave(
+            this.order);
         //then
-        assertThat(actualPaymentRecord.getOriginalTotalPrice()).isEqualTo(expectedPaymentRecord.getOriginalTotalPrice());
-        assertThat(actualPaymentRecord.calculateDiscountedPrice()).isEqualTo(expectedPaymentRecord.calculateDiscountedPrice());
-        assertThat(actualPaymentRecord.calculateDeliveryFee()).isEqualTo(expectedPaymentRecord.calculateDeliveryFee());
-        assertThat(actualPaymentRecord.calculateFinalPrice()).isEqualTo(expectedPaymentRecord.calculateFinalPrice());
+        assertThat(actualPaymentRecord.getOriginalTotalPrice()).isEqualTo(
+            expectedPaymentRecord.getOriginalTotalPrice());
+        assertThat(actualPaymentRecord.calculateDiscountedPrice()).isEqualTo(
+            expectedPaymentRecord.calculateDiscountedPrice());
+        assertThat(actualPaymentRecord.calculateDeliveryFee()).isEqualTo(
+            expectedPaymentRecord.calculateDeliveryFee());
+        assertThat(actualPaymentRecord.calculateFinalPrice()).isEqualTo(
+            expectedPaymentRecord.calculateFinalPrice());
     }
 
     @Test
     @DisplayName("Order로 PaymentRecord를 찾아 반환한다.")
     void findPaymentRecordByOrder() {
         //given
-        final PaymentRecord expectedPaymentRecord = this.paymentService.createPaymentRecordAndSave(this.order);
+        final PaymentRecord expectedPaymentRecord = this.paymentService.createPaymentRecordAndSave(
+            this.order);
         //when
         final PaymentRecord actualPaymentRecord = this.paymentService.findByOrder(this.order);
         //then
-        assertThat(actualPaymentRecord.getOriginalTotalPrice()).isEqualTo(expectedPaymentRecord.getOriginalTotalPrice());
-        assertThat(actualPaymentRecord.calculateDiscountedPrice()).isEqualTo(expectedPaymentRecord.calculateDiscountedPrice());
-        assertThat(actualPaymentRecord.calculateDeliveryFee()).isEqualTo(expectedPaymentRecord.calculateDeliveryFee());
-        assertThat(actualPaymentRecord.calculateFinalPrice()).isEqualTo(expectedPaymentRecord.calculateFinalPrice());
+        assertThat(actualPaymentRecord.getOriginalTotalPrice()).isEqualTo(
+            expectedPaymentRecord.getOriginalTotalPrice());
+        assertThat(actualPaymentRecord.calculateDiscountedPrice()).isEqualTo(
+            expectedPaymentRecord.calculateDiscountedPrice());
+        assertThat(actualPaymentRecord.calculateDeliveryFee()).isEqualTo(
+            expectedPaymentRecord.calculateDeliveryFee());
+        assertThat(actualPaymentRecord.calculateFinalPrice()).isEqualTo(
+            expectedPaymentRecord.calculateFinalPrice());
     }
 }

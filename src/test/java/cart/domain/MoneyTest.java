@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class MoneyTest {
+
     @Test
     @DisplayName("값을 음수로 생성한다.")
     void createByNegativeValue() {
@@ -14,7 +15,7 @@ class MoneyTest {
         //when
         //then
         assertThatThrownBy(() -> new Money(-1))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package cart.dto;
 
 public class ApiErrorResponse {
+
     private final String errorMessage;
 
     public ApiErrorResponse(String errorMessage) {

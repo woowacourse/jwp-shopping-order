@@ -3,6 +3,7 @@ package cart.domain;
 import java.util.Objects;
 
 public class DefaultDeliveryPolicy implements DeliveryPolicy {
+
     private final Long id;
     private final String name;
     private final Money fee;
@@ -39,8 +40,12 @@ public class DefaultDeliveryPolicy implements DeliveryPolicy {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
         final DefaultDeliveryPolicy that = (DefaultDeliveryPolicy) o;
         return Objects.equals(this.id, that.id);
     }

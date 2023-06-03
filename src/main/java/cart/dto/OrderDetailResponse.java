@@ -8,14 +8,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderDetailResponse {
+
     private final List<OrderItemResponse> productList;
     private final long id;
     private final LocalDateTime orderTime;
     @JsonProperty("paymentAmount")
     private final PaymentResponse paymentResponse;
 
-    public OrderDetailResponse(final List<OrderItemResponse> productList, final long id, final LocalDateTime orderTime,
-                               final PaymentResponse paymentResponse) {
+    public OrderDetailResponse(final List<OrderItemResponse> productList, final long id,
+        final LocalDateTime orderTime,
+        final PaymentResponse paymentResponse) {
         this.productList = productList;
         this.id = id;
         this.orderTime = orderTime;
@@ -24,8 +26,9 @@ public class OrderDetailResponse {
 
     public static OrderDetailResponse from(PaymentRecord paymentRecord) {
         Order order = paymentRecord.getOrder();
-        List<OrderItemResponse> productList = order.getOrderItems().stream().map(OrderItemResponse::from)
-                .collect(Collectors.toList());
+        List<OrderItemResponse> productList = order.getOrderItems().stream()
+            .map(OrderItemResponse::from)
+            .collect(Collectors.toList());
         Long id = order.getId();
         LocalDateTime orderTime = order.getOrderTime();
         PaymentResponse paymentResponse = PaymentResponse.of(paymentRecord);

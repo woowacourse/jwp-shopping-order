@@ -26,7 +26,8 @@ public class PaymentController {
     }
 
     @GetMapping("/total-cart-price")
-    public ResponseEntity<PaymentResponse> getCartPrice(Member member, @RequestParam List<Long> cartItemIds) {
+    public ResponseEntity<PaymentResponse> getCartPrice(Member member,
+        @RequestParam List<Long> cartItemIds) {
         Order draftOrder = orderService.createDraftOrder(member, cartItemIds);
         PaymentRecord draftPaymentRecord = paymentService.createDraftPaymentRecord(draftOrder);
         PaymentResponse paymentResponse = PaymentResponse.of(draftPaymentRecord);

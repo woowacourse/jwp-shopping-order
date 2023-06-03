@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public class DeliveryPolicyDbRepository implements DeliveryPolicyRepository {
+
     private final DefaultDeliveryPolicyDao defaultDeliveryPolicyDao;
 
     public DeliveryPolicyDbRepository(final DefaultDeliveryPolicyDao defaultDeliveryPolicyDao) {

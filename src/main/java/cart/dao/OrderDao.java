@@ -11,14 +11,15 @@ import java.util.Map;
 
 @Component
 public class OrderDao {
+
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order_record")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("order_record")
+            .usingGeneratedKeyColumns("id");
     }
 
     public Long insert(final OrderEntity orderEntity) {
@@ -31,14 +32,16 @@ public class OrderDao {
     public List<OrderEntity> findByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM order_record WHERE member_id = ?";
         return this.jdbcTemplate.query(sql, (rs, rowNum) -> {
-            return new OrderEntity(rs.getLong("id"), rs.getLong("member_id"), rs.getTimestamp("order_time"));
+            return new OrderEntity(rs.getLong("id"), rs.getLong("member_id"),
+                rs.getTimestamp("order_time"));
         }, memberId);
     }
 
     public OrderEntity findById(final Long orderId) {
         final String sql = "SELECT * FROM order_record WHERE id = ?";
         return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            return new OrderEntity(rs.getLong("id"), rs.getLong("member_id"), rs.getTimestamp("order_time"));
+            return new OrderEntity(rs.getLong("id"), rs.getLong("member_id"),
+                rs.getTimestamp("order_time"));
         }, orderId);
     }
 }

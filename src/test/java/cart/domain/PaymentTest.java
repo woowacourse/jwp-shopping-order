@@ -19,15 +19,16 @@ class PaymentTest {
     void createPaymentRecord() {
         //given
         final DiscountPolicy discountPolicy = defaultDiscountPolicy;
-        final DeliveryPolicy deliveryPolicy = new DefaultDeliveryPolicy("기본 배송 정책", Money.from(3_500));
+        final DeliveryPolicy deliveryPolicy = new DefaultDeliveryPolicy("기본 배송 정책",
+            Money.from(3_500));
         final Payment payment = new Payment(List.of(discountPolicy), List.of(deliveryPolicy));
         final PaymentRecord expected = new PaymentRecord(orderWithoutId, Money.from(55_000),
-                Map.of(discountPolicy, Money.from(5_500)), Map.of(deliveryPolicy, Money.from(3_500)));
+            Map.of(discountPolicy, Money.from(5_500)), Map.of(deliveryPolicy, Money.from(3_500)));
         //when
         final PaymentRecord actual = payment.createPaymentRecord(orderWithoutId);
         //then
         assertThat(actual).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @Test
@@ -35,15 +36,17 @@ class PaymentTest {
     void createPaymentRecord_notAppliedDiscount() {
         //given
         final DiscountPolicy discountPolicy = defaultDiscountPolicy;
-        final DeliveryPolicy deliveryPolicy = new DefaultDeliveryPolicy("기본 배송 정책", Money.from(3_500));
+        final DeliveryPolicy deliveryPolicy = new DefaultDeliveryPolicy("기본 배송 정책",
+            Money.from(3_500));
         final Payment payment = new Payment(List.of(discountPolicy), List.of(deliveryPolicy));
-        final PaymentRecord expected = new PaymentRecord(orderUnderDiscountThreshold, Money.from(40_000),
-                Map.of(), Map.of(deliveryPolicy, Money.from(3_500)));
+        final PaymentRecord expected = new PaymentRecord(orderUnderDiscountThreshold,
+            Money.from(40_000),
+            Map.of(), Map.of(deliveryPolicy, Money.from(3_500)));
         //when
         final PaymentRecord actual = payment.createPaymentRecord(orderUnderDiscountThreshold);
         //then
         assertThat(actual).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
 }

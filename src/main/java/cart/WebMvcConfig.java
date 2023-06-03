@@ -12,6 +12,7 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
     private final MemberDao memberDao;
 
     public WebMvcConfig(MemberDao memberDao) {
@@ -24,10 +25,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry){
+    public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods("*")
-                .exposedHeaders(HttpHeaders.LOCATION)
-                .allowedHeaders("*");
+            .allowedMethods("*")
+            .exposedHeaders(HttpHeaders.LOCATION)
+            .allowedHeaders("*");
     }
 }

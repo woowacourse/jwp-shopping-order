@@ -26,18 +26,19 @@ public class ProductService {
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException.NotFound(productId));
+            .orElseThrow(() -> new ProductException.NotFound(productId));
         return ProductResponse.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = Product.of(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = Product.of(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl());
         return productRepository.create(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = Product.of(productId, productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
+            productRequest.getImageUrl());
         productRepository.update(product);
     }
 

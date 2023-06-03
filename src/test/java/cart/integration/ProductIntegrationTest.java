@@ -20,20 +20,20 @@ public class ProductIntegrationTest extends IntegrationTest {
     @Test
     public void getProducts() {
         var result = given(this.spec)
-                .filter(
-                        document("get-products",
-                                responseFields(
-                                        fieldWithPath("[].id").description("상품 아이디"),
-                                        fieldWithPath("[].name").description("상품명"),
-                                        fieldWithPath("[].price").description("상품 가격"),
-                                        fieldWithPath("[].imageUrl").description("상품 이미지 주소")
-                                ))
-                )
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products")
-                .then()
-                .extract();
+            .filter(
+                document("get-products",
+                    responseFields(
+                        fieldWithPath("[].id").description("상품 아이디"),
+                        fieldWithPath("[].name").description("상품명"),
+                        fieldWithPath("[].price").description("상품 가격"),
+                        fieldWithPath("[].imageUrl").description("상품 이미지 주소")
+                    ))
+            )
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/products")
+            .then()
+            .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -43,21 +43,21 @@ public class ProductIntegrationTest extends IntegrationTest {
         var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
         var response = given(this.spec)
-                .filter(
-                        document("create-product",
-                                requestFields(
-                                        fieldWithPath("name").description("상품명"),
-                                        fieldWithPath("price").description("상품 가격"),
-                                        fieldWithPath("imageUrl").description("상품 이미지 주소")
-                                )
-                        )
+            .filter(
+                document("create-product",
+                    requestFields(
+                        fieldWithPath("name").description("상품명"),
+                        fieldWithPath("price").description("상품 가격"),
+                        fieldWithPath("imageUrl").description("상품 이미지 주소")
+                    )
                 )
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(product)
-                .when()
-                .post("/products")
-                .then()
-                .extract();
+            )
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(product)
+            .when()
+            .post("/products")
+            .then()
+            .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -68,38 +68,38 @@ public class ProductIntegrationTest extends IntegrationTest {
 
         // create product
         var location =
-                given(this.spec)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
+            given(this.spec)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(product)
+                .when()
+                .post("/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
         Long productId = Long.valueOf(location.split("/")[2]);
 
         // get product
         var responseProduct = given(this.spec).log().all()
-                .filter(
-                        document("get-product",
-                                pathParameters(
-                                        parameterWithName("productId").description("확인할 상품 id")
-                                ),
-                                responseFields(
-                                        fieldWithPath("id").description("상품 id"),
-                                        fieldWithPath("name").description("상품명"),
-                                        fieldWithPath("price").description("상품 가격"),
-                                        fieldWithPath("imageUrl").description("상품 이미지 주소")
-                                )
-                        )
+            .filter(
+                document("get-product",
+                    pathParameters(
+                        parameterWithName("productId").description("확인할 상품 id")
+                    ),
+                    responseFields(
+                        fieldWithPath("id").description("상품 id"),
+                        fieldWithPath("name").description("상품명"),
+                        fieldWithPath("price").description("상품 가격"),
+                        fieldWithPath("imageUrl").description("상품 이미지 주소")
+                    )
                 )
-                .when()
-                .get("/products/{productId}", productId)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .jsonPath()
-                .getObject(".", ProductResponse.class);
+            )
+            .when()
+            .get("/products/{productId}", productId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getObject(".", ProductResponse.class);
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");
@@ -112,60 +112,60 @@ public class ProductIntegrationTest extends IntegrationTest {
 
         // create product
         var location =
-                given(this.spec)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
+            given(this.spec)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(product)
+                .when()
+                .post("/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
         Long productId = Long.valueOf(location.split("/")[2]);
         var response = given(this.spec).log().all()
-                .filter(document("delete-product",
-                                pathParameters(
-                                        parameterWithName("productId").description("확인할 상품 id")
-                                )
-                        )
+            .filter(document("delete-product",
+                    pathParameters(
+                        parameterWithName("productId").description("확인할 상품 id")
+                    )
                 )
-                .when()
-                .delete("/products/{productId}", productId)
-                .then()
-                .extract();
+            )
+            .when()
+            .delete("/products/{productId}", productId)
+            .then()
+            .extract();
         assertThat(response.statusCode()).isEqualTo(204);
     }
 
     @Test
-    void updateProduct(){
+    void updateProduct() {
         var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product
         var location =
-                given(this.spec)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
+            given(this.spec)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(product)
+                .when()
+                .post("/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
         Long productId = Long.valueOf(location.split("/")[2]);
         var newProduct = new ProductRequest("새로운 피자", product.getPrice(), product.getImageUrl());
 
         // update product
         var response = given(this.spec).log().all()
-                .filter(document("update-product",
-                                pathParameters(
-                                        parameterWithName("productId").description("수정할 상품 id")
-                                )
-                        )
+            .filter(document("update-product",
+                    pathParameters(
+                        parameterWithName("productId").description("수정할 상품 id")
+                    )
                 )
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(newProduct)
-                .when()
-                .put("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+            )
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(newProduct)
+            .when()
+            .put("/products/{productId}", productId)
+            .then().log().all()
+            .extract();
         assertThat(response.statusCode()).isEqualTo(200);
     }
 }

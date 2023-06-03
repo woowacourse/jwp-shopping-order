@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderResponse {
+
     private final Long id;
     private final LocalDateTime orderTime;
     private final List<OrderItemResponse> productList;
@@ -18,8 +19,8 @@ public class OrderResponse {
 
     public static OrderResponse from(Order order) {
         List<OrderItemResponse> productList = order.getOrderItems().stream()
-                .map(OrderItemResponse::from)
-                .collect(Collectors.toList());
+            .map(OrderItemResponse::from)
+            .collect(Collectors.toList());
         return new OrderResponse(order.getId(), order.getOrderTime(), productList);
     }
 

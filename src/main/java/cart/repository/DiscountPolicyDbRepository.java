@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public class DiscountPolicyDbRepository implements DiscountPolicyRepository {
+
     private final DefaultDiscountPolicyDao defaultDiscountPolicyDao;
 
     public DiscountPolicyDbRepository(final DefaultDiscountPolicyDao defaultDiscountPolicyDao) {

@@ -61,20 +61,25 @@ class OrderServiceTest {
     @DisplayName("CartItem 아이디 리스트로 Order 객체를 생성하고 저장한다.")
     void createOrderAndSave() {
         //given
-        final List<OrderItem> orderItems = this.CART_ITEM_IDS.stream().map(this.cartItemRepository::findById).map(cartItem -> {
-            return OrderItem.from(cartItem.orElseThrow());
-        }).collect(Collectors.toList());
+        final List<OrderItem> orderItems = this.CART_ITEM_IDS.stream()
+            .map(this.cartItemRepository::findById).map(cartItem -> {
+                return OrderItem.from(cartItem.orElseThrow());
+            }).collect(Collectors.toList());
         final Order expected = new Order(memberWithId, orderItems);
         //when
-        final Long createdOrderId = this.orderService.createOrderAndSave(memberWithId, this.CART_ITEM_IDS);
+        final Long createdOrderId = this.orderService.createOrderAndSave(memberWithId,
+            this.CART_ITEM_IDS);
 
         //then
         assertSoftly(softly -> {
             final Optional<Order> createdOrder = this.orderRepository.findById(createdOrderId);
             softly.assertThat(createdOrder).isNotEmpty();
-            softly.assertThat(createdOrder.get()).usingRecursiveComparison().ignoringFields("id", "orderTime")
-                    .isEqualTo(expected);
-            this.CART_ITEM_IDS.forEach(cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId)).isEmpty());
+            softly.assertThat(createdOrder.get()).usingRecursiveComparison()
+                .ignoringFields("id", "orderTime")
+                .isEqualTo(expected);
+            this.CART_ITEM_IDS.forEach(
+                cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId))
+                    .isEmpty());
         });
     }
 
@@ -108,8 +113,9 @@ class OrderServiceTest {
         //given
         //when
         //then
-        Assertions.assertThatThrownBy(() -> this.orderService.createDraftOrder(memberWithId, List.of()))
-                .isInstanceOf(EmptyItemInput.class);
+        Assertions.assertThatThrownBy(
+                () -> this.orderService.createDraftOrder(memberWithId, List.of()))
+            .isInstanceOf(EmptyItemInput.class);
     }
 
     @Test
@@ -117,10 +123,12 @@ class OrderServiceTest {
     void createOrderAndSave_fail_() {
         //given
         final Member unauthorizedMember = new Member(10000000L, "iam@othermember.com", "1234");
-        final CartItem cartItem = this.cartItemRepository.findById(this.CART_ITEM_IDS.get(0)).orElseThrow();
+        final CartItem cartItem = this.cartItemRepository.findById(this.CART_ITEM_IDS.get(0))
+            .orElseThrow();
         //when
         //then
-        assertThatThrownBy(() -> this.orderService.createOrderAndSave(unauthorizedMember, List.of(cartItem.getId())))
-                .isInstanceOf(CartItemException.IllegalMember.class);
+        assertThatThrownBy(() -> this.orderService.createOrderAndSave(unauthorizedMember,
+            List.of(cartItem.getId())))
+            .isInstanceOf(CartItemException.IllegalMember.class);
     }
 }

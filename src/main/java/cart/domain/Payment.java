@@ -18,14 +18,15 @@ public class Payment {
     public PaymentRecord createPaymentRecord(Order order) {
         Money originalTotalPrice = order.calculateOriginalTotalPrice();
         Map<DiscountPolicy, Money> policyToDiscountAmounts = discountPolicies.stream()
-                .filter(discountPolicy -> discountPolicy.canApply(order))
-                .collect(toMap(discountPolicy -> discountPolicy,
-                        discountPolicy -> discountPolicy.calculateDiscountAmount(order)));
+            .filter(discountPolicy -> discountPolicy.canApply(order))
+            .collect(toMap(discountPolicy -> discountPolicy,
+                discountPolicy -> discountPolicy.calculateDiscountAmount(order)));
 
         Map<DeliveryPolicy, Money> policyToDeliveryFees = deliveryPolicies.stream()
-                .collect(toMap(deliveryPolicy -> deliveryPolicy,
-                        (DeliveryPolicy deliveryPolicy) -> deliveryPolicy.calculateDeliveryFee(order)));
+            .collect(toMap(deliveryPolicy -> deliveryPolicy,
+                (DeliveryPolicy deliveryPolicy) -> deliveryPolicy.calculateDeliveryFee(order)));
 
-        return new PaymentRecord(order, originalTotalPrice, policyToDiscountAmounts, policyToDeliveryFees);
+        return new PaymentRecord(order, originalTotalPrice, policyToDiscountAmounts,
+            policyToDeliveryFees);
     }
 }

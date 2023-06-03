@@ -3,6 +3,7 @@ package cart.domain;
 import java.util.Objects;
 
 public class Money {
+
     private final int value;
 
     public Money(int value) {
@@ -56,8 +57,8 @@ public class Money {
     @Override
     public String toString() {
         return "Money{" +
-                "value=" + value +
-                '}';
+            "value=" + value +
+            '}';
     }
 
     public boolean isGreaterThanOrEqual(Money other) {

@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
+
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+    public CartItemService(ProductRepository productRepository,
+        CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
     }
@@ -31,13 +33,13 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
+            .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
         return cartItemRepository.create(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new CartItemException.NotFound(id));
+            .orElseThrow(() -> new CartItemException.NotFound(id));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -51,7 +53,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new CartItemException.NotFound(id));
+            .orElseThrow(() -> new CartItemException.NotFound(id));
 
         cartItem.checkOwner(member);
 

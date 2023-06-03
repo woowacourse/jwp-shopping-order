@@ -10,6 +10,7 @@ import java.util.List;
 
 @Component
 public class DefaultDeliveryPolicyDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public DefaultDeliveryPolicyDao(final JdbcTemplate jdbcTemplate) {

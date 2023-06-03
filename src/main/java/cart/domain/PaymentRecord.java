@@ -3,13 +3,15 @@ package cart.domain;
 import java.util.Map;
 
 public class PaymentRecord {
+
     private final Order order;
     private final Money originalTotalPrice;
     private final Map<DiscountPolicy, Money> policyToDiscountAmounts;
     private final Map<DeliveryPolicy, Money> policyToDeliveryFees;
 
-    public PaymentRecord(Order order, Money originalTotalPrice, Map<DiscountPolicy, Money> policyToDiscountAmounts,
-                         Map<DeliveryPolicy, Money> policyToDeliveryFees) {
+    public PaymentRecord(Order order, Money originalTotalPrice,
+        Map<DiscountPolicy, Money> policyToDiscountAmounts,
+        Map<DeliveryPolicy, Money> policyToDeliveryFees) {
         this.order = order;
         this.originalTotalPrice = originalTotalPrice;
         this.policyToDiscountAmounts = policyToDiscountAmounts;
@@ -33,7 +35,8 @@ public class PaymentRecord {
     }
 
     public Money calculateDiscountedPrice() {
-        Money discountAmount = policyToDiscountAmounts.values().stream().reduce(Money.from(0), Money::add);
+        Money discountAmount = policyToDiscountAmounts.values().stream()
+            .reduce(Money.from(0), Money::add);
         return originalTotalPrice.subtract(discountAmount);
     }
 

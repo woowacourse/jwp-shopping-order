@@ -3,6 +3,7 @@ package cart.dto;
 import cart.domain.OrderItem;
 
 public class OrderItemResponse {
+
     private final String name;
     private final int quantity;
     private final String imageUrl;
@@ -17,9 +18,9 @@ public class OrderItemResponse {
 
     public static OrderItemResponse from(OrderItem orderItem) {
         return new OrderItemResponse(orderItem.getName(),
-                orderItem.getQuantity(),
-                orderItem.getImageUrl(),
-                orderItem.getTotalPrice().getValue());
+            orderItem.getQuantity(),
+            orderItem.getImageUrl(),
+            orderItem.getTotalPrice().getValue());
     }
 
     public String getName() {

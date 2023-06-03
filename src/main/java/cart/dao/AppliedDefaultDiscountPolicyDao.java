@@ -14,6 +14,7 @@ import java.util.Map;
 
 @Component
 public class AppliedDefaultDiscountPolicyDao {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<DiscountPolicy> rowMapper = (rs, rowNum) -> {
@@ -27,8 +28,8 @@ public class AppliedDefaultDiscountPolicyDao {
     public AppliedDefaultDiscountPolicyDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("applied_default_discount_policy")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("applied_default_discount_policy")
+            .usingGeneratedKeyColumns("id");
     }
 
     public long insert(final long paymentRecordId, final long discountPolicyId) {
@@ -39,7 +40,9 @@ public class AppliedDefaultDiscountPolicyDao {
     }
 
     public List<DiscountPolicy> findByPaymentRecordId(final Long paymentRecordId) {
-        final String sql = "SELECT B.id AS id, B.name AS name, B.threshold AS threshold, B.discount_rate AS discount_rate FROM applied_default_discount_policy AS A " +
+        final String sql =
+            "SELECT B.id AS id, B.name AS name, B.threshold AS threshold, B.discount_rate AS discount_rate FROM applied_default_discount_policy AS A "
+                +
                 "INNER JOIN default_discount_policy AS B ON A.default_discount_policy_id = B.id " +
                 "WHERE A.payment_record_id = ?";
         return this.jdbcTemplate.query(sql, this.rowMapper, paymentRecordId);

@@ -10,13 +10,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
+
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(final AuthenticationException e) {
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
+        final AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiErrorResponse.from(e));
     }
 
     @ExceptionHandler({CartItemException.NotFound.class, OrderException.NotFound.class,
-            ProductException.NotFound.class, PaymentException.NotFound.class})
+        ProductException.NotFound.class, PaymentException.NotFound.class})
     public ResponseEntity<ApiErrorResponse> handleNotFoundException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiErrorResponse.from(e));
     }
@@ -29,7 +31,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<ApiErrorResponse> handleRuntimeException(final RuntimeException e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiErrorResponse.from(e));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ApiErrorResponse.from(e));
     }
 
 }

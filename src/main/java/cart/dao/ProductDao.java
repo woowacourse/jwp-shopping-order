@@ -45,8 +45,8 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
+                "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
@@ -61,7 +61,8 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(),
+            productId);
     }
 
     public void deleteProduct(Long productId) {

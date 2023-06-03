@@ -46,12 +46,16 @@ public class PaymentIntegrationTest extends IntegrationTest {
 
         member = memberDao.getMemberById(1L);
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
-        productId3 = createProduct(new ProductRequest("보쌈", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(
+            new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
+        productId2 = createProduct(
+            new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId3 = createProduct(
+            new ProductRequest("보쌈", 15_000, "http://example.com/pizza.jpg"));
 
         cartItemIds = List.of(requestAddCartItemAndGetId(member, productId),
-                requestAddCartItemAndGetId(member, productId2), requestAddCartItemAndGetId(member, productId3));
+            requestAddCartItemAndGetId(member, productId2),
+            requestAddCartItemAndGetId(member, productId3));
 
         requestUpdateCartItemQuantity(member, cartItemIds.get(1), 2);
     }
@@ -60,50 +64,51 @@ public class PaymentIntegrationTest extends IntegrationTest {
     @Test
     void getPayment() {
         ExtractableResponse<Response> response = given(this.spec).log().all()
-                .queryParam("cartItemIds", cartItemIds)
-                .filter(
-                        document("get-payment",
-                                requestParameters(parameterWithName("cartItemIds").description("선택한 장바구니의 아이템 id")),
-                                responseFields(
-                                        fieldWithPath("originalPrice").description("주문 금액"),
-                                        fieldWithPath("discounts[].discountPolicy").description("적용된 할인 정책 이름"),
-                                        fieldWithPath("discounts[].discountAmount").description("할인 금액"),
-                                        fieldWithPath("discountedPrice").description("할인 적용 금액"),
-                                        fieldWithPath("deliveryFee").description("배송비"),
-                                        fieldWithPath("finalPrice").description("예상 결제 금액")
-                                )
-                        )
+            .queryParam("cartItemIds", cartItemIds)
+            .filter(
+                document("get-payment",
+                    requestParameters(
+                        parameterWithName("cartItemIds").description("선택한 장바구니의 아이템 id")),
+                    responseFields(
+                        fieldWithPath("originalPrice").description("주문 금액"),
+                        fieldWithPath("discounts[].discountPolicy").description("적용된 할인 정책 이름"),
+                        fieldWithPath("discounts[].discountAmount").description("할인 금액"),
+                        fieldWithPath("discountedPrice").description("할인 적용 금액"),
+                        fieldWithPath("deliveryFee").description("배송비"),
+                        fieldWithPath("finalPrice").description("예상 결제 금액")
+                    )
                 )
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .get("/total-cart-price")
-                .then()
-                .log().all()
-                .extract();
+            )
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/total-cart-price")
+            .then()
+            .log().all()
+            .extract();
 
         PaymentResponse responseBody = response.body().as(PaymentResponse.class);
 
         PaymentResponse expected = new PaymentResponse(55_000,
-                List.of(new DiscountResponse("5만원 이상 구매 시 10% 할인", 5_500)), 49_500, 3_500, 53_000);
+            List.of(new DiscountResponse("5만원 이상 구매 시 10% 할인", 5_500)), 49_500, 3_500, 53_000);
 
         Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(200),
-                () -> assertThat(responseBody).usingRecursiveComparison().isEqualTo(expected)
+            () -> assertThat(response.statusCode()).isEqualTo(200),
+            () -> assertThat(responseBody).usingRecursiveComparison().isEqualTo(expected)
         );
 
     }
 
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given(this.spec)
-                .filter(document("create-product"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when()
-                .post("/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
+            .filter(document("create-product"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(productRequest)
+            .when()
+            .post("/products")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract();
 
         return getIdFromCreatedResponse(response);
     }
@@ -112,34 +117,38 @@ public class PaymentIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(Member member,
+        CartItemRequest cartItemRequest) {
         return given(this.spec).log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
-                .when()
-                .post("/cart-items")
-                .then()
-                .log().all()
-                .extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .body(cartItemRequest)
+            .when()
+            .post("/cart-items")
+            .then()
+            .log().all()
+            .extract();
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+        ExtractableResponse<Response> response = requestAddCartItem(member,
+            new CartItemRequest(productId));
         return getIdFromCreatedResponse(response);
     }
 
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
-        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member,
+        Long cartItemId, int quantity) {
+        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(
+            quantity);
         return given(this.spec).log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .body(quantityUpdateRequest)
-                .patch("/cart-items/{cartItemId}", cartItemId)
-                .then()
-                .log().all()
-                .extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .body(quantityUpdateRequest)
+            .patch("/cart-items/{cartItemId}", cartItemId)
+            .then()
+            .log().all()
+            .extract();
     }
 }

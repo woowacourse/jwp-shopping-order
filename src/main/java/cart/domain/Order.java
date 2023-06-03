@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Order {
+
     private final Long id;
     private final Member member;
     private final List<OrderItem> orderItems;
@@ -21,7 +22,8 @@ public class Order {
         this.orderTime = LocalDateTime.now();
     }
 
-    public Order(final Long id, final Member member, final List<OrderItem> orderItems, final LocalDateTime orderTime) {
+    public Order(final Long id, final Member member, final List<OrderItem> orderItems,
+        final LocalDateTime orderTime) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
@@ -34,8 +36,8 @@ public class Order {
 
     public Money calculateOriginalTotalPrice() {
         return this.orderItems.stream()
-                .map(OrderItem::getTotalPrice)
-                .reduce(new Money(0), Money::add);
+            .map(OrderItem::getTotalPrice)
+            .reduce(new Money(0), Money::add);
     }
 
     public Long getId() {
@@ -52,8 +54,12 @@ public class Order {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
         final Order order = (Order) o;
         return Objects.equals(this.id, order.id);
     }

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
+
     private final OrderService orderService;
     private final PaymentService paymentService;
 
@@ -29,9 +30,12 @@ public class OrderController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Void> postOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
-        final Long orderId = this.orderService.createOrderAndSave(member, orderRequest.getCartItemIds());
-        this.paymentService.createPaymentRecordAndSave(this.orderService.retrieveOrderById(orderId));
+    public ResponseEntity<Void> postOrder(final Member member,
+        @RequestBody final OrderRequest orderRequest) {
+        final Long orderId = this.orderService.createOrderAndSave(member,
+            orderRequest.getCartItemIds());
+        this.paymentService.createPaymentRecordAndSave(
+            this.orderService.retrieveOrderById(orderId));
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
@@ -39,13 +43,14 @@ public class OrderController {
     public ResponseEntity<List<OrderResponse>> getOrders(final Member member) {
         final List<Order> orders = this.orderService.retrieveMemberOrders(member);
         final List<OrderResponse> orderResponses = orders.stream()
-                .map(OrderResponse::from)
-                .collect(Collectors.toList());
+            .map(OrderResponse::from)
+            .collect(Collectors.toList());
         return ResponseEntity.ok(orderResponses);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDetailResponse> getOrderDetail(final Member member, @PathVariable final Long orderId) {
+    public ResponseEntity<OrderDetailResponse> getOrderDetail(final Member member,
+        @PathVariable final Long orderId) {
         final Order order = this.orderService.retrieveOrderById(orderId);
         final PaymentRecord paymentRecord = this.paymentService.findByOrder(order);
         return ResponseEntity.ok(OrderDetailResponse.from(paymentRecord));

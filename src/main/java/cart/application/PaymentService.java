@@ -17,7 +17,8 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     public PaymentService(final DiscountPolicyRepository discountPolicyRepository,
-                          final DeliveryPolicyRepository deliveryPolicyRepository, final PaymentRepository paymentRepository) {
+        final DeliveryPolicyRepository deliveryPolicyRepository,
+        final PaymentRepository paymentRepository) {
         this.discountPolicyRepository = discountPolicyRepository;
         this.deliveryPolicyRepository = deliveryPolicyRepository;
         this.paymentRepository = paymentRepository;
@@ -40,6 +41,6 @@ public class PaymentService {
 
     public PaymentRecord findByOrder(final Order order) {
         return this.paymentRepository.findByOrder(order)
-                .orElseThrow(() -> new PaymentException.NotFound(order));
+            .orElseThrow(() -> new PaymentException.NotFound(order));
     }
 }
