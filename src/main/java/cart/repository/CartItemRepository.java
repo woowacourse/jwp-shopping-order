@@ -5,6 +5,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
+import cart.exception.IllegalMemberException;
 import cart.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,13 +25,16 @@ public class CartItemRepository {
                 .orElseThrow(() -> new ResourceNotFoundException("해당하는 상품이 없습니다.")));
     }
 
-    public List<CartItem> findByIds(final List<Long> ids) {
-        return ids
+    public List<CartItem> findMembersItemByCartIds(final Member member, final List<Long> ids) {
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId())
                 .stream()
-                .map(id -> cartItemDao.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("해당하는 장바구니 아이템이 없습니다.")))
+                .filter(cartItemEntity -> ids.contains(cartItemEntity.getId()))
                 .map(this::toDomain)
                 .collect(Collectors.toUnmodifiableList());
+        if (cartItems.size() != ids.size()) {
+            throw new IllegalMemberException("요청한 장바구니에 접근할 수 없는 유저입니다.");
+        }
+        return cartItems;
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {

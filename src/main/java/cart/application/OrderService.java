@@ -38,8 +38,7 @@ public class OrderService {
     @Transactional
     public Long saveOrder(final Member member, final OrderCreateRequest orderCreateRequest) {
         final List<Long> cartItemIds = orderCreateRequest.getCartItemIds();
-        final List<CartItem> cartItemsToOrder = cartItemRepository.findByIds(cartItemIds);
-        validateOwner(member, cartItemsToOrder);
+        final List<CartItem> cartItemsToOrder = cartItemRepository.findMembersItemByCartIds(member, cartItemIds);
 
         final Point usingPoint = new Point(orderCreateRequest.getPoint());
         final CreditCard creditCard = new CreditCard(orderCreateRequest.getCardNumber(), orderCreateRequest.getCvc());
@@ -60,10 +59,6 @@ public class OrderService {
         cartItemIds.forEach(cartItemRepository::deleteById);
 
         return orderId;
-    }
-
-    private void validateOwner(final Member member, final List<CartItem> cartItemsToOrder) {
-        cartItemsToOrder.forEach(cartItem -> cartItem.validateOwner(member));
     }
 
     private int calculateTotalPrice(final List<CartItem> cartItemsToOrder) {
