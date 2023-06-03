@@ -3,6 +3,7 @@ package cart.domain;
 import static cart.fixture.DomainFixture.MEMBER_A;
 import static cart.fixture.DomainFixture.MEMBER_B;
 import static cart.fixture.DomainFixture.TWO_CHICKEN;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -38,5 +39,14 @@ class CartItemTest {
         assertThatThrownBy(() -> TWO_CHICKEN.changeQuantity(-1))
                 .isInstanceOf(CartItemException.InvalidQuantity.class)
                 .hasMessage("수량은 음수일 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("calculateCartItemPrice는 호출하면 해당 CartItem의 총 가격을 계산해 반환한다.")
+    void calculateCartItemPriceTest() {
+        Money actual = TWO_CHICKEN.calculateCartItemPrice();
+
+        Money expected = new Money(20_000);
+        assertThat(actual).isEqualTo(expected);
     }
 }
