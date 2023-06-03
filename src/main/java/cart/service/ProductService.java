@@ -5,9 +5,11 @@ import cart.domain.Price;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +27,11 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+        Optional<Product> product = productDao.getProductById(productId);
+        if (product.isPresent()) {
+            return ProductResponse.of(product.get());
+        }
+        throw new ProductException("존재하지 않는 상품입니다");
     }
 
     public Long createProduct(ProductRequest productRequest) {

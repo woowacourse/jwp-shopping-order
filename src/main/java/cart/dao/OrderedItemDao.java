@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -29,6 +28,5 @@ public class OrderedItemDao {
         params.put("quantity", quantity);
 
         return insertAction.executeAndReturnKey(params).longValue();
-
     }
 }

@@ -4,10 +4,12 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +32,11 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Optional<Product> product = productDao.getProductById(cartItemRequest.getProductId());
+        if (product.isPresent()) {
+            return cartItemDao.save(new CartItem(member, product.get()));
+        }
+        throw new ProductException("존재하지 않는 상품입니다");
     }
 
     public CartItem findById(Long id) {
