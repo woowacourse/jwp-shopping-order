@@ -17,6 +17,10 @@ public class Order {
         this(items, null, member);
     }
 
+    public Order(Long id, List<OrderItem> items, Member member) {
+        this(id, items, null, member);
+    }
+
     public Order(List<OrderItem> items, Timestamp createdAt, Member member) {
         this(null, items, createdAt, member);
     }
@@ -61,5 +65,9 @@ public class Order {
 
     public long getMemberId() {
         return member.getId();
+    }
+
+    public Member getMember() {
+        return member;
     }
 }
