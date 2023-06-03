@@ -39,7 +39,7 @@ public class ProductDao {
                 productEntity.getName(),
                 productEntity.getPrice(),
                 productEntity.getImageUrl(),
-                productEntity.isDiscounted(),
+                productEntity.getIsDiscounted(),
                 productEntity.getDiscountRate()
         );
     }
@@ -65,7 +65,7 @@ public class ProductDao {
                 productEntity.getName(),
                 productEntity.getPrice(),
                 productEntity.getImageUrl(),
-                productEntity.isDiscounted(),
+                productEntity.getIsDiscounted(),
                 productEntity.getDiscountRate(),
                 id
         );

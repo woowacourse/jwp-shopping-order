@@ -84,6 +84,6 @@ public class CartItemRepository {
     private Product findProduct(final CartItemEntity cartItemEntity) {
         final ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
         return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
-                productEntity.getImageUrl(), productEntity.isDiscounted(), productEntity.getDiscountRate());
+                productEntity.getImageUrl(), productEntity.getIsDiscounted(), productEntity.getDiscountRate());
     }
 }

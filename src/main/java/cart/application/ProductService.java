@@ -33,7 +33,9 @@ public class ProductService {
         final Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
-                productRequest.getImageUrl()
+                productRequest.getImageUrl(),
+                productRequest.getIsDiscounted(),
+                productRequest.getDiscountRate()
         );
         return productRepository.save(product).getId();
     }
@@ -42,7 +44,9 @@ public class ProductService {
         final Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
-                productRequest.getImageUrl()
+                productRequest.getImageUrl(),
+                productRequest.getIsDiscounted(),
+                productRequest.getDiscountRate()
         );
         productRepository.updateById(productId, product);
     }

@@ -45,7 +45,7 @@ public class ProductRepository {
                                 productEntity.getName(),
                                 productEntity.getPrice(),
                                 productEntity.getImageUrl(),
-                                productEntity.isDiscounted(),
+                                productEntity.getIsDiscounted(),
                                 productEntity.getDiscountRate()
                         )
                 ).collect(Collectors.toList());
@@ -58,7 +58,7 @@ public class ProductRepository {
                 productEntity.getName(),
                 productEntity.getPrice(),
                 productEntity.getImageUrl(),
-                productEntity.isDiscounted(),
+                productEntity.getIsDiscounted(),
                 productEntity.getDiscountRate()
         );
     }

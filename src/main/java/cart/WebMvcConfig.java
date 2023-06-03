@@ -28,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedHeaders("*")
                 .allowedOrigins("*")
-                .allowedHeaders(
+                .allowedMethods(
                         HttpMethod.POST.name(),
                         HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),

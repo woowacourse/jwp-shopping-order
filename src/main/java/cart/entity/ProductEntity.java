@@ -41,7 +41,7 @@ public class ProductEntity {
         return imageUrl;
     }
 
-    public boolean isDiscounted() {
+    public boolean getIsDiscounted() {
         return isDiscounted;
     }
 

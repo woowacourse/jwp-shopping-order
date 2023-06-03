@@ -2,11 +2,11 @@ package cart.domain.value;
 
 import java.util.Objects;
 
-public class DiscountRate {
+public class Rate {
 
     private final int value;
 
-    public DiscountRate(final int value) {
+    public Rate(final int value) {
         validateRange(value);
         this.value = value;
     }
@@ -29,7 +29,7 @@ public class DiscountRate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final DiscountRate that = (DiscountRate) o;
+        final Rate that = (Rate) o;
         return getValue() == that.getValue();
     }
 

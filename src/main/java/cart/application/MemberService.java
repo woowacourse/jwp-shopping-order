@@ -18,7 +18,7 @@ public class MemberService {
         final Member member = memberRepository.findById(id);
         return new MemberGradeResponse(
                 member.getId(),
-                member.getGrade().name(),
+                member.getGrade().getKorean(),
                 (int) (member.getGrade().getDiscountRate() * 100)
         );
     }

@@ -1,10 +1,10 @@
 package cart.domain;
 
-import cart.domain.value.DiscountRate;
 import cart.domain.value.ImageUrl;
 import cart.domain.value.Money;
 import cart.domain.value.Name;
 import cart.domain.value.Quantity;
+import cart.domain.value.Rate;
 
 public class OrderItem {
 
@@ -13,7 +13,7 @@ public class OrderItem {
     private final Money price;
     private final ImageUrl imageUrl;
     private final Quantity quantity;
-    private final DiscountRate discountRate;
+    private final Rate rate;
 
     public OrderItem(
             final String name,
@@ -27,7 +27,7 @@ public class OrderItem {
         this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.quantity = new Quantity(quantity);
-        this.discountRate = new DiscountRate(discountRate);
+        this.rate = new Rate(discountRate);
     }
 
     public OrderItem(
@@ -43,19 +43,19 @@ public class OrderItem {
         this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.quantity = new Quantity(quantity);
-        this.discountRate = new DiscountRate(discountRate);
+        this.rate = new Rate(discountRate);
     }
 
     public boolean isMemberDiscount() {
-        return discountRate.getValue() == 0;
+        return rate.getValue() == 0;
     }
 
     public boolean isProductDiscount() {
-        return discountRate.getValue() != 0;
+        return rate.getValue() != 0;
     }
 
     public int calculateDiscountAmount() {
-        return (int) (price.getValue() * (discountRate.getValue() / 100.0) * quantity.getValue());
+        return (int) (price.getValue() * (rate.getValue() / 100.0) * quantity.getValue());
     }
 
     public int calculateMemberDiscountAmount(final double discountedRateByGrade) {
@@ -67,7 +67,7 @@ public class OrderItem {
     }
 
     public int calculateDiscountedPrice() {
-        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)) * quantity.getValue());
+        return (int) (price.getValue() * (1 - (rate.getValue() / 100.0)) * quantity.getValue());
     }
 
     public Long getId() {
@@ -91,6 +91,6 @@ public class OrderItem {
     }
 
     public int getDiscountRate() {
-        return discountRate.getValue();
+        return rate.getValue();
     }
 }

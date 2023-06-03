@@ -1,9 +1,9 @@
 package cart.domain;
 
-import cart.domain.value.DiscountRate;
 import cart.domain.value.ImageUrl;
 import cart.domain.value.Money;
 import cart.domain.value.Name;
+import cart.domain.value.Rate;
 
 public class Product {
     private Long id;
@@ -11,16 +11,20 @@ public class Product {
     private Money price;
     private ImageUrl imageUrl;
     private boolean isDiscounted;
-    private DiscountRate discountRate;
+    private Rate rate;
 
     public Product(
             final String name,
             final int price,
-            final String imageUrl
+            final String imageUrl,
+            final boolean isDiscounted,
+            final int discountedRate
     ) {
         this.name = new Name(name);
         this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
+        this.isDiscounted = isDiscounted;
+        this.rate = new Rate(discountedRate);
     }
 
     public Product(
@@ -48,11 +52,11 @@ public class Product {
         this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.isDiscounted = isDiscounted;
-        this.discountRate = new DiscountRate(discountRate);
+        this.rate = new Rate(discountRate);
     }
 
     public int calculateDiscountedPrice() {
-        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)));
+        return (int) (price.getValue() * (1 - (rate.getValue() / 100.0)));
     }
 
     public Long getId() {
@@ -76,6 +80,6 @@ public class Product {
     }
 
     public int getDiscountRate() {
-        return discountRate.getValue();
+        return rate.getValue();
     }
 }
