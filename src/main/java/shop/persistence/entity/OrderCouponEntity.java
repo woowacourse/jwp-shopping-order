@@ -2,25 +2,25 @@ package shop.persistence.entity;
 
 public class OrderCouponEntity {
     private final Long id;
-    private final Long memberId;
+    private final Long orderId;
     private final Long couponId;
 
-    public OrderCouponEntity(Long id, Long memberId, Long couponId) {
+    public OrderCouponEntity(Long id, Long orderId, Long couponId) {
         this.id = id;
-        this.memberId = memberId;
+        this.orderId = orderId;
         this.couponId = couponId;
     }
 
-    public OrderCouponEntity(Long memberId, Long couponId) {
-        this(null, memberId, couponId);
+    public OrderCouponEntity(Long orderId, Long couponId) {
+        this(null, orderId, couponId);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getOrderId() {
+        return orderId;
     }
 
     public Long getCouponId() {

@@ -22,6 +22,7 @@ public class OrderDao {
                     rs.getLong("id"),
                     rs.getLong("member_id"),
                     rs.getLong("total_product_price"),
+                    rs.getLong("discounted_total_price"),
                     rs.getInt("delivery_price"),
                     rs.getTimestamp("expired_at").toLocalDateTime()
             );
@@ -29,7 +30,7 @@ public class OrderDao {
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order")
+                .withTableName("`order`")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -40,7 +41,7 @@ public class OrderDao {
     }
 
     public OrderEntity findById(Long id) {
-        String sql = "SELECT * FROM order WHERE id = ?";
+        String sql = "SELECT * FROM `order` WHERE id = ?";
 
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -50,7 +51,7 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findAllByMemberId(Long memberId) {
-        String sql = "SELECT * FROM order where member_id = ?";
+        String sql = "SELECT * FROM `order` where member_id = ?";
 
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }

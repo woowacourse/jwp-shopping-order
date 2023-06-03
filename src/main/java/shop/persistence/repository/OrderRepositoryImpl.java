@@ -40,17 +40,17 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Long save(Long memberId, Long couponId, Order order) {
         Long savedOrderId = saveOrder(memberId, order);
         saveOrderProduct(savedOrderId, order);
-        saveOrderCoupon(memberId, couponId);
+        saveOrderCoupon(savedOrderId, couponId);
 
         return savedOrderId;
     }
 
-    private void saveOrderCoupon(Long memberId, Long couponId) {
+    private void saveOrderCoupon(Long orderId, Long couponId) {
         if (couponId == null) {
             return;
         }
 
-        OrderCouponEntity orderCouponEntity = new OrderCouponEntity(memberId, couponId);
+        OrderCouponEntity orderCouponEntity = new OrderCouponEntity(orderId, couponId);
         orderCouponDao.insert(orderCouponEntity);
     }
 

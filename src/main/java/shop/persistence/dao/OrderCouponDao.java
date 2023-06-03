@@ -32,7 +32,7 @@ public class OrderCouponDao {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_coupon")
-                .usingGeneratedKeyColumns();
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long insert(OrderCouponEntity orderCouponEntity) {
@@ -47,7 +47,8 @@ public class OrderCouponDao {
                 "WHERE order_coupon.order_id = ?";
 
         try {
-            OrderCouponDetail orderCouponDetail = jdbcTemplate.queryForObject(sql, detailRowMapper, orderId);
+            OrderCouponDetail orderCouponDetail =
+                    jdbcTemplate.queryForObject(sql, detailRowMapper, orderId);
 
             return Optional.of(orderCouponDetail);
         } catch (DataAccessException e) {
