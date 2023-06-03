@@ -68,7 +68,7 @@ class PaymentControllerUnitTest {
     private Member member;
 
     @BeforeEach
-    void init() throws Exception {
+    void init() {
         member = createMember();
         member.initCoupons(createCoupons());
 

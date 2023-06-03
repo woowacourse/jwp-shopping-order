@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 
 public class CartItems {
 
-    private static final int EMPTY_COUNT = 0;
-
     private final List<CartItem> cartItems;
 
     public CartItems(final List<CartItem> cartItems) {

@@ -1,6 +1,5 @@
 package cart.dao.cart;
 
-import cart.domain.cart.CartItem;
 import cart.entity.cart.CartEntity;
 import cart.entity.cart.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,19 +57,6 @@ public class CartDao {
         String sql = "SELECT id, cart_id, product_id, quantity FROM cart_item WHERE id = :id";
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("id", cartItemId), cartItemRowMapper).stream()
                 .findAny();
-    }
-
-    public Long saveCartItem(final long cartId, final CartItem cartItem) {
-        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart_item")
-                .usingGeneratedKeyColumns("id");
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("cart_id", cartId);
-        parameters.put("product_id", cartItem.getProduct().getId());
-        parameters.put("quantity", cartItem.getQuantity());
-
-        return insert.executeAndReturnKey(parameters).longValue();
     }
 
     public Long saveCartItem(final long cartId, final Long productId) {

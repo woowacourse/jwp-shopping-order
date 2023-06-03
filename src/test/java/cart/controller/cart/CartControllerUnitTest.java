@@ -65,7 +65,7 @@ class CartControllerUnitTest {
     private Member member;
 
     @BeforeEach
-    void init() throws Exception {
+    void init() {
         member = createMember();
 
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
