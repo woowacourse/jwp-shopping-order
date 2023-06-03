@@ -2,7 +2,6 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.domain.Product;
 import cart.dto.OrderResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -17,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class OrderIntegrationTest extends IntegrationTest {
 
