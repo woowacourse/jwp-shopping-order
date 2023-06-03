@@ -1,4 +1,4 @@
-package cart.service;
+package cart.paging;
 
 import cart.dto.PageInfo;
 import cart.dto.PageRequest;

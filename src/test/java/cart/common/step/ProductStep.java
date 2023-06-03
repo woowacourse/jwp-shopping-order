@@ -1,5 +1,6 @@
 package cart.common.step;
 
+import cart.dto.PageRequest;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -22,5 +23,15 @@ public class ProductStep {
     public static Long addProductAndGetId(final ProductRequest productRequest) {
         final ExtractableResponse<Response> response = addProduct(productRequest);
         return Long.parseLong(response.header("Location").split("/")[2]);
+    }
+
+    public static ExtractableResponse<Response> readAllProducts(final PageRequest pageRequest) {
+        return given().log().all()
+                .param("page", pageRequest.getPage())
+                .param("size", pageRequest.getSize())
+                .when()
+                .get("/products")
+                .then()
+                .extract();
     }
 }

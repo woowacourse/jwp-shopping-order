@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dto.PageInfo;
 import cart.dto.PageRequest;
+import cart.paging.Paging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
