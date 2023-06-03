@@ -8,8 +8,10 @@ import cart.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -28,18 +30,21 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
+    @Transactional
     public Long createProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), Amount.of(productRequest.getPrice()),
             productRequest.getImageUrl());
         return productDao.createProduct(product);
     }
 
+    @Transactional
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), Amount.of(productRequest.getPrice()),
             productRequest.getImageUrl());
         productDao.updateProduct(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(final Long productId) {
         productDao.deleteProduct(productId);
     }

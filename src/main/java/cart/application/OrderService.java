@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -40,6 +42,7 @@ public class OrderService {
         this.productOrderDao = productOrderDao;
     }
 
+    @Transactional
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
         final List<Product> products = findProducts(orderRequest);
         final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())

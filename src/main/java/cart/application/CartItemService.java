@@ -12,8 +12,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CartItemService {
 
     private final ProductDao productDao;
@@ -29,6 +31,7 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Optional<CartItem> optionalCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
             cartItemRequest.getProductId());
@@ -43,6 +46,7 @@ public class CartItemService {
                 member));
     }
 
+    @Transactional
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -56,6 +60,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(final Member member, final Long id) {
         final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -63,6 +68,7 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
+    @Transactional
     public void remove(final Member member, final RemoveCartItemsRequest request) {
         final List<CartItem> cartItems = cartItemDao.findAllByIds(request.getCartItemIds());
         for (final CartItem cartItem : cartItems) {

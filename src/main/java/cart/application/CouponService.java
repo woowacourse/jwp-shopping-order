@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CouponService {
 
     private final CouponDao couponDao;
@@ -45,6 +47,7 @@ public class CouponService {
             coupon.getDiscountAmount().getValue(), isPublished);
     }
 
+    @Transactional
     public void registerCouponToMember(final Long couponId, final Member member) {
         final Coupon coupon = findCoupon(couponId);
         couponDao.save(coupon, member.getId());
