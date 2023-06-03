@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.domain.repository.CouponRepository;
 import cart.domain.repository.MemberRepository;
 import cart.dto.response.ActiveCouponResponse;
+import cart.dto.response.CouponDiscountResponse;
 import cart.dto.response.CouponResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -90,6 +91,25 @@ public class CouponIntegrationTest extends IntegrationTest {
         assertThat(responses.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
 
+    @DisplayName("쿠폰 id와 총 상품 금액을 입력받아 할인 금액과 할인된 상품 금액을 조회할 수 있다.")
+    @Test
+    void showCouponDiscountAmount() {
+        // given
+        final Long couponId = coupon1.getId();
+        final int totalProductAmount = 30000;
+
+        // when
+        final ExtractableResponse<Response> response = getDiscountAmountResponse(couponId, totalProductAmount);
+
+        // then
+        final CouponDiscountResponse couponDiscountResponse = response.as(CouponDiscountResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final int expectedDiscountAmount = coupon1.getDiscountAmount().getValue();
+        assertThat(couponDiscountResponse.getDiscountAmount()).isEqualTo(expectedDiscountAmount);
+        assertThat(couponDiscountResponse.getDiscountedProductAmount())
+                .isEqualTo(totalProductAmount - expectedDiscountAmount);
+    }
+
     private ExtractableResponse<Response> getCouponsResponse() {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -111,6 +131,14 @@ public class CouponIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/coupons/active?total=" + totalProductAmount)
+                .then().extract();
+    }
+
+    private ExtractableResponse<Response> getDiscountAmountResponse(final Long id, final int totalProductAmount) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/coupons/{id}/discount?total=" + totalProductAmount, id)
                 .then().extract();
     }
 }
