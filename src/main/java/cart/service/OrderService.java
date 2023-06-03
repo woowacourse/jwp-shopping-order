@@ -116,7 +116,7 @@ public class OrderService {
     }
 
     public OrderResponse findById(Member member, Long id) {
-        Member orderOwner = memberDao.findByOrderId(id).orElseThrow(() -> new AuthenticationException());
+        Member orderOwner = memberDao.findByOrderId(id).orElseThrow(AuthenticationException::new);
         if (!orderOwner.equals(member)) {
             throw new IllegalArgumentException("로그인한 사용자의 주문 목록이 아닙니다");
         }

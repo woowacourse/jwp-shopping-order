@@ -17,7 +17,7 @@ import java.util.Optional;
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
-    private RowMapper<Product> productRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
         Long id = rs.getLong("id");
         String name = rs.getString("name");
         Price price = new Price(rs.getInt("price"));

@@ -6,16 +6,18 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Order {
-    private Long id;
-    private Member member;
-    private LocalDateTime orderedAt;
-    private Point usedPoint;
-    private OrderedItems orderedItems;
+    private final Long id;
+    private final Member member;
+    private final LocalDateTime orderedAt;
+    private final Point usedPoint;
+    private final OrderedItems orderedItems;
 
     public Order(Member member, LocalDateTime orderedAt, Point usedPoint) {
+        this.id = null;
         this.member = member;
         this.orderedAt = orderedAt;
         this.usedPoint = usedPoint;
+        this.orderedItems = null;
     }
 
     public Order(Long id, Member member, LocalDateTime orderedAt, Point usedPoint, OrderedItems orderedItems) {

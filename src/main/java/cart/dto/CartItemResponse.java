@@ -3,9 +3,9 @@ package cart.dto;
 import cart.domain.CartItem;
 
 public class CartItemResponse {
-    private Long id;
-    private Integer quantity;
-    private ProductResponse product;
+    private final Long id;
+    private final Integer quantity;
+    private final ProductResponse product;
 
     private CartItemResponse(Long id, Integer quantity, ProductResponse product) {
         this.id = id;

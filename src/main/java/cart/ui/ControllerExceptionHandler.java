@@ -12,26 +12,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
+        LOGGER.info("An error occurred: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<Void> handleCartItemException(CartItemException.IllegalMember e) {
+        LOGGER.info("An error occurred: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @ExceptionHandler(InvalidCardException.class)
     public ResponseEntity<Void> handleInvalidCardException(InvalidCardException e) {
+        LOGGER.info("An error occurred: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
-        logger.info("An error occurred: {}", e.getMessage(), e);
+        LOGGER.info("An error occurred: {}", e.getMessage(), e);
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
 }

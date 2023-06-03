@@ -1,13 +1,12 @@
 package cart.dto;
 
 import cart.domain.Product;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProductResponse {
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
 
     public ProductResponse(Long id, String name, Integer price, String imageUrl) {
         this.id = id;

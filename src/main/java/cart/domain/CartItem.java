@@ -5,12 +5,14 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
+    private final Long id;
     private final Product product;
     private final Member member;
-    private Long id;
+
     private Integer quantity;
 
     public CartItem(Member member, Product product) {
+        this.id = null;
         this.quantity = 1;
         this.member = member;
         this.product = product;

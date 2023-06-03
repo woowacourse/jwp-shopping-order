@@ -3,9 +3,9 @@ package cart.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OrderItemResponse {
-    private Long id;
-    private Integer quantity;
-    private ProductResponse product;
+    private final Long id;
+    private final Integer quantity;
+    private final ProductResponse product;
 
     public OrderItemResponse(Long id, Integer quantity, ProductResponse product) {
         this.id = id;

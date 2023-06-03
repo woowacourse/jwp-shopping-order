@@ -12,6 +12,13 @@ import java.util.Optional;
 @Repository
 public class MemberDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Member> memberRowMapper = (rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        Point point = new Point(rs.getLong("point"));
+        return new Member(id, email, password, point);
+    };
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -39,14 +46,6 @@ public class MemberDao {
         String sql = "SELECT id, email, password, point from member";
         return jdbcTemplate.query(sql, memberRowMapper);
     }
-
-    private RowMapper<Member> memberRowMapper = (rs, rowNum) -> {
-        Long id = rs.getLong("id");
-        String email = rs.getString("email");
-        String password = rs.getString("password");
-        Point point = new Point(rs.getLong("point"));
-        return new Member(id, email, password, point);
-    };
 
     public void addMember(Member member) {
         String sql = "INSERT INTO member (email, password) VALUES (?, ?)";

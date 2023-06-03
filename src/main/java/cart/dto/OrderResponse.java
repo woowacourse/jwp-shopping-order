@@ -4,11 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderResponse {
-    private Long id;
-    private Long usedPoint;
+    private final Long id;
+    private final Long usedPoint;
+    private final LocalDateTime orderedAt;
+    private final List<OrderItemResponse> products;
+
     private Long savedPoint;
-    private LocalDateTime orderedAt;
-    private List<OrderItemResponse> products;
 
     public OrderResponse(Long id, Long usedPoint, Long savedPoint, LocalDateTime orderedAt, List<OrderItemResponse> products) {
         this.id = id;
@@ -30,15 +31,15 @@ public class OrderResponse {
         return savedPoint;
     }
 
+    public void setSavedPoint(Long savedPoint) {
+        this.savedPoint = savedPoint;
+    }
+
     public LocalDateTime getOrderedAt() {
         return orderedAt;
     }
 
     public List<OrderItemResponse> getProducts() {
         return products;
-    }
-
-    public void setSavedPoint(Long savedPoint) {
-        this.savedPoint = savedPoint;
     }
 }
