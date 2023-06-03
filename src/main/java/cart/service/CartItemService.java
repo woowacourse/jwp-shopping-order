@@ -10,7 +10,6 @@ import cart.dto.cart.CartItemSaveRequest;
 import cart.exception.cart.CartItemNotFoundException;
 import cart.exception.cart.ProductNotFoundException;
 import cart.repository.CartItemRepository;
-import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -21,16 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
-    private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
     public CartItemService(
             final CartItemRepository cartItemDao,
-            final MemberRepository memberRepository,
             final ProductRepository productDao
     ) {
         this.cartItemRepository = cartItemDao;
-        this.memberRepository = memberRepository;
         this.productRepository = productDao;
     }
 
