@@ -55,8 +55,11 @@ class OrderApiControllerTest extends DocsTest {
     @BeforeEach
     void setUp() {
         MemberStore memberStore = new MemberStore();
-        AuthenticationInterceptor authInterceptor = new AuthenticationInterceptor(new BasicAuthorizationExtractor(),
-                new AuthenticationMemberConverter(memberRepository), memberStore);
+        AuthenticationInterceptor authInterceptor = new AuthenticationInterceptor(
+                new BasicAuthorizationExtractor(),
+                new AuthenticationMemberConverter(memberRepository),
+                memberStore
+        );
         MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberStore);
 
         mockMvc = MockMvcBuilders.standaloneSetup(orderApiController)

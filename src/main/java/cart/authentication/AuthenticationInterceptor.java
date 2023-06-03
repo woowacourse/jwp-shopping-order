@@ -5,8 +5,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import cart.domain.Member;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final BasicAuthorizationExtractor extractor;

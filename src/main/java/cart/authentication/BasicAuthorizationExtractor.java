@@ -2,7 +2,9 @@ package cart.authentication;
 
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BasicAuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";

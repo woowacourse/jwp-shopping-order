@@ -4,7 +4,9 @@ import cart.domain.Member;
 import cart.exception.AuthenticationException;
 import cart.exception.AuthenticationException.InvalidMember;
 import cart.repository.MemberRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AuthenticationMemberConverter {
 
     private final MemberRepository memberRepository;
