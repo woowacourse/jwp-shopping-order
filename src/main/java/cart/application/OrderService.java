@@ -38,7 +38,7 @@ public class OrderService {
         final Order order = new Order(
                 member,
                 new Coupon(orderRequest.getCouponId(), member),
-                new Money(orderRequest.getTotalPrice()),
+                new Money(orderRequest.getDeliveryFee()),
                 OrderItem.convert(cartItems));
         order.checkTotalPrice(new Money(orderRequest.getTotalPrice()));
         cartItemService.remove(member, cartItemIds);
