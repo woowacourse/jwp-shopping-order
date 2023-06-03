@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static cart.fixture.MemberFixtures.MEMBER_GITCHAN;
-import static cart.fixture.MemberFixtures.MEMBER_IRENE;
 import static cart.fixture.ProductFixtures.PRODUCT_REQUEST_AIRPOD;
 import static cart.fixture.ProductFixtures.PRODUCT_REQUEST_CAMERA_EOS_M200;
 import static cart.steps.CartItemSteps.카트에_아이템_추가하고_아이디_반환;
@@ -24,7 +23,6 @@ import static cart.steps.PaySteps.카트_아이템_주문하고_주문_히스토
 import static cart.steps.ProductSteps.제품_추가하고_아이디_반환;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -111,7 +109,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                                 )
                 ).isTrue(),
                 () -> assertThat(
-                        response.jsonPath().getList("count")
+                        response.jsonPath().getList("quantity")
                                 .containsAll(
                                         List.of(
                                                 cartItemRepository.findById(cartItem1Id).getQuantity(),
