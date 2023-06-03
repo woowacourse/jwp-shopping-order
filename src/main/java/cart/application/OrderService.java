@@ -51,6 +51,7 @@ public class OrderService {
             CartItem itemToOrder = cartItemService.getItemBy(orderItemRequest.getId());
             List<MemberCoupon> memberCoupons = getMemberCouponsFrom(member, orderItemRequest);
             cart.applyCouponsOn(itemToOrder, memberCoupons);
+            couponService.updateMemberCoupons(memberCoupons);
             itemsToOrder.add(itemToOrder);
         }
         Order order = cart.order(itemsToOrder);
