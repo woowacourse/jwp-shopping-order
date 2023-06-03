@@ -4,21 +4,21 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.Products;
 import cart.domain.vo.Amount;
-import cart.exception.BusinessException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrderConverter {
 
-    public static Order convertToOrder(final List<OrderProductJoinDto> orderProductJoinDtos) {
+    public static Optional<Order> convertToOrder(final List<OrderProductJoinDto> orderProductJoinDtos) {
         final List<Order> orders = removeDuplicate(orderProductJoinDtos);
         if (orders.size() == 1) {
-            return orders.get(0);
+            return Optional.of(orders.get(0));
         }
-        throw new BusinessException("매핑 실패");
+        return Optional.empty();
     }
 
     private static List<Order> removeDuplicate(final List<OrderProductJoinDto> dtos) {

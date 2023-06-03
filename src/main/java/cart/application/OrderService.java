@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
+import cart.dao.ProductOrderDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -27,13 +28,15 @@ public class OrderService {
     private final ProductDao productDao;
     private final CouponDao couponDao;
     private final CartItemDao cartItemDao;
+    private final ProductOrderDao productOrderDao;
 
     public OrderService(final OrderDao orderDao, final ProductDao productDao, final CouponDao couponDao,
-        final CartItemDao cartItemDao) {
+        final CartItemDao cartItemDao, final ProductOrderDao productOrderDao) {
         this.orderDao = orderDao;
         this.productDao = productDao;
         this.couponDao = couponDao;
         this.cartItemDao = cartItemDao;
+        this.productOrderDao = productOrderDao;
     }
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
@@ -42,7 +45,7 @@ public class OrderService {
             .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
         final Order order = orderDao.save(
             new Order(new Products(products), coupon, Amount.of(orderRequest.getDeliveryAmount()),
-                orderRequest.getAddress()), member.getId());
+                Amount.of(orderRequest.getTotalProductAmount()), orderRequest.getAddress()), member.getId());
         final Coupon usedCoupon = coupon.use();
         couponDao.update(usedCoupon, member.getId());
         deleteCartItem(orderRequest, member.getId());
@@ -101,5 +104,25 @@ public class OrderService {
         for (final CartItemRequest product : orderRequest.getProducts()) {
             cartItemDao.delete(memberId, product.getProductId());
         }
+    }
+
+    public OrderResponse findOrder(final Long orderId) {
+        final Order order = orderDao.findById(orderId)
+            .orElseThrow(() -> new BusinessException("존재하지 않는 주문입니다."));
+        final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(order);
+        return new OrderResponse(order.getId(), order.getTotalAmount().getValue(),
+            order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+            orderProductResponses);
+    }
+
+    private List<OrderProductResponse> makeOrderProductResponses(final Order order) {
+        final List<Product> products = order.getProducts().getValue();
+        return products.stream()
+            .map(it -> {
+                final int quantity = productOrderDao.count(it.getId(), order.getId());
+                return new OrderProductResponse(it.getId(), it.getName(), it.getAmount().getValue(), it.getImageUrl(),
+                    quantity);
+            })
+            .collect(Collectors.toUnmodifiableList());
     }
 }

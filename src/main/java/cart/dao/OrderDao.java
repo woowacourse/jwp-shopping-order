@@ -6,6 +6,7 @@ import cart.domain.Products;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -57,7 +58,7 @@ public class OrderDao {
             order.getTotalAmount(), order.getAddress());
     }
 
-    public Order findById(final Long id) {
+    public Optional<Order> findById(final Long id) {
         final String sql =
             "SELECT o.id                as id, "
                 + "       o.discounted_amount as discount_amount, "

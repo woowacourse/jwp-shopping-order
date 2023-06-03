@@ -10,6 +10,7 @@ import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
+import cart.dao.ProductOrderDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -23,6 +24,7 @@ import cart.dto.OrderResponse;
 import cart.exception.BusinessException;
 import java.util.List;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +41,7 @@ class OrderServiceTest {
     private final Coupon coupon = new Coupon(1L, "name", Amount.of(1_000), Amount.of(10_000), false);
     private final List<CartItemRequest> products = List.of(new CartItemRequest(1L, 5), new CartItemRequest(2L, 10));
     private final Order order = new Order(1L, new Products(List.of(product1, product2)), coupon, Amount.of(3_000),
-        "address");
+        Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), "address");
 
     @Mock
     private OrderDao orderDao;
@@ -49,6 +51,8 @@ class OrderServiceTest {
     private CouponDao couponDao;
     @Mock
     private CartItemDao cartItemDao;
+    @Mock
+    private ProductOrderDao productOrderDao;
     @InjectMocks
     private OrderService orderService;
 
@@ -107,6 +111,41 @@ class OrderServiceTest {
         //when
         //then
         assertThatThrownBy(() -> orderService.order(request, member))
+            .isInstanceOf(BusinessException.class);
+    }
+
+    @Test
+    @DisplayName("주문을 조회한다.")
+    void testFindOrder() {
+        //given
+        given(orderDao.findById(anyLong()))
+            .willReturn(Optional.of(order));
+        given(productOrderDao.count(anyLong(), anyLong()))
+            .willReturn(3);
+
+        //when
+        final OrderResponse response = orderService.findOrder(1L);
+
+        //then
+        assertThat(response.getId()).isEqualTo(order.getId());
+        assertThat(response.getAddress()).isEqualTo(order.getAddress());
+        assertThat(response.getDeliveryAmount()).isEqualTo(order.getDeliveryAmount().getValue());
+        assertThat(response.getTotalProductAmount()).isEqualTo(order.getTotalAmount().getValue());
+        final List<OrderProductResponse> orderProductResponses = response.getProducts();
+        assertThat(orderProductResponses.get(0).getId()).isEqualTo(product1.getId());
+        assertThat(orderProductResponses.get(1).getId()).isEqualTo(product2.getId());
+    }
+
+    @Test
+    @DisplayName("주문이 존재하지 않을 때, 조회한다.")
+    void testFindOrderWhenOrderNotExists() {
+        //given
+        given(orderDao.findById(anyLong()))
+            .willReturn(Optional.empty());
+
+        //when
+        //then
+        Assertions.assertThatThrownBy(() -> orderService.findOrder(3L))
             .isInstanceOf(BusinessException.class);
     }
 }
