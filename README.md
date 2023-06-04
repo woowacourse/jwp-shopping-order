@@ -6,7 +6,7 @@
 
 ### Request
 
-```json
+```text
 POST /orders HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ### Response
 
-```json
+```text
 HTTP/1.1 201 Created
 Content-Type: application/json
 Location: orders/{id}
@@ -29,7 +29,7 @@ Location: orders/{id}
 
 ### Request
 
-```json
+```text
 GET /orders HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ### Response
 
-```json
+```text
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -68,7 +68,7 @@ Content-Type: application/json
 
 ### Request
 
-```json
+```text
 GET /orders/{orderId} HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
@@ -76,7 +76,7 @@ Content-Type: application/json
 
 ### Response
 
-```json
+```text
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -107,7 +107,7 @@ Content-Type: application/json
 
 ### Request
 
-```json
+```text
 GET /points HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
@@ -115,7 +115,7 @@ Content-Type: application/json
 
 ### Response
 
-```json
+```text
 HTTP/1.1 200 Ok
 Content-Type: application/json
 
@@ -128,7 +128,7 @@ Content-Type: application/json
 
 ### Request
 
-```json
+```text
 GET orders/{id}/points HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
@@ -136,7 +136,7 @@ Content-Type: application/json
 
 ### Response
 
-```json
+```text
 HTTP/1.1 200 Ok
 Content-Type: application/json
 
