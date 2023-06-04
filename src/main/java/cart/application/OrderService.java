@@ -45,15 +45,7 @@ public class OrderService {
     @Transactional
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
         final List<Product> products = findProducts(orderRequest);
-        final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())
-            .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
-        final Order order = orderDao.save(
-            new Order(new Products(products), Amount.of(orderRequest.getTotalProductAmount()),
-                coupon.calculateProduct(Amount.of(orderRequest.getTotalProductAmount())),
-                Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()),
-            member.getId());
-        final Coupon usedCoupon = coupon.use();
-        couponDao.update(usedCoupon, member.getId());
+        final Order order = makeOrder(orderRequest, member, products);
         deleteCartItem(orderRequest, member.getId());
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
             products);
@@ -74,6 +66,23 @@ public class OrderService {
             .collect(Collectors.toList());
         checkTotalAmount(Amount.of(orderRequest.getTotalProductAmount()), amounts);
         return products;
+    }
+
+    private Order makeOrder(final OrderRequest orderRequest, final Member member, final List<Product> products) {
+        if (orderRequest.getCouponId() == null) {
+            return orderDao.save(
+                new Order(new Products(products), Amount.of(orderRequest.getTotalProductAmount()),
+                    Amount.of(orderRequest.getTotalProductAmount()), Amount.of(orderRequest.getDeliveryAmount()),
+                    orderRequest.getAddress()), member.getId());
+        }
+        final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())
+            .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
+        final Coupon usedCoupon = coupon.use();
+        couponDao.update(usedCoupon, member.getId());
+        return orderDao.save(
+            new Order(new Products(products), Amount.of(orderRequest.getTotalProductAmount()),
+                coupon.calculateProduct(Amount.of(orderRequest.getTotalProductAmount())),
+                Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
     }
 
     private void addToProducts(final List<Product> products, final int quantity, final Product product) {

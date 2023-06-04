@@ -117,6 +117,35 @@ class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("쿠폰을 적용하지 않고 주문을 한다.")
+    void testOrderWhenCouponNotUse() {
+        //given
+        final OrderRequest request = new OrderRequest(products, 250_000, 3_000, "address", null);
+        final Order order = new Order(1L, new Products(List.of(product1, product2)),
+            Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()),
+            Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()),
+            Amount.of(3_000), "address");
+        given(productDao.getProductById(anyLong()))
+            .willReturn(product1, product2);
+        given(orderDao.save(any(Order.class), anyLong()))
+            .willReturn(order);
+
+        //when
+        final OrderResponse response = orderService.order(request, member);
+
+        //then
+        final OrderProductResponse orderProductResponse1 = new OrderProductResponse(product1.getId(),
+            product1.getName(), product1.getAmount().getValue(), product1.getImageUrl(), 5);
+        final OrderProductResponse orderProductResponse2 = new OrderProductResponse(product2.getId(),
+            product2.getName(), product2.getAmount().getValue(), product2.getImageUrl(), 10);
+        final OrderResponse expectedResponse = new OrderResponse(order.getId(), request.getTotalProductAmount(),
+            order.getDiscountedAmount().getValue(), order.getDeliveryAmount().getValue(), order.getAddress(),
+            List.of(orderProductResponse1, orderProductResponse2));
+
+        assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    @Test
     @DisplayName("주문을 조회한다.")
     void testFindOrder() {
         //given
