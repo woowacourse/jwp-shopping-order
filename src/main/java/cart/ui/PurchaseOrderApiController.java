@@ -45,4 +45,11 @@ public class PurchaseOrderApiController {
         return ResponseEntity.ok()
                              .body(purchaseOrderResponse);
     }
+
+    @DeleteMapping("{orderId}")
+    public ResponseEntity<Void> cancelledPurchaseOrder(Member member, @PathVariable Long orderId) {
+        paymentService.deleteOrder(member, orderId);
+        return ResponseEntity.ok()
+                             .build();
+    }
 }
