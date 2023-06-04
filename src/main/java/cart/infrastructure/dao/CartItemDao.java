@@ -6,6 +6,7 @@ import cart.infrastructure.entity.ProductEntity;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -95,6 +96,26 @@ public class CartItemDao {
     public void updateQuantity(CartItemEntity cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void deleteAllByIds(List<Long> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String sql = String.format("DELETE FROM cart_item WHERE id IN (%s)", inSql);
+        jdbcTemplate.update(sql, ids.toArray());
+    }
+
+    public List<CartItemEntity> findAllByIds(List<Long> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
+                "cart_item.member_id as member_id, member.email as member_email, " +
+                "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id IN (%s) ";
+        String sql = String.format(query, inSql);
+        return jdbcTemplate.query(sql, ROW_MAPPER, ids.toArray());
     }
 }
 

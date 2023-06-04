@@ -65,8 +65,8 @@ class OrderServiceTest {
 
     @Test
     void 주문을_등록한다() {
-        given(cartItemRepository.findById(anyLong()))
-                .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
+        given(cartItemRepository.findByIds(any()))
+                .willReturn(List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개));
         given(orderRepository.save(any()))
                 .willReturn(주문_밀리_치킨_피자_3000원);
         given(memberCouponRepository.findById(anyLong()))
@@ -76,22 +76,22 @@ class OrderServiceTest {
 
         Long id = orderService.register(new OrderRequest(of(1L, 2L), 1L, 3000, valueOf(111000)), 밀리_인증_정보);
 
-        verify(cartItemRepository, times(2)).deleteById(any());
+        verify(cartItemRepository, times(1)).deleteAllByIds(any());
         verify(memberCouponRepository, times(1)).delete(any());
         assertThat(id).isEqualTo(1L);
     }
 
     @Test
     void 쿠폰으로_주문할_때_최소_사용_가능_금액보다_작으면_예외가_발생한다() {
-        given(cartItemRepository.findById(anyLong()))
-                .willReturn(Optional.of(장바구니_밀리_피자_1개));
+        given(cartItemRepository.findByIds(any()))
+                .willReturn(List.of(장바구니_밀리_피자_1개));
         given(memberCouponRepository.findById(anyLong()))
                 .willReturn(Optional.of(밀리_쿠폰_10퍼센트));
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(밀리));
 
         verify(orderRepository, never()).save(any());
-        verify(cartItemRepository, never()).deleteById(any());
+        verify(cartItemRepository, never()).deleteAllByIds(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L), 1L, 3000, valueOf(21000)), 밀리_인증_정보))
                 .isInstanceOf(CouponException.class);
@@ -99,15 +99,15 @@ class OrderServiceTest {
 
     @Test
     void 쿠폰으로_주문할_때_만료기간이_지난_쿠폰이면_예외가_발생한다() {
-        given(cartItemRepository.findById(anyLong()))
-                .willReturn(Optional.of(장바구니_밀리_피자_1개));
+        given(cartItemRepository.findByIds(any()))
+                .willReturn(List.of(장바구니_밀리_피자_1개));
         given(memberCouponRepository.findById(anyLong()))
                 .willReturn(Optional.of(밀리_만료기간_지난_쿠폰_10퍼센트));
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(밀리));
 
         verify(orderRepository, never()).save(any());
-        verify(cartItemRepository, never()).deleteById(any());
+        verify(cartItemRepository, never()).deleteAllByIds(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L), 1L, 3000, valueOf(21000)), 밀리_인증_정보))
                 .isInstanceOf(CouponException.class);
@@ -115,13 +115,13 @@ class OrderServiceTest {
 
     @Test
     void 주문을_등록할_때_요청한_총_금액과_다르면_예외가_발생한다() {
-        given(cartItemRepository.findById(anyLong()))
-                .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
+        given(cartItemRepository.findByIds(any()))
+                .willReturn(List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개));
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(밀리));
 
         verify(orderRepository, never()).save(any());
-        verify(cartItemRepository, never()).deleteById(any());
+        verify(cartItemRepository, never()).deleteAllByIds(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(
                 () -> orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(12000)), 밀리_인증_정보))
@@ -166,8 +166,8 @@ class OrderServiceTest {
 
     @Test
     void 주문을_할_때_쿠폰을_사용하지_않으면_쿠폰을_발급한경다() {
-        given(cartItemRepository.findById(anyLong()))
-                .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
+        given(cartItemRepository.findByIds(any()))
+                .willReturn(List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개));
         given(orderRepository.save(any()))
                 .willReturn(주문_밀리_치킨_피자_3000원);
         given(memberRepository.findById(anyLong()))
@@ -176,15 +176,15 @@ class OrderServiceTest {
         Long id = orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(123000)), 밀리_인증_정보);
 
         verify(couponService, times(1)).issueByOrderPrice(any(), any());
-        verify(cartItemRepository, times(2)).deleteById(any());
+        verify(cartItemRepository, times(1)).deleteAllByIds(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThat(id).isEqualTo(1L);
     }
 
     @Test
     void 주문을_할_때_쿠폰을_사용하면_쿠폰을_발급하지_않는다() {
-        given(cartItemRepository.findById(anyLong()))
-                .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
+        given(cartItemRepository.findByIds(any()))
+                .willReturn(List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개));
         given(orderRepository.save(any()))
                 .willReturn(주문_밀리_치킨_피자_3000원);
         given(memberCouponRepository.findById(anyLong()))
@@ -195,7 +195,7 @@ class OrderServiceTest {
         Long id = orderService.register(new OrderRequest(of(1L, 2L), 1L, 3000, valueOf(111000)), 밀리_인증_정보);
 
         verify(couponService, never()).issueByOrderPrice(any(), any());
-        verify(cartItemRepository, times(2)).deleteById(any());
+        verify(cartItemRepository, times(1)).deleteAllByIds(any());
         verify(memberCouponRepository, times(1)).delete(any());
         assertThat(id).isEqualTo(1L);
     }

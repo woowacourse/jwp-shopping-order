@@ -24,6 +24,7 @@ import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import cart.exception.MemberException;
 import cart.exception.OrderException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -50,9 +51,7 @@ public class OrderService {
     }
 
     public Long register(OrderRequest orderRequest, AuthMember authMember) {
-        List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
-                .map(this::findCartItem)
-                .collect(Collectors.toList());
+        List<CartItem> cartItems = findAllCartItems(orderRequest.getCartItemIds());
         Member member = toMember(authMember);
         MemberCoupon memberCoupon = findMemberCoupon(orderRequest.getCouponId(), member);
 
@@ -71,6 +70,13 @@ public class OrderService {
         return savedOrder.getId();
     }
 
+    private List<CartItem> findAllCartItems(List<Long> cartItemIds) {
+        if (cartItemIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return cartItemRepository.findByIds(cartItemIds);
+    }
+
     private Member toMember(AuthMember authMember) {
         return memberRepository.findById(authMember.getId())
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
@@ -85,9 +91,12 @@ public class OrderService {
     }
 
     private void deleteOrdered(List<CartItem> cartItems, MemberCoupon memberCoupon) {
-        cartItems.stream()
+        List<Long> cartItemIds = cartItems.stream()
                 .map(CartItem::getId)
-                .forEach(cartItemRepository::deleteById);
+                .collect(Collectors.toList());
+        if (!cartItemIds.isEmpty()) {
+            cartItemRepository.deleteAllByIds(cartItemIds);
+        }
         if (memberCoupon.isExists()) {
             memberCouponRepository.delete(memberCoupon);
         }

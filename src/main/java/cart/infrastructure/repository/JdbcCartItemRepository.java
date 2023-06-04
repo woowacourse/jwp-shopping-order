@@ -83,4 +83,16 @@ public class JdbcCartItemRepository implements CartItemRepository {
                 )
         );
     }
+
+    @Override
+    public void deleteAllByIds(List<Long> ids) {
+        cartItemDao.deleteAllByIds(ids);
+    }
+
+    @Override
+    public List<CartItem> findByIds(List<Long> ids) {
+        return cartItemDao.findAllByIds(ids).stream()
+                .map(CartItemEntity::toDomain)
+                .collect(toList());
+    }
 }
