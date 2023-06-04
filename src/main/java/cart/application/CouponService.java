@@ -54,9 +54,8 @@ public class CouponService {
     }
 
     private Coupon findCoupon(final Long couponId) {
-        final Coupon coupon = couponDao.findById(couponId)
+        return couponDao.findById(couponId)
             .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
-        return coupon;
     }
 
     public List<PossibleCouponResponse> findPossibleCouponByMember(final Member member, final int totalProductAmount) {

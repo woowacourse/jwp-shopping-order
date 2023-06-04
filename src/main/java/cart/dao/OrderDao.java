@@ -64,7 +64,7 @@ public class OrderDao {
     public Optional<Order> findById(final Long id) {
         final String sql =
             "SELECT o.id                as id, "
-                + "       o.discounted_amount as discount_amount, "
+                + "       o.discounted_amount as discounted_amount, "
                 + "       o.delivery_amount   as delivery_amount, "
                 + "       o.address           as address, "
                 + "       o.total_amount      as total_amount, "
@@ -89,7 +89,7 @@ public class OrderDao {
     public List<Order> findByMember(final Member member) {
         final String sql =
             "SELECT o.id                as id, "
-                + "       o.discounted_amount as discount_amount, "
+                + "       o.discounted_amount as discounted_amount, "
                 + "       o.delivery_amount   as delivery_amount, "
                 + "       o.address           as address, "
                 + "       o.total_amount      as total_amount, "
