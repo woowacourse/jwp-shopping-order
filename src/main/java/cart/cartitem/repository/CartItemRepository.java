@@ -1,6 +1,7 @@
 package cart.cartitem.repository;
 
 import cart.cartitem.dao.CartItemDao;
+import cart.cartitem.dto.CartItemOrderRequest;
 import cart.member.dao.MemberDao;
 import cart.product.dao.ProductDao;
 import cart.cartitem.domain.CartItem;
@@ -11,6 +12,7 @@ import cart.product.repository.ProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
@@ -46,6 +48,12 @@ public class CartItemRepository {
         final MemberEntity memberEntity = memberDao.getMemberByEmail(cartItem.getMember().getEmail());
         final CartItemEntity cartItemEntity = new CartItemEntity(null, memberEntity.getId(), cartItem.getProduct().getId(), cartItem.getQuantity());
         return cartItemDao.save(cartItemEntity);
+    }
+    
+    public Set<CartItem> findAllByIds(final List<Long> cartItemIds) {
+        return cartItemIds.stream()
+                .map(this::findById)
+                .collect(Collectors.toUnmodifiableSet());
     }
     
     public CartItem findById(final Long id) {

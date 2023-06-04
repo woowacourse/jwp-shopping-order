@@ -1,7 +1,6 @@
 package cart.order.application;
 
 import cart.cartitem.domain.CartItem;
-import cart.cartitem.dto.CartItemOrderRequest;
 import cart.cartitem.repository.CartItemRepository;
 import cart.member.domain.Member;
 import cart.member.repository.MemberRepository;
@@ -9,10 +8,10 @@ import cart.order.domain.Order;
 import cart.order.domain.OrderInfo;
 import cart.order.dto.OrderDetailResponse;
 import cart.order.dto.OrderInfoResponse;
-import cart.order.dto.OrderResponse;
-import cart.product.domain.Product;
 import cart.order.dto.OrderRequest;
+import cart.order.dto.OrderResponse;
 import cart.order.repository.OrderRepository;
+import cart.product.domain.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +46,12 @@ public class OrderService {
     }
     
     private Set<CartItem> getCartItems(final OrderRequest orderRequest) {
+        return cartItemRepository.findAllByIds(getCartItemIds(orderRequest));
+    }
+    
+    private List<Long> getCartItemIds(final OrderRequest orderRequest) {
         return orderRequest.getCartItemIds().stream()
-                .map(CartItemOrderRequest::getCartItemId)
-                .map(cartItemRepository::findById)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toUnmodifiableList());
     }
     
     private void validateMemberOfCartItem(final Member member, final Set<CartItem> cartItems) {
@@ -67,8 +68,7 @@ public class OrderService {
     }
     
     private void removeCartItems(final OrderRequest orderRequest) {
-        orderRequest.getCartItemIds().stream()
-                .map(CartItemOrderRequest::getCartItemId)
+        orderRequest.getCartItemIds()
                 .forEach(cartItemRepository::removeById);
     }
     

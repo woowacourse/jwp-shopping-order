@@ -1,9 +1,8 @@
 package cart.integration;
 
 import cart.member.domain.Member;
-import cart.cartitem.dto.CartItemOrderRequest;
-import cart.order.dto.OrderRequest;
 import cart.member.repository.MemberRepository;
+import cart.order.dto.OrderRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -37,7 +36,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final Member member = memberRepository.getMemberById(1L);
         final OrderRequest orderRequest =
-                new OrderRequest(List.of(new CartItemOrderRequest(1L)), 20000L, memberRepository.getMemberById(1L).getPoint() / 2L, 2000L);
+                new OrderRequest(List.of(1L), 20000L, memberRepository.getMemberById(1L).getPoint() / 2L, 2000L);
         // expect
         final ExtractableResponse<Response> response = given().log().all()
                 .contentType(ContentType.JSON)
@@ -58,7 +57,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        List.of(1L, 2L),
                         100000L,
                         memberRepository.getMemberById(1L).getPoint() / 2L,
                         10000L
@@ -73,7 +72,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
         
         final OrderRequest orderRequest2 =
-                new OrderRequest(List.of(new CartItemOrderRequest(4L)), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
+                new OrderRequest(List.of(4L), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
         
         given().log().all()
                 .contentType(ContentType.JSON)
@@ -97,7 +96,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        List.of(1L, 2L),
                         100000L,
                         memberRepository.getMemberById(1L).getPoint() / 2L,
                         10000L
@@ -112,7 +111,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
         
         final OrderRequest orderRequest2 =
-                new OrderRequest(List.of(new CartItemOrderRequest(4L)), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
+                new OrderRequest(List.of(4L), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
         
         given().log().all()
                 .contentType(ContentType.JSON)
@@ -136,7 +135,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        List.of(1L, 2L),
                         100001L,
                         5000L,
                         10000L
@@ -157,7 +156,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        List.of(1L, 2L),
                         100000L,
                         5000L,
                         10001L
@@ -178,7 +177,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        List.of(1L, 2L),
                         100000L,
                         20001L,
                         10000L
@@ -199,7 +198,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(4L)),
+                        List.of(1L, 4L),
                         85000L,
                         memberRepository.getMemberById(1L).getPoint() + 1L,
                         8500L
@@ -220,7 +219,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest1 =
                 new OrderRequest(
-                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        List.of(1L, 2L),
                         100000L,
                         memberRepository.getMemberById(1L).getPoint() / 2L,
                         10000L
@@ -235,7 +234,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
         
         final OrderRequest orderRequest2 =
-                new OrderRequest(List.of(new CartItemOrderRequest(4L)), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
+                new OrderRequest(List.of(4L), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
         
         given().log().all()
                 .contentType(ContentType.JSON)

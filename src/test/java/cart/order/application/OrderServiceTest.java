@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Set;
 
 import static cart.cartitem.domain.CartItemTest.*;
 import static cart.member.domain.MemberTest.*;
@@ -45,11 +46,9 @@ class OrderServiceTest {
     @Test
     void 주문한다() {
         // given
-        final List<CartItemOrderRequest> cartItems =
-                List.of(new CartItemOrderRequest(1L));
-        final OrderRequest orderRequest = new OrderRequest(cartItems, 50000L, 5000L, 5000L);
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L), 50000L, 5000L, 5000L);
         given(memberRepository.getMemberByEmail(any())).willReturn(MEMBER);
-        given(cartItemRepository.findById(anyLong())).willReturn(CART_ITEM);
+        given(cartItemRepository.findAllByIds(any())).willReturn(Set.of(CART_ITEM));
         given(orderRepository.save(any(), any())).willReturn(1L);
 
         // when

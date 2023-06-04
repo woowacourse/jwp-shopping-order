@@ -1,11 +1,9 @@
 package cart.order.dto;
 
-import cart.cartitem.dto.CartItemOrderRequest;
-
 import java.util.List;
 
 public class OrderRequest {
-    private List<CartItemOrderRequest> cartItemIds;
+    private List<Long> cartItemIds;
     private Long originalPrice;
     private Long usedPoint;
     private Long pointToAdd;
@@ -13,14 +11,14 @@ public class OrderRequest {
     public OrderRequest() {
     }
     
-    public OrderRequest(final List<CartItemOrderRequest> cartItemIds, final Long originalPrice, final Long usedPoint, final Long pointToAdd) {
+    public OrderRequest(final List<Long> cartItemIds, final Long originalPrice, final Long usedPoint, final Long pointToAdd) {
         this.cartItemIds = cartItemIds;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
     }
     
-    public List<CartItemOrderRequest> getCartItemIds() {
+    public List<Long> getCartItemIds() {
         return cartItemIds;
     }
     
