@@ -61,8 +61,7 @@ public class OrderService {
 
     public List<OrderItemDto> findOrderByMember(Member member) {
         List<OrderDto> orders = orderDao.findByMemberId(member.getId());
-        return orders.stream().map(orderDto -> {
-            return OrderItemDto.of(orderDto.getId(), orderDto.getCartItems());
-        }).collect(Collectors.toList());
+        return orders.stream().map(orderDto -> OrderItemDto.of(orderDto.getId(), orderDto.getCartItems()))
+                .collect(Collectors.toList());
     }
 }

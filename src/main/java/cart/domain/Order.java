@@ -56,7 +56,9 @@ public class Order {
         return this.price.isBiggerThan(money);
     }
     public List<Long> getCartItemIds() {
-        return this.cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
+        return this.cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
     }
 
     public OrderState getState() {
