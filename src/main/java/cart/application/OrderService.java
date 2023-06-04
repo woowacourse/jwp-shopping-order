@@ -108,6 +108,7 @@ public class OrderService {
         return orderId;
     }
 
+    @Transactional
     public void deleteOrder(Member member, Long orderId) {
         orderDao.validate(member.getId(), orderId);
         orderDao.delete(orderId);
@@ -129,6 +130,7 @@ public class OrderService {
         return new CouponsResponse(coupons.stream().map(CouponResponse::of).collect(Collectors.toUnmodifiableList()));
     }
 
+    @Transactional
     public Long addMemberCoupon(Member member, Long couponId, MemberCouponAddRequest memberCouponAddRequest) {
         Coupon coupon = couponDao.findById(couponId);
         if (coupon == null) {
