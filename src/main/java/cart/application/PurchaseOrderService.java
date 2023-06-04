@@ -55,7 +55,7 @@ public class PurchaseOrderService {
                                                      .getProduct();
             PurchaseOrderItemInfoResponse purchaseOrderItemInfoResponse = new PurchaseOrderItemInfoResponse(
                     purchaseOrderInfo.getId(), purchaseOrderInfo.getPayment(), purchaseOrderInfo.getOrderAt(),
-                    firstProduct.getName(), firstProduct.getImageUrl(), purchaseOrderItems.size()
+                    purchaseOrderInfo.getStatus(), firstProduct.getName(), firstProduct.getImageUrl(), purchaseOrderItems.size()
             );
             purchaseOrderItemInfoResponses.add(purchaseOrderItemInfoResponse);
         }
@@ -72,7 +72,7 @@ public class PurchaseOrderService {
             PurchaseOrderInfo purchaseOrderInfo = purchaseOrderInfoById.get();
             List<PurchaseOrderItemResponse> purchaseOrderItemResponses = getPurchaseOrderItemResponses(orderId);
             Point savedPoint = memberRewardPointDao.getPointByOrderId(orderId);
-            return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(), purchaseOrderInfo.getPayment(),
+            return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(), purchaseOrderInfo.getStatus(), purchaseOrderInfo.getPayment(),
                     purchaseOrderInfo.getUsedPoint(), savedPoint.getPointAmount(), purchaseOrderItemResponses);
         }
         throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");

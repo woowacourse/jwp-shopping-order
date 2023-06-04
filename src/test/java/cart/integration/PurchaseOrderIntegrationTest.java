@@ -104,14 +104,14 @@ public class PurchaseOrderIntegrationTest extends IntegrationTest {
     @Test
     void showPurchaseOrders() {
         List<PurchaseOrderItemInfoResponse> expectInfoResponse = List.of(
-                new PurchaseOrderItemInfoResponse(회원1_주문1.getId(), 회원1_주문1.getPayment(), 회원1_주문1.getOrderAt(), 주문1_상품1.getProduct()
-                                                                                                                      .getName(), 주문1_상품1.getProduct()
+                new PurchaseOrderItemInfoResponse(회원1_주문1.getId(), 회원1_주문1.getPayment(), 회원1_주문1.getOrderAt(), 회원1_주문1.getStatus(), 주문1_상품1.getProduct()
+                                                                                                                                   .getName(), 주문1_상품1.getProduct()
                                                                                                                                          .getImageUrl(), 2),
-                new PurchaseOrderItemInfoResponse(회원1_주문2.getId(), 회원1_주문2.getPayment(), 회원1_주문2.getOrderAt(), 주문2_상품1.getProduct()
-                                                                                                                      .getName(), 주문2_상품1.getProduct()
+                new PurchaseOrderItemInfoResponse(회원1_주문2.getId(), 회원1_주문2.getPayment(), 회원1_주문2.getOrderAt(), 회원1_주문2.getStatus(), 주문2_상품1.getProduct()
+                                                                                                                                   .getName(), 주문2_상품1.getProduct()
                                                                                                                                          .getImageUrl(), 2),
-                new PurchaseOrderItemInfoResponse(회원1_주문3.getId(), 회원1_주문3.getPayment(), 회원1_주문3.getOrderAt(), 주문3_상품1.getProduct()
-                                                                                                                      .getName(), 주문3_상품1.getProduct()
+                new PurchaseOrderItemInfoResponse(회원1_주문3.getId(), 회원1_주문3.getPayment(), 회원1_주문3.getOrderAt(), 회원1_주문3.getStatus(), 주문3_상품1.getProduct()
+                                                                                                                                   .getName(), 주문3_상품1.getProduct()
                                                                                                                                          .getImageUrl(), 2)
         );
         PurchaseOrderPageResponse expectPageResponse = new PurchaseOrderPageResponse(1, 1, 3, expectInfoResponse);
@@ -146,7 +146,7 @@ public class PurchaseOrderIntegrationTest extends IntegrationTest {
                 new PurchaseOrderItemResponse(주문1_상품2.getQuantity(), ProductResponse.of(주문1_상품2.getProduct()))
         );
         PurchaseOrderResponse expectResponse = new PurchaseOrderResponse(회원1_주문1.getId(), 회원1_주문1.getOrderAt(),
-                회원1_주문1.getPayment(), 회원1_주문1.getUsedPoint(), 500, expectItemResponse);
+                회원1_주문1.getStatus(), 회원1_주문1.getPayment(), 회원1_주문1.getUsedPoint(), 500, expectItemResponse);
 
         PurchaseOrderResponse response = requestShowPurchaseOrder(1L);
 

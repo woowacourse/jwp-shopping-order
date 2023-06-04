@@ -8,15 +8,17 @@ public class PurchaseOrderResponse {
 
     private Long orderId;
     private LocalDateTime orderAt;
+    private String orderStatus;
     private int payAmount;
     private int usedPoint;
     private int savedPoint;
     private List<PurchaseOrderItemResponse> products;
 
-    public PurchaseOrderResponse(Long orderId, LocalDateTime orderAt, int payAmount, int usedPoint,
+    public PurchaseOrderResponse(Long orderId, LocalDateTime orderAt, String orderStatus, int payAmount, int usedPoint,
                                  int savedPoint, List<PurchaseOrderItemResponse> products) {
         this.orderId = orderId;
         this.orderAt = orderAt;
+        this.orderStatus = orderStatus;
         this.payAmount = payAmount;
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;

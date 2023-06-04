@@ -8,15 +8,17 @@ public class PurchaseOrderItemInfoResponse {
     private Long orderId;
     private int payAmount;
     private LocalDateTime orderAt;
+    private String orderStatus;
     private String productName;
     private String productImageUrl;
     private int totalProductCount;
 
     public PurchaseOrderItemInfoResponse(Long orderId, int payAmount, LocalDateTime orderAt,
-                                         String productName, String productImageUrl, int totalProductCount) {
+                                         String orderStatus, String productName, String productImageUrl, int totalProductCount) {
         this.orderId = orderId;
         this.payAmount = payAmount;
         this.orderAt = orderAt;
+        this.orderStatus = orderStatus;
         this.productName = productName;
         this.productImageUrl = productImageUrl;
         this.totalProductCount = totalProductCount;

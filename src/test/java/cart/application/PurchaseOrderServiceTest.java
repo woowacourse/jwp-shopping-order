@@ -56,11 +56,11 @@ class PurchaseOrderServiceTest {
         // given
         List<PurchaseOrderItemInfoResponse> expectInfoResponses = List.of(
                 new PurchaseOrderItemInfoResponse(회원1_주문1.getId(), 회원1_주문1.getPayment(), 회원1_주문1.getOrderAt(),
-                        주문1_상품1.getProduct().getName(), 주문1_상품1.getProduct().getImageUrl(), 2),
+                        회원1_주문1.getStatus(), 주문1_상품1.getProduct().getName(), 주문1_상품1.getProduct().getImageUrl(), 2),
                 new PurchaseOrderItemInfoResponse(회원1_주문2.getId(), 회원1_주문2.getPayment(), 회원1_주문2.getOrderAt(),
-                        주문2_상품1.getProduct().getName(), 주문2_상품1.getProduct().getImageUrl(), 2),
+                        회원1_주문2.getStatus(), 주문2_상품1.getProduct().getName(), 주문2_상품1.getProduct().getImageUrl(), 2),
                 new PurchaseOrderItemInfoResponse(회원1_주문3.getId(), 회원1_주문3.getPayment(), 회원1_주문3.getOrderAt(),
-                        주문3_상품1.getProduct().getName(), 주문3_상품1.getProduct().getImageUrl(), 2)
+                        회원1_주문3.getStatus(), 주문3_상품1.getProduct().getName(), 주문3_상품1.getProduct().getImageUrl(), 2)
         );
 
         Member member = 회원1;
@@ -91,7 +91,7 @@ class PurchaseOrderServiceTest {
         // then
         assertThat(purchaseOrderResponse).isEqualTo(
                 new PurchaseOrderResponse(1L, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        10_000, 1_000, 500, purchaseOrderItemResponses)
+                        "Pending", 10_000, 1_000, 500, purchaseOrderItemResponses)
         );
     }
 }
