@@ -12,6 +12,9 @@ jobs:
           sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order 
       - uses: actions/checkout@v3
 
+      - name: set environments
+        run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application-dev.properties
+
       - name: gradle bootjar
         run: |
           chmod +x ./gradlew
