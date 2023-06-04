@@ -15,6 +15,16 @@ public class OrderItem {
     private final Quantity quantity;
     private final Rate discountRate;
 
+    public OrderItem(final Product product, final CartItem cartItem) {
+        this.id = null;
+        this.name = new Name(product.getName());
+        this.price = new Money(product.getPrice());
+        this.imageUrl = new ImageUrl(product.getImageUrl());
+        this.quantity = new Quantity(cartItem.getQuantity());
+        this.discountRate = new Rate(product.getDiscountRate());
+    }
+
+
     public OrderItem(
             final String name,
             final int price,

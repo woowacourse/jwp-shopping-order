@@ -4,7 +4,6 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Product;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -38,19 +37,9 @@ public class OrderService {
     public Long createOrder(final Member member, final OrderCreateRequest request) {
         final List<OrderItem> orderItems = new ArrayList<>();
 
-        final List<CartItem> cartItems = request.getCartItemIds()
-                .stream()
-                .map(cartItemRepository::findById)
-                .collect(Collectors.toList());
+        final List<CartItem> cartItems = getCartItems(request);
         for (final CartItem cartItem : cartItems) {
-            final Product product = cartItem.getProduct();
-            final OrderItem orderItem = new OrderItem(
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    cartItem.getQuantity(),
-                    product.getDiscountRate()
-            );
+            final OrderItem orderItem = new OrderItem(cartItem.getProduct(), cartItem);
             orderItems.add(orderItem);
 
             cartItemRepository.deleteById(cartItem.getId());
@@ -59,11 +48,21 @@ public class OrderService {
         final Order order = new Order(orderItems, request.getShippingFee(), member);
         final Long savedId = orderRepository.saveOrder(order).getId();
 
+        updateMemberInfo(member, order);
+        return savedId;
+    }
+
+    private List<CartItem> getCartItems(final OrderCreateRequest request) {
+        return request.getCartItemIds()
+                .stream()
+                .map(cartItemRepository::findById)
+                .collect(Collectors.toList());
+    }
+
+    private void updateMemberInfo(Member member, Order order) {
         member.addTotalPurchaseAmount(order.calculateTotalPrice());
         member.upgradeGrade();
-        System.out.println("foundMember.getGrade() = " + member.getGrade());
         memberRepository.update(member);
-        return savedId;
     }
 
     public OrderShowResponse showOrder(final Member member, final Long orderId) {
@@ -80,13 +79,17 @@ public class OrderService {
 
         final List<Order> orders = orderRepository.findAllByMember(member);
         for (final Order order : orders) {
-            final List<OrderItemDto> orderItemDtos = orderRepository.findAllOrderItemsByIdAndMemberId(order.getId(),
-                            member.getId())
-                    .stream()
-                    .map(OrderItemDto::from)
-                    .collect(Collectors.toList());
+            final List<OrderItemDto> orderItemDtos = getOrderItemDtos(member, order);
             orderShowResponses.add(OrderShowResponse.of(orderItemDtos, order));
         }
         return orderShowResponses;
+    }
+
+    private List<OrderItemDto> getOrderItemDtos(final Member member, final Order order) {
+        return orderRepository.findAllOrderItemsByIdAndMemberId(order.getId(),
+                        member.getId())
+                .stream()
+                .map(OrderItemDto::from)
+                .collect(Collectors.toList());
     }
 }
