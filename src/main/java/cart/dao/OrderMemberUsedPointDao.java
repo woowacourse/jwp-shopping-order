@@ -73,7 +73,7 @@ public class OrderMemberUsedPointDao {
     }
 
     public boolean isAlreadyUsedReward(Long rewardPointId) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM order_member_used_point WHERE used_reward_point_id = :가used_reward_point_id)";
+        String sql = "SELECT EXISTS(SELECT 1 FROM order_member_used_point WHERE used_reward_point_id = :used_reward_point_id)";
         SqlParameterSource source = new MapSqlParameterSource("used_reward_point_id", rewardPointId);
         return namedParameterJdbcTemplate.queryForObject(sql, source, Boolean.class);
     }

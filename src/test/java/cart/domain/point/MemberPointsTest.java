@@ -100,7 +100,7 @@ class MemberPointsTest {
         int usablePoints = memberPoints.getUsablePoints();
 
         // then
-        assertThat(usablePoints).isEqualTo(600);
+        assertThat(usablePoints).isEqualTo(1600);
     }
 
     @DisplayName("30일 이하로 남은 포인트를 조회한다")
