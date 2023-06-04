@@ -103,15 +103,15 @@ public class CouponDao {
 
     public List<Coupon> findAllByMemberWhereIsNotUsed(final Member member) {
         final String sql =
-            "SELECT       c.id  as coupon_id, "
-                + "       c.name            as  coupon_name, "
+            "SELECT       c.id  as id, "
+                + "       c.name            as  name, "
                 + "       c.min_amount      as min_amount, "
                 + "       c.discount_amount as discount_amount, "
                 + "       mc.is_used        as is_used "
                 + "FROM coupon as c "
                 + "         JOIN member_coupon mc on c.id = mc.coupon_id "
-                + "WHERE coupon_id = ? "
-                + "  AND is_used = false";
+                + "WHERE c.id = ? "
+                + "  AND mc.is_used = false";
         return jdbcTemplate.query(sql, defaultRowMapper, member.getId());
     }
 
