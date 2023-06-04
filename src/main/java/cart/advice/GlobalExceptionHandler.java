@@ -22,9 +22,8 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleInternalServerException(final Exception exception, final WebRequest request) {
-        final String message = "[ERROR] 서버가 응답할 수 없습니다.";
-        logger.error(message);
-        return this.handleExceptionInternal(exception, null, HttpHeaders.EMPTY, HttpStatus.INTERNAL_SERVER_ERROR, request);
+        logger.error("[ERROR] " + exception.getMessage());
+        return handleExceptionInternal(exception, new ExceptionResponse("[ERROR] " + exception.getMessage()), HttpHeaders.EMPTY, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @Override
@@ -64,36 +63,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error(exceptionMessage);
         return ResponseEntity.badRequest().body(new ExceptionResponse(exceptionMessage));
     }
-
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(
-            final Exception ex,
-            final Object body,
-            final HttpHeaders headers,
-            final HttpStatus status,
-            final WebRequest request
-    ) {
-        if (ex instanceof DiscordException) {
-            logger.error("[ERROR] " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionResponse("[ERROR] " + ex.getMessage()));
-        }
-
-        if (ex instanceof IllegalArgumentException) {
-            logger.error("[ERROR] " + ex.getMessage());
-            return ResponseEntity.badRequest().body(new ExceptionResponse("[ERROR] " + ex.getMessage()));
-        }
-        
-        if (ex instanceof AuthenticationException) {
-            logger.error("[ERROR] " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponse("[ERROR] " + ex.getMessage()));
-        }
-        
-        if (ex instanceof CartItemException.IllegalMember) {
-            logger.error("[ERROR] " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse("[ERROR] " + ex.getMessage()));
-        }
-
-        logger.error("[ERROR] 서버가 응답할 수 없습니다.");
-        return ResponseEntity.internalServerError().body(new ExceptionResponse("[ERROR] 서버가 응답할 수 없습니다."));
+    
+    @ExceptionHandler(DiscordException.class)
+    public ResponseEntity<Object> handleDiscordException(final DiscordException ex) {
+        return buildResponseEntity(ex, HttpStatus.CONFLICT);
+    }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(final IllegalArgumentException ex) {
+        return buildResponseEntity(ex, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(final AuthenticationException ex) {
+        return buildResponseEntity(ex, HttpStatus.UNAUTHORIZED);
+    }
+    
+    @ExceptionHandler(CartItemException.IllegalMember.class)
+    public ResponseEntity<Object> handleIllegalMemberException(final CartItemException.IllegalMember ex) {
+        return buildResponseEntity(ex, HttpStatus.FORBIDDEN);
+    }
+    
+    private ResponseEntity<Object> buildResponseEntity(final Exception ex, final HttpStatus status) {
+        logger.error("[ERROR] " + ex.getMessage());
+        return ResponseEntity.status(status).body(new ExceptionResponse("[ERROR] " + ex.getMessage()));
     }
 }
