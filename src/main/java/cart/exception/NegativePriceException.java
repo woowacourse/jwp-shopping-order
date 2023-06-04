@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class NegativePriceException extends IllegalArgumentException {
+public class NegativePriceException extends ShoppingOrderException {
 
     private static final String MESSAGE = "가격은 음수일 수 없습니다.";
 

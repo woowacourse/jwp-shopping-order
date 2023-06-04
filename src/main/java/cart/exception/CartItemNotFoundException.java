@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class CartItemNotFoundException extends IllegalArgumentException {
+public class CartItemNotFoundException extends ShoppingOrderException {
 
     private static final String MESSAGE = "id: %s 에 해당하는 장바구니 품목을 찾을 수 없습니다.";
 

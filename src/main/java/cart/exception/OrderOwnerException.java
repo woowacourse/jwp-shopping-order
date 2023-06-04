@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class OrderOwnerException extends IllegalArgumentException {
+public class OrderOwnerException extends ShoppingOrderException {
 
     private static final String MESSAGE = "id: %s인 주문에 접근할 수 없습니다.";
 

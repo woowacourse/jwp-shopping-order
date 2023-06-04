@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class NotEnoughPointException extends IllegalArgumentException {
+public class NotEnoughPointException extends ShoppingOrderException {
 
     private static final String MESSAGE = "보유 포인트 : %s 보다 사용 포인트 : %s 가 더 많습니다.";
 

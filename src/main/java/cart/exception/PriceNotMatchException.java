@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class PriceNotMatchException extends IllegalArgumentException {
+public class PriceNotMatchException extends ShoppingOrderException {
 
     private static final String MESSAGE = "예상 총 가격 : %s, 실제 총 가격 : %s 이 일치하지 않습니다.";
 
