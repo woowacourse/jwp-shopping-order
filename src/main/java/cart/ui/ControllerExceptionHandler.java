@@ -4,6 +4,7 @@ import cart.dto.response.ExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.ItemException;
 import cart.exception.CouponException;
+import cart.exception.OrderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,13 +18,18 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(ItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(ItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    @ExceptionHandler(value = {
+            ItemException.IllegalMember.class,
+            OrderException.IllegalMember.class
+    })
+    public ResponseEntity<ExceptionResponse> handleException(ItemException.IllegalMember exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(value = {
-            CouponException.class
+            CouponException.class,
+            OrderException.class
     })
     public ResponseEntity<ExceptionResponse> handleWrongDiscountInputException(Exception exception) {
         return ResponseEntity.badRequest()

@@ -40,3 +40,34 @@ CREATE TABLE member_coupon
     FOREIGN KEY (member_id) REFERENCES member (id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE orders
+(
+    id             BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    original_price INT    NOT NULL,
+    actual_price   INT    NOT NULL,
+    delivery_fee   INT    NOT NULL,
+    member_id      BIGINT NOT NULL
+);
+
+CREATE TABLE orders_item
+(
+    id           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    price        INT          NOT NULL,
+    image_url    VARCHAR(255) NOT NULL,
+    quantity     INT          NOT NULL,
+    product_id   BIGINT       NOT NULL,
+    orders_id     BIGINT       NOT NULL,
+    FOREIGN KEY (orders_id) REFERENCES orders (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE orders_coupon
+(
+    id               BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    coupon_name      VARCHAR(255) NOT NULL,
+    discount_amount  INT          NOT NULL,
+    member_coupon_id BIGINT       NOT NULL,
+    orders_id         BIGINT       NOT NULL,
+    FOREIGN KEY (orders_id) REFERENCES orders (id) ON UPDATE CASCADE ON DELETE CASCADE
+);

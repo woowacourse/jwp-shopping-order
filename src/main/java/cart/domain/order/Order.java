@@ -23,7 +23,7 @@ public class Order {
     private final Money deliveryFee;
     private final Member member;
 
-    private Order(
+    public Order(
             Long id,
             Money originalTotalItemPrice,
             Money actualTotalItemPrice,
@@ -90,7 +90,7 @@ public class Order {
         return totalPrice;
     }
 
-    public final void checkOwner(Member member) {
+    public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new OrderException.IllegalMember(this, member);
         }
@@ -106,6 +106,10 @@ public class Order {
 
     public Money getActualTotalItemPrice() {
         return actualTotalItemPrice;
+    }
+
+    public List<MemberCoupon> getAppliedCoupons() {
+        return appliedCoupons.getMemberCoupons();
     }
 
     public List<OrderItem> getOrderItems() {

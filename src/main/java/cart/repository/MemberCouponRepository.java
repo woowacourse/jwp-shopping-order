@@ -9,6 +9,7 @@ import cart.domain.discountpolicy.DiscountType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -24,11 +25,13 @@ public class MemberCouponRepository {
             "INNER JOIN coupon ON member_coupon.member_id = member.id ";
     private static final String WHERE_MEMBER_ID = "WHERE member_coupon.member_id = ? ";
     private static final String WHERE_MEMBER_COUPON_ID = "WHERE member_coupon.id = ? ";
+    private static final String WHERE_IN_IDS = "WHERE member_coupon.id IN (:ids) ";
     private static final String FOR_UPDATE = "FOR UPDATE ";
 
     private final DiscountPolicyProvider discountPolicyProvider;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public MemberCouponRepository(DiscountPolicyProvider discountPolicyProvider, JdbcTemplate jdbcTemplate) {
         this.discountPolicyProvider = discountPolicyProvider;
@@ -36,6 +39,7 @@ public class MemberCouponRepository {
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member_coupon")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public Long insert(Member member, Coupon coupon) {
@@ -78,5 +82,11 @@ public class MemberCouponRepository {
     public void updateCouponStatus(MemberCoupon memberCoupon) {
         String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ? ";
         jdbcTemplate.update(sql, memberCoupon.isUsed(), memberCoupon.getId());
+    }
+
+    public List<MemberCoupon> findAllById(List<Long> memberCouponIds) {
+        String sql = SELECT_MEMBER_COUPON_SQL + WHERE_IN_IDS;
+        SqlParameterSource sources = new MapSqlParameterSource("ids", memberCouponIds);
+        return namedParameterJdbcTemplate.query(sql, sources, getMemberCouponRowMapper());
     }
 }
