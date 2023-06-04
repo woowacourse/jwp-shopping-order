@@ -3,6 +3,8 @@ package cart.domain.price;
 import cart.exception.NumberRangeException;
 
 public class Point {
+    public static final Point ZERO = new Point(0);
+
     private final long amount;
 
     public Point(long amount) {

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.member.Member;
-import cart.domain.price.Point;
 import cart.domain.price.Price;
 import cart.domain.product.Product;
 import cart.exception.IllegalOrderException;
@@ -16,8 +15,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -79,25 +76,5 @@ class OrderTest {
         String thumbnailUrl = order.getThumbnailUrl();
 
         assertThat(thumbnailUrl).isEqualTo(orderItemA.getProduct().getImageUrl());
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {"10,500", "1,50", "0.1,5"})
-    void 결제_금액의_일정_비율만큼_포인트가_계산된다(double percent, long point) {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 5000, LocalDateTime.now());
-
-        Point rewardPoint = order.calculateRewardPoint(percent);
-
-        assertThat(rewardPoint.getAmount()).isEqualTo(point);
-    }
-
-    @Test
-    void 결제_금액이_0원이면_적립_포인트가_0원이어야_한다() {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 10000, LocalDateTime.now());
-
-        Point rewardPoint = order.calculateRewardPoint(1);
-
-        assertThat(rewardPoint.getAmount())
-                .isZero();
     }
 }

@@ -2,6 +2,7 @@ package cart.domain.order;
 
 import cart.domain.member.Member;
 import cart.domain.price.Point;
+import cart.domain.price.PointPolicy;
 import cart.domain.price.Price;
 import cart.domain.product.Product;
 import cart.exception.IllegalOrderException;
@@ -80,11 +81,9 @@ public class Order {
         return totalPrice.minus(Price.from(spendPoint.getAmount()));
     }
 
-    public Point calculateRewardPoint(double percent) {
+    public Point calculateRewardPoint(PointPolicy pointPolicy) {
         Price spendPrice = calculateSpendPrice();
-        long amount = spendPrice.getAmount();
-        double reward = amount * (percent / 100);
-        return new Point((long) Math.ceil(reward));
+        return pointPolicy.calculate(spendPrice);
     }
 
     public void checkOwner(Long memberId) {

@@ -12,6 +12,8 @@ import cart.dao.ProductDao;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.price.FixedPercentPointPolicy;
+import cart.domain.price.PointPolicy;
 import cart.domain.product.Product;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
@@ -28,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -49,6 +52,9 @@ class OrderServiceTest {
 
     @Mock
     MemberDao memberDao;
+
+    @Spy
+    PointPolicy pointPolicy = new FixedPercentPointPolicy(10);
 
     @Test
     void 회원의_주문이_생성되어야_한다() {

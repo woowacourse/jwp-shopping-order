@@ -9,6 +9,7 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.price.Point;
+import cart.domain.price.PointPolicy;
 import cart.domain.product.Product;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
@@ -27,20 +28,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
-    private static final int POINT_REWARD_PERCENT = 10;
-
     private final OrderRepository orderRepository;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
     private final MemberDao memberDao;
+    private final PointPolicy pointPolicy;
 
     public OrderService(OrderRepository orderRepository, ProductDao productDao,
                         CartItemDao cartItemDao,
-                        MemberDao memberDao) {
+                        MemberDao memberDao, PointPolicy pointPolicy) {
         this.orderRepository = orderRepository;
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
         this.memberDao = memberDao;
+        this.pointPolicy = pointPolicy;
     }
 
     @Transactional
@@ -51,7 +52,7 @@ public class OrderService {
         decreaseMemberPoint(member, spendPoint);
         Order order = new Order(null, member, orderItems, spendPoint.getAmount(), LocalDateTime.now());
         Order saveOrder = orderRepository.save(order);
-        member.increasePoint(saveOrder.calculateRewardPoint(POINT_REWARD_PERCENT));
+        member.increasePoint(saveOrder.calculateRewardPoint(pointPolicy));
         deleteCartItems(member, orderItems);
         memberDao.updateMember(member);
         return saveOrder.getId();
