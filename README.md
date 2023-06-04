@@ -118,3 +118,9 @@ Content-Type: application/json
   - [ ] Cart-Item 을 삭제하는 행위는 들어온 Request 를 그대로 활용해서 삭제한다.
   - [ ] 그대로 OrderResponseDto 에 담아서 반환한다.
     - [ ] 이 괒어에서 필요한 것, OrderRepository 에 저장, OrderProduct 저장, CartItem 삭제
+
+- 이제 남은 것
+- 코드 리팩토링
+- 기능 요구사항 정리 (현재 이 파일)
+- 서브 모듈을 이용한 Mysql 관리
+- 서버에 배포 

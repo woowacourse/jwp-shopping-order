@@ -15,6 +15,8 @@ class ProductIntegrationTest extends IntegrationTest {
     void getProducts() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam("limit", 5L)
+                .queryParam("scroll-count", 0L)
                 .when()
                 .get("/products")
                 .then()

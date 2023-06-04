@@ -22,6 +22,12 @@ public class ProductService {
         List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponseDto::from).collect(Collectors.toList());
     }
+    public List<ProductResponseDto> getAllProductsPagination(final Long limit, final Long scrollCount) {
+        return productDao.getAllProductsPagination(limit, scrollCount)
+                .stream()
+                .map(ProductResponseDto::from)
+                .collect(Collectors.toList());
+    }
 
     public ProductResponseDto getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
