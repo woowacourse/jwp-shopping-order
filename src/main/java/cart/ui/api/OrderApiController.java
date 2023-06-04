@@ -2,6 +2,7 @@ package cart.ui.api;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.order.DiscountPolicyResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrderSimpleResponse;
@@ -42,5 +43,11 @@ public class OrderApiController {
     public ResponseEntity<List<OrderSimpleResponse>> showOrders(Member member) {
         List<OrderSimpleResponse> orderSimpleResponses = orderService.findAllByMember(member);
         return ResponseEntity.ok().body(orderSimpleResponses);
+    }
+
+    @GetMapping("/discount-policies")
+    public ResponseEntity<DiscountPolicyResponse> showDiscountPolicies() {
+        DiscountPolicyResponse discountPolicyResponse = orderService.getDiscountInfo();
+        return ResponseEntity.ok().body(discountPolicyResponse);
     }
 }

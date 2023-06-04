@@ -8,11 +8,14 @@ import cart.domain.OrderItems;
 import cart.domain.Payment;
 import cart.domain.PaymentGenerator;
 import cart.domain.Price;
+import cart.dto.order.DiscountPolicyResponse;
+import cart.dto.order.FixedDiscountPolicyResponse;
 import cart.dto.order.OrderSimpleResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.repository.OrderRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,5 +72,10 @@ public class OrderService {
         return orders.stream()
                 .map(OrderSimpleResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public DiscountPolicyResponse getDiscountInfo() {
+        Map<Price, Price> standards = paymentGenerator.getDiscountStandard();
+        return FixedDiscountPolicyResponse.from(standards);
     }
 }

@@ -1,5 +1,6 @@
 package cart.domain;
 
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,5 +13,9 @@ public class PaymentGenerator {
 
     public Payment generate(Price price) {
         return discountStrategy.calculate(price);
+    }
+
+    public Map<Price, Price> getDiscountStandard() {
+        return discountStrategy.getStandards();
     }
 }
