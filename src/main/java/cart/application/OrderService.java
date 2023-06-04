@@ -9,11 +9,10 @@ import cart.exception.OrderException;
 import cart.exception.OrderException.EmptyItemInput;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -52,7 +51,11 @@ public class OrderService {
     @Transactional
     public Long createOrderAndSave(final Member member, final List<Long> cartItemIds) {
         final Order draftOrder = this.createDraftOrder(member, cartItemIds);
-        return this.orderRepository.create(draftOrder);
+        Long createdOrderId = this.orderRepository.create(draftOrder);
+
+        cartItemIds.forEach(this.cartItemRepository::deleteById);
+
+        return createdOrderId;
     }
 
     public Order retrieveOrderById(final Long orderId) {

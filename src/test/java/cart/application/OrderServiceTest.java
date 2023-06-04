@@ -1,5 +1,11 @@
 package cart.application;
 
+import static cart.domain.fixture.MemberFixture.memberWithId;
+import static cart.exception.OrderException.EmptyItemInput;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -7,6 +13,9 @@ import cart.domain.OrderItem;
 import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,16 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static cart.domain.fixture.MemberFixture.memberWithId;
-import static cart.exception.OrderException.EmptyItemInput;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SpringBootTest
 @Transactional
@@ -61,9 +60,8 @@ class OrderServiceTest {
     @DisplayName("CartItem 아이디 리스트로 Order 객체를 생성하고 저장한다.")
     void createOrderAndSave() {
         //given
-        final List<OrderItem> orderItems = this.CART_ITEM_IDS.stream().map(this.cartItemRepository::findById).map(cartItem -> {
-            return OrderItem.from(cartItem.orElseThrow());
-        }).collect(Collectors.toList());
+        final List<OrderItem> orderItems = this.CART_ITEM_IDS.stream().map(this.cartItemRepository::findById)
+                .map(cartItem -> OrderItem.from(cartItem.orElseThrow())).collect(Collectors.toList());
         final Order expected = new Order(memberWithId, orderItems);
         //when
         final Long createdOrderId = this.orderService.createOrderAndSave(memberWithId, this.CART_ITEM_IDS);
@@ -74,7 +72,8 @@ class OrderServiceTest {
             softly.assertThat(createdOrder).isNotEmpty();
             softly.assertThat(createdOrder.get()).usingRecursiveComparison().ignoringFields("id", "orderTime")
                     .isEqualTo(expected);
-            this.CART_ITEM_IDS.forEach(cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId)).isEmpty());
+            this.CART_ITEM_IDS.forEach(
+                    cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId)).isEmpty());
         });
     }
 

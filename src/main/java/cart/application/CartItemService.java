@@ -10,10 +10,9 @@ import cart.exception.CartItemException;
 import cart.exception.ProductException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
@@ -56,9 +55,5 @@ public class CartItemService {
                 .orElseThrow(() -> new CartItemException.NotFound(id));
         cartItem.checkOwner(member);
         this.cartItemRepository.deleteById(id);
-    }
-
-    public void removeAfterOrder(final List<Long> cartItemIds) {
-        cartItemIds.forEach(this.cartItemRepository::deleteById);
     }
 }
