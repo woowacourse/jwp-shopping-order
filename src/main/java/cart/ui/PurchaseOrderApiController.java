@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.PaymentService;
 import cart.application.PurchaseOrderService;
 import cart.domain.Member;
-import cart.dto.purchaseorder.PurchaseOrderRequest;
+import cart.dto.purchaseorder.request.PurchaseOrderRequest;
 import cart.dto.purchaseorder.response.PurchaseOrderPageResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderResponse;
 import org.springframework.http.ResponseEntity;

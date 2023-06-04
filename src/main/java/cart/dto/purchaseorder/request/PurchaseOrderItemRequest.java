@@ -1,4 +1,4 @@
-package cart.dto.purchaseorder;
+package cart.dto.purchaseorder.request;
 
 public class PurchaseOrderItemRequest {
 

@@ -1,13 +1,13 @@
-package cart.dto.purchaseorder;
+package cart.dto.purchaseorder.request;
 
 import java.util.List;
 
 public class PurchaseOrderRequest {
 
     private Integer usedPoint;
-    private List<cart.dto.purchaseorder.PurchaseOrderItemRequest> purchaseOrderItems;
+    private List<PurchaseOrderItemRequest> purchaseOrderItems;
 
-    public PurchaseOrderRequest(Integer usedPoint, List<cart.dto.purchaseorder.PurchaseOrderItemRequest> purchaseOrderItems) {
+    public PurchaseOrderRequest(Integer usedPoint, List<PurchaseOrderItemRequest> purchaseOrderItems) {
         this.usedPoint = usedPoint;
         this.purchaseOrderItems = purchaseOrderItems;
     }
@@ -16,7 +16,7 @@ public class PurchaseOrderRequest {
         return usedPoint;
     }
 
-    public List<cart.dto.purchaseorder.PurchaseOrderItemRequest> getPurchaseOrderItems() {
+    public List<PurchaseOrderItemRequest> getPurchaseOrderItems() {
         return purchaseOrderItems;
     }
 }
