@@ -22,9 +22,8 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+    public List<CartItem> findByMember(Member member) {
+        return cartItemDao.findByMemberId(member.getId());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {

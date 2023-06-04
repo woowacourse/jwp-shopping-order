@@ -9,6 +9,7 @@ import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CouponService {
@@ -22,8 +23,7 @@ public class CouponService {
     }
 
     public List<Coupon> findAll() {
-        List<Coupon> coupons = couponRepository.findAll();
-        return coupons;
+        return couponRepository.findAll();
     }
 
     public Long create(CouponRequest request) {
@@ -34,8 +34,11 @@ public class CouponService {
         couponRepository.delete(id);
     }
 
-    public List<MemberCoupon> findMemberCouponsByMember(Member member) {
-        return memberCouponDao.findByMemberId(member.getId());
+    public List<MemberCoupon> findUnUsedMemberCouponByMember(Member member) {
+        List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(member.getId());
+        return memberCoupons.stream()
+                .filter(MemberCoupon::isUnUsed)
+                .collect(Collectors.toList());
     }
 
     public Long createMemberCoupons(Member member, Long couponId) {

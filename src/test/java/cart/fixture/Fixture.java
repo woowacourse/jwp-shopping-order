@@ -1,5 +1,6 @@
 package cart.fixture;
 
+import cart.domain.cartItem.CartItem;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.member.Member;
@@ -32,4 +33,6 @@ public class Fixture {
     public static final Member 유저2 = new Member(2L, "b@b.com", "1234");
     public static final OrderItem 주문_제품_치킨 = new OrderItem(Fixture.치킨, 5, List.of(Fixture.멤버_쿠폰));
     public static final OrderItem 주문_제품_피자 = new OrderItem(Fixture.피자, 5, List.of());
+    public static final CartItem 장바구니_치킨 = new CartItem(유저,치킨);
+    public static final CartItem 장바구니_피자 = new CartItem(유저,피자);
 }

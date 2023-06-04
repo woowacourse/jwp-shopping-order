@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.CartItemService;
+import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
@@ -24,7 +26,11 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        List<CartItem> cartItems = cartItemService.findByMember(member);
+        List<CartItemResponse> results = cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(results);
     }
 
     @PostMapping
@@ -35,7 +41,7 @@ public class CartItemApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,@Valid @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @Valid @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok().build();
