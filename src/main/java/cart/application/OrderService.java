@@ -49,17 +49,17 @@ public class OrderService {
 	}
 
 	public Long createOrder(final OrderCreateRequest orderCreateRequest, final Member member) {
-		final List<Long> cartItemIds = orderCreateRequest.getCartItems().stream()
+		final List<Long> cartItemRequestIds = orderCreateRequest.getCartItems().stream()
 			.map(CartItemRequest::getId)
 			.collect(Collectors.toList());
-		final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+		final List<CartItem> cartItems = cartItemDao.findByIds(cartItemRequestIds);
 		final List<CartItemRequest> requests = orderCreateRequest.getCartItems();
 
 		validateLegalOrder(cartItems, requests);
 
 		final List<CartItem> cartItemsByRequest = toCartItems(member, requests);
 
-		cartItemDao.deleteAll(cartItemIds);
+		cartItemDao.deleteAll(cartItemRequestIds);
 
 		final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
 		order.validatePoints(member.getPoints());
