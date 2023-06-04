@@ -1,5 +1,6 @@
 package cart.domain.value;
 
+import cart.exception.value.discountrate.InvalidDiscountRateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,7 +17,7 @@ class DiscountRateTest {
     void check_discount_rate(int discountRate) {
         // when + then
         assertThatThrownBy(() -> new DiscountRate(discountRate))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidDiscountRateException.class);
     }
 
     @ParameterizedTest(name = "{displayName}")

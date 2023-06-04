@@ -1,5 +1,6 @@
 package cart.domain.value;
 
+import cart.exception.value.quantity.InvalidQuantityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,6 +15,6 @@ class QuantityTest {
     void check_quantity(int quantity) {
         // when + then
         assertThatThrownBy(() -> new Quantity(quantity))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidQuantityException.class);
     }
 }

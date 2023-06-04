@@ -1,5 +1,6 @@
 package cart.domain.value;
 
+import cart.exception.value.NullOrBlankException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -16,6 +17,6 @@ class ImageUrlTest {
     void check_image_url(String imageUrl) {
         // when + then
         assertThatThrownBy(() -> new ImageUrl(imageUrl))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NullOrBlankException.class);
     }
 }

@@ -1,12 +1,12 @@
 package cart.ui;
 
-import cart.exception.member.AuthenticationException;
 import cart.exception.bill.BillException;
 import cart.exception.cart.CartItemNotFoundException;
 import cart.exception.cart.IllegalMemberException;
+import cart.exception.member.AuthenticationException;
 import cart.exception.member.MemberNotFoundException;
-import cart.exception.product.ProductException;
 import cart.exception.product.ProductNotFoundException;
+import cart.exception.value.ValueException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,5 +59,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException exception) {
         String errorMessage = exception.getMessage();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    }
+
+    @ExceptionHandler(ValueException.class)
+    public ResponseEntity<String> handleValueException(ValueException exception) {
+        String errorMessage = exception.getMessage();
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 }

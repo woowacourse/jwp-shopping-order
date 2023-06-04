@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.NullOrBlankException;
+import cart.exception.value.email.InvalidEmailException;
 import org.springframework.util.ObjectUtils;
 
 import java.util.regex.Matcher;
@@ -18,14 +20,14 @@ public class Email {
 
     private void validateNullOrBlank(final String email) {
         if (ObjectUtils.isEmpty(email) || email.isBlank()) {
-            throw new IllegalArgumentException("이메일은 null이나 빈 값이 될 수 없습니다.");
+            throw new NullOrBlankException("이메일");
         }
     }
 
     private void validateEmailForm(final String email) {
         Matcher matcher = EMAIL_REGEX.matcher(email);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
+            throw new InvalidEmailException();
         }
     }
 

@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.NullOrBlankException;
+import cart.exception.value.email.InvalidEmailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -16,7 +18,7 @@ class EmailTest {
     void validate_email_null_or_blank(String email) {
         // when + then
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NullOrBlankException.class);
 
     }
 
@@ -26,7 +28,7 @@ class EmailTest {
     void validate_email_form(String email) {
         // when + then
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidEmailException.class);
     }
 
 }

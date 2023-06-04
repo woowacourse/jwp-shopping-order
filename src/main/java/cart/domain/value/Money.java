@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.money.InvalidMoneyException;
+
 import java.util.Objects;
 
 public class Money {
@@ -13,7 +15,7 @@ public class Money {
 
     private void validateMoney(final int money) {
         if (money < 0) {
-            throw new IllegalArgumentException("가격은 음수가 될 수 없습니다.");
+            throw new InvalidMoneyException();
         }
     }
 

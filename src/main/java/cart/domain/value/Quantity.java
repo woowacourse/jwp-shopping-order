@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.quantity.InvalidQuantityException;
+
 public class Quantity {
 
     private final int quantity;
@@ -11,7 +13,7 @@ public class Quantity {
 
     private void validateQuantity(final int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("상품 개수는 0이하가 될 수 없습니다.");
+            throw new InvalidQuantityException();
         }
     }
 

@@ -1,5 +1,6 @@
 package cart.domain.value;
 
+import cart.exception.value.money.InvalidMoneyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,6 +15,6 @@ class MoneyTest {
     void check_price(int price) {
         // when + then
         assertThatThrownBy(() -> new Money(price))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoneyException.class);
     }
 }

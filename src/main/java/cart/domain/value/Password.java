@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.NullOrBlankException;
+import cart.exception.value.password.InvalidPasswordException;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Objects;
@@ -20,14 +22,14 @@ public class Password {
 
     private void validateNullOrBlank(final String password) {
         if (ObjectUtils.isEmpty(password) || password.isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 null이나 빈 값이 될 수 없습니다.");
+            throw new NullOrBlankException("비밀번호");
         }
     }
 
     private void validatePassword(final String password) {
         Matcher matcher = PASSWORD_REGEX.matcher(password);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("비밀번호는 8~16자의 영문 대 소문자, 숫자, 특수문자를 사용해야합니다.");
+            throw new InvalidPasswordException();
         }
     }
 

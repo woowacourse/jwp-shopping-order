@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.discountrate.InvalidDiscountRateException;
+
 public class DiscountRate {
 
     private final int discountRate;
@@ -11,7 +13,7 @@ public class DiscountRate {
 
     private void validateDiscountRate(final int discountRate) {
         if (!(0 <= discountRate && discountRate <= 100)) {
-            throw new IllegalArgumentException("할인률은 0과 100 사이여야 한다.");
+            throw new InvalidDiscountRateException();
         }
     }
 

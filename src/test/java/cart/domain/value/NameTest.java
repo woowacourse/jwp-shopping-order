@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import cart.exception.value.NullOrBlankException;
+import cart.exception.value.name.NameLengthException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +19,7 @@ class NameTest {
     void check_name(String name) {
         // when + then
         assertThatThrownBy(() -> new Name(name))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NullOrBlankException.class);
     }
 
     @Test
@@ -28,6 +30,6 @@ class NameTest {
 
         // when + then
         assertThatThrownBy(() -> new Name(wrongName))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NameLengthException.class);
     }
 }
