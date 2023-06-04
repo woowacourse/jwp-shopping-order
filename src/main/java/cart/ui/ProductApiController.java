@@ -39,9 +39,9 @@ public class ProductApiController {
     }
 
     @ApiOperation(value = "상품 상세 조회")
-    @GetMapping("/{id}")
-    public ResponseEntity<Response> getProductById(@PathVariable Long id) {
-        ProductResponse product = productService.getProductById(id);
+    @GetMapping("/{productId}")
+    public ResponseEntity<Response> getProductById(@PathVariable Long productId) {
+        ProductResponse product = productService.getProductById(productId);
         return ResponseEntity.ok()
                 .body(new ResultResponse<>("상품이 조회되었습니다.", product));
     }
@@ -55,17 +55,17 @@ public class ProductApiController {
     }
 
     @ApiOperation(value = "상품 수정")
-    @PutMapping("/{id}")
-    public ResponseEntity<Response> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
+    @PutMapping("/{productId}")
+    public ResponseEntity<Response> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductRequest productRequest) {
+        productService.updateProduct(productId, productRequest);
         return ResponseEntity.ok()
                 .body(new Response("상품이 수정되었습니다."));
     }
 
     @ApiOperation(value = "상품 삭제")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Response> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.ok()
                 .body(new Response("상품이 삭제되었습니다."));
     }

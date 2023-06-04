@@ -52,19 +52,19 @@ public class CartItemApiController {
     }
 
     @ApiOperation(value = "장바구니에 담긴 상품 수량 변경", authorizations = {@Authorization("Basic")})
-    @PatchMapping("/{id}")
+    @PatchMapping("/{cartItemId}")
     public ResponseEntity<Response> updateCartItemQuantity(@Principal User user,
-                                                           @PathVariable Long id,
+                                                           @PathVariable Long cartItemId,
                                                            @RequestBody @Valid CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(user.getMemberId(), id, request);
+        cartItemService.updateQuantity(user.getMemberId(), cartItemId, request);
         return ResponseEntity.ok()
                 .body(new Response("장바구니에 담긴 상품의 수량을 변경했습니다."));
     }
 
     @ApiOperation(value = "장바구니에 담긴 상품 삭제", authorizations = {@Authorization("Basic")})
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Response> removeCartItems(@Principal User user, @PathVariable Long id) {
-        cartItemService.remove(user.getMemberId(), id);
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<Response> removeCartItems(@Principal User user, @PathVariable Long cartItemId) {
+        cartItemService.remove(user.getMemberId(), cartItemId);
         return ResponseEntity.ok()
                 .body(new Response("장바구니에 담긴 상품을 삭제했습니다."));
     }
