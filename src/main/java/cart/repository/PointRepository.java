@@ -11,6 +11,7 @@ import cart.exception.OrderServerException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +21,8 @@ public class PointRepository {
 
     private static final int INIT_USED_POINT = 0;
     private static final String INVALID_USE_POINT_MESSAGE = "사용된 포인트를 취소할 수 없습니다.";
-    private static final String NO_POINT_MESSAGE = "삭제하고자하는 포인트가 없습니다.";
+    private static final String NO_POINT_MESSAGE = "입력한 포인트가 없습니다.";
+    private static final String INVALID_SAVE_POINT_MESSAGE = "데이터베이스에 포인트를 적립할 수 없습니다.";
 
     private final PointDao pointDao;
     private final PointHistoryDao pointHistoryDao;
@@ -43,7 +45,6 @@ public class PointRepository {
     private List<PointEntity> getPointsNotExpired(List<PointEntity> pointEntities) {
         return pointEntities.stream()
                 .filter(this::isNotExpiredPoint)
-                .sorted(Comparator.comparing(PointEntity::getExpiredAt))
                 .collect(Collectors.toList());
     }
 
@@ -87,20 +88,26 @@ public class PointRepository {
     }
 
     public Point findBy(Long memberId, Long orderId) {
-        PointEntity pointEntity = pointDao.findBy(memberId, orderId);
-
-        Long id = pointEntity.getId();
-        int value = pointEntity.getValue();
-        String comment = pointEntity.getComment();
-        LocalDate createAt = pointEntity.getCreateAt();
-        LocalDate expiredAt = pointEntity.getExpiredAt();
-
-        return Point.of(id, value, comment, createAt, expiredAt);
+        try {
+            PointEntity pointEntity = pointDao.findBy(memberId, orderId);
+            Long id = pointEntity.getId();
+            int value = pointEntity.getValue();
+            String comment = pointEntity.getComment();
+            LocalDate createAt = pointEntity.getCreateAt();
+            LocalDate expiredAt = pointEntity.getExpiredAt();
+            return Point.of(id, value, comment, createAt, expiredAt);
+        } catch (DataAccessException exception) {
+            throw new OrderException(NO_POINT_MESSAGE);
+        }
     }
 
     public void save(Long memberId, Long orderId, Point point) {
-        PointEntity pointEntity = new PointEntity(point.getId(), point.getValue(), point.getComment(), point.getCreateAt(), point.getExpiredAt());
-        pointDao.save(memberId, orderId, pointEntity);
+        try {
+            PointEntity pointEntity = new PointEntity(point.getId(), point.getValue(), point.getComment(), point.getCreateAt(), point.getExpiredAt());
+            pointDao.save(memberId, orderId, pointEntity);
+        } catch (DataAccessException exception) {
+            throw new OrderServerException(INVALID_SAVE_POINT_MESSAGE);
+        }
     }
 
     public void delete(Long memberId, Long orderId) {

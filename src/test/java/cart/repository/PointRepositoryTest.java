@@ -4,10 +4,13 @@ import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
 import cart.domain.*;
 import cart.exception.OrderException;
+import cart.exception.OrderServerException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -81,7 +84,7 @@ class PointRepositoryTest {
 
     @DisplayName("한 유저의 한 주문에 대한 포인트 정보를 구할 수 있다.")
     @Test
-    void findBy() {
+    void findBy_success() {
         Point point = pointRepository.findBy(1L, 1L);
 
         Point expected = Point.of(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 7, 2), LocalDate.of(2023, 10, 31));
@@ -89,14 +92,32 @@ class PointRepositoryTest {
         assertThat(point).isEqualTo(expected);
     }
 
+    @DisplayName("데이터베이스에 저장되지 않은 포인트를 요청할 때 예외가 발생한다..")
+    @ParameterizedTest
+    @CsvSource(value = {"1:100", "100:1"}, delimiter = ':')
+    void findBy_fail(Long memberId, Long orderId) {
+        assertThatThrownBy(() -> pointRepository.findBy(memberId, orderId))
+                .isInstanceOf(OrderException.class)
+                .hasMessageContaining("입력한 포인트가 없습니다.");
+    }
+
     @DisplayName("한 주문에 대한 포인트를 저장할 수 있다.")
     @Test
-    void save() {
+    void save_success() {
         pointRepository.save(member.getId(), 3L, Point.of(3000, "테스트 주문 포인트", LocalDate.of(2099, 03, 03)));
 
         Integer point = jdbcTemplate.queryForObject("select earned_point from point where orders_id = 3 and comment = '테스트 주문 포인트'", Integer.class);
 
         assertThat(point).isEqualTo(3000);
+    }
+
+    @DisplayName("이미 저장되지 않은 주문이나 멤버에 대한 적립을 할 경우에는 예외가 발생한다..")
+    @ParameterizedTest
+    @CsvSource(value = {"1:100", "100:1"}, delimiter = ':')
+    void save_fail(Long memberId, Long orderId) {
+        assertThatThrownBy(() -> pointRepository.save(memberId, orderId, Point.of(3000, "테스트 주문 포인트", LocalDate.of(2099, 03, 03))))
+                .isInstanceOf(OrderServerException.class)
+                .hasMessageContaining("데이터베이스에 포인트를 적립할 수 없습니다.");
     }
 
     @DisplayName("기존에 적립한 포인트를 사용하지 않았다면 포인트를 삭제할 수 있다.")
@@ -119,6 +140,6 @@ class PointRepositoryTest {
     void delete_fail_2() {
         assertThatThrownBy(() -> pointRepository.delete(1L, 100L))
                 .isInstanceOf(OrderException.class)
-                .hasMessageContaining("삭제하고자하는 포인트가 없습니다.");
+                .hasMessageContaining("입력한 포인트가 없습니다.");
     }
 }
