@@ -31,10 +31,7 @@ public class OrderRepository {
         this.productDao = productDao;
     }
     
-    public Long save(final Member member, final Order order) {
-        final MemberEntity memberEntity = new MemberEntity(member.getId(), member.getEmail(), member.getPassword(), member.getPoint());
-        memberDao.updateMember(memberEntity);
-        final Long memberId = memberEntity.getId();
+    public Long save(final Long memberId, final Order order) {
         final OrderEntity orderEntity = new OrderEntity(memberId, order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
         
         final Long orderId = orderDao.insert(orderEntity);

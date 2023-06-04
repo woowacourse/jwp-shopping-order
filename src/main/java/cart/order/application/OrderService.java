@@ -45,7 +45,7 @@ public class OrderService {
         memberByEmail.accumulatePoint(orderRequest.getPointToAdd());
         
         memberRepository.update(memberByEmail);
-        return orderRepository.save(memberByEmail, order);
+        return orderRepository.save(memberByEmail.getId(), order);
     }
     
     private List<Long> getCartItemIds(final OrderRequest orderRequest) {

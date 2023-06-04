@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static cart.member.domain.MemberTest.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -76,7 +75,7 @@ class MemberDaoTest extends DBInit {
         final MemberEntity updatedMemberEntity = new MemberEntity(memberId, email, password, point);
 
         // when
-        memberDao.updateMember(updatedMemberEntity);
+        memberDao.update(updatedMemberEntity);
 
         // then
         assertAll(
