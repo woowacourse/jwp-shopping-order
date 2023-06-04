@@ -40,7 +40,8 @@ public class OrderService {
         Order newOrder = Order.of(member,
                 shippingFee.getFee(),
                 orderItemList,
-                shippingDiscountPolicy.getThreshold());
+                shippingDiscountPolicy.getThreshold(),
+                orderRequest.getUsedPoint());
         return orderRepository.saveOrder(member, newOrder);
     }
 

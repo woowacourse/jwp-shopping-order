@@ -4,18 +4,20 @@ public class OrderEntity {
     private final Long id;
     private final Long memberId;
     private final Long shippingFee;
-    private final Long totalPrice;
+    private final Long totalProductPrice;
+    private final Long usedPoint;
     private final String createdAt;
 
-    public OrderEntity(Long memberId, Long shippingFee, Long totalPrice) {
-        this(null, memberId, shippingFee, totalPrice,null);
+    public OrderEntity(Long memberId, Long shippingFee, Long totalProductPrice, Long usedPoint) {
+        this(null, memberId, shippingFee, totalProductPrice, usedPoint, null);
     }
 
-    public OrderEntity(Long id, Long memberId, Long shippingFee, Long totalPrice,String createdAt) {
+    public OrderEntity(Long id, Long memberId, Long shippingFee, Long totalProductPrice, Long usedPoint, String createdAt) {
         this.id = id;
         this.memberId = memberId;
         this.shippingFee = shippingFee;
-        this.totalPrice = totalPrice;
+        this.totalProductPrice = totalProductPrice;
+        this.usedPoint = usedPoint;
         this.createdAt = createdAt;
     }
 
@@ -31,8 +33,12 @@ public class OrderEntity {
         return shippingFee;
     }
 
-    public Long getTotalPrice() {
-        return totalPrice;
+    public Long getTotalProductPrice() {
+        return totalProductPrice;
+    }
+
+    public Long getUsedPoint() {
+        return usedPoint;
     }
 
     public String getCreatedAt() {

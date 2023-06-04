@@ -23,7 +23,8 @@ public class OrderDao {
                     rs.getLong("id"),
                     rs.getLong("memberId"),
                     rs.getLong("shippingFee"),
-                    rs.getLong("totalPrice"),
+                    rs.getLong("total_products_price"),
+                    rs.getLong("used_point"),
                     rs.getTimestamp("created_at").toString()
             );
 

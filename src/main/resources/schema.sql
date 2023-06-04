@@ -8,9 +8,16 @@ create table if not exists product
 
 create table if not exists member
 (
-     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-     email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+---회원 추가할때 point도 같이 추가..
+create table if not exists point
+(
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    point BIGINT NOT NULL DEFAULT 0
 );
 
 create table if not exists cart_item
@@ -18,16 +25,17 @@ create table if not exists cart_item
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL
+    quantity BIGINT NOT NULL
 );
 
 create table if not exists orders
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	member_id BIGINT NOT NULL,
-	shipping_fee BIGINT NOT NULL,
-	total_price BIGINT NOT NULL,
-	created_at timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+    member_id BIGINT NOT NULL,
+    shipping_fee BIGINT NOT NULL,
+    total_products_price BIGINT NOT NULL,
+    used_point BIGINT NOT NULL,
+    created_at timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
 create table if not exists order_item
@@ -44,11 +52,12 @@ create table if not exists order_item
 create table if not exists shipping_fee
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	fee BIGINT NOT NULL
+    fee BIGINT NOT NULL
 );
 
 create table if not exists shipping_discount_policy
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	threshold BIGINT NOT NULL
+    threshold BIGINT NOT NULL
 );
+

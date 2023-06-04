@@ -44,8 +44,9 @@ public class OrderRepository {
         return new Order(orderEntity.getId(),
                 member,
                 orderEntity.getShippingFee(),
-                orderEntity.getTotalPrice(),
+                orderEntity.getTotalProductPrice(),
                 orderItemList,
+                orderEntity.getUsedPoint(),
                 orderEntity.getCreatedAt());
     }
 
@@ -75,8 +76,9 @@ public class OrderRepository {
                 .map(orderEntity -> new Order(orderEntity.getId(),
                         member,
                         orderEntity.getShippingFee(),
-                        orderEntity.getTotalPrice(),
+                        orderEntity.getTotalProductPrice(),
                         toOrderItemList(maps.get(orderEntity.getId())),
+                        orderEntity.getUsedPoint(),
                         orderEntity.getCreatedAt()))
                 .collect(toList());
     }
@@ -110,7 +112,9 @@ public class OrderRepository {
         final OrderEntity orderEntity = new OrderEntity(
                 member.getId(),
                 order.getShippingFee(),
-                order.getTotalPrice());
+                order.getTotalPrice(),
+                order.getUsedPoint()
+        );
         return orderDao.createOrder(orderEntity);
     }
 

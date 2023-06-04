@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderItemApiController {
+public class OrderApiController {
 
     private final OrderService orderService;
 
-    public OrderItemApiController(OrderService orderService) {
+    public OrderApiController(OrderService orderService) {
         this.orderService = orderService;
     }
 

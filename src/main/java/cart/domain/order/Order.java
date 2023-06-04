@@ -12,30 +12,32 @@ public class Order {
     private final Long shippingFee;
     private final Long totalPrice;
     private final List<OrderItem> orderItems;
+    private final Long usedPoint;
     private final String createdAt;
 
-    public Order(Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems) {
-        this(null, member, shippingFee, totalPrice, orderItems, null);
+    public Order(Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Long usedPoint) {
+        this(null, member, shippingFee, totalPrice, orderItems, usedPoint, null);
     }
 
-    public Order(Long id, Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, String createdAt) {
+    public Order(Long id, Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Long usedPoint, String createdAt) {
         this.id = id;
         this.member = member;
         this.shippingFee = shippingFee;
         this.totalPrice = totalPrice;
         this.orderItems = orderItems;
+        this.usedPoint = usedPoint;
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems,Long threshold) {
+    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems, Long usedPoint, Long threshold) {
         Long getTotalPrice = orderItems.stream()
                 .mapToLong(orderItem -> orderItem.getProduct().getPrice() * orderItem.getQuantity())
                 .sum();
-        if(getTotalPrice>=threshold){
-            return new Order(member, 0L, getTotalPrice, orderItems);
+        if (getTotalPrice >= threshold) {
+            return new Order(member, 0L, getTotalPrice, orderItems, usedPoint);
         }
 
-        return new Order(member, shippingFee, getTotalPrice, orderItems);
+        return new Order(member, shippingFee, getTotalPrice, orderItems, usedPoint);
     }
 
     public Long getId() {
@@ -56,6 +58,10 @@ public class Order {
 
     public List<OrderItem> getOrderItems() {
         return orderItems;
+    }
+
+    public Long getUsedPoint() {
+        return usedPoint;
     }
 
     public String getCreatedAt() {
