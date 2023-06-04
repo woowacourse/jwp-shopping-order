@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -121,7 +122,8 @@ public class MemberCouponDao {
 
             return ps;
         }, keyHolder);
-        Number key = keyHolder.getKey();
-        return Objects.requireNonNull(key).longValue();
+
+        List<Map<String, Object>> keys = keyHolder.getKeyList();
+        return ((Number)keys.get(0).get("ID")).longValue();
     }
 }
