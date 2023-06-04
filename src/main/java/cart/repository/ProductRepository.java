@@ -38,6 +38,10 @@ public class ProductRepository {
         productDao.update(productEntity);
     }
 
+    public void delete(Long productId) {
+        productDao.delete(productId);
+    }
+
     private Product convertToDomain(ProductEntity productEntity) {
         return new Product(
                 productEntity.getId(),

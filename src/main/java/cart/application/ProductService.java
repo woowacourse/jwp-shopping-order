@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -11,12 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-
-    private final ProductDao productDao;
     private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao, ProductRepository productRepository) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -51,6 +47,6 @@ public class ProductService {
     }
 
     public void delete(Long productId) {
-        productDao.delete(productId);
+        productRepository.delete(productId);
     }
 }
