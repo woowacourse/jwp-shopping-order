@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Member {
 
     private Long id;
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
     public Member(String email, String password) {
         this.email = email;

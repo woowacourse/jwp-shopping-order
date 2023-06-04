@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class OrderPoint {
 
-    private PointPolicy pointPolicy;
+    private final PointPolicy pointPolicy;
 
     public OrderPoint(PointPolicy pointPolicy) {
         this.pointPolicy = pointPolicy;

@@ -13,11 +13,11 @@ import java.util.Objects;
 public class Order {
 
     private Long id;
-    private Member member;
-    private Long usedPoint;
-    private Long earnedPoint;
-    private Timestamp createdAt;
-    private List<OrderItem> orderItems;
+    private final Member member;
+    private final Long usedPoint;
+    private final Long earnedPoint;
+    private final Timestamp createdAt;
+    private final List<OrderItem> orderItems;
 
     public Order(Member member, Long usedPoint, Long earnedPoint, Timestamp createdAt) {
         this.member = member;
@@ -85,5 +85,18 @@ public class Order {
 
     public List<OrderItem> getOrderItems() {
         return orderItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

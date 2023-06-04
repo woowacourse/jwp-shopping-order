@@ -5,11 +5,11 @@ import java.util.Objects;
 public class OrderItem {
 
     private Long id;
-    private Long productId;
-    private String name;
-    private Long price;
-    private String imageUrl;
-    private Long quantity;
+    private final Long productId;
+    private final String name;
+    private final Long price;
+    private final String imageUrl;
+    private final Long quantity;
 
     public OrderItem(Long productId, String name, Long price, String imageUrl, Long quantity) {
         this.productId = productId;
