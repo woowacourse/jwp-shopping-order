@@ -128,16 +128,118 @@ VALUES ('신규 가입 할인', '정액제', 5000);
 INSERT INTO coupon_type (name, discount_type, discount_amount)
 VALUES ('여름 맞이 할인', '정액제', 2000);
 
+INSERT INTO coupon_type (name, discount_type, discount_amount)
+VALUES ('이벤트 할인', '정액제', 1000);
+
 -- 발행 쿠폰
+-- 계정 a
 INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (1, 1);
+SELECT 1, coupon_type_id
+FROM (
+         SELECT 1 AS coupon_type_id
+         UNION ALL SELECT 2
+         UNION ALL SELECT 3
+         UNION ALL SELECT 4
+     ) AS coupon_types
+         CROSS JOIN (
+    SELECT 1 AS count
+    UNION ALL SELECT 2
+    UNION ALL SELECT 3
+    UNION ALL SELECT 4
+    UNION ALL SELECT 5
+    UNION ALL SELECT 6
+    UNION ALL SELECT 7
+    UNION ALL SELECT 8
+    UNION ALL SELECT 9
+    UNION ALL SELECT 10
+    UNION ALL SELECT 11
+    UNION ALL SELECT 12
+    UNION ALL SELECT 13
+    UNION ALL SELECT 14
+    UNION ALL SELECT 15
+    UNION ALL SELECT 16
+    UNION ALL SELECT 17
+    UNION ALL SELECT 18
+    UNION ALL SELECT 19
+    UNION ALL SELECT 20
+    UNION ALL SELECT 21
+    UNION ALL SELECT 22
+    UNION ALL SELECT 23
+    UNION ALL SELECT 24
+    UNION ALL SELECT 25
+) AS counts
+    LIMIT 100;
+-- 계정 a
 INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (1, 2);
+SELECT 2, coupon_type_id
+FROM (
+         SELECT 1 AS coupon_type_id
+         UNION ALL SELECT 2
+         UNION ALL SELECT 3
+         UNION ALL SELECT 4
+     ) AS coupon_types
+         CROSS JOIN (
+    SELECT 1 AS count
+    UNION ALL SELECT 2
+    UNION ALL SELECT 3
+    UNION ALL SELECT 4
+    UNION ALL SELECT 5
+    UNION ALL SELECT 6
+    UNION ALL SELECT 7
+    UNION ALL SELECT 8
+    UNION ALL SELECT 9
+    UNION ALL SELECT 10
+    UNION ALL SELECT 11
+    UNION ALL SELECT 12
+    UNION ALL SELECT 13
+    UNION ALL SELECT 14
+    UNION ALL SELECT 15
+    UNION ALL SELECT 16
+    UNION ALL SELECT 17
+    UNION ALL SELECT 18
+    UNION ALL SELECT 19
+    UNION ALL SELECT 20
+    UNION ALL SELECT 21
+    UNION ALL SELECT 22
+    UNION ALL SELECT 23
+    UNION ALL SELECT 24
+    UNION ALL SELECT 25
+) AS counts
+    LIMIT 100;
+-- 계정 c
 INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (1, 3);
-INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (2, 1);
-INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (2, 2);
-INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (2, 3);
+SELECT 3, coupon_type_id
+FROM (
+         SELECT 1 AS coupon_type_id
+         UNION ALL SELECT 2
+         UNION ALL SELECT 3
+         UNION ALL SELECT 4
+     ) AS coupon_types
+         CROSS JOIN (
+    SELECT 1 AS count
+    UNION ALL SELECT 2
+    UNION ALL SELECT 3
+    UNION ALL SELECT 4
+    UNION ALL SELECT 5
+    UNION ALL SELECT 6
+    UNION ALL SELECT 7
+    UNION ALL SELECT 8
+    UNION ALL SELECT 9
+    UNION ALL SELECT 10
+    UNION ALL SELECT 11
+    UNION ALL SELECT 12
+    UNION ALL SELECT 13
+    UNION ALL SELECT 14
+    UNION ALL SELECT 15
+    UNION ALL SELECT 16
+    UNION ALL SELECT 17
+    UNION ALL SELECT 18
+    UNION ALL SELECT 19
+    UNION ALL SELECT 20
+    UNION ALL SELECT 21
+    UNION ALL SELECT 22
+    UNION ALL SELECT 23
+    UNION ALL SELECT 24
+    UNION ALL SELECT 25
+) AS counts
+    LIMIT 100;
