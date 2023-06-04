@@ -164,6 +164,18 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     }
 
+    @Test
+    void 상품_ID가_장바구니에_존재하지_않으면_404_에러가_발생한다() {
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().log().all()
+                .get("/cart-items/products/3")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
