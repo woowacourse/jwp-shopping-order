@@ -19,9 +19,13 @@ public class PointService {
         this.pointRepository = pointRepository;
     }
 
+    public void savePointOfOrder(int requestedPoint, Order order) {
+        Point pointToUse = new Point(requestedPoint);
+        checkPointAbleToUse(pointToUse, order);
+        savePointHistory(pointToUse, order);
+    }
 
-    @Transactional(readOnly = true)
-    public void checkPointAbleToUse(Point pointToUse, Order order) {
+    private void checkPointAbleToUse(Point pointToUse, Order order) {
         checkMemberPointAvailability(pointToUse, order.getMemberId());
         checkOrderPointAvailability(pointToUse, order.calculateTotalPrice());
     }
@@ -40,13 +44,14 @@ public class PointService {
         }
     }
 
-    public void savePointHistory(Point pointToUse, Order order) {
+    private void savePointHistory(Point pointToUse, Order order) {
         Money paymentPrice = order.calculateTotalPrice().subtract(pointToUse.toMoney());
         Point pointToSave = Point.fromMoney(paymentPrice);
         Point updatedPoint = calculateUpdatedPoint(order.getMemberId(), pointToUse, pointToSave);
 
         pointRepository.update(updatedPoint, order.getMemberId());
-        pointRepository.savePointHistory(pointToSave, pointToUse, order.getId(), order.getMemberId());
+        pointRepository.savePointHistory(pointToSave, pointToUse, order.getId(),
+            order.getMemberId());
     }
 
     private Point calculateUpdatedPoint(long memberId, Point pointToUse, Point pointToSave) {
