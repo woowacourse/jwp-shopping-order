@@ -43,17 +43,16 @@ public class OrderService {
         Member member = findMemberByEmail(authInfo.getEmail());
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
-        long originalPoint = member.getPoint();
-        order.adjustPoint();
-        validateEarnedPointIsEqual(order.getMember().getPoint(), originalPoint + request.getUsedPoint() + request.getPointToAdd());
+        adjustPoint(order, member.getPoint(), request.getUsedPoint() - request.getPointToAdd());
         memberRepository.update(order.getMember());
         Order inserted = orderRepository.insert(order);
         cartItemRepository.deleteByMemberId(member.getId());
         return inserted.getId();
     }
 
-    private void validateEarnedPointIsEqual(long point, long expectedPoint) {
-        if (point != expectedPoint) {
+    private void adjustPoint(Order order, long originalPoint, long changedAmount) {
+        order.adjustPoint();
+        if (originalPoint != order.getMember().getPoint() + changedAmount) {
             throw new PointInconsistentException();
         }
     }
@@ -88,11 +87,11 @@ public class OrderService {
         Member member = findMemberByEmail(authInfo.getEmail());
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
-                .map(order -> new OrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo())))
+                .map(order -> new OrderResponse(order.getId(), mapOrderInfosToOrderDtos(order.getOrderInfo())))
                 .collect(Collectors.toList());
     }
 
-    private List<OrderDto> mapOrderInfosToOrderDto(OrderInfos orderInfos) {
+    private List<OrderDto> mapOrderInfosToOrderDtos(OrderInfos orderInfos) {
         return orderInfos.getValues().stream()
                 .map(this::makeOrderDto)
                 .collect(Collectors.toList());
@@ -110,7 +109,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                         .orElseThrow(OrderNotFoundException::new);
         order.validateIsIssuedBy(member);
-        return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo()),
+        return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDtos(order.getOrderInfo()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
     }
 

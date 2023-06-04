@@ -54,11 +54,11 @@ public class CartItemService {
         Member member = findMemberByEmail(authInfo.getEmail());
         CartItem cartItem = findCartItemById(id);
         cartItem.validateIsOwnedBy(member);
-        if (request.getQuantity() == 0) {
+        cartItem.updateQuantity(request.getQuantity());
+        if (cartItem.isOutOfStock()) {
             cartItemRepository.deleteById(id);
             return;
         }
-        cartItem.updateQuantity(request.getQuantity());
         cartItemRepository.update(cartItem);
     }
 

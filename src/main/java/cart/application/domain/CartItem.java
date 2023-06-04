@@ -28,6 +28,10 @@ public class CartItem {
         }
     }
 
+    public boolean isOutOfStock() {
+        return quantity <= 0;
+    }
+
     public Long getId() {
         return id;
     }
