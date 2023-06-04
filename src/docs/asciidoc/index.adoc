@@ -53,13 +53,16 @@ operation::delete-cart-item[snippets='http-request,path-parameters,http-response
 
 operation::update-cart-item-quantity[snippets='http-request,http-response']
 
-[[Order-API]]
-== Order API
+[[Payment-API]]
+== Payment API
 
 [[예상-결제-금액-조회-API]]
 === 예상 결제 금액 조회
 
 operation::get-payment[snippets='http-request,request-parameters,http-response,response-fields']
+
+[[Order-API]]
+== Order API
 
 [[주문하기-API]]
 === 주문하기
