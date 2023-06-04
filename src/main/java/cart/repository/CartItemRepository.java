@@ -9,6 +9,10 @@ import cart.dao.entity.ProductEntity;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.exception.CartItemException;
+import cart.exception.CouponException;
+import cart.exception.MemberException;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -47,11 +51,11 @@ public class CartItemRepository {
 
     public CartItem findById(final Long id) {
         CartItemEntity cartItemEntity = cartItemDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니는 없습니다."));
+                .orElseThrow(() -> new CartItemException.NoExist("해당 장바구니는 없습니다."));
         ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품은 없습니다."));
+                .orElseThrow(() -> new ProductException.NoExist("해당 상품은 없습니다."));
         MemberEntity memberEntity = memberDao.findById(cartItemEntity.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 멤버는 없습니다."));
+                .orElseThrow(() -> new MemberException.NoExist("해당 멤버는 없습니다."));
 
         Product product = productEntity.toProduct();
         Member member = memberEntity.toMember();

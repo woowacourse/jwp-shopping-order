@@ -69,6 +69,16 @@ public class OrderService {
         return convertToOrderDetailResponse(order);
     }
 
+    @Transactional(readOnly = true)
+    public void cancelOrder(final Long orderId, final Member member) {
+        Order order = orderRepository.findById(orderId);
+
+        Order canceledOrder = order.cancel();
+
+        memberCouponRepository.update(canceledOrder.getMemberCoupon());
+        orderRepository.delete(canceledOrder);
+    }
+
     private MemberCoupon findCouponIfExist(final Long memberCouponId) {
         if (memberCouponId== null) {
             return new EmptyMemberCoupon();
@@ -131,14 +141,5 @@ public class OrderService {
                 orderItem.getProduct().getImageUrl(),
                 orderItem.getQuantity()
         );
-    }
-
-    public void cancelOrder(final Long orderId, final Member member) {
-        Order order = orderRepository.findById(orderId);
-
-        Order canceledOrder = order.cancel();
-
-        memberCouponRepository.update(canceledOrder.getMemberCoupon());
-        orderRepository.delete(canceledOrder);
     }
 }

@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.MemberException;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,12 @@ public class LoginService {
     @Transactional(readOnly = true)
     public void login(final String authorization) {
         if (authorization == null) {
-            throw new AuthenticationException();
+            throw new AuthenticationException.Unauthorized("로그인 정보가 없습니다.");
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException();
+            throw new AuthenticationException.Unauthorized("로그인 정보가 없습니다.");
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
@@ -35,11 +36,9 @@ public class LoginService {
 
         try {
             Member member = memberRepository.findByEmail(email);
-            if (!member.checkPassword(password)) {
-                throw new AuthenticationException();
-            }
-        } catch (IllegalArgumentException e) {
-            throw new AuthenticationException();
+            member.checkPassword(password);
+        } catch (MemberException.NoExist exception) {
+            throw new AuthenticationException.LoginFail("로그인 정보가 잘못되었습니다.");
         }
     }
 }

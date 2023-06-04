@@ -1,12 +1,9 @@
 package cart.integration;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.DisplayName;
+import cart.ui.advcie.ErrorType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
 
@@ -23,5 +20,12 @@ public class AuthIntegrationTest extends IntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .log().all();
+    }
+
+    @Test
+    void 예외() {
+        Exception ddd = new IllegalArgumentException("dd");
+        ErrorType from = ErrorType.from(ddd);
+        System.out.println(from);
     }
 }

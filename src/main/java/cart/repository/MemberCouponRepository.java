@@ -10,6 +10,9 @@ import cart.domain.Coupon;
 import cart.domain.EmptyMemberCoupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.exception.CouponException;
+import cart.exception.MemberCouponException;
+import cart.exception.MemberException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -55,11 +58,11 @@ public class MemberCouponRepository {
 
     public MemberCoupon findById(final Long id) {
         MemberCouponEntity memberCouponEntity = memberCouponDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 멤버의 쿠폰이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberCouponException.NoExist("해당 멤버의 쿠폰이 존재하지 않습니다."));
         CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰이 존재하지 않습니다."));
+                .orElseThrow(() -> new CouponException.NoExist("해당 쿠폰이 존재하지 않습니다."));
         MemberEntity memberEntity = memberDao.findById(memberCouponEntity.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberException.NoExist("해당 회원이 존재하지 않습니다."));
         return memberCouponEntity.toMemberCoupon(couponEntity.toCoupon(), memberEntity.toMember());
     }
 

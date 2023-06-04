@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.CartItemException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,11 +34,17 @@ public class CartItems {
         }
     }
 
+    public void checkNotEmpty() {
+        if (cartItems.isEmpty()) {
+            throw new CartItemException.EmptyCart("장바구니가 비어있습니다.");
+        }
+    }
+
     private void validateValue(final CartItem currentCartItem, final List<CartItem> otherCartItems) {
         CartItem selectedCartItem = otherCartItems.stream()
                 .filter(cartItem -> cartItem.equals(currentCartItem))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품은 선택되지 않았습니다."));
+                .orElseThrow(() -> new CartItemException.NoExist("해당 장바구니 상품은 선택되지 않았습니다."));
         currentCartItem.checkValue(selectedCartItem);
     }
 
@@ -44,7 +52,7 @@ public class CartItems {
         return cartItems.stream()
                 .filter(cartItem -> Objects.equals(cartItem.getId(), id))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 카트목록이 존재하지 않습니다."));
+                .orElseThrow(() -> new CartItemException.NoExist("해당 카트목록이 존재하지 않습니다."));
     }
 
     public Order order(final Member member, final MemberCoupon memberCoupon) {

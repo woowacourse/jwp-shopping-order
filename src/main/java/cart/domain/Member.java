@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.AuthenticationException;
+
 import java.util.Objects;
 
 public class Member {
@@ -16,8 +18,10 @@ public class Member {
     }
 
     // TODO: 6/3/23 안에서 예외 터르리기 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public void checkPassword(String password) {
+        if (this.password.equals(password)) {
+            throw new AuthenticationException.LoginFail("로그인 정보가 잘못되었습니다.");
+        }
     }
 
     public Long getId() {

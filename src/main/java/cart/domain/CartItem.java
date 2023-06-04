@@ -34,7 +34,7 @@ public class CartItem {
 
     public void checkValue(final CartItem other) {
         if (!Objects.equals(this.quantity, other.quantity)) {
-            throw new IllegalArgumentException("카트 수량이 변경되었습니다.");
+            throw new CartItemException.QuantityIncorrect("카트 수량이 변경되었습니다.");
         }
         this.product.checkValue(other.product);
     }
@@ -57,7 +57,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException.IllegalMember("접근 권한 없습니다");
         }
     }
 

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.OrderException;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +41,7 @@ public class Order {
 
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member, member)) {
-            throw new IllegalArgumentException("다른 회원의 주문입니다.");
+            throw new OrderException.IllegalMember("다른 회원의 주문입니다.");
         }
     }
 

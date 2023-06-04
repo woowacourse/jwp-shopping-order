@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.NoExpectedException;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -11,7 +13,7 @@ public enum CouponType {
         return Arrays.stream(values())
                 .filter(couponType -> Objects.equals(couponType.name(), value))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 타입 쿠폰이 없습니다,"));
+                .orElseThrow(() -> new NoExpectedException("해당 타입 쿠폰이 없습니다,"));
     }
 
     public static CouponType from(final Coupon coupon) {

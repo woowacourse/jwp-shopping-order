@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.NoExpectedException;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -25,7 +27,7 @@ public enum ShippingFee {
         return Arrays.stream(values())
                 .filter(shippingFee -> Objects.equals(shippingFee.getCharge(), charge))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 배송비 정책이 존재항지 않습니다."));
+                .orElseThrow(() -> new NoExpectedException("해당 배송비 정책이 존재하지 않습니다."));
     }
 
     public Integer getCharge() {

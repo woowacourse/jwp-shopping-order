@@ -39,6 +39,7 @@ public class CouponService {
 
         CartItems cartItems = new CartItems(cartItemsByMember);
         CartItems selectedCartItems = cartItems.filterByIds(selectedCartItemIds);
+        selectedCartItems.checkNotEmpty();
         Integer totalPrice = selectedCartItems.calculateTotalPrice();
 
         return convertToAllOrderCouponResponse(memberCoupons, totalPrice);

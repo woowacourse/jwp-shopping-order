@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.CouponDao;
 import cart.dao.entity.CouponEntity;
 import cart.domain.Coupon;
+import cart.exception.CouponException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class CouponRepository {
 
     public Coupon findById(final Long id) {
         CouponEntity couponEntity = couponDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰 존재하지 않습니다."));
+                .orElseThrow(() -> new CouponException.NoExist("해당 쿠폰 존재하지 않습니다."));
         return couponEntity.toCoupon();
     }
 

@@ -36,7 +36,7 @@ public class ProductService {
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = productRepository.findById(productId);
         Product editProduct = new Product(
-                productId,
+                product.getId(),
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl()

@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.exception.CartItemException;
+import cart.exception.ProductException;
+
 import java.util.Objects;
 
 public class Product {
@@ -23,7 +26,7 @@ public class Product {
 
     public void checkValue(final Product other) {
         if (!Objects.equals(this.price, other.price)) {
-            throw new IllegalArgumentException("제품 가격이 변경되었습니다.");
+            throw new CartItemException.PriceIncorrect("제품 가격이 변경되었습니다.");
         }
     }
 

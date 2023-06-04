@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.exception.MemberCouponException;
+import cart.exception.NoExpectedException;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -36,20 +39,20 @@ public class UsableMemberCoupon implements MemberCoupon {
 
     @Override
     public MemberCoupon cancelUsed() {
-        throw new UnsupportedOperationException("사용하지 않은 쿠폰입니다.");
+        throw new NoExpectedException("사용하지 않은 쿠폰입니다.");
     }
 
     @Override
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member, member)) {
-            throw new IllegalArgumentException("다른 사용자의 쿠폰입니다.");
+            throw new MemberCouponException.IllegalMember("다른 사용자의 쿠폰입니다.");
         }
     }
 
     @Override
     public void checkExpired() {
         if (LocalDateTime.now().isAfter(expiredAt)) {
-            throw new IllegalArgumentException("유효기간이 지난 쿠폰입니다다");
+            throw new MemberCouponException.Unavailable("유효기간이 지난 쿠폰입니다");
         }
     }
 

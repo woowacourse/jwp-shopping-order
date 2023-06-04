@@ -5,11 +5,13 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,12 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
+        List<CartItem> cartItems = cartItemRepository.findByMember(member);
+        for (CartItem cartItem : cartItems) {
+            if (Objects.equals(cartItem.getProduct().getId(), cartItemRequest.getProductId())) {
+                throw new CartItemException.AlreadyExist("이미 장바구니에 존재하는 상품입니다.");
+            }
+        }
         return cartItemRepository.save(new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
     }
 

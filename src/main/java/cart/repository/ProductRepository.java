@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ProductRepository {
 
     public Product findById(Long id) {
         ProductEntity productEntity = productDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
+                .orElseThrow(() -> new ProductException.NoExist("해당 상품은 존재하지 않습니다."));
         return productEntity.toProduct();
     }
 
