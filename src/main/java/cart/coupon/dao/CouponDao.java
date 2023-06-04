@@ -6,6 +6,7 @@ import cart.coupon.domain.FixDiscountCoupon;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,57 +17,49 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CouponDao {
 
+  private static final long NOT_USED_WITH_ORDER_COUPON_ID = 0L;
+
   private final JdbcTemplate jdbcTemplate;
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-  private final RowMapper<CouponEntity> rowMapper = (rs, rowNum) ->
-      new CouponEntity(
-          rs.getLong("id"),
-          rs.getString("name"),
-          rs.getBigDecimal("discount_price")
-      );
 
   public CouponDao(final JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
     this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
   }
 
-
-  public List<CouponEntity> findByIdsIn(final List<Long> couponIds) {
+  public List<Coupon> findByIdsIn(final List<Long> couponIds) {
     final String sql = "SELECT * FROM COUPON C WHERE C.id IN (:ids)";
 
     final MapSqlParameterSource parameterSource =
         new MapSqlParameterSource().addValue("ids", couponIds);
 
-    return namedParameterJdbcTemplate.query(sql, parameterSource, rowMapper);
+    return namedParameterJdbcTemplate.query(sql, parameterSource, getRowMapper());
   }
 
-  public List<Coupon> findByIdsIn2(final List<Long> couponIds) {
-    final String sql = "SELECT * FROM COUPON C WHERE C.id IN (:ids)";
-
-    final MapSqlParameterSource parameterSource =
-        new MapSqlParameterSource().addValue("ids", couponIds);
-
-    return namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> {
+  private static RowMapper<Coupon> getRowMapper() {
+    return (rs, rowNum) -> {
       final long id = rs.getLong("id");
       final String name = rs.getString("name");
       final BigDecimal discountPrice = rs.getBigDecimal("discount_price");
       return new FixDiscountCoupon(id, name, new Money(discountPrice));
-    });
+    };
   }
 
-  public Coupon findById(final Long couponId) {
+  public Optional<Coupon> findById(final Long couponId) {
+    if (isNotUsingCouponInOrder(couponId)) {
+      return Optional.of(new EmptyCoupon());
+    }
+
     final String sql = "SELECT * FROM COUPON C WHERE C.id = ?";
 
     try {
-      return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-        final long id = rs.getLong("id");
-        final String name = rs.getString("name");
-        final BigDecimal discountPrice = rs.getBigDecimal("discount_price");
-        return new FixDiscountCoupon(id, name, new Money(discountPrice));
-      }, couponId);
+      return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getRowMapper(), couponId));
     } catch (EmptyResultDataAccessException e) {
-      return new EmptyCoupon();
+      return Optional.empty();
     }
+  }
+
+  private boolean isNotUsingCouponInOrder(final Long couponId) {
+    return couponId == null || couponId.equals(NOT_USED_WITH_ORDER_COUPON_ID);
   }
 }

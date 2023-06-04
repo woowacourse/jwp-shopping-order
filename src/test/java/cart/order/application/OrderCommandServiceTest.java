@@ -2,6 +2,7 @@ package cart.order.application;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
@@ -76,6 +77,32 @@ class OrderCommandServiceTest {
     //when & then
     assertThatThrownBy(() -> orderCommandService.registerOrder(member, registerOrderRequest))
         .isInstanceOf(NotSameTotalPriceException.class);
+  }
+
+  @Test
+  @DisplayName("registerOrder() : 주문 중 쿠폰을 사용하지 않아도 생성할 수 있다.")
+  void test_registerOrder_NotCoupon() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+
+    final List<Long> cartItemIds = List.of(1L, 2L);
+    final BigDecimal totalPrice = BigDecimal.valueOf(380400);
+    final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
+    final Long couponId = null;
+
+    final RegisterOrderRequest registerOrderRequest =
+        new RegisterOrderRequest(
+            cartItemIds,
+            totalPrice,
+            deliveryFee,
+            couponId
+        );
+
+    //when
+    final Long savedId = orderCommandService.registerOrder(member, registerOrderRequest);
+
+    //then
+    assertNotNull(savedId);
   }
 
   @Test

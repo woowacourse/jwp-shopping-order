@@ -59,6 +59,40 @@ class OrderApiControllerTest extends IntegrationTestHelper {
   }
 
   @Test
+  @DisplayName("registerOrder() : 쿠폰을 사용하지 않고 주문이 성공적으로 생성된다면 Location에 저장된 리소스의 위치와 함께 201 Created를 반환한다.")
+  void test_registerOrder_notCoupon() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+
+    final List<Long> cartItemIdList = List.of(1L, 2L);
+    final BigDecimal totalPrice = BigDecimal.valueOf(380400);
+    final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
+    final Long couponId = null;
+
+    final RegisterOrderRequest registerOrderRequest = new RegisterOrderRequest(
+        cartItemIdList,
+        totalPrice,
+        deliveryFee,
+        couponId
+    );
+
+    //when
+    final String location = given().log().all()
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        .body(registerOrderRequest)
+        .when()
+        .post("/orders")
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.CREATED.value())
+        .extract().header("Location");
+
+    //then
+    assertNotNull(location);
+  }
+
+  @Test
   @DisplayName("showOrders() : 사용자가 주문한 주문 목록들을 성공적으로 조회한다면 200 OK 를 반환한다.")
   void test_showOrders() throws Exception {
     //given

@@ -17,6 +17,7 @@ import cart.order.exception.NotSameTotalPriceException;
 import cart.order_item.application.OrderItemCommandService;
 import cart.order_item.domain.OrderedItems;
 import cart.value_object.Money;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,43 +44,50 @@ public class OrderCommandService {
 
   public Long registerOrder(final Member member, final RegisterOrderRequest registerOrderRequest) {
 
+    final List<Long> cartItemIds = registerOrderRequest.getCartItemIds();
+    final Money totalPrice = new Money(registerOrderRequest.getTotalPrice());
+
     final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, registerOrderRequest);
     final Long savedOrderId = orderDao.save(orderEntity);
 
     final Order order = orderDao.findByOrderId(savedOrderId);
 
     final OrderedItems orderedItems = orderItemCommandService.registerOrderItem(
-        registerOrderRequest.getCartItemIds(),
+        cartItemIds,
         order,
         member
     );
+    final Money orderItemsTotalPrice = orderedItems.calculateAllItemPrice();
+    validateSameTotalPrice(orderItemsTotalPrice, totalPrice);
 
-    validateSameTotalPrice(orderedItems.calculateAllItemPrice(), registerOrderRequest);
     final Coupon coupon = order.getCoupon();
-
     validateCouponExceedTotalPrice(orderedItems, coupon);
 
-    cartItemService.removeBatch(member,
-        new RemoveCartItemRequest(registerOrderRequest.getCartItemIds()));
+    cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
 
-    memberCouponCommandService.updateUsedCoupon(registerOrderRequest.getCouponId(), member.getId());
+    if (hasCouponWith(registerOrderRequest)) {
+      memberCouponCommandService.updateUsedCoupon(
+          registerOrderRequest.getCouponId(),
+          member.getId()
+      );
+    }
 
     return savedOrderId;
   }
 
-  private void validateCouponExceedTotalPrice(final OrderedItems orderedItems, final Coupon coupon) {
+  private boolean hasCouponWith(final RegisterOrderRequest registerOrderRequest) {
+    return registerOrderRequest.getCouponId() != null;
+  }
+
+  private void validateCouponExceedTotalPrice(final OrderedItems orderedItems,
+      final Coupon coupon) {
     if (coupon.isExceedDiscountFrom(orderedItems.calculateAllItemPrice())) {
       throw new CanNotDiscountPriceMoreThanTotalPrice("쿠폰 가격이 전체 가격보다 높으면 사용할 수 있습니다.");
     }
   }
 
-  private void validateSameTotalPrice(
-      final Money totalPrice,
-      final RegisterOrderRequest registerOrderRequest
-  ) {
-    final Money other = new Money(registerOrderRequest.getTotalPrice());
-
-    if (totalPrice.isNotSame(other)) {
+  private void validateSameTotalPrice(final Money totalPrice, final Money targetTotalPrice) {
+    if (totalPrice.isNotSame(targetTotalPrice)) {
       throw new NotSameTotalPriceException("주문된 총액이 올바르지 않습니다.");
     }
   }

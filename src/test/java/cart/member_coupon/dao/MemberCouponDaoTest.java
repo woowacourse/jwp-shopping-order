@@ -61,7 +61,7 @@ class MemberCouponDaoTest {
         .thenReturn(member);
 
     when(couponDao.findById(anyLong()))
-        .thenReturn(coupon);
+        .thenReturn(Optional.of(coupon));
 
     //when
     final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(
@@ -111,7 +111,7 @@ class MemberCouponDaoTest {
         .thenReturn(member);
 
     when(couponDao.findById(anyLong()))
-        .thenReturn(coupon);
+        .thenReturn(Optional.of(coupon));
 
     //when
     final Optional<MemberCoupon> memberCoupon = memberCouponDao.findByMemberAndCouponId(

@@ -2,6 +2,7 @@ package cart.order.dao;
 
 import cart.coupon.dao.CouponDao;
 import cart.coupon.domain.Coupon;
+import cart.coupon.exception.NotFoundCouponException;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
@@ -10,7 +11,6 @@ import cart.order.domain.OrderStatus;
 import cart.order.exception.NotFoundOrderException;
 import cart.value_object.Money;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -18,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -54,12 +55,18 @@ public class OrderDao {
   public List<Order> findByMemberId(final long memberId) {
     final String sql = "SELECT * FROM ORDERS O WHERE O.member_id = ?";
 
-    return jdbcTemplate.query(sql, (rs, rowNum) -> {
+    return jdbcTemplate.query(sql, getRowMapper(), memberId);
+  }
+
+  private RowMapper<Order> getRowMapper() {
+    return (rs, rowNum) -> {
       final long id = rs.getLong("id");
+      final long memberId = rs.getLong("member_id");
       final Member member = memberDao.getMemberById(memberId);
       final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
-      final long couponId = rs.getLong("coupon_id");
-      final Coupon coupon = couponDao.findById(couponId);
+      final Long couponId = rs.getLong("coupon_id");
+      final Coupon coupon = couponDao.findById(couponId)
+          .orElseThrow(() -> new NotFoundCouponException("해당 쿠폰은 존재하지 않습니다"));
       final Timestamp createdAt = rs.getTimestamp("created_at");
       final Instant instant = createdAt.toInstant();
       final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -69,30 +76,14 @@ public class OrderDao {
           new Money(deliveryFee), coupon,
           OrderStatus.findOrderStatus(orderStatus), zonedDateTime
       );
-    }, memberId);
+    };
   }
 
   public Order findByOrderId(final Long orderId) {
     final String sql = "SELECT * FROM ORDERS O WHERE O.id = ?";
 
     try {
-      return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-        final long id = rs.getLong("id");
-        final long memberId = rs.getLong("member_id");
-        final Member member = memberDao.getMemberById(memberId);
-        final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
-        final long couponId = rs.getLong("coupon_id");
-        final Coupon coupon = couponDao.findById(couponId);
-        final Timestamp createdAt = rs.getTimestamp("created_at");
-        final Instant instant = createdAt.toInstant();
-        final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        final String orderStatus = rs.getString("order_status");
-        return new Order(
-            id, member,
-            new Money(deliveryFee), coupon,
-            OrderStatus.findOrderStatus(orderStatus), zonedDateTime
-        );
-      }, orderId);
+      return jdbcTemplate.queryForObject(sql, getRowMapper(), orderId);
     } catch (EmptyResultDataAccessException exception) {
       throw new NotFoundOrderException("해당 주문은 존재하지 않습니다.");
     }
