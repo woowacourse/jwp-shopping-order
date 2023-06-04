@@ -21,39 +21,34 @@ public class CouponRepository {
 
     private final CouponDao couponDao;
     private final MemberCouponDao memberCouponDao;
-    private final MemberDao memberDao;
 
     public CouponRepository(final CouponDao couponDao,
-                            final MemberCouponDao memberCouponDao,
-                            final MemberDao memberDao) {
+                            final MemberCouponDao memberCouponDao) {
         this.couponDao = couponDao;
         this.memberCouponDao = memberCouponDao;
-        this.memberDao = memberDao;
     }
 
     public List<MemberCoupon> saveCoupon(Member member) {
-        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
         List<CouponDto> couponDtos = couponDao.findAll();
-        return saveMemberCoupons(memberByEmail, couponDtos);
+        return saveMemberCoupons(member, couponDtos);
     }
 
-    private List<MemberCoupon> saveMemberCoupons(final Member memberByEmail, final List<CouponDto> couponDtos) {
+    private List<MemberCoupon> saveMemberCoupons(final Member member, final List<CouponDto> couponDtos) {
         List<MemberCoupon> memberCoupons = new ArrayList<>();
 
         for (CouponDto couponDto : couponDtos) {
-            MemberCouponDto memberCouponDto = new MemberCouponDto(memberByEmail.getId(), couponDto.getId());
+            MemberCouponDto memberCouponDto = new MemberCouponDto(member.getId(), couponDto.getId());
             Long id = memberCouponDao.insert(memberCouponDto);
             Coupon coupon = CouponConvertor.dtoToDomain(couponDto);
-            memberCoupons.add(new MemberCoupon(id, memberByEmail, coupon));
+            memberCoupons.add(new MemberCoupon(id, member, coupon));
         }
 
         return memberCoupons;
     }
 
     public List<MemberCoupon> findMemberCouponByMember(Member member) {
-        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(memberByEmail.getId());
-        return getMemberCoupons(memberByEmail, memberCouponDtos);
+        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(member.getId());
+        return getMemberCoupons(member, memberCouponDtos);
     }
 
     private List<MemberCoupon> getMemberCoupons(Member member, final List<MemberCouponDto> memberCouponDtos) {
@@ -70,8 +65,7 @@ public class CouponRepository {
     }
 
     public Optional<Coupon> findCouponByMemberAndMemberCouponId(final Member member, final Long memberCouponId) {
-        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId, memberByEmail.getId());
+        MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId, member.getId());
         CouponDto couponDto = getCouponByCouponId(memberCouponDto.getCouponId());
         Coupon coupon = new Coupon(couponDto.getId(), couponDto.getName(), couponDto.getDiscountRate(), couponDto.getDiscountPrice());
         return Optional.of(coupon);

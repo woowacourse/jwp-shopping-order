@@ -21,7 +21,7 @@ class OrderTest {
     @ParameterizedTest(name = "{0}")
     @DisplayName("Order 생성 성공")
     @MethodSource("validateCoupon")
-    void create_success(String testName, Optional<Coupon> coupon, Integer cutPrice, String couponName) {
+    void create_success(String testName, Coupon coupon, Integer cutPrice, String couponName) {
         Member member = new Member(1L, "홍홍", "honghong");
         Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
         CartItem cartItem = new CartItem(member, hongProduct);
@@ -40,9 +40,9 @@ class OrderTest {
 
     private static Stream<Arguments> validateCoupon() {
         return Stream.of(
-                Arguments.of("Coupon 이 없는 경우 할인되지 않는다.", Optional.ofNullable(COUPON_3_NULL), 0, "적용된 쿠폰이 없습니다."),
-                Arguments.of("백분율로 할인하는 Coupon 의 경우 기존의 가격에서 discountRate 만큼 할인된다.", Optional.ofNullable(COUPON_2_NOT_NULL_RATE), 200_000_000, "할인율 쿠폰"),
-                Arguments.of("고정된 금액으로 할인하는 Coupon 의 경우 기존의 가격에서 discountPrice 만큼 할인된다.", Optional.ofNullable(COUPON_1_NOT_NULL_PRICE), 5000, "정액 할인 쿠폰")
+                Arguments.of("Coupon 이 없는 경우 할인되지 않는다.", COUPON_3_NULL, 0, "적용된 쿠폰이 없습니다."),
+                Arguments.of("백분율로 할인하는 Coupon 의 경우 기존의 가격에서 discountRate 만큼 할인된다.", COUPON_2_NOT_NULL_RATE, 200_000_000, "할인율 쿠폰"),
+                Arguments.of("고정된 금액으로 할인하는 Coupon 의 경우 기존의 가격에서 discountPrice 만큼 할인된다.", COUPON_1_NOT_NULL_PRICE, 5000, "정액 할인 쿠폰")
         );
     }
 
@@ -55,7 +55,7 @@ class OrderTest {
         CartItem cartItem = new CartItem(member, hongProduct);
         List<CartItem> cartItems = List.of(cartItem);
 
-        assertThatThrownBy(() -> Order.of(illegalMember, Optional.ofNullable(COUPON_3_NULL), cartItems))
+        assertThatThrownBy(() -> Order.of(illegalMember, COUPON_3_NULL, cartItems))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

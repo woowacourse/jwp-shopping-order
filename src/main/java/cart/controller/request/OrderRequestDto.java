@@ -8,16 +8,16 @@ public class OrderRequestDto {
 
     @Size(min = 1)
     private List<Long> cartItemIds;
-    private Optional<Long> couponId;
+    private Long couponId;
 
     private OrderRequestDto() {
     }
 
     public OrderRequestDto(final List<Long> cartItemIds) {
-        this(cartItemIds, Optional.empty());
+        this(cartItemIds, null);
     }
 
-    public OrderRequestDto(final List<Long> cartItemIds, final Optional<Long> couponId) {
+    public OrderRequestDto(final List<Long> cartItemIds, final Long couponId) {
         this.cartItemIds = cartItemIds;
         this.couponId = couponId;
     }
@@ -27,7 +27,7 @@ public class OrderRequestDto {
     }
 
     public Optional<Long> getCouponId() {
-        return couponId;
+        return Optional.of(couponId);
     }
 
     @Override

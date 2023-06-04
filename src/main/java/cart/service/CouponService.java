@@ -8,6 +8,7 @@ import cart.domain.util.DiscountCalculator;
 import cart.repository.CouponRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +39,8 @@ public class CouponService {
     }
 
     public Integer calculateDiscountPrice(final Member member, final Integer originPrice, final Long memberCouponId) {
-        Coupon coupon = couponRepository
-                .findCouponByMemberAndMemberCouponId(member, memberCouponId)
-                .orElseThrow(NoSuchElementException::new);
+        Optional<Coupon> coupon = couponRepository
+                .findCouponByMemberAndMemberCouponId(member, memberCouponId);
 
         return DiscountCalculator.calculatePriceAfterDiscount(originPrice, coupon);
     }

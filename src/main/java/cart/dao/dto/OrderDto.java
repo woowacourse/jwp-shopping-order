@@ -33,7 +33,7 @@ public class OrderDto {
     public static OrderDto from(final Order order) {
         return new OrderDto(
                 order.getMember().getId(),
-                getCouponId(order.getCoupon()),
+                getCouponId(order.getOptionalCoupon()),
                 order.getTimeStamp()
         );
     }

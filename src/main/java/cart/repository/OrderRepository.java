@@ -2,7 +2,6 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
-import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
@@ -21,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.swing.text.html.Option;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -30,20 +28,17 @@ public class OrderRepository {
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
     private final CartItemDao cartItemDao;
-    private final MemberDao memberDao;
     private final CouponDao couponDao;
     private final ProductDao productDao;
 
     public OrderRepository(final OrderDao orderDao,
                            final OrderProductDao orderProductDao,
                            final CartItemDao cartItemDao,
-                           final MemberDao memberDao,
                            final CouponDao couponDao,
                            final ProductDao productDao) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
         this.cartItemDao = cartItemDao;
-        this.memberDao = memberDao;
         this.couponDao = couponDao;
         this.productDao = productDao;
     }
@@ -57,7 +52,7 @@ public class OrderRepository {
                 orderId,
                 order.getTimeStamp(),
                 order.getMember(),
-                order.getCoupon(),
+                order.getOptionalCoupon().orElse(null),
                 orderProductsAfterSave
         );
     }
@@ -80,41 +75,41 @@ public class OrderRepository {
     }
 
     public List<Order> findOrdersByMember(Member member) {
-        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        List<OrderDto> orderDtos = orderDao.findByMemberId(memberByEmail.getId());
-        return getOrdersByOrderDtos(memberByEmail, orderDtos);
+        List<OrderDto> orderDtos = orderDao.findByMemberId(member.getId());
+        return getOrdersByOrderDtos(member, orderDtos);
     }
 
     public Order findOrderById(Member member, Long orderId) {
-        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        OrderDto orderDto = orderDao.findByIdAndMemberId(orderId, memberByEmail.getId())
+        OrderDto orderDto = orderDao.findByIdAndMemberId(orderId, member.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 고객의 주문이 아닙니다."));
         List<OrderProduct> orderProductsByOrderDto = getOrderProductsByOrderDto(orderDto);
         return new Order(
                 orderId,
                 orderDto.getTimeStamp(),
-                memberByEmail,
+                member,
                 findCouponById(orderDto.getCouponId()),
                 orderProductsByOrderDto
         );
     }
 
-    private List<Order> getOrdersByOrderDtos(final Member memberByEmail, final List<OrderDto> orderDtos) {
+    private List<Order> getOrdersByOrderDtos(final Member member, final List<OrderDto> orderDtos) {
         List<Order> orders = new ArrayList<>();
 
         for (OrderDto orderDto : orderDtos) {
             Optional<CouponDto> couponDto = couponDao.findById(orderDto.getCouponId());
-            Optional<Coupon> coupon = couponDto.map(CouponConvertor::dtoToDomain);
-            Order order = new Order(orderDto.getId(), orderDto.getTimeStamp(), memberByEmail, coupon, getOrderProductsByOrderDto(orderDto));
+            Coupon coupon = couponDto.map(CouponConvertor::dtoToDomain)
+                    .orElse(null);
+            Order order = new Order(orderDto.getId(), orderDto.getTimeStamp(), member, coupon, getOrderProductsByOrderDto(orderDto));
             orders.add(order);
         }
 
         return orders;
     }
 
-    private Optional<Coupon> findCouponById(Long id) {
+    private Coupon findCouponById(Long id) {
         Optional<CouponDto> couponDto = couponDao.findById(id);
-        return couponDto.map(CouponConvertor::dtoToDomain);
+        return couponDto.map(CouponConvertor::dtoToDomain)
+                .orElse(null);
     }
 
     private List<OrderProduct> getOrderProductsByOrderDto(final OrderDto orderDto) {

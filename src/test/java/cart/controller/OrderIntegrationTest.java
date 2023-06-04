@@ -69,6 +69,7 @@ class OrderIntegrationTest extends IntegrationTest {
                         .filter(this::isSameCoupon)
                         .findFirst()
                         .map(CouponResponseDto::getMemberCouponId)
+                        .orElse(null)
         );
 
         // when

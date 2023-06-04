@@ -26,8 +26,9 @@ public class OrderService {
 
     public OrderResponseDto orderCartItems(Member member, OrderRequestDto orderRequestDto) {
         List<CartItem> cartItems = orderRepository.findCartItemByIds(orderRequestDto.getCartItemIds());
-        Optional<Coupon> coupon = orderRequestDto.getCouponId()
-                .flatMap(couponId -> couponRepository.findCouponByMemberAndMemberCouponId(member, couponId));
+        Coupon coupon = orderRequestDto.getCouponId()
+                .flatMap(couponId -> couponRepository.findCouponByMemberAndMemberCouponId(member, couponId))
+                .orElse(null);
         Order order = Order.of(member, coupon, cartItems);
         Order orderAfterSave = orderRepository.save(order);
 

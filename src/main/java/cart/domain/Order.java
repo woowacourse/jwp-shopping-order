@@ -9,18 +9,16 @@ import java.util.Optional;
 
 public class Order {
 
-    private static final double PERCENTAGE = 100d;
-
     private final Long id;
     private final LocalDateTime timeStamp;
     private final Member member;
-    private final Optional<Coupon> coupon;
+    private final Coupon coupon;
     private final List<OrderProduct> orderProducts;
 
     public Order(final Long id,
                  final LocalDateTime timeStamp,
                  final Member member,
-                 final Optional<Coupon> coupon,
+                 final Coupon coupon,
                  final List<OrderProduct> orderProducts) {
         this.id = id;
         this.timeStamp = timeStamp;
@@ -31,13 +29,13 @@ public class Order {
 
     public Order(final Long id,
                  final Member member,
-                 final Optional<Coupon> coupon,
+                 final Coupon coupon,
                  final List<OrderProduct> orderProducts) {
         this(id, LocalDateTime.now(), member, coupon, orderProducts);
     }
 
     public static Order of(final Member member,
-                           final Optional<Coupon> coupon,
+                           final Coupon coupon,
                            final List<CartItem> cartItems) {
         validateSameMember(member, cartItems);
 
@@ -69,10 +67,7 @@ public class Order {
 
     public Integer calculateCutPrice() {
         Integer originPrice = calculateTotalPrice();
-        Integer priceAfterDiscount = coupon
-                .map(notNullCoupon -> DiscountCalculator.calculatePriceAfterDiscount(originPrice, notNullCoupon))
-                .orElseGet(() ->  originPrice);
-
+        Integer priceAfterDiscount = DiscountCalculator.calculatePriceAfterDiscount(originPrice, getOptionalCoupon());
         return  originPrice - priceAfterDiscount;
     }
 
@@ -97,13 +92,16 @@ public class Order {
         return orderProducts;
     }
 
-    public Optional<Coupon> getCoupon() {
-        return coupon;
+    public Optional<Coupon> getOptionalCoupon() {
+        return Optional.ofNullable(coupon);
     }
 
     public String getCouponName() {
-        return coupon.map(Coupon::getName)
-                .orElseGet(() -> "적용된 쿠폰이 없습니다.");
+        if (coupon == null) {
+            return "적용된 쿠폰이 없습니다.";
+        }
+
+        return coupon.getName();
     }
 
     @Override
