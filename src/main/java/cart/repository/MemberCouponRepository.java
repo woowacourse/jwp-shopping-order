@@ -3,11 +3,13 @@ package cart.repository;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
-import cart.dao.MemberDao2;
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.MemberCouponEntity;
 import cart.dao.entity.MemberEntity;
-import cart.domain.*;
+import cart.domain.Coupon;
+import cart.domain.EmptyMemberCoupon;
+import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -19,9 +21,9 @@ import java.util.stream.Collectors;
 public class MemberCouponRepository {
     private final MemberCouponDao memberCouponDao;
     private final CouponDao couponDao;
-    private final MemberDao2 memberDao;
+    private final MemberDao memberDao;
 
-    public MemberCouponRepository(final MemberCouponDao memberCouponDao, final CouponDao couponDao, final MemberDao2 memberDao) {
+    public MemberCouponRepository(final MemberCouponDao memberCouponDao, final CouponDao couponDao, final MemberDao memberDao) {
         this.memberCouponDao = memberCouponDao;
         this.couponDao = couponDao;
         this.memberDao = memberDao;

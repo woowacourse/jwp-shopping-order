@@ -17,6 +17,15 @@ public class ProductEntity {
         this.imageUrl = imageUrl;
     }
 
+    public static ProductEntity from(final Product product) {
+        return new ProductEntity(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+        );
+    }
+
     public Product toProduct() {
         return new Product(id, name, price, imageUrl);
     }

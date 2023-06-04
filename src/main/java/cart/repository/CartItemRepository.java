@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.dao.CartItemDao;
-import cart.dao.MemberDao2;
-import cart.dao.ProductDao2;
+import cart.dao.MemberDao;
+import cart.dao.ProductDao;
 import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 @Repository
 public class CartItemRepository {
     private final CartItemDao cartItemDao;
-    private final ProductDao2 productDao;
-    private final MemberDao2 memberDao2;
+    private final ProductDao productDao;
+    private final MemberDao memberDao;
 
-    public CartItemRepository(final CartItemDao cartItemDao, final ProductDao2 productDao, final MemberDao2 memberDao2) {
+    public CartItemRepository(final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
-        this.memberDao2 = memberDao2;
+        this.memberDao = memberDao;
     }
 
     public Long save(CartItem cartItem) {
@@ -50,7 +50,7 @@ public class CartItemRepository {
                 .orElseThrow(() -> new IllegalArgumentException("해당 장바구니는 없습니다."));
         ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품은 없습니다."));
-        MemberEntity memberEntity = memberDao2.findById(cartItemEntity.getMemberId())
+        MemberEntity memberEntity = memberDao.findById(cartItemEntity.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 멤버는 없습니다."));
 
         Product product = productEntity.toProduct();
@@ -60,7 +60,7 @@ public class CartItemRepository {
 
     public List<CartItem> findByIds(final List<Long> cartItemsIds) {
         List<CartItemEntity> cartItems = cartItemDao.findByIds(cartItemsIds);
-        Map<Long, MemberEntity> allMembersById = memberDao2.findAll().stream()
+        Map<Long, MemberEntity> allMembersById = memberDao.findAll().stream()
                 .collect(Collectors.toMap(MemberEntity::getId, memberEntity -> memberEntity));
         Map<Long, Product> allProductsById = productDao.findAll().stream()
                 .collect(Collectors.toMap(ProductEntity::getId, ProductEntity::toProduct));

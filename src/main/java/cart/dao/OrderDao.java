@@ -17,10 +17,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class OrderDao2 {
+public class OrderDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public OrderDao2(final JdbcTemplate jdbcTemplate) {
+    public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

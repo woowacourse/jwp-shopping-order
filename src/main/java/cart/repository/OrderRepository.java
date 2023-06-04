@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
-    private final OrderDao2 orderDao;
+    private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final CouponDao couponDao;
     private final MemberCouponDao memberCouponDao;
-    private final MemberDao2 memberDao;
+    private final MemberDao memberDao;
 
-    public OrderRepository(final OrderDao2 orderDao, final OrderItemDao orderItemDao, final CouponDao couponDao, final MemberCouponDao memberCouponDao, final MemberDao2 memberDao) {
+    public OrderRepository(final OrderDao orderDao, final OrderItemDao orderItemDao, final CouponDao couponDao, final MemberCouponDao memberCouponDao, final MemberDao memberDao) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.couponDao = couponDao;
