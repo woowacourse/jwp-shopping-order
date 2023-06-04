@@ -71,8 +71,18 @@ public class OrderRepository {
 
     public List<CartItem> findCartItemsByIds(List<Long> cartItemIds) {
         return cartItemIds.stream()
-                .map(cartItemDao::findById)
+                .map(this::findCartItemById)
                 .collect(Collectors.toList());
+    }
+
+    private CartItem findCartItemById(Long id) {
+        CartItem cartItem = cartItemDao.findById(id);
+
+        if (cartItem == null) {
+            throw new IllegalArgumentException("찾는 장바구니가 없습니다.");
+        }
+
+        return cartItem;
     }
 
     public List<Order> findOrdersByMember(Member member) {

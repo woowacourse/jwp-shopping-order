@@ -1,3 +1,42 @@
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-05T000519.403.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-05T000515.201.json
+
+###
+
+GET http://localhost:8080/products?limit=2&scroll-count=1
+Accept: application/json
+
+<> 2023-06-05T000358.200.json
+
+###
+
 GET http://localhost:8080/products?limit=2&scroll-count=1
 Accept: application/json
 
