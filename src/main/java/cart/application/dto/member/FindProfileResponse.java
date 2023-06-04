@@ -1,21 +1,21 @@
-package cart.application.dto.auth;
+package cart.application.dto.member;
 
 import cart.domain.Member;
 
-public class LoginResponse {
+public class FindProfileResponse {
 
     private long id;
     private String email;
     private String nickname;
 
-    public LoginResponse(final long id, final String email, final String nickname) {
+    public FindProfileResponse(final long id, final String email, final String nickname) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
     }
 
-    public static LoginResponse from(final Member member) {
-        return new LoginResponse(member.getId(), member.getEmail(), member.getNickname());
+    public static FindProfileResponse from(final Member member) {
+        return new FindProfileResponse(member.getId(), member.getEmail(), member.getNickname());
     }
 
     public long getId() {
