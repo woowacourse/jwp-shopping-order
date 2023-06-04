@@ -33,7 +33,6 @@ public class ProductService {
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
-
         return ProductResponse.of(product);
     }
 

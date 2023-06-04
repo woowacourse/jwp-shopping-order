@@ -35,7 +35,7 @@ public class CartItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemResponse> findAllCartItems(AuthInfo authInfo) {
+    public List<CartItemResponse> getAllCartItems(AuthInfo authInfo) {
         Member member = findMemberByEmail(authInfo.getEmail());
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream()
