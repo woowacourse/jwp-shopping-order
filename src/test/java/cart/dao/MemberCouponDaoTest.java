@@ -63,7 +63,6 @@ class MemberCouponDaoTest {
         insertMember(otherMember, jdbcTemplate);
         memberCouponDao.save(new MemberCouponEntity(2L, 천원_할인_쿠폰.getId(), false));
 
-
         // when
         List<MemberCoupon> actual = memberCouponDao.findUnusedByMemberId(MEMBER.getId());
 

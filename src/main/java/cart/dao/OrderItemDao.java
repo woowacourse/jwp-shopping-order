@@ -1,7 +1,5 @@
 package cart.dao;
 
-import static java.util.stream.Collectors.toList;
-
 import cart.entity.OrderItemEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,14 +37,6 @@ public class OrderItemDao {
     public Long save(OrderItemEntity orderItemEntity) {
         final SqlParameterSource source = new BeanPropertySqlParameterSource(orderItemEntity);
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
-    }
-
-    public void batchSave(List<OrderItemEntity> orderItemEntities) {
-        final SqlParameterSource[] array = orderItemEntities.stream()
-                .map(BeanPropertySqlParameterSource::new)
-                .collect(toList())
-                .toArray(new SqlParameterSource[orderItemEntities.size()]);
-        simpleJdbcInsert.executeBatch(array);
     }
 
     public List<OrderItemEntity> findAllByOrderId(Long orderId) {
