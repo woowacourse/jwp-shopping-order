@@ -52,4 +52,30 @@ class PointTest {
                 () -> Point.validateUsablePoint(usePoint)
         );
     }
+
+    @Test
+    void 총_상품_금액으로_포인트를_계산한다() {
+        // given
+        int totalProductPoint = 5_000;
+
+        // when
+        Point point = new Point(0);
+        Point newPoint = point.calculatePointBy(totalProductPoint);
+
+        // then
+        assertThat(newPoint.getValue()).isEqualTo(250);
+    }
+
+    @Test
+    void 포인트를_합한다() {
+        // given
+        Point point = new Point(3000);
+        Point newPoint = new Point(10000);
+
+        // when
+        Point result = point.add(newPoint);
+
+        // then
+        assertThat(result.getValue()).isEqualTo(13000);
+    }
 }
