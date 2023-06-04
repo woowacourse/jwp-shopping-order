@@ -88,4 +88,8 @@ public class CartItemRepository {
     public void deleteById(final Long cartItemId) {
         cartItemDao.deleteById(cartItemId);
     }
+
+    public void deleteByIds(final List<Long> cartItemIds) {
+        cartItemDao.deleteByIds(cartItemIds);
+    }
 }

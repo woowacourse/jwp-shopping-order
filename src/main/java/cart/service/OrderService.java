@@ -9,13 +9,11 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrderSaveRequest;
-import cart.exception.order.MemberCouponNotFoundException;
 import cart.exception.order.OrderNotFoundException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,17 +39,14 @@ public class OrderService {
         final List<CartItem> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
         final List<OrderItem> orderItems = toOrderItems(items);
 
-        if (Objects.nonNull(request.getCouponId())) {
-            final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
-                    .orElseThrow(MemberCouponNotFoundException::new);
-            final Order order = Order.of(memberCoupon, memberId, orderItems);
-            order.useCoupon();
-            final Order saveOrder = orderRepository.save(order);
-            return saveOrder.getId();
-        }
+        final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
+                .orElseGet(() -> MemberCoupon.empty(memberId));
 
-        final Order order = Order.of(MemberCoupon.empty(memberId), memberId, orderItems);
+        final Order order = Order.of(memberCoupon, memberId, orderItems);
+        order.useCoupon();
         final Order saveOrder = orderRepository.save(order);
+
+        cartItemRepository.deleteByIds(request.getOrderItemIds());
         return saveOrder.getId();
     }
 

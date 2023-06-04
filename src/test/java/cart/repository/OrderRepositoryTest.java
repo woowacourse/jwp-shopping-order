@@ -29,13 +29,7 @@ class OrderRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CartItemRepository cartItemRepository;
-
+    
     @Autowired
     private CouponRepository couponRepository;
 

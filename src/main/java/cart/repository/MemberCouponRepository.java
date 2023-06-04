@@ -48,8 +48,13 @@ public class MemberCouponRepository {
     }
 
     public Optional<MemberCoupon> findById(final Long id) {
-        final MemberCouponEntity memberCouponEntity = memberCouponDao.findById(id)
-                .orElseThrow(MemberCouponNotFoundException::new);
+        final Optional<MemberCouponEntity> mayBeMemberCouponEntity = memberCouponDao.findById(id);
+        if (mayBeMemberCouponEntity.isEmpty()) {
+            return Optional.empty();
+        }
+
+        final MemberCouponEntity memberCouponEntity = mayBeMemberCouponEntity.orElseThrow(
+                MemberCouponNotFoundException::new);
 
         final Coupon coupon = couponDao.findById(memberCouponEntity.getCouponId())
                 .map(CouponEntity::toDomain)

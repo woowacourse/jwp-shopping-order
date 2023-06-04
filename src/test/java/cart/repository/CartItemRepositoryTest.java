@@ -71,11 +71,9 @@ class CartItemRepositoryTest {
         final Member member = memberRepository.save(사용자1);
         final Product product1 = productRepository.save(상품_8900원);
         final Product product2 = productRepository.save(상품_18900원);
-        final Product product3 = productRepository.save(상품_28900원);
 
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
-        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));
 
         // when
         final List<CartItem> result = cartItemRepository.findAllByIdsAndMemberId(
@@ -88,7 +86,7 @@ class CartItemRepositoryTest {
     }
 
     @Test
-    void 사용자_아이디와_삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
+    void 삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
         // given
         final Member member = memberRepository.save(사용자1);
         final Product product = productRepository.save(상품_8900원);
@@ -96,6 +94,23 @@ class CartItemRepositoryTest {
 
         // when
         cartItemRepository.deleteById(cartItem.getId());
+
+        // then
+        assertThat(cartItemRepository.findAllByMemberId(member.getId())).isEmpty();
+    }
+
+    @Test
+    void 삭제할_장바구니의_상품_아이디_목록을_받아_장바구니_항목을_제거한다() {
+        // given
+        final Member member = memberRepository.save(사용자1);
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
+
+        // when
+        cartItemRepository.deleteByIds(List.of(cartItem1.getId(), cartItem2.getId()));
 
         // then
         assertThat(cartItemRepository.findAllByMemberId(member.getId())).isEmpty();

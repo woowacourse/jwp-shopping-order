@@ -82,6 +82,7 @@ class OrderServiceTest {
         assertAll(
                 () -> assertThat(orderRepository.findAllByMemberId(member.getId())).hasSize(1),
                 () -> assertThat(memberCouponRepository.findAllByMemberId(member.getId())).hasSize(0),
+                () -> assertThat(cartItemRepository.findAllByMemberId(member.getId())).hasSize(0),
                 () -> assertThat(result).isPositive()
         );
     }

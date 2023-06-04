@@ -13,7 +13,6 @@ import cart.domain.VO.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.order.MemberCoupon;
 import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.OrderEntity;
@@ -59,7 +58,6 @@ public class OrderRepository {
         final OrderEntity savedOrderEntity = orderDao.insert(orderEntity);
         useMemberCoupon(order.getMemberCoupon());
         saveOrderItems(order, savedOrderEntity);
-        deleteCartItems(order);
         return Order.of(
                 savedOrderEntity.getId(),
                 order.getMemberCoupon(),
@@ -79,13 +77,6 @@ public class OrderRepository {
                 .map(cartItem -> OrderItemEntity.from(cartItem, orderEntity.getId()))
                 .collect(toList());
         orderItemDao.insertAll(orderItemEntities);
-    }
-
-    private void deleteCartItems(final Order order) {
-        final List<Long> cartItemIds = order.getItems().stream()
-                .map(OrderItem::getId)
-                .collect(toList());
-        cartItemDao.deleteByIds(cartItemIds);
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
