@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static cart.fixture.CartFixture.createCart;
+import static cart.fixture.CartFixture.createCart2;
 import static cart.fixture.CartItemFixture.createCartItem;
 import static cart.fixture.MemberFixture.createMember;
 import static cart.fixture.ProductFixture.createProduct;
@@ -87,8 +88,7 @@ public class CartServiceUnitTest {
         CartItemQuantityUpdateRequest req = new CartItemQuantityUpdateRequest(100);
 
         given(cartRepository.findCartItemById(any())).willReturn(cartItem);
-        given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
-        given(cartRepository.hasCartItem(cart, cartItem)).willReturn(true);
+        given(cartRepository.findCartByCartItemId(any())).willReturn(cart);
 
         // when
         cartService.updateQuantity(member, 1L, req);
@@ -102,13 +102,12 @@ public class CartServiceUnitTest {
     void throws_exception_when_member_not_equals() {
         // given
         Member member = createMember();
-        Cart cart = createCart();
+        Cart cart = createCart2();
         CartItem cartItem = createCartItem();
         CartItemQuantityUpdateRequest req = new CartItemQuantityUpdateRequest(100);
 
         given(cartRepository.findCartItemById(any())).willReturn(cartItem);
-        given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
-        given(cartRepository.hasCartItem(cart, cartItem)).willReturn(false);
+        given(cartRepository.findCartByCartItemId(any())).willReturn(cart);
 
         // when & then
         assertThatThrownBy(() -> cartService.updateQuantity(member, 1L, req))
@@ -121,11 +120,7 @@ public class CartServiceUnitTest {
         // given
         Member member = createMember();
         Cart cart = createCart();
-        CartItem cartItem = createCartItem();
-
-        given(cartRepository.findCartItemById(any())).willReturn(cartItem);
-        given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
-        given(cartRepository.hasCartItem(cart, cartItem)).willReturn(true);
+        given(cartRepository.findCartByCartItemId(any())).willReturn(cart);
 
         // when
         cartService.remove(member, 1L);

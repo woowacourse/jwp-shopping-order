@@ -113,5 +113,10 @@ public class CartDao {
         int count = jdbcTemplate.queryForObject(sql, Integer.class, cartId, cartItemId);
         return count > 0;
     }
+
+    public CartEntity findCartEntityById(final long cartId) {
+        String sql = "SELECT id, member_id FROM cart WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, cartRowMapper, cartId);
+    }
 }
 

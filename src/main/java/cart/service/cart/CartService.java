@@ -7,7 +7,7 @@ import cart.domain.product.Product;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
-import cart.exception.CartItemNotFoundException;
+import cart.exception.MemberNotOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -62,8 +62,8 @@ public class CartService {
     @Transactional
     public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
-        Cart cart = cartRepository.findCartByMemberId(member.getId());
-        validateHasCartItem(cart, cartItem);
+        Cart cart = cartRepository.findCartByCartItemId(cartItemId);
+        validateMember(cart, member);
 
         if (request.getQuantity() == EMPTY) {
             cartRepository.removeCartItem(cartItem);
@@ -73,19 +73,17 @@ public class CartService {
         cartRepository.updateCartItemQuantity(cartItem, request.getQuantity());
     }
 
-    private void validateHasCartItem(final Cart cart, final CartItem cartItem) {
-        if (!cartRepository.hasCartItem(cart, cartItem)) {
-            throw new CartItemNotFoundException();
+    public void validateMember(final Cart cart, final Member member) {
+        if (!cart.isOwner(member.getId())) {
+            throw new MemberNotOwnerException();
         }
     }
 
     @Transactional
     public void remove(final Member member, final Long cartItemId) {
-        CartItem cartItem = cartRepository.findCartItemById(cartItemId);
-        Cart cart = cartRepository.findCartByMemberId(member.getId());
-        validateHasCartItem(cart, cartItem);
-
-        cartRepository.deleteCartItemById(cartItem.getId());
+        Cart cart = cartRepository.findCartByCartItemId(cartItemId);
+        validateMember(cart, member);
+        cartRepository.deleteCartItemById(cartItemId);
     }
 
     @Transactional

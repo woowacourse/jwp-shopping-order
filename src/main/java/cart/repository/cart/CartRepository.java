@@ -28,19 +28,7 @@ public class CartRepository {
 
     public Cart findCartByMemberId(final long memberId) {
         CartEntity cartEntity = cartDao.findCartEntityByMemberId(memberId);
-        List<CartItemEntity> cartItemEntities = cartDao.findAllCartItemEntitiesByCartId(cartEntity.getId());
-
-        List<CartItem> cartItems = cartItemEntities.stream()
-                .map(cartItemEntity -> {
-                    int quantity = cartItemEntity.getQuantity();
-                    Long productId = cartItemEntity.getProductId();
-                    ProductEntity productEntity = productDao.getProductById(productId);
-                    Product product = new Product(productId, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
-                    return new CartItem(cartItemEntity.getId(), product, quantity);
-                })
-                .collect(Collectors.toList());
-
-        return new Cart(cartEntity.getId(), new CartItems(cartItems));
+        return getCart(cartEntity);
     }
 
     public Long insertNewCartItem(final Cart cart, final Long productId) {
@@ -98,5 +86,29 @@ public class CartRepository {
 
     public boolean hasCartItem(final Cart cart, final CartItem cartItem) {
         return cartDao.hasCartItem(cart.getId(), cartItem.getId());
+    }
+
+    public Cart findCartByCartItemId(final Long cartItemId) {
+        CartItemEntity cartItem = cartDao.findCartItemEntityById(cartItemId)
+                .orElseThrow(CartItemNotFoundException::new);
+
+        CartEntity cartEntity = cartDao.findCartEntityById(cartItem.getCartId());
+        return getCart(cartEntity);
+    }
+
+    private Cart getCart(final CartEntity cartEntity) {
+        List<CartItemEntity> cartItemEntities = cartDao.findAllCartItemEntitiesByCartId(cartEntity.getId());
+
+        List<CartItem> cartItems = cartItemEntities.stream()
+                .map(cartItemEntity -> {
+                    int quantity = cartItemEntity.getQuantity();
+                    Long productId = cartItemEntity.getProductId();
+                    ProductEntity productEntity = productDao.getProductById(productId);
+                    Product product = new Product(productId, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
+                    return new CartItem(cartItemEntity.getId(), product, quantity);
+                })
+                .collect(Collectors.toList());
+
+        return new Cart(cartEntity.getId(), cartEntity.getMemberId(), new CartItems(cartItems));
     }
 }

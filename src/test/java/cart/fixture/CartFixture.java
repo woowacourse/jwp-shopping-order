@@ -8,7 +8,11 @@ import static cart.fixture.CartItemsFixture.createSimpleCartItems;
 public class CartFixture {
 
     public static Cart createCart() {
-        return new Cart(1L, createCartItems());
+        return new Cart(1L, 1L, createCartItems());
+    }
+
+    public static Cart createCart2() {
+        return new Cart(1L, 2L, createCartItems());
     }
 
     public static Cart createSimpleCart() {
