@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.IllegalUsePointException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -20,6 +21,12 @@ public class Point {
     private void validatePositive(final int value) {
         if (value < 0) {
             throw new IllegalArgumentException("포인트는 음수가 될 수 없습니다.");
+        }
+    }
+
+    public static void validateUsablePoint(final int usePoint) {
+        if (0 < usePoint && usePoint < MIN_USAGE_VALUE) {
+            throw new IllegalUsePointException();
         }
     }
 }
