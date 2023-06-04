@@ -76,7 +76,7 @@ public class CouponDao {
             "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, mc.is_used as is_used "
                 + "FROM member_coupon as mc "
                 + "INNER JOIN coupon c on mc.coupon_id = c.id "
-                + "WHERE member_id = ? AND coupon_id = ?";
+                + "WHERE mc.member_id = ? AND c.id = ?";
         final List<Coupon> coupons = jdbcTemplate.query(sql, defaultRowMapper, memberId, couponId);
         return coupons.stream().findAny();
     }
