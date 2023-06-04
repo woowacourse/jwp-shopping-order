@@ -1,5 +1,6 @@
 package cart.ui.api;
 
+import cart.application.AuthService;
 import cart.application.OrderService;
 import cart.dao.member.JdbcTemplateMemberDao;
 import cart.dao.member.MemberDao;
@@ -42,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("classpath:schema.sql")
 public class OrderApiControllerTest {
 
-    private final static String CREDENTIAL = "basic " + Base64.encodeBase64String((하디.getEmail() + ":" + 하디.getPassword()).getBytes());
+    private final static String CREDENTIAL = "Basic " + Base64.encodeBase64String((하디.getEmail() + ":" + 하디.getPassword()).getBytes());
     private final static String AUTH_HEADER = "Authorization";
     private static Member 하디_멤버;
 
@@ -66,6 +67,11 @@ public class OrderApiControllerTest {
         @Bean
         public MemberDao memberDao() {
             return new JdbcTemplateMemberDao(jdbcTemplate());
+        }
+
+        @Bean
+        public AuthService authService() {
+            return new AuthService(memberDao());
         }
     }
 
