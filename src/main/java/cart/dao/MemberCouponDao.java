@@ -11,6 +11,8 @@ import cart.domain.Coupon;
 import cart.domain.CouponType;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.exception.BadRequestException;
+import cart.exception.ExceptionType;
 
 @Repository
 public class MemberCouponDao {
@@ -53,29 +55,42 @@ public class MemberCouponDao {
         }, memberId);
     }
 
-    public Coupon findByIdIfCanBeUsed(Long id, Long memberCouponId) {
+    public MemberCoupon findByIdIfCanBeUsed(Long memberId, Long memberCouponId) {
         String query = "SELECT c.id, c.name, c.min_order_price, c.max_discount_price, c.type, " +
-            "c.discount_amount, c.discount_percentage " +
-            "FROM coupon c " +
-            "INNER JOIN member_coupon mc ON c.id = mc.coupon_id " +
-            "WHERE c.id = ? AND mc.id = ? AND mc.is_used = false";
+            "c.discount_amount, c.discount_percentage, "+
+            "mc.coupon_id, mc.expired_at, " +
+            "m.email, m.password, m.nickname " +
+            "FROM member_coupon mc " +
+            "INNER JOIN coupon c ON mc.coupon_id = c.id " +
+            "INNER JOIN member m ON mc.member_id = m.id" +
+            "WHERE m.id = ? AND mc.id = ? AND mc.is_used = false";
 
         try {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
-                Long couponId = resultSet.getLong("id");
-                String couponName = resultSet.getString("name");
-                Integer minOrderPrice = resultSet.getInt("min_order_price");
-                Integer maxDiscountPrice = resultSet.getInt("max_discount_price");
-                String couponType = resultSet.getString("type");
-                Integer discountAmount = resultSet.getInt("discount_amount");
-                Double discountPercentage = resultSet.getDouble("discount_percentage");
+                Long couponId = resultSet.getLong("c.id");
+                String couponName = resultSet.getString("c.name");
+                Integer minOrderPrice = resultSet.getInt("c.min_order_price");
+                Integer maxDiscountPrice = resultSet.getInt("c.max_discount_price");
+                CouponType couponType = CouponType.valueOf(resultSet.getString("c.type"));
+                Integer discountAmount = resultSet.getInt("c.discount_amount");
+                Double discountPercentage = resultSet.getDouble("c.discount_percentage");
 
-                return new Coupon(couponId, couponName, minOrderPrice, CouponType.valueOf(couponType),
-                    discountAmount, discountPercentage, maxDiscountPrice);
-            }, id, memberCouponId);
-            //// TODO: 2023/06/01 쿠폰 사용된 경우 던질 예외 
+                Coupon coupon = new Coupon(couponId, couponName, minOrderPrice, couponType, discountAmount,
+                    discountPercentage,
+                    maxDiscountPrice);
+
+                String email = resultSet.getString("m.email");
+                String password = resultSet.getString("m.password");
+                String nickname = resultSet.getString("m.nickname");
+
+                Member member = new Member(memberId, email, password, nickname);
+
+                Timestamp expiredAt = resultSet.getTimestamp("mc.expired_at");
+
+                return new MemberCoupon(memberCouponId, member, coupon, expiredAt);
+            }, memberId, memberCouponId);
         } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("Coupon is already used");
+            throw new BadRequestException(ExceptionType.COUPON_UNVAILABLE);
         }
     }
 
@@ -83,5 +98,11 @@ public class MemberCouponDao {
         String query = "UPDATE member_coupon SET is_used = true WHERE id = ?";
 
         jdbcTemplate.update(query, memberCouponId);
+    }
+
+    public void save(MemberCoupon memberCoupon) {
+        String query = "INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, memberCoupon.getMember().getId(), memberCoupon.getCoupon().getId(),
+            Timestamp.valueOf(memberCoupon.getExpiredAt()));
     }
 }

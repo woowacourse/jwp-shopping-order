@@ -13,6 +13,10 @@ public class Money {
         return money;
     }
 
+    public static Money subtract(Money money1, Money money2) {
+        return new Money(money1.value() - money2.value());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

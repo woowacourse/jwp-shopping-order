@@ -1,9 +1,7 @@
 package cart.ui;
 
-import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -41,7 +39,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = emailAndPassword.getKey();
         String password = emailAndPassword.getValue();
 
-        // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException(ExceptionType.UNAUTHORIZED);

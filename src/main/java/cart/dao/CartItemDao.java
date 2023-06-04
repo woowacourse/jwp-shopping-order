@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.exception.BadRequestException;
+import cart.exception.ExceptionType;
 
 @Repository
 public class CartItemDao {
@@ -105,9 +107,6 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByIds(List<Long> cartItemIds) {
-        if (cartItemIds.isEmpty()) {
-            return Collections.emptyList();
-        }
         final String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.product_id, member.email, member.nickname, product.name, product.price, product.image_url, cart_item.quantity"
             + " FROM cart_item INNER JOIN member ON cart_item.member_id = member.id"
             + " INNER JOIN product ON cart_item.product_id = product.id WHERE cart_item.id IN (:ids)";
@@ -115,7 +114,7 @@ public class CartItemDao {
         final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("ids", cartItemIds);
 
-        return namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> {
+        List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> {
             final Long id = rs.getLong("id");
 
             final int quantity = rs.getInt("quantity");
@@ -133,6 +132,11 @@ public class CartItemDao {
             Member member = new Member(memberId, email, null, nickname);
             return new CartItem(id, quantity, product, member);
         });
+
+        if (cartItems.size() != cartItemIds.size()) {
+            throw new BadRequestException(ExceptionType.CART_ITEM_NO_EXIST);
+        }
+        return cartItems;
     }
 
     public void deleteByIds(List<Long> cartItemIds) {

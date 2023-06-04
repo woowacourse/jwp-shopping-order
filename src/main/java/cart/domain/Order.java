@@ -3,33 +3,39 @@ package cart.domain;
 import java.util.List;
 
 public class Order {
-    private final Member member;
-    private final List<CartItem> cartItems;
-    private final Coupon coupon;
-    private final Money totalPrice;
     private Long id;
+    private final Member member;
+    private final List<OrderItem> orderItems;
+    private final MemberCoupon memberCoupon;
 
-    public Order(Member member, List<CartItem> cartItems, Coupon coupon) {
+    public Order(Member member, List<OrderItem> orderItems, MemberCoupon memberCoupon) {
         this.member = member;
-        this.cartItems = cartItems;
-        this.coupon = coupon;
-        this.totalPrice = PriceCalculator.calculate(cartItems);
+        this.orderItems = orderItems;
+        this.memberCoupon = memberCoupon;
     }
 
-    public Order(Long id, Member member, List<CartItem> cartItems, Coupon coupon) {
+    public Order(Long id, Member member, List<OrderItem> orderItems, MemberCoupon memberCoupon) {
         this.id = id;
         this.member = member;
-        this.cartItems = cartItems;
-        this.coupon = coupon;
-        this.totalPrice = PriceCalculator.calculate(cartItems);
+        this.orderItems = orderItems;
+        this.memberCoupon = memberCoupon;
     }
 
-    public Money getDiscountedPrice() {
-        return coupon.discount(totalPrice);
+    public Money getTotalPrice() {
+        return new Money(orderItems.stream().mapToInt(OrderItem::getPrice).sum());
+    }
+
+    public Money getDiscountPrice() {
+        Money totalPrice = getTotalPrice();
+        return Money.subtract(totalPrice, getDiscountedPrice());
     }
 
     public Money getShippingFee() {
-        return ShippingFeePolicy.findShippingFee(totalPrice);
+        return ShippingFeePolicy.findShippingFee(getTotalPrice());
+    }
+
+    public Money getDiscountedPrice() {
+        return memberCoupon.getCoupon().discount(getTotalPrice());
     }
 
     public Long getId() {
@@ -40,11 +46,15 @@ public class Order {
         return member;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public Coupon getCoupon() {
-        return coupon;
+    public MemberCoupon getMemberCoupon() {
+        return memberCoupon;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
     }
 }

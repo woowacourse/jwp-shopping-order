@@ -73,8 +73,8 @@ public class OrderServiceTest {
         when(memberCouponDao.findByMemberId(member.getId())).thenReturn(memberCoupons);
 
         MemberCouponsResponse expectedResponse = new MemberCouponsResponse(Arrays.asList(
-            new MemberCouponResponse(memberCoupons.get(0), price),
-            new MemberCouponResponse(memberCoupons.get(1), price)
+            MemberCouponResponse.of(memberCoupons.get(0), price),
+            MemberCouponResponse.of(memberCoupons.get(1), price)
         ));
 
         MemberCouponsResponse actualResponse = orderService.getMemberCoupons(member, cartItemIds);

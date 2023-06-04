@@ -14,14 +14,34 @@ public class MemberCouponResponse {
     private final Integer discountPrice;
     private final LocalDateTime expiredAt;
 
-    public MemberCouponResponse(MemberCoupon memberCoupon, Money price) {
-        this.id = memberCoupon.getId();
-        this.name = memberCoupon.getCoupon().getName();
-        this.minOrderPrice = memberCoupon.getCoupon().getMinOrderPrice();
-        this.maxDiscountPrice = memberCoupon.getCoupon().getMaxDiscountPrice();
-        this.isAvailable = memberCoupon.isAvailable(price);
-        this.discountPrice = price.value() - memberCoupon.getCoupon().discount(price).value();
-        this.expiredAt = memberCoupon.getExpiredAt();
+    private MemberCouponResponse(
+        Long id,
+        String name,
+        Integer minOrderPrice,
+        Integer maxDiscountPrice,
+        boolean isAvailable,
+        Integer discountPrice,
+        LocalDateTime expiredAt
+    ) {
+        this.id = id;
+        this.name = name;
+        this.minOrderPrice = minOrderPrice;
+        this.maxDiscountPrice = maxDiscountPrice;
+        this.isAvailable = isAvailable;
+        this.discountPrice = discountPrice;
+        this.expiredAt = expiredAt;
+    }
+
+    public static MemberCouponResponse of(MemberCoupon memberCoupon, Money price) {
+        return new MemberCouponResponse(
+            memberCoupon.getId(),
+            memberCoupon.getCoupon().getName(),
+            memberCoupon.getCoupon().getMinOrderPrice(),
+            memberCoupon.getCoupon().getMaxDiscountPrice(),
+            memberCoupon.isAvailable(price),
+            price.value() - memberCoupon.getCoupon().discount(price).value(),
+            memberCoupon.getExpiredAt()
+        );
     }
 
     public Long getId() {
