@@ -1,5 +1,6 @@
 package cart.application.service;
 
+import cart.application.exception.MemberNotFoundException;
 import cart.application.repository.MemberRepository;
 import cart.application.domain.Member;
 import cart.presentation.dto.request.AuthInfo;
@@ -21,7 +22,9 @@ public class MemberService {
     }
 
     public PointResponse getPoint(AuthInfo authInfo) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail());
+        Member member = memberRepository.findByEmail(authInfo.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
+
         return new PointResponse(member.getPoint());
     }
 
@@ -33,7 +36,8 @@ public class MemberService {
     }
 
     public Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
+        return memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     public List<Member> getAllMembers() {

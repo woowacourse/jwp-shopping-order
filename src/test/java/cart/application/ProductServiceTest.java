@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,7 +55,7 @@ class ProductServiceTest {
     @Test
     void 특정_상품을_찾을_수_있다() {
         // given
-        when(productRepository.findById(any())).thenReturn(pizza);
+        when(productRepository.findById(any())).thenReturn(Optional.of(pizza));
 
         // when
         ProductResponse productResponse = productService.getProductById(1L);

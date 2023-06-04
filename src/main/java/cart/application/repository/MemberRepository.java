@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository {
 
-    Member findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     List<Member> findAll();
 

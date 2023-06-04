@@ -40,8 +40,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg", 0.0, false));
         productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg", 0.0, false));
 
-        member = memberDao.findByEmail("a@a.com");
-        member2 = memberDao.findByEmail("b@b.com");
+        member = memberDao.findByEmail("a@a.com").get();
+        member2 = memberDao.findByEmail("b@b.com").get();
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

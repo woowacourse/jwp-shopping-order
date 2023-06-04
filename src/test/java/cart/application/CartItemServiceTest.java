@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,7 +56,7 @@ class CartItemServiceTest {
         when(cartItemRepository.findByMemberId(member.getId())).thenReturn(List.of(
                 new CartItem(1L, 1, pizza, member)
         ));
-        when(memberRepository.findByEmail(any())).thenReturn(member);
+        when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
         // when
         List<CartItemResponse> carItemResponses = cartItemService.findAllCartItems(authInfo);
 
@@ -67,9 +68,9 @@ class CartItemServiceTest {
     void 멤버정보를_통해_장바구니에_품목을_넣을_수_있다() {
         // given
         CartItemRequest request = new CartItemRequest(1L);
-        when(productRepository.findById(1L)).thenReturn(pizza);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(pizza));
         when(cartItemRepository.insert(any())).thenReturn(new CartItem(1L, 1, pizza, member));
-        when(memberRepository.findByEmail(any())).thenReturn(member);
+        when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
 
         // when
         Long cartItemId = cartItemService.createCartItem(authInfo, request);

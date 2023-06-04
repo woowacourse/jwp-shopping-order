@@ -1,5 +1,6 @@
 package cart.application.service;
 
+import cart.application.exception.ProductNotFoundException;
 import cart.application.repository.ProductRepository;
 import cart.application.domain.Product;
 import cart.presentation.dto.request.ProductRequest;
@@ -30,7 +31,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+
         return ProductResponse.of(product);
     }
 

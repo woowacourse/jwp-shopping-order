@@ -4,7 +4,6 @@ import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Product;
 import cart.application.repository.CartItemRepository;
-import cart.persistence.exception.CannotFindDataException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -39,9 +38,10 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
                 .addValue("member_id", cartItem.getMember().getId())
                 .addValue("product_id", cartItem.getProduct().getId())
                 .addValue("quantity", cartItem.getQuantity());
+
         namedParameterJdbcTemplate.update(sql, namedParameters, keyHolder);
         return findById(keyHolder.getKeyAs(Long.class))
-                .orElseThrow(() -> new CannotFindDataException());
+                .orElseThrow();
     }
 
     @Override
@@ -75,6 +75,7 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("quantity", cartItem.getQuantity())
                 .addValue("id", cartItem.getId());
+
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
@@ -82,6 +83,7 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
@@ -89,6 +91,7 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
     public void deleteByMemberId(Long memberId) {
         String sql = "DELETE FROM cart_item WHERE member_id = :member_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("member_id", memberId);
+        
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 

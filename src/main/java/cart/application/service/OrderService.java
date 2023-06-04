@@ -2,6 +2,9 @@ package cart.application.service;
 
 import cart.application.domain.OrderInfo;
 import cart.application.domain.OrderInfos;
+import cart.application.exception.CartItemNotFoundException;
+import cart.application.exception.MemberNotFoundException;
+import cart.application.exception.OrderNotFoundException;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.OrderRepository;
@@ -36,7 +39,9 @@ public class OrderService {
     }
 
     public long issue(AuthInfo authInfo, OrderRequest request) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail());
+        Member member = memberRepository.findByEmail(authInfo.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
+
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
         order.adjustPoint();
@@ -55,6 +60,7 @@ public class OrderService {
     private List<CartItem> makeCartItemsFromRequest(OrderRequest request) {
         return request.getCartItemIds().stream()
                 .map(cartItemRepository::findById)
+                .map(cartItem -> cartItem.orElseThrow(CartItemNotFoundException::new))
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +78,9 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders(AuthInfo authInfo) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail());
+        Member member = memberRepository.findByEmail(authInfo.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
+
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
                 .map(order -> new OrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo())))
@@ -93,8 +101,11 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public SpecificOrderResponse getSpecificOrder(AuthInfo authInfo, Long orderId) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail());
-        Order order = orderRepository.findById(orderId);
+        Member member = memberRepository.findByEmail(authInfo.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
+        Order order = orderRepository.findById(orderId)
+                        .orElseThrow(OrderNotFoundException::new);
+
         order.validateIsIssuedBy(member);
         return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());

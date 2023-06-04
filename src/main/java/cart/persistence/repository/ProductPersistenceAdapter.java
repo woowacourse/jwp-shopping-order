@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductPersistenceAdapter implements ProductRepository {
@@ -28,24 +29,23 @@ public class ProductPersistenceAdapter implements ProductRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyHolder);
-        return findById(keyHolder.getKeyAs(Long.class)); // TODO: 쿼리 또 한번 날리지 않도록 최적화?
+        return findById(keyHolder.getKeyAs(Long.class))
+                .orElseThrow(); // TODO: 쿼리 또 한번 날리지 않도록 최적화?
     }
 
 
     @Override
-    public Product findById(Long productId) {
+    public Optional<Product> findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", productId);
         return namedParameterJdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> new Product(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("image_url"),
-                        rs.getDouble("point_ratio"),
-                        rs.getBoolean("point_available")
-                )).stream()
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("DB 애외"));
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getString("image_url"),
+                rs.getDouble("point_ratio"),
+                rs.getBoolean("point_available")
+        )).stream().findAny();
     }
 
     @Override
