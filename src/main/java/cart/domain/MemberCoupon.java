@@ -22,9 +22,6 @@ public class MemberCoupon {
     }
 
     public Amount calculateProduct(final Amount productAmount) {
-        if (isUsed) {
-            throw new BusinessException("이미 사용한 쿠폰입니다.");
-        }
         if (productAmount.isLessThan(coupon.getMinAmount())) {
             throw new BusinessException("총 금액은 최소금액보다 커야합니다.");
         }
