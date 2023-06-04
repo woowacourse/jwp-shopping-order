@@ -1,3 +1,3 @@
-[submodule "jwt-shopping-order-submodule"]
+[submodule "src/main/resources/jwt-shopping-order-submodule"]
 	path = src/main/resources/jwt-shopping-order-submodule
 	url = git@github.com:yeonkkk/jwt-shopping-order-submodule.git
