@@ -10,9 +10,9 @@ import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.VO.Money;
-import cart.domain.cart.CartItem;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
+import cart.domain.cart.OrderItem;
 import cart.domain.coupon.Coupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
@@ -20,7 +20,6 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.exception.cart.MemberCouponNotFoundException;
 import cart.exception.coupon.CouponNotFoundException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class OrderRepository {
 
     private void deleteCartItems(final Order order) {
         final List<Long> cartItemIds = order.getItems().stream()
-                .map(CartItem::getId)
+                .map(OrderItem::getId)
                 .collect(toList());
         cartItemDao.deleteByIds(cartItemIds);
     }
@@ -130,8 +129,8 @@ public class OrderRepository {
                 memberCouponIdByMemberCoupon.get(orderEntity.getMemberCouponId()),
                 orderEntity.getMemberId(),
                 Money.from(orderEntity.getDeliveryFee()),
-                orderIdByOrderItems.getOrDefault(id, new ArrayList<>()).stream()
-                        .map(orderItemEntity -> orderItemEntity.toDomain(orderEntity.getMemberId()))
+                orderIdByOrderItems.get(id).stream()
+                        .map(OrderItemEntity::toDomain)
                         .collect(toList())
         );
     }

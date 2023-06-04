@@ -1,7 +1,6 @@
 package cart.dto.cart;
 
-import cart.domain.cart.CartItem;
-import cart.domain.cart.Product;
+import cart.domain.cart.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "주문 상품 정보")
@@ -36,13 +35,12 @@ public class ItemResponse {
         this.quantity = quantity;
     }
 
-    public static ItemResponse from(final CartItem item) {
-        final Product product = item.getProduct();
+    public static ItemResponse from(final OrderItem item) {
         return new ItemResponse(
                 item.getId(),
-                product.getName(),
-                product.getPrice().getLongValue(),
-                product.getImageUrl(),
+                item.getName(),
+                item.getPrice().getLongValue(),
+                item.getImageUrl(),
                 item.getQuantity()
         );
     }

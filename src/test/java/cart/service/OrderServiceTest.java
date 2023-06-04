@@ -2,7 +2,9 @@ package cart.service;
 
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
 import static cart.fixture.MemberFixture.사용자1;
-import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.OrderItemFixture.상품_18900원_1개_주문;
+import static cart.fixture.OrderItemFixture.상품_28900원_1개_주문;
+import static cart.fixture.OrderItemFixture.상품_8900원_1개_주문;
 import static cart.fixture.ProductFixture.상품_28900원;
 import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,22 +89,16 @@ class OrderServiceTest {
     @Test
     void 주문_전체_조회() {
         // given
-        final Product product1 = productRepository.save(상품_8900원);
-        final Product product2 = productRepository.save(상품_18900원);
-        final Product product3 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
         final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
         final MemberCoupon memberCoupon = memberCouponRepository.save(
                 new MemberCoupon(null, member.getId(), coupon, true)
         );
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
-        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));
         final Order order1 = orderRepository.save(
-                Order.of(memberCoupon, member.getId(), List.of(cartItem1, cartItem3))
+                Order.of(memberCoupon, member.getId(), List.of(상품_8900원_1개_주문, 상품_28900원_1개_주문))
         );
         final Order order2 = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem2))
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_18900원_1개_주문))
         );
 
         // when
@@ -123,11 +119,9 @@ class OrderServiceTest {
     @Test
     void 주문_단일_조회() {
         // given
-        final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final Order order = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem))
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_8900원_1개_주문))
         );
 
         // when

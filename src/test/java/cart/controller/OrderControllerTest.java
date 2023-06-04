@@ -2,7 +2,9 @@ package cart.controller;
 
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
 import static cart.fixture.MemberFixture.사용자1;
-import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.OrderItemFixture.상품_18900원_1개_주문;
+import static cart.fixture.OrderItemFixture.상품_28900원_1개_주문;
+import static cart.fixture.OrderItemFixture.상품_8900원_1개_주문;
 import static cart.fixture.ProductFixture.상품_28900원;
 import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +42,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @AutoConfigureMockMvc
 @Transactional
@@ -103,17 +106,11 @@ class OrderControllerTest {
     @Test
     void 주문을_전체_조회한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(상품_8900원);
-        final Product product2 = productRepository.save(상품_18900원);
-        final Product product3 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
-        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));
         final Order order1 = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2)));
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_8900원_1개_주문, 상품_18900원_1개_주문)));
         final Order order2 = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem3)));
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_28900원_1개_주문)));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
@@ -136,11 +133,9 @@ class OrderControllerTest {
     @Test
     void 주문을_단일_조회한다() throws Exception {
         // given
-        final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final Order order = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem)));
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_8900원_1개_주문)));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
