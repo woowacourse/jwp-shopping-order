@@ -148,4 +148,27 @@ public class PaymentService {
         updatePoints.removeAll(remove);
         return List.copyOf(updatePoints);
     }
+
+    public void deleteOrder(Member member, Long orderId) {
+        Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId);
+        checkAlreadyUsed(rewardPointByOrder);
+
+        List<Point> rewardPointByMember = memberRewardPointDao.getAllByMemberId(member.getId());
+        MemberPoints memberPoints = new MemberPoints(member, rewardPointByMember);
+        memberRewardPointDao.deleteById(rewardPointByOrder.getId());
+
+        List<UsedPoint> usedPoints = orderMemberUsedPointDao.getAllUsedPointByOrderId(orderId);
+        memberPoints.cancelledPoints(usedPoints);
+        orderMemberUsedPointDao.deleteAll(usedPoints);
+
+        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(orderId);
+        purchaseOrderInfo.changeStatus(OrderStatus.CANCELLED);
+        purchaseOrderDao.updateStatus(purchaseOrderInfo);
+    }
+
+    private void checkAlreadyUsed(Point rewardPoint) {
+        if (orderMemberUsedPointDao.isAlreadyUsedReward(rewardPoint.getId())) {
+            throw new IllegalArgumentException("해당 주문을 통해 적립된 포인트를 이미 사용해 취소할 수 없습니다.");
+        }
+    }
 }
