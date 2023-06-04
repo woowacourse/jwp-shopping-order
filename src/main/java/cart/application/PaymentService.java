@@ -42,7 +42,7 @@ public class PaymentService {
     }
 
     // TODO: 2023/06/02 한 메서드가 너무 긴 상태..! 수정 필요
-    public void createPurchaseOrder(Member member, PurchaseOrderRequest purchaseOrderRequest) {
+    public Long createPurchaseOrder(Member member, PurchaseOrderRequest purchaseOrderRequest) {
         List<PurchaseOrderItem> orderItems = getPurchaseOrderItems(purchaseOrderRequest);
         int payment = getPayment(orderItems);
         payment -= purchaseOrderRequest.getUsedPoint();
@@ -58,9 +58,10 @@ public class PaymentService {
         List<UsedPoint> usedPoints = memberPoints.usedPoint(purchaseOrderRequest.getUsedPoint());
 
         PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderInfo, orderItems, usedPoints, rewardPoint);
-        savePurchaseOrder(member, purchaseOrder);
+        Long orderId = savePurchaseOrder(member, purchaseOrder);
         deleteCartItems(member, purchaseOrder.getPurchaseOrderItems());
         updateChangePoints(memberPoints.getPoints(), pointsSnapshot);
+        return orderId;
     }
 
     private List<PurchaseOrderItem> getPurchaseOrderItems(PurchaseOrderRequest purchaseOrderRequest) {
@@ -119,13 +120,14 @@ public class PaymentService {
         return pointSnapshot;
     }
 
-    private void savePurchaseOrder(Member member, PurchaseOrder purchaseOrder) {
+    private Long savePurchaseOrder(Member member, PurchaseOrder purchaseOrder) {
         PurchaseOrderInfo purchaseOrderInfo = purchaseOrder.getPurchaseOrderInfo();
 
         Long saveOrderId = purchaseOrderDao.save(purchaseOrderInfo);
         purchaseOrderItemDao.saveAll(purchaseOrder.getPurchaseOrderItems(), saveOrderId);
         orderMemberUsedPointDao.saveAll(purchaseOrder.getUsedPoints(), saveOrderId);
         memberRewardPointDao.save(member.getId(), purchaseOrder.getRewardPoints(), saveOrderId);
+        return saveOrderId;
     }
 
     private void deleteCartItems(Member member, List<PurchaseOrderItem> purchaseOrderItems) {
