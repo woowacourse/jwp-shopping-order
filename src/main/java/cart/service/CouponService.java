@@ -44,7 +44,7 @@ public class CouponService {
     public void issueByOrderPrice(Money totalOrderPrice, Member member) {
         List<IssuableCoupon> issuableCoupons = findSatisfyIssuableCoupons(totalOrderPrice);
         Money money = getMaxIssueConditionPrice(issuableCoupons);
-        List<MemberCoupon> memberCoupons = findSatisfyMemberCoupon(member, issuableCoupons, money);
+        List<MemberCoupon> memberCoupons = findAllSatisfyMemberCoupon(member, issuableCoupons, money);
         if (!memberCoupons.isEmpty()) {
             memberCouponRepository.saveAll(memberCoupons);
         }
@@ -63,8 +63,8 @@ public class CouponService {
                 .orElse(Money.ZERO);
     }
 
-    private List<MemberCoupon> findSatisfyMemberCoupon(Member member, List<IssuableCoupon> issuableCoupons,
-                                                       Money money) {
+    private List<MemberCoupon> findAllSatisfyMemberCoupon(Member member, List<IssuableCoupon> issuableCoupons,
+                                                          Money money) {
         return issuableCoupons.stream()
                 .filter(issuableCoupon -> issuableCoupon.getMoney().equals(money))
                 .map(IssuableCoupon::getCoupon)

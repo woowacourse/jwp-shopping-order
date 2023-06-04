@@ -99,7 +99,7 @@ class CartItemServiceTest {
         // given
         Member member = new Member(1L, "email@email.com", "password");
         AuthMember authMember = new AuthMember(1L, "email@email.com");
-        given(cartItemRepository.findByMemberId(1L))
+        given(cartItemRepository.findAllByMemberId(1L))
                 .willReturn(List.of(
                         new CartItem(
                                 1L,

@@ -73,7 +73,7 @@ class CartItemRepositoryTest {
                 ));
 
         // when
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(memberEntity.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberEntity.getId());
 
         // then
         assertAll(

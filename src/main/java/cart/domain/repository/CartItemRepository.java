@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository {
-    List<CartItem> findByMemberId(Long id);
+    List<CartItem> findAllByMemberId(Long id);
 
     CartItem save(CartItem cartItem);
 

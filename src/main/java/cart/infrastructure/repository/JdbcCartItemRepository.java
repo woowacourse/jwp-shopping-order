@@ -24,7 +24,7 @@ public class JdbcCartItemRepository implements CartItemRepository {
     }
 
     @Override
-    public List<CartItem> findByMemberId(Long id) {
+    public List<CartItem> findAllByMemberId(Long id) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(id);
         return cartItemEntities.stream()
                 .map(CartItemEntity::toDomain)

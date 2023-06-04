@@ -157,7 +157,7 @@ class OrderServiceTest {
                 .willReturn(List.of(주문_밀리_치킨_피자_3000원, 주문_밀리_치킨_햄버거_3000원));
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(밀리));
-        
+
         List<OrderResponse> responses = orderService.findAll(밀리_인증_정보);
 
         assertThat(responses).map(OrderResponse::getId)
@@ -165,7 +165,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void 주문을_할_때_쿠폰을_사용하지_않으면_쿠폰을_발급한다() {
+    void 주문을_할_때_쿠폰을_사용하지_않으면_쿠폰을_발급한경다() {
         given(cartItemRepository.findById(anyLong()))
                 .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
         given(orderRepository.save(any()))
