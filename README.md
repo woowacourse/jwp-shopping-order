@@ -1,6 +1,151 @@
 # jwp-shopping-order
 
-### 기능 요구사항
+## 주문
+
+### ✔️ 구매
+
+### Request
+
+```json
+POST /orders HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+
+{
+	"cartItemIds":[1,2,3,4],
+	"usePoint":1000
+}
+```
+
+### Response
+
+```json
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: orders/{id}
+```
+
+### ✔️ 전체 주문 목록 조회
+
+### Request
+
+```json
+GET /orders HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+```
+
+### Response
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+      "id": 2,               // 하나의 주문에 대한 id
+      "price": 50000,       // 구매 전체 금액
+      "orderDate": 2023-05-26T12:34
+      "orders" : [           // 구매 전체 상품 리스트
+          { "id": 1,           // 그 상품에 대한 id
+            "quantity": 5,     // 그 상품의 개수
+            "price": 20000,   // 그 상품의 가격
+            "name": "피자",    // 그 상품의 이름
+            "imageUrl": "http://example.com/pizza.jpg" // 그 상품의 이미지
+          },
+          { "id": 2,
+            "quantity": 5,
+            "price": 20000,
+            "name": "피자2",
+            "imageUrl": "http://example.com/pizza2.jpg"
+          }
+        ]
+    },
+]
+```
+
+### ✔️ 단일 주문 조회
+
+### Request
+
+```json
+GET /orders/{orderId} HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+```
+
+### Response
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id": 2,    
+    "price": 50000,  
+    "orderDate": "2023-05-26T12:34", 
+    "orders" : [   
+      { "id": 1, 
+        "quantity": 5,  
+        "price": 20000,  
+        "name": "피자", 
+        "imageUrl": "http://example.com/pizza.jpg"
+      },
+      { "id": 2,
+        "quantity": 5,
+        "price": 20000,
+        "name": "피자2",
+        "imageUrl": "http://example.com/pizza2.jpg"
+      }
+    ]
+}
+```
+
+## 포인트
+
+### ✔️ 회원이 가지고 있는 전체 포인트 조회
+
+### Request
+
+```json
+GET /points HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+```
+
+### Response
+
+```json
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+	"points":10
+}
+```
+
+### ✔️ 주문으로 적립된 포인트 조회
+
+### Request
+
+```json
+GET orders/{id}/points HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+```
+
+### Response
+
+```json
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+	"points_saved":10
+}
+```
+
+## 기능 요구사항
 - [x] 주문
   - [x] 사용자는 자신의 장바구니에 담긴 상품을 주문할 수 있다.
     - [x] 주문이 된 상품은 장바구니에서 삭제된다.
