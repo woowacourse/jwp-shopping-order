@@ -1,7 +1,7 @@
 package cart.product.application;
 
-import cart.controller.presentation.dto.ProductRequest;
-import cart.controller.presentation.dto.ProductResponse;
+import cart.controller.product.dto.ProductRequest;
+import cart.controller.product.dto.ProductResponse;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.product.Product;
 import cart.sale.SaleService;

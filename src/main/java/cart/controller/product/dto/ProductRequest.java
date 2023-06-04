@@ -1,4 +1,4 @@
-package cart.controller.presentation.dto;
+package cart.controller.product.dto;
 
 public class ProductRequest {
     private String name;

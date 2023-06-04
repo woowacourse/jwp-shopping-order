@@ -81,6 +81,5 @@ public class CartService {
 
     private void applyDiscountPolicyExceptTotalPrice(Cart cart) {
         saleService.applySales(cart, DiscountTarget.TOTAL);
-
     }
 }
