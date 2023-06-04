@@ -1,7 +1,7 @@
 package cart.domain.member;
 
 import cart.domain.product.ProductPrice;
-import cart.exception.business.point.PointAbusedException;
+import cart.exception.business.order.PointAbusedException;
 
 import java.util.Objects;
 

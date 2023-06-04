@@ -1,4 +1,4 @@
-package cart.exception.business.point;
+package cart.exception.business.order;
 
 import cart.domain.member.MemberPoint;
 import cart.exception.business.BusinessException;

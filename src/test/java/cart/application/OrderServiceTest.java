@@ -17,7 +17,7 @@ import cart.domain.order.UsedPoint;
 import cart.domain.product.Product;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
-import cart.exception.business.point.InvalidPointUseException;
+import cart.exception.business.order.InvalidPointUseException;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.notfound.OrderNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;

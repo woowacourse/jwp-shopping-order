@@ -1,5 +1,7 @@
 package cart.domain.cartitem;
 
+import cart.exception.business.cartitem.InvalidCartItemQuantityException;
+
 import java.util.Objects;
 
 public class Quantity {
@@ -9,11 +11,18 @@ public class Quantity {
     private final int quantity;
 
     public Quantity(final int quantity) {
+        validate(quantity);
         this.quantity = quantity;
     }
 
     public static Quantity create() {
         return new Quantity(INITIAL_VALUE);
+    }
+
+    private void validate(final int quantity) {
+        if (quantity < 0) {
+            throw new InvalidCartItemQuantityException(quantity);
+        }
     }
 
     public Quantity add() {

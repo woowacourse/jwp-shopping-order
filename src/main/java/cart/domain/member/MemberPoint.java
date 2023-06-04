@@ -1,7 +1,7 @@
 package cart.domain.member;
 
 import cart.domain.product.ProductPrice;
-import cart.exception.business.point.NegativePointException;
+import cart.exception.business.member.InvalidMemberPointException;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ public class MemberPoint {
     private final int point;
 
     public MemberPoint(final Integer point) {
-        validatePoint(point);
+        validate(point);
         this.point = point;
     }
 
@@ -20,9 +20,9 @@ public class MemberPoint {
         return new MemberPoint(0);
     }
 
-    private void validatePoint(final Integer point) {
+    private void validate(final Integer point) {
         if (point < 0) {
-            throw new NegativePointException();
+            throw new InvalidMemberPointException();
         }
     }
 

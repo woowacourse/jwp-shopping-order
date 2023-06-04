@@ -1,5 +1,7 @@
 package cart.domain.order;
 
+import cart.exception.business.order.InvalidUsedPointException;
+
 import java.util.Objects;
 
 public class UsedPoint {
@@ -7,7 +9,14 @@ public class UsedPoint {
     private final int usedPoint;
 
     public UsedPoint(final int usedPoint) {
+        validate(usedPoint);
         this.usedPoint = usedPoint;
+    }
+
+    private void validate(final int usedPoint) {
+        if (usedPoint < 0) {
+            throw new InvalidUsedPointException(usedPoint);
+        }
     }
 
     public int getUsedPoint() {

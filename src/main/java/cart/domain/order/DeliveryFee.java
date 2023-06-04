@@ -1,5 +1,7 @@
 package cart.domain.order;
 
+import cart.exception.business.order.InvalidDeliveryFeeException;
+
 import java.util.Objects;
 
 public class DeliveryFee {
@@ -7,7 +9,14 @@ public class DeliveryFee {
     private final int deliveryFee;
 
     public DeliveryFee(final int deliveryFee) {
+        validate(deliveryFee);
         this.deliveryFee = deliveryFee;
+    }
+
+    private void validate(final int deliveryFee) {
+        if (deliveryFee < 0) {
+            throw new InvalidDeliveryFeeException(deliveryFee);
+        }
     }
 
     public int getDeliveryFee() {

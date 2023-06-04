@@ -1,5 +1,7 @@
 package cart.domain.order;
 
+import cart.exception.business.order.InvalidSavedPointException;
+
 import java.util.Objects;
 
 public class SavedPoint {
@@ -7,7 +9,14 @@ public class SavedPoint {
     private final int savedPoint;
 
     public SavedPoint(final int savedPoint) {
+        validate(savedPoint);
         this.savedPoint = savedPoint;
+    }
+
+    private void validate(final int savedPoint) {
+        if (savedPoint < 0) {
+            throw new InvalidSavedPointException(savedPoint);
+        }
     }
 
     public int getSavedPoint() {

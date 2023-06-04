@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.exception.business.member.InvalidMemberEmailException;
+
 import java.util.Objects;
 
 public class MemberEmail {
@@ -7,7 +9,14 @@ public class MemberEmail {
     private final String email;
 
     public MemberEmail(final String email) {
+        validate(email);
         this.email = email;
+    }
+
+    private void validate(final String email) {
+        if (email.isBlank() || !email.contains("@")) {
+            throw new InvalidMemberEmailException(email);
+        }
     }
 
     public String getEmail() {
