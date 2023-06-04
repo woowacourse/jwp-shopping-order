@@ -5,7 +5,10 @@ import cart.exception.coupon.DiscountPolicyNotFoundException;
 import java.util.Arrays;
 
 public enum DiscountPolicyType {
-    NONE((discountValue, price) -> price, (discountValue, price) -> price),
+    NONE(
+            (discountValue, price) -> price,
+            (discountValue, price) -> price
+    ),
     PRICE(
             (discountValue, price) -> price.minus(Money.from(discountValue)),
             (discountValue, price) -> price
