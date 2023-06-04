@@ -42,6 +42,10 @@
 
 ## 명세
 
-### DB UML
+### API
+
+[추가된 API 명세](https://dev-pilyang.notion.site/API-8811bf6e59c0468497584e98fb06baad?pvs=4)
+
+### DB
 
 ![database table uml](./images/shopping-order-uml.png)
