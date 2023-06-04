@@ -101,7 +101,7 @@ public class OrderDao {
                 + "FROM `order` as o "
                 + "         join product_order po on o.id = po.order_id "
                 + "         join product p on po.product_id = p.id "
-                + "WHERE member_id = ?";
+                + "WHERE o.member_id = ?";
         final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper,
             member.getId());
         return OrderConverter.convertToOrders(orderProductJoinDtos);
