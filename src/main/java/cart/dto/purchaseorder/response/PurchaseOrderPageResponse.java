@@ -10,14 +10,14 @@ public class PurchaseOrderPageResponse {
     private int totalPages;
     private int currentPage;
     private int pageSize;
-    private List<PurchaseOrderItemInfoResponse> purchaseOrderInfoRespons;
+    private List<PurchaseOrderItemInfoResponse> contents;
 
     public PurchaseOrderPageResponse(int totalPages, int currentPage, int pageSize,
-                                     List<PurchaseOrderItemInfoResponse> purchaseOrderInfoRespons) {
+                                     List<PurchaseOrderItemInfoResponse> contents) {
         this.totalPages = totalPages;
         this.currentPage = currentPage;
         this.pageSize = pageSize;
-        this.purchaseOrderInfoRespons = purchaseOrderInfoRespons;
+        this.contents = contents;
     }
 
     public int getTotalPages() {
@@ -33,7 +33,7 @@ public class PurchaseOrderPageResponse {
     }
 
     public List<PurchaseOrderItemInfoResponse> getPurchaseOrderItemsResponses() {
-        return purchaseOrderInfoRespons;
+        return contents;
     }
 
     @Override
@@ -41,12 +41,12 @@ public class PurchaseOrderPageResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PurchaseOrderPageResponse that = (PurchaseOrderPageResponse) o;
-        return totalPages == that.totalPages && currentPage == that.currentPage && pageSize == that.pageSize && Objects.equals(purchaseOrderInfoRespons, that.purchaseOrderInfoRespons);
+        return totalPages == that.totalPages && currentPage == that.currentPage && pageSize == that.pageSize && Objects.equals(contents, that.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(totalPages, currentPage, pageSize, purchaseOrderInfoRespons);
+        return Objects.hash(totalPages, currentPage, pageSize, contents);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PurchaseOrderPageResponse {
                 "totalPages=" + totalPages +
                 ", currentPage=" + currentPage +
                 ", pageSize=" + pageSize +
-                ", purchaseOrderInfoRespons=" + purchaseOrderInfoRespons +
+                ", purchaseOrderInfoRespons=" + contents +
                 '}';
     }
 }
