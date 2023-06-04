@@ -8,6 +8,7 @@ import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.exception.NoSuchCartItemException;
 import cart.exception.NoSuchOrderException;
+import cart.exception.OrderException;
 import cart.exception.PointOverTotalPriceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,30 +36,57 @@ public class OrderService {
     public Long createOrder(Member member, OrderRequest orderRequest) {
         LocalDateTime now = LocalDateTime.now();
 
+        validateOverPoint(orderRequest);
+        pointService.usePointByMember(member, orderRequest.getPoint());
+        int amountAfterUsePoint = orderRequest.getTotalPrice() - orderRequest.getPoint();
+        Point point = pointService.savePointByMember(member, amountAfterUsePoint, now);
+        Orders createdOrders = createOrders(member, point, orderRequest, now);
+        int productAmountSum = createOrderDetailInCartItems(member, orderRequest, createdOrders);
+        validateTotalSum(orderRequest, productAmountSum);
+
+        return createdOrders.getId();
+    }
+
+    private void validateOverPoint(OrderRequest orderRequest) {
         if (orderRequest.getTotalPrice() < orderRequest.getPoint()) {
             throw new PointOverTotalPriceException();
         }
-        pointService.usePointByMember(member, orderRequest.getPoint());
-        Point point = pointService.savePointByMember(member, orderRequest.getTotalPrice() - orderRequest.getPoint(), now);
+    }
+
+    private Orders createOrders(Member member, Point point, OrderRequest orderRequest, LocalDateTime now) {
         Orders orders = new Orders(member, point, point.getEarnedPoint(), orderRequest.getPoint(), now);
         Long id = orderDao.createOrders(orders);
-        Orders createdOrders = new Orders(id, orders.getMember(), orders.getPoint(), orders.getEarnedPoint(), orders.getUsedPoint(), orders.getCreatedAt());
-        int productSum = 0;
+        return new Orders(id, orders.getMember(), orders.getPoint(), orders.getEarnedPoint(), orders.getUsedPoint(), orders.getCreatedAt());
+    }
+
+    private int createOrderDetailInCartItems(Member member, OrderRequest orderRequest, Orders createdOrders) {
+        int allProductSum = 0;
         for (Long cartId : orderRequest.getCartIds()) {
             CartItem cartItem = cartItemDao.findById(cartId).orElseThrow(NoSuchCartItemException::new);
             cartItem.checkOwner(member);
             Product product = cartItem.getProduct();
-            productDao.updateProduct(product.getId(), new Product(product.getName(), product.getPrice(), product.getImageUrl(), product.getStock() - cartItem.getQuantity()));
+            validateUseStock(product, cartItem.getQuantity());
+            productDao.updateProduct(product.getId(), product);
             OrderDetail orderDetail = new OrderDetail(createdOrders, product, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity());
-            productSum += product.getPrice() * cartItem.getQuantity();
+            allProductSum += cartItem.getCartItemPrice();
             orderDao.createOrderDetail(orderDetail);
             cartItemDao.deleteById(cartId);
         }
+        return allProductSum;
+    }
+
+    private void validateUseStock(Product product, int usingStock) {
+        try {
+            product.useStock(usingStock);
+        } catch (IllegalArgumentException e) {
+            throw new OrderException.NotEnoughStockException(product);
+        }
+    }
+
+    private void validateTotalSum(OrderRequest orderRequest, int productSum) {
         if (productSum != orderRequest.getTotalPrice()) {
             throw new IllegalArgumentException("총계가 결제 예정 금액과 다릅니다.");
         }
-
-        return createdOrders.getId();
     }
 
     @Transactional(readOnly = true)

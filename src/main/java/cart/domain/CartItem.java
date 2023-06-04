@@ -37,6 +37,10 @@ public class CartItem {
         return quantityVo.getQuantity();
     }
 
+    public int getCartItemPrice() {
+        return product.getPrice() * quantityVo.getQuantity();
+    }
+
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.IllegalMember(this, member);

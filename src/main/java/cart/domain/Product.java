@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.exception.OrderException;
-
 import java.util.Objects;
 
 public class Product {
@@ -9,7 +7,7 @@ public class Product {
     private String name;
     private PriceVO price;
     private String imageUrl;
-    private int stock;
+    private StockVO stock;
 
 
     public Product(String name, int price, String imageUrl, int stock) {
@@ -17,18 +15,15 @@ public class Product {
     }
 
     public Product(Long id, String name, int price, String imageUrl, int stock) {
-        validateStock(stock);
         this.id = id;
         this.name = name;
         this.price = new PriceVO(price);
         this.imageUrl = imageUrl;
-        this.stock = stock;
+        this.stock = new StockVO(stock);
     }
 
-    private void validateStock(int stock) {
-        if (stock < 0) {
-            throw new OrderException.NotEnoughStockException(this);
-        }
+    public void useStock(int stock) {
+        this.stock = new StockVO(getStock() - stock);
     }
 
     public Long getId() {
@@ -48,7 +43,7 @@ public class Product {
     }
 
     public int getStock() {
-        return stock;
+        return stock.getStock();
     }
 
     @Override

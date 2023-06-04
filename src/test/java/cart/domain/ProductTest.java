@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.exception.OrderException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -29,8 +28,8 @@ class ProductTest {
     void doseNotCreateStockUnderZero(int price, int stock) {
         //when, then
         assertThatThrownBy(() -> new Product(null, price, null, stock))
-                .isInstanceOf(OrderException.NotEnoughStockException.class)
-                .hasMessageEndingWith("의 재고가 부족합니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageEndingWith("재고는 음수가 될 수 없습니다.");
     }
 
     @DisplayName("물품 가격을 음수로 할 수 없습니다.")
