@@ -1,7 +1,5 @@
 package cart.exception;
 
-import cart.ui.advcie.ErrorType;
-
 public class ProductException extends RuntimeException {
     public ProductException() {
     }

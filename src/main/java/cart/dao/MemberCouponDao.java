@@ -59,7 +59,7 @@ public class MemberCouponDao {
         final String sql = "SELECT * FROM member_coupon WHERE id = ? ";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
-        } catch (EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

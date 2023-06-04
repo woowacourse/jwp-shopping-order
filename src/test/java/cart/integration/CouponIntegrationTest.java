@@ -2,16 +2,12 @@ package cart.integration;
 
 import cart.dto.AllCouponResponse;
 import cart.dto.CouponResponse;
-import cart.dto.MemberCouponRequest;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;

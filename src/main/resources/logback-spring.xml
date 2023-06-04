@@ -4,7 +4,9 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%cyan([%d{yyyy-MM-dd HH:mm:ss}:%-3relative])[%thread] %highlight(%-5level) %yellow(%logger{36}) - %msg%n</Pattern>
+            <Pattern>%cyan([%d{yyyy-MM-dd HH:mm:ss}:%-3relative])[%thread] %highlight(%-5level) %yellow(%logger{36}) -
+                %msg%n
+            </Pattern>
         </layout>
     </appender>
 
@@ -71,9 +73,9 @@
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="INFO_LOG" />
-        <appender-ref ref="WARN_LOG" />
-        <appender-ref ref="ERROR_LOG" />
+        <appender-ref ref="INFO_LOG"/>
+        <appender-ref ref="WARN_LOG"/>
+        <appender-ref ref="ERROR_LOG"/>
     </root>
 
 </configuration>

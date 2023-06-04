@@ -28,7 +28,7 @@ public class PercentageCoupon implements Coupon {
             return couponInfo.getMaxDiscountPrice();
         }
         // TODO: 5/29/23 이거 반올림?
-        return (int)discountPrice;
+        return (int) discountPrice;
     }
 
     @Override

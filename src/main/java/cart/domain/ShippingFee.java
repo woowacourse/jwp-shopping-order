@@ -15,7 +15,7 @@ public enum ShippingFee {
     ShippingFee(final Integer charge) {
         this.charge = charge;
     }
-    
+
     public static ShippingFee from(final Integer price) {
         if (price > FREE_DELIVERY_CRITERIA) {
             return NONE;

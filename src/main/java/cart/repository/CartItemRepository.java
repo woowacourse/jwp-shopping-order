@@ -10,7 +10,6 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.exception.CartItemException;
-import cart.exception.CouponException;
 import cart.exception.MemberException;
 import cart.exception.ProductException;
 import org.springframework.stereotype.Repository;

@@ -1,10 +1,5 @@
 package cart.exception;
 
-import cart.dao.entity.CartItemEntity;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.repository.CartItemRepository;
-
 public class CartItemException extends RuntimeException {
     public CartItemException() {
 

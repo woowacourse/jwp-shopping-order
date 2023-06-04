@@ -1,7 +1,5 @@
 package cart.exception;
 
-import cart.ui.advcie.ErrorType;
-
 public class MemberException extends RuntimeException {
     public MemberException() {
     }

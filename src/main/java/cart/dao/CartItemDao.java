@@ -65,6 +65,7 @@ public class CartItemDao {
             public void setValues(final PreparedStatement ps, final int i) throws SQLException {
                 ps.setLong(1, ids.get(i));
             }
+
             @Override
             public int getBatchSize() {
                 return ids.size();

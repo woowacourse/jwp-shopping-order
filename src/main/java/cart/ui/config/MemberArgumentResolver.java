@@ -27,7 +27,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-           throw new AuthenticationException.Unauthorized("로그인 정보가 없습니다.");
+            throw new AuthenticationException.Unauthorized("로그인 정보가 없습니다.");
         }
 
         String[] authHeader = authorization.split(" ");

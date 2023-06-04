@@ -1,6 +1,5 @@
 package cart.domain;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class CouponInfo {

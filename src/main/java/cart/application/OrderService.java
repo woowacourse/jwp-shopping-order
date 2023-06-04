@@ -80,13 +80,13 @@ public class OrderService {
     }
 
     private MemberCoupon findCouponIfExist(final Long memberCouponId) {
-        if (memberCouponId== null) {
+        if (memberCouponId == null) {
             return new EmptyMemberCoupon();
         }
         return memberCouponRepository.findById(memberCouponId);
     }
 
-    private List<CartItem>  findCartItemsRequest(final OrderRequest request) {
+    private List<CartItem> findCartItemsRequest(final OrderRequest request) {
         List<Long> currentCartIds = request.getProducts().stream()
                 .map(OrderCartItemRequest::getCartItemId)
                 .collect(Collectors.toList());
