@@ -13,14 +13,14 @@ public class Order {
     private final int points;
     private final List<CartItem> cartItems;
 
-    public Order(final Long id, final int points, final List<CartItem> cartItems) {
+    public static Order of(final int points, final List<CartItem> cartItems) {
+        return new Order(null, points, cartItems);
+    }
+
+    private Order(final Long id, final int points, final List<CartItem> cartItems) {
         this.id = id;
         this.points = points;
         this.cartItems = cartItems;
-    }
-
-    public Order(final int points, final List<CartItem> cartItems) {
-        this(null, points, cartItems);
     }
 
     public void validatePoints(final int memberPoints) {

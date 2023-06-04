@@ -9,11 +9,15 @@ public class Product {
     private final int price;
     private final String imageUrl;
 
-    public Product(String name, int price, String imageUrl) {
-        this(null, name, price, imageUrl);
+    public static Product of(Long id, String name, int price, String imageUrl) {
+        return new Product(id, name, price, imageUrl);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public static Product of(String name, int price, String imageUrl) {
+        return new Product(null, name, price, imageUrl);
+    }
+
+    private Product(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

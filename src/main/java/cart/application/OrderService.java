@@ -54,7 +54,7 @@ public class OrderService {
 
         validateOrderedCartItems(orderedCartItemIds, cartItemsFromRequest);
 
-        Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsFromRequest);
+        Order order = Order.of(orderCreateRequest.getUsedPoints(), cartItemsFromRequest);
         order.validatePoints(member.getPoints());
         saveMemberPoints(member, order);
 
@@ -68,14 +68,14 @@ public class OrderService {
     }
 
     private void validateOrderedCartItems(List<Long> orderedCartItemIds, List<CartItem> cartItemsFromRequest) {
-        CartItems requestedCartItems = new CartItems(cartItemsFromRequest);
-        CartItems serverCartItems = new CartItems(cartItemDao.findByIds(orderedCartItemIds));
+        CartItems requestedCartItems = CartItems.from(cartItemsFromRequest);
+        CartItems serverCartItems = CartItems.from(cartItemDao.findByIds(orderedCartItemIds));
         requestedCartItems.validateAllCartItemsOrderedLegally(serverCartItems);
     }
 
     private List<CartItem> convertToCartItems(final Member member, final List<CartItemRequest> requests) {
         return requests.stream()
-                .map(cartItemRequest -> new CartItem(
+                .map(cartItemRequest -> CartItem.of(
                         cartItemRequest.getId(),
                         cartItemRequest.getQuantity(),
                         productDao.findProductById(cartItemRequest.getProductId()),

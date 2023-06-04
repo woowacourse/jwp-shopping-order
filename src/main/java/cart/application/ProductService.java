@@ -34,12 +34,12 @@ public class ProductService {
     }
 
     public Long createProduct(final ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = Product.of(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         return productDao.createProduct(product);
     }
 
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = Product.of(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         productDao.updateProduct(productId, product);
     }
 

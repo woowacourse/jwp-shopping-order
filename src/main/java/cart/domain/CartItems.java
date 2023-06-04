@@ -9,7 +9,11 @@ public class CartItems {
 
     private final List<CartItem> cartItems;
 
-    public CartItems(List<CartItem> cartItems) {
+    public static CartItems from(List<CartItem> cartItems) {
+        return new CartItems(cartItems);
+    }
+
+    private CartItems(List<CartItem> cartItems) {
         this.cartItems = new ArrayList<>(cartItems);
     }
 

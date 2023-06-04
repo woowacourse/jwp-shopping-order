@@ -15,11 +15,15 @@ public class CartItem {
     private final Member member;
     private boolean checked;
 
-    public CartItem(Member member, Product product) {
-        this(null, 1, product, member, true);
+    public static CartItem initOf(Member member, Product product) {
+        return new CartItem(null, 1, product, member, true);
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member, final boolean checked) {
+    public static CartItem of(Long id, int quantity, Product product, Member member, final boolean checked) {
+        return new CartItem(id, quantity, product, member, checked);
+    }
+
+    private CartItem(Long id, int quantity, Product product, Member member, final boolean checked) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;

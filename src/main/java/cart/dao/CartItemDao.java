@@ -45,9 +45,9 @@ public class CartItemDao {
             int price = rs.getInt("product.price");
             String imageUrl = rs.getString("product.image_url");
 
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member, checked);
+            Member member = Member.of(memberId, email, null);
+            Product product = Product.of(productId, name, price, imageUrl);
+            return CartItem.of(cartItemId, quantity, product, member, checked);
         }, memberId);
     }
 
@@ -71,9 +71,9 @@ public class CartItemDao {
             int price = rs.getInt("product.price");
             String imageUrl = rs.getString("product.image_url");
 
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member, checked);
+            Member member = Member.of(memberId, email, null);
+            Product product = Product.of(productId, name, price, imageUrl);
+            return CartItem.of(cartItemId, quantity, product, member, checked);
         }, memberId);
     }
 
@@ -99,9 +99,9 @@ public class CartItemDao {
             int price = rs.getInt("product.price");
             String imageUrl = rs.getString("product.image_url");
 
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member, checked);
+            Member member = Member.of(memberId, email, null);
+            Product product = Product.of(productId, name, price, imageUrl);
+            return CartItem.of(cartItemId, quantity, product, member, checked);
         }, cartItemIds.toArray());
         if (cartItems.isEmpty()) {
             throw new CartItemNotFoundException(cartItemIds);
@@ -148,9 +148,9 @@ public class CartItemDao {
             int price = rs.getInt("product.price");
             String imageUrl = rs.getString("product.image_url");
 
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member, checked);
+            Member member = Member.of(memberId, email, null);
+            Product product = Product.of(productId, name, price, imageUrl);
+            return CartItem.of(cartItemId, quantity, product, member, checked);
         }, id);
         if (cartItems.isEmpty()) {
             throw new CartItemNotFoundException(id);

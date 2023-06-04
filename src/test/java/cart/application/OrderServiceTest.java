@@ -19,8 +19,8 @@ class OrderServiceTest extends ServiceTest {
                 new CartItemRequest(1L, 1L, 2),
                 new CartItemRequest(2L, 2L, 4)
         ));
-        final Long id = orderService.createOrder(request, new Member(1L, "a@a.com", "1234", 1000));
-        final OrderResponse response = orderService.findById(id, new Member(1L, "a@a.com", "1234", 1000));
+        final Long id = orderService.createOrder(request, Member.of(1L, "a@a.com", "1234", 1000));
+        final OrderResponse response = orderService.findById(id, Member.of(1L, "a@a.com", "1234", 1000));
         final Member member = memberDao.findMemberById(1L);
 
         assertAll(

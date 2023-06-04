@@ -5,20 +5,25 @@ import java.util.Objects;
 public class Member {
 
     private static final int ZERO_POINTS = 0;
+
     private final Long id;
     private final String email;
     private final String password;
     private final int points;
 
-    public Member(final Long id, final String email, final String password, final int points) {
+    public static Member of(final Long id, final String email, final String password) {
+        return new Member(id, email, password, ZERO_POINTS);
+    }
+
+    public static Member of(final Long id, final String email, final String password, final int points) {
+        return new Member(id, email, password, points);
+    }
+
+    private Member(final Long id, final String email, final String password, final int points) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.points = points;
-    }
-
-    public Member(final Long id, final String email, final String password) {
-        this(id, email, password, ZERO_POINTS);
     }
 
     public Member updatePoints(final int addedPoints, final int usedPoints) {
