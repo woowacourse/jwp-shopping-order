@@ -1,22 +1,47 @@
-### 상품목록 page로 가져오기
-GET http://localhost:8080/products?limit=20&scroll-count=0
+### 상품목록 page로 가져오기 (1번째 페이지)
+GET http://localhost:8080/products?limit=2&scroll-count=0
 Accept: application/json
 
 ### response
-HTTP/1.1 200 OK
+HTTP/1.1 200
 Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 04 Jun 2023 14:58:42 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
 
 [
   {
     "id": 1,
     "name": "치킨",
     "price": 10000,
-    "imageUrl": "http://example.com/chicken.jpg"
+    "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
   },
   {
     "id": 2,
-    "name": "피자",
+    "name": "샐러드",
     "price": 20000,
-    "imageUrl": "http://example.com/pizza.jpg"
+    "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
+  }
+]
+
+### 상품목록 page로 가져오기 (2번째 페이지)
+GET http://localhost:8080/products?limit=2&scroll-count=1
+Accept: application/json
+
+### response
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 04 Jun 2023 14:58:56 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "id": 3,
+    "name": "피자",
+    "price": 13000,
+    "imageUrl": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
   }
 ]

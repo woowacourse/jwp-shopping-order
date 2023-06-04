@@ -1,0 +1,197 @@
+GET http://localhost:8080/products?limit=2&scroll-count=1
+Accept: application/json
+
+<> 2023-06-04T235856.200.json
+
+###
+
+GET http://localhost:8080/products?limit=2&scroll-count=0
+Accept: application/json
+
+<> 2023-06-04T235842.200.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-04T235627.201.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-04T235532.500.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-04T235359.500.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ],
+  "couponId": 1
+}
+
+<> 2023-06-04T235302.201.json
+
+###
+
+GET http://localhost:8080/orders
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235233.200.json
+
+###
+
+GET http://localhost:8080/orders/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235203.200.json
+
+###
+
+GET http://localhost:8080/order/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235157.404.json
+
+###
+
+GET http://localhost:8080/order/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235152.404.json
+
+###
+
+POST http://localhost:8080/coupons/issue
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235130.201.json
+
+###
+
+GET http://localhost:8080/coupons
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235101.200.json
+
+###
+
+GET http://localhost:8080/coupons/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235037.200.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235028.404.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235025.404.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T233648.200.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T232858.200.json
+
+###
+
+GET http://localhost:8080/coupon/discount?total-price=10000&coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T232747.400.json
+
+###
+
+POST http://localhost:8080/cart-items
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+###
+
+POST http://localhost:8080/cart-items
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+<> 2023-06-04T232243.500.json
+
+###
+
