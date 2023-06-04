@@ -88,8 +88,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Coupon confirmById(Long orderId, Member member) {
         OrderEntity orderEntity = orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
         orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), member.getId());
+
         CouponEntity bonusCoupon = new CouponEntity(Coupon.BONUS_COUPON.getName(), Coupon.BONUS_COUPON.getCouponTypes().getCouponTypeName(),
                 Coupon.BONUS_COUPON.getMinimumPrice(), Coupon.BONUS_COUPON.getDiscountPrice(), Coupon.BONUS_COUPON.getDiscountRate());
+
         CouponEntity coupon = couponDao.findByName(bonusCoupon).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
         Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), member.getId(), true));
 
@@ -112,13 +114,16 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private Order toDomain(OrderEntity orderEntity) {
         Member member = memberDao.findById(orderEntity.getMemberId());
+
         List<CartItem> products = orderProductDao.findOrderProductByOrderId(orderEntity.getId()).stream()
                 .map(it -> new CartItem(it.getId(), it.getQuantity(),
                         new Product(it.getId(), it.getName(), it.getPrice(), it.getImage_url()), member))
                 .collect(Collectors.toList());
+
         CouponEntity couponEntity = orderCouponDao.findByOrderId(orderEntity.getId()).orElse(CouponEntity.EMPTY);
         Coupon coupon = new Coupon(couponEntity.getId(), couponEntity.getName(), DiscountType.from(couponEntity.getDiscountType()),
                 couponEntity.getMinimumPrice(), couponEntity.getDiscountPrice(), couponEntity.getDiscountRate());
+
         return new Order(orderEntity.getId(), member, products, orderEntity.getConfirmState(), coupon);
     }
 

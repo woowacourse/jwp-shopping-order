@@ -6,6 +6,7 @@ import cart.domain.repository.CouponRepository;
 import cart.dto.request.CouponCreateRequest;
 import cart.dto.response.CouponIssuableResponse;
 import cart.dto.response.CouponResponse;
+import cart.exception.CouponException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,22 @@ public class CouponService {
     }
 
     public Long save(Member member, CouponCreateRequest request) {
+        validateExistCoupon(request);
+        validateDuplicateCoupon(member, request);
+
         return couponRepository.save(member, request.getId());
+    }
+
+    private void validateDuplicateCoupon(Member member, CouponCreateRequest request) {
+        if (couponRepository.checkByCouponIdAndMemberId(request.getId(), member.getId())) {
+            throw new CouponException("이미 존재하는 쿠폰입니다.");
+        }
+    }
+
+    private void validateExistCoupon(CouponCreateRequest request) {
+        if (!couponRepository.checkById(request.getId())) {
+            throw new CouponException("해당 쿠폰을 찾을 수 없습니다.");
+        }
     }
 
     @Transactional(readOnly = true)

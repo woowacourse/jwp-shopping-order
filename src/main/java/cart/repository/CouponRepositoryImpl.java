@@ -9,32 +9,23 @@ import cart.domain.coupon.DiscountType;
 import cart.domain.repository.CouponRepository;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
-import cart.exception.CouponException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class CouponRepsitoryImpl implements CouponRepository {
+public class CouponRepositoryImpl implements CouponRepository {
     private final CouponDao couponDao;
     private final MemberCouponDao memberCouponDao;
 
-    public CouponRepsitoryImpl(CouponDao couponDao, MemberCouponDao memberCouponDao) {
+    public CouponRepositoryImpl(CouponDao couponDao, MemberCouponDao memberCouponDao) {
         this.couponDao = couponDao;
         this.memberCouponDao = memberCouponDao;
     }
 
     @Override
     public Long save(Member member, Long couponId) {
-        if (!couponDao.checkById(couponId)) {
-            throw new CouponException("해당 쿠폰을 찾을 수 없습니다.");
-        }
-
-        if (memberCouponDao.checkByCouponIdAndMemberId(member.getId(), couponId)) {
-            throw new CouponException("이미 존재하는 쿠폰입니다.");
-        }
-
         return memberCouponDao.save(new MemberCouponEntity(couponId, member.getId(), true));
     }
 
@@ -54,6 +45,16 @@ public class CouponRepsitoryImpl implements CouponRepository {
     @Override
     public Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId) {
         return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(member.getId(), couponId).orElse(CouponEntity.EMPTY));
+    }
+
+    @Override
+    public boolean checkById(Long couponId) {
+        return couponDao.checkById(couponId);
+    }
+
+    @Override
+    public boolean checkByCouponIdAndMemberId(Long couponId, Long memberId) {
+        return memberCouponDao.checkByCouponIdAndMemberId(couponId, memberId);
     }
 
     private Coupon toDomain(CouponEntity entity) {
