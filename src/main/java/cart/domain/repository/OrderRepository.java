@@ -2,6 +2,7 @@ package cart.domain.repository;
 
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.coupon.Coupon;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface OrderRepository {
 
     void deleteById(Member member, Long orderId);
 
-    void confirmById(Long orderId, Member member);
+    Coupon confirmById(Long orderId, Member member);
 
     boolean checkConfirmStateById(Long orderId);
 }

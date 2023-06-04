@@ -9,8 +9,10 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DiscountType;
 import cart.domain.repository.OrderRepository;
 import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
+import cart.exception.CouponException;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Repository;
 
@@ -26,15 +28,17 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final OrderCouponDao orderCouponDao;
     private final CartItemDao cartItemDao;
     private final MemberCouponDao memberCouponDao;
+    private final CouponDao couponDao;
 
     public OrderRepositoryImpl(OrderDao orderDao, MemberDao memberDao, OrderProductDao orderProductDao,
-                               OrderCouponDao orderCouponDao, CartItemDao cartItemDao, MemberCouponDao memberCouponDao) {
+                               OrderCouponDao orderCouponDao, CartItemDao cartItemDao, MemberCouponDao memberCouponDao, CouponDao couponDao) {
         this.orderDao = orderDao;
         this.memberDao = memberDao;
         this.orderProductDao = orderProductDao;
         this.orderCouponDao = orderCouponDao;
         this.cartItemDao = cartItemDao;
         this.memberCouponDao = memberCouponDao;
+        this.couponDao = couponDao;
     }
 
     @Override
@@ -79,9 +83,16 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public void confirmById(Long orderId, Member member) {
+    public Coupon confirmById(Long orderId, Member member) {
         OrderEntity orderEntity = orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
         orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), member.getId());
+
+        CouponEntity coupon = couponDao.findByName(CouponEntity.toEntity(Coupon.BONUS_COUPON)).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), member.getId(), true));
+
+        return new Coupon(userCouponId, coupon.getName(),
+                DiscountType.from(coupon.getDiscountType()),
+                coupon.getMinimumPrice(), coupon.getDiscountPrice(), coupon.getDiscountRate());
     }
 
     @Override

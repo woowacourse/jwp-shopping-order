@@ -73,8 +73,7 @@ public class OrderService {
     }
 
     public CouponConfirmResponse confirmById(Member member, Long orderId) {
-        orderRepository.confirmById(orderId, member);
-        Coupon coupon = memberCouponRepository.saveBonusCoupon(orderId, member);
+        Coupon coupon = orderRepository.confirmById(orderId, member);
 
         return CouponConfirmResponse.from(CouponResponse.from(coupon));
     }

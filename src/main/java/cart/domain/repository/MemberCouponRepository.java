@@ -11,8 +11,4 @@ public interface MemberCouponRepository {
     Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId);
 
     List<Coupon> findAllByMemberId(Member member);
-
-    void updateUnUsedCouponAvailability(Member member, Long memberCouponId);
-
-    Coupon saveBonusCoupon(Long id, Member member);
 }
