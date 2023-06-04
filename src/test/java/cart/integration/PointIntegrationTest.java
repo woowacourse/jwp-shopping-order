@@ -29,7 +29,7 @@ public class PointIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> savedPoint = findSavedPoint(orderId);
 
         // then
-        assertThat(savedPoint.body().jsonPath().getInt("pointsSaved"))
+        assertThat(savedPoint.body().jsonPath().getInt("points_saved"))
             .isEqualTo(2475);
     }
 

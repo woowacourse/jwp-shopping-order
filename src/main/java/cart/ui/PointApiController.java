@@ -4,7 +4,7 @@ import cart.application.PointService;
 import cart.domain.Member;
 import cart.domain.Point;
 import cart.dto.point.MemberPointResponse;
-import cart.dto.order.OrderSavedPointResponse;
+import cart.dto.point.OrderSavedPointResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
