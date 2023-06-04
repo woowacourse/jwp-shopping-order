@@ -132,7 +132,7 @@ class PaymentControllerUnitTest {
         // when & then
         mockMvc.perform(get("/payments/coupons")
                         .header("Authorization", "Basic YUBhLmNvbToxMjM0")
-                        .param("couponsId", "1")
+                        .param("couponsIds", "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.products[0].productId").value(1))
                 .andExpect(jsonPath("$.products[0].originalPrice").value(20000))
@@ -144,7 +144,7 @@ class PaymentControllerUnitTest {
                                 headerWithName("Authorization").description("Basic Auth")
                         ),
                         requestParameters(
-                                parameterWithName("couponsId").description("쿠폰 ID 리스트")
+                                parameterWithName("couponsIds").description("쿠폰 ID 리스트")
                         ),
                         responseFields(
                                 fieldWithPath("products[0].productId").description("상품의 id"),

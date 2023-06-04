@@ -78,7 +78,7 @@ public class PaymentControllerIntegrationTest {
         Response response = given()
                 .auth().preemptive().basic("a@a.com", "1234")
                 .when()
-                .get("/payments/coupons?couponsId=1");
+                .get("/payments/coupons?couponsIds=1");
 
         response.then()
                 .statusCode(HttpStatus.OK.value())
