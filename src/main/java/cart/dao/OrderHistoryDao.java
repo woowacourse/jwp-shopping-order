@@ -40,17 +40,22 @@ public class OrderHistoryDao {
     }
 
     public List<OrderHistory> findAllByMemberId(Long memberId) {
-        String sql = "SELECT order_history.id as order_history_id, order_history.member_id, order_history.original_price, order_history.used_point, order_history.order_price, "
-                + "order_item.id as order_item_id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, "
-                + "member.email, member.password, member.point "
-                + "FROM order_history "
-                + "INNER JOIN order_item ON order_history.id = order_item.order_history_id "
-                + "INNER JOIN member ON order_history.member_id = member.id "
-                + "WHERE member_id = :memberId";
+        String sql =
+                "SELECT order_history.id as order_history_id, order_history.member_id, order_history.original_price, order_history.used_point, order_history.order_price, "
+                        + "order_item.id as order_item_id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, "
+                        + "member.email, member.password, member.point "
+                        + "FROM order_history "
+                        + "INNER JOIN order_item ON order_history.id = order_item.order_history_id "
+                        + "INNER JOIN member ON order_history.member_id = member.id "
+                        + "WHERE member_id = :memberId";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("memberId", memberId);
 
+        return getOrderHistories(sql, parameters);
+    }
+
+    private List<OrderHistory> getOrderHistories(final String sql, final MapSqlParameterSource parameters) {
         return jdbcTemplate.query(sql, parameters, (rs) -> {
             Map<Long, OrderHistory> orderHistoryMap = new HashMap<>();
             while (rs.next()) {
@@ -80,10 +85,33 @@ public class OrderHistoryDao {
                 String imageUrl = rs.getString("image_url");
                 int quantity = rs.getInt("quantity");
 
-                OrderItem orderItem = new OrderItem(orderItemId, orderHistory, productId, name, price, imageUrl, quantity);
+                OrderItem orderItem = new OrderItem(orderItemId, orderHistory, productId, name, price, imageUrl,
+                        quantity);
                 orderHistory.addOrderItem(orderItem);
             }
             return new ArrayList<>(orderHistoryMap.values());
         });
+    }
+
+    public OrderHistory findById(Long orderId) {
+        String sql =
+                "SELECT order_history.id as order_history_id, order_history.member_id, order_history.original_price, order_history.used_point, order_history.order_price, "
+                        + "order_item.id as order_item_id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, "
+                        + "member.email, member.password, member.point "
+                        + "FROM order_history "
+                        + "INNER JOIN order_item ON order_history.id = order_item.order_history_id "
+                        + "INNER JOIN member ON order_history.member_id = member.id "
+                        + "WHERE order_history.id = :orderId";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("orderId", orderId);
+
+        List<OrderHistory> orderHistories = getOrderHistories(sql, parameters);
+
+        if (!orderHistories.isEmpty()) {
+            return orderHistories.get(0);
+        } else {
+            return null;
+        }
     }
 }

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Member;
 import cart.domain.OrderHistory;
 import cart.domain.OrderItem;
+import cart.dto.response.OrderDetailResponse;
 import cart.dto.response.OrderItemsResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -66,6 +67,32 @@ public class MemberIntegrationTest extends IntegrationTest {
                         orderHistory2.getId()),
                 () -> assertThat(orderItemsResponse.getOrderItems().get(1).getPreviewName()).isEqualTo(
                         orderItem3.getName())
+        );
+    }
+
+    @DisplayName("회원의 주문 내역을 상세 조회한다.")
+    @Test
+    void showOrderDetail() {
+        Member member = memberTestSupport.builder().build();
+        OrderHistory orderHistory = orderHistoryTestSupport.builder().member(member).build();
+        OrderItem orderItem1 = orderItemTestSupport.builder().orderHistory(orderHistory).build();
+        OrderItem orderItem2 = orderItemTestSupport.builder().orderHistory(orderHistory).build();
+
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("members/orders/{orderId}", orderHistory.getId())
+                .then()
+                .extract();
+
+        OrderDetailResponse orderDetailResponse = response.as(OrderDetailResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(orderDetailResponse.getOrderItems().size()).isEqualTo(2),
+                () -> assertThat(orderDetailResponse.getOrderPrice()).isEqualTo(orderHistory.getOrderPrice()),
+                () -> assertThat(orderDetailResponse.getOriginalPrice()).isEqualTo(orderHistory.getOriginalPrice()),
+                () -> assertThat(orderDetailResponse.getUsedPoints()).isEqualTo(orderHistory.getUsedPoint())
         );
     }
 }

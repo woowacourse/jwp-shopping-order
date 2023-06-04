@@ -52,7 +52,7 @@ class OrderHistoryDaoTest {
         assertThat(orderHistoryId).isNotNull();
     }
 
-    @DisplayName("회원의 이전 주문 내역을 조회한다.")
+    @DisplayName("회원으로 이전 주문 내역을 조회한다.")
     @Test
     void findAllByMemberId() {
         //given
@@ -74,5 +74,21 @@ class OrderHistoryDaoTest {
                 () -> assertThat(orderHistories.get(0).getMember()).isEqualTo(member),
                 () -> assertThat(orderHistories.get(0).getOrderItems().get(0)).isEqualTo(orderItem)
         );
+    }
+
+    @DisplayName("주문 ID로 주문 내역을 조회한다.")
+    @Test
+    void findById() {
+        //given
+        Member member = memberTestSupport.builder().build();
+        OrderHistory orderHistory = orderHistoryTestSupport.builder().member(member).build();
+        OrderItem orderItem1 = orderItemTestSupport.builder().orderHistory(orderHistory).build();
+        OrderItem orderItem2 = orderItemTestSupport.builder().orderHistory(orderHistory).build();
+
+        //when
+        OrderHistory findOrderHistory = orderHistoryDao.findById(orderHistory.getId());
+
+        //then
+        assertThat(orderHistory).isEqualTo(findOrderHistory);
     }
 }
