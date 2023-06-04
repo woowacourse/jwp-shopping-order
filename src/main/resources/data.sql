@@ -12,26 +12,13 @@ VALUES ('pizza1@pizza.com', 'pizza');
 INSERT INTO member (email, password)
 VALUES ('pizza2@pizza.com', 'pizza');
 
-INSERT INTO coupon (name, policy_type, discount_value, minimum_price)
-VALUES ('10000원 이상 3000원 할인 쿠폰', 'PRICE', 3000, 10000);
-INSERT INTO coupon (name, policy_type, discount_value, minimum_price)
-VALUES ('30000원 이상 4000원 할인 쿠폰', 'PRICE', 4000, 30000);
+INSERT INTO coupon (name, policy_type, discount_value, minimum_price, used, member_id)
+VALUES ('10000원 이상 3000원 할인 쿠폰', 'PRICE', 3000, 10000, true, 1);
+INSERT INTO coupon (name, policy_type, discount_value, minimum_price, used, member_id)
+VALUES ('30000원 이상 4000원 할인 쿠폰', 'PRICE', 4000, 30000, false, 1);
 
-INSERT INTO member_coupon (coupon_id, member_id, used)
-values (1, 1, false);
-INSERT INTO member_coupon (coupon_id, member_id, used)
-values (2, 1, false);
-INSERT INTO member_coupon (coupon_id, member_id, used)
-values (1, 2, false);
-INSERT INTO member_coupon (coupon_id, member_id, used)
-values (2, 2, false);
-
-INSERT INTO orders (delivery_fee, member_coupon_id, member_id)
+INSERT INTO orders (delivery_fee, coupon_id, member_id)
 values (3000, 1, 1);
-
-UPDATE member_coupon
-set used = true
-where id = 1;
 
 INSERT INTO order_item (name, image_url, price, quantity, order_id)
 values ('도미노 치즈피자', 'https://cdn.dominos.co.kr/admin/upload/goods/20200311_TI57KvOH.jpg', 23900, 1, 1);
