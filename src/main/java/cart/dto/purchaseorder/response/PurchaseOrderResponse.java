@@ -33,6 +33,10 @@ public class PurchaseOrderResponse {
         return orderAt;
     }
 
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
     public int getPayAmount() {
         return payAmount;
     }

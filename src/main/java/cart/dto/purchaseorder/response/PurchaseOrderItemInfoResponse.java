@@ -36,6 +36,10 @@ public class PurchaseOrderItemInfoResponse {
         return orderAt;
     }
 
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
     public String getProductName() {
         return productName;
     }
