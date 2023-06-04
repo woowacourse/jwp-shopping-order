@@ -34,6 +34,16 @@ public class CartItemRepository {
                 .collect(Collectors.toList());
     }
 
+    public CartItem findById(Long id) {
+        CartItemEntity cartItemEntity = cartItemDao.findById(id);
+        return new CartItem(
+                cartItemEntity.getId(),
+                cartItemEntity.getQuantity(),
+                productRepository.findById(cartItemEntity.getProduct_id()),
+                memberRepository.findById(cartItemEntity.getMember_id())
+        );
+    }
+
     public Long save(CartItem cartItem) {
         return cartItemDao.save(new CartItemEntity(
                 cartItem.getId(),
@@ -41,5 +51,18 @@ public class CartItemRepository {
                 cartItem.getProduct().getId(),
                 cartItem.getQuantity()
         ));
+    }
+
+    public void updateQuantity(CartItem cartItem) {
+        cartItemDao.updateQuantity(new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getMember().getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getQuantity()
+        ));
+    }
+
+    public void deleteById(Long id) {
+        cartItemDao.deleteById(id);
     }
 }

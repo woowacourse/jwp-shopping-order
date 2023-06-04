@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -15,14 +14,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
-    private final CartItemDao cartItemDao;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
 
-    public CartItemService(CartItemDao cartItemDao,
-                           CartItemRepository cartItemRepository,
-                           ProductRepository productRepository) {
-        this.cartItemDao = cartItemDao;
+    public CartItemService(CartItemRepository cartItemRepository, ProductRepository productRepository) {
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
     }
@@ -40,22 +35,22 @@ public class CartItemService {
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(id);
             return;
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+    public void delete(Member member, Long id) {
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(id);
     }
 }

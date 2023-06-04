@@ -40,17 +40,16 @@ public class CartItemApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> cartItemUpdate(Member member, @PathVariable Long id,
-                                               @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> cartItemUpdate(Member member,
+                                               @PathVariable Long id,
+                                               @Validated @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cartItemDelete(Member member, @PathVariable Long id) {
-        cartItemService.remove(member, id);
-
+        cartItemService.delete(member, id);
         return ResponseEntity.noContent().build();
     }
 }
