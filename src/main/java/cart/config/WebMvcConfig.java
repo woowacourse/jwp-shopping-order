@@ -1,6 +1,7 @@
 package cart.config;
 
 import cart.config.auth.AuthInterceptor;
+import cart.config.auth.AuthProvider;
 import cart.config.auth.UserArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +12,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final AuthInterceptor authInterceptor;
+    private final AuthProvider authProvider;
 
-    public WebMvcConfig(AuthInterceptor authInterceptor) {
-        this.authInterceptor = authInterceptor;
+    public WebMvcConfig(AuthProvider authProvider) {
+        this.authProvider = authProvider;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor)
+        registry.addInterceptor(new AuthInterceptor(authProvider))
                 .addPathPatterns(
                         "/cart-items/**",
                         "/orders/**",

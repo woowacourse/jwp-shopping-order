@@ -5,10 +5,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import cart.dto.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-@Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final AuthProvider authProvider;
 
