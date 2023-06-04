@@ -24,16 +24,18 @@ public class Product {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Product)) {
             return false;
         }
+
         Product product = (Product) o;
-        return Objects.equals(getId(), product.getId());
+
+        return Objects.equals(id, product.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return id != null ? id.hashCode() : 0;
     }
 
     public Long getId() {

@@ -40,11 +40,12 @@ public class ProductService {
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = Product.builder()
+                .id(productId)
                 .name(productRequest.getName())
                 .price(productRequest.getPrice())
                 .imageUrl(productRequest.getImageUrl())
                 .build();
-        productDao.updateProduct(productId, product);
+        productDao.updateProduct(product);
     }
 
     public void deleteProduct(Long productId) {

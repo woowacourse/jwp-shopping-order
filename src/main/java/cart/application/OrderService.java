@@ -91,7 +91,7 @@ public class OrderService {
 
     private void deleteCartItems(Member member, List<OrderItem> orderItems) {
         for (OrderItem orderItem : orderItems) {
-            cartItemDao.deleteByMemberAndProduct(member.getId(), orderItem.getProduct().getId());
+            cartItemDao.deleteByMemberIdAndProductId(member.getId(), orderItem.getProduct().getId());
         }
     }
 

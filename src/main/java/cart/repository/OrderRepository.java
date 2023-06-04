@@ -48,7 +48,7 @@ public class OrderRepository {
 
     public List<Order> findAllByMember(Member member) {
         List<Order> orders = new ArrayList<>();
-        List<OrderEntity> orderEntities = orderDao.findAllByMember(member.getId());
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
         for (OrderEntity orderEntity : orderEntities) {
             Order order = new Order(orderEntity.getId(), member,
                     orderItemDao.findByOrderId(orderEntity.getId()), orderEntity.getSpendPoint(),

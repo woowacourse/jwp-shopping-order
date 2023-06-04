@@ -67,7 +67,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, rowMapper, id).stream().findAny();
     }
 
-    public void deleteByMemberAndProduct(Long memberId, Long productId) {
+    public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
     }

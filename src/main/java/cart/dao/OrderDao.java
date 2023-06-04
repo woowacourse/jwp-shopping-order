@@ -45,7 +45,7 @@ public class OrderDao {
         return jdbcTemplate.query(sql, rowMapper, orderId).stream().findAny();
     }
 
-    public List<OrderEntity> findAllByMember(Long memberId) {
+    public List<OrderEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT id, member_id, spend_point, created_at " +
                 "FROM orders " +
                 "WHERE member_id = ?";
