@@ -37,7 +37,7 @@ class PurchaseOrderDaoTest {
     @BeforeEach
     void setup() {
         purchaseOrderItemDao = new PurchaseOrderItemDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
-        purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource, purchaseOrderItemDao);
+        purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource);
     }
 
     @DisplayName("PurchaseOrder를 통해 주문을 저장한다")

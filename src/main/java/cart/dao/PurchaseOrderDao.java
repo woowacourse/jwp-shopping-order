@@ -19,14 +19,12 @@ public class PurchaseOrderDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
-    private final PurchaseOrderItemDao purchaseOrderItemDao;
 
-    public PurchaseOrderDao(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource, PurchaseOrderItemDao purchaseOrderItemDao) {
+    public PurchaseOrderDao(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(dataSource)
                 .withTableName("purchase_order")
                 .usingGeneratedKeyColumns("id");
-        this.purchaseOrderItemDao = purchaseOrderItemDao;
     }
 
     public Long save(PurchaseOrderInfo purchaseOrderInfo) {
@@ -42,7 +40,7 @@ public class PurchaseOrderDao {
     public List<PurchaseOrderInfo> findAllByMemberId(Long memberId) {
         String sql = "SELECT o.id as order_id, member.id as member_id, member.email as email, member.password as password, o.order_at, o.payment, o.used_point, o.status "
                 + "FROM purchase_order AS o "
-                + "JOIN member AS member ON o.member_id = member.id "
+                + "JOIN member ON o.member_id = member.id "
                 + "WHERE member.id = :member_id";
         SqlParameterSource source = new MapSqlParameterSource("member_id", memberId);
         return jdbcTemplate.query(sql, source, getPurchaseOrderRowMapper());
@@ -52,7 +50,7 @@ public class PurchaseOrderDao {
         String sql = "SELECT o.id as order_id, member.id as member_id, member.email as email, member.password as password,"
                 + " o.order_at, o.payment, o.used_point, o.status "
                 + "FROM purchase_order AS o "
-                + "JOIN member AS member ON o.member_id = member.id "
+                + "JOIN member ON o.member_id = member.id "
                 + "WHERE member.id = :member_id "
                 + "LIMIT :limitValue OFFSET :offsetValue";
         SqlParameterSource source = new MapSqlParameterSource()
@@ -65,7 +63,7 @@ public class PurchaseOrderDao {
     public PurchaseOrderInfo findById(Long id) {
         String sql = "SELECT o.id as order_id, member.id as member_id, member.email as email, member.password as password, o.order_at, o.payment, o.used_point, o.status "
                 + "FROM purchase_order AS o "
-                + "JOIN member AS member ON o.member_id = member.id "
+                + "JOIN member ON o.member_id = member.id "
                 + "WHERE o.id = :id";
         SqlParameterSource source = new MapSqlParameterSource("id", id);
         return jdbcTemplate.queryForObject(sql, source, getPurchaseOrderRowMapper());
@@ -87,7 +85,7 @@ public class PurchaseOrderDao {
     public int getTotalByMemberId(Long memberId) {
         String sql = "SELECT COUNT(*) "
                 + "FROM purchase_order AS o "
-                + "JOIN member AS member ON o.member_id = member.id "
+                + "JOIN member ON o.member_id = member.id "
                 + "WHERE member.id = :member_id";
         SqlParameterSource source = new MapSqlParameterSource("member_id", memberId);
         return jdbcTemplate.queryForObject(sql, source, Integer.class);
@@ -99,5 +97,11 @@ public class PurchaseOrderDao {
                 .addValue("status", purchaseOrderInfo.getStatus())
                 .addValue("id", purchaseOrderInfo.getId());
         jdbcTemplate.update(sql, source);
+    }
+
+    public boolean isCancelled(Long orderId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM purchase_order WHERE id = :id and status = 'Cancelled')";
+        SqlParameterSource source = new MapSqlParameterSource("id", orderId);
+        return jdbcTemplate.queryForObject(sql, source, Boolean.class);
     }
 }

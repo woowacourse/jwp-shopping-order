@@ -45,7 +45,7 @@ class PurchaseOrderServiceTest {
     @BeforeEach
     void setUp() {
         purchaseOrderItemDao = new PurchaseOrderItemDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
-        purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource, purchaseOrderItemDao);
+        purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource);
         memberRewardPointDao = new MemberRewardPointDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
         purchaseOrderService = new PurchaseOrderService(purchaseOrderDao, purchaseOrderItemDao, memberRewardPointDao);
     }

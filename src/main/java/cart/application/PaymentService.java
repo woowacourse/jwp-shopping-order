@@ -156,10 +156,17 @@ public class PaymentService {
     }
 
     public void deleteOrder(Member member, Long orderId) {
+        checkCancelledOrder(orderId);
         Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId);
         checkAlreadyUsed(rewardPointByOrder);
         updateUsedAndRewardPoint(member, orderId, rewardPointByOrder);
         updatePurchaseOrderStatus(orderId);
+    }
+
+    private void checkCancelledOrder(Long orderId) {
+        if (purchaseOrderDao.isCancelled(orderId)) {
+            throw new IllegalArgumentException("이미 취소된 주문입니다.");
+        }
     }
 
     private void updateUsedAndRewardPoint(Member member, Long orderId, Point rewardPointByOrder) {
@@ -169,6 +176,7 @@ public class PaymentService {
         MemberPoints memberPoints = new MemberPoints(member, rewardPointByMember);
         List<UsedPoint> usedPoints = orderMemberUsedPointDao.getAllUsedPointByOrderId(orderId);
         memberPoints.cancelledPoints(usedPoints);
+        memberRewardPointDao.updatePoints(memberPoints.getPoints());
         orderMemberUsedPointDao.deleteAll(usedPoints);
     }
 

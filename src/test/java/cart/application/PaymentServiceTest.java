@@ -5,6 +5,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.point.Point;
 import cart.domain.point.UsedPoint;
+import cart.domain.purchaseorder.OrderStatus;
 import cart.domain.purchaseorder.PurchaseOrderInfo;
 import cart.domain.purchaseorder.PurchaseOrderItem;
 import cart.dto.purchaseorder.request.PurchaseOrderItemRequest;
@@ -50,7 +51,7 @@ class PaymentServiceTest {
     void setUp() {
         productDao = new ProductDao(jdbcTemplate, namedParameterJdbcTemplate);
         purchaseOrderItemDao = new PurchaseOrderItemDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
-        purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource, purchaseOrderItemDao);
+        purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource);
         memberRewardPointDao = new MemberRewardPointDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
         orderMemberUsedPointDao = new OrderMemberUsedPointDao(jdbcTemplate, dataSource, namedParameterJdbcTemplate);
         cartItemDao = new CartItemDao(namedParameterJdbcTemplate, jdbcTemplate);
