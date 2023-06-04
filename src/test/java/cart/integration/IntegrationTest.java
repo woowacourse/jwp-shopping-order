@@ -31,7 +31,6 @@ public class IntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        clearTables();
     }
 
     @AfterEach
