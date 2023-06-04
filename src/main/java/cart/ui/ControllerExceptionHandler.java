@@ -26,7 +26,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<ErrorResponse> handleException(CartItemException.IllegalMember e) {
-        final int statusCode = HttpStatus.UNAUTHORIZED.value();
+        final int statusCode = HttpStatus.FORBIDDEN.value();
         final String message = e.getMessage();
         return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
     }
