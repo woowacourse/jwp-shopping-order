@@ -1,4 +1,4 @@
-package cart.controller.cart.dto.dto;
+package cart.controller.cart.dto;
 
 import cart.cartitem.CartItem;
 

@@ -1,7 +1,7 @@
 package cart.coupon.application;
 
 import cart.cart.Cart;
-import cart.controller.cart.dto.dto.CouponResponse;
+import cart.controller.cart.dto.CouponResponse;
 import cart.coupon.Coupon;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
