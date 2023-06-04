@@ -6,8 +6,8 @@ import cart.exception.CouponCreateBadRequestException;
 import cart.exception.CouponNotFoundException;
 import cart.exception.EmailInvalidException;
 import cart.exception.MemberAlreadyExistException;
+import cart.exception.MemberNotCartOwnerException;
 import cart.exception.MemberNotFoundException;
-import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
 import cart.exception.QuantityExceedsCartException;
 import cart.exception.SalePercentageInvalidRangeException;
@@ -34,8 +34,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
-    @ExceptionHandler(MemberNotOwnerException.class)
-    public ResponseEntity<String> handleException(final MemberNotOwnerException exception) {
+    @ExceptionHandler(MemberNotCartOwnerException.class)
+    public ResponseEntity<String> handleException(final MemberNotCartOwnerException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 

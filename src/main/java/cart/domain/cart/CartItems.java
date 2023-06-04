@@ -91,7 +91,7 @@ public class CartItems {
         return cartItems.stream()
                 .filter(item -> item.hasProduct(productId))
                 .findAny()
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(() -> new CartItemNotFoundException(productId));
     }
 
     public List<CartItem> getCartItems() {

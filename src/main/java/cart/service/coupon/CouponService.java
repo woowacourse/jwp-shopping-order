@@ -63,11 +63,11 @@ public class CouponService {
 
     private void validateRequest(final Long couponId, final Long memberId) {
         if (!memberRepository.isExistMemberById(memberId)) {
-            throw new MemberNotFoundException();
+            throw new MemberNotFoundException(memberId);
         }
 
         if (!couponRepository.isExistCouponById(couponId)) {
-            throw new CouponNotFoundException();
+            throw new CouponNotFoundException(couponId);
         }
     }
 }

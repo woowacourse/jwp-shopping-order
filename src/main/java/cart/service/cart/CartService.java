@@ -7,7 +7,7 @@ import cart.domain.product.Product;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
-import cart.exception.MemberNotOwnerException;
+import cart.exception.MemberNotCartOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class CartService {
 
     public void validateMember(final Cart cart, final Member member) {
         if (!cart.isOwner(member.getId())) {
-            throw new MemberNotOwnerException();
+            throw new MemberNotCartOwnerException(cart.getMemberId(), member.getId());
         }
     }
 

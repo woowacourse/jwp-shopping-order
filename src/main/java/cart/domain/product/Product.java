@@ -38,7 +38,7 @@ public class Product {
 
     public int applySale(int percentage) {
         if (validateRangeOfSalePercentage(percentage)) {
-            throw new SalePercentageInvalidRangeException();
+            throw new SalePercentageInvalidRangeException(percentage);
         }
 
         this.isOnSale = true;

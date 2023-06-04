@@ -4,7 +4,7 @@ import cart.domain.member.Member;
 import cart.dto.history.OrderHistory;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
-import cart.exception.MemberNotOwnerException;
+import cart.exception.MemberNotOrderOwnerException;
 import cart.repository.order.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class OrderService {
 
     private void validateMemberHasOrder(final Member member, final Long orderId) {
         if (!orderRepository.isMemberOrder(member, orderId)) {
-            throw new MemberNotOwnerException();
+            throw new MemberNotOrderOwnerException(member.getId());
         }
     }
 }

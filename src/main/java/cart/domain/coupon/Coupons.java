@@ -30,7 +30,7 @@ public class Coupons {
         return coupons.stream()
                 .filter(coupon -> coupon.isSame(couponId))
                 .findAny()
-                .orElseThrow(CouponNotFoundException::new);
+                .orElseThrow(() -> new CouponNotFoundException(couponId));
     }
 
 

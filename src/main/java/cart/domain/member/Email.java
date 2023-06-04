@@ -17,7 +17,7 @@ public class Email {
 
     private void validate(final String email) {
         if (email.isBlank() || !email.matches(EMAIL_REGEX)) {
-            throw new EmailInvalidException();
+            throw new EmailInvalidException(email);
         }
     }
 

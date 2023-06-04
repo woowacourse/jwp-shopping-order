@@ -6,7 +6,7 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
-import cart.exception.MemberNotOwnerException;
+import cart.exception.MemberNotCartOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -111,7 +111,7 @@ public class CartServiceUnitTest {
 
         // when & then
         assertThatThrownBy(() -> cartService.updateQuantity(member, 1L, req))
-                .isInstanceOf(MemberNotOwnerException.class);
+                .isInstanceOf(MemberNotCartOwnerException.class);
     }
 
     @DisplayName("아이템을 제거한다.")

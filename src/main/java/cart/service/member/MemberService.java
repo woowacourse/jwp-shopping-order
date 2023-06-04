@@ -32,7 +32,7 @@ public class MemberService {
 
     private void validateAlreadyExistMember(final MemberCreateRequest request) {
         if (memberRepository.isExistMemberByEmail(request.getEmail())) {
-            throw new MemberAlreadyExistException();
+            throw new MemberAlreadyExistException(request.getEmail());
         }
     }
 

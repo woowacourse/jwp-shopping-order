@@ -35,7 +35,7 @@ public class Coupon {
 
     public static void validateCoupon(final boolean isPercentage, final int amount) {
         if (isPercentage && (amount > MAXIMUM_AMOUNT || amount < MINIMUM_AMOUNT)) {
-            throw new CouponCreateBadRequestException();
+            throw new CouponCreateBadRequestException(amount);
         }
     }
 

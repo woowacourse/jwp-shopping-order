@@ -37,7 +37,7 @@ public class CartRepository {
 
     public CartItem findCartItemById(final Long cartItemId) {
         CartItemEntity cartItemEntity = cartDao.findCartItemEntityById(cartItemId)
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
 
         ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
 
@@ -90,7 +90,7 @@ public class CartRepository {
 
     public Cart findCartByCartItemId(final Long cartItemId) {
         CartItemEntity cartItem = cartDao.findCartItemEntityById(cartItemId)
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
 
         CartEntity cartEntity = cartDao.findCartEntityById(cartItem.getCartId());
         return getCart(cartEntity);

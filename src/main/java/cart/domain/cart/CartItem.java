@@ -27,7 +27,7 @@ public class CartItem {
 
     public void validateQuantity(final int quantity) {
         if (this.quantity < quantity) {
-            throw new QuantityExceedsCartException();
+            throw new QuantityExceedsCartException(this.quantity, quantity);
         }
     }
 
