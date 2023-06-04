@@ -27,6 +27,7 @@ public class PurchaseOrderApiController {
 
     @PostMapping
     public ResponseEntity<Void> addPurchaseOrder(Member member, @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
+        System.out.println(purchaseOrderRequest);
         Long purchaseOrderId = paymentService.createPurchaseOrder(member, purchaseOrderRequest);
         return ResponseEntity.created(URI.create("/orders/" + purchaseOrderId))
                              .build();

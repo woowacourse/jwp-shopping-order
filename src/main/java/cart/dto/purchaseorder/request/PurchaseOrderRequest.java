@@ -5,11 +5,11 @@ import java.util.List;
 public class PurchaseOrderRequest {
 
     private Integer usedPoint;
-    private List<PurchaseOrderItemRequest> purchaseOrderItems;
+    private List<PurchaseOrderItemRequest> products;
 
-    public PurchaseOrderRequest(Integer usedPoint, List<PurchaseOrderItemRequest> purchaseOrderItems) {
+    public PurchaseOrderRequest(Integer usedPoint, List<PurchaseOrderItemRequest> products) {
         this.usedPoint = usedPoint;
-        this.purchaseOrderItems = purchaseOrderItems;
+        this.products = products;
     }
 
     public Integer getUsedPoint() {
@@ -17,6 +17,14 @@ public class PurchaseOrderRequest {
     }
 
     public List<PurchaseOrderItemRequest> getPurchaseOrderItems() {
-        return purchaseOrderItems;
+        return products;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseOrderRequest{" +
+                "usedPoint=" + usedPoint +
+                ", purchaseOrderItems=" + products +
+                '}';
     }
 }
