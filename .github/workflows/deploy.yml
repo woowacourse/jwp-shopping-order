@@ -19,9 +19,9 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
 
         run: |
-          echo "MYSQL_URL=${MYSQL_URL}" >> src/main/resources/application-prod.yml
-          echo "MYSQL_USERNAME=${MYSQL_USERNAME}" >> src/main/resources/application-prod.yml
-          echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> src/main/resources/application-prod.yml
+          export MYSQL_URL=${MYSQL_URL}
+          export MYSQL_USERNAME=${MYSQL_USERNAME}
+          export MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
       - name: gradle bootjar
         run: |
