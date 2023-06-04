@@ -1,8 +1,22 @@
 package cart.member_coupon.dao;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import cart.coupon.dao.CouponDao;
+import cart.coupon.domain.Coupon;
+import cart.coupon.domain.EmptyCoupon;
+import cart.coupon.domain.FixDiscountCoupon;
+import cart.member.dao.MemberDao;
+import cart.member.domain.Member;
+import cart.member_coupon.domain.MemberCoupon;
 import java.util.List;
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +35,16 @@ class MemberCouponDaoTest {
 
   private MemberCouponDao memberCouponDao;
 
+  private MemberDao memberDao;
+  private CouponDao couponDao;
+
+
   @BeforeEach
   void setUp() {
-    memberCouponDao = new MemberCouponDao(jdbcTemplate);
+    memberDao = mock(MemberDao.class);
+    couponDao = mock(CouponDao.class);
+
+    memberCouponDao = new MemberCouponDao(jdbcTemplate, memberDao, couponDao);
   }
 
   @Test
@@ -31,11 +52,73 @@ class MemberCouponDaoTest {
   void test_findByMemberId() throws Exception {
     //given
     final long memberId = 1L;
+    final Member member = new Member(null, null, null);
+    final Coupon coupon = new EmptyCoupon();
+
+    when(memberDao.getMemberById(anyLong()))
+        .thenReturn(member);
+
+    when(couponDao.findById(anyLong()))
+        .thenReturn(coupon);
 
     //when
-    final List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(memberId);
+    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId2(memberId);
 
     //then
-    assertEquals(2, memberCouponEntities.size());
+    assertEquals(2, memberCoupons.size());
+  }
+
+  @Test
+  @DisplayName("updateMemberCoupon() : 특정 쿠폰의 사용 상태를 변경할 수 있다.")
+  void test_updateMemberCoupon() throws Exception {
+    //given
+    final long couponId = 2L;
+    final long memberId = 3L;
+
+    final MemberCoupon memberCoupon = memberCouponDao.findByMemberAndCouponId2(
+        couponId,
+        memberId
+    ).get();
+
+    //when
+    memberCouponDao.updateMemberCoupon(couponId, memberId, "Y");
+
+    //then
+    final MemberCoupon afterUpdateMemberCoupon = memberCouponDao.findByMemberAndCouponId2(
+        couponId,
+        memberId
+    ).get();
+
+    assertNotEquals(afterUpdateMemberCoupon.getUsedStatus(),
+        memberCoupon.getUsedStatus());
+  }
+
+  @Test
+  @DisplayName("findByMemberAndCouponId() : 사용자가 가지고 있는 특정 쿠폰을 조회할 수 있다.")
+  void test_findByMemberAndCouponId() throws Exception {
+    //given
+    final long memberId = 1L;
+    final long couponId = 1L;
+    final Member member = new Member(memberId, null, null);
+    final Coupon coupon = new FixDiscountCoupon(couponId, null, null);
+
+    when(memberDao.getMemberById(anyLong()))
+        .thenReturn(member);
+
+    when(couponDao.findById(anyLong()))
+        .thenReturn(coupon);
+
+    //when
+    final Optional<MemberCoupon> memberCoupon = memberCouponDao.findByMemberAndCouponId2(
+        couponId,
+        memberId
+    );
+
+    //then
+    assertAll(
+        () -> Assertions.assertThat(memberCoupon).isPresent(),
+        () -> assertEquals(couponId, memberCoupon.get().getCoupon().getId()),
+        () -> assertEquals(memberId, memberCoupon.get().getMember().getId())
+    );
   }
 }
