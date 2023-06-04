@@ -1,6 +1,7 @@
 package cart.domain.bill;
 
 import cart.domain.value.Money;
+import cart.exception.bill.InvalidBillRequestException;
 
 public class Bill {
 
@@ -41,7 +42,7 @@ public class Bill {
                                 final int shippingFee
     ) {
         if (!checkBill(totalItemPrice, discountedTotalItemPrice, totalItemDiscountAmount, totalMemberDiscountAmount, shippingFee)) {
-            throw new IllegalArgumentException("주문 요청 정보가 올바르지 않습니다.");
+            throw new InvalidBillRequestException();
         }
     }
 

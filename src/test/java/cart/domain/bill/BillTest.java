@@ -1,6 +1,7 @@
 package cart.domain.bill;
 
 import cart.domain.value.Money;
+import cart.exception.bill.InvalidBillRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,7 +30,7 @@ class BillTest {
 
         // when + then
         assertThatThrownBy(() -> bill.validateRequest(request.get(0), request.get(1), request.get(2), request.get(3), request.get(4)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidBillRequestException.class);
     }
 
     private static Stream<Arguments> provideWrongRequest() {

@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.bill.BillException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class ControllerExceptionHandler {
         String errorMessage = exception.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @ExceptionHandler(BillException.class)
+    public ResponseEntity<String> handleBillException(BillException exception) {
+        String errorMessage = exception.getMessage();
         return ResponseEntity.badRequest().body(errorMessage);
     }
 }
