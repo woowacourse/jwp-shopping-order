@@ -1,7 +1,8 @@
 package cart.config;
 
-import cart.dao.MemberDao;
-import cart.ui.MemberArgumentResolver;
+import cart.domain.respository.member.MemberRepository;
+import cart.infrastructure.JwtTokenProvider;
+import cart.ui.TokenAuthMemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -11,17 +12,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(final MemberRepository memberRepository, final JwtTokenProvider jwtTokenProvider) {
+        this.memberRepository = memberRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOrigins(
-                "http://localhost:3000",
                 "http://218.39.176.142:3000",
                 "https://woowasplit.shop/",
                 "https://react-shopping-cart-woowa.netlify.app/",
@@ -35,6 +37,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new TokenAuthMemberArgumentResolver(jwtTokenProvider, memberRepository));
     }
 }
