@@ -20,7 +20,7 @@ import cart.dto.request.OrderPostRequest;
 import cart.dto.response.OrderPreviewResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductInOrderResponse;
-import cart.exception.AuthenticationException;
+import cart.exception.UnauthorizedAccessException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -153,6 +153,6 @@ class OrderServiceTest {
 
         //when, then
         assertThatThrownBy(() -> orderService.addOrder(memberB, request))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(UnauthorizedAccessException.class);
     }
 }
