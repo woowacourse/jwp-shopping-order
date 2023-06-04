@@ -75,7 +75,7 @@ public class CouponService {
         CouponInfo couponInfo = coupon.getCouponInfo();
         if (coupon.isAvailable(totalPrice)) {
             return new OrderCouponResponse(
-                    couponInfo.getId(),
+                    memberCoupon.getId(),
                     couponInfo.getName(),
                     couponInfo.getMinOrderPrice(),
                     couponInfo.getMaxDiscountPrice(),
