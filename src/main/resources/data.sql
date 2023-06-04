@@ -113,7 +113,7 @@ INSERT INTO member_coupon (member_id, coupon_serial_number_id)
 VALUES (3, 6);
 
 INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
-VALUES (1, 0, 3000, 'IN_TRANSIT');
+VALUES (1, 0, 3000, 'PAID');
 INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
 VALUES (1, 0, 5000, 'CANCELED');
 INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
