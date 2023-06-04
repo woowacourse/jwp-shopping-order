@@ -169,7 +169,7 @@ FROM (
     UNION ALL SELECT 25
 ) AS counts
     LIMIT 100;
--- 계정 a
+-- 계정 b
 INSERT INTO coupon (member_id, coupon_type_id)
 SELECT 2, coupon_type_id
 FROM (

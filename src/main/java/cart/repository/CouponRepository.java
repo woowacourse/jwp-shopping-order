@@ -28,7 +28,7 @@ public class CouponRepository {
         if (foundCoupon.isEmpty()) {
             return Optional.empty();
         }
-        final CouponTypeEntity couponType = findCouponType(id);
+        final CouponTypeEntity couponType = findCouponType(foundCoupon.get().getCouponTypeId());
         return Optional.of(Coupon.of(foundCoupon.get(), CouponType.from(couponType)));
     }
 
