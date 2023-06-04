@@ -17,11 +17,11 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew bootjar
-      - name: kill 80 port if exist
+      - name: kill 8080 port if exist
         run: |
-          if sudo lsof -i :80; then
-            echo "Port 80 is already in use. Killing the process..."
-            sudo lsof -i :80 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
+          if sudo lsof -i :8080; then
+            echo "Port 8080 is already in use. Killing the process..."
+            sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
           fi
       - name: deploy
         run: |
