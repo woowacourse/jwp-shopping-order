@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
@@ -11,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
-public class ControllerExceptionHandler {
+@RestControllerAdvice(basePackages = "cart.controller.api")
+public class GlobalExceptionApiHandler {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(AuthenticationException e) {

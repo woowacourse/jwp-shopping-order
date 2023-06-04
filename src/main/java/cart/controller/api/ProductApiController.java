@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;

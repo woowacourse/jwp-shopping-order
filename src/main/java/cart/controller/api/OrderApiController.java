@@ -1,5 +1,6 @@
-package cart.controller;
+package cart.controller.api;
 
+import cart.controller.AuthPrincipal;
 import cart.domain.Member;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;

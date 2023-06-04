@@ -4,11 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public enum ExceptionType {
 
-    UNAUTHORIZED_MEMBER(
-            1001,
-            HttpStatus.UNAUTHORIZED,
-            "권한이 없는 사용자입니다."
-    ),
     NO_AUTHORITY_CART_ITEM(
             1002,
             HttpStatus.FORBIDDEN,

@@ -1,5 +1,6 @@
-package cart.controller;
+package cart.controller.api;
 
+import cart.controller.AuthPrincipal;
 import cart.domain.Member;
 import cart.dto.CouponResponse;
 import cart.service.CouponService;
@@ -17,7 +18,6 @@ public class MemberCouponApiController {
     public MemberCouponApiController(CouponService couponService) {
         this.couponService = couponService;
     }
-
 
     @GetMapping
     public ResponseEntity<CouponResponse> findAll(@AuthPrincipal Member member) {
