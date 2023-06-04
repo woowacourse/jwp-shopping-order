@@ -4,13 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import cart.application.dto.GetPointResponse;
 import cart.application.event.PointAdditionEvent;
 import cart.application.event.PointRetrieveEvent;
 import cart.dao.PointAdditionDao;
 import cart.dao.PointUsageDao;
+import cart.domain.Member;
 import cart.domain.PointAddition;
 import cart.domain.PointCalculator;
 import cart.domain.PointUsage;
@@ -22,6 +25,7 @@ import cart.exception.IllegalPointException;
 public class PointService {
 
     private static final int POINT_EXPIRATION_DATE = 90;
+    private static final int TO_BE_EXPIRED = 30;
 
     private final PointCalculator pointCalculator;
     private final PointAdditionDao pointAdditionDao;
@@ -99,6 +103,16 @@ public class PointService {
         if (pointUsageHistory.size() != 0) {
             throw new IllegalOrderException("지급된 포인트가 이미 사용되어 취소가 불가능합니다");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public GetPointResponse getPointStatus(Member member) {
+        List<PointAddition> additions = pointAdditionDao.findAllByMemberId(member.getId());
+        List<PointUsage> usages = pointUsageDao.findAllByMemberId(member.getId());
+        Points points = new Points(additions, usages);
+        int remaining = points.getTotalRemainingPoint();
+        int toBeExpired = points.getPointsToBeExpired(TO_BE_EXPIRED);
+        return new GetPointResponse(remaining, toBeExpired);
     }
 }
 

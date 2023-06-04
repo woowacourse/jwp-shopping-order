@@ -3,6 +3,7 @@ package cart.domain;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class Points {
         return remainingPoint < usePointAmount;
     }
 
-    private int getTotalRemainingPoint() {
+    public int getTotalRemainingPoint() {
         int totalAddition = pointAdditions.stream()
             .mapToInt(PointAddition::getAmount)
             .sum();
@@ -105,5 +106,18 @@ public class Points {
         collect.add(PointUsage.from(partiallyUsedPoint.getMemberId(), partiallyUsedPoint.getOrderId(),
             partiallyUsedPoint.getId(), partiallyUsedPoint.getAmount() - remainder));
         return collect;
+    }
+
+    public int getPointsToBeExpired(int expirationDate) {
+        List<PointAddition> unused = findUnusedPointsAscendingByExpireAt();
+        LocalDateTime now = LocalDateTime.now();
+        return unused.stream()
+            .filter(pointAddition -> isGoingToBeExpired(expirationDate, now, pointAddition))
+            .mapToInt(PointAddition::getAmount)
+            .sum();
+    }
+
+    private boolean isGoingToBeExpired(int expirationDate, LocalDateTime now, PointAddition pointAddition) {
+        return now.plusDays(expirationDate).isAfter(pointAddition.getExpireAt());
     }
 }
