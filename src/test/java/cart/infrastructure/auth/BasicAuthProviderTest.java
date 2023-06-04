@@ -1,4 +1,4 @@
-package cart.config.auth;
+package cart.infrastructure.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -87,7 +87,8 @@ class BasicAuthProviderTest {
     @ParameterizedTest
     @ValueSource(strings = {"glen@naver.com:1234:glen", "glen@naver.com,1234"})
     void 인증_정보에_콜론이_두_개_이상이거나_없으면_예외가_발생한다(String input) {
-        String authorization = "Basic " + Base64Utils.encodeToString(input.getBytes(StandardCharsets.UTF_8));
+        String authorization = "Basic " + Base64Utils.encodeToString(input.getBytes(
+                StandardCharsets.UTF_8));
 
         assertThatThrownBy(() -> basicAuthProvider.resolveUser(authorization))
                 .isInstanceOf(AuthenticationException.class)

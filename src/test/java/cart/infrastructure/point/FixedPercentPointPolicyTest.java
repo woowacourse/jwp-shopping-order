@@ -1,7 +1,10 @@
-package cart.domain.price;
+package cart.infrastructure.point;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.price.Point;
+import cart.domain.price.PointPolicy;
+import cart.domain.price.Price;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

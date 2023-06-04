@@ -1,6 +1,7 @@
-package cart.config.auth;
+package cart.infrastructure.auth;
 
 import cart.application.MemberService;
+import cart.config.auth.AuthProvider;
 import cart.dto.User;
 import cart.exception.AuthenticationException;
 import org.springframework.util.Base64Utils;

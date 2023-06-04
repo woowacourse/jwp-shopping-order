@@ -1,6 +1,6 @@
 package cart.config.point;
 
-import cart.domain.price.FixedPercentPointPolicy;
+import cart.infrastructure.point.FixedPercentPointPolicy;
 import cart.domain.price.PointPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

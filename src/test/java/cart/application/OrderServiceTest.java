@@ -12,7 +12,7 @@ import cart.dao.ProductDao;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import cart.domain.price.FixedPercentPointPolicy;
+import cart.infrastructure.point.FixedPercentPointPolicy;
 import cart.domain.price.PointPolicy;
 import cart.domain.product.Product;
 import cart.dto.request.OrderItemRequest;
