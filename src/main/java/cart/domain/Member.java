@@ -39,7 +39,21 @@ public class Member {
         this.totalPurchaseAmount = new Money(totalPurchaseAmount);
     }
 
-    public boolean isCorrectPassword(final String value) {
+    public Member(
+            final Long id,
+            final String email,
+            final String password,
+            final Grade grade,
+            final int totalPurchaseAmount
+    ) {
+        this.id = id;
+        this.email = new Email(email);
+        this.password = new Password(password);
+        this.grade = grade;
+        this.totalPurchaseAmount = new Money(totalPurchaseAmount);
+    }
+
+    public boolean isSamePassword(final String value) {
         final Password password = new Password(value);
         return this.password.equals(password);
     }

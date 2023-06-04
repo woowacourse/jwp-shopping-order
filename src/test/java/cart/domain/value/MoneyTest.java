@@ -8,13 +8,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class MoneyTest {
 
-    @DisplayName("가격이 0보다 작으면 예외가 발생한다.")
+    @DisplayName("금액이 0보다 작으면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(ints = {-1, -100, -10_000})
     void validateRange(int input) {
         // when, then
         assertThatThrownBy(() -> new Money(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("가격은 0보다 작을 수 없습니다.");
+                .hasMessage("금액은 0보다 작을 수 없습니다.");
     }
 }

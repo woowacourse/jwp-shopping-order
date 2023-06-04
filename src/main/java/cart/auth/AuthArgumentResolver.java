@@ -42,7 +42,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(header);
 
         Member member = memberRepository.findByEmail(new Email(authInfo.getEmail()));
-        if (!member.isCorrectPassword(authInfo.getPassword())) {
+        if (!member.isSamePassword(authInfo.getPassword())) {
             throw new AuthenticationException();
         }
         return member;

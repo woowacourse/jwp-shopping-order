@@ -42,14 +42,14 @@ public class Order {
         return calculateDiscountedTotalItemPrice() + calculateShippingFee();
     }
 
-    public int calculateTotalItemDiscountAmount(final List<OrderItem> orderItems) {
+    public int calculateTotalItemDiscountAmount() {
         return orderItems.stream()
                 .mapToInt(OrderItem::calculateDiscountAmount)
                 .sum();
     }
 
-    public int calculateTotalMemberDiscountAmount(final List<OrderItem> orderItems) {
-        if (calculateTotalItemDiscountAmount(orderItems) != 0) {
+    public int calculateTotalMemberDiscountAmount() {
+        if (calculateTotalItemDiscountAmount() != 0) {
             return 0;
         }
         return orderItems.stream()
@@ -70,7 +70,7 @@ public class Order {
     private int getMemberDiscount(int sum, final OrderItem orderItem) {
         if (orderItem.isMemberDiscount()) {
             final double discountRate = member.getGrade().getDiscountRate();
-            sum += orderItem.calculateDiscountedPriceBy(discountRate);
+            sum += orderItem.calculateDiscountedPriceByGrade(discountRate);
         }
         return sum;
     }

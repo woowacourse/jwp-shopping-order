@@ -11,32 +11,20 @@ public class Product {
     private Money price;
     private ImageUrl imageUrl;
     private boolean isDiscounted;
-    private Rate rate;
+    private Rate discountRate;
 
     public Product(
             final String name,
             final int price,
             final String imageUrl,
             final boolean isDiscounted,
-            final int discountedRate
+            final int discountRate
     ) {
         this.name = new Name(name);
         this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.isDiscounted = isDiscounted;
-        this.rate = new Rate(discountedRate);
-    }
-
-    public Product(
-            final Long id,
-            final String name,
-            final int price,
-            final String imageUrl
-    ) {
-        this.id = id;
-        this.name = new Name(name);
-        this.price = new Money(price);
-        this.imageUrl = new ImageUrl(imageUrl);
+        this.discountRate = new Rate(discountRate);
     }
 
     public Product(
@@ -52,11 +40,11 @@ public class Product {
         this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.isDiscounted = isDiscounted;
-        this.rate = new Rate(discountRate);
+        this.discountRate = new Rate(discountRate);
     }
 
     public int calculateDiscountedPrice() {
-        return (int) (price.getValue() * (1 - (rate.getValue() / 100.0)));
+        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)));
     }
 
     public Long getId() {
@@ -80,6 +68,6 @@ public class Product {
     }
 
     public int getDiscountRate() {
-        return rate.getValue();
+        return discountRate.getValue();
     }
 }

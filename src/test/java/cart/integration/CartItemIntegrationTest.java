@@ -39,6 +39,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", false, 0));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", false, 0));
 
+        memberRepository.save(new Member(1L, "jeomxon@gmail.com", "abcd1234@"));
+        memberRepository.save(new Member(1L, "charlie@gmail.com", "abcd1234@"));
         member = memberRepository.findById(1L);
         member2 = memberRepository.findById(2L);
     }

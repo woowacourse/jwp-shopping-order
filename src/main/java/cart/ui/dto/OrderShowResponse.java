@@ -1,7 +1,6 @@
 package cart.ui.dto;
 
 import cart.domain.Order;
-import cart.domain.OrderItem;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,15 +40,14 @@ public class OrderShowResponse {
 
     public static OrderShowResponse of(
             final List<OrderItemDto> orderItemDtos,
-            final Order order,
-            final List<OrderItem> orderItems
+            final Order order
     ) {
         return new OrderShowResponse(
                 order.getId(),
                 orderItemDtos,
                 order.getOrderedAt(),
-                order.calculateTotalItemDiscountAmount(orderItems),
-                order.calculateTotalMemberDiscountAmount(orderItems),
+                order.calculateTotalItemDiscountAmount(),
+                order.calculateTotalMemberDiscountAmount(),
                 order.calculateTotalItemPrice(),
                 order.calculateDiscountedTotalItemPrice(),
                 order.getShippingFee(),
