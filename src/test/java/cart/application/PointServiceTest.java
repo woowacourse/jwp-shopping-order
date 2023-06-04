@@ -3,7 +3,6 @@ package cart.application;
 import cart.domain.*;
 import cart.dto.PointResponse;
 import cart.repository.PointRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +44,6 @@ class PointServiceTest {
 
         PointResponse expected = new PointResponse(3000, 1000);
 
-        assertThat(pointService.findByMemberId(new Member(1L, "kong", "1234"))).isEqualTo(expected);
+        assertThat(pointService.findBy(new Member(1L, "kong", "1234"))).isEqualTo(expected);
     }
 }
