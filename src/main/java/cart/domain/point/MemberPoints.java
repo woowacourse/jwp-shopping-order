@@ -3,6 +3,7 @@ package cart.domain.point;
 import cart.domain.Member;
 import cart.exception.PointException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -43,6 +44,10 @@ public class MemberPoints {
         return usedPoints;
     }
 
+    private void sortByExpiredAt() {
+        points.sort(Comparator.comparing(Point::getExpiredAt));
+    }
+
     private UsedPoint getUsedPoint(Point point, int usedPoint) {
         int pointAmount = point.getPointAmount();
         if (pointAmount <= usedPoint) {
@@ -54,12 +59,30 @@ public class MemberPoints {
         return new UsedPoint(point.getId(), usedPoint);
     }
 
-    private void sortByExpiredAt() {
-        points.sort(Comparator.comparing(Point::getExpiredAt));
+    public void cancelledPoints(List<UsedPoint> usedPoints) {
+        for (UsedPoint usedPoint : usedPoints) {
+            Point point = getPointById(usedPoint.getId());
+            point.increasePoint(usedPoint.getUsedPoint());
+        }
+    }
+
+    private Point getPointById(Long id) {
+        return points.stream()
+                     .filter(point -> point.isMatchId(id))
+                     .findFirst()
+                     .orElseThrow(() -> new IllegalArgumentException("해당 적립 포인트를 찾을 수 없습니다."));
     }
 
     public int getUsablePoints() {
         return points.stream()
+                     .mapToInt(Point::getPointAmount)
+                     .sum();
+    }
+
+    public int getToBeExpiredPoints() {
+        LocalDateTime now = LocalDateTime.now();
+        return points.stream()
+                     .filter(point -> point.isToBeExpired(now))
                      .mapToInt(Point::getPointAmount)
                      .sum();
     }

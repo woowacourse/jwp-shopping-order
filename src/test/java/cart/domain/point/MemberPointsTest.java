@@ -28,7 +28,9 @@ class MemberPointsTest {
                 new Point(2L, 300, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
                         LocalDateTime.parse("2023-06-06 12:12:12", formatter)),
                 new Point(3L, 200, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-29 12:12:12", formatter))
+                        LocalDateTime.parse("2023-05-29 12:12:12", formatter)),
+                new Point(4L, 1000, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
+                        LocalDateTime.parse("2030-05-29 12:12:12", formatter))
         );
         memberPoints = new MemberPoints(member, points);
     }
@@ -99,5 +101,15 @@ class MemberPointsTest {
 
         // then
         assertThat(usablePoints).isEqualTo(600);
+    }
+
+    @DisplayName("30일 이하로 남은 포인트를 조회한다")
+    @Test
+    void getToBeExpiredPoints() {
+        // when
+        int toBeExpiredPoints = memberPoints.getToBeExpiredPoints();
+
+        // then
+        assertThat(toBeExpiredPoints).isEqualTo(600);
     }
 }

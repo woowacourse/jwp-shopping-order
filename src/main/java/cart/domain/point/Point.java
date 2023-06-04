@@ -1,6 +1,8 @@
 package cart.domain.point;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Point {
 
@@ -34,6 +36,17 @@ public class Point {
 
     public void increasePoint(int point) {
         this.pointAmount += point;
+    }
+
+    public boolean isMatchId(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
+    public boolean isToBeExpired(LocalDateTime compareDateTime) {
+        Duration duration = Duration.between(compareDateTime, expiredAt);
+        long days = duration.toDays();
+        System.out.println(days);
+        return days <= 30;
     }
 
     public Long getId() {
