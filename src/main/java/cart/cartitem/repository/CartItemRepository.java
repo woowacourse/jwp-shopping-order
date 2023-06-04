@@ -65,13 +65,13 @@ public class CartItemRepository {
         cartItemDao.deleteById(id);
     }
     
-    public void updateQuantity(final CartItem cartItem) {
+    public void update(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = new CartItemEntity(
                 cartItem.getId(),
                 cartItem.getMember().getId(),
                 cartItem.getProduct().getId(),
                 cartItem.getQuantity()
         );
-        cartItemDao.updateQuantity(cartItemEntity);
+        cartItemDao.update(cartItemEntity);
     }
 }

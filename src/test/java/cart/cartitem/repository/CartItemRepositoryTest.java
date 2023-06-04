@@ -78,7 +78,7 @@ class CartItemRepositoryTest extends DBInit {
         final CartItem cartItem = new CartItem(1L, 100L, PRODUCT_FIRST, MEMBER);
 
         // when
-        cartItemRepository.updateQuantity(cartItem);
+        cartItemRepository.update(cartItem);
 
         // then
         assertThat(cartItemRepository.findById(1L)).isEqualTo(cartItem);

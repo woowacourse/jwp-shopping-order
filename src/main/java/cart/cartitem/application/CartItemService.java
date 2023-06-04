@@ -47,7 +47,7 @@ public class CartItemService {
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemRepository.updateQuantity(cartItem);
+        cartItemRepository.update(cartItem);
     }
 
     public void remove(Member member, Long cartId) {

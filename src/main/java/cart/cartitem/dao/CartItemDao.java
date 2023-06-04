@@ -55,9 +55,15 @@ public class CartItemDao {
         jdbcTemplate.update(sql, memberId, productId);
     }
 
-    public void updateQuantity(CartItemEntity cartItemEntity) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    public void update(CartItemEntity cartItemEntity) {
+        String sql = "UPDATE cart_item SET member_id = ?, product_id = ?, quantity = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                cartItemEntity.getMemberId(),
+                cartItemEntity.getProductId(),
+                cartItemEntity.getQuantity(),
+                cartItemEntity.getId()
+        );
     }
     
     public void deleteById(Long id) {

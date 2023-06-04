@@ -68,10 +68,10 @@ class CartItemDaoTest extends DBInit {
     }
 
     @Test
-    void 장바구니_수량을_수정한다() {
+    void 장바구니를_수정한다() {
         // expect
         assertThatNoException()
-                .isThrownBy(() -> cartItemDao.updateQuantity(new CartItemEntity(null, 1L, 2L, 4L)));
+                .isThrownBy(() -> cartItemDao.update(new CartItemEntity(null, 1L, 2L, 4L)));
     }
 
     @Test
