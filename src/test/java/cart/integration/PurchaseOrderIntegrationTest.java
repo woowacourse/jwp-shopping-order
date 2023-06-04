@@ -2,9 +2,9 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.ProductRequest;
-import cart.dto.PurchaseOrderItemRequest;
-import cart.dto.PurchaseOrderRequest;
+import cart.dto.product.ProductRequest;
+import cart.dto.purchaseorder.PurchaseOrderItemRequest;
+import cart.dto.purchaseorder.PurchaseOrderRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

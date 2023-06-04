@@ -3,8 +3,8 @@ package cart.application;
 import cart.dao.PurchaseOrderDao;
 import cart.dao.PurchaseOrderItemDao;
 import cart.domain.*;
-import cart.dto.PurchaseOrderItemInfoResponse;
-import cart.dto.PurchaseOrderPageResponse;
+import cart.dto.purchaseorder.PurchaseOrderItemInfoResponse;
+import cart.dto.purchaseorder.response.PurchaseOrderPageResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -1,4 +1,6 @@
-package cart.dto;
+package cart.dto.purchaseorder.response;
+
+import cart.dto.purchaseorder.PurchaseOrderItemInfoResponse;
 
 import java.util.List;
 import java.util.Objects;
