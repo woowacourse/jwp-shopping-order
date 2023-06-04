@@ -87,7 +87,7 @@ class CartItemDaoTest {
     @Test
     void updateQuantity() {
         final Long id = cartItemDao.insert(CartItemFixture.CHICKEN).getId();
-        cartItemDao.updateQuantity(new CartItem(id, null, null, 10));
+        cartItemDao.updateQuantity(CartItem.of(id, null, null, 10));
         final Optional<CartItem> result = cartItemDao.findById(id);
         assertAll(
                 () -> assertThat(result).isPresent(),

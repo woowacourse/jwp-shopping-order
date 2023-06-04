@@ -39,7 +39,7 @@ class CartItemServiceTest {
 
     @Test
     void addCartItem() {
-        given(cartItemRepository.addCartItem(any(), anyLong())).willReturn(new CartItem(1L, CartItemFixture.CHICKEN));
+        given(cartItemRepository.addCartItem(any(), anyLong())).willReturn(CartItem.of(1L, CartItemFixture.CHICKEN));
         final CartItemResponse result = cartItemService.addCartItem(MemberFixture.MEMBER, new CartItemRequest(1L));
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(1L),
@@ -54,8 +54,8 @@ class CartItemServiceTest {
     @Test
     void findByMember() {
         given(cartItemRepository.findByMember(any())).willReturn(List.of(
-                new CartItem(1L, CartItemFixture.CHICKEN),
-                new CartItem(2L, CartItemFixture.PIZZA)
+                CartItem.of(1L, CartItemFixture.CHICKEN),
+                CartItem.of(2L, CartItemFixture.PIZZA)
         ));
         final List<CartItemResponse> result = cartItemService.findByMember(MemberFixture.MEMBER);
         assertAll(

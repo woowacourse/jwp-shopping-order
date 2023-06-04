@@ -11,23 +11,27 @@ public class CartItem {
     private final Product product;
     private final int quantity;
 
-    public CartItem(final Long id, final CartItem other) {
-        this(id, other.member, other.product, other.quantity);
-    }
-
-    public CartItem(final Member member, final Product product) {
-        this(null, member, product, 1);
-    }
-
-    public CartItem(final Product product, final int quantity) {
-        this(null, null, product, quantity);
-    }
-
-    public CartItem(final Long id, final Member member, final Product product, final int quantity) {
+    private CartItem(final Long id, final Member member, final Product product, final int quantity) {
         this.id = id;
         this.member = member;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public static CartItem of(final Long id, final CartItem other) {
+        return new CartItem(id, other.member, other.product, other.quantity);
+    }
+
+    public static CartItem of(final Member member, final Product product) {
+        return new CartItem(null, member, product, 1);
+    }
+
+    public static CartItem of(final Product product, final int quantity) {
+        return new CartItem(null, null, product, quantity);
+    }
+
+    public static CartItem of(final Long id, final Member member, final Product product, final int quantity) {
+        return new CartItem(id, member, product, quantity);
     }
 
     public void checkOwner(final Member member) {

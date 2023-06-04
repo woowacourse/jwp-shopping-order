@@ -107,7 +107,7 @@ class CartItemRepositoryTest {
         final Member invalidMember = new Member(2L, "odo1@woowa.com", "1234");
         assertThatThrownBy(() -> cartItemRepository.updateQuantity(invalidMember, id, 10))
                 .isInstanceOf(CartItemException.IllegalMember.class)
-                .hasMessage(new CartItemException.IllegalMember(new CartItem(id, null, null, 0), invalidMember).getMessage());
+                .hasMessage(new CartItemException.IllegalMember(CartItem.of(id, null, null, 0), invalidMember).getMessage());
     }
 
     @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertProduct.sql"})
@@ -136,6 +136,6 @@ class CartItemRepositoryTest {
         final Member invalidMember = new Member(2L, "odo1@woowa.com", "1234");
         assertThatThrownBy(() -> cartItemRepository.deleteCartItem(invalidMember, id))
                 .isInstanceOf(CartItemException.IllegalMember.class)
-                .hasMessage(new CartItemException.IllegalMember(new CartItem(id, null, null, 0), invalidMember).getMessage());
+                .hasMessage(new CartItemException.IllegalMember(CartItem.of(id, null, null, 0), invalidMember).getMessage());
     }
 }

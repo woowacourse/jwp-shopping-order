@@ -82,7 +82,7 @@ public class OrderRepository {
     }
 
     private CartItem getCartItemByOrderDetailEntity(final OrderDetailEntity orderDetailEntity) {
-        return new CartItem(new Product(
+        return CartItem.of(new Product(
                 orderDetailEntity.getProductId(),
                 orderDetailEntity.getProductName(),
                 orderDetailEntity.getProductPrice(),

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final RowMapper<CartItem> rowMapper = (rs, rowNum) ->
-            new CartItem(
+            CartItem.of(
                     rs.getLong("cart_item.id"),
                     new Member(
                             rs.getLong("cart_item.member_id"),
@@ -51,7 +51,7 @@ public class CartItemDao {
         params.put("quantity", cartItem.getQuantity());
 
         final long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new CartItem(id, cartItem);
+        return CartItem.of(id, cartItem);
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {

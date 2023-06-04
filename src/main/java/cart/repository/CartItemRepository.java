@@ -28,7 +28,7 @@ public class CartItemRepository {
         final Product product = productDao.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId))
                 .toProduct();
-        return cartItemDao.insert(new CartItem(member, product));
+        return cartItemDao.insert(CartItem.of(member, product));
     }
 
     public List<CartItem> findByMember(final Member member) {

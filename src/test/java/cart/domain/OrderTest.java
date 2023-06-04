@@ -14,8 +14,8 @@ class OrderTest {
     void construct() {
         final Order result = new Order(1L, CartItems.of(
                 List.of(
-                        new CartItem(1L, null, null, 0),
-                        new CartItem(2L, null, null, 0)
+                        CartItem.of(1L, null, null, 0),
+                        CartItem.of(2L, null, null, 0)
                 )),
                 new OrderPoint(1L, null, null),
                 Timestamp.valueOf("2023-11-31 10:00:00")
@@ -33,8 +33,8 @@ class OrderTest {
     void constructWithNoId() {
         final Order result = new Order(CartItems.of(
                 List.of(
-                        new CartItem(1L, null, null, 0),
-                        new CartItem(2L, null, null, 0)
+                        CartItem.of(1L, null, null, 0),
+                        CartItem.of(2L, null, null, 0)
                 )),
                 new OrderPoint(1L, null, null),
                 Timestamp.valueOf("2023-11-31 10:00:00")
@@ -52,8 +52,8 @@ class OrderTest {
     void constructWithOther() {
         final Order order = new Order(CartItems.of(
                 List.of(
-                        new CartItem(1L, null, null, 0),
-                        new CartItem(2L, null, null, 0)
+                        CartItem.of(1L, null, null, 0),
+                        CartItem.of(2L, null, null, 0)
                 )),
                 new OrderPoint(1L, null, null),
                 Timestamp.valueOf("2023-11-31 10:00:00")

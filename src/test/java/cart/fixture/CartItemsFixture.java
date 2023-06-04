@@ -10,35 +10,35 @@ public class CartItemsFixture {
 
     public static final CartItems ORDER1_CARTITEMS = CartItems.of(
             List.of(
-                    new CartItem(ProductFixture.CHICKEN_WITH_ID, 2),
-                    new CartItem(ProductFixture.PIZZA_WITH_ID, 3)
+                    CartItem.of(ProductFixture.CHICKEN_WITH_ID, 2),
+                    CartItem.of(ProductFixture.PIZZA_WITH_ID, 3)
             )
     );
 
     public static final CartItems ORDER2_CARTITEMS = CartItems.of(
             List.of(
-                    new CartItem(ProductFixture.CHICKEN_WITH_ID, 4),
-                    new CartItem(ProductFixture.PIZZA_WITH_ID, 5),
-                    new CartItem(ProductFixture.SALAD_WITH_ID, 6)
+                    CartItem.of(ProductFixture.CHICKEN_WITH_ID, 4),
+                    CartItem.of(ProductFixture.PIZZA_WITH_ID, 5),
+                    CartItem.of(ProductFixture.SALAD_WITH_ID, 6)
             )
     );
 
     public static final CartItems ORDER3_CARTITEMS = CartItems.of(
             List.of(
-                    new CartItem(new Product(4L, null, 0, null), 3)
+                    CartItem.of(new Product(4L, null, 0, null), 3)
             )
     );
 
     public static final CartItems ORDER4_CARTITEMS = CartItems.of(
             List.of(
-                    new CartItem(new Product(1L, null, 0, null), 11)
+                    CartItem.of(new Product(1L, null, 0, null), 11)
             )
     );
 
     public static final CartItems ORDER5_CARTITEMS = CartItems.of(
             List.of(
-                    new CartItem(new Product(1L, null, 0, null), 10),
-                    new CartItem(new Product(2L, null, 0, null), 11)
+                    CartItem.of(new Product(1L, null, 0, null), 10),
+                    CartItem.of(new Product(2L, null, 0, null), 11)
             )
     );
 }
