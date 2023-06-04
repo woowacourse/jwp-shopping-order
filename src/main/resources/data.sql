@@ -4,6 +4,8 @@ INSERT INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://i
 
 INSERT INTO member (email, password) VALUES ('a@a.com', '1234');
 INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
+INSERT INTO member (email, password) VALUES ('sangun', '1234');
+INSERT INTO member (email, password) VALUES ('ropi', '1234');
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
