@@ -4,19 +4,16 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 import cart.domain.Product;
-import cart.domain.Products;
 import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.MemberCouponRepository;
 import cart.domain.repository.OrderRepository;
 import cart.domain.repository.ProductRepository;
 import cart.domain.vo.Amount;
-import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderProductResponse;
 import cart.dto.response.OrderResponse;
-import cart.exception.BusinessException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -39,19 +36,19 @@ public class OrderService {
     }
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
-        final List<Product> products = findProducts(orderRequest);
+        final List<OrderItem> orderItems = findOrderItems(orderRequest);
         final MemberCoupon coupon = findCouponIfExists(member.getId(), orderRequest.getCouponId());
         final Order order = orderRepository.create(
-                new Order(new Products(products), coupon, Amount.of(orderRequest.getTotalProductAmount()),
+                new Order(orderItems, coupon, Amount.of(orderRequest.getTotalProductAmount()),
                         Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
-        for (Product product : products) {
-            cartItemRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
+        for (OrderItem orderItem : orderItems) {
+            cartItemRepository.deleteByMemberIdAndProductId(member.getId(), orderItem.getProduct().getId());
         }
         final int discountedProductAmount = order.discountProductAmount().getValue();
         useCoupon(member, coupon, orderRequest.getCouponId());
         return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
                 order.getDeliveryAmount().getValue(), discountedProductAmount, order.getAddress(),
-                makeOrderProductResponses(orderRequest, products));
+                makeOrderProductResponses(orderItems));
     }
 
     private void useCoupon(final Member member, final MemberCoupon coupon, final Long requestCouponId) {
@@ -69,33 +66,18 @@ public class OrderService {
         return new MemberCoupon(memberId, new Coupon("", Amount.of(0), Amount.of(0)));
     }
 
-    private List<Product> findProducts(final OrderRequest orderRequest) {
-        final List<Product> products = new ArrayList<>();
-        final List<Amount> amounts = orderRequest.getProducts().stream()
+    private List<OrderItem> findOrderItems(final OrderRequest orderRequest) {
+        return orderRequest.getProducts().stream()
                 .map(it -> {
                     final Product product = productRepository.findById(it.getProductId());
-                    products.add(product);
-                    return product.getAmount().multiply(it.getQuantity());
-                })
-                .collect(Collectors.toList());
-        final Amount sum = Amount.of(amounts);
-        if (!sum.equals(Amount.of(orderRequest.getTotalProductAmount()))) {
-            throw new BusinessException("상품 금액이 변경되었습니다.");
-        }
-        return products;
+                    return new OrderItem(product, it.getQuantity());
+                }).collect(Collectors.toList());
     }
 
-    private List<OrderProductResponse> makeOrderProductResponses(final OrderRequest orderRequest,
-                                                                 final List<Product> products) {
-        final List<OrderProductResponse> orderProductResponses = new ArrayList<>();
-        for (int index = 0; index < products.size(); index++) {
-            final Product product = products.get(index);
-            final CartItemRequest cartItemRequest = orderRequest.getProducts().get(index);
-            final OrderProductResponse orderProductResponse = new OrderProductResponse(product.getId(),
-                    product.getName(), product.getAmount().getValue(),
-                    product.getImageUrl(), cartItemRequest.getQuantity());
-            orderProductResponses.add(orderProductResponse);
-        }
-        return orderProductResponses;
+    private List<OrderProductResponse> makeOrderProductResponses(final List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(it -> new OrderProductResponse(it.getProduct().getId(), it.getProduct().getName(),
+                        it.getProduct().getAmount().getValue(), it.getProduct().getImageUrl(), it.getQuantity()))
+                .collect(Collectors.toList());
     }
 }

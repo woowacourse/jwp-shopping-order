@@ -18,12 +18,15 @@ public class OrderDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("`order`")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "discounted_amount", "address", "delivery_amount");
+                .usingColumns("member_id", "coupon_id", "total_amount", "discounted_amount", "address",
+                        "delivery_amount");
     }
 
     public Long create(final OrderEntity order, final Long memberId) {
         final Map<String, Object> params = new HashMap<>();
         params.put("member_id", memberId);
+        params.put("coupon_id", order.getCouponId());
+        params.put("total_amount", order.getTotalAmount());
         params.put("discounted_amount", order.getDiscountedAmount());
         params.put("address", order.getAddress());
         params.put("delivery_amount", order.getDeliveryAmount());

@@ -24,11 +24,11 @@ public class JdbcOrderRepository implements OrderRepository {
     @Override
     public Order create(final Order order, final Long memberId) {
         final Long orderId = orderDao.create(OrderEntity.of(order, memberId), memberId);
-        final Products products = order.getProducts();
-        for (final Product product : products.getValue()) {
-            productOrderDao.create(ProductOrderEntity.of(product.getId(), orderId));
+        final List<OrderItem> orderItems = order.getOrderItems();
+        for (OrderItem orderItem : orderItems) {
+            productOrderDao.create(ProductOrderEntity.of(orderItem, orderId));
         }
-        return new Order(orderId, order.getProducts(), order.getCoupon(), order.getTotalProductAmount(),
+        return new Order(orderId, order.getOrderItems(), order.getCoupon(), order.getTotalProductAmount(),
                 order.getDeliveryAmount(), order.getAddress());
     }
 }

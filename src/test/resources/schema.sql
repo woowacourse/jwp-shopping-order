@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS cart_item;
 DROP TABLE IF EXISTS product_order;
 DROP TABLE IF EXISTS member_coupon;
-DROP TABLE IF EXISTS coupon;
 DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS coupon;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
 
@@ -32,14 +32,25 @@ CREATE TABLE IF NOT EXISTS cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
+CREATE TABLE IF NOT EXISTS coupon
+(
+    id              BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name            VARCHAR(50) NOT NULL,
+    min_amount      INT         NOT NULL,
+    discount_amount INT         NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `order`
 (
     id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id         BIGINT NOT NULL,
+    coupon_id         BIGINT,
+    total_amount      INT    NOT NULL,
     discounted_amount INT    NOT NULL,
     address           VARCHAR(255),
     delivery_amount   INT,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );
 
 CREATE TABLE IF NOT EXISTS product_order
@@ -47,16 +58,9 @@ CREATE TABLE IF NOT EXISTS product_order
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id BIGINT NOT NULL,
     order_id   BIGINT NOT NULL,
+    quantity   INT,
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (order_id) REFERENCES `order` (id)
-);
-
-CREATE TABLE IF NOT EXISTS coupon
-(
-    id              BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name            VARCHAR(50) NOT NULL,
-    min_amount      INT         NOT NULL,
-    discount_amount INT         NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS member_coupon

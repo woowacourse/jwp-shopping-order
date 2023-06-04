@@ -14,7 +14,7 @@ public class ProductOrderDao {
     }
 
     public void create(final ProductOrderEntity productOrder) {
-        final String sql = "INSERT INTO product_order(product_id, order_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, productOrder.getProductId(), productOrder.getOrderId());
+        final String sql = "INSERT INTO product_order(product_id, order_id, quantity) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, productOrder.getProductId(), productOrder.getOrderId(), productOrder.getQuantity());
     }
 }

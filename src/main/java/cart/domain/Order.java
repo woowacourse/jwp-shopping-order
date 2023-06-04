@@ -1,25 +1,26 @@
 package cart.domain;
 
 import cart.domain.vo.Amount;
+import java.util.List;
 
 public class Order {
 
     private final Long id;
-    private final Products products;
+    private final List<OrderItem> orderItems;
     private final MemberCoupon coupon;
     private final Amount totalProductAmount;
     private final Amount deliveryAmount;
     private final String address;
 
-    public Order(final Products products, final MemberCoupon coupon, final Amount totalProductAmount, final Amount deliveryAmount, final String address) {
-        this(null, products, coupon, totalProductAmount, deliveryAmount, address);
+    public Order(final List<OrderItem> orderItems, final MemberCoupon coupon, final Amount totalProductAmount, final Amount deliveryAmount, final String address) {
+        this(null, orderItems, coupon, totalProductAmount, deliveryAmount, address);
     }
 
-    public Order(final Long id, final Products products, final MemberCoupon coupon, final Amount totalProductAmount,
+    public Order(final Long id, final List<OrderItem> orderItems, final MemberCoupon coupon, final Amount totalProductAmount,
                  final Amount deliveryAmount,
                  final String address) {
         this.id = id;
-        this.products = products;
+        this.orderItems = orderItems;
         this.coupon = coupon;
         this.totalProductAmount = totalProductAmount;
         this.deliveryAmount = deliveryAmount;
@@ -34,8 +35,8 @@ public class Order {
         return id;
     }
 
-    public Products getProducts() {
-        return products;
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
     public MemberCoupon getCoupon() {
