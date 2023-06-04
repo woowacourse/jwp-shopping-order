@@ -30,10 +30,6 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
         return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(member.getId(), couponId).orElse(CouponEntity.EMPTY));
     }
 
-    @Override
-    public void updateUsedCouponAvailability(Coupon coupon) {
-        memberCouponDao.updateUsedCouponAvailabilityById(coupon.getId());
-    }
 
     @Override
     public List<Coupon> findAllByMemberId(Member member) {

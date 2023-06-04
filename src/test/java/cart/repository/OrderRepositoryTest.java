@@ -7,7 +7,6 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.CartItemRepository;
-import cart.domain.repository.OrderProductRepository;
 import cart.domain.repository.OrderRepository;
 import cart.domain.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrderRepositoryTest {
     @Autowired
     private OrderRepository orderRepository;
-    @Autowired
-    private OrderProductRepository orderProductRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -71,8 +68,6 @@ class OrderRepositoryTest {
         Order order2 = new Order(member, cartItems2, Coupon.EMPTY);
         Long orderId1 = orderRepository.save(order1);
         Long orderId2 = orderRepository.save(order2);
-        orderProductRepository.save(orderId1,order1);
-        orderProductRepository.save(orderId2,order2);
 
         List<Order> orders = orderRepository.findAllByMemberId(member);
 
@@ -102,7 +97,6 @@ class OrderRepositoryTest {
 
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.save(requestOrder);
-        orderProductRepository.save(orderId1,requestOrder);
 
         Order order = orderRepository.findByIdAndMemberId(member, orderId1);
 
@@ -127,7 +121,6 @@ class OrderRepositoryTest {
 
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.save(requestOrder);
-        orderProductRepository.save(orderId1,requestOrder);
 
         assertDoesNotThrow(()->orderRepository.deleteById(requestOrder.getId()));
     }
@@ -146,7 +139,6 @@ class OrderRepositoryTest {
 
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.save(requestOrder);
-        orderProductRepository.save(orderId1,requestOrder);
 
         orderRepository.confirmById(orderId1,member);
         assertAll(

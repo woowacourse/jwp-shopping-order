@@ -10,6 +10,7 @@ import cart.domain.coupon.DiscountType;
 import cart.domain.repository.OrderRepository;
 import cart.entity.CouponEntity;
 import cart.entity.OrderEntity;
+import cart.entity.OrderProductEntity;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Repository;
 
@@ -23,17 +24,36 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final MemberDao memberDao;
     private final OrderProductDao orderProductDao;
     private final OrderCouponDao orderCouponDao;
+    private final CartItemDao cartItemDao;
+    private final MemberCouponDao memberCouponDao;
 
-    public OrderRepositoryImpl(OrderDao orderDao, MemberDao memberDao, OrderProductDao orderProductDao, OrderCouponDao orderCouponDao) {
+    public OrderRepositoryImpl(OrderDao orderDao, MemberDao memberDao, OrderProductDao orderProductDao,
+                               OrderCouponDao orderCouponDao, CartItemDao cartItemDao, MemberCouponDao memberCouponDao) {
         this.orderDao = orderDao;
         this.memberDao = memberDao;
         this.orderProductDao = orderProductDao;
         this.orderCouponDao = orderCouponDao;
+        this.cartItemDao = cartItemDao;
+        this.memberCouponDao = memberCouponDao;
     }
 
     @Override
     public Long save(Order order) {
-        return orderDao.save(toEntity(order));
+        Long savedOrderId = orderDao.save(toEntity(order));
+
+        List<OrderProductEntity> orderProducts = order.getCartProducts().stream()
+                .map(it -> OrderProductEntity.of(it, savedOrderId)).collect(Collectors.toList());
+        List<Long> cartItemIds = order.getCartProducts().stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+
+        cartItemDao.deleteByIdsAndMemberId(order.getMember().getId(), cartItemIds);
+        orderProductDao.save(savedOrderId, orderProducts);
+        memberCouponDao.updateUnUsedCouponAvailabilityById(order.getCoupon().getId());
+        if (!DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
+            orderCouponDao.save(savedOrderId, order.getCoupon().getId());
+        }
+        return savedOrderId;
     }
 
     @Override

@@ -10,8 +10,6 @@ import java.util.List;
 public interface MemberCouponRepository {
     Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId);
 
-    void updateUsedCouponAvailability(Coupon coupon);
-
     List<Coupon> findAllByMemberId(Member member);
 
     void updateUnUsedCouponAvailability(Member member, Long memberCouponId);

@@ -21,16 +21,13 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final MemberCouponRepository memberCouponRepository;
     private final OrderRepository orderRepository;
-    private final OrderProductRepository orderProductRepository;
     private final OrderCouponRepository orderCouponRepository;
 
     public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository,
-                        OrderRepository orderRepository, OrderProductRepository orderProductRepository,
-                        OrderCouponRepository orderCouponRepository) {
+                        OrderRepository orderRepository, OrderCouponRepository orderCouponRepository) {
         this.cartItemRepository = cartItemRepository;
         this.memberCouponRepository = memberCouponRepository;
         this.orderRepository = orderRepository;
-        this.orderProductRepository = orderProductRepository;
         this.orderCouponRepository = orderCouponRepository;
     }
 
@@ -45,12 +42,7 @@ public class OrderService {
                 member, cartItems,
                 memberCouponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
 
-        Long orderSavedId = orderRepository.save(order);
-        cartItemRepository.deleteByIdsAndMemberId(member.getId(), cartItems);
-        orderProductRepository.save(orderSavedId, order);
-        memberCouponRepository.updateUsedCouponAvailability(order.getCoupon());
-        orderCouponRepository.save(orderSavedId, order);
-        return orderSavedId;
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)

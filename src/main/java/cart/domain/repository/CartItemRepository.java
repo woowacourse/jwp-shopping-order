@@ -21,5 +21,4 @@ public interface CartItemRepository {
 
     List<CartItem> findAllByIdsAndMemberId(Member member, List<Long> cartProductIds);
 
-    void deleteByIdsAndMemberId(Long memberId, List<CartItem> cartItems);
 }
