@@ -7,3 +7,8 @@ Content-Type: application/json
 GET http://localhost:8080/orders/1
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
+
+### 주문 취소
+DELETE http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json

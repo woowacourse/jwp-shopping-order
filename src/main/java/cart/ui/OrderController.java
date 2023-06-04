@@ -28,4 +28,10 @@ public class OrderController {
         DetailOrderResponse detailOrder = orderService.findDetailOrder(member, orderId);
         return ResponseEntity.ok(detailOrder);
     }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<String> deleteOrder(Member member, @PathVariable Long orderId) {
+        orderService.deleteOrder(member, orderId);
+        return ResponseEntity.ok().body("ok");
+    }
 }
