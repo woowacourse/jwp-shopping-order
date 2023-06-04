@@ -37,6 +37,30 @@ public class OrderRepository {
         this.shippingDiscountPolicyDao = shippingDiscountPolicyDao;
     }
 
+    public Long saveOrder(final Member member, final Order order) {
+        final OrderEntity orderEntity = new OrderEntity(
+                member.getId(),
+                order.getShippingFee(),
+                order.getTotalPrice(),
+                order.getUsedPoint()
+        );
+        final Long orderId = orderDao.createOrder(orderEntity);
+
+        final List<OrderItem> orderItemList = order.getOrderItems();
+        final List<OrderItemEntity> orderItemEntityList = orderItemList.stream()
+                .map(orderItem -> OrderItemEntity.toEntity(orderItem, orderId))
+                .collect(toList());
+        saveOrderItems(orderItemEntityList);
+
+        return orderId;
+    }
+
+    private void saveOrderItems(List<OrderItemEntity> orderItemEntityList) {
+        for (OrderItemEntity orderItemEntity : orderItemEntityList) {
+            orderItemDao.createOrderItem(orderItemEntity);
+        }
+    }
+
     public Order findOrderById(final Member member, final Long orderId) {
         //TODO: optional 반환 예외처리
         final OrderEntity orderEntity = orderDao.findById(orderId).get();
@@ -45,7 +69,7 @@ public class OrderRepository {
         return new Order(orderEntity.getId(),
                 member,
                 orderEntity.getShippingFee(),
-                orderEntity.getTotalProductPrice(),
+                orderEntity.getTotalProductsPrice(),
                 orderItemList,
                 new Point(orderEntity.getUsedPoint()),
                 orderEntity.getCreatedAt());
@@ -77,7 +101,7 @@ public class OrderRepository {
                 .map(orderEntity -> new Order(orderEntity.getId(),
                         member,
                         orderEntity.getShippingFee(),
-                        orderEntity.getTotalProductPrice(),
+                        orderEntity.getTotalProductsPrice(),
                         toOrderItemList(maps.get(orderEntity.getId())),
                         new Point(orderEntity.getUsedPoint()),
                         orderEntity.getCreatedAt()))
@@ -103,25 +127,4 @@ public class OrderRepository {
         return ShippingDiscountPolicy.from(shippingDiscountPolicyEntity);
     }
 
-    public Long saveOrder(final Member member, final Order order) {
-        final List<OrderItem> orderItemList = order.getOrderItems();
-        final List<OrderItemEntity> orderItemEntityList = orderItemList.stream()
-                .map(orderItem -> OrderItemEntity.toEntity(orderItem, order.getId()))
-                .collect(toList());
-        saveOrderItems(orderItemEntityList);
-
-        final OrderEntity orderEntity = new OrderEntity(
-                member.getId(),
-                order.getShippingFee(),
-                order.getTotalPrice(),
-                order.getUsedPoint()
-        );
-        return orderDao.createOrder(orderEntity);
-    }
-
-    private void saveOrderItems(List<OrderItemEntity> orderItemEntityList) {
-        for (OrderItemEntity orderItemEntity : orderItemEntityList) {
-            orderItemDao.createOrderItem(orderItemEntity);
-        }
-    }
 }

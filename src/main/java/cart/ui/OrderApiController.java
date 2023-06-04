@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
@@ -22,9 +23,9 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderRequest orderRequest) {
-        Long id = orderService.createOrder(member, orderRequest);
-        return ResponseEntity.created(URI.create("/orders/" + id)).build();
+    public ResponseEntity<OrderCreateResponse> createOrder(Member member, @RequestBody OrderRequest orderRequest) {
+        OrderCreateResponse response = orderService.createOrder(member, orderRequest);
+        return ResponseEntity.created(URI.create("/orders/" + response.getOrderId())).body(response);
     }
 
     @GetMapping

@@ -7,10 +7,12 @@ import cart.domain.ShippingDiscountPolicy;
 import cart.domain.ShippingFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
 import cart.repository.OrderRepository;
+import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,20 +20,25 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
+
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemDao cartItemDao;
+    private final PointRepository pointRepository;
 
-    public OrderService(OrderRepository orderRepository, CartItemDao cartItemDao) {
+    public OrderService(OrderRepository orderRepository, CartItemDao cartItemDao, PointRepository pointRepository) {
         this.orderRepository = orderRepository;
         this.cartItemDao = cartItemDao;
+        this.pointRepository = pointRepository;
     }
 
-    public Long createOrder(Member member, OrderRequest orderRequest) {
-        List<OrderItem> orderItemList = orderRequest.getOrderItemDtoList().stream()
+    public OrderCreateResponse createOrder(Member member, OrderRequest orderRequest) {
+        System.out.println("orderRequest.getOrderItemDtoList(): "+ orderRequest.getOrder().size());
+        List<OrderItem> orderItemList = orderRequest.getOrder().stream()
                 .map(orderItemDto -> new OrderItem(cartItemDao.findById(orderItemDto.getCartItemId()).getProduct(), orderItemDto.getQuantity()))
                 .collect(toList());
+        System.out.println("orderItemList: "+ orderItemList.size());
 
         // TODO: optional 예외처리 구현하기
         ShippingFee shippingFee = orderRepository.findShippingFee();
@@ -42,7 +49,14 @@ public class OrderService {
                 orderItemList,
                 shippingDiscountPolicy.getThreshold(),
                 new Point(orderRequest.getUsedPoint()));
-        return orderRepository.saveOrder(member, newOrder);
+        Long orderId = orderRepository.saveOrder(member, newOrder);
+        Point memberPoint = pointRepository.findPointByMemberId(member.getId());
+
+        pointRepository.updatePoint(member.getId(),memberPoint.minus(orderRequest.getUsedPoint()));
+        Long EarnedPoint = memberPoint.getPointByPolicy(newOrder.getTotalPrice());
+        pointRepository.updatePoint(member.getId(),EarnedPoint);
+
+        return new OrderCreateResponse(orderId,EarnedPoint);
     }
 
     public List<OrdersResponse> findAllOrdersByMember(Member member) {

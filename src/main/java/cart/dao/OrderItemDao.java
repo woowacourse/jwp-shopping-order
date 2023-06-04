@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class OrderItemDao {
@@ -27,19 +28,20 @@ public class OrderItemDao {
             resultSet.getString("image_url"),
             resultSet.getLong("quantity"),
             resultSet.getLong("product_id"),
-            resultSet.getLong("orders_id")
+            resultSet.getLong("order_id")
     );
 
     public OrderItemDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("order_item")
                 .usingGeneratedKeyColumns("id");
     }
 
     public void createOrderItem(OrderItemEntity orderItemEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(orderItemEntity);
+
         simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 

@@ -28,7 +28,7 @@ create table if not exists cart_item
     quantity BIGINT NOT NULL
 );
 
-create table if not exists orders
+create table if not exists `order`
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
@@ -46,7 +46,7 @@ create table if not exists order_item
     image_url VARCHAR(255) NOT NULL,
     quantity BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    orders_id BIGINT NOT NULL
+    order_id BIGINT NOT NULL
 );
 
 create table if not exists shipping_fee

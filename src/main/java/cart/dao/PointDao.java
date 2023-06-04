@@ -30,4 +30,9 @@ public class PointDao {
             return Optional.empty();
         }
     }
+
+    public void updatePoint(Long memberId, Long point) {
+        final String sql = "UPDATE point SET point = ? where member_id = ?";
+        jdbcTemplate.update(sql, memberId, point);
+    }
 }

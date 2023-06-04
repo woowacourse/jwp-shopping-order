@@ -3,28 +3,34 @@ package cart.dto.order;
 import java.util.List;
 
 public class OrderRequest {
-    private Long totalPrice;
-    private List<OrderItemDto> orderItemDtoList;
+    private Long totalProductsPrice;
+    private Long shippingFee;
     private Long usedPoint;
+    private List<OrderItemDto> order;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(Long totalPrice, List<OrderItemDto> orderItemDtoList,Long usedPoint) {
-        this.totalPrice = totalPrice;
-        this.orderItemDtoList = orderItemDtoList;
+    public OrderRequest(Long totalProductsPrice, Long shippingFee, Long usedPoint, List<OrderItemDto> order) {
+        this.totalProductsPrice = totalProductsPrice;
+        this.shippingFee = shippingFee;
         this.usedPoint = usedPoint;
+        this.order = order;
     }
 
-    public Long getTotalPrice() {
-        return totalPrice;
+    public Long getTotalProductsPrice() {
+        return totalProductsPrice;
     }
 
-    public List<OrderItemDto> getOrderItemDtoList() {
-        return orderItemDtoList;
+    public Long getShippingFee() {
+        return shippingFee;
     }
 
     public Long getUsedPoint() {
         return usedPoint;
+    }
+
+    public List<OrderItemDto> getOrder() {
+        return order;
     }
 }

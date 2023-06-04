@@ -18,4 +18,8 @@ public class PointRepository {
         PointEntity pointEntity = pointDao.findPointByMemberId(memberId).get();
         return new Point(pointEntity.getPoint());
     }
+
+    public void updatePoint(Long memberId, Long point) {
+        pointDao.updatePoint(memberId, point);
+    }
 }
