@@ -16,11 +16,17 @@ public abstract class Coupon {
     return calculate(totalPrice);
   }
 
+  public Money findDiscountPrice() {
+    return discountPrice();
+  }
+
   public boolean isExceedDiscountFrom(final Money totalPrice) {
     return calculate(totalPrice).isGreaterThan(totalPrice);
   }
 
   protected abstract Money calculate(final Money totalPrice);
+
+  protected abstract Money discountPrice();
 
   public Long getId() {
     return id;

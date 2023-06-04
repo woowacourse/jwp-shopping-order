@@ -39,13 +39,7 @@ public class MemberCouponDao {
     this.couponDao = couponDao;
   }
 
-  public List<MemberCouponEntity> findByMemberId(final Long id) {
-    final String sql = "SELECT * FROM MEMBER_COUPON MC WHERE MC.member_id = ? and MC.used_yn = ?";
-
-    return jdbcTemplate.query(sql, rowMapper, id, "N");
-  }
-
-  public List<MemberCoupon> findByMemberId2(final Long memberId) {
+  public List<MemberCoupon> findByMemberId(final Long memberId) {
     final String sql = "SELECT * FROM MEMBER_COUPON MC WHERE MC.member_id = ? and MC.used_yn = ?";
 
     return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -64,20 +58,7 @@ public class MemberCouponDao {
     jdbcTemplate.update(sql, usedYn, couponId, memberId);
   }
 
-  public Optional<MemberCouponEntity> findByMemberAndCouponId(
-      final Long couponId,
-      final Long memberId
-  ) {
-    final String sql = "SELECT * FROM MEMBER_COUPON MC WHERE MC.member_id = ? AND MC.coupon_id = ?";
-
-    try {
-      return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId));
-    } catch (EmptyResultDataAccessException e) {
-      return Optional.empty();
-    }
-  }
-
-  public Optional<MemberCoupon> findByMemberAndCouponId2(final Long couponId, final Long memberId) {
+  public Optional<MemberCoupon> findByMemberAndCouponId(final Long couponId, final Long memberId) {
     final String sql = "SELECT * FROM MEMBER_COUPON MC WHERE MC.member_id = ? AND MC.coupon_id = ?";
 
     try {

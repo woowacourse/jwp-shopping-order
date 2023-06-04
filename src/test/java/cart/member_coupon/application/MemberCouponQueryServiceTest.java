@@ -2,6 +2,7 @@ package cart.member_coupon.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.coupon.domain.Coupon;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import java.util.List;
@@ -26,9 +27,9 @@ class MemberCouponQueryServiceTest {
     final Member member = memberDao.getMemberById(1L);
 
     //when
-    final List<Long> couponIds = memberCouponQueryService.searchCouponsIdOwenByMember(member);
+    final List<Coupon> coupons = memberCouponQueryService.searchCouponsIdOwenByMember(member);
 
     //then
-    assertEquals(2, couponIds.size());
+    assertEquals(2, coupons.size());
   }
 }

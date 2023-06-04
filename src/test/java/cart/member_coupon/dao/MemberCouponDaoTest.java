@@ -62,7 +62,7 @@ class MemberCouponDaoTest {
         .thenReturn(coupon);
 
     //when
-    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId2(memberId);
+    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(memberId);
 
     //then
     assertEquals(2, memberCoupons.size());
@@ -75,7 +75,7 @@ class MemberCouponDaoTest {
     final long couponId = 2L;
     final long memberId = 3L;
 
-    final MemberCoupon memberCoupon = memberCouponDao.findByMemberAndCouponId2(
+    final MemberCoupon memberCoupon = memberCouponDao.findByMemberAndCouponId(
         couponId,
         memberId
     ).get();
@@ -84,7 +84,7 @@ class MemberCouponDaoTest {
     memberCouponDao.updateMemberCoupon(couponId, memberId, "Y");
 
     //then
-    final MemberCoupon afterUpdateMemberCoupon = memberCouponDao.findByMemberAndCouponId2(
+    final MemberCoupon afterUpdateMemberCoupon = memberCouponDao.findByMemberAndCouponId(
         couponId,
         memberId
     ).get();
@@ -109,7 +109,7 @@ class MemberCouponDaoTest {
         .thenReturn(coupon);
 
     //when
-    final Optional<MemberCoupon> memberCoupon = memberCouponDao.findByMemberAndCouponId2(
+    final Optional<MemberCoupon> memberCoupon = memberCouponDao.findByMemberAndCouponId(
         couponId,
         memberId
     );

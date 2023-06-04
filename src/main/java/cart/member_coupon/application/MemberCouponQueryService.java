@@ -1,8 +1,10 @@
 package cart.member_coupon.application;
 
+import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.member_coupon.dao.MemberCouponDao;
 import cart.member_coupon.dao.MemberCouponEntity;
+import cart.member_coupon.domain.MemberCoupon;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,11 @@ public class MemberCouponQueryService {
     this.memberCouponDao = memberCouponDao;
   }
 
-  public List<Long> searchCouponsIdOwenByMember(final Member member) {
-    List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(member.getId());
+  public List<Coupon> searchCouponsIdOwenByMember(final Member member) {
+    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(member.getId());
 
-    return memberCouponEntities.stream()
-        .map(MemberCouponEntity::getCouponId)
+    return memberCoupons.stream()
+        .map(MemberCoupon::getCoupon)
         .collect(Collectors.toList());
   }
 }

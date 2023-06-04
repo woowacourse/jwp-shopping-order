@@ -12,4 +12,19 @@ public class EmptyCoupon extends Coupon {
   protected Money calculate(final Money totalPrice) {
     return totalPrice;
   }
+
+  @Override
+  protected Money discountPrice() {
+    return Money.ZERO;
+  }
+
+  @Override
+  public String getName() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Long getId() {
+    throw new UnsupportedOperationException();
+  }
 }

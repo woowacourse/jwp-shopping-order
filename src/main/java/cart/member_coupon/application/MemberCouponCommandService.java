@@ -1,9 +1,9 @@
 package cart.member_coupon.application;
 
 import cart.member_coupon.dao.MemberCouponDao;
-import cart.member_coupon.dao.MemberCouponEntity;
+import cart.member_coupon.domain.MemberCoupon;
+import cart.member_coupon.domain.UsedStatus;
 import cart.member_coupon.exception.NotFoundMemberCouponException;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +18,11 @@ public class MemberCouponCommandService {
   }
 
   public void updateUsedCoupon(final Long couponId, final Long memberId) {
-    final MemberCouponEntity memberCouponEntity =
-        memberCouponDao.findByMemberAndCouponId(couponId, memberId)
-            .orElseThrow(() -> new NotFoundMemberCouponException("해당 멤버는 현재 쿠폰을 가지고 있지 않습니다."));
+    final MemberCoupon memberCoupon = memberCouponDao.findByMemberAndCouponId(couponId, memberId)
+        .orElseThrow(() -> new NotFoundMemberCouponException("해당 멤버는 현재 쿠폰을 가지고 있지 않습니다."));
 
-    final String usedYn = memberCouponEntity.getUsedYn();
+    final UsedStatus usedStatus = memberCoupon.getUsedStatus();
 
-    memberCouponDao.updateMemberCoupon(couponId, memberId, exchangeUsingStatus(usedYn));
-  }
-
-  public String exchangeUsingStatus(final String usedYn) {
-    if (usedYn.equals("Y")) {
-      return "N";
-    }
-    return "Y";
+    memberCouponDao.updateMemberCoupon(couponId, memberId, usedStatus.opposite().getValue());
   }
 }

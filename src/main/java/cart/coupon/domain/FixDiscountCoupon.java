@@ -16,7 +16,8 @@ public class FixDiscountCoupon extends Coupon {
     return totalPrice.minus(discountPrice);
   }
 
-  public Money getDiscountPrice() {
+  @Override
+  protected Money discountPrice() {
     return discountPrice;
   }
 }

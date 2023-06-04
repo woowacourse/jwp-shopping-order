@@ -2,7 +2,7 @@ package cart.coupon.application;
 
 import cart.coupon.application.dto.CouponResponse;
 import cart.coupon.dao.CouponDao;
-import cart.coupon.dao.CouponEntity;
+import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.member_coupon.application.MemberCouponQueryService;
 import java.util.List;
@@ -25,16 +25,13 @@ public class CouponQueryService {
 
   public List<CouponResponse> searchCoupons(final Member member) {
 
-    final List<Long> couponIds = memberCouponQueryService.searchCouponsIdOwenByMember(member);
+    final List<Coupon> coupons = memberCouponQueryService.searchCouponsIdOwenByMember(member);
 
-    List<CouponEntity> couponEntities = couponDao.findByIdsIn(couponIds);
-
-    return couponEntities.stream()
-        .map(it -> new CouponResponse(
-            it.getId(),
-            it.getName(),
-            it.getDiscountPrice()
-        ))
+    return coupons.stream()
+        .map(coupon -> new CouponResponse(
+            coupon.getId(),
+            coupon.getName(),
+            coupon.findDiscountPrice().getValue()))
         .collect(Collectors.toList());
   }
 }

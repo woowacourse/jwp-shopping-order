@@ -5,7 +5,7 @@ import java.util.Arrays;
 public enum UsedStatus {
 
   USED("Y"),
-  NOT_USED("N");
+  UNUSED("N");
 
   private final String value;
 
@@ -18,6 +18,13 @@ public enum UsedStatus {
         .filter(it -> it.value.equals(value))
         .findAny()
         .orElseThrow(() -> new IllegalArgumentException("사용 상태는 Y, N으로만 표시 가능합니다."));
+  }
+
+  public UsedStatus opposite() {
+    if (this == USED) {
+      return UNUSED;
+    }
+    return USED;
   }
 
   public String getValue() {
