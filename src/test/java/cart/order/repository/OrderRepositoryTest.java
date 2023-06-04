@@ -7,7 +7,6 @@ import cart.order.dao.OrderInfoDao;
 import cart.order.domain.Order;
 import cart.order.domain.OrderInfo;
 import cart.product.dao.ProductDao;
-import cart.product.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static cart.member.domain.MemberTest.*;
-import static cart.product.domain.ProductTest.*;
-import static org.assertj.core.api.Assertions.*;
+import static cart.member.domain.MemberTest.MEMBER;
+import static cart.product.domain.ProductTest.PRODUCT_FIRST;
+import static cart.product.domain.ProductTest.PRODUCT_SECOND;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
@@ -41,7 +41,7 @@ class OrderRepositoryTest extends DBInit {
         // given
         final OrderInfo orderInfo1 = new OrderInfo(PRODUCT_FIRST, "치킨", 10000L, "aa", 2L);
         final OrderInfo orderInfo2 = new OrderInfo(PRODUCT_SECOND, "샐러드", 20000L, "bb", 4L);
-        final Order order = new Order(MEMBER, List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
+        final Order order = new Order(List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
 
         // when
 
@@ -56,7 +56,7 @@ class OrderRepositoryTest extends DBInit {
         // given
         final OrderInfo orderInfo1 = new OrderInfo(PRODUCT_FIRST, "치킨", 10000L, "aa", 2L);
         final OrderInfo orderInfo2 = new OrderInfo(PRODUCT_SECOND, "샐러드", 20000L, "bb", 4L);
-        final Order order = new Order(MEMBER, List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
+        final Order order = new Order(List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
         orderRepository.save(MEMBER, order);
 
         // when
@@ -71,7 +71,7 @@ class OrderRepositoryTest extends DBInit {
         // given
         final OrderInfo orderInfo1 = new OrderInfo(PRODUCT_FIRST, "치킨", 10000L, "aa", 2L);
         final OrderInfo orderInfo2 = new OrderInfo(PRODUCT_SECOND, "샐러드", 20000L, "bb", 4L);
-        final Order orderToSave = new Order(MEMBER, List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
+        final Order orderToSave = new Order(List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
         orderRepository.save(MEMBER, orderToSave);
 
         // when

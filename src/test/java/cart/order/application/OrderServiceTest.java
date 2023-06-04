@@ -61,7 +61,7 @@ class OrderServiceTest {
     @Test
     void member로_주문_목록을_조회한다() {
         // given
-        final List<Order> orders = List.of(new Order(1L, MEMBER, List.of(), 0L, 0L, 0L));
+        final List<Order> orders = List.of(new Order(1L, List.of(), 0L, 0L, 0L));
         given(orderRepository.findByMember(MEMBER)).willReturn(orders);
 
         // when
@@ -74,7 +74,7 @@ class OrderServiceTest {
     @Test
     void member와_orderId로_주문상세를_조회한다() {
         // given
-        final Order order = new Order(1L, MEMBER, List.of(), 0L, 0L, 0L);
+        final Order order = new Order(1L, List.of(), 0L, 0L, 0L);
         given(orderRepository.findByMemberAndId(MEMBER, 1L)).willReturn(order);
 
         // when

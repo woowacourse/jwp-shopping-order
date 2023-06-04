@@ -1,5 +1,6 @@
 package cart.member.dao;
 
+import cart.cartitem.repository.CartItemEntity;
 import cart.member.domain.Member;
 import cart.member.repository.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,7 +62,18 @@ public class MemberDao {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
-
+    
+    public void update(final MemberEntity memberEntity) {
+        String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                memberEntity.getPoint(),
+                memberEntity.getId()
+        );
+    }
+    
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {

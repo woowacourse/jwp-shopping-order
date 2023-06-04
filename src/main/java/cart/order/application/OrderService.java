@@ -34,19 +34,18 @@ public class OrderService {
     
     public Long order(final Member member, final OrderRequest orderRequest) {
         final Member memberByEmail = memberRepository.getMemberByEmail(member.getEmail());
-        final Set<CartItem> cartItems = getCartItems(orderRequest);
-        validateMemberOfCartItem(memberByEmail, cartItems);
-        final List<OrderInfo> orderInfos = getOrderInfos(cartItems);
+        final Set<CartItem> cartItems = cartItemRepository.findAllByIds(getCartItemIds(orderRequest));
+        validateOwnerOfCartItem(memberByEmail, cartItems);
         removeCartItems(orderRequest);
         
         final Order order =
-                new Order(memberByEmail, orderInfos, orderRequest.getOriginalPrice(), orderRequest.getUsedPoint(), orderRequest.getPointToAdd());
-        order.order();
+                new Order(getOrderInfos(cartItems), orderRequest.getOriginalPrice(), orderRequest.getUsedPoint(), orderRequest.getPointToAdd());
+        
+        memberByEmail.usePoint(orderRequest.getUsedPoint());
+        memberByEmail.accumulatePoint(orderRequest.getPointToAdd());
+        
+        memberRepository.update(memberByEmail);
         return orderRepository.save(memberByEmail, order);
-    }
-    
-    private Set<CartItem> getCartItems(final OrderRequest orderRequest) {
-        return cartItemRepository.findAllByIds(getCartItemIds(orderRequest));
     }
     
     private List<Long> getCartItemIds(final OrderRequest orderRequest) {
@@ -54,7 +53,7 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
     
-    private void validateMemberOfCartItem(final Member member, final Set<CartItem> cartItems) {
+    private void validateOwnerOfCartItem(final Member member, final Set<CartItem> cartItems) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
     

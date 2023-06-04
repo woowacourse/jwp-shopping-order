@@ -1,38 +1,33 @@
 package cart.order.domain;
 
-import cart.member.domain.Member;
 import cart.exception.DiscordException;
 
 import java.util.List;
 
 public class Order {
     private final Long id;
-    private final Member member;
     private final OrderInfos orderInfos;
     private final Long originalPrice;
     private final Long usedPoint;
     private final Long pointToAdd;
     
     public Order(
-            final Member member,
             final List<OrderInfo> orderInfos,
             final long originalPrice,
             final long usedPoint,
             final long pointToAdd
     ) {
-        this(null, member, orderInfos, originalPrice, usedPoint, pointToAdd);
+        this(null, orderInfos, originalPrice, usedPoint, pointToAdd);
     }
     
     public Order(
             final Long id,
-            final Member member,
             final List<OrderInfo> orderInfos,
             final long originalPrice,
             final long usedPoint,
             final long pointToAdd
     ) {
         this.id = id;
-        this.member = member;
         this.orderInfos = new OrderInfos(orderInfos);
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
@@ -65,18 +60,8 @@ public class Order {
         }
     }
     
-    public Long order() {
-        member.usePoint(usedPoint);
-        member.accumulatePoint(orderInfos.calculatePointToAdd());
-        return orderInfos.calculateAllProductPriceWithQuantity() - usedPoint;
-    }
-    
     public Long getId() {
         return id;
-    }
-    
-    public Member getMember() {
-        return member;
     }
     
     public OrderInfos getOrderInfos() {

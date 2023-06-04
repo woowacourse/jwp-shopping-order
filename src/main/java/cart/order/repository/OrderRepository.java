@@ -55,7 +55,6 @@ public class OrderRepository {
                     final List<OrderInfo> orderInfos = getOrderInfos(orderInfoEntities);
                     return new Order(
                             orderId,
-                            Member.from(memberEntity),
                             orderInfos,
                             orderEntity.getOriginalPrice(),
                             orderEntity.getUsedPoint(),
@@ -85,7 +84,6 @@ public class OrderRepository {
                 .filter(orderEntity -> Objects.equals(orderEntity.getId(), orderId))
                 .map(orderEntity -> new Order(
                         orderId,
-                        Member.from(memberEntity),
                         getOrderInfos(orderId),
                         orderEntity.getOriginalPrice(),
                         orderEntity.getUsedPoint(),

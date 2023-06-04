@@ -1,5 +1,7 @@
 package cart.member.repository;
 
+import cart.cartitem.domain.CartItem;
+import cart.cartitem.repository.CartItemEntity;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import org.springframework.stereotype.Repository;
@@ -19,5 +21,15 @@ public class MemberRepository {
     
     public Member getMemberById(final long id) {
         return Member.from(memberDao.getMemberById(id));
+    }
+    
+    public void update(final Member memberByEmail) {
+        final MemberEntity memberEntity = new MemberEntity(
+                memberByEmail.getId(),
+                memberByEmail.getEmail(),
+                memberByEmail.getPassword(),
+                memberByEmail.getPoint()
+        );
+        memberDao.update(memberEntity);
     }
 }
