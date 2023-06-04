@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Member;
 import cart.domain.OrderStatus;
+import cart.domain.Pagination;
 import cart.domain.PurchaseOrderInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,6 +76,21 @@ class PurchaseOrderDaoTest {
                                         .contains(회원1_주문1, 회원1_주문2, 회원1_주문3);
     }
 
+    @DisplayName("PurchaseOrder를 특정 회원의 주문 목록을 페이징 처리를 통해 조회할 수 있다")
+    @Test
+    void findMemberByIdWithPagination() {
+        // given
+        Long memberId = 1L;
+        Pagination pagination = Pagination.create(3, 1);
+
+        // when
+        List<PurchaseOrderInfo> resultOrderInfos = purchaseOrderDao.findMemberByIdWithPagination(memberId, pagination);
+
+        // then
+        assertThat(resultOrderInfos).usingRecursiveFieldByFieldElementComparator()
+                                    .contains(회원1_주문1, 회원1_주문2, 회원1_주문3);
+    }
+
     @DisplayName("PurchaseOrder 아이디를 통해 특정 주문을 조회할 수 있다")
     @Test
     void findById() {
@@ -87,6 +103,19 @@ class PurchaseOrderDaoTest {
         // then
         assertThat(result).usingRecursiveComparison()
                           .isEqualTo(회원1_주문1);
+    }
+
+    @DisplayName("특정 회원의 전체 주문 목록 개수를 조회할 수 있다")
+    @Test
+    void getTotalByMemberId() {
+        // given
+        Long memberId = 1L;
+
+        // when
+        int totalItemCount = purchaseOrderDao.getTotalByMemberId(memberId);
+
+        // then
+        assertThat(totalItemCount).isEqualTo(3);
     }
 
     @DisplayName("PurchaseOrder를 통해 특정 주문의 상태를 업데이트할 수 있다")

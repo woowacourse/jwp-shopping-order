@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Member;
 import cart.domain.OrderStatus;
+import cart.domain.Pagination;
 import cart.domain.PurchaseOrderInfo;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -47,6 +48,20 @@ public class PurchaseOrderDao {
         return jdbcTemplate.query(sql, source, getPurchaseOrderRowMapper());
     }
 
+    public List<PurchaseOrderInfo> findMemberByIdWithPagination(Long memberId, Pagination pagination) {
+        String sql = "SELECT o.id as order_id, member.id as member_id, member.email as email, member.password as password,"
+                + " o.order_at, o.payment, o.used_point, o.status "
+                + "FROM purchase_order AS o "
+                + "JOIN member AS member ON o.member_id = member.id "
+                + "WHERE member.id = :member_id "
+                + "LIMIT :limitValue OFFSET :offsetValue";
+        SqlParameterSource source = new MapSqlParameterSource()
+                .addValue("member_id", memberId)
+                .addValue("limitValue", pagination.getPageSize())
+                .addValue("offsetValue", pagination.getFirstItemIndex());
+        return jdbcTemplate.query(sql, source, getPurchaseOrderRowMapper());
+    }
+
     public PurchaseOrderInfo findById(Long id) {
         String sql = "SELECT o.id as order_id, member.id as member_id, member.email as email, member.password as password, o.order_at, o.payment, o.used_point, o.status "
                 + "FROM purchase_order AS o "
@@ -67,6 +82,15 @@ public class PurchaseOrderDao {
                         rs.getInt("used_point"),
                         OrderStatus.convertTo(rs.getString("status"))
                 );
+    }
+
+    public int getTotalByMemberId(Long memberId) {
+        String sql = "SELECT COUNT(*) "
+                + "FROM purchase_order AS o "
+                + "JOIN member AS member ON o.member_id = member.id "
+                + "WHERE member.id = :member_id";
+        SqlParameterSource source = new MapSqlParameterSource("member_id", memberId);
+        return jdbcTemplate.queryForObject(sql, source, Integer.class);
     }
 
     public void updateStatus(PurchaseOrderInfo purchaseOrderInfo) {
