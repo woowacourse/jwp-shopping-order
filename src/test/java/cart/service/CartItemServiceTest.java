@@ -3,6 +3,7 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -11,13 +12,15 @@ import static org.mockito.Mockito.verify;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.MemberRepository;
+import cart.domain.repository.ProductRepository;
+import cart.dto.AuthMember;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
 import cart.exception.ProductException;
-import cart.infrastructure.repository.JdbcCartItemRepository;
-import cart.infrastructure.repository.JdbcProductRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +41,13 @@ class CartItemServiceTest {
     private CartItemService cartItemService;
 
     @Mock
-    private JdbcCartItemRepository cartItemRepository;
+    private CartItemRepository cartItemRepository;
 
     @Mock
-    private JdbcProductRepository productRepository;
+    private ProductRepository productRepository;
+
+    @Mock
+    private MemberRepository memberRepository;
 
     @Test
     void 장바구니에_상품을_추가한다() {
@@ -59,10 +65,12 @@ class CartItemServiceTest {
                                 new Member(1L, "email@email.com", "password")
                         )
                 );
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(1L, "email@email.com", "password")));
 
         // when
         Long id = cartItemService.addCart(
-                new Member(1L, "email@email.com", "password"),
+                new AuthMember(1L, "email@email.com"),
                 new CartItemRequest(1L));
 
         // then
@@ -74,10 +82,12 @@ class CartItemServiceTest {
         // given
         given(productRepository.findById(1L))
                 .willReturn(Optional.empty());
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(1L, "email@email.com", "password")));
 
         // expect
         assertThatThrownBy(() -> cartItemService.addCart(
-                new Member(1L, "email@email.com", "password"),
+                new AuthMember(1L, "email@email.com"),
                 new CartItemRequest(1L))
         ).isInstanceOf(ProductException.class);
 
@@ -88,6 +98,7 @@ class CartItemServiceTest {
     void 사용자의_장바구니를_조회한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
+        AuthMember authMember = new AuthMember(1L, "email@email.com");
         given(cartItemRepository.findByMemberId(1L))
                 .willReturn(List.of(
                         new CartItem(
@@ -105,7 +116,7 @@ class CartItemServiceTest {
                 ));
 
         // when
-        List<CartItemResponse> responses = cartItemService.findBy(member);
+        List<CartItemResponse> responses = cartItemService.findBy(authMember);
 
         // then
         assertThat(responses).map(CartItemResponse::getId)
@@ -116,6 +127,7 @@ class CartItemServiceTest {
     void 장바구니에_담긴_상품의_수량을_변경한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
+        AuthMember authMember = new AuthMember(1L, "email@email.com");
         CartItem cartItem = new CartItem(
                 1L,
                 1,
@@ -124,9 +136,11 @@ class CartItemServiceTest {
         );
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(1L, "email@email.com", "password")));
 
         // when
-        cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(10));
+        cartItemService.updateQuantity(authMember, 1L, new CartItemQuantityUpdateRequest(10));
 
         // then
         verify(cartItemRepository, never()).deleteById(1L);
@@ -139,11 +153,12 @@ class CartItemServiceTest {
     void 담겨있지_않은_상품의_수량을_변경할_경우_예외가_발생한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
+        AuthMember authMember = new AuthMember(1L, "email@email.com");
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.empty());
 
         // expect
-        assertThatThrownBy(() -> cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(10)))
+        assertThatThrownBy(() -> cartItemService.updateQuantity(authMember, 1L, new CartItemQuantityUpdateRequest(10)))
                 .isInstanceOf(CartItemException.class);
     }
 
@@ -151,6 +166,7 @@ class CartItemServiceTest {
     void 변경할_수량이_0인_경우_장바구니에서_삭제한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
+        AuthMember authMember = new AuthMember(1L, "email@email.com");
         CartItem cartItem = new CartItem(
                 1L,
                 1,
@@ -159,9 +175,11 @@ class CartItemServiceTest {
         );
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(1L, "email@email.com", "password")));
 
         // when
-        cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(0));
+        cartItemService.updateQuantity(authMember, 1L, new CartItemQuantityUpdateRequest(0));
 
         // then
         verify(cartItemRepository, times(1)).deleteById(1L);
@@ -180,9 +198,11 @@ class CartItemServiceTest {
         );
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(2L, "email2@email.com", "password")));
 
         // expect
-        Member otherMember = new Member(2L, "email2@email.com", "password");
+        AuthMember otherMember = new AuthMember(2L, "email2@email.com");
         assertThatThrownBy(() -> cartItemService.updateQuantity(otherMember, 1L, new CartItemQuantityUpdateRequest(10)))
                 .isInstanceOf(CartItemException.class);
     }
@@ -191,6 +211,7 @@ class CartItemServiceTest {
     void 장바구니_상품을_제거한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
+        AuthMember authMember = new AuthMember(1L, "email@email.com");
         CartItem cartItem = new CartItem(
                 1L,
                 1,
@@ -199,9 +220,11 @@ class CartItemServiceTest {
         );
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(1L, "email@email.com", "password")));
 
         // when
-        cartItemService.remove(member, 1L);
+        cartItemService.remove(authMember, 1L);
 
         // then
         verify(cartItemRepository, times(1)).deleteById(1L);
@@ -211,11 +234,12 @@ class CartItemServiceTest {
     void 담겨있지_않은_상품을_제거할_경우_예외가_발생한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
+        AuthMember authMember = new AuthMember(1L, "email@email.com");
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.empty());
 
         // expect
-        assertThatThrownBy(() -> cartItemService.remove(member, 1L))
+        assertThatThrownBy(() -> cartItemService.remove(authMember, 1L))
                 .isInstanceOf(CartItemException.class);
 
         verify(cartItemRepository, never()).deleteById(1L);
@@ -233,9 +257,11 @@ class CartItemServiceTest {
         );
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(new Member(2L, "email2@email.com", "password")));
 
         // expect
-        Member otherMember = new Member(2L, "email2@email.com", "password");
+        AuthMember otherMember = new AuthMember(2L, "email2@email.com");
         assertThatThrownBy(() -> cartItemService.remove(otherMember, 1L))
                 .isInstanceOf(CartItemException.class);
 

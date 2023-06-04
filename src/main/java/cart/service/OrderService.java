@@ -2,6 +2,7 @@ package cart.service;
 
 import static cart.exception.ExceptionType.NOT_FOUND_CART_ITEM;
 import static cart.exception.ExceptionType.NOT_FOUND_COUPON;
+import static cart.exception.ExceptionType.NOT_FOUND_MEMBER;
 import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
 
 import cart.domain.CartItem;
@@ -12,13 +13,16 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.coupon.repository.MemberCouponRepository;
 import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.MemberRepository;
 import cart.domain.repository.OrderRepository;
+import cart.dto.AuthMember;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
+import cart.exception.MemberException;
 import cart.exception.OrderException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,20 +37,23 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberCouponRepository memberCouponRepository;
     private final CouponService couponService;
+    private final MemberRepository memberRepository;
 
     public OrderService(CartItemRepository cartItemRepository, OrderRepository orderRepository,
-                        MemberCouponRepository memberCouponRepository, CouponService couponService) {
+                        MemberCouponRepository memberCouponRepository, CouponService couponService,
+                        MemberRepository memberRepository) {
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
         this.memberCouponRepository = memberCouponRepository;
         this.couponService = couponService;
+        this.memberRepository = memberRepository;
     }
 
-    public Long register(OrderRequest orderRequest, Member member) {
+    public Long register(OrderRequest orderRequest, AuthMember authMember) {
         List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
                 .map(this::findCartItem)
                 .collect(Collectors.toList());
-
+        Member member = toMember(authMember);
         MemberCoupon memberCoupon = findMemberCoupon(orderRequest.getCouponId(), member);
 
         Order order = Order.of(member, cartItems, orderRequest.getDeliveryFee(), memberCoupon);
@@ -62,6 +69,11 @@ public class OrderService {
             couponService.issueByOrderPrice(totalPrice, member);
         }
         return savedOrder.getId();
+    }
+
+    private Member toMember(AuthMember authMember) {
+        return memberRepository.findById(authMember.getId())
+                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
     }
 
     private MemberCoupon findMemberCoupon(Long couponId, Member member) {
@@ -86,14 +98,16 @@ public class OrderService {
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
     }
 
-    public OrderDetailResponse findById(Long id, Member member) {
+    public OrderDetailResponse findById(Long id, AuthMember authMember) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
+        Member member = toMember(authMember);
         order.validateOwner(member);
         return OrderDetailResponse.from(order);
     }
 
-    public List<OrderResponse> findAll(Member member) {
+    public List<OrderResponse> findAll(AuthMember authMember) {
+        Member member = toMember(authMember);
         List<Order> orders = orderRepository.findAllByMember(member);
 
         return orders.stream()

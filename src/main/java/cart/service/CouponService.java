@@ -6,7 +6,11 @@ import cart.domain.coupon.IssuableCoupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.coupon.repository.CouponRepository;
 import cart.domain.coupon.repository.MemberCouponRepository;
+import cart.domain.repository.MemberRepository;
+import cart.dto.AuthMember;
 import cart.dto.MemberCouponsResponse;
+import cart.exception.ExceptionType;
+import cart.exception.MemberException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,15 +21,24 @@ public class CouponService {
 
     private final MemberCouponRepository memberCouponRepository;
     private final CouponRepository couponRepository;
+    private final MemberRepository memberRepository;
 
-    public CouponService(MemberCouponRepository memberCouponRepository, CouponRepository couponRepository) {
+    public CouponService(MemberCouponRepository memberCouponRepository, CouponRepository couponRepository,
+                         MemberRepository memberRepository) {
         this.memberCouponRepository = memberCouponRepository;
         this.couponRepository = couponRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public MemberCouponsResponse findAll(Member member) {
+    public MemberCouponsResponse findAll(AuthMember authMember) {
+        Member member = toMember(authMember);
         List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpired(member);
         return MemberCouponsResponse.from(memberCoupons);
+    }
+
+    private Member toMember(AuthMember authMember) {
+        return memberRepository.findById(authMember.getId())
+                .orElseThrow(() -> new MemberException(ExceptionType.NOT_FOUND_MEMBER));
     }
 
     public void issueByOrderPrice(Money totalOrderPrice, Member member) {

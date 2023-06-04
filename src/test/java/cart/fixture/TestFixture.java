@@ -9,6 +9,7 @@ import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.MemberCoupon;
+import cart.dto.AuthMember;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ import java.util.List;
 public class TestFixture {
 
     public static final Member 밀리 = new Member(1L, "millie@email.com", "millie");
+    public static final AuthMember 밀리_인증_정보 = new AuthMember(1L, "millie@email.com");
     public static final Member 박스터 = new Member(2L, "boxster@email.com", "boxster");
+    public static final AuthMember 박스터_인증_정보 = new AuthMember(2L, "boxster@email.com");
 
     public static final Coupon 쿠폰_10퍼센트 = new Coupon(1L, "10퍼센트 할인 쿠폰", CouponType.RATE, BigDecimal.valueOf(10),
             new Money(21000));

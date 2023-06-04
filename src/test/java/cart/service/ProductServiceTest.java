@@ -10,10 +10,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import cart.domain.Product;
+import cart.domain.repository.ProductRepository;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductException;
-import cart.infrastructure.repository.JdbcProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -33,7 +33,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Mock
-    private JdbcProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Test
     void 전체_상품을_조회한다() {

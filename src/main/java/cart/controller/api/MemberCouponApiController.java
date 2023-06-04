@@ -1,7 +1,7 @@
 package cart.controller.api;
 
 import cart.controller.AuthPrincipal;
-import cart.domain.Member;
+import cart.dto.AuthMember;
 import cart.dto.MemberCouponsResponse;
 import cart.service.CouponService;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class MemberCouponApiController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberCouponsResponse> findAll(@AuthPrincipal Member member) {
+    public ResponseEntity<MemberCouponsResponse> findAll(@AuthPrincipal AuthMember member) {
         MemberCouponsResponse couponsResponse = couponService.findAll(member);
         return ResponseEntity.ok(couponsResponse);
     }
