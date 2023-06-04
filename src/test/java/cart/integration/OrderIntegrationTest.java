@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.domain.repository.CouponRepository;
 import cart.domain.repository.MemberRepository;
 import cart.dto.request.CartItemRequest;
+import cart.dto.request.OrderCartItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.CartItemResponse;
@@ -53,7 +54,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void orderWithoutCoupon() {
         // given
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+        final OrderRequest orderRequest = new OrderRequest(List.of(
+                new OrderCartItemRequest(cartItemRequest1.getProductId(), cartItemRequest1.getQuantity()),
+                new OrderCartItemRequest(cartItemRequest2.getProductId(), cartItemRequest2.getQuantity())),
                 65_000, 2_000, "서울특별시 송파구", null);
 
         // when
@@ -73,7 +76,9 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final Coupon coupon = couponRepository.findAll().get(0);
         postCoupon(coupon.getId());
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+        final OrderRequest orderRequest = new OrderRequest(List.of(
+                new OrderCartItemRequest(cartItemRequest1.getProductId(), cartItemRequest1.getQuantity()),
+                new OrderCartItemRequest(cartItemRequest2.getProductId(), cartItemRequest2.getQuantity())),
                 65_000, 2_000, "서울특별시 송파구", coupon.getId());
 
         // when
@@ -91,7 +96,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void orderThenDeleteCartItem() {
         // given
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+        final OrderRequest orderRequest = new OrderRequest(List.of(
+                new OrderCartItemRequest(cartItemRequest1.getProductId(), cartItemRequest1.getQuantity()),
+                new OrderCartItemRequest(cartItemRequest2.getProductId(), cartItemRequest2.getQuantity())),
                 65_000, 2_000, "서울특별시 송파구", null);
 
         // when
@@ -112,7 +119,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void showOrderDetail() {
         // given
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+        final OrderRequest orderRequest = new OrderRequest(List.of(
+                new OrderCartItemRequest(cartItemRequest1.getProductId(), cartItemRequest1.getQuantity()),
+                new OrderCartItemRequest(cartItemRequest2.getProductId(), cartItemRequest2.getQuantity())),
                 65_000, 2_000, "서울특별시 송파구", null);
         final OrderDetailResponse orderDetailResponse = order(orderRequest).as(OrderDetailResponse.class);
 
@@ -131,7 +140,9 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final Coupon coupon = couponRepository.findAll().get(0);
         postCoupon(coupon.getId());
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+        final OrderRequest orderRequest = new OrderRequest(List.of(
+                new OrderCartItemRequest(cartItemRequest1.getProductId(), cartItemRequest1.getQuantity()),
+                new OrderCartItemRequest(cartItemRequest2.getProductId(), cartItemRequest2.getQuantity())),
                 65_000, 2_000, "서울특별시 송파구", coupon.getId());
         final OrderDetailResponse orderDetailResponse = order(orderRequest).as(OrderDetailResponse.class);
 

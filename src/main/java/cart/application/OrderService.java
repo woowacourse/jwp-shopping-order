@@ -70,7 +70,7 @@ public class OrderService {
     private List<OrderItem> findOrderItems(final OrderRequest orderRequest) {
         return orderRequest.getProducts().stream()
                 .map(it -> {
-                    final Product product = productRepository.findById(it.getProductId());
+                    final Product product = productRepository.findById(it.getId());
                     return new OrderItem(product, it.getQuantity());
                 }).collect(Collectors.toList());
     }

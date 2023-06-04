@@ -4,7 +4,7 @@ import java.util.List;
 
 public class OrderRequest {
 
-    private List<CartItemRequest> products;
+    private List<OrderCartItemRequest> products;
     private int totalProductAmount;
     private int deliveryAmount;
     private String address;
@@ -13,7 +13,7 @@ public class OrderRequest {
     public OrderRequest() {
     }
 
-    public OrderRequest(final List<CartItemRequest> products, final Integer totalProductAmount, final int deliveryAmount,
+    public OrderRequest(final List<OrderCartItemRequest> products, final Integer totalProductAmount, final int deliveryAmount,
         final String address, final Long couponId) {
         this.products = products;
         this.totalProductAmount = totalProductAmount;
@@ -22,7 +22,7 @@ public class OrderRequest {
         this.couponId = couponId;
     }
 
-    public List<CartItemRequest> getProducts() {
+    public List<OrderCartItemRequest> getProducts() {
         return products;
     }
 
