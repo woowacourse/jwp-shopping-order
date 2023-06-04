@@ -7,4 +7,4 @@ git pull origin main
 fuser -k 8080/tcp
 
 cd build/libs
-nohup java -jar *.jar &
+nohup java -jar -Dspring.profiles.active=prod *.jar &
