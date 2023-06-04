@@ -6,19 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -76,16 +67,7 @@ public class ProductApiControllerTest {
             //then
             response
                     .andExpect(status().isCreated())
-                    .andExpect(header().string("location", endsWith("1")))
-                    .andDo(document("product-create",
-                            preprocessRequest(prettyPrint()),
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                    fieldWithPath("name").description("제품 명"),
-                                    fieldWithPath("price").description("제품 가격"),
-                                    fieldWithPath("imageUrl").description("제품 이미지 url")
-                            )
-                    ));
+                    .andExpect(header().string("location", endsWith("1")));
         }
 
         @ParameterizedTest
@@ -150,19 +132,7 @@ public class ProductApiControllerTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
-                .andDo(print())
-                .andDo(document("product-getById",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("상품 아이디")),
-                        responseFields(
-                                fieldWithPath("id").description("제품 id"),
-                                fieldWithPath("name").description("제품 명"),
-                                fieldWithPath("price").description("제품 가격"),
-                                fieldWithPath("imageUrl").description("제품 이미지 url")
-                        )
-                ));
+                .andDo(print());
     }
 
     @Test
@@ -183,17 +153,7 @@ public class ProductApiControllerTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
-                .andDo(print())
-                .andDo(document("product-getAll",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("[].id").description("제품 id"),
-                                fieldWithPath("[].name").description("제품 명"),
-                                fieldWithPath("[].price").description("제품 가격"),
-                                fieldWithPath("[].imageUrl").description("제품 이미지 url")
-                        )
-                ));
+                .andDo(print());
     }
 
     @Nested
@@ -210,18 +170,7 @@ public class ProductApiControllerTest {
             //then
             result
                     .andExpect(status().isOk())
-                    .andDo(print())
-                    .andDo(document("product-update",
-                            preprocessRequest(prettyPrint()),
-                            preprocessResponse(prettyPrint()),
-                            pathParameters(
-                                    parameterWithName("id").description("상품 아이디")),
-                            requestFields(
-                                    fieldWithPath("name").description("제품 명"),
-                                    fieldWithPath("price").description("제품 가격"),
-                                    fieldWithPath("imageUrl").description("제품 이미지 url")
-                            )
-                    ));
+                    .andDo(print());
         }
 
         @ParameterizedTest
@@ -278,13 +227,7 @@ public class ProductApiControllerTest {
         //then
         result
                 .andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("product-delete",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("상품 아이디")
-                        )));
+                .andDo(print());
     }
 }
 
