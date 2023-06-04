@@ -103,4 +103,30 @@ class OrderMemberUsedPointDaoTest {
         assertThat(usedPoints).usingRecursiveFieldByFieldElementComparator()
                               .contains(주문1_포인트_사용1, 주문1_포인트_사용2, 주문1_포인트_사용3);
     }
+
+    @DisplayName("특정 rewardPointId가 사용되었는지 확인할 수 있다 - 사용한 경우")
+    @Test
+    void isAlreadyUsedReward() {
+        // given
+        Long rewardPointId = 1L;
+
+        // when
+        boolean isAlreadyUsed = orderMemberUsedPointDao.isAlreadyUsedReward(rewardPointId);
+
+        // then
+        assertThat(isAlreadyUsed).isTrue();
+    }
+
+    @DisplayName("특정 rewardPointId가 사용되었는지 확인할 수 있다 - 사용하지 않은 경우")
+    @Test
+    void isNotUsedReward() {
+        // given
+        Long rewardPointId = 10L;
+
+        // when
+        boolean isAlreadyUsed = orderMemberUsedPointDao.isAlreadyUsedReward(rewardPointId);
+
+        // then
+        assertThat(isAlreadyUsed).isFalse();
+    }
 }
