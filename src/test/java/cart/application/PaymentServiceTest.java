@@ -159,7 +159,7 @@ class PaymentServiceTest {
 
         Point 취소한_주문_적립_포인트 = new Point(7L, 1100, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2023-06-15 12:12:12", formatter));
 
-        PurchaseOrderInfo 취소한_주문 = new PurchaseOrderInfo(7L, 회원2, LocalDateTime.parse("2023-05-31 17:11:12", formatter), 21_000, 2_000, OrderStatus.CANCELLED);
+        PurchaseOrderInfo 취소한_주문 = new PurchaseOrderInfo(7L, 회원2, LocalDateTime.parse("2023-05-31 17:11:12", formatter), 21_000, 2_000, OrderStatus.CANCELED);
 
         Member member = 회원2;
         Long orderId = 7L;

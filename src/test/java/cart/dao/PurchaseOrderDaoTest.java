@@ -153,7 +153,7 @@ class PurchaseOrderDaoTest {
         PurchaseOrderInfo updatePurchaseOrder =
                 new PurchaseOrderInfo(1L, 회원1, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
                         10_000, 1_000, OrderStatus.PENDING);
-        updatePurchaseOrder.changeStatus(OrderStatus.CANCELLED);
+        updatePurchaseOrder.changeStatus(OrderStatus.CANCELED);
 
         // when
         purchaseOrderDao.updateStatus(updatePurchaseOrder);

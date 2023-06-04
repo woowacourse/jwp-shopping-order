@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cart.domain.purchaseorder.OrderStatus.CANCELLED;
+import static cart.domain.purchaseorder.OrderStatus.CANCELED;
 
 @Transactional
 @Service
@@ -156,15 +156,15 @@ public class PaymentService {
     }
 
     public void deleteOrder(Member member, Long orderId) {
-        checkCancelledOrder(orderId);
+        checkCanceledOrder(orderId);
         Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId);
         checkAlreadyUsed(rewardPointByOrder);
         updateUsedAndRewardPoint(member, orderId, rewardPointByOrder);
         updatePurchaseOrderStatus(orderId);
     }
 
-    private void checkCancelledOrder(Long orderId) {
-        if (purchaseOrderDao.isCancelled(orderId)) {
+    private void checkCanceledOrder(Long orderId) {
+        if (purchaseOrderDao.isCanceled(orderId)) {
             throw new IllegalArgumentException("이미 취소된 주문입니다.");
         }
     }
@@ -183,7 +183,7 @@ public class PaymentService {
     private void updatePurchaseOrderStatus(Long orderId) {
         purchaseOrderDao.findById(orderId)
                         .ifPresent(purchaseOrderInfo -> {
-                                    purchaseOrderInfo.changeStatus(CANCELLED);
+                                    purchaseOrderInfo.changeStatus(CANCELED);
                                     purchaseOrderDao.updateStatus(purchaseOrderInfo);
 
                                 }

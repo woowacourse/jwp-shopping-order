@@ -105,8 +105,8 @@ public class PurchaseOrderDao {
         jdbcTemplate.update(sql, source);
     }
 
-    public boolean isCancelled(Long orderId) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM purchase_order WHERE id = :id and status = 'Cancelled')";
+    public boolean isCanceled(Long orderId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM purchase_order WHERE id = :id and status = 'Canceled')";
         SqlParameterSource source = new MapSqlParameterSource("id", orderId);
         return jdbcTemplate.queryForObject(sql, source, Boolean.class);
     }

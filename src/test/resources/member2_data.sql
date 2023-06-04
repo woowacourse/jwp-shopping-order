@@ -1,9 +1,9 @@
 -- purchase_order
 INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-05-20 12:12:12', 10000, 1000, 'Pending');
-INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-05-25 14:13:12', 12000, 4000, 'Cancelled');
+INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-05-25 14:13:12', 12000, 4000, 'Canceled');
 INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-05-31 17:11:12', 21000, 2000, 'Pending');
 INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-05-31 17:11:12', 21000, 2000, 'Pending');
-INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-06-01 17:11:12', 15000, 1000, 'Cancelled');
+INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (2, '2023-06-01 17:11:12', 15000, 1000, 'Canceled');
 
 -- purchase_order_item
 INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (4, 1, '치킨', 10000, 'testImage1', 2);

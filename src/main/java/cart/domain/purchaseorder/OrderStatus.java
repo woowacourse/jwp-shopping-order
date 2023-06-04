@@ -8,7 +8,7 @@ public enum OrderStatus {
     PROCESSING("Processing"),
     SHIPPED("Shipped"),
     DELIVERED("Delivered"),
-    CANCELLED("Cancelled");
+    CANCELED("Canceled");
 
     private static final HashMap<String, OrderStatus> stringToStatus = new HashMap<>();
     static {

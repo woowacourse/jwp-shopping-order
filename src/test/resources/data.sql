@@ -15,7 +15,7 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 3);
 
 -- purchase_order
 INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (1, '2023-05-20 12:12:12', 10000, 1000, 'Pending');
-INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (1, '2023-05-25 14:13:12', 12000, 4000, 'Cancelled');
+INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (1, '2023-05-25 14:13:12', 12000, 4000, 'Canceled');
 INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (1, '2023-05-31 17:11:12', 21000, 2000, 'Pending');
 
 -- purchase_order_item
