@@ -1,4 +1,4 @@
-package cart.ui.dto.order;
+package cart.ui.dto.cartitem;
 
 public class CartItemsPriceResponse {
 

@@ -6,7 +6,7 @@ import cart.ui.dto.cartitem.CartItemIdsRequest;
 import cart.ui.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.ui.dto.cartitem.CartItemRequest;
 import cart.ui.dto.cartitem.CartItemResponse;
-import cart.ui.dto.order.CartItemsPriceResponse;
+import cart.ui.dto.cartitem.CartItemsPriceResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

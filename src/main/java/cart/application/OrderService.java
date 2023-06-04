@@ -41,14 +41,18 @@ public class OrderService {
         final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(request.getCartItemIds()));
         cartItems.checkOwner(findMember);
         final int totalPrice = cartItems.getTotalPrice();
-        if (totalPrice + cartItems.getDeliveryFee() < request.getPoint()) {
-            throw new InvalidPointUseException(totalPrice, request.getPoint());
-        }
+        validateInvalidPointUse(request, cartItems, totalPrice);
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberRepository.save(updatedMember);
         final Long orderId = orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
         cartItemRepository.deleteByIds(cartItems.getCartItemIds());
         return orderId;
+    }
+
+    private void validateInvalidPointUse(final OrderRequest request, final CartItems cartItems, final int totalPrice) {
+        if (totalPrice + cartItems.getDeliveryFee() < request.getPoint()) {
+            throw new InvalidPointUseException(totalPrice, request.getPoint());
+        }
     }
 
     public OrderDetailResponse getOrderDetail(final Member member, final Long orderId) {

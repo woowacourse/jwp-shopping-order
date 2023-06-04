@@ -7,7 +7,7 @@ import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.ui.dto.cartitem.CartItemRequest;
-import cart.ui.dto.order.CartItemsPriceResponse;
+import cart.ui.dto.cartitem.CartItemsPriceResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

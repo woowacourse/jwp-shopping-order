@@ -4,7 +4,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
-@Profile(value = "prod")
+import static cart.env.Profile.PROFILE_ZONE;
+
+
+@Profile(value = PROFILE_ZONE)
 @Configuration
 @PropertySource(
         value = {
