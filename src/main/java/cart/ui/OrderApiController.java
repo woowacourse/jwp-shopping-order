@@ -3,6 +3,8 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
@@ -44,19 +46,31 @@ public class OrderApiController {
         return ResponseEntity.ok(orderResponses);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> showOrderDetail(Member member, @PathVariable long id) {
-        Order orderDetail = orderService.getOrderDetailById(member, id);
-        return ResponseEntity.ok(toOrderResponse(orderDetail));
-    }
-
     private OrderResponse toOrderResponse(Order order) {
         return new OrderResponse(
                 order.getId(),
-                order.getOrderProducts(),
+                toOrderProductResponse(order.getOrderProducts().getOrderProducts()),
                 order.getPayment().getTotalPrice(),
                 order.getPayment().getUsedPoint(),
                 order.getCreatedAt()
         );
+    }
+
+    private List<OrderProductResponse> toOrderProductResponse(List<OrderProduct> orderProducts) {
+        return orderProducts.stream()
+                .map(orderProduct -> new OrderProductResponse(
+                        orderProduct.getProductId(),
+                        orderProduct.getName(),
+                        orderProduct.getPrice(),
+                        orderProduct.getImageUrl(),
+                        orderProduct.getQuantity(),
+                        orderProduct.getTotalPrice()
+                )).collect(toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> showOrderDetail(Member member, @PathVariable long id) {
+        Order orderDetail = orderService.getOrderDetailById(member, id);
+        return ResponseEntity.ok(toOrderResponse(orderDetail));
     }
 }

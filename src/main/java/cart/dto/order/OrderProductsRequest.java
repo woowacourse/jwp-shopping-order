@@ -13,13 +13,16 @@ public class OrderProductsRequest {
 
     @PositiveOrZero(message = "입력 가능한 포인트는 0포인트 부터입니다.")
     private int point;
+    @PositiveOrZero(message = "입력 가능한 배달비는 0원 부터입니다.")
+    private int deliveryFee;
 
     public OrderProductsRequest() {
     }
 
-    public OrderProductsRequest(List<Long> cartIds, int point) {
+    public OrderProductsRequest(List<Long> cartIds, int point, int deliveryFee) {
         this.cartIds = cartIds;
         this.point = point;
+        this.deliveryFee = deliveryFee;
     }
 
     public List<Long> getCartIds() {
