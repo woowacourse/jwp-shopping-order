@@ -1,16 +1,16 @@
 package cart.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class CartItemQuantityUpdateRequest {
-    private int quantity;
+    private final Integer quantity;
 
-    public CartItemQuantityUpdateRequest() {
-    }
-
-    public CartItemQuantityUpdateRequest(final int quantity) {
+    @JsonCreator
+    public CartItemQuantityUpdateRequest(final Integer quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 }

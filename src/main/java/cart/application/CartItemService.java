@@ -5,8 +5,8 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
 import cart.exception.NoSuchDataExistException;
 import java.util.List;
@@ -31,8 +31,8 @@ public class CartItemService {
     }
 
     @Transactional
-    public Long addCartItem(final Member member, final CartItemRequest cartItemRequest) {
-        final Product productById = productDao.findProductById(cartItemRequest.getProductId())
+    public Long addCartItem(final Member member, final CartItemAddRequest cartItemAddRequest) {
+        final Product productById = productDao.findProductById(cartItemAddRequest.getProductId())
                 .orElseThrow(NoSuchDataExistException::new);
         return cartItemDao.saveCartItem(new CartItem(1, member, productById));
     }

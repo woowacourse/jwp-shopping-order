@@ -6,9 +6,9 @@ import java.util.List;
 public class OrderPostRequest {
     private final List<Long> cartItems;
     @JsonProperty("totalPrice")
-    private final int finalPrice;
+    private final Integer finalPrice;
 
-    public OrderPostRequest(final List<Long> cartItems, final int finalPrice) {
+    public OrderPostRequest(final List<Long> cartItems, final Integer finalPrice) {
         this.cartItems = cartItems;
         this.finalPrice = finalPrice;
     }
@@ -17,7 +17,7 @@ public class OrderPostRequest {
         return cartItems;
     }
 
-    public int getFinalPrice() {
+    public Integer getFinalPrice() {
         return finalPrice;
     }
 }

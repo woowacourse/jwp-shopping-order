@@ -5,14 +5,14 @@ import java.util.List;
 
 public class OrderResponse {
     @JsonProperty("priceBeforeDiscount")
-    private final int totalPrice;
+    private final Integer totalPrice;
     @JsonProperty("priceAfterDiscount")
-    private final int finalPrice;
+    private final Integer finalPrice;
     private final List<ProductInOrderResponse> products;
 
     public OrderResponse(
-            final int totalPrice,
-            final int finalPrice,
+            final Integer totalPrice,
+            final Integer finalPrice,
             final List<ProductInOrderResponse> products
     ) {
         this.totalPrice = totalPrice;
@@ -20,11 +20,11 @@ public class OrderResponse {
         this.products = products;
     }
 
-    public int getTotalPrice() {
+    public Integer getTotalPrice() {
         return totalPrice;
     }
 
-    public int getFinalPrice() {
+    public Integer getFinalPrice() {
         return finalPrice;
     }
 

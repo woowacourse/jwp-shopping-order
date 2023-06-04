@@ -2,8 +2,8 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
+import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
 import java.net.URI;
 import java.util.List;
@@ -33,8 +33,8 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(final Member member, @RequestBody final CartItemRequest cartItemRequest) {
-        final Long cartItemId = cartItemService.addCartItem(member, cartItemRequest);
+    public ResponseEntity<Void> addCartItems(final Member member, @RequestBody final CartItemAddRequest request) {
+        final Long cartItemId = cartItemService.addCartItem(member, request);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }

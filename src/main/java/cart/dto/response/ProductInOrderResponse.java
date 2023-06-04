@@ -3,15 +3,15 @@ package cart.dto.response;
 public class ProductInOrderResponse {
     private final Long id;
     private final String name;
-    private final int price;
-    private final int count;
+    private final Integer price;
+    private final Integer count;
     private final String imageUrl;
 
     public ProductInOrderResponse(
             final Long id,
             final String name,
-            final int price,
-            final int count,
+            final Integer price,
+            final Integer count,
             final String imageUrl
     ) {
         this.id = id;
@@ -29,11 +29,11 @@ public class ProductInOrderResponse {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 

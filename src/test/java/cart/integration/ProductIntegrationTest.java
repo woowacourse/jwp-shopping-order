@@ -3,7 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.response.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +46,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void 상품_추가_테스트() {
-        final var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        final var product = new ProductCreateRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
         final var response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +61,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void 추가된_상품_조회_테스트() {
-        final var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        final var product = new ProductCreateRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product
         final var location =
