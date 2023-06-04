@@ -62,6 +62,14 @@ public class CartItems {
         return Order.of(null, orderItems, member, memberCoupon);
     }
 
+    public void checkDuplicated(final Long productId) {
+        for (CartItem cartItem : cartItems) {
+            if (Objects.equals(cartItem.getProduct().getId(), productId)) {
+                throw new CartItemException.AlreadyExist("이미 장바구니에 존재하는 상품입니다.");
+            }
+        }
+    }
+
     public List<CartItem> getCartItems() {
         return cartItems;
     }

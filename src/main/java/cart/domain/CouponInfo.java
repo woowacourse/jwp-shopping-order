@@ -36,15 +36,12 @@ public class CouponInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final CouponInfo that = (CouponInfo) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(minOrderPrice, that.minOrderPrice)
-                && Objects.equals(maxDiscountPrice, that.maxDiscountPrice);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, minOrderPrice, maxDiscountPrice);
+        return Objects.hash(id);
     }
 
     @Override

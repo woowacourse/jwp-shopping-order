@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -30,12 +31,8 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        List<CartItem> cartItems = cartItemRepository.findByMember(member);
-        for (CartItem cartItem : cartItems) {
-            if (Objects.equals(cartItem.getProduct().getId(), cartItemRequest.getProductId())) {
-                throw new CartItemException.AlreadyExist("이미 장바구니에 존재하는 상품입니다.");
-            }
-        }
+        CartItems cartItems = new CartItems(cartItemRepository.findByMember(member));
+        cartItems.checkDuplicated(cartItemRequest.getProductId());
         return cartItemRepository.save(new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
     }
 

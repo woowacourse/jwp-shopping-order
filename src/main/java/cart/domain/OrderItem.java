@@ -34,14 +34,12 @@ public class OrderItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id)
-                && Objects.equals(product, orderItem.product)
-                && Objects.equals(quantity, orderItem.quantity);
+        return Objects.equals(id, orderItem.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, product, quantity);
+        return Objects.hash(id);
     }
 
     @Override
