@@ -17,6 +17,7 @@ import cart.dto.CartItemRequest;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.dto.SingleOrderResponse;
 import cart.exception.BusinessException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,13 +53,19 @@ public class OrderService {
     final Long orderId = orderDao.createOrder(order);
     final List<Integer> quantities = saveProductOrder(requestProducts, products, orderId);
 
-    memberCouponDao.use(member.getId(), coupon.getId());
+    useIfSelectCoupon(member, coupon);
 
     final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(products, quantities);
     
     return new OrderResponse(orderId, order.calculateTotalProductAmount(quantities).getValue(),
         order.getDeliveryAmount().getValue(), order.calculateDiscountedAmount(quantities).getValue(),
         order.getAddress(), orderProductResponses);
+  }
+
+  private void useIfSelectCoupon(Member member, Coupon coupon) {
+    if (coupon.getId() != null) {
+      memberCouponDao.use(member.getId(), coupon.getId());
+    }
   }
 
   private List<Integer> saveProductOrder(List<CartItemRequest> requestProducts, List<Product> products, Long orderId) {
@@ -73,7 +80,7 @@ public class OrderService {
 
   private Coupon findCoupon(OrderRequest orderRequest) {
     return couponDao.findById(orderRequest.getCouponId())
-        .orElseThrow(() -> new BusinessException("찾는 쿠폰이 존재하지 않습니다"));
+        .orElse(Coupon.empty());
   }
 
   private List<Product> findProducts(List<CartItemRequest> requestProducts) {
@@ -104,15 +111,15 @@ public class OrderService {
 
     return productOrders.stream()
         .map(productOrder -> {
-          final Long orderId = productOrder.getOrderId();
+          final Long orderId = productOrder.getOrder().getId();
           return new AllOrderResponse(orderId, productsByOrderId.get(orderId));
         }).collect(Collectors.toList());
   }
 
-  private static HashMap<Long, List<OrderProductResponse>> sortProductsByOrder(final List<ProductOrder> productOrders) {
+  private HashMap<Long, List<OrderProductResponse>> sortProductsByOrder(final List<ProductOrder> productOrders) {
     final HashMap<Long, List<OrderProductResponse>> productsByOrderId = new HashMap<>();
     for (ProductOrder productOrder : productOrders) {
-      final Long key = productOrder.getOrderId();
+      final Long key = productOrder.getOrder().getId();
       final Product product = productOrder.getProduct();
       final List<OrderProductResponse> responses = productsByOrderId.getOrDefault(key, new ArrayList<>());
       responses.add(new OrderProductResponse(product.getId(), product.getName(), product.getPrice().getValue(),
@@ -122,12 +129,21 @@ public class OrderService {
     return productsByOrderId;
   }
 
-  public AllOrderResponse getOrder(final Long orderId) {
-    final List<ProductOrder> productOrders = orderDao.findOrderByOrderId(orderId);
+  public SingleOrderResponse getOrder(final Member member, final Long orderId) {
+    final List<ProductOrder> productOrders = orderDao.findOrderByOrderId(member.getId(), orderId);
 
     final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(productOrders);
 
-    return new AllOrderResponse(orderId, orderProductResponses);
+    if (productOrders.isEmpty()) {
+      return null;
+    }
+    final List<Integer> quantities = productOrders.stream().map(ProductOrder::getQuantity).collect(Collectors.toList());
+    final Order order = productOrders.get(0).getOrder();
+
+    return new SingleOrderResponse(orderId, orderProductResponses,
+        order.calculateTotalProductAmount(quantities).getValue(),
+        order.getDeliveryAmount().getValue(), order.calculateDiscountedAmount(quantities).getValue(),
+        order.getAddress());
   }
 
   private static List<OrderProductResponse> makeOrderProductResponses(List<ProductOrder> productOrders) {

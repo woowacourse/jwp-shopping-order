@@ -4,13 +4,13 @@ public class ProductOrder {
 
   private final Long id;
   private final Product product;
-  private final Long orderId;
+  private final Order order;
   private final int quantity;
 
-  public ProductOrder(Long id, Product product, Long orderId, int quantity) {
+  public ProductOrder(Long id, Product product, Order order, int quantity) {
     this.id = id;
     this.product = product;
-    this.orderId = orderId;
+    this.order = order;
     this.quantity = quantity;
   }
 
@@ -22,8 +22,8 @@ public class ProductOrder {
     return product;
   }
 
-  public Long getOrderId() {
-    return orderId;
+  public Order getOrder() {
+    return order;
   }
 
   public int getQuantity() {

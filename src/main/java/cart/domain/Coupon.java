@@ -20,6 +20,10 @@ public class Coupon {
     this.minAmount = minAmount;
   }
 
+  public static Coupon empty() {
+    return new Coupon(null, null, null, null);
+  }
+
   public Amount apply(final Amount amount) {
     if (amount.isLessThan(minAmount)) {
       throw new BusinessException(String.format("최소 금액이 %d원 이상 이여야 합니다.", minAmount.getValue()));
