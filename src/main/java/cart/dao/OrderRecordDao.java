@@ -1,44 +1,43 @@
 package cart.dao;
 
-import cart.dao.entity.OrderEntity;
+import cart.dao.entity.OrderRecordEntity;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Component
-public class OrderDao {
+public class OrderRecordDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
+    public OrderRecordDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_record")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long insert(final OrderEntity orderEntity) {
+    public Long insert(final OrderRecordEntity orderRecordEntity) {
         final Map<String, Object> params = new HashMap<>();
-        params.put("member_id", orderEntity.getMemberId());
-        params.put("order_time", orderEntity.getOrderTime());
+        params.put("member_id", orderRecordEntity.getMemberId());
+        params.put("order_time", orderRecordEntity.getOrderTime());
         return this.simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<OrderEntity> findByMemberId(final Long memberId) {
+    public List<OrderRecordEntity> findByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM order_record WHERE member_id = ?";
         return this.jdbcTemplate.query(sql, (rs, rowNum) -> {
-            return new OrderEntity(rs.getLong("id"), rs.getLong("member_id"), rs.getTimestamp("order_time"));
+            return new OrderRecordEntity(rs.getLong("id"), rs.getLong("member_id"), rs.getTimestamp("order_time"));
         }, memberId);
     }
 
-    public OrderEntity findById(final Long orderId) {
+    public OrderRecordEntity findById(final Long orderId) {
         final String sql = "SELECT * FROM order_record WHERE id = ?";
         return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            return new OrderEntity(rs.getLong("id"), rs.getLong("member_id"), rs.getTimestamp("order_time"));
+            return new OrderRecordEntity(rs.getLong("id"), rs.getLong("member_id"), rs.getTimestamp("order_time"));
         }, orderId);
     }
 }
