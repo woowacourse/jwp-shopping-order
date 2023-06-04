@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.DetailOrderResponse;
 import cart.dto.OrderPageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,5 +21,11 @@ public class OrderController {
     public ResponseEntity<OrderPageResponse> getOrderPages(Member member, @RequestParam("orderPage") Integer orderPage) {
         OrderPageResponse orders = orderService.findOrders(member, orderPage);
         return ResponseEntity.ok().body(orders);
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<DetailOrderResponse> getDetailOrder(Member member, @PathVariable Long orderId) {
+        DetailOrderResponse detailOrder = orderService.findDetailOrder(member, orderId);
+        return ResponseEntity.ok(detailOrder);
     }
 }

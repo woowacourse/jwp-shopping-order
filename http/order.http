@@ -2,3 +2,8 @@
 GET http://localhost:8080/orders?orderPage=1
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
+
+### 주문 상세 정보 조회
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json

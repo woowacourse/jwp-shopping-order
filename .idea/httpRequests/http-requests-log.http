@@ -1,0 +1,168 @@
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T165617.500.json
+
+###
+
+GET http://localhost:8080/order/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T165610.404.json
+
+###
+
+GET http://localhost:8080/orders?orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T165230.200.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T164927.404.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T164540.404.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T164144.404.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T164129.404.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T164020.404.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T164018.404.json
+
+###
+
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163445.200.json
+
+###
+
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163259.500.json
+
+###
+
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163212.500.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163153.400.json
+
+###
+
+GET http://localhost:8080/orders/orderPage%20=%201
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163146.400.json
+
+###
+
+GET http://localhost:8080/orders/orderPage%20=%201
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163145.400.json
+
+###
+
+GET http://localhost:8080/orders/orderPage%20=%201
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163144.400.json
+
+###
+
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163134.500.json
+
+###
+
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163106.500.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+<> 2023-06-04T163042.400.json
+
+###
+
+GET http://localhost:8080/orders/orderPage=1
+Authorization=Basic YUBhLmNvbToxMjM0:
+Content-Type: application/json
+
+<> 2023-06-04T162900.400.html
+
+###
+
+GET http://localhost:8080/orders/1
+Authorization=Basic YUBhLmNvbToxMjM0:
+Content-Type: application/json
+
+<> 2023-06-04T162840.400.html
+
+###
+
