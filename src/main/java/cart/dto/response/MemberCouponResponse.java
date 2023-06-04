@@ -60,7 +60,7 @@ public class MemberCouponResponse {
         return maxDiscountPrice;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
