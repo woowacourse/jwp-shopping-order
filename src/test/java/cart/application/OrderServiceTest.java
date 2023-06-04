@@ -53,7 +53,7 @@ class OrderServiceTest {
     void createOrder() {
         given(cartItemRepository.findByIds(any(), any())).willReturn(CartItems.of(List.of(CartItemFixture.CHICKEN, CartItemFixture.PIZZA)));
         given(pointRepository.updatePoint(any(), any(), any(), any())).willReturn(new OrderPoint(1L, Point.valueOf(100), Point.valueOf(50)));
-        given(orderRepository.createOrder(any(), any())).willReturn(new Order(10L, OrderFixture.ORDER1));
+        given(orderRepository.createOrder(any(), any())).willReturn(Order.of(10L, OrderFixture.ORDER1));
         final OrderResponse result = orderService.createOrder(MemberFixture.MEMBER, new OrderRequest(List.of(1L, 2L), 100, 25_000));
         assertAll(
                 () -> assertThat(result.getOrderId()).isEqualTo(10L),

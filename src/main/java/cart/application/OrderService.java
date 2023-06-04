@@ -53,7 +53,7 @@ public class OrderService {
         final Timestamp createdAt = new Timestamp(System.currentTimeMillis());
         final OrderPoint orderPoint = pointRepository.updatePoint(member, usedPoint, cartItems.getTotalPrice(), createdAt);
         productRepository.updateStock(cartItems);
-        final Order order = orderRepository.createOrder(member, new Order(cartItems, orderPoint, createdAt));
+        final Order order = orderRepository.createOrder(member, Order.of(cartItems, orderPoint, createdAt));
         return OrderResponse.of(order);
     }
 

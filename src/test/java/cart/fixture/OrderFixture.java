@@ -10,7 +10,7 @@ import cart.domain.Point;
 
 public class OrderFixture {
 
-    public static Order ORDER1 = new Order(
+    public static Order ORDER1 = Order.of(
             1L,
             CartItems.of(
                     List.of(
@@ -24,7 +24,7 @@ public class OrderFixture {
             Timestamp.valueOf("2023-05-31 10:00:00")
     );
 
-    public static Order ORDER2 = new Order(
+    public static Order ORDER2 = Order.of(
             2L,
             CartItems.of(
                     List.of(

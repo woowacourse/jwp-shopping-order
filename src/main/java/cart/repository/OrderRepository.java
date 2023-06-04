@@ -32,7 +32,7 @@ public class OrderRepository {
     public Order createOrder(final Member member, final Order order) {
         final Long orderId = insertOrder(member, order);
         insertOrderDetail(orderId, order.getCartItems());
-        return new Order(orderId, order);
+        return Order.of(orderId, order);
     }
 
     private Long insertOrder(final Member member, final Order order) {
@@ -66,7 +66,7 @@ public class OrderRepository {
     }
 
     private Order getOrderByOrdersEntity(final OrdersEntity ordersEntity) {
-        return new Order(
+        return Order.of(
                 ordersEntity.getId(),
                 getCartItemsByOrderId(ordersEntity.getId()),
                 getOrderPointByOrdersEntity(ordersEntity),

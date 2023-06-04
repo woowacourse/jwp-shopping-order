@@ -9,19 +9,23 @@ public class Order {
     private final OrderPoint orderPoint;
     private final Timestamp createdAt;
 
-    public Order(final Long id, final Order other) {
-        this(id, other.cartItems, other.orderPoint, other.createdAt);
-    }
-
-    public Order(final CartItems cartItems, final OrderPoint orderPoint, final Timestamp createdAt) {
-        this(null, cartItems, orderPoint, createdAt);
-    }
-
-    public Order(final Long id, final CartItems cartItems, final OrderPoint orderPoint, final Timestamp createdAt) {
+    private Order(final Long id, final CartItems cartItems, final OrderPoint orderPoint, final Timestamp createdAt) {
         this.id = id;
         this.cartItems = cartItems;
         this.orderPoint = orderPoint;
         this.createdAt = createdAt;
+    }
+
+    public static Order of(final Long id, final Order other) {
+        return new Order(id, other.cartItems, other.orderPoint, other.createdAt);
+    }
+
+    public static Order of(final CartItems cartItems, final OrderPoint orderPoint, final Timestamp createdAt) {
+        return new Order(null, cartItems, orderPoint, createdAt);
+    }
+
+    public static Order of(final Long id, final CartItems cartItems, final OrderPoint orderPoint, final Timestamp createdAt) {
+        return new Order(id, cartItems, orderPoint, createdAt);
     }
 
     public Long getId() {

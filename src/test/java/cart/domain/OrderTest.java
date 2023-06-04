@@ -12,11 +12,11 @@ class OrderTest {
 
     @Test
     void construct() {
-        final Order result = new Order(1L, CartItems.of(
-                List.of(
-                        CartItem.of(1L, null, null, 0),
-                        CartItem.of(2L, null, null, 0)
-                )),
+        final Order result = Order.of(1L, CartItems.of(
+                        List.of(
+                                CartItem.of(1L, null, null, 0),
+                                CartItem.of(2L, null, null, 0)
+                        )),
                 new OrderPoint(1L, null, null),
                 Timestamp.valueOf("2023-11-31 10:00:00")
         );
@@ -31,11 +31,11 @@ class OrderTest {
 
     @Test
     void constructWithNoId() {
-        final Order result = new Order(CartItems.of(
-                List.of(
-                        CartItem.of(1L, null, null, 0),
-                        CartItem.of(2L, null, null, 0)
-                )),
+        final Order result = Order.of(CartItems.of(
+                        List.of(
+                                CartItem.of(1L, null, null, 0),
+                                CartItem.of(2L, null, null, 0)
+                        )),
                 new OrderPoint(1L, null, null),
                 Timestamp.valueOf("2023-11-31 10:00:00")
         );
@@ -50,15 +50,15 @@ class OrderTest {
 
     @Test
     void constructWithOther() {
-        final Order order = new Order(CartItems.of(
-                List.of(
-                        CartItem.of(1L, null, null, 0),
-                        CartItem.of(2L, null, null, 0)
-                )),
+        final Order order = Order.of(CartItems.of(
+                        List.of(
+                                CartItem.of(1L, null, null, 0),
+                                CartItem.of(2L, null, null, 0)
+                        )),
                 new OrderPoint(1L, null, null),
                 Timestamp.valueOf("2023-11-31 10:00:00")
         );
-        final Order result = new Order(10L, order);
+        final Order result = Order.of(10L, order);
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(10L),
                 () -> assertThat(result.getCartItems().getCartItems().get(0).getId()).isEqualTo(1L),
