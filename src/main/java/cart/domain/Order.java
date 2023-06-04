@@ -12,9 +12,16 @@ public class Order {
     private final List<CartItem> cartItems;
 
     public Order(final Long id, final int points, final List<CartItem> cartItems) {
+        validatePointUnit(points);
         this.id = id;
         this.points = points;
         this.cartItems = cartItems;
+    }
+
+    private void validatePointUnit(final int points) {
+        if (points % MINIMUM_UNIT_POINTS != 0) {
+            throw new IllegalPointUsageException();
+        }
     }
 
     public Order(final int points, final List<CartItem> cartItems) {
@@ -23,9 +30,6 @@ public class Order {
 
     public void validatePoints(final int memberPoints) {
         if (points > memberPoints) {
-            throw new IllegalPointUsageException();
-        }
-        if (points % MINIMUM_UNIT_POINTS != 0) {
             throw new IllegalPointUsageException();
         }
     }
