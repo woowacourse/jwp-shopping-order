@@ -143,7 +143,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void 요청에_담긴_총_상품_금액과_실제_DB에_저장된_상품들의_총_금액이_다르면_예외가_발생한다() {
         // given
         Product newProduct = new Product(product1.getId(), product1.getName(), product1.getPrice() + 9999, product1.getImageUrl(), product1.getStock());
-        productDao.update(product1.getId(), newProduct);
+        productDao.update(newProduct);
 
         // when
         var response = orderRequest(member1, orderRequest);

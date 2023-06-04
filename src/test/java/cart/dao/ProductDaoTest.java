@@ -68,10 +68,10 @@ public class ProductDaoTest extends DaoTest {
         // given
         long savedId = productDao.insert(dummyProduct);
 
-        Product newProduct = new Product("newName", 200, "newImageUrl", 5);
+        Product newProduct = new Product(savedId, "newName", 200, "newImageUrl", 5);
 
         // when
-        productDao.update(savedId, newProduct);
+        productDao.update(newProduct);
 
         // then
         Product foundProduct = productDao.findById(savedId);

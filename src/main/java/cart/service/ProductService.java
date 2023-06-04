@@ -37,9 +37,9 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, ProductAddRequest productAddRequest) {
-        Product product = new Product(productAddRequest.getName(), productAddRequest.getPrice(), productAddRequest.getImageUrl(), productAddRequest.getStock());
+        Product newProduct = new Product(productId, productAddRequest.getName(), productAddRequest.getPrice(), productAddRequest.getImageUrl(), productAddRequest.getStock());
 
-        productDao.update(productId, product);
+        productDao.update(newProduct);
     }
 
     public void deleteProduct(Long productId) {

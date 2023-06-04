@@ -63,10 +63,10 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void update(final long id, final Product newProduct) {
+    public void update(final Product newProduct) {
         String sql = "UPDATE " + TABLE + " SET name = ?, price = ?, image_url = ?, stock = ? WHERE id = ?;";
 
-        jdbcTemplate.update(sql, newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl(), newProduct.getStock(), id);
+        jdbcTemplate.update(sql, newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl(), newProduct.getStock(), newProduct.getId());
     }
 
     public void updateStockById(final Long productId, final Integer newQuantity) {
