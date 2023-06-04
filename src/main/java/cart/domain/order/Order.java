@@ -2,7 +2,7 @@ package cart.domain.order;
 
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
-import cart.domain.pay.PayPoint;
+import cart.domain.pay.PointPolicy;
 import cart.domain.vo.Money;
 import cart.exception.OrderException;
 
@@ -33,7 +33,7 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, CartItems cartItems, Money deliveryFee, Money usePoint, PayPoint payPoint) {
+    public static Order of(Member member, CartItems cartItems, Money deliveryFee, Money usePoint, PointPolicy pointPolicy) {
         cartItems.checkOwner(member);
         validateOverFlowPoint(cartItems, usePoint);
 
@@ -42,7 +42,7 @@ public class Order {
 
         member.spendPoint(usePoint);
         member.spendMoney(realPay);
-        member.accumulatePoint(payPoint.calculate(payWithOutDeliveryFee));
+        member.accumulatePoint(pointPolicy.calculate(payWithOutDeliveryFee));
 
         return new Order(member, cartItems, usePoint, deliveryFee);
     }

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cart.domain.pay.PayPoint.DEFAULT_POINT_POLICY;
+import static cart.domain.pay.PointPolicy.DEFAULT_POINT_POLICY;
 
 @Transactional(readOnly = true)
 @Service
