@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 @Service
 public class CouponService {
 
-    public static final int COUPON_ADD_MONEY = 100000;
+    private static final int COUPON_ADD_PRICE = 100_000;
+    private static final int DEFAULT_DISCOUNT_MONEY = 1000;
+
     private final CouponDao couponDao;
 
     public CouponService(CouponDao couponDao) {
@@ -33,11 +35,11 @@ public class CouponService {
     }
 
     public void addCouponDependsOnPay(Member member, Order order) {
-        if (!order.isBiggerPrice(Money.from(COUPON_ADD_MONEY))) {
+        if (!order.isBiggerPrice(Money.from(COUPON_ADD_PRICE))) {
             return;
         }
 
-        Coupon coupon = new FixedDiscountCoupon(member.getId(), "10만원 주문 - 1000원 할인쿠폰", "image.com", 1000);
+        Coupon coupon = new FixedDiscountCoupon(member.getId(), "10만원 주문 - 1000원 할인쿠폰", "image.com", DEFAULT_DISCOUNT_MONEY);
         couponDao.save(coupon);
     }
 }
