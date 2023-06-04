@@ -23,7 +23,7 @@ public class MemberCoupons {
         return coupons.isEmpty();
     }
 
-    public MemberCoupons useCoupons() {
+    public MemberCoupons use() {
         return new MemberCoupons(coupons.stream()
                 .map(MemberCoupon::use)
                 .collect(Collectors.toList()));

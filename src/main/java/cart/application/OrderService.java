@@ -62,7 +62,7 @@ public class OrderService {
             throw new MemberCouponNotFoundException();
         }
 
-        memberCouponDao.updateCoupon(requestCoupons.getCoupons(), member.getId());
+        memberCouponDao.updateCoupon(requestCoupons.use().getCoupons(), member.getId());
         return requestCoupons;
     }
 

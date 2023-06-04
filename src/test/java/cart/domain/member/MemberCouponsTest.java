@@ -41,7 +41,7 @@ class MemberCouponsTest {
         final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount("rate", 10)), true);
         MemberCoupons memberCoupons = new MemberCoupons(List.of(멤버_쿠폰3));
 
-        List<Boolean> usedMemberCoupons = memberCoupons.useCoupons()
+        List<Boolean> usedMemberCoupons = memberCoupons.use()
                 .getCoupons()
                 .stream()
                 .map(MemberCoupon::isUsed)
