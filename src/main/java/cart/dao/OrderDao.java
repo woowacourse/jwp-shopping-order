@@ -93,7 +93,7 @@ public class OrderDao {
                 + "       o.delivery_amount   as delivery_amount, "
                 + "       o.address           as address, "
                 + "       o.total_amount      as total_amount, "
-                + "       o.member_id         as memer_id, "
+                + "       o.member_id         as member_id, "
                 + "       p.id                as product_id, "
                 + "       p.name              as product_name, "
                 + "       p.price             as product_price, "
