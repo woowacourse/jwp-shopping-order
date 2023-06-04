@@ -39,7 +39,7 @@ class OrderDaoTest {
     }
 
     @Test
-    void 주문이_정상적으로_조횐된다() {
+    void 주문이_정상적으로_조회된다() {
         LocalDateTime createdAt = LocalDateTime.now();
         OrderEntity orderEntity = new OrderEntity(null, 1L, createdAt, 1000);
 

@@ -12,7 +12,8 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -23,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(MemberController.class)
 @AutoConfigureRestDocs
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class MemberControllerTest {
 
     @Autowired
@@ -35,8 +38,7 @@ class MemberControllerTest {
     MemberDao memberDao;
 
     @Test
-    @DisplayName("회원의 포인트를 조회한다.")
-    void showCartItems() throws Exception {
+    void 회원의_포인트를_조회한다() throws Exception {
         Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
