@@ -6,5 +6,5 @@ public interface DiscountPolicy {
 
     void validateValue(final int value, final int minOrderPrice);
 
-    int calculateDiscountPrice(final int value, final CartItems cartItems);
+    int calculateDiscountPrice(final int value, final CartItems cartItems, final int maxDiscountPrice);
 }

@@ -3,9 +3,14 @@ package cart.domain.coupon;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItems;
+import cart.fixture.MemberFixture.Member_test1;
+import cart.fixture.ProductFixture.피자_20000원;
+import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
@@ -29,5 +34,18 @@ class CouponTest {
 
         // then
         assertThat(result).isEqualTo(applicable);
+    }
+
+    @Test
+    void 비율할인가격이_쿠폰의_최대할인금액을_넘을시_최대할인금액만큼_할인된다() {
+        // given
+        CartItems cartItems = new CartItems(List.of(new CartItem(Member_test1.MEMBER, 피자_20000원.PRODUCT)));
+        Coupon coupon = new Coupon(new CouponInfo("name", 1000, 2000), 20, CouponType.FIXED_PERCENTAGE);
+
+        // when
+        int discountPrice = coupon.calculateDiscountPrice(cartItems);
+
+        // then
+        assertThat(discountPrice).isEqualTo(2000);
     }
 }

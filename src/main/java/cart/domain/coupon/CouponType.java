@@ -22,8 +22,8 @@ public enum CouponType {
         discountPolicy.validateValue(value, minOrderPrice);
     }
 
-    public int calculateDiscountPrice(final int value, final CartItems cartItems) {
-        return discountPolicy.calculateDiscountPrice(value, cartItems);
+    public int calculateDiscountPrice(final int value, final CartItems cartItems, final int maxDiscountPrice) {
+        return discountPolicy.calculateDiscountPrice(value, cartItems, maxDiscountPrice);
     }
 
     public DiscountPolicy getDiscountPolicy() {

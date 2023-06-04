@@ -40,7 +40,7 @@ public class Coupon {
         if (!isApplicable(cartItems)) {
             throw new BadRequestException(COUPON_UNAVAILABLE);
         }
-        return type.calculateDiscountPrice(value, cartItems);
+        return type.calculateDiscountPrice(value, cartItems, couponInfo.getMaxDiscountPrice());
     }
 
     public Long getId() {

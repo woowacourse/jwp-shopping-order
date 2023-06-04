@@ -9,7 +9,7 @@ public class NonePolicy implements DiscountPolicy {
     }
 
     @Override
-    public int calculateDiscountPrice(final int value, final CartItems cartItems) {
+    public int calculateDiscountPrice(final int value, final CartItems cartItems, final int maxDiscountPrice) {
         return 0;
     }
 }
