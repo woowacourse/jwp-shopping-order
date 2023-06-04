@@ -8,6 +8,8 @@ public interface MemberCoupon {
 
     MemberCoupon use();
 
+    MemberCoupon cancelUsed();
+
     void checkOwner(final Member member);
 
     void checkExpired();

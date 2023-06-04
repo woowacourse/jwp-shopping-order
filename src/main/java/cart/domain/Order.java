@@ -43,6 +43,16 @@ public class Order {
         }
     }
 
+    public Order cancel() {
+        return new Order(
+                id,
+                shippingFee,
+                orderItems,
+                memberCoupon.cancelUsed(),
+                member
+        );
+    }
+
     public Long getId() {
         return id;
     }

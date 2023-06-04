@@ -62,7 +62,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderDetailResponse findOrderByIdAndMember(final Long id, final Member member) {
-        Order order = orderRepository.findByIdAndMember(id, member);
+        Order order = orderRepository.findById(id);
 
         order.checkOwner(member);
 
@@ -89,7 +89,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    // TODO: 6/1/23 request에 id 받아와야 될지 고민해보기
     private CartItem convertToCartItem(final OrderCartItemRequest orderCartItemRequest, final Member member) {
         return new CartItem(
                 orderCartItemRequest.getCartItemId(),
@@ -132,5 +131,14 @@ public class OrderService {
                 orderItem.getProduct().getImageUrl(),
                 orderItem.getQuantity()
         );
+    }
+
+    public void cancelOrder(final Long orderId, final Member member) {
+        Order order = orderRepository.findById(orderId);
+
+        Order canceledOrder = order.cancel();
+
+        memberCouponRepository.update(canceledOrder.getMemberCoupon());
+        orderRepository.delete(canceledOrder);
     }
 }

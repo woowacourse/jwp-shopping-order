@@ -66,4 +66,10 @@ public class OrderItemDao {
 
         return jdbcTemplate.query(sql, rowMapper, orderId);
     }
+
+    public void deleteByOrderId(final Long id) {
+        final String sql = "DELETE FROM order_item WHERE order_id = ? ";
+
+        jdbcTemplate.update(sql, id);
+    }
 }

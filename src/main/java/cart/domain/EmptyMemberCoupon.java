@@ -14,6 +14,11 @@ public class EmptyMemberCoupon implements MemberCoupon {
     }
 
     @Override
+    public MemberCoupon cancelUsed() {
+        return this;
+    }
+
+    @Override
     public void checkOwner(final Member member) {
     }
 

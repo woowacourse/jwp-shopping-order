@@ -162,7 +162,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                         )
                 ),
                 802000,
-                3000,
+                2000,
                 0
         );
         String jsonResponse = given().log().all()
@@ -177,5 +177,17 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         OrderDetailResponse orderDetailResponse = objectMapper.readValue(jsonResponse, OrderDetailResponse.class);
         assertThat(orderDetailResponse).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void 주문을_취소한다() {
+        given().log().all()
+                .auth().preemptive().basic("a@a.com", "1234")
+                .pathParam("orderId", 1)
+                .when()
+                .delete("/orders/{orderId}")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .log().all();
     }
 }

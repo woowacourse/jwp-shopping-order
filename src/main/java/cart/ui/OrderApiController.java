@@ -67,4 +67,15 @@ public class OrderApiController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(allOrderCouponResponse);
     }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrder(
+            Member member,
+            @PathVariable final Long orderId
+    ) {
+        orderService.cancelOrder(orderId, member);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }

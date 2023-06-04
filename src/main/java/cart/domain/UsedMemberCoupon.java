@@ -30,6 +30,17 @@ public class UsedMemberCoupon implements MemberCoupon {
     }
 
     @Override
+    public MemberCoupon cancelUsed() {
+        return new UsableMemberCoupon(
+                id,
+                coupon,
+                member,
+                expiredAt,
+                createdAt
+        );
+    }
+
+    @Override
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member, member)) {
             throw new IllegalArgumentException("다른 사용자의 쿠폰입니다.");

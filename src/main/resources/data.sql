@@ -25,7 +25,7 @@ INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at) VALUES (1,
 INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at) VALUES (1, 2, false, '2023-06-30');
 INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at) VALUES (1, 2, true, '2023-06-30');
 
-INSERT INTO `order` (member_id, member_coupon_id, shipping_fee, total_price) VALUES (1, 1, 3000, 802000);
+INSERT INTO `order` (member_id, member_coupon_id, shipping_fee, total_price) VALUES (1, 3, 0, 802000);
 
 INSERT INTO order_item (order_id, product_id, name, price, image_url, quantity) VALUES (1, 1, '지구', 1000, 'https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg', 2);
 INSERT INTO order_item (order_id, product_id, name, price, image_url, quantity) VALUES (1, 2, '화성', 200000, 'https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg', 4);
