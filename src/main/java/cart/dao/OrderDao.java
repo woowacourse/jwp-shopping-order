@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +32,10 @@ public class OrderDao {
             ps.setInt(1, order.getTotalItemPrice());
             ps.setInt(2, order.getDiscountedTotalItemPrice());
             ps.setInt(3, order.getShippingFee());
-            ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            LocalDateTime localDateTime = LocalDateTime.now();
+            ZoneId zid = ZoneId.of("Asia/Seoul");
+            ZonedDateTime zdt = localDateTime.atZone(zid);
+            ps.setTimestamp(4, Timestamp.valueOf(zdt.toLocalDateTime()));
             ps.setLong(5, memberId);
             return ps;
         }, keyHolder);
