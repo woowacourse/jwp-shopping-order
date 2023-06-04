@@ -1,13 +1,13 @@
 package cart.ui;
 
 import cart.application.PaymentService;
+import cart.application.PurchaseOrderService;
 import cart.domain.Member;
 import cart.dto.PurchaseOrderRequest;
+import cart.dto.PurchaseOrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -16,9 +16,12 @@ import java.net.URI;
 public class PurchaseOrderApiController {
 
     private final PaymentService paymentService;
+    private final PurchaseOrderService purchaseOrderService;
 
-    public PurchaseOrderApiController(PaymentService paymentService) {
+    public PurchaseOrderApiController(PaymentService paymentService,
+                                      PurchaseOrderService purchaseOrderService) {
         this.paymentService = paymentService;
+        this.purchaseOrderService = purchaseOrderService;
     }
 
     @PostMapping
@@ -26,5 +29,12 @@ public class PurchaseOrderApiController {
         Long purchaseOrderId = paymentService.createPurchaseOrder(member, purchaseOrderRequest);
         return ResponseEntity.created(URI.create("/orders/" + purchaseOrderId))
                              .build();
+    }
+
+    @GetMapping("{page}")
+    public ResponseEntity<PurchaseOrderResponse> showPurchaseOrders(Member member, @PathVariable int page) {
+        PurchaseOrderResponse purchaseOrderResponse = purchaseOrderService.getAllByMemberId(member, page);
+        return ResponseEntity.ok()
+                             .body(purchaseOrderResponse);
     }
 }

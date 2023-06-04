@@ -41,9 +41,9 @@
         Content-Type: application/json
         ```
         
-  - [ ] 주문 목록 조회
-    - [ ] GET /orders 요청과 매핑
-    - [ ] db에서 특정 회원의 주문 목록을 조회한다
+  - [x] 주문 목록 조회
+    - [x] GET /orders 요청과 매핑
+    - [x] db에서 특정 회원의 주문 목록을 조회한다
     - API 명세
       - 요청
         ```text
@@ -66,7 +66,7 @@
               "payAmount": 10000, // 최종 결재 금액 (전체 - 포인트)
               "orderAt": "2024-10-23",
               "productName": "마우스",
-            " productImageUrl": "http://example.com/chicken.jpg",
+              "productImageUrl": "http://example.com/chicken.jpg",
               "totalProductCount": 4
             },
             {
