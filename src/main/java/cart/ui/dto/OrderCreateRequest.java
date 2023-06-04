@@ -4,7 +4,7 @@ import java.util.List;
 
 public class OrderCreateRequest {
 
-    private List<CartItemDto> cartItems;
+    private List<Long> cartItemIds;
     private int totalItemDiscountAmount;
     private int totalMemberDiscountAmount;
     private int totalItemPrice;
@@ -15,8 +15,8 @@ public class OrderCreateRequest {
     public OrderCreateRequest() {
     }
 
-    public List<CartItemDto> getCartItems() {
-        return cartItems;
+    public List<Long> getCartItemIds() {
+        return cartItemIds;
     }
 
     public int getTotalItemDiscountAmount() {

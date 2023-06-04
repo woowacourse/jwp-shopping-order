@@ -8,7 +8,6 @@ import cart.domain.Product;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
-import cart.ui.dto.CartItemDto;
 import cart.ui.dto.OrderCreateRequest;
 import cart.ui.dto.OrderItemDto;
 import cart.ui.dto.OrderShowResponse;
@@ -39,9 +38,11 @@ public class OrderService {
     public Long createOrder(final Member member, final OrderCreateRequest request) {
         final List<OrderItem> orderItems = new ArrayList<>();
 
-        final List<CartItemDto> cartItemDtos = request.getCartItems();
-        for (final CartItemDto cartItemDto : cartItemDtos) {
-            final CartItem cartItem = cartItemRepository.findById(cartItemDto.getCartItemId());
+        final List<CartItem> cartItems = request.getCartItemIds()
+                .stream()
+                .map(cartItemRepository::findById)
+                .collect(Collectors.toList());
+        for (final CartItem cartItem : cartItems) {
             final Product product = cartItem.getProduct();
             final OrderItem orderItem = new OrderItem(
                     product.getName(),
@@ -52,7 +53,7 @@ public class OrderService {
             );
             orderItems.add(orderItem);
 
-            cartItemRepository.deleteById(cartItemDto.getCartItemId());
+            cartItemRepository.deleteById(cartItem.getId());
         }
 
         final Order order = new Order(orderItems, request.getShippingFee(), member);
