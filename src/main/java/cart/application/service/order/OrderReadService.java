@@ -21,9 +21,6 @@ public class OrderReadService {
 
     public List<OrderResultDto> findAllByMember(final Member member) {
         final List<Order> orders = orderRepository.findAllByMemberId(member.getId());
-        if (orders.isEmpty()) {
-            throw new IllegalArgumentException("사용자의 주문 목록이 없습니다.");
-        }
         return OrderResultDto.from(orders);
     }
 
