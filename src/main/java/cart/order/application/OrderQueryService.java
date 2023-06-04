@@ -5,6 +5,7 @@ import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
+import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
 import cart.order.domain.Order;
 import cart.order.exception.CanNotSearchNotMyOrderException;
@@ -13,10 +14,8 @@ import cart.order_item.application.mapper.OrderItemMapper;
 import cart.order_item.domain.OrderItem;
 import cart.order_item.domain.OrderedItems;
 import cart.value_object.Money;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,32 +38,35 @@ public class OrderQueryService {
     final List<Order> orders = orderDao.findByMemberId(member.getId());
     final List<OrderResponse> orderResponses = new ArrayList<>();
 
-
     for (final Order order : orders) {
+      validateOrderOwner(order, member);
+
       final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
-
       final OrderedItems orderedItems = new OrderedItems(orderItems);
+      final Money totalPayments = calculateTotalPayments(order, orderedItems);
 
-      final Money totalPrice = orderedItems.calculateAllItemPrice();
-
-      final Money totalItemPrice = totalPrice.add(order.getDeliveryFee());
-
-      final Coupon coupon = order.getCoupon();
-
-      final Money totalPayments = coupon.discount(totalItemPrice);
-
-      final OrderResponse orderResponse = new OrderResponse(
-          order.getId(),
-          OrderItemMapper.mapToOrderItemResponse(orderItems),
-          totalPayments.getValue(),
-          order.getCreatedAt(),
-          order.getOrderStatus().getValue(
-          ));
+      final OrderResponse orderResponse = OrderMapper.mapToOrderResponse(
+          order,
+          orderItems,
+          totalPayments
+      );
 
       orderResponses.add(orderResponse);
     }
 
     return orderResponses;
+  }
+
+  private Money calculateTotalPayments(
+      final Order order,
+      final OrderedItems orderedItems
+  ) {
+    final Money totalOrderPrice = orderedItems.calculateAllItemPrice()
+        .add(order.getDeliveryFee());
+
+    final Coupon coupon = order.getCoupon();
+
+    return coupon.discount(totalOrderPrice);
   }
 
   public SpecificOrderResponse searchOrder(final Member member, final Long orderId) {

@@ -17,6 +17,7 @@ public class OrderItemQueryService {
     this.orderItemDao = orderItemDao;
   }
 
+  // TODO : OrderItem 을 사용하지 않고 무조건 OrderedItem 사용하도록
   public List<OrderItem> searchOrderItemsByOrderId(final Order order) {
     return orderItemDao.findByOrderId(order.getId());
   }

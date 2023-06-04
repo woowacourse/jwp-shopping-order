@@ -2,8 +2,8 @@ package cart.order.application.dto;
 
 import cart.order_item.application.dto.OrderItemResponse;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class OrderResponse {
@@ -11,7 +11,7 @@ public class OrderResponse {
   private Long orderId;
   private List<OrderItemResponse> products;
   private BigDecimal totalPayments;
-  private ZonedDateTime createdAt;
+  private String createdAt;
   private String orderStatus;
 
   private OrderResponse() {
@@ -25,7 +25,7 @@ public class OrderResponse {
     this.orderId = orderId;
     this.products = products;
     this.totalPayments = totalPayments;
-    this.createdAt = createdAt;
+    this.createdAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     this.orderStatus = orderStatus;
   }
 
@@ -41,7 +41,7 @@ public class OrderResponse {
     return totalPayments;
   }
 
-  public ZonedDateTime getCreatedAt() {
+  public String getCreatedAt() {
     return createdAt;
   }
 
