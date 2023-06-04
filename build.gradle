@@ -48,6 +48,7 @@ asciidoctor {
 
 asciidoctor.doFirst {
     delete file("src/main/resources/static/docs")
+    file(snippetsDir).mkdirs()
 }
 
 bootJar {

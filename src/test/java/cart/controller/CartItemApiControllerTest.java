@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.application.CartItemService;
 import cart.domain.member.Member;
+import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
 import cart.fixture.Fixture;
 import cart.repository.MemberRepository;
@@ -28,11 +29,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +61,7 @@ public class CartItemApiControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void 유저_장바구니_조회() throws Exception {
+    void 장바구니_조회() throws Exception {
         //given
         given(memberRepository.getMemberByEmail(email)).willReturn(new Member(1L, email, password));
         given(cartItemService.findByMember(any(Member.class)))
@@ -87,13 +89,13 @@ public class CartItemApiControllerTest {
         //given
         given(memberRepository.getMemberByEmail(email)).willReturn(new Member(1L, email, password));
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(3L);
-        CartItemRequest cartItemRequest = new CartItemRequest(1L);
+        CartItemRequest request = new CartItemRequest(1L);
 
         //when
         ResultActions result = mockMvc.perform(post("/cart-items")
                 .contentType(APPLICATION_JSON)
                 .header("Authorization", "Basic " + encodedAuthString)
-                .content(objectMapper.writeValueAsString(cartItemRequest)));
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
@@ -105,6 +107,56 @@ public class CartItemApiControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("productId").description("제품 id")
+                        )
+                ));
+    }
+
+    @Test
+    void 장바구니_업데이트() throws Exception {
+        //given
+        given(memberRepository.getMemberByEmail(email)).willReturn(new Member(1L, email, password));
+        CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(5);
+
+        //when
+        ResultActions result = mockMvc.perform(patch("/cart-items/{id}",2L)
+                .contentType(APPLICATION_JSON)
+                .header("Authorization", "Basic " + encodedAuthString)
+                .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        result
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-item-quantity-update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("장바구니 id")
+                        ),
+                        requestFields(
+                                fieldWithPath("quantity").description("상품 개수")
+                        )
+                ));
+    }
+
+    @Test
+    void 장바구니_삭제() throws Exception {
+        //given
+        given(memberRepository.getMemberByEmail(email)).willReturn(new Member(1L, email, password));
+
+        //when
+        ResultActions result = mockMvc.perform(delete("/cart-items/{id}",2L)
+                .contentType(APPLICATION_JSON)
+                .header("Authorization", "Basic " + encodedAuthString));
+        //then
+        result
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("cart-item-delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("장바구니 아이디")
                         )
                 ));
     }

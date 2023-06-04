@@ -62,3 +62,110 @@ include::{snippets}/product-delete/path-parameters.adoc[]
 ==== HTTP response
 
 include::{snippets}/product-delete/http-response.adoc[]
+
+== CartItem
+
+=== CartItem 생성
+
+==== HTTP request
+
+include::{snippets}/cart-item-create/http-request.adoc[]
+include::{snippets}/cart-item-create/request-fields.adoc[]
+include::{snippets}/member-coupon-findAll/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/cart-item-create/http-response.adoc[]
+
+=== CartItem 조회
+
+==== HTTP request
+
+include::{snippets}/cart-item-findAll/http-request.adoc[]
+include::{snippets}/member-coupon-findAll/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/cart-item-findAll/http-response.adoc[]
+
+=== CartItem 수정
+
+==== HTTP request
+
+include::{snippets}/cart-item-quantity-update/http-request.adoc[]
+include::{snippets}/member-coupon-findAll/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/cart-item-quantity-update/http-response.adoc[]
+
+=== CartItem 삭제
+
+==== HTTP request
+
+include::{snippets}/cart-item-delete/http-request.adoc[]
+include::{snippets}/cart-item-delete/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/cart-item-create/http-response.adoc[]
+
+== Member Coupon
+
+=== Member Coupon 추가
+
+==== HTTP request
+
+include::{snippets}/member-coupon-create/http-request.adoc[]
+include::{snippets}/member-coupon-create/request-fields.adoc[]
+include::{snippets}/member-coupon-findAll/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-coupon-create/http-response.adoc[]
+
+=== Member Coupon 전체 조회
+
+==== HTTP request
+
+include::{snippets}/member-coupon-findAll/http-request.adoc[]
+include::{snippets}/member-coupon-findAll/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-coupon-findAll/http-response.adoc[]
+
+== Order
+=== Order 단일 조회
+
+==== HTTP request
+
+include::{snippets}/order-create/http-request.adoc[]
+include::{snippets}/order-create/request-fields.adoc[]
+include::{snippets}/order-create/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/order-create/http-response.adoc[]
+
+=== Order 단일 조회
+
+==== HTTP request
+
+include::{snippets}/order-find/http-request.adoc[]
+include::{snippets}/order-find/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/order-find/http-response.adoc[]
+
+=== Order 전체 조회
+
+==== HTTP request
+
+include::{snippets}/order-find-all/http-request.adoc[]
+include::{snippets}/order-find-all/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/order-find-all/http-response.adoc[]

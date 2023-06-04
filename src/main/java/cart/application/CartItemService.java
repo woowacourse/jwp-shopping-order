@@ -6,11 +6,9 @@ import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
-import cart.dto.cartItem.CartItemResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {

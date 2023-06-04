@@ -7,6 +7,7 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
+import cart.entity.OrderItemEntity;
 
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class Fixture {
     public static final MemberCoupon 멤버_쿠폰2 = new MemberCoupon(2L, new Coupon(2L, "오픈 기념 쿠폰", new Discount("price", 2000)), false);
     public static final Member 유저 = new Member(1L, "a@a.com", "1234");
     public static final Member 유저2 = new Member(2L, "b@b.com", "1234");
-    public static final OrderItem 주문_제품_치킨 = new OrderItem(Fixture.치킨, 5, List.of(Fixture.멤버_쿠폰));
-    public static final OrderItem 주문_제품_피자 = new OrderItem(Fixture.피자, 5, List.of());
-    public static final CartItem 장바구니_치킨 = new CartItem(유저,치킨);
-    public static final CartItem 장바구니_피자 = new CartItem(유저,피자);
+    public static final OrderItem 주문_제품_피자 = new OrderItem(new OrderItemEntity(1L, 2L, 피자, 5), List.of());
+    public static final OrderItem 주문_제품_치킨 = new OrderItem(new OrderItemEntity(2L, 2L, 치킨, 5), List.of(Fixture.멤버_쿠폰));
+    public static final CartItem 장바구니_치킨 = new CartItem(유저, 치킨);
+    public static final CartItem 장바구니_피자 = new CartItem(유저, 피자);
 }
