@@ -2,7 +2,6 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
-import cart.dao.MemberDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
@@ -48,15 +47,16 @@ public class CouponRepository {
 
     public List<MemberCoupon> findMemberCouponByMember(Member member) {
         List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(member.getId());
-        return getMemberCoupons(member, memberCouponDtos);
+        return createMemberCoupons(member, memberCouponDtos);
     }
 
-    private List<MemberCoupon> getMemberCoupons(Member member, final List<MemberCouponDto> memberCouponDtos) {
+    private List<MemberCoupon> createMemberCoupons(Member member, final List<MemberCouponDto> memberCouponDtos) {
         List<MemberCoupon> memberCoupons = new ArrayList<>();
 
         for (MemberCouponDto memberCouponDto : memberCouponDtos) {
             Long couponId = memberCouponDto.getCouponId();
-            CouponDto couponDto = couponDao.findById(couponId).orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
+            CouponDto couponDto = couponDao.findById(couponId)
+                    .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
             Coupon coupon = CouponConvertor.dtoToDomain(couponDto);
             memberCoupons.add(new MemberCoupon(memberCouponDto.getId(), member, coupon));
         }
@@ -65,18 +65,17 @@ public class CouponRepository {
     }
 
     public Optional<Coupon> findCouponByMemberAndMemberCouponId(final Member member, final Long memberCouponId) {
-        MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId, member.getId());
-        CouponDto couponDto = getCouponByCouponId(memberCouponDto.getCouponId());
-        Coupon coupon = new Coupon(couponDto.getId(), couponDto.getName(), couponDto.getDiscountRate(), couponDto.getDiscountPrice());
-        return Optional.of(coupon);
+        MemberCouponDto memberCouponDto = findMemberCouponByMemberCouponId(memberCouponId, member.getId());
+        CouponDto couponDto = findCouponByCouponId(memberCouponDto.getCouponId());
+        return Optional.of(CouponConvertor.dtoToDomain(couponDto));
     }
 
-    private MemberCouponDto getMemberCouponByMemberCouponId(final Long memberCouponId, final Long memberId) {
+    private MemberCouponDto findMemberCouponByMemberCouponId(final Long memberCouponId, final Long memberId) {
         return memberCouponDao.findByIdAndMemberId(memberCouponId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
     }
 
-    private CouponDto getCouponByCouponId(final Long couponId) {
+    private CouponDto findCouponByCouponId(final Long couponId) {
         return couponDao.findById(couponId)
                 .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
     }

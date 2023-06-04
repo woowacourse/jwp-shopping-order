@@ -27,23 +27,23 @@ public class Order {
         this.orderProducts = orderProducts;
     }
 
-    public Order(final Long id,
-                 final Member member,
-                 final Coupon coupon,
-                 final List<OrderProduct> orderProducts) {
-        this(id, LocalDateTime.now(), member, coupon, orderProducts);
-    }
-
     public static Order of(final Member member,
                            final Coupon coupon,
                            final List<CartItem> cartItems) {
         validateSameMember(member, cartItems);
 
         List<OrderProduct> orderProducts = cartItems.stream()
-                .map(cartItem -> new OrderProduct(cartItem.getProduct(), Quantity.from(cartItem.getQuantity())))
+                .map(Order::createOrderProductFromCartItem)
                 .collect(toList());
 
         return new Order(null, LocalDateTime.now(), member, coupon, orderProducts);
+    }
+
+    private static OrderProduct createOrderProductFromCartItem(final CartItem cartItem) {
+        return new OrderProduct(
+                cartItem.getProduct(),
+                Quantity.from(cartItem.getQuantity())
+        );
     }
 
     private static void validateSameMember(final Member member,

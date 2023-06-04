@@ -52,7 +52,8 @@ public class OrderRepository {
                 orderId,
                 order.getTimeStamp(),
                 order.getMember(),
-                order.getOptionalCoupon().orElse(null),
+                order.getOptionalCoupon()
+                        .orElse(null),
                 orderProductsAfterSave
         );
     }
@@ -68,7 +69,7 @@ public class OrderRepository {
         return orderProductsAfterSave;
     }
 
-    public List<CartItem> findCartItemByIds(List<Long> cartItemIds) {
+    public List<CartItem> findCartItemsByIds(List<Long> cartItemIds) {
         return cartItemIds.stream()
                 .map(cartItemDao::findById)
                 .collect(Collectors.toList());
@@ -76,13 +77,42 @@ public class OrderRepository {
 
     public List<Order> findOrdersByMember(Member member) {
         List<OrderDto> orderDtos = orderDao.findByMemberId(member.getId());
-        return getOrdersByOrderDtos(member, orderDtos);
+        return createOrdersFromOrderDtos(member, orderDtos);
+    }
+
+    private List<Order> createOrdersFromOrderDtos(final Member member, final List<OrderDto> orderDtos) {
+        List<Order> orders = new ArrayList<>();
+
+        for (OrderDto orderDto : orderDtos) {
+            Optional<CouponDto> couponDto = couponDao.findById(orderDto.getCouponId());
+            Coupon coupon = couponDto.map(CouponConvertor::dtoToDomain)
+                    .orElse(null);
+            Order order = new Order(orderDto.getId(), orderDto.getTimeStamp(), member, coupon, createOrderProductsFromOrderDto(orderDto));
+            orders.add(order);
+        }
+
+        return orders;
+    }
+
+    private List<OrderProduct> createOrderProductsFromOrderDto(final OrderDto orderDto) {
+        return orderProductDao.findByOrderId(orderDto.getId())
+                .stream()
+                .map(this::createOrderProductFromOrderProductDto)
+                .collect(Collectors.toList());
+    }
+
+    private OrderProduct createOrderProductFromOrderProductDto(final OrderProductDto orderProductDto) {
+        return new OrderProduct(
+                orderProductDto.getId(),
+                productDao.getProductById(orderProductDto.getProductId()),
+                Quantity.from(orderProductDto.getQuantity())
+        );
     }
 
     public Order findOrderById(Member member, Long orderId) {
         OrderDto orderDto = orderDao.findByIdAndMemberId(orderId, member.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 고객의 주문이 아닙니다."));
-        List<OrderProduct> orderProductsByOrderDto = getOrderProductsByOrderDto(orderDto);
+        List<OrderProduct> orderProductsByOrderDto = createOrderProductsFromOrderDto(orderDto);
         return new Order(
                 orderId,
                 orderDto.getTimeStamp(),
@@ -92,33 +122,10 @@ public class OrderRepository {
         );
     }
 
-    private List<Order> getOrdersByOrderDtos(final Member member, final List<OrderDto> orderDtos) {
-        List<Order> orders = new ArrayList<>();
-
-        for (OrderDto orderDto : orderDtos) {
-            Optional<CouponDto> couponDto = couponDao.findById(orderDto.getCouponId());
-            Coupon coupon = couponDto.map(CouponConvertor::dtoToDomain)
-                    .orElse(null);
-            Order order = new Order(orderDto.getId(), orderDto.getTimeStamp(), member, coupon, getOrderProductsByOrderDto(orderDto));
-            orders.add(order);
-        }
-
-        return orders;
-    }
-
     private Coupon findCouponById(Long id) {
         Optional<CouponDto> couponDto = couponDao.findById(id);
         return couponDto.map(CouponConvertor::dtoToDomain)
                 .orElse(null);
-    }
-
-    private List<OrderProduct> getOrderProductsByOrderDto(final OrderDto orderDto) {
-        return orderProductDao.findByOrderId(orderDto.getId())
-                .stream()
-                .map(orderProductDto -> new OrderProduct(orderProductDto.getId(),
-                        productDao.getProductById(orderProductDto.getProductId()),
-                        Quantity.from(orderProductDto.getQuantity())))
-                .collect(Collectors.toList());
     }
 
     public void deleteCartItems(List<Long> cartItemIds) {

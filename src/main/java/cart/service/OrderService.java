@@ -9,7 +9,6 @@ import cart.domain.Order;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,7 @@ public class OrderService {
     }
 
     public OrderResponseDto orderCartItems(Member member, OrderRequestDto orderRequestDto) {
-        List<CartItem> cartItems = orderRepository.findCartItemByIds(orderRequestDto.getCartItemIds());
+        List<CartItem> cartItems = orderRepository.findCartItemsByIds(orderRequestDto.getCartItemIds());
         Coupon coupon = orderRequestDto.getCouponId()
                 .flatMap(couponId -> couponRepository.findCouponByMemberAndMemberCouponId(member, couponId))
                 .orElse(null);
@@ -33,6 +32,7 @@ public class OrderService {
         Order orderAfterSave = orderRepository.save(order);
 
         orderRepository.deleteCartItems(orderRequestDto.getCartItemIds());
+
         couponRepository.deleteMemberCouponById(orderRequestDto.getCouponId());
 
         return OrderResponseDto.from(orderAfterSave);
@@ -47,6 +47,7 @@ public class OrderService {
 
     public OrderResponseDto findOrderById(final Member member ,final Long orderId) {
         Order orderById = orderRepository.findOrderById(member, orderId);
+
         return OrderResponseDto.from(orderById);
     }
 }

@@ -110,7 +110,7 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("id 들을 가지고 CartItem 들을 조회한다.")
     void findCartItemByIds() {
-        List<CartItem> cartItemByIds = orderRepository.findCartItemByIds(List.of(1L, 2L, 3L));
+        List<CartItem> cartItemByIds = orderRepository.findCartItemsByIds(List.of(1L, 2L, 3L));
 
         assertThat(cartItemByIds)
                 .usingRecursiveComparison()
