@@ -1,13 +1,5 @@
-package cart.presentation;
+package cart.exception;
 
-import cart.exception.AuthenticationException;
-import cart.exception.IllegalAccessCartException;
-import cart.exception.IllegalUsePointException;
-import cart.exception.InsufficientStockException;
-import cart.exception.MemberNotFoundException;
-import cart.exception.MismatchedTotalFeeException;
-import cart.exception.MismatchedTotalPriceException;
-import cart.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -45,8 +37,8 @@ public class ControllerExceptionHandler {
         return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(MismatchedTotalPriceException.class)
-    public ResponseEntity<String> handleMismatchedTotalPriceException(final MismatchedTotalPriceException e) {
+    @ExceptionHandler(MismatchedTotalProductPriceException.class)
+    public ResponseEntity<String> handleMismatchedTotalPriceException(final MismatchedTotalProductPriceException e) {
         return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
@@ -55,8 +47,8 @@ public class ControllerExceptionHandler {
         return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(MismatchedTotalFeeException.class)
-    public ResponseEntity<String> handleMismatchedTotalFeeException(final MismatchedTotalFeeException e) {
+    @ExceptionHandler(MismatchedTotalPriceException.class)
+    public ResponseEntity<String> handleMismatchedTotalFeeException(final MismatchedTotalPriceException e) {
         return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
