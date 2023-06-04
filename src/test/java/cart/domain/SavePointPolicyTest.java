@@ -17,7 +17,6 @@ class SavePointPolicyTest {
     void calculateRange1(int payment) {
         // when
         double point = savePointPolicy.calculate(payment);
-        System.out.println(point);
 
         // then
         assertThat(point).isEqualTo(Math.floor(payment * 0.05));

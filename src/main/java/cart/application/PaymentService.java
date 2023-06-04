@@ -71,7 +71,7 @@ public class PaymentService {
     }
 
     private List<PurchaseOrderItem> getPurchaseOrderItems(PurchaseOrderRequest purchaseOrderRequest) {
-        List<Product> products = getAllProductsByIds(purchaseOrderRequest.getPurchaseOrderItems());
+        List<Product> products = getAllProductsByIds(purchaseOrderRequest.getProducts());
         return getAllPurchaseOrderItem(purchaseOrderRequest, products);
     }
 
@@ -94,7 +94,7 @@ public class PaymentService {
     private List<PurchaseOrderItem> getAllPurchaseOrderItem(PurchaseOrderRequest purchaseOrderRequest,
                                                             List<Product> products) {
         List<PurchaseOrderItem> purchaseOrderItems = new ArrayList<>();
-        for (PurchaseOrderItemRequest purchaseOrderItemRequest : purchaseOrderRequest.getPurchaseOrderItems()) {
+        for (PurchaseOrderItemRequest purchaseOrderItemRequest : purchaseOrderRequest.getProducts()) {
             Product product = getProductById(products, purchaseOrderItemRequest.getProductId());
             PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem(product, purchaseOrderItemRequest.getQuantity());
             purchaseOrderItems.add(purchaseOrderItem);

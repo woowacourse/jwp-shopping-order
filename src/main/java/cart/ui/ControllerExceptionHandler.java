@@ -39,8 +39,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handlerException(Exception exception) {
-        String errorMessage = "알 수 없는 문제가 발생했습니다.";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .body(new ExceptionResponse(errorMessage));
+                             .body(new ExceptionResponse(exception.getMessage()));
     }
 }

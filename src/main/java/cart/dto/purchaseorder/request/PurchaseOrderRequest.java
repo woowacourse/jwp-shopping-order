@@ -16,7 +16,7 @@ public class PurchaseOrderRequest {
         return usedPoint;
     }
 
-    public List<PurchaseOrderItemRequest> getPurchaseOrderItems() {
+    public List<PurchaseOrderItemRequest> getProducts() {
         return products;
     }
 
