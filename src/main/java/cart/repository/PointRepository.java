@@ -6,6 +6,9 @@ import cart.domain.Point;
 import cart.domain.Points;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
+import cart.exception.OrderException;
+import cart.exception.OrderServerException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
 public class PointRepository {
 
     private static final int INIT_USED_POINT = 0;
+    private static final String INVALID_USE_POINT_MESSAGE = "사용된 포인트를 취소할 수 없습니다.";
+    private static final String NO_POINT_MESSAGE = "삭제하고자하는 포인트가 없습니다.";
 
     private final PointDao pointDao;
     private final PointHistoryDao pointHistoryDao;
@@ -99,6 +104,24 @@ public class PointRepository {
     }
 
     public void delete(Long memberId, Long orderId) {
+        validateDelete(memberId, orderId);
         pointDao.delete(memberId, orderId);
+        pointHistoryDao.deleteByOrderId(orderId);
+    }
+
+    private void validateDelete(Long memberId, Long orderId) {
+        PointEntity pointEntity;
+        try {
+            pointEntity = pointDao.findBy(memberId, orderId);
+        } catch (DataAccessException exception) {
+            throw new OrderException(NO_POINT_MESSAGE);
+        }
+        if (isUsedPoint(pointEntity)) {
+            throw new OrderException(INVALID_USE_POINT_MESSAGE);
+        }
+    }
+
+    private boolean isUsedPoint(PointEntity pointEntity) {
+        return pointHistoryDao.isIn(pointEntity.getId());
     }
 }

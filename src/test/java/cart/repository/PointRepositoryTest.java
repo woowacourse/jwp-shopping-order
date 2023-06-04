@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
 import cart.domain.*;
+import cart.exception.OrderException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ import java.util.List;
 
 import static cart.ProductFixture.product1;
 import static cart.ProductFixture.product2;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -96,5 +97,28 @@ class PointRepositoryTest {
         Integer point = jdbcTemplate.queryForObject("select earned_point from point where orders_id = 3 and comment = '테스트 주문 포인트'", Integer.class);
 
         assertThat(point).isEqualTo(3000);
+    }
+
+    @DisplayName("기존에 적립한 포인트를 사용하지 않았다면 포인트를 삭제할 수 있다.")
+    @Test
+    void delete_success() {
+        assertThatCode(() -> pointRepository.delete(1L, 2L))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("기존에 적립한 포인트를 사용했다면 포인트를 삭제할 때 예외가 발생한다.")
+    @Test
+    void delete_fail_1() {
+        assertThatThrownBy(() -> pointRepository.delete(1L, 1L))
+                .isInstanceOf(OrderException.class)
+                .hasMessageContaining("사용된 포인트를 취소할 수 없습니다.");
+    }
+
+    @DisplayName("적립되지 않은 포인트에 대해 삭제할 때 예외가 발생한다.")
+    @Test
+    void delete_fail_2() {
+        assertThatThrownBy(() -> pointRepository.delete(1L, 100L))
+                .isInstanceOf(OrderException.class)
+                .hasMessageContaining("삭제하고자하는 포인트가 없습니다.");
     }
 }
