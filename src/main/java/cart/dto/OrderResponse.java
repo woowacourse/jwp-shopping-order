@@ -1,5 +1,8 @@
 package cart.dto;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,12 +29,18 @@ public class OrderResponse {
     public static OrderResponse of(final Order order) {
         return new OrderResponse(
                 order.getId(),
-                order.getCreatedAt().toString(),
+                format(order.getCreatedAt()),
                 order.getCartItems().getCartItems().stream().map(OrderItemResponse::of).collect(Collectors.toList()),
                 order.getCartItems().getTotalPrice().getValue(),
                 order.getOrderPoint().getUsedPoint().getValue(),
                 order.getOrderPoint().getEarnedPoint().getValue()
         );
+    }
+
+    private static String format(final Timestamp timestamp) {
+        final LocalDateTime localDateTime = timestamp.toLocalDateTime();
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return localDateTime.format(dateTimeFormatter);
     }
 
     public Long getOrderId() {
