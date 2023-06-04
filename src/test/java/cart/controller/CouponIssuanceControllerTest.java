@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponSaveRequest;
-import cart.repository.MemberCouponRepository;
+import cart.repository.CouponRepository;
 import cart.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -40,7 +40,7 @@ public class CouponIssuanceControllerTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private MemberCouponRepository memberCouponRepository;
+    private CouponRepository couponRepository;
 
     @Test
     void 모든_사용자에게_쿠폰을_발급한다() throws Exception {
@@ -54,13 +54,13 @@ public class CouponIssuanceControllerTest {
         mockMvc.perform(post("/issuance")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         // then
         assertAll(
-                () -> assertThat(memberCouponRepository.findAllByMemberId(member1.getId())).hasSize(1),
-                () -> assertThat(memberCouponRepository.findAllByMemberId(member2.getId())).hasSize(1)
+                () -> assertThat(couponRepository.findAllByUsedAndMemberId(false, member1.getId())).hasSize(1),
+                () -> assertThat(couponRepository.findAllByUsedAndMemberId(false, member2.getId())).hasSize(1)
         );
     }
 }

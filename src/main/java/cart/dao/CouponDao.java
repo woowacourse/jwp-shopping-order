@@ -28,7 +28,9 @@ public class CouponDao {
         final String policyType = rs.getString("policy_type");
         final long disCountPrice = rs.getLong("discount_value");
         final long minimumPrice = rs.getLong("minimum_price");
-        return new CouponEntity(id, name, policyType, disCountPrice, minimumPrice);
+        final boolean used = rs.getBoolean("used");
+        final Long memberId = rs.getLong("member_id");
+        return new CouponEntity(id, name, policyType, disCountPrice, minimumPrice, used, memberId);
     };
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
@@ -36,7 +38,8 @@ public class CouponDao {
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
-                .usingColumns("name", "policy_type", "discount_value", "minimum_price")
+                .usingColumns("name", "policy_type", "discount_value",
+                        "minimum_price", "used", "member_id")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -48,7 +51,9 @@ public class CouponDao {
                 couponEntity.getName(),
                 couponEntity.getPolicyType(),
                 couponEntity.getDiscountValue(),
-                couponEntity.getMinimumPrice()
+                couponEntity.getMinimumPrice(),
+                couponEntity.isUsed(),
+                couponEntity.getMemberId()
         );
     }
 
@@ -70,5 +75,28 @@ public class CouponDao {
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<CouponEntity> findAllByUsedAndMemberId(final boolean used, final Long memberId) {
+        final String sql = "SELECT * FROM coupon WHERE used = ? and member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, used, memberId);
+    }
+
+    public void insertAll(final List<CouponEntity> couponEntities) {
+        final BeanPropertySqlParameterSource[] parameterSources = couponEntities.stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(BeanPropertySqlParameterSource[]::new);
+        jdbcInsert.executeBatch(parameterSources);
+    }
+
+    public void updateUsed(final CouponEntity couponEntity) {
+        final String sql = "UPDATE coupon SET used = ? where id = ? and member_id = ?";
+        jdbcTemplate.update(
+                sql,
+                couponEntity.isUsed(),
+                couponEntity.getId(),
+                couponEntity.getMemberId()
+        );
     }
 }

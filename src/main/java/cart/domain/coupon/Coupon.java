@@ -6,13 +6,15 @@ import cart.domain.VO.Money;
 
 public class Coupon {
 
-    public static final Coupon EMPTY = new Coupon("", NONE, 0L, Money.ZERO);
+    public static final Coupon EMPTY = new Coupon("", NONE, 0L, Money.ZERO, 0L);
 
     private final Long id;
     private final String name;
     private final DiscountPolicyType discountPolicyType;
     private final Long discountValue;
     private final Money minimumPrice;
+    private boolean used;
+    private final Long memberId;
 
     public Coupon(
             final String name,
@@ -20,21 +22,29 @@ public class Coupon {
             final Long discountValue,
             final Money minimumPrice
     ) {
-        this(null, name, discountPolicyType, discountValue, minimumPrice);
+        this(null, name, discountPolicyType, discountValue, minimumPrice, false, null);
     }
 
     public Coupon(
-            final Long id,
             final String name,
             final DiscountPolicyType discountPolicyType,
             final Long discountValue,
-            final Money minimumPrice
+            final Money minimumPrice,
+            final Long memberId
     ) {
+        this(null, name, discountPolicyType, discountValue, minimumPrice, false, memberId);
+    }
+
+    public Coupon(final Long id, final String name, final DiscountPolicyType discountPolicyType,
+                  final Long discountValue, final Money minimumPrice,
+                  final boolean used, final Long memberId) {
         this.id = id;
         this.name = name;
         this.discountPolicyType = discountPolicyType;
         this.discountValue = discountValue;
         this.minimumPrice = minimumPrice;
+        this.used = used;
+        this.memberId = memberId;
     }
 
     public boolean isInvalidPrice(final Money price) {
@@ -47,6 +57,10 @@ public class Coupon {
 
     public Money calculateDeliveryFee(final Money deliveryFee) {
         return discountPolicyType.calculateDeliveryFee(discountValue, deliveryFee);
+    }
+
+    public void use() {
+        used = true;
     }
 
     public Long getId() {
@@ -71,5 +85,13 @@ public class Coupon {
 
     public Long getMinimumPriceValue() {
         return minimumPrice.getLongValue();
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 }

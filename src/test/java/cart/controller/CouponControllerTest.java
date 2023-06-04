@@ -2,6 +2,7 @@ package cart.controller;
 
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
 import static cart.fixture.CouponFixture._3만원_이상_배달비_3천원_할인_쿠폰;
+import static cart.fixture.CouponFixture.쿠폰_발급;
 import static cart.fixture.MemberFixture.사용자1;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,14 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.domain.order.MemberCoupon;
 import cart.repository.CouponRepository;
-import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import java.util.Base64;
-import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -43,19 +40,12 @@ public class CouponControllerTest {
     @Autowired
     private CouponRepository couponRepository;
 
-    @Autowired
-    private MemberCouponRepository memberCouponRepository;
-
     @Test
     void 사용자의_모든_쿠폰을_조회한다() throws Exception {
         // given
-        final Coupon coupon1 = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
-        final Coupon coupon2 = couponRepository.save(_3만원_이상_배달비_3천원_할인_쿠폰);
         final Member member = memberRepository.save(사용자1);
-        memberCouponRepository.saveAll(List.of(
-                new MemberCoupon(member.getId(), coupon1),
-                new MemberCoupon(member.getId(), coupon2)
-        ));
+        couponRepository.save(쿠폰_발급(_3만원_이상_2천원_할인_쿠폰, member.getId()));
+        couponRepository.save(쿠폰_발급(_3만원_이상_배달비_3천원_할인_쿠폰, member.getId()));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect

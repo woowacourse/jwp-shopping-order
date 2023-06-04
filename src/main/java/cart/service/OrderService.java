@@ -4,14 +4,14 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Product;
-import cart.domain.order.MemberCoupon;
+import cart.domain.coupon.Coupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrderSaveRequest;
 import cart.exception.order.OrderNotFoundException;
 import cart.repository.CartItemRepository;
-import cart.repository.MemberCouponRepository;
+import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -23,30 +23,31 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
-    private final MemberCouponRepository memberCouponRepository;
+    private final CouponRepository couponRepository;
 
     public OrderService(
             final OrderRepository orderRepository,
             final CartItemRepository cartItemRepository,
-            final MemberCouponRepository memberCouponRepository
+            final CouponRepository couponRepository
     ) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
-        this.memberCouponRepository = memberCouponRepository;
+        this.couponRepository = couponRepository;
     }
 
     public Long save(final OrderSaveRequest request, final Long memberId) {
         final List<CartItem> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
         final List<OrderItem> orderItems = toOrderItems(items);
 
-        final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
-                .orElseGet(() -> MemberCoupon.empty(memberId));
+        final Coupon coupon = couponRepository.findById(request.getCouponId())
+                .orElse(Coupon.EMPTY);
 
-        final Order order = Order.of(memberCoupon, memberId, orderItems);
+        final Order order = Order.of(coupon, memberId, orderItems);
         order.useCoupon();
         final Order saveOrder = orderRepository.save(order);
 
         cartItemRepository.deleteByIds(request.getOrderItemIds());
+        couponRepository.update(order.getCoupon());
         return saveOrder.getId();
     }
 

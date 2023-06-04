@@ -3,10 +3,8 @@ package cart.repository;
 import static java.util.stream.Collectors.toList;
 
 import cart.dao.CouponDao;
-import cart.dao.MemberCouponDao;
 import cart.domain.coupon.Coupon;
 import cart.entity.CouponEntity;
-import cart.entity.MemberCouponEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -15,11 +13,9 @@ import org.springframework.stereotype.Repository;
 public class CouponRepository {
 
     private final CouponDao couponDao;
-    private final MemberCouponDao memberCouponDao;
 
-    public CouponRepository(final CouponDao couponDao, final MemberCouponDao memberCouponDao) {
+    public CouponRepository(final CouponDao couponDao) {
         this.couponDao = couponDao;
-        this.memberCouponDao = memberCouponDao;
     }
 
     public Coupon save(final Coupon coupon) {
@@ -30,15 +26,14 @@ public class CouponRepository {
                 coupon.getName(),
                 coupon.getDiscountPolicyType(),
                 coupon.getDiscountValue(),
-                coupon.getMinimumPrice()
+                coupon.getMinimumPrice(),
+                coupon.isUsed(),
+                coupon.getMemberId()
         );
     }
 
-    public List<Coupon> findAllByMemberId(final Long memberId) {
-        final List<Long> couponIds = memberCouponDao.findAllByUsedAndMemberId(false, memberId).stream()
-                .map(MemberCouponEntity::getCouponId)
-                .collect(toList());
-        return couponDao.findByIds(couponIds).stream()
+    public List<Coupon> findAllByUsedAndMemberId(final boolean used, final Long memberId) {
+        return couponDao.findAllByUsedAndMemberId(used, memberId).stream()
                 .map(CouponEntity::toDomain)
                 .collect(toList());
     }
@@ -47,13 +42,15 @@ public class CouponRepository {
         return couponDao.findById(id).map(CouponEntity::toDomain);
     }
 
-    public Optional<Coupon> findByIdAndMemberId(final Long id, final Long memberId) {
-        final boolean invalidCoupon = memberCouponDao.findAllByUsedAndMemberId(false, memberId).stream()
-                .map(MemberCouponEntity::getCouponId)
-                .noneMatch(couponId -> couponId.equals(id));
-        if (invalidCoupon) {
-            return Optional.empty();
-        }
-        return couponDao.findById(id).map(CouponEntity::toDomain);
+    public void saveAll(final List<Coupon> coupons) {
+        final List<CouponEntity> couponEntities = coupons.stream()
+                .map(CouponEntity::from)
+                .collect(toList());
+        couponDao.insertAll(couponEntities);
+    }
+
+    public void update(final Coupon coupon) {
+        final CouponEntity couponEntity = CouponEntity.from(coupon);
+        couponDao.updateUsed(couponEntity);
     }
 }

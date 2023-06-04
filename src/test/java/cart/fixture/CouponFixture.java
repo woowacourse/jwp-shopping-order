@@ -11,6 +11,23 @@ import cart.entity.CouponEntity;
 @SuppressWarnings("NonAsciiCharacters")
 public class CouponFixture {
 
+    public static Coupon 쿠폰_발급(final Coupon coupon, final Long memberId) {
+        return new Coupon(null, coupon.getName(), coupon.getDiscountPolicyType(), coupon.getDiscountValue(),
+                coupon.getMinimumPrice(), coupon.isUsed(), memberId);
+    }
+
+    public static CouponEntity 쿠폰_엔티티_발급(final CouponEntity couponEntity, final Long memberId) {
+        return new CouponEntity(
+                null,
+                couponEntity.getName(),
+                couponEntity.getPolicyType(),
+                couponEntity.getDiscountValue(),
+                couponEntity.getMinimumPrice(),
+                couponEntity.isUsed(),
+                memberId
+        );
+    }
+
     public static final Coupon _3만원_이상_2천원_할인_쿠폰 = new Coupon(
             "30000원 이상 2000원 할인 쿠폰",
             PRICE,
@@ -50,13 +67,17 @@ public class CouponFixture {
             "30000원 이상 3000원 할인 쿠폰",
             PRICE.name(),
             3000L,
-            3000L
+            3000L,
+            false,
+            null
     );
 
     public static final CouponEntity _배달비_3천원_할인_쿠폰_엔티티 = new CouponEntity(
             "배달비 3000원 할인 쿠폰",
             DELIVERY.name(),
             3000L,
-            0L
+            0L,
+            false,
+            null
     );
 }

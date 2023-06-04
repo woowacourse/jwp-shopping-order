@@ -1,6 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.VO.Money;
+import cart.domain.coupon.Coupon;
 import cart.exception.order.InvalidOrderException;
 import java.util.List;
 import java.util.Objects;
@@ -10,57 +11,57 @@ public class Order {
     private static final Money DEFAULT_DELIVERY_FEE = Money.from(3000L);
 
     private final Long id;
-    private final MemberCoupon memberCoupon;
+    private final Coupon coupon;
     private final Long memberId;
     private final Money deliveryFee;
     private final List<OrderItem> items;
 
-    private Order(final MemberCoupon memberCoupon, final Long memberId, final List<OrderItem> items) {
-        this(null, memberCoupon, memberId, DEFAULT_DELIVERY_FEE, items);
+    private Order(final Coupon coupon, final Long memberId, final List<OrderItem> items) {
+        this(null, coupon, memberId, DEFAULT_DELIVERY_FEE, items);
     }
 
     private Order(
             final Long id,
-            final MemberCoupon memberCoupon,
+            final Coupon coupon,
             final Long memberId,
             final Money deliveryFee,
             final List<OrderItem> items
     ) {
-        validate(memberCoupon, items, memberId);
+        validate(coupon, items, memberId);
         this.id = id;
-        this.memberCoupon = memberCoupon;
+        this.coupon = coupon;
         this.memberId = memberId;
         this.deliveryFee = deliveryFee;
         this.items = items;
     }
 
-    private void validate(final MemberCoupon memberCoupon, final List<OrderItem> items, final Long memberId) {
+    private void validate(final Coupon coupon, final List<OrderItem> items, final Long memberId) {
         final Money totalPrice = items.stream()
                 .map(OrderItem::calculateTotalPrice)
                 .reduce(Money.ZERO, Money::plus);
-        if (memberCoupon.isInvalidCoupon(totalPrice)) {
+        if (coupon.isInvalidPrice(totalPrice)) {
             throw new InvalidOrderException("쿠폰을 적용할 수 없는 주문입니다.");
         }
     }
 
     public static Order of(
             final Long id,
-            final MemberCoupon memberCoupon,
+            final Coupon coupon,
             final Long memberId,
             final Money deliveryFee,
             final List<OrderItem> items
     ) {
-        if (Objects.isNull(memberCoupon)) {
-            return new Order(id, MemberCoupon.empty(memberId), memberId, deliveryFee, items);
+        if (Objects.isNull(coupon)) {
+            return new Order(id, Coupon.EMPTY, memberId, deliveryFee, items);
         }
-        return new Order(id, memberCoupon, memberId, deliveryFee, items);
+        return new Order(id, coupon, memberId, deliveryFee, items);
     }
 
-    public static Order of(final MemberCoupon memberCoupon, final Long memberId, final List<OrderItem> items) {
-        if (Objects.isNull(memberCoupon)) {
-            return new Order(MemberCoupon.empty(memberId), memberId, items);
+    public static Order of(final Coupon coupon, final Long memberId, final List<OrderItem> items) {
+        if (Objects.isNull(coupon)) {
+            return new Order(Coupon.EMPTY, memberId, items);
         }
-        return new Order(memberCoupon, memberId, items);
+        return new Order(coupon, memberId, items);
     }
 
     public void checkOwner(final Long memberId) {
@@ -71,7 +72,7 @@ public class Order {
 
     public Money calculateDiscountPrice() {
         final Money totalPrice = calculateTotalPrice();
-        final Money subtrahend = memberCoupon.calculatePrice(totalPrice);
+        final Money subtrahend = coupon.calculatePrice(totalPrice);
         final Money discountPrice = totalPrice.minus(subtrahend);
         if (discountPrice.isGreaterThanOrEqual(totalPrice)) {
             return totalPrice;
@@ -86,11 +87,11 @@ public class Order {
     }
 
     public Money calculateDeliveryFee() {
-        return memberCoupon.calculateDeliveryFee(deliveryFee);
+        return coupon.calculateDeliveryFee(deliveryFee);
     }
 
     public void useCoupon() {
-        memberCoupon.use();
+        coupon.use();
     }
 
     @Override
@@ -114,8 +115,8 @@ public class Order {
         return id;
     }
 
-    public MemberCoupon getMemberCoupon() {
-        return memberCoupon;
+    public Coupon getCoupon() {
+        return coupon;
     }
 
     public Long getMemberId() {

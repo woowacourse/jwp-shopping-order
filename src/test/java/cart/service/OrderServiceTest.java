@@ -1,6 +1,7 @@
 package cart.service;
 
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
+import static cart.fixture.CouponFixture.쿠폰_발급;
 import static cart.fixture.MemberFixture.사용자1;
 import static cart.fixture.OrderItemFixture.상품_18900원_1개_주문;
 import static cart.fixture.OrderItemFixture.상품_28900원_1개_주문;
@@ -14,14 +15,12 @@ import cart.domain.cart.CartItem;
 import cart.domain.cart.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.domain.order.MemberCoupon;
 import cart.domain.order.Order;
 import cart.dto.order.OrderItemResponse;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrderSaveRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
-import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
@@ -57,9 +56,6 @@ class OrderServiceTest {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private MemberCouponRepository memberCouponRepository;
-
     @Test
     void 상품을_주문한다() {
         // given
@@ -68,11 +64,10 @@ class OrderServiceTest {
         final Member member = memberRepository.save(사용자1);
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
-        final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
-        final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
+        final Coupon coupon = couponRepository.save(쿠폰_발급(_3만원_이상_2천원_할인_쿠폰, member.getId()));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(cartItem1.getId(), cartItem2.getId()),
-                memberCoupon.getId()
+                coupon.getId()
         );
 
         // when
@@ -81,7 +76,7 @@ class OrderServiceTest {
         // then
         assertAll(
                 () -> assertThat(orderRepository.findAllByMemberId(member.getId())).hasSize(1),
-                () -> assertThat(memberCouponRepository.findAllByMemberId(member.getId())).hasSize(0),
+                () -> assertThat(couponRepository.findAllByUsedAndMemberId(false, member.getId())).hasSize(0),
                 () -> assertThat(cartItemRepository.findAllByMemberId(member.getId())).hasSize(0),
                 () -> assertThat(result).isPositive()
         );
@@ -91,15 +86,14 @@ class OrderServiceTest {
     void 주문_전체_조회() {
         // given
         final Member member = memberRepository.save(사용자1);
-        final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
-        final MemberCoupon memberCoupon = memberCouponRepository.save(
-                new MemberCoupon(null, member.getId(), coupon, true)
-        );
+        final Coupon coupon = couponRepository.save(쿠폰_발급(_3만원_이상_2천원_할인_쿠폰, member.getId()));
+        coupon.use();
+        couponRepository.update(coupon);
         final Order order1 = orderRepository.save(
-                Order.of(memberCoupon, member.getId(), List.of(상품_8900원_1개_주문, 상품_28900원_1개_주문))
+                Order.of(coupon, member.getId(), List.of(상품_8900원_1개_주문, 상품_28900원_1개_주문))
         );
         final Order order2 = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_18900원_1개_주문))
+                Order.of(Coupon.EMPTY, member.getId(), List.of(상품_18900원_1개_주문))
         );
 
         // when
@@ -122,7 +116,7 @@ class OrderServiceTest {
         // given
         final Member member = memberRepository.save(사용자1);
         final Order order = orderRepository.save(
-                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(상품_8900원_1개_주문))
+                Order.of(Coupon.EMPTY, member.getId(), List.of(상품_8900원_1개_주문))
         );
 
         // when
