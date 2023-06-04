@@ -2,6 +2,7 @@ package cart.domain.order;
 
 
 import cart.domain.Member;
+import cart.domain.Point;
 
 import java.util.List;
 
@@ -12,14 +13,14 @@ public class Order {
     private final Long shippingFee;
     private final Long totalPrice;
     private final List<OrderItem> orderItems;
-    private final Long usedPoint;
+    private final Point usedPoint;
     private final String createdAt;
 
-    public Order(Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Long usedPoint) {
+    public Order(Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Point usedPoint) {
         this(null, member, shippingFee, totalPrice, orderItems, usedPoint, null);
     }
 
-    public Order(Long id, Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Long usedPoint, String createdAt) {
+    public Order(Long id, Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Point usedPoint, String createdAt) {
         this.id = id;
         this.member = member;
         this.shippingFee = shippingFee;
@@ -29,7 +30,7 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems, Long usedPoint, Long threshold) {
+    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems, Long threshold,Point usedPoint) {
         Long getTotalPrice = orderItems.stream()
                 .mapToLong(orderItem -> orderItem.getProduct().getPrice() * orderItem.getQuantity())
                 .sum();
@@ -61,7 +62,7 @@ public class Order {
     }
 
     public Long getUsedPoint() {
-        return usedPoint;
+        return usedPoint.getPoint();
     }
 
     public String getCreatedAt() {

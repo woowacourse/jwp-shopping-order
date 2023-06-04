@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.domain.ShippingDiscountPolicy;
 import cart.domain.ShippingFee;
 import cart.domain.order.Order;
@@ -36,12 +37,11 @@ public class OrderService {
         ShippingFee shippingFee = orderRepository.findShippingFee();
         ShippingDiscountPolicy shippingDiscountPolicy = orderRepository.findShippingDiscountPolicy();
 
-
         Order newOrder = Order.of(member,
                 shippingFee.getFee(),
                 orderItemList,
                 shippingDiscountPolicy.getThreshold(),
-                orderRequest.getUsedPoint());
+                new Point(orderRequest.getUsedPoint()));
         return orderRepository.saveOrder(member, newOrder);
     }
 

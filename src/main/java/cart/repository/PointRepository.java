@@ -1,6 +1,8 @@
 package cart.repository;
 
 import cart.dao.PointDao;
+import cart.dao.entity.PointEntity;
+import cart.domain.Point;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,7 +14,8 @@ public class PointRepository {
         this.pointDao = pointDao;
     }
 
-    public Long findPointByMemberId(Long id) {
-        return pointDao.findPointByMemberId(id).get().getPoint();
+    public Point findPointByMemberId(Long memberId) {
+        PointEntity pointEntity = pointDao.findPointByMemberId(memberId).get();
+        return new Point(pointEntity.getPoint());
     }
 }

@@ -1,6 +1,5 @@
 package cart.domain.order;
 
-import cart.dao.entity.OrderItemEntity;
 import cart.domain.Product;
 
 
@@ -10,8 +9,8 @@ public class OrderItem {
     private final Product product;
     private final Long quantity;
 
-    public OrderItem(Product product,  Long quantity) {
-        this(null,product,quantity);
+    public OrderItem(Product product, Long quantity) {
+        this(null, product, quantity);
     }
 
     public OrderItem(Long id, Product product, Long quantity) {

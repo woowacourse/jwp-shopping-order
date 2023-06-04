@@ -9,6 +9,7 @@ import cart.dao.entity.OrderItemEntity;
 import cart.dao.entity.ShippingDiscountPolicyEntity;
 import cart.dao.entity.ShippingFeeEntity;
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.domain.ShippingDiscountPolicy;
 import cart.domain.ShippingFee;
 import cart.domain.order.Order;
@@ -46,7 +47,7 @@ public class OrderRepository {
                 orderEntity.getShippingFee(),
                 orderEntity.getTotalProductPrice(),
                 orderItemList,
-                orderEntity.getUsedPoint(),
+                new Point(orderEntity.getUsedPoint()),
                 orderEntity.getCreatedAt());
     }
 
@@ -78,7 +79,7 @@ public class OrderRepository {
                         orderEntity.getShippingFee(),
                         orderEntity.getTotalProductPrice(),
                         toOrderItemList(maps.get(orderEntity.getId())),
-                        orderEntity.getUsedPoint(),
+                        new Point(orderEntity.getUsedPoint()),
                         orderEntity.getCreatedAt()))
                 .collect(toList());
     }

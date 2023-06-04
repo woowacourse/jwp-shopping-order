@@ -1,8 +1,8 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.dto.point.PointResponse;
-import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,8 @@ public class PointService {
     }
 
     public PointResponse findPointByMember(Member member) {
-        Long point = pointRepository.findPointByMemberId(member.getId());
-        return new PointResponse(point);
+        Point point = pointRepository.findPointByMemberId(member.getId());
+        return new PointResponse(point.getPoint());
     }
 
 }
