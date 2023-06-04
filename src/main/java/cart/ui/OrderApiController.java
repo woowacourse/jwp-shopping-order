@@ -7,6 +7,7 @@ import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,8 +22,8 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<Void> createOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
-        orderService.add(member, orderRequest);
-        return ResponseEntity.ok().build();
+        Long id = orderService.add(member, orderRequest);
+        return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 
     @GetMapping
@@ -32,7 +33,7 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> findOrdersByMember(Member member, @PathVariable final Long orderId) {
+    public ResponseEntity<OrderResponse> findOrderById(Member member, @PathVariable final Long orderId) {
         OrderResponse orderResponse = orderService.findOrderById(member, orderId);
         return ResponseEntity.ok().body(orderResponse);
     }

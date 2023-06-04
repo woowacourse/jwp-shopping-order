@@ -27,6 +27,10 @@ public class Item {
         }
     }
 
+    public int calculateItemPrice() {
+        return this.product.getPrice() * getQuantity();
+    }
+
     public void changeQuantity(final int quantity) {
         this.quantity = quantity;
     }

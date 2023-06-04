@@ -18,10 +18,13 @@ public class OrderResponse {
     private int deliveryPrice;
     private LocalDateTime orderedAt;
 
+    public OrderResponse() {
+    }
+
     public OrderResponse(final Order order) {
         this.orderId = order.getId();
         if (order.getCoupon().isEmpty()) {
-            this.coupon = new OrderCouponResponse();
+            this.coupon = null;
         }
         if (order.getCoupon().isPresent()) {
             this.coupon = new OrderCouponResponse(order.getCoupon().get());

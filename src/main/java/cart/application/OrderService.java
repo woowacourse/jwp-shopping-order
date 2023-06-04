@@ -36,7 +36,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void add(final Member member, final OrderRequest orderRequest) {
+    public Long add(final Member member, final OrderRequest orderRequest) {
         Map<Long, Integer> orderRequestItems = orderRequest.getItems()
                 .stream()
                 .collect(Collectors.toMap(ItemRequest::getProductId, ItemRequest::getQuantity));
@@ -50,9 +50,12 @@ public class OrderService {
                 .map(product -> new Item(product, orderRequestItems.get(product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
-        Coupon coupon = couponRepository.findById(orderRequest.getCouponId());
+        Coupon coupon = null;
+        if (orderRequest.getCouponId() != null) {
+            coupon = couponRepository.findById(orderRequest.getCouponId());
+        }
         Order order = new Order(member, items, coupon);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
     public OrderResponse findOrderById(final Member member, final Long orderId) {

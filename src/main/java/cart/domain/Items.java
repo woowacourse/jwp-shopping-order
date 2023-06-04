@@ -18,9 +18,15 @@ public class Items {
         }
     }
 
-    public int calculateItemsQuantity(final List<Item> items) {
+    private int calculateItemsQuantity(final List<Item> items) {
         return items.stream()
                 .mapToInt(Item::getQuantity)
+                .sum();
+    }
+
+    public int calculateItemsPrice(final List<Item> items) {
+        return items.stream()
+                .mapToInt(Item::calculateItemPrice)
                 .sum();
     }
 

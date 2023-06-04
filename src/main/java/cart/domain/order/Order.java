@@ -28,7 +28,7 @@ public class Order {
         this.member = member;
         this.items = new Items(items);
         this.coupon = Optional.ofNullable(coupon);
-        this.totalPrice = this.items.calculateItemsQuantity(items);
+        this.totalPrice = this.items.calculateItemsPrice(items);
         this.deliveryPrice = 3000;
         this.orderedAt = LocalDateTime.now();
     }
