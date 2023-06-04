@@ -1,7 +1,9 @@
 package cart.dto;
 
 import cart.domain.CartItem;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(implementation = CartItemResponse.class)
 public class CartItemResponse {
     private Long id;
     private int quantity;

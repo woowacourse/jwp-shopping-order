@@ -1,8 +1,13 @@
 package cart.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ProductRequest {
+    @Schema(description = "상품 ID")
     private String name;
+    @Schema(description = "상품 가격")
     private int price;
+    @Schema(description = "상품 이미지 주소")
     private String imageUrl;
 
     public ProductRequest() {
