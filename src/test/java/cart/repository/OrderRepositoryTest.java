@@ -163,6 +163,6 @@ class OrderRepositoryTest {
     void delete_fail(Long memberId, Long orderId) {
         assertThatThrownBy(() -> orderRepository.delete(memberId, orderId))
                 .isInstanceOf(OrderException.class)
-                .hasMessageContaining("해당 주문 번호에 대한 주문을 취소할 수 없습니다.");
+                .hasMessageContaining("해당 주문을 찾을 수 없습니다.");
     }
 }

@@ -14,11 +14,11 @@ public class TestConfig {
     @Bean
     public DataSource getDataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.h2.Driver");
-        dataSourceBuilder.url("jdbc:h2:mem:test?useUnicode=true&characterEncoding=utf8");
+        dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
+        dataSourceBuilder.url("jdbc:mysql://localhost:3306/cart_test?useUnicode=true&characterEncoding=utf8");
 
-        dataSourceBuilder.username("sa");
-        dataSourceBuilder.password("");
+        dataSourceBuilder.username("root");
+        dataSourceBuilder.password("xxxx");
         return dataSourceBuilder.build();
     }
 }
