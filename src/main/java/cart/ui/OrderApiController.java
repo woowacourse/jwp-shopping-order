@@ -50,7 +50,7 @@ public class OrderApiController {
         return new OrderResponse(
                 order.getId(),
                 toOrderProductResponse(order.getOrderProducts().getOrderProducts()),
-                order.getPayment().getTotalPrice(),
+                order.getPayment().getUserPayment(),
                 order.getPayment().getUsedPoint(),
                 order.getCreatedAt()
         );
