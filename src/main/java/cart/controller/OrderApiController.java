@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RequestMapping("/orders")
 @RestController
 public class OrderApiController {
@@ -27,14 +26,13 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderRequest orderRequest,
-                                            @AuthPrincipal Member member) {
+    public ResponseEntity<Void> createOrder(@AuthPrincipal Member member, @RequestBody OrderRequest orderRequest) {
         Long id = orderService.register(orderRequest, member);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailResponse> getOrder(@PathVariable Long id, @AuthPrincipal Member member) {
+    public ResponseEntity<OrderDetailResponse> getOrder(@AuthPrincipal Member member, @PathVariable Long id) {
         OrderDetailResponse response = orderService.findById(id, member);
         return ResponseEntity.ok().body(response);
     }

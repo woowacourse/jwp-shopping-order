@@ -34,8 +34,12 @@ public class OrderService {
     private final MemberCouponRepository memberCouponRepository;
     private final CouponService couponService;
 
-    public OrderService(CartItemRepository cartItemRepository, OrderRepository orderRepository,
-                        MemberCouponRepository memberCouponRepository, CouponService couponService) {
+    public OrderService(
+            CartItemRepository cartItemRepository,
+            OrderRepository orderRepository,
+            MemberCouponRepository memberCouponRepository,
+            CouponService couponService
+    ) {
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
         this.memberCouponRepository = memberCouponRepository;

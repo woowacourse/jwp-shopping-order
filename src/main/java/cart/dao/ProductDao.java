@@ -31,20 +31,6 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> findAll() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, rowMapper);
-    }
-
-    public Optional<ProductEntity> findById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
     public Long save(ProductEntity product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -62,6 +48,20 @@ public class ProductDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Optional<ProductEntity> findById(Long productId) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<ProductEntity> findAll() {
+        String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void updateProduct(ProductEntity product) {

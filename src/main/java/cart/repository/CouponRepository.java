@@ -54,6 +54,14 @@ public class CouponRepository {
 
     }
 
+    private CouponEntity toEntity(Coupon coupon) {
+        return new CouponEntity(
+                coupon.getName(),
+                coupon.getCouponType().name(),
+                coupon.getDiscountValue(),
+                coupon.getMinOrderPrice().getValue()
+        );
+    }
 
     private IssuableCoupon toDomain(CouponIssueConditionEntity couponIssueCondition) {
         return new IssuableCoupon(
@@ -67,14 +75,5 @@ public class CouponRepository {
         return couponDao.findById(it.getCouponId())
                 .map(CouponEntity::toDomain)
                 .orElseThrow();
-    }
-
-    private CouponEntity toEntity(Coupon coupon) {
-        return new CouponEntity(
-                coupon.getName(),
-                coupon.getCouponType().name(),
-                coupon.getDiscountValue(),
-                coupon.getMinOrderPrice().getValue()
-        );
     }
 }

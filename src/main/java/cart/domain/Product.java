@@ -3,6 +3,7 @@ package cart.domain;
 import java.math.BigDecimal;
 
 public class Product {
+
     private final Long id;
     private String name;
     private Money price;
@@ -27,6 +28,12 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public void update(String name, BigDecimal price, String imageUrl) {
+        this.name = name;
+        this.price = new Money(price);
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,11 +48,5 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void update(String name, BigDecimal price, String imageUrl) {
-        this.name = name;
-        this.price = new Money(price);
-        this.imageUrl = imageUrl;
     }
 }

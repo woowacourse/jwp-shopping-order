@@ -19,8 +19,14 @@ public class OrderEntity {
         this(null, memberId, couponId, orderNumber, deliveryFee, createdAt);
     }
 
-    public OrderEntity(Long id, Long memberId, Long couponId, String orderNumber, int deliveryFee,
-                       LocalDateTime createdAt) {
+    public OrderEntity(
+            Long id,
+            Long memberId,
+            Long couponId,
+            String orderNumber,
+            int deliveryFee,
+            LocalDateTime createdAt
+    ) {
         this.id = id;
         this.memberId = memberId;
         this.couponId = couponId;

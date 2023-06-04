@@ -15,9 +15,9 @@ public class MemberRepository {
         this.memberDao = memberDao;
     }
 
-    public Optional<Member> findByEmail(String email) {
-        return memberDao.findByEmail(email)
-                .map(MemberEntity::toDomain);
+    public Member save(Member member) {
+        Long id = memberDao.save(new MemberEntity(member.getEmail(), member.getPassword()));
+        return new Member(id, member.getEmail(), member.getPassword());
     }
 
     public Optional<Member> findById(long id) {
@@ -25,8 +25,8 @@ public class MemberRepository {
                 .map(MemberEntity::toDomain);
     }
 
-    public Member save(Member member) {
-        Long id = memberDao.save(new MemberEntity(member.getEmail(), member.getPassword()));
-        return new Member(id, member.getEmail(), member.getPassword());
+    public Optional<Member> findByEmail(String email) {
+        return memberDao.findByEmail(email)
+                .map(MemberEntity::toDomain);
     }
 }

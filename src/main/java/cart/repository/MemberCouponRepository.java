@@ -30,6 +30,20 @@ public class MemberCouponRepository {
         this.memberDao = memberDao;
     }
 
+    public MemberCoupon save(MemberCoupon memberCoupon) {
+        MemberCouponEntity memberCouponEntity = toEntity(memberCoupon);
+        Long id = memberCouponDao.save(memberCouponEntity);
+        return new MemberCoupon(id, memberCoupon.getMember(), memberCoupon.getCoupon(), memberCoupon.getExpiredDate());
+    }
+
+    public void saveAll(List<MemberCoupon> memberCoupons) {
+        List<MemberCouponEntity> memberCouponEntities = memberCoupons.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
+
+        memberCouponDao.saveAll(memberCouponEntities);
+    }
+
     public Optional<MemberCoupon> findById(Long id) {
         Optional<MemberCouponEntity> savedMemberCoupon = memberCouponDao.findById(id);
         if (savedMemberCoupon.isEmpty()) {
@@ -38,6 +52,26 @@ public class MemberCouponRepository {
         MemberCouponEntity memberCouponEntity = savedMemberCoupon.get();
         MemberCoupon memberCoupon = toDomain(memberCouponEntity);
         return Optional.of(memberCoupon);
+    }
+
+    public List<MemberCoupon> findNotExpiredAllByMember(Member member) {
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(member.getId());
+        return memberCouponEntities.stream()
+                .map(this::toDomain)
+                .filter(MemberCoupon::isNotExpired)
+                .collect(Collectors.toList());
+    }
+
+    public void delete(MemberCoupon memberCoupon) {
+        memberCouponDao.deleteById(memberCoupon.getId());
+    }
+
+    private MemberCouponEntity toEntity(MemberCoupon memberCoupon) {
+        return new MemberCouponEntity(
+                memberCoupon.getMember().getId(),
+                memberCoupon.getCoupon().getId(),
+                memberCoupon.getExpiredDate()
+        );
     }
 
     private MemberCoupon toDomain(MemberCouponEntity memberCoupon) {
@@ -56,39 +90,5 @@ public class MemberCouponRepository {
         return memberDao.findById(memberId)
                 .map(MemberEntity::toDomain)
                 .orElseThrow(() -> new MemberException(ExceptionType.NOT_FOUND_MEMBER));
-    }
-
-    public MemberCoupon save(MemberCoupon memberCoupon) {
-        MemberCouponEntity memberCouponEntity = toEntity(memberCoupon);
-        Long id = memberCouponDao.save(memberCouponEntity);
-        return new MemberCoupon(id, memberCoupon.getMember(), memberCoupon.getCoupon(), memberCoupon.getExpiredDate());
-    }
-
-    private MemberCouponEntity toEntity(MemberCoupon memberCoupon) {
-        return new MemberCouponEntity(
-                memberCoupon.getMember().getId(),
-                memberCoupon.getCoupon().getId(),
-                memberCoupon.getExpiredDate()
-        );
-    }
-
-    public void delete(MemberCoupon memberCoupon) {
-        memberCouponDao.deleteById(memberCoupon.getId());
-    }
-
-    public List<MemberCoupon> findNotExpiredAllByMember(Member member) {
-        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(member.getId());
-        return memberCouponEntities.stream()
-                .map(this::toDomain)
-                .filter(MemberCoupon::isNotExpired)
-                .collect(Collectors.toList());
-    }
-
-    public void saveAll(List<MemberCoupon> memberCoupons) {
-        List<MemberCouponEntity> memberCouponEntities = memberCoupons.stream()
-                .map(this::toEntity)
-                .collect(Collectors.toList());
-
-        memberCouponDao.saveAll(memberCouponEntities);
     }
 }

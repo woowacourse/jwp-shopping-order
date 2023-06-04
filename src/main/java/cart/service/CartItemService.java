@@ -26,18 +26,18 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
-        return cartItems.stream()
-                .map(CartItemResponse::of)
-                .collect(Collectors.toList());
-    }
-
     public Long addCart(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new ProductException(ExceptionType.NOT_FOUND_PRODUCT));
         CartItem cartItem = new CartItem(product, member);
         return cartItemRepository.save(cartItem).getId();
+    }
+
+    public List<CartItemResponse> findByMember(Member member) {
+        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

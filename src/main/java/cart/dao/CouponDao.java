@@ -31,16 +31,6 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<CouponEntity> findById(Long id) {
-        String sql = "SELECT * FROM coupon WHERE id = ?";
-        try {
-            CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
-            return Optional.ofNullable(couponEntity);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
     public Long save(CouponEntity coupon) {
         String sql = "INSERT INTO coupon (name, type, discount_value, min_order_price) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -60,5 +50,15 @@ public class CouponDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Optional<CouponEntity> findById(Long id) {
+        String sql = "SELECT * FROM coupon WHERE id = ?";
+        try {
+            CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.ofNullable(couponEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

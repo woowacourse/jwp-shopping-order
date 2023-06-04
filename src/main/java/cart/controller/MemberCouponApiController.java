@@ -18,7 +18,6 @@ public class MemberCouponApiController {
         this.couponService = couponService;
     }
 
-
     @GetMapping
     public ResponseEntity<CouponResponse> findAll(@AuthPrincipal Member member) {
         CouponResponse couponResponse = couponService.findAllByMember(member);

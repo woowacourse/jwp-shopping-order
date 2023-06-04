@@ -12,18 +12,25 @@ public class OrderProductEntity {
     private final BigDecimal productPrice;
     private final String productImageUrl;
 
-    public OrderProductEntity(Long orderId, Long productId, int quantity, String productName, BigDecimal productPrice,
-                              String productImageUrl) {
+    public OrderProductEntity(
+            Long orderId,
+            Long productId,
+            int quantity,
+            String productName,
+            BigDecimal productPrice,
+            String productImageUrl
+    ) {
         this(null, orderId, productId, quantity, productName, productPrice, productImageUrl);
     }
 
-    public OrderProductEntity(Long id,
-                              Long orderId,
-                              Long productId,
-                              int quantity,
-                              String productName,
-                              BigDecimal productPrice,
-                              String productImageUrl
+    public OrderProductEntity(
+            Long id,
+            Long orderId,
+            Long productId,
+            int quantity,
+            String productName,
+            BigDecimal productPrice,
+            String productImageUrl
     ) {
         this.id = id;
         this.orderId = orderId;

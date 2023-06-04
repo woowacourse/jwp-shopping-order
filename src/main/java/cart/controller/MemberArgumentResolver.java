@@ -23,7 +23,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         this.memberRepository = memberRepository;
     }
 
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthPrincipal.class) &&
@@ -31,8 +30,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(
+            MethodParameter parameter,
+            ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory
+    ) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         validateAuthorizationHeader(authorization);
 

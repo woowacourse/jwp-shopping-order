@@ -32,8 +32,15 @@ public class Order {
         this.coupon = coupon;
     }
 
-    public Order(Long id, Member member, List<Item> items, Money deliveryFee, LocalDateTime orderDate,
-                 String orderNumber, Coupon coupon) {
+    public Order(
+            Long id,
+            Member member,
+            List<Item> items,
+            Money deliveryFee,
+            LocalDateTime orderDate,
+            String orderNumber,
+            Coupon coupon
+    ) {
         this.id = id;
         this.member = member;
         this.items = items;
@@ -62,6 +69,12 @@ public class Order {
         return orderDate.format(ORDER_NUMBER_FORMAT) + memberId;
     }
 
+    public void checkOwner(Member member) {
+        if (!this.member.equals(member)) {
+            throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
+        }
+    }
+
     public Money calculateTotalPrice() {
         Money totalCartsPrice = calculateBeforeDiscountPrice();
         Money discountedPrice = coupon.discountPrice(totalCartsPrice);
@@ -77,12 +90,6 @@ public class Order {
     public Money calculateDiscountPrice() {
         Money beforeDiscountPrice = calculateBeforeDiscountPrice();
         return beforeDiscountPrice.subtract(coupon.discountPrice(beforeDiscountPrice).getValue());
-    }
-
-    public void checkOwner(Member member) {
-        if (!this.member.equals(member)) {
-            throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
-        }
     }
 
     public boolean isUnusedCoupon() {

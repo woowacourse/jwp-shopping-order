@@ -32,23 +32,11 @@ public class CartItemDao {
         ProductEntity product = new ProductEntity(productId, name, price, imageUrl);
         return new CartItemEntity(cartItemId, product, member, quantity);
     };
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public List<CartItemEntity> findByMemberId(Long memberId) {
-        String sql =
-                "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
-                        "cart_item.member_id as member_id, member.email as member_email, " +
-                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
-                        +
-                        "FROM cart_item " +
-                        "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.member_id = ? ";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
     public Long save(CartItemEntity cartItem) {
@@ -87,14 +75,27 @@ public class CartItemDao {
         }
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public List<CartItemEntity> findByMemberId(Long memberId) {
+        String sql =
+                "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
+                        "cart_item.member_id as member_id, member.email as member_email, " +
+                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN member ON cart_item.member_id = member.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.member_id = ? ";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
     public void updateQuantity(CartItemEntity cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
 

@@ -22,6 +22,7 @@ public class MemberDao {
         String password = rs.getString("password");
         return new MemberEntity(id, email, password);
     };
+
     private final JdbcTemplate jdbcTemplate;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {

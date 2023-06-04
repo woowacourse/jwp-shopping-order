@@ -4,6 +4,7 @@ import cart.exception.CartItemException;
 import cart.exception.ExceptionType;
 
 public class CartItem {
+
     private final Long id;
     private final Member member;
     private final Item item;

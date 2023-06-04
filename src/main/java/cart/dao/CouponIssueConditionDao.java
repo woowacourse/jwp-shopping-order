@@ -28,11 +28,6 @@ public class CouponIssueConditionDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CouponIssueConditionEntity> findAll() {
-        String sql = "SELECT * FROM coupon_issue_condition";
-        return jdbcTemplate.query(sql, rowMapper);
-    }
-
     public Long save(CouponIssueConditionEntity couponIssueCondition) {
         String sql = "INSERT INTO coupon_issue_condition (coupon_id, min_issue_price) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -47,5 +42,10 @@ public class CouponIssueConditionDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public List<CouponIssueConditionEntity> findAll() {
+        String sql = "SELECT * FROM coupon_issue_condition";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

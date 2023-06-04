@@ -50,8 +50,11 @@ public class CouponService {
                 .orElse(Money.ZERO);
     }
 
-    private List<MemberCoupon> getSatisfyMemberCoupon(Member member, List<IssuableCoupon> issuableCoupons,
-                                                      Money money) {
+    private List<MemberCoupon> getSatisfyMemberCoupon(
+            Member member,
+            List<IssuableCoupon> issuableCoupons,
+            Money money
+    ) {
         return issuableCoupons.stream()
                 .filter(issuableCoupon -> issuableCoupon.getMoney().equals(money))
                 .map(IssuableCoupon::getCoupon)

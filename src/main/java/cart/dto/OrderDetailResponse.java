@@ -80,14 +80,6 @@ public class OrderDetailResponse {
         return deliveryFee;
     }
 
-    public BigDecimal getTotalOrderPrice() {
-        return totalOrderPrice;
-    }
-
-    public List<OrderProductResponse> getProducts() {
-        return products;
-    }
-
     public String getUsingCouponName() {
         return usingCouponName;
     }
@@ -98,5 +90,13 @@ public class OrderDetailResponse {
 
     public BigDecimal getBeforeDiscountPrice() {
         return beforeDiscountPrice;
+    }
+
+    public BigDecimal getTotalOrderPrice() {
+        return totalOrderPrice;
+    }
+
+    public List<OrderProductResponse> getProducts() {
+        return products;
     }
 }

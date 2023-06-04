@@ -19,10 +19,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> findAll() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResponse::of)
-                .collect(Collectors.toList());
+    public Long registerProduct(ProductRequest productRequest) {
+        Product product = new Product(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
+        );
+        return productRepository.save(product).getId();
     }
 
     public ProductResponse findById(Long productId) {
@@ -31,13 +34,10 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public Long registerProduct(ProductRequest productRequest) {
-        Product product = new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl()
-        );
-        return productRepository.save(product).getId();
+    public List<ProductResponse> findAll() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {

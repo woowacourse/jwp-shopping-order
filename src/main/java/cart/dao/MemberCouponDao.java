@@ -31,16 +31,6 @@ public class MemberCouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<MemberCouponEntity> findById(Long couponId) {
-        String sql = "SELECT * FROM member_coupon WHERE id = ?";
-        try {
-            MemberCouponEntity memberCoupon = jdbcTemplate.queryForObject(sql, rowMapper, couponId);
-            return Optional.ofNullable(memberCoupon);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
     public Long save(MemberCouponEntity memberCoupon) {
         String sql = "INSERT INTO member_coupon (member_id, coupon_id, expired_date) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -61,17 +51,6 @@ public class MemberCouponDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM member_coupon WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    public List<MemberCouponEntity> findByMemberId(Long memberId) {
-        String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
-
-        return jdbcTemplate.query(sql, rowMapper, memberId);
-    }
-
     public void saveAll(List<MemberCouponEntity> memberCoupons) {
         String sql = "INSERT INTO member_coupon (member_id, coupon_id, expired_date) VALUES (?, ?, ?)";
 
@@ -80,5 +59,25 @@ public class MemberCouponDao {
             ps.setLong(2, memberCoupon.getCouponId());
             ps.setDate(3, Date.valueOf(memberCoupon.getExpiredDate()));
         }));
+    }
+
+    public Optional<MemberCouponEntity> findById(Long couponId) {
+        String sql = "SELECT * FROM member_coupon WHERE id = ?";
+        try {
+            MemberCouponEntity memberCoupon = jdbcTemplate.queryForObject(sql, rowMapper, couponId);
+            return Optional.ofNullable(memberCoupon);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<MemberCouponEntity> findByMemberId(Long memberId) {
+        String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM member_coupon WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

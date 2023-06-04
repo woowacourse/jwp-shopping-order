@@ -64,7 +64,6 @@ public class OrderDao {
             return;
         }
         ps.setLong(2, couponId);
-
     }
 
     public Optional<OrderEntity> findById(Long id) {
@@ -80,7 +79,6 @@ public class OrderDao {
 
     public List<OrderEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT * FROM orders WHERE member_id = ?";
-
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

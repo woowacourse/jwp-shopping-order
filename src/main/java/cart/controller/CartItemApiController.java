@@ -36,22 +36,20 @@ public class CartItemApiController {
     public ResponseEntity<Void> addCartItems(@AuthPrincipal Member member,
                                              @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.addCart(member, cartItemRequest);
-
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(@AuthPrincipal Member member, @PathVariable Long id,
+    public ResponseEntity<Void> updateCartItemQuantity(@AuthPrincipal Member member,
+                                                       @PathVariable Long id,
                                                        @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(@AuthPrincipal Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
-
         return ResponseEntity.noContent().build();
     }
 }

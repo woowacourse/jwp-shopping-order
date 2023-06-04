@@ -41,12 +41,24 @@ public class CartItemRepository {
         return new CartItem(id, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
-    private MemberEntity toEntity(Member member) {
-        return new MemberEntity(
-                member.getId(),
-                member.getEmail(),
-                member.getPassword()
+    public Optional<CartItem> findById(Long id) {
+        return cartItemDao.findById(id)
+                .map(CartItemEntity::toDomain);
+    }
+
+    public void updateQuantity(CartItem cartItem) {
+        cartItemDao.updateQuantity(
+                new CartItemEntity(
+                        cartItem.getId(),
+                        toEntity(cartItem.getProduct()),
+                        toEntity(cartItem.getMember()),
+                        cartItem.getQuantity()
+                )
         );
+    }
+
+    public void deleteById(Long id) {
+        cartItemDao.deleteById(id);
     }
 
     private ProductEntity toEntity(Product product) {
@@ -58,23 +70,11 @@ public class CartItemRepository {
         );
     }
 
-    public Optional<CartItem> findById(Long id) {
-        return cartItemDao.findById(id)
-                .map(CartItemEntity::toDomain);
-    }
-
-    public void deleteById(Long id) {
-        cartItemDao.deleteById(id);
-    }
-
-    public void updateQuantity(CartItem cartItem) {
-        cartItemDao.updateQuantity(
-                new CartItemEntity(
-                        cartItem.getId(),
-                        toEntity(cartItem.getProduct()),
-                        toEntity(cartItem.getMember()),
-                        cartItem.getQuantity()
-                )
+    private MemberEntity toEntity(Member member) {
+        return new MemberEntity(
+                member.getId(),
+                member.getEmail(),
+                member.getPassword()
         );
     }
 }

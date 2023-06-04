@@ -46,8 +46,13 @@ public class CouponResponse {
         private final LocalDate expiredDate;
         private final BigDecimal minOrderPrice;
 
-        public RateCouponResponse(Long id, String name, BigDecimal discountRate, LocalDate expiredDate,
-                                  BigDecimal minOrderPrice) {
+        public RateCouponResponse(
+                Long id,
+                String name,
+                BigDecimal discountRate,
+                LocalDate expiredDate,
+                BigDecimal minOrderPrice
+        ) {
             this.id = id;
             this.name = name;
             this.discountRate = discountRate;
@@ -85,17 +90,6 @@ public class CouponResponse {
         public BigDecimal getMinOrderPrice() {
             return minOrderPrice;
         }
-
-        @Override
-        public String toString() {
-            return "RateCouponResponse{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    ", discountRate=" + discountRate +
-                    ", expiredDate=" + expiredDate +
-                    ", minOrderPrice=" + minOrderPrice +
-                    '}';
-        }
     }
 
     public static class FixedCouponResponse {
@@ -106,8 +100,13 @@ public class CouponResponse {
         private final LocalDate expiredDate;
         private final BigDecimal minOrderPrice;
 
-        public FixedCouponResponse(Long id, String name, BigDecimal discountPrice, LocalDate expiredDate,
-                                   BigDecimal minOrderPrice) {
+        public FixedCouponResponse(
+                Long id,
+                String name,
+                BigDecimal discountPrice,
+                LocalDate expiredDate,
+                BigDecimal minOrderPrice
+        ) {
             this.id = id;
             this.name = name;
             this.discountPrice = discountPrice;
@@ -146,6 +145,4 @@ public class CouponResponse {
             return minOrderPrice;
         }
     }
-
-
 }

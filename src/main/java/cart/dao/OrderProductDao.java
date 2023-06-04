@@ -31,14 +31,14 @@ public class OrderProductDao {
         String sql = "INSERT INTO orders_product "
                 + "(orders_id, product_id, quantity, product_name, product_price, product_image_url) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.batchUpdate(sql, orderProducts, orderProducts.size(), (((ps, orderProduct) -> {
+        jdbcTemplate.batchUpdate(sql, orderProducts, orderProducts.size(), ((ps, orderProduct) -> {
             ps.setLong(1, orderProduct.getOrderId());
             ps.setLong(2, orderProduct.getProductId());
             ps.setInt(3, orderProduct.getQuantity());
             ps.setString(4, orderProduct.getProductName());
             ps.setBigDecimal(5, orderProduct.getProductPrice());
             ps.setString(6, orderProduct.getProductImageUrl());
-        })));
+        }));
     }
 
     public List<OrderProductEntity> findAll() {

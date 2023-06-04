@@ -20,6 +20,10 @@ public class CartItemEntity {
         this.quantity = quantity;
     }
 
+    public CartItem toDomain() {
+        return new CartItem(id, quantity, productEntity.toDomain(), memberEntity.toDomain());
+    }
+
     public Long getId() {
         return id;
     }
@@ -34,9 +38,5 @@ public class CartItemEntity {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public CartItem toDomain() {
-        return new CartItem(id, quantity, productEntity.toDomain(), memberEntity.toDomain());
     }
 }

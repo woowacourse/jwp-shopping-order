@@ -46,14 +46,18 @@ public class MemberCoupon {
         }
     }
 
-    public boolean isNotExpired() {
-        return !expiredDate.isBefore(LocalDate.now());
-    }
-
     private void checkOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new CouponException(ExceptionType.NO_AUTHORITY_COUPON);
         }
+    }
+
+    public boolean isNotExpired() {
+        return !expiredDate.isBefore(LocalDate.now());
+    }
+
+    public boolean isExists() {
+        return coupon.isCoupon();
     }
 
     public Long getId() {
@@ -70,9 +74,5 @@ public class MemberCoupon {
 
     public LocalDate getExpiredDate() {
         return expiredDate;
-    }
-
-    public boolean isExists() {
-        return coupon.isCoupon();
     }
 }

@@ -1,6 +1,7 @@
 package cart.domain;
 
 public class Item {
+
     private final Product product;
     private int quantity;
 
