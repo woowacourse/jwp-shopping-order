@@ -1,21 +1,22 @@
 package cart.application.service;
 
-import cart.application.domain.OrderInfo;
-import cart.application.domain.OrderInfos;
-import cart.application.exception.CartItemNotFoundException;
-import cart.application.exception.MemberNotFoundException;
-import cart.application.exception.OrderNotFoundException;
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.OrderRepository;
 import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Order;
+import cart.application.domain.OrderInfo;
+import cart.application.domain.OrderInfos;
 import cart.application.domain.Product;
+import cart.application.exception.CartItemNotFoundException;
+import cart.application.exception.MemberNotFoundException;
+import cart.application.exception.OrderNotFoundException;
+import cart.application.exception.PointInconsistentException;
+import cart.application.repository.CartItemRepository;
+import cart.application.repository.MemberRepository;
+import cart.application.repository.OrderRepository;
 import cart.presentation.dto.request.AuthInfo;
+import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.OrderDto;
 import cart.presentation.dto.response.OrderResponse;
-import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.SpecificOrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,11 +45,19 @@ public class OrderService {
 
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
+        long originalPoint = member.getPoint();
         order.adjustPoint();
+        validateEarnedPointIsEqual(order.getMember().getPoint(), originalPoint + request.getUsedPoint() + request.getPointToAdd());
         memberRepository.update(order.getMember());
         Order inserted = orderRepository.insert(order);
         cartItemRepository.deleteByMemberId(member.getId());
         return inserted.getId();
+    }
+
+    private void validateEarnedPointIsEqual(long point, long expectedPoint) {
+        if (point != expectedPoint) {
+            throw new PointInconsistentException();
+        }
     }
 
     private OrderInfos makeOrderInfosFromRequest(Member member, OrderRequest request) {

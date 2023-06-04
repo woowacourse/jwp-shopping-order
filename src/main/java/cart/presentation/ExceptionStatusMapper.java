@@ -4,6 +4,7 @@ import cart.application.exception.AuthenticationException;
 import cart.application.exception.ExceedAvailablePointException;
 import cart.application.exception.ExceedOwnedPointException;
 import cart.application.exception.IllegalMemberException;
+import cart.application.exception.PointInconsistentException;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -16,6 +17,9 @@ public enum ExceptionStatusMapper {
     )),
     FORBIDDEN(HttpStatus.FORBIDDEN, List.of(
             IllegalMemberException.class
+    )),
+    CONFLICT(HttpStatus.CONFLICT, List.of(
+            PointInconsistentException.class
     )),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, List.of(
             ExceedAvailablePointException.class,
