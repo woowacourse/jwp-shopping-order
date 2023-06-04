@@ -60,7 +60,11 @@ class CartItemDaoTest {
         final Long id = cartItemDao.save(cartItem);
 
         //then
-        assertThat(id).isEqualTo(1L);
+        assertSoftly(softly -> {
+            softly.assertThat(id).isEqualTo(1L);
+            softly.assertThat(cartItemDao.findById(id))
+                    .isEqualTo(new CartItem(1L, 1, product, member));
+        });
     }
 
     @Test
