@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.coupon.domain.EmptyCoupon;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.domain.Order;
+import cart.order.domain.OrderStatus;
 import cart.order_item.domain.OrderItem;
 import cart.order_item.exception.CanNotOrderNotInCart;
 import cart.value_object.Money;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +42,10 @@ class OrderItemCommandServiceTest {
     //given
     final List<Long> cartIdemIds = List.of(1L, 2L);
     final Member member = memberDao.getMemberById(1L);
-    final Order order = new Order(1L, member, new Money(3000));
+    final Order order = new Order(
+        1L, member,
+        new Money(100), new EmptyCoupon(),
+        OrderStatus.CANCEL, ZonedDateTime.now());
 
     //when & then
     assertDoesNotThrow(
@@ -52,7 +58,10 @@ class OrderItemCommandServiceTest {
     //given
     final List<Long> cartIdemIds = List.of(1L, 2L, 3L, 4L, 8L);
     final Member member = memberDao.getMemberById(1L);
-    final Order order = new Order(1L, member, new Money(3000));
+    final Order order = new Order(
+        1L, member,
+        new Money(100), new EmptyCoupon(),
+        OrderStatus.CANCEL, ZonedDateTime.now());
 
     //when & then
     assertThatThrownBy(
@@ -65,7 +74,10 @@ class OrderItemCommandServiceTest {
   void test_deleteBatch() throws Exception {
     //given
     final Member member = memberDao.getMemberById(1L);
-    final Order order = new Order(1L, member, new Money(3000));
+    final Order order = new Order(
+        1L, member,
+        new Money(100), new EmptyCoupon(),
+        OrderStatus.CANCEL, ZonedDateTime.now());
 
     //when
     orderItemCommandService.deleteBatch(order);

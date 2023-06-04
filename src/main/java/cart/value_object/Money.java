@@ -33,6 +33,10 @@ public class Money {
     return !this.equals(other);
   }
 
+  public boolean isGreaterThan(final Money other) {
+    return value.compareTo(other.value) > 0;
+  }
+
   public BigDecimal getValue() {
     return value;
   }

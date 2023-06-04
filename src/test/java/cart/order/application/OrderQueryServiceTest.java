@@ -63,7 +63,7 @@ class OrderQueryServiceTest {
   void test_searchOrder() throws Exception {
     //given
     final Member member = memberDao.getMemberById(1L);
-    final long orderId = 1L;
+    final long orderId = 2L;
 
     //when
     final SpecificOrderResponse specificOrderResponse =

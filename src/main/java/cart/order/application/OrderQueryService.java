@@ -1,5 +1,6 @@
 package cart.order.application;
 
+import cart.coupon.application.dto.CouponResponse;
 import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
@@ -12,6 +13,7 @@ import cart.order_item.application.mapper.OrderItemMapper;
 import cart.order_item.domain.OrderItem;
 import cart.order_item.domain.OrderedItems;
 import cart.value_object.Money;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,12 +74,29 @@ public class OrderQueryService {
 
     final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
     final OrderedItems orderedItems = new OrderedItems(orderItems);
+    final Money totalPrice = orderedItems.calculateAllItemPrice();
+    final Money totalItemPrice = totalPrice.add(order.getDeliveryFee());
+
+    final Coupon coupon = order.getCoupon();
+    final Money totalPayments = coupon.discount(totalItemPrice);
+    final Money deliveryFee = order.getDeliveryFee();
+
+    final Money priceDiscount = totalPayments.minus(deliveryFee)
+        .minus(totalPrice);
+
+    final CouponResponse couponResponse = new CouponResponse(
+        coupon.getId(),
+        coupon.getName(),
+        priceDiscount.getValue()
+    );
 
     return new SpecificOrderResponse(
         order.getId(),
         OrderItemMapper.mapToOrderItemResponse(orderItems),
-        orderedItems.calculateAllItemPrice().getValue(),
-        order.getDeliveryFee().getValue()
+        totalPrice.getValue(),
+        deliveryFee.getValue(),
+        totalPayments.getValue(),
+        couponResponse
     );
   }
 

@@ -10,10 +10,12 @@ import cart.coupon.domain.EmptyCoupon;
 import cart.member.domain.Member;
 import cart.order.dao.OrderDao;
 import cart.order.domain.Order;
+import cart.order.domain.OrderStatus;
 import cart.order_item.dao.entity.OrderItemEntity;
 import cart.order_item.domain.OrderItem;
 import cart.value_object.Money;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +73,10 @@ class OrderItemDaoTest {
     final Long orderId = 1L;
 
     final Member member = new Member(1L, "email", "password");
-    final Order order = new Order(1L, member, new Money(100), new EmptyCoupon());
+    final Order order = new Order(
+        1L, member,
+        new Money(100), new EmptyCoupon(),
+        OrderStatus.CANCEL, ZonedDateTime.now());
 
     when(orderDao.findByOrderId(anyLong()))
         .thenReturn(order);
