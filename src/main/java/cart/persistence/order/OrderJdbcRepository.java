@@ -12,10 +12,11 @@ import cart.persistence.order.dto.OrderDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +25,6 @@ import java.util.stream.Collectors;
 public class OrderJdbcRepository implements OrderRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
     private final CouponRepository couponRepository;
     private final OrderedItemRepository orderedItemRepository;
 
@@ -37,9 +37,6 @@ public class OrderJdbcRepository implements OrderRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.couponRepository = couponRepository;
         this.orderedItemRepository = orderedItemRepository;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("orders")
-                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Member> memberRowMapper = (rs, rowNum) ->
@@ -61,17 +58,25 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public Long createOrder(final Order order) {
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("member_id", order.getMember().getId());
-        parameters.addValue("total_price", order.calculateTotalPrice());
-        parameters.addValue("payment_price", order.getPaymentPrice());
-        parameters.addValue("point", order.getPoint().getPoint());
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        final String sql = "INSERT INTO orders (member_id, total_price, payment_price, point) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setLong(1, order.getMember().getId());
+            ps.setInt(2, order.calculateTotalPrice());
+            ps.setInt(3, order.getPaymentPrice());
+            ps.setInt(4, order.getPoint().getPoint());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT o.*, m.name, m.email, m.password " +
+        final String sql = "SELECT o.id, o.member_id, o.total_price, o.payment_price, o.point, o.created_at, " +
+                "m.name, m.email, m.password " +
                 "FROM orders o " +
                 "JOIN member m ON o.member_id = m.id " +
                 "WHERE o.member_id = ?";
@@ -87,7 +92,8 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public Optional<Order> findByOrderId(final Long memberId, final Long orderId) {
-        final String sql = "SELECT o.*, m.name, m.email, m.password " +
+        final String sql = "SELECT o.id, o.member_id, o.total_price, o.payment_price, o.point, o.created_at, " +
+                "m.name, m.email, m.password " +
                 "FROM orders o " +
                 "JOIN member m ON o.member_id = m.id " +
                 "WHERE o.id = ?";
