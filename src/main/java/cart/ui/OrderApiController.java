@@ -33,7 +33,7 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> showOrder(Member member, @PathVariable Long orderId){
+    public ResponseEntity<OrderResponse> showOrder(Member member, @PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.showOrder(member, orderId));
     }
 }

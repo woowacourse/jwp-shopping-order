@@ -16,6 +16,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'mysql:mysql-connector-java:8.0.32'
+    implementation 'com.google.guava:guava:24.0-jre'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
