@@ -1,6 +1,5 @@
 package cart.entity;
 
-import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DiscountType;
 
 public class CouponEntity {
@@ -12,7 +11,7 @@ public class CouponEntity {
     private final Double discountRate;
 
     public static final CouponEntity EMPTY = new CouponEntity(
-            null,"", DiscountType.EMPTY_DISCOUNT.getTypeName(),
+            null, "", DiscountType.EMPTY_DISCOUNT.getTypeName(),
             0, 0, 0.0
     );
 
@@ -29,13 +28,6 @@ public class CouponEntity {
         this.discountRate = discountRate;
     }
 
-    public static CouponEntity toEntity(Coupon coupon) {
-        return new CouponEntity(coupon.getName(),
-                coupon.getCouponTypes().getCouponTypeName(),
-                coupon.getMinimumPrice(),
-                coupon.getDiscountPrice(),
-                coupon.getDiscountRate());
-    }
     public Long getId() {
         return id;
     }

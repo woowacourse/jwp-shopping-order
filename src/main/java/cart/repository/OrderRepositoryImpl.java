@@ -46,7 +46,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         Long savedOrderId = orderDao.save(toEntity(order));
 
         List<OrderProductEntity> orderProducts = order.getCartProducts().stream()
-                .map(it -> OrderProductEntity.of(it, savedOrderId)).collect(Collectors.toList());
+                .map(it -> toOrderProductEntity(it,savedOrderId))
+                .collect(Collectors.toList());
+
         List<Long> cartItemIds = order.getCartProducts().stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
@@ -86,8 +88,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Coupon confirmById(Long orderId, Member member) {
         OrderEntity orderEntity = orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
         orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), member.getId());
-
-        CouponEntity coupon = couponDao.findByName(CouponEntity.toEntity(Coupon.BONUS_COUPON)).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
+        CouponEntity bonusCoupon = new CouponEntity(Coupon.BONUS_COUPON.getName(), Coupon.BONUS_COUPON.getCouponTypes().getCouponTypeName(),
+                Coupon.BONUS_COUPON.getMinimumPrice(), Coupon.BONUS_COUPON.getDiscountPrice(), Coupon.BONUS_COUPON.getDiscountRate());
+        CouponEntity coupon = couponDao.findByName(bonusCoupon).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
         Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), member.getId(), true));
 
         return new Coupon(userCouponId, coupon.getName(),
@@ -117,5 +120,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         Coupon coupon = new Coupon(couponEntity.getId(), couponEntity.getName(), DiscountType.from(couponEntity.getDiscountType()),
                 couponEntity.getMinimumPrice(), couponEntity.getDiscountPrice(), couponEntity.getDiscountRate());
         return new Order(orderEntity.getId(), member, products, orderEntity.getConfirmState(), coupon);
+    }
+
+    public static OrderProductEntity toOrderProductEntity(CartItem cartItem, Long orderId) {
+        return new OrderProductEntity(cartItem.getProduct().getName(),
+                cartItem.getProduct().getImageUrl(), cartItem.getProduct().getPrice(),
+                cartItem.getQuantity(), orderId);
     }
 }
