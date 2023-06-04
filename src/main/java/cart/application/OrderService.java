@@ -123,6 +123,6 @@ public class OrderService {
         }
         MemberCoupon memberCoupon = new MemberCoupon(null, member, coupon,
             Timestamp.valueOf(memberCouponAddRequest.getExpiredAt()));
-        memberCouponDao.save(memberCoupon);
+        return memberCouponDao.save(memberCoupon);
     }
 }

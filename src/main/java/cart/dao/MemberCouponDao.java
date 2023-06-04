@@ -1,10 +1,17 @@
 package cart.dao;
 
+import java.security.Key;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import cart.domain.Coupon;
@@ -100,9 +107,21 @@ public class MemberCouponDao {
         jdbcTemplate.update(query, memberCouponId);
     }
 
-    public void save(MemberCoupon memberCoupon) {
-        String query = "INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, memberCoupon.getMember().getId(), memberCoupon.getCoupon().getId(),
-            Timestamp.valueOf(memberCoupon.getExpiredAt()));
+    public Long save(MemberCoupon memberCoupon) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS);
+
+            ps.setLong(1, memberCoupon.getMember().getId());
+            ps.setLong(2, memberCoupon.getCoupon().getId());
+            ps.setTimestamp(3, Timestamp.valueOf(memberCoupon.getExpiredAt()));
+
+            return ps;
+        }, keyHolder);
+        Number key = keyHolder.getKey();
+        return Objects.requireNonNull(key).longValue();
     }
 }

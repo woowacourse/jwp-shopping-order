@@ -3,7 +3,6 @@ package cart.dao;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -107,9 +106,10 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByIds(List<Long> cartItemIds) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.product_id, member.email, member.nickname, product.name, product.price, product.image_url, cart_item.quantity"
-            + " FROM cart_item INNER JOIN member ON cart_item.member_id = member.id"
-            + " INNER JOIN product ON cart_item.product_id = product.id WHERE cart_item.id IN (:ids)";
+        final String sql =
+            "SELECT cart_item.id, cart_item.member_id, cart_item.product_id, member.email, member.nickname, product.name, product.price, product.image_url, cart_item.quantity"
+                + " FROM cart_item INNER JOIN member ON cart_item.member_id = member.id"
+                + " INNER JOIN product ON cart_item.product_id = product.id WHERE cart_item.id IN (:ids)";
 
         final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("ids", cartItemIds);
