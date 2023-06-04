@@ -1,8 +1,8 @@
 package cart.domain.coupon;
 
 import cart.domain.Member;
-import cart.exception.IllegalCouponException;
-import cart.exception.IllegalMemberException;
+import cart.exception.CouponException;
+import cart.exception.ExceptionType;
 import java.time.LocalDate;
 
 public class MemberCoupon {
@@ -42,7 +42,7 @@ public class MemberCoupon {
 
     private void checkExpiredDate() {
         if (!isNotExpired()) {
-            throw new IllegalCouponException();
+            throw new CouponException(ExceptionType.INVALID_EXPIRED_DATE);
         }
     }
 
@@ -52,7 +52,7 @@ public class MemberCoupon {
 
     private void checkOwner(Member member) {
         if (!this.member.equals(member)) {
-            throw new IllegalMemberException();
+            throw new CouponException(ExceptionType.NO_AUTHORITY_COUPON);
         }
     }
 

@@ -9,8 +9,9 @@ import cart.domain.coupon.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
-import cart.exception.NonExistCouponException;
-import cart.exception.NonExistMemberException;
+import cart.exception.CouponException;
+import cart.exception.ExceptionType;
+import cart.exception.MemberException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,13 +49,13 @@ public class MemberCouponRepository {
     private Coupon toCoupon(Long couponId) {
         return couponDao.findById(couponId)
                 .map(CouponEntity::toDomain)
-                .orElseThrow(NonExistCouponException::new);
+                .orElseThrow(() -> new CouponException(ExceptionType.NOT_FOUND_COUPON));
     }
 
     private Member toMember(Long memberId) {
         return memberDao.findById(memberId)
                 .map(MemberEntity::toDomain)
-                .orElseThrow(NonExistMemberException::new);
+                .orElseThrow(() -> new MemberException(ExceptionType.NOT_FOUND_MEMBER));
     }
 
     public MemberCoupon save(MemberCoupon memberCoupon) {

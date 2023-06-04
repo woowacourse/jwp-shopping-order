@@ -1,9 +1,9 @@
 package cart.controller;
 
+import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
-import cart.exception.IllegalMemberException;
-import cart.exception.IncorrectPriceException;
-import cart.exception.NonExistProductException;
+import cart.exception.BaseException;
+import cart.exception.ExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,18 +23,10 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Void> handleException(IllegalMemberException e) {
-        log.warn("권한이 없습니다. [이유 : {}]", e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Void> handleException(NonExistProductException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Void> handleException(IncorrectPriceException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<ErrorResponse> handleException(BaseException e) {
+        ExceptionType exceptionType = e.getExceptionType();
+        log.warn(exceptionType.getErrorMessage(), e);
+        ErrorResponse errorResponse = new ErrorResponse(exceptionType.getErrorCode());
+        return ResponseEntity.status(exceptionType.getHttpStatus()).body(errorResponse);
     }
 }

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.exception.NonExistProductException;
+import cart.exception.ProductException;
 import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +62,7 @@ class ProductServiceTest {
 
         // expect
         assertThatThrownBy(() -> productService.findById(1L))
-                .isInstanceOf(NonExistProductException.class);
+                .isInstanceOf(ProductException.class);
     }
 
     @Test
@@ -101,7 +101,7 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.updateProduct(
                 1L,
                 new ProductRequest("밀리", valueOf(10000000), "http://millie.com")
-        )).isInstanceOf(NonExistProductException.class);
+        )).isInstanceOf(ProductException.class);
     }
 
     @Test

@@ -3,7 +3,8 @@ package cart.service;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.exception.NonExistProductException;
+import cart.exception.ExceptionType;
+import cart.exception.ProductException;
 import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class ProductService {
 
     public ProductResponse findById(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(NonExistProductException::new);
+                .orElseThrow(() -> new ProductException(ExceptionType.NOT_FOUND_PRODUCT));
         return ProductResponse.of(product);
     }
 
@@ -41,7 +42,7 @@ public class ProductService {
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(NonExistProductException::new);
+                .orElseThrow(() -> new ProductException(ExceptionType.NOT_FOUND_PRODUCT));
         product.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         productRepository.updateProduct(product);
     }

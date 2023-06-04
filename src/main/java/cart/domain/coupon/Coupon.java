@@ -1,7 +1,8 @@
 package cart.domain.coupon;
 
 import cart.domain.Money;
-import cart.exception.IllegalCouponException;
+import cart.exception.CouponException;
+import cart.exception.ExceptionType;
 import java.math.BigDecimal;
 
 public class Coupon {
@@ -29,13 +30,13 @@ public class Coupon {
 
     private void validateDiscountValue(CouponType couponType, BigDecimal discountValue) {
         if (!couponType.isValid(discountValue)) {
-            throw new IllegalCouponException();
+            throw new CouponException(ExceptionType.INVALID_DISCOUNT_VALUE);
         }
     }
 
     public Money discountPrice(Money totalCartsPrice) {
         if (totalCartsPrice.isLessThan(minOrderPrice.getValue())) {
-            throw new IllegalCouponException();
+            throw new CouponException(ExceptionType.INVALID_MIN_ORDER);
         }
         return couponType.discount(totalCartsPrice, discountValue);
     }

@@ -8,8 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.exception.IllegalCouponException;
-import cart.exception.IllegalMemberException;
+import cart.exception.CouponException;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -25,7 +24,7 @@ class MemberCouponTest {
         MemberCoupon memberCoupon = new MemberCoupon(1L, 밀리, 쿠폰_10퍼센트, expiredDate);
 
         assertThatThrownBy(() -> memberCoupon.check(밀리))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @Test
@@ -33,7 +32,7 @@ class MemberCouponTest {
         MemberCoupon memberCoupon = new MemberCoupon(1L, 밀리, 쿠폰_10퍼센트, LocalDate.now());
 
         assertThatThrownBy(() -> memberCoupon.check(박스터))
-                .isInstanceOf(IllegalMemberException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @Test

@@ -22,9 +22,8 @@ import static org.mockito.Mockito.verify;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.exception.IllegalCouponException;
-import cart.exception.IllegalMemberException;
-import cart.exception.IncorrectPriceException;
+import cart.exception.CouponException;
+import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
@@ -85,7 +84,7 @@ class OrderServiceTest {
         verify(cartItemRepository, never()).deleteById(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L), 1L, 3000, valueOf(21000)), 밀리))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @Test
@@ -99,7 +98,7 @@ class OrderServiceTest {
         verify(cartItemRepository, never()).deleteById(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L), 1L, 3000, valueOf(21000)), 밀리))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @Test
@@ -111,7 +110,7 @@ class OrderServiceTest {
         verify(cartItemRepository, never()).deleteById(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(12000)), 밀리))
-                .isInstanceOf(IncorrectPriceException.class);
+                .isInstanceOf(OrderException.class);
     }
 
     @Test
@@ -130,7 +129,7 @@ class OrderServiceTest {
                 .willReturn(Optional.of(주문_밀리_치킨_피자_3000원));
 
         assertThatThrownBy(() -> orderService.findById(1L, 박스터))
-                .isInstanceOf(IllegalMemberException.class);
+                .isInstanceOf(OrderException.class);
     }
 
     @Test

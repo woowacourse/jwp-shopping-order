@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.Money;
-import cart.exception.IllegalCouponException;
+import cart.exception.CouponException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -23,21 +23,21 @@ class CouponTest {
     @ParameterizedTest
     void 비율에_따른_할인_쿠폰은_0이하이거나_100초과이면_예외가_발생한다(int value) {
         assertThatThrownBy(() -> new Coupon("쿠폰", RATE, valueOf(value), new Money(50000)))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @ValueSource(ints = {-1, 0})
     @ParameterizedTest
     void 금액에_따른_할인_쿠폰은_0이하면_예외가_발생한다(int value) {
         assertThatThrownBy(() -> new Coupon("쿠폰", FIXED, valueOf(value), new Money(50000)))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @ValueSource(ints = {-1, 1})
     @ParameterizedTest
     void 할인되지_않는_쿠폰은_0이_아니면_예외가_발생한다(int value) {
         assertThatThrownBy(() -> new Coupon("쿠폰", NONE, valueOf(value), new Money(50000)))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
 
@@ -47,7 +47,7 @@ class CouponTest {
         Coupon coupon = new Coupon("쿠폰", FIXED, valueOf(10000), minOrderPrice);
 
         assertThatThrownBy(() -> coupon.discountPrice(new Money(4000)))
-                .isInstanceOf(IllegalCouponException.class);
+                .isInstanceOf(CouponException.class);
     }
 
     @Test

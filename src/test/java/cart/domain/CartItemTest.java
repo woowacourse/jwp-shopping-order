@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.exception.IllegalMemberException;
+import cart.exception.CartItemException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class CartItemTest {
 
         // then
         assertThatThrownBy(() -> cartItem.checkOwner(other))
-                .isInstanceOf(IllegalMemberException.class);
+                .isInstanceOf(CartItemException.class);
     }
 
     @Test

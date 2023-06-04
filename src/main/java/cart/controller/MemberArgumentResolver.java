@@ -2,6 +2,8 @@ package cart.controller;
 
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.ExceptionType;
+import cart.exception.MemberException;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -39,9 +41,9 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new AuthenticationException("잘못된 로그인 정보입니다."));
+                .orElseThrow(() -> new MemberException(ExceptionType.INVALID_LOGIN_INFO));
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException("비밀번호가 틀렸습니다.");
+            throw new MemberException(ExceptionType.INVALID_LOGIN_INFO);
         }
         return member;
     }

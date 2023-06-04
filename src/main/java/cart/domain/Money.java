@@ -1,6 +1,7 @@
 package cart.domain;
 
-import cart.exception.InvalidMoneyException;
+import cart.exception.ExceptionType;
+import cart.exception.MoneyException;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class Money {
 
     private void validate(BigDecimal value) {
         if (value.compareTo(BigDecimal.valueOf(0)) == -1) {
-            throw new InvalidMoneyException();
+            throw new MoneyException(ExceptionType.INVALID_VALUE);
         }
     }
 

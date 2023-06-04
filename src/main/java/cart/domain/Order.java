@@ -4,7 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.exception.IllegalMemberException;
+import cart.exception.ExceptionType;
+import cart.exception.OrderException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class Order {
 
     public void checkOwner(Member member) {
         if (!this.member.equals(member)) {
-            throw new IllegalMemberException();
+            throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
         }
     }
 

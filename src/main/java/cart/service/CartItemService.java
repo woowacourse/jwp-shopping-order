@@ -6,8 +6,9 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.exception.NonExistCartItemException;
-import cart.exception.NonExistProductException;
+import cart.exception.CartItemException;
+import cart.exception.ExceptionType;
+import cart.exception.ProductException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -34,14 +35,14 @@ public class CartItemService {
 
     public Long addCart(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(NonExistProductException::new);
+                .orElseThrow(() -> new ProductException(ExceptionType.NOT_FOUND_PRODUCT));
         CartItem cartItem = new CartItem(product, member);
         return cartItemRepository.save(cartItem).getId();
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(NonExistCartItemException::new);
+                .orElseThrow(() -> new CartItemException(ExceptionType.NOT_FOUND_CART_ITEM));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -55,7 +56,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(NonExistCartItemException::new);
+                .orElseThrow(() -> new CartItemException(ExceptionType.NOT_FOUND_CART_ITEM));
         cartItem.checkOwner(member);
 
         cartItemRepository.deleteById(id);

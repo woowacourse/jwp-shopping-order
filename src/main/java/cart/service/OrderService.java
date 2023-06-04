@@ -1,5 +1,9 @@
 package cart.service;
 
+import static cart.exception.ExceptionType.NOT_FOUND_CART_ITEM;
+import static cart.exception.ExceptionType.NOT_FOUND_COUPON;
+import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
+
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Money;
@@ -9,10 +13,10 @@ import cart.domain.coupon.MemberCoupon;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.exception.IncorrectPriceException;
-import cart.exception.NonExistCartItemException;
-import cart.exception.NonExistCouponException;
-import cart.exception.NonExistOrderException;
+import cart.exception.CartItemException;
+import cart.exception.CouponException;
+import cart.exception.ExceptionType;
+import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
@@ -49,7 +53,7 @@ public class OrderService {
 
         Money totalPrice = order.calculateTotalPrice();
         if (totalPrice.isNotSameValue(orderRequest.getTotalOrderPrice())) {
-            throw new IncorrectPriceException();
+            throw new OrderException(ExceptionType.INCORRECT_PRICE);
         }
 
         Order savedOrder = orderRepository.save(order);
@@ -65,7 +69,7 @@ public class OrderService {
             return new MemberCoupon(member, Coupon.NONE);
         }
         return memberCouponRepository.findById(couponId)
-                .orElseThrow(NonExistCouponException::new);
+                .orElseThrow(() -> new CouponException(NOT_FOUND_COUPON));
     }
 
     private void deleteOrdered(List<CartItem> cartItems, MemberCoupon memberCoupon) {
@@ -79,12 +83,12 @@ public class OrderService {
 
     private CartItem getCartItem(Long cartItemId) {
         return cartItemRepository.findById(cartItemId)
-                .orElseThrow(NonExistCartItemException::new);
+                .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
     }
 
     public OrderDetailResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(NonExistOrderException::new);
+                .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
         order.checkOwner(member);
         return OrderDetailResponse.from(order);
     }
