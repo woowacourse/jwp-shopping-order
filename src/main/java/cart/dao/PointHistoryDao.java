@@ -40,6 +40,12 @@ public class PointHistoryDao {
         return jdbcTemplate.query(sql, new PointHistoryRowMapper(), orderId);
     }
 
+    public boolean isIn(Long pointId) {
+        String sql = "select exists (select id from point_history where point_id = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, pointId);
+    }
+
     public void save(Long orderId, Long pointId, int usedPoint) {
         String sql = "insert into point_history(orders_id, point_id, used_point) values(?, ?, ?)";
 

@@ -3,12 +3,12 @@ package cart.dto;
 public class ProductOrderRequest {
 
     private Long productId;
-    private int quantity;
+    private Integer quantity;
 
     public ProductOrderRequest() {
     }
 
-    public ProductOrderRequest(Long productId, int quantity) {
+    public ProductOrderRequest(Long productId, Integer quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -17,7 +17,7 @@ public class ProductOrderRequest {
         return productId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 }

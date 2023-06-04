@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -78,6 +80,13 @@ class PointHistoryDaoTest {
         List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByOrderId(2L);
 
         assertThat(pointHistoryEntities).containsExactlyInAnyOrder(expected);
+    }
+
+    @DisplayName("포인트 번호를 기준으로 이미 사용된 포인트인지 확인할 수 있다.")
+    @ParameterizedTest
+    @CsvSource(value = {"1:true", "2:false"}, delimiter = ':')
+    void isIn(Long pointId, boolean expected) {
+        assertThat(pointHistoryDao.isIn(pointId)).isEqualTo(expected);
     }
 
     @DisplayName("포인트 사용 이력을 저장할 수 있다.")

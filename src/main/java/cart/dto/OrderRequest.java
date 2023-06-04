@@ -4,18 +4,18 @@ import java.util.List;
 
 public class OrderRequest {
 
-    private int usedPoint;
+    private Integer usedPoint;
     private List<ProductOrderRequest> products;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(int usedPoint, List<ProductOrderRequest> products) {
+    public OrderRequest(Integer usedPoint, List<ProductOrderRequest> products) {
         this.usedPoint = usedPoint;
         this.products = products;
     }
 
-    public int getUsedPoint() {
+    public Integer getUsedPoint() {
         return usedPoint;
     }
 
