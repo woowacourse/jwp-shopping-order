@@ -27,7 +27,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(final Member member) {
         final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream().map(CartItemResponse::from).collect(Collectors.toList());
     }
 
     @Transactional

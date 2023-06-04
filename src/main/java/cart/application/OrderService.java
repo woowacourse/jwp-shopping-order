@@ -108,7 +108,7 @@ public class OrderService {
 
         final List<OrderProduct> orderProducts = createOrderProducts(cartItemsByIds, order);
         orderProductDao.saveOrderProducts(orderProducts);
-        cartItemDao.deleteById(collectCartItemIds(cartItemsByIds));
+        cartItemDao.deleteByIds(collectCartItemIds(cartItemsByIds));
 
         return order.getId();
     }

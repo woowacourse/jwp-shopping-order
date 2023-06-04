@@ -148,7 +148,7 @@ class CartItemDaoTest {
         cartItemDao.saveCartItem(new CartItem(5, memberFixture, productFixtureC));
 
         //when
-        cartItemDao.deleteById(List.of(savedCartItemAId, savedCartItemBId));
+        cartItemDao.deleteByIds(List.of(savedCartItemAId, savedCartItemBId));
 
         //then
         final List<CartItem> all = cartItemDao.findAll();

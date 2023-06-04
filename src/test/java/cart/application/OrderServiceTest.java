@@ -115,7 +115,7 @@ class OrderServiceTest {
         given(orderDao.saveOrder(any())).willReturn(1L);
         given(orderDao.findById(1L)).willReturn(Optional.of(new Order(1L, null, member, 50_000, 45_000)));
         doNothing().when(orderProductDao).saveOrderProducts(any());
-        doNothing().when(cartItemDao).deleteById(anyList());
+        doNothing().when(cartItemDao).deleteByIds(anyList());
 
         //when
         orderService.addOrder(member, request);
