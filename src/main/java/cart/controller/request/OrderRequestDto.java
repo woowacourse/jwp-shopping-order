@@ -27,7 +27,7 @@ public class OrderRequestDto {
     }
 
     public Optional<Long> getCouponId() {
-        return Optional.of(couponId);
+        return Optional.ofNullable(couponId);
     }
 
     @Override

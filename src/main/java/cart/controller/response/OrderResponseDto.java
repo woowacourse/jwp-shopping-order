@@ -73,4 +73,16 @@ public class OrderResponseDto {
         return discountPrice;
     }
 
+    @Override
+    public String toString() {
+        return "OrderResponseDto{" +
+                "id=" + id +
+                ", orderProducts=" + orderProducts +
+                ", timestamp='" + timestamp + '\'' +
+                ", originPrice=" + originPrice +
+                ", discountPrice=" + discountPrice +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
 }

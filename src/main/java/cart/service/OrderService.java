@@ -30,12 +30,15 @@ public class OrderService {
                 .orElse(null);
         Order order = Order.of(member, coupon, cartItems);
         Order orderAfterSave = orderRepository.save(order);
-
         orderRepository.deleteCartItems(orderRequestDto.getCartItemIds());
-
         couponRepository.deleteMemberCouponById(orderRequestDto.getCouponId());
-
         return OrderResponseDto.from(orderAfterSave);
+    }
+
+    public OrderResponseDto findOrderById(final Member member ,final Long orderId) {
+        Order orderById = orderRepository.findOrderById(member, orderId);
+
+        return OrderResponseDto.from(orderById);
     }
 
     public List<OrderResponseDto> findAllOrder(Member member) {
@@ -45,9 +48,4 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderResponseDto findOrderById(final Member member ,final Long orderId) {
-        Order orderById = orderRepository.findOrderById(member, orderId);
-
-        return OrderResponseDto.from(orderById);
-    }
 }
