@@ -2,9 +2,12 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.AllOrderResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,11 @@ public class OrderApiController {
 
   public OrderApiController(OrderService orderService) {
     this.orderService = orderService;
+  }
+
+  @GetMapping
+  public ResponseEntity<List<AllOrderResponse>> getAllOrders(Member member) {
+    return ResponseEntity.ok(orderService.getAllOrders(member));
   }
 
   @PostMapping

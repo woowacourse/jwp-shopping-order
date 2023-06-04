@@ -1,8 +1,12 @@
 package cart.dao;
 
+import cart.domain.Amount;
 import cart.domain.Order;
+import cart.domain.Product;
+import cart.domain.ProductOrder;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,5 +41,27 @@ public class OrderDao {
     }, keyHolder);
 
     return Objects.requireNonNull(keyHolder.getKey()).longValue();
+  }
+
+  public List<ProductOrder> findAllOrdersByMemberId(Long memberId) {
+    String sql = "SELECT order.id, "
+        + "product.id, product.name, product.image_url, product.price "
+        + "product_order.id, product_order.quantity" +
+        "FROM `order` " +
+        "INNER JOIN product_order ON product_order.order_id = order.id " +
+        "INNER JOIN product ON product_order.product_id = product.id " +
+        "WHERE order.member_id = ?";
+
+    return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
+      Long orderId = rs.getLong("order.id");
+      Long productId = rs.getLong("product.id");
+      String name = rs.getString("name");
+      int price = rs.getInt("price");
+      String imageUrl = rs.getString("image_url");
+      Long productOrderId = rs.getLong("product_order.id");
+      int quantity = rs.getInt("quantity");
+      Product product = new Product(productId, name, new Amount(price), imageUrl);
+      return new ProductOrder(productOrderId, product, orderId, quantity);
+    });
   }
 }

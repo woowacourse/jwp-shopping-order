@@ -10,13 +10,16 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.domain.ProductOrder;
 import cart.domain.Products;
+import cart.dto.AllOrderResponse;
 import cart.dto.CartItemRequest;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.BusinessException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -92,5 +95,30 @@ public class OrderService {
       orderProductResponses.add(orderProductResponse);
     }
     return orderProductResponses;
+  }
+
+  public List<AllOrderResponse> getAllOrders(final Member member) {
+    final List<ProductOrder> productOrders = orderDao.findAllOrdersByMemberId(member.getId());
+
+    final HashMap<Long, List<OrderProductResponse>> productsByOrderId = sortProductsByOrder(productOrders);
+
+    return productOrders.stream()
+        .map(productOrder -> {
+          final Long orderId = productOrder.getOrderId();
+          return new AllOrderResponse(orderId, productsByOrderId.get(orderId));
+        }).collect(Collectors.toList());
+  }
+
+  private static HashMap<Long, List<OrderProductResponse>> sortProductsByOrder(List<ProductOrder> productOrders) {
+    final HashMap<Long, List<OrderProductResponse>> productsByOrderId = new HashMap<>();
+    for (ProductOrder productOrder : productOrders) {
+      final Long key = productOrder.getOrderId();
+      final Product product = productOrder.getProduct();
+      final List<OrderProductResponse> responses = productsByOrderId.getOrDefault(key, new ArrayList<>());
+      responses.add(new OrderProductResponse(product.getId(), product.getName(), product.getPrice().getValue(),
+          product.getImageUrl(), productOrder.getQuantity()));
+      productsByOrderId.put(key, responses);
+    }
+    return productsByOrderId;
   }
 }
