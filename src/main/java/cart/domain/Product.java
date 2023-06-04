@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Product {
     private final Long id;
@@ -47,5 +48,22 @@ public class Product {
         this.name = name;
         this.price = new Money(price);
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

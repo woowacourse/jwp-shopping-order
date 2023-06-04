@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class MemberCoupon {
 
@@ -56,6 +57,10 @@ public class MemberCoupon {
         }
     }
 
+    public boolean isExists() {
+        return coupon.isCoupon();
+    }
+
     public Long getId() {
         return id;
     }
@@ -72,7 +77,20 @@ public class MemberCoupon {
         return expiredDate;
     }
 
-    public boolean isExists() {
-        return coupon.isCoupon();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MemberCoupon that = (MemberCoupon) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

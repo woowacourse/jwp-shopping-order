@@ -4,6 +4,7 @@ import cart.domain.Money;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Coupon {
 
@@ -63,5 +64,22 @@ public class Coupon {
 
     public Money getMinOrderPrice() {
         return minOrderPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Coupon coupon = (Coupon) o;
+        return Objects.equals(id, coupon.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
