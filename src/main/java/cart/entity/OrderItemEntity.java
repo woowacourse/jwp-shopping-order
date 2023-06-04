@@ -1,7 +1,7 @@
 package cart.entity;
 
 import cart.domain.VO.Money;
-import cart.domain.cart.OrderItem;
+import cart.domain.order.OrderItem;
 
 public class OrderItemEntity {
 

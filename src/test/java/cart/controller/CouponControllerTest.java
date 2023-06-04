@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
+import cart.domain.order.MemberCoupon;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;

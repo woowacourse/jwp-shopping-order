@@ -1,10 +1,10 @@
-package cart.dto.cart;
+package cart.dto.order;
 
-import cart.domain.cart.OrderItem;
+import cart.domain.order.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "주문 상품 정보")
-public class ItemResponse {
+public class OrderItemResponse {
 
     @Schema(description = "상품 Id", example = "1")
     private final Long orderItemId;
@@ -21,7 +21,7 @@ public class ItemResponse {
     @Schema(description = "수량", example = "3")
     private final int quantity;
 
-    public ItemResponse(
+    public OrderItemResponse(
             final Long orderItemId,
             final String name,
             final long price,
@@ -35,8 +35,8 @@ public class ItemResponse {
         this.quantity = quantity;
     }
 
-    public static ItemResponse from(final OrderItem item) {
-        return new ItemResponse(
+    public static OrderItemResponse from(final OrderItem item) {
+        return new OrderItemResponse(
                 item.getId(),
                 item.getName(),
                 item.getPrice().getLongValue(),

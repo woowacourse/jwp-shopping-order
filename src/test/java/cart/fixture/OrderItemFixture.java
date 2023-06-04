@@ -1,7 +1,7 @@
 package cart.fixture;
 
 import cart.domain.VO.Money;
-import cart.domain.cart.OrderItem;
+import cart.domain.order.OrderItem;
 import cart.entity.OrderItemEntity;
 
 @SuppressWarnings("NonAsciiCharacters")

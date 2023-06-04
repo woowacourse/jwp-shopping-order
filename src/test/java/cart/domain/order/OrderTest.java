@@ -1,4 +1,4 @@
-package cart.domain.cart;
+package cart.domain.order;
 
 import static cart.fixture.CouponFixture._20만원_할인_쿠폰;
 import static cart.fixture.CouponFixture._20프로_할인_쿠폰;
@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.VO.Money;
-import cart.exception.cart.InvalidOrderException;
+import cart.exception.order.InvalidOrderException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

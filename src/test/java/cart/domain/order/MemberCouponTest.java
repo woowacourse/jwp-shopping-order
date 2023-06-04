@@ -1,4 +1,4 @@
-package cart.domain.cart;
+package cart.domain.order;
 
 import static cart.domain.VO.Money.from;
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;

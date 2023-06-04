@@ -8,10 +8,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.VO.Money;
-import cart.domain.cart.MemberCoupon;
-import cart.domain.cart.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
+import cart.domain.order.MemberCoupon;
+import cart.domain.order.Order;
 import cart.test.RepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;

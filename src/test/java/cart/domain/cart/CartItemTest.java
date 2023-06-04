@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.domain.VO.Money;
 import cart.exception.cart.InvalidCartItemOwnerException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,15 +21,6 @@ class CartItemTest {
 
         // expect
         assertThat(cartItem.getQuantity()).isEqualTo(1);
-    }
-
-    @Test
-    void 가격의_총합을_계산하여_반환한다() {
-        // given
-        final CartItem cartItem = new CartItem(null, 3, 1L, 상품_8900원);
-
-        // expect
-        assertThat(cartItem.calculateTotalPrice()).isEqualTo(Money.from(26700L));
     }
 
     @Test

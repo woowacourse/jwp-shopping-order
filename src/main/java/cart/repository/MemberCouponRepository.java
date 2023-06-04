@@ -5,12 +5,12 @@ import static java.util.stream.Collectors.toMap;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
-import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
+import cart.domain.order.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
-import cart.exception.cart.MemberCouponNotFoundException;
 import cart.exception.coupon.CouponNotFoundException;
+import cart.exception.order.MemberCouponNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

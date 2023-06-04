@@ -1,6 +1,6 @@
-package cart.dto.cart;
+package cart.dto.order;
 
-import cart.domain.cart.Order;
+import cart.domain.order.Order;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,14 +21,14 @@ public class OrderResponse {
     private final Long deliveryFee;
 
     @Schema(description = "주문 상품")
-    private final List<ItemResponse> orderItems;
+    private final List<OrderItemResponse> orderItems;
 
     public OrderResponse(
             final Long id,
             final Long totalItemsPrice,
             final Long discountPrice,
             final Long deliveryFee,
-            final List<ItemResponse> orderItems
+            final List<OrderItemResponse> orderItems
     ) {
         this.id = id;
         this.totalItemsPrice = totalItemsPrice;
@@ -38,8 +38,8 @@ public class OrderResponse {
     }
 
     public static OrderResponse from(final Order order) {
-        final List<ItemResponse> items = order.getItems().stream()
-                .map(ItemResponse::from)
+        final List<OrderItemResponse> items = order.getItems().stream()
+                .map(OrderItemResponse::from)
                 .collect(Collectors.toList());
         return new OrderResponse(
                 order.getId(),
@@ -77,7 +77,7 @@ public class OrderResponse {
         return deliveryFee;
     }
 
-    public List<ItemResponse> getOrderItems() {
+    public List<OrderItemResponse> getOrderItems() {
         return orderItems;
     }
 }

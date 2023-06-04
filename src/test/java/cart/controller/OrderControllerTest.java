@@ -17,12 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.cart.CartItem;
-import cart.domain.cart.MemberCoupon;
-import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.dto.cart.OrderSaveRequest;
+import cart.domain.order.MemberCoupon;
+import cart.domain.order.Order;
+import cart.dto.order.OrderSaveRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;

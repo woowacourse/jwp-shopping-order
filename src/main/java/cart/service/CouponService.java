@@ -2,8 +2,8 @@ package cart.service;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
-import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
+import cart.domain.order.MemberCoupon;
 import cart.dto.coupon.CouponSaveRequest;
 import cart.dto.coupon.MemberCouponResponse;
 import cart.repository.CouponRepository;
