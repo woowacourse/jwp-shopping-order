@@ -85,8 +85,8 @@ public class OrderService {
     }
 
     private void saveMemberPoints(final Member member, final Order order) {
-        final int savingPoints = PointPolicy.calculateSavingPoints(order.getPoints(), order.getCartItems());
-        final Member updatedMember = member.updatePoints(savingPoints, order.getPoints());
+        final int savingPoints = PointPolicy.calculateSavingPoints(order.getUsedPoints(), order.getCartItems());
+        final Member updatedMember = member.updatePoints(savingPoints, order.getUsedPoints());
         memberDao.updateMember(updatedMember);
     }
 
