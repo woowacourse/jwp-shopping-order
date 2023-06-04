@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.CartItemEntity;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -63,18 +62,6 @@ public class CartItemDao {
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    @Transactional(readOnly = true)
-    public List<CartItemEntity> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
-        if (ids.isEmpty()) {
-            return Collections.emptyList();
-        }
-        final String sql = "SELECT * FROM cart_item WHERE member_id = (:member_id) AND id IN (:ids)";
-        final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        parameterSource.addValue("ids", ids);
-        parameterSource.addValue("member_id", memberId);
-        return namedJdbcTemplate.query(sql, parameterSource, rowMapper);
     }
 
     public int deleteById(final Long cartItemId) {

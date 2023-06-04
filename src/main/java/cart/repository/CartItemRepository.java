@@ -45,16 +45,14 @@ public class CartItemRepository {
 
     public List<CartItem> findAllByMemberId(final Long memberId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(memberId);
-        return getItems(memberId, cartItemEntities);
-    }
 
-    private List<CartItem> getItems(final Long memberId, final List<CartItemEntity> cartItemEntities) {
         final List<Long> productIds = cartItemEntities.stream()
                 .map(CartItemEntity::getProductId)
                 .collect(toList());
         final Map<Long, Product> products = productDao.findByIds(productIds).stream()
                 .map(ProductEntity::toDomain)
                 .collect(toMap(Product::getId, Function.identity()));
+
         return cartItemEntities.stream()
                 .map(it -> new CartItem(it.getId(), it.getQuantity(), memberId, products.get(it.getProductId())))
                 .collect(toList());
@@ -70,17 +68,13 @@ public class CartItemRepository {
         final Product product = productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(ProductNotFoundException::new)
                 .toDomain();
+        
         return Optional.of(new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
                 cartItemEntity.getMemberId(),
                 product
         ));
-    }
-
-    public List<CartItem> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
-        final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByIdsAndMemberId(ids, memberId);
-        return getItems(memberId, cartItemEntities);
     }
 
     public void deleteById(final Long cartItemId) {

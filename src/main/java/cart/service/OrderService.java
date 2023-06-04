@@ -1,5 +1,6 @@
 package cart.service;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 import cart.domain.cart.CartItem;
@@ -36,8 +37,10 @@ public class OrderService {
     }
 
     public Long save(final OrderSaveRequest request, final Long memberId) {
-        final List<CartItem> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
-        final List<OrderItem> orderItems = toOrderItems(items);
+        final List<Long> orderItemIds = request.getOrderItemIds();
+        final List<OrderItem> orderItems = cartItemRepository.findAllByMemberId(memberId).stream()
+                .filter(cartItem -> orderItemIds.contains(cartItem.getId()))
+                .collect(collectingAndThen(toList(), this::toOrderItems));
 
         final Coupon coupon = couponRepository.findById(request.getCouponId())
                 .orElse(Coupon.EMPTY);

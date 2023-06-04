@@ -66,28 +66,6 @@ class CartItemDaoTest {
     }
 
     @Test
-    void 사용자_아이디와_장바구니_상품_아이디_목록을_받아_조회한다() {
-        // given
-        final MemberEntity member = memberDao.insert(사용자1_엔티티);
-        final ProductEntity product1 = productDao.insert(상품_8900원_엔티티);
-        final ProductEntity product2 = productDao.insert(상품_18900원_엔티티);
-        final ProductEntity product3 = productDao.insert(상품_28900원_엔티티);
-
-        final CartItemEntity cartItem1 = cartItemDao.insert(new CartItemEntity(member.getId(), product1.getId(), 1));
-        final CartItemEntity cartItem2 = cartItemDao.insert(new CartItemEntity(member.getId(), product2.getId(), 1));
-        final CartItemEntity cartItem3 = cartItemDao.insert(new CartItemEntity(member.getId(), product3.getId(), 1));
-
-        // when
-        final List<CartItemEntity> result = cartItemDao.findAllByIdsAndMemberId(
-                List.of(cartItem1.getId(), cartItem2.getId()),
-                member.getId()
-        );
-
-        // then
-        assertThat(result).hasSize(2);
-    }
-
-    @Test
     void 사용자_아이디와_삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
         // given
         final MemberEntity member = memberDao.insert(사용자1_엔티티);
