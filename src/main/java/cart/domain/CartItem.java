@@ -1,7 +1,11 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
+import cart.exception.InvalidOrderCheckedException;
+import cart.exception.InvalidOrderProductException;
+import cart.exception.InvalidOrderQuantityException;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class CartItem {
@@ -40,10 +44,6 @@ public class CartItem {
         this.checked = checked;
     }
 
-    public boolean equalsProductId(final Long productId) {
-        return product.equalsId(productId);
-    }
-
     public Long getId() {
         return id;
     }
@@ -75,5 +75,18 @@ public class CartItem {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void isSameProductAndQuantity(final Map<Long, Integer> requestProductIdQuantity) {
+        final Integer quantity = requestProductIdQuantity.get(product.getId());
+        if (Objects.isNull(quantity)) {
+            throw new InvalidOrderProductException();
+        }
+        if (!Objects.equals(quantity, this.quantity)) {
+            throw new InvalidOrderQuantityException();
+        }
+        if (!isChecked()) {
+            throw new InvalidOrderCheckedException();
+        }
     }
 }

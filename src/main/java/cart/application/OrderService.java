@@ -15,15 +15,15 @@ import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
-import cart.exception.InvalidOrderCheckedException;
-import cart.exception.InvalidOrderProductException;
-import cart.exception.InvalidOrderQuantityException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Transactional
 @Service
@@ -49,9 +49,12 @@ public class OrderService {
     public Long createOrder(final OrderCreateRequest orderCreateRequest, final Member member) {
         final List<Long> cartItemIds = orderCreateRequest.toCartItemIds();
         final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
-        final List<CartItemRequest> cartItemRequests = orderCreateRequest.getCartItems();
+        final Map<Long, Integer> requestProductIdQuantity = orderCreateRequest.getCartItems().stream()
+                .collect(toMap(CartItemRequest::getProductId, CartItemRequest::getQuantity));
 
-        validateLegalOrder(cartItems, cartItemRequests);
+        for (final CartItem cartItem : cartItems) {
+            cartItem.isSameProductAndQuantity(requestProductIdQuantity);
+        }
 
         final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItems, member.getPoints());
         final Long id = orderDao.save(order, PointPolicy.getSavingRate(), member);
@@ -59,51 +62,6 @@ public class OrderService {
         cartItemDao.deleteAll(cartItemIds);
 
         return id;
-    }
-
-    private void validateLegalOrder(final List<CartItem> cartItems, final List<CartItemRequest> requests) {
-        if (cartItems.size() != requests.size()) {
-            throw new InvalidOrderProductException();
-        }
-        for (final CartItem cartItem : cartItems) {
-            iterateRequests(requests, cartItem);
-        }
-    }
-
-    private void iterateRequests(final List<CartItemRequest> requests, final CartItem cartItem) {
-        for (final CartItemRequest request : requests) {
-            compareEachCartItemIfIdEquals(cartItem, request);
-        }
-    }
-
-    private void compareEachCartItemIfIdEquals(final CartItem cartItem, final CartItemRequest request) {
-        if (cartItem.getId().equals(request.getId())) {
-            compareEachCartItem(cartItem, request);
-        }
-    }
-
-    private void compareEachCartItem(final CartItem cartItem, final CartItemRequest request) {
-        if (isInvalidProduct(cartItem, request)) {
-            throw new InvalidOrderProductException();
-        }
-        if (isInvalidQuantity(cartItem, request)) {
-            throw new InvalidOrderQuantityException();
-        }
-        if (isNotChecked(cartItem)) {
-            throw new InvalidOrderCheckedException();
-        }
-    }
-
-    private boolean isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
-        return !cartItem.equalsProductId(request.getProductId());
-    }
-
-    private boolean isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
-        return cartItem.getQuantity() != request.getQuantity();
-    }
-
-    private boolean isNotChecked(final CartItem cartItem) {
-        return !cartItem.isChecked();
     }
 
     private void updateMember(final Member member, final Order order) {
@@ -128,7 +86,7 @@ public class OrderService {
                         orderItemEntity.getProductPrice(),
                         orderItemEntity.getProductQuantity(),
                         orderItemEntity.getProductImageUrl()
-                )).collect(Collectors.toList());
+                )).collect(toList());
     }
 
     @Transactional(readOnly = true)
