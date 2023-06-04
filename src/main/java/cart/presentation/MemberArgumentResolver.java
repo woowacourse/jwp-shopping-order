@@ -13,6 +13,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final int AUTH_TYPE_INDEX = 0;
+    private static final int AUTH_VALUE_INDEX = 1;
+    private static final int EMAIL_INDEX = 0;
+    private static final int PASSWORD_INDEX = 1;
     private final MemberRepository memberRepository;
 
     public MemberArgumentResolver(final MemberRepository memberRepository) {
@@ -27,27 +31,41 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return new AuthenticationException();
-        }
+        validateNull(authorization);
 
         String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return new AuthenticationException();
-        }
+        validateAuthType(authHeader[AUTH_TYPE_INDEX]);
 
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
+        String[] credentials = encode(authHeader[AUTH_VALUE_INDEX]);
+        
+        Member member = memberRepository.findByEmail(credentials[EMAIL_INDEX]);
+        validatePassword(member, credentials[PASSWORD_INDEX]);
+
+        return member;
+    }
+
+    private void validateNull(final String authorization) {
+        if (authorization == null) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private void validateAuthType(final String authType) {
+        if (!authType.equalsIgnoreCase("basic")) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private String[] encode(final String authValue) {
+        byte[] decodedBytes = Base64.decodeBase64(authValue);
         String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
+        return decodedString.split(":");
+    }
 
-        // 본인 여부 확인
-        Member member = memberRepository.findByEmail(email);
+    private void validatePassword(final Member member, final String password) {
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }
-        return member;
     }
 }
