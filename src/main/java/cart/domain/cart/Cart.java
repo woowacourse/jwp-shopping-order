@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.member.Member;
+import cart.domain.product.Price;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,12 @@ public class Cart {
 
     public void checkOwner(final Member member) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+    }
+
+    public Price getTotalPrice() {
+        return cartItems.stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(Price.minPrice(), Price::add);
     }
 
     public List<CartItem> getCartItems() {

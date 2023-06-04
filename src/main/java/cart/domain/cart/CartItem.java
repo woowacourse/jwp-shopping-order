@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.member.Member;
+import cart.domain.product.Price;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
 
@@ -23,6 +24,20 @@ public class CartItem {
         this.member = member;
     }
 
+    public void checkOwner(final Member member) {
+        if (this.member.isNotSameMember(member)) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public void changeQuantity(final Quantity quantity) {
+        this.quantity = quantity;
+    }
+
+    public Price getTotalPrice() {
+        return product.getPrice().multiply(quantity.quantity());
+    }
+
     public Long getId() {
         return id;
     }
@@ -37,15 +52,5 @@ public class CartItem {
 
     public Quantity getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(final Member member) {
-        if (this.member.isNotSameMember(member)) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(final Quantity quantity) {
-        this.quantity = quantity;
     }
 }
