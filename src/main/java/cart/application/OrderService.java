@@ -12,6 +12,8 @@ import cart.domain.order.OrderItem;
 import cart.domain.order.OrderPoint;
 import cart.domain.point.Point;
 import cart.domain.point.PointPolicy;
+import cart.domain.time.Region;
+import cart.domain.time.TimestampGenerator;
 import cart.dto.order.OrderItemResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
@@ -22,9 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,8 +49,7 @@ public class OrderService {
     @Transactional
     public Long orderCartItems(Member member, OrderRequest orderRequest) {
         // 0. 현재 주문 시간 구하기
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
-        Timestamp createdAt = new Timestamp(calendar.getTimeInMillis());
+        Timestamp createdAt = TimestampGenerator.getCurrentTime(Region.KOREA);
 
         // 1. 총 가격, 쓸 포인트, CartIds 꺼내기
         Long totalPrice = orderRequest.getTotalPrice();
