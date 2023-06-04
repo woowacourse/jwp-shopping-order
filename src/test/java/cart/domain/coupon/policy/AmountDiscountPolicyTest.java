@@ -72,7 +72,7 @@ class AmountDiscountPolicyTest {
         given(cartItems.calculateTotalProductPrice()).willReturn(totalPrice);
 
         // when
-        int result = discountPolicy.calculateDiscountPrice(couponDiscountAmount, cartItems);
+        int result = discountPolicy.calculateDiscountPrice(couponDiscountAmount, cartItems, 0);
 
         // then
         assertThat(result).isEqualTo(discountPrice);

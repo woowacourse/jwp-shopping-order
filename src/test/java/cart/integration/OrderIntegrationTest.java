@@ -114,7 +114,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         FindOrderDetailResponse expected = new FindOrderDetailResponse(orderId, List.of(
                 new OrderDetailProductResponse(productId, "치킨", "http://example.com/chicken.jpg", 10_000, 3),
                 new OrderDetailProductResponse(productId2, "피자", "http://example.com/pizza.jpg", 15_000, 1)),
-                45000, 4500, 0);
+                45000, 3000, 0);
 
         assertThat(response)
                 .usingRecursiveComparison()
