@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.config.ControllerTestConfig;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
+import cart.domain.product.Product;
+import cart.dto.product.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -31,9 +31,9 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("[].imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .get("/products")
-        .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -51,10 +51,9 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
-                .pathParam("id", 1L)
-                .get("/products/{id}")
-        .then()
+                .when()
+                .get("/products/1")
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -69,10 +68,10 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .body(new ProductRequest("계란", 1000, "https://계란_이미지_주소.png"))
                 .post("/products")
-        .then()
+                .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -89,11 +88,11 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .body(new ProductRequest("수정된 계란", 1000, "https://계란_이미지_주소.png"))
                 .pathParam("id", 상품_계란_식별자값)
                 .put("/products/{id}")
-        .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 }

@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
