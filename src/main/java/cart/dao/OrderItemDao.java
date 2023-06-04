@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Repository
 public class OrderItemDao {
 
+    private static final long DUMMY = -1L;
+
     private final JdbcTemplate jdbcTemplate;
 
     public OrderItemDao(JdbcTemplate jdbcTemplate) {
@@ -36,6 +38,7 @@ public class OrderItemDao {
     }
 
     public List<OrderItemEntity> findAllByOrderIds(List<Long> orderIds) {
+        orderIds.add(DUMMY);
         String inSql = orderIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));

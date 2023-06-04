@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Repository
 public class PointHistoryDao {
 
+    private static final long DUMMY = -1L;
+
     private final JdbcTemplate jdbcTemplate;
 
     public PointHistoryDao(JdbcTemplate jdbcTemplate) {
@@ -26,6 +28,7 @@ public class PointHistoryDao {
     }
 
     public List<PointHistoryEntity> findByPointIds(List<Long> pointIds) {
+        pointIds.add(DUMMY);
         String inSql = pointIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
