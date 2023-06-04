@@ -65,7 +65,7 @@ public class OrderService {
 		order.validatePoints(member.getPoints());
 
 		final Long id = orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest,
-			PointPolicy.getSavingRate(), member);
+			PointPolicy.SAVING_RATE, member);
 
 		updateMember(member, order);
 
@@ -154,6 +154,6 @@ public class OrderService {
 		final List<CartItem> cartItems = cartItemDao.findByMemberIdAndChecked(member.getId());
 		final int savingPoints = PointPolicy.calculateSavingPoints(0, cartItems);
 
-		return new CartPointsResponse(PointPolicy.getSavingRate(), savingPoints);
+		return new CartPointsResponse(PointPolicy.SAVING_RATE, savingPoints);
 	}
 }
