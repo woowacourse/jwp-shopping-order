@@ -15,7 +15,7 @@ public class NotUsed extends CouponInfo {
 	}
 
 	@Override
-	public String getCouponType() {
-		return CouponType.NOT_USED.getType();
+	public CouponType getCouponType() {
+		return CouponType.NOT_USED;
 	}
 }

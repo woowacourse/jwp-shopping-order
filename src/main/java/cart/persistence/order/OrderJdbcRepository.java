@@ -69,7 +69,6 @@ public class OrderJdbcRepository implements OrderRepository {
 	public void updateStatus(final Order order) {
 		final String sql = "UPDATE orders SET order_status = ? WHERE id = ? ";
 		jdbcTemplate.update(sql, order.getOrderStatus().name(), order.getId());
-
 	}
 
 	@Override

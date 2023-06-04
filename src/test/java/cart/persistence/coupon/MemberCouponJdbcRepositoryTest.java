@@ -3,6 +3,7 @@ package cart.persistence.coupon;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -23,6 +24,20 @@ class MemberCouponJdbcRepositoryTest {
 	@BeforeEach
 	public void setUp() {
 		memberCouponJdbcRepository = new MemberCouponJdbcRepository(jdbcTemplate);
+	}
+
+	@Test
+	@DisplayName("멤버에게 쿠폰을 지급한다")
+	void addCouponTest() {
+		// given
+		final long memberId = 1L;
+		final long serialNumberId = 4L;
+
+		// when
+		Long couponId = memberCouponJdbcRepository.addCoupon(memberId, serialNumberId);
+
+		// then
+		assertThat(couponId).isNotNull();
 	}
 
 	@Test

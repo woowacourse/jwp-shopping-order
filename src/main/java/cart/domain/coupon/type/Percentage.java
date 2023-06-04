@@ -20,8 +20,8 @@ public class Percentage extends CouponInfo {
 	}
 
 	@Override
-	public String getCouponType() {
-		return CouponType.PERCENTAGE.getType();
+	public CouponType getCouponType() {
+		return CouponType.PERCENTAGE;
 	}
 
 	private BigDecimal calculateDiscountFactor() {

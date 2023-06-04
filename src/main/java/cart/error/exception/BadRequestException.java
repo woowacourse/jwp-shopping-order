@@ -34,4 +34,12 @@ public class BadRequestException extends RuntimeException {
 			super("해당 쿠폰을 찾을 수 없습니다.");
 		}
 	}
+
+	public static class SerialNumber extends BadRequestException {
+
+		public SerialNumber() {
+			super("발행 매수는 음수가 될 수 없습니다.");
+		}
+	}
+
 }

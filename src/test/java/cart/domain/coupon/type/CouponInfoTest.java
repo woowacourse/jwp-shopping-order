@@ -19,7 +19,7 @@ class CouponInfoTest {
 			final CouponInfo couponInfo = CouponInfo.of(0L, null, null, null);
 
 			// when
-			final String couponType = couponInfo.getCouponType();
+			final String couponType = couponInfo.getCouponType().getType();
 
 			// then
 			assertThat(couponType).isEqualTo(notUsed.getType());
@@ -33,7 +33,7 @@ class CouponInfoTest {
 				BigDecimal.valueOf(15));
 
 			// when
-			final String couponType = couponInfo.getCouponType();
+			final String couponType = couponInfo.getCouponType().getType();
 
 			// then
 			assertThat(couponType).isEqualTo(percentage.getType());
@@ -47,7 +47,7 @@ class CouponInfoTest {
 				BigDecimal.valueOf(5000));
 
 			// when
-			final String couponType = couponInfo.getCouponType();
+			final String couponType = couponInfo.getCouponType().getType();
 
 			// then
 			assertThat(couponType).isEqualTo(fixedAmount.getType());

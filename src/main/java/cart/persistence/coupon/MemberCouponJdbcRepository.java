@@ -1,10 +1,14 @@
 package cart.persistence.coupon;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import cart.domain.coupon.MemberCoupon;
@@ -20,6 +24,21 @@ public class MemberCouponJdbcRepository implements MemberCouponRepository {
 
 	public MemberCouponJdbcRepository(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public Long addCoupon(final Long memberId, final Long serialNumberId) {
+		final String sql = "INSERT INTO member_coupon (member_id, coupon_serial_number_id) VALUES (?, ?)";
+
+		final KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(sql, new String[] {"ID"});
+			ps.setLong(1, memberId);
+			ps.setLong(2, serialNumberId);
+			return ps;
+		}, keyHolder);
+
+		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
 
 	@Override

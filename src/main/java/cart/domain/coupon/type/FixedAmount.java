@@ -16,7 +16,7 @@ public class FixedAmount extends CouponInfo {
 	}
 
 	@Override
-	public String getCouponType() {
-		return CouponType.FIXED_AMOUNT.getType();
+	public CouponType getCouponType() {
+		return CouponType.FIXED_AMOUNT;
 	}
 }

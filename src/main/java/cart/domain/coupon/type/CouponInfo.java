@@ -42,6 +42,6 @@ public abstract class CouponInfo {
 
 	public abstract BigDecimal calculatePayments(final BigDecimal totalPrice);
 
-	public abstract String getCouponType();
+	public abstract CouponType getCouponType();
 
 }

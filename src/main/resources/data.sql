@@ -63,13 +63,16 @@ VALUES (2, 6, 2);
 
 
 INSERT INTO coupon (name, discount_type, discount)
-VALUES ('배송비 3000원 할인', 'FIXED_AMOUNT', 3000);
+VALUES ('배송비 할인', 'FIXED_AMOUNT', 3000);
 
 INSERT INTO coupon (name, discount_type, discount)
 VALUES ('신규 가입 할인', 'FIXED_AMOUNT', 5000);
 
 INSERT INTO coupon (name, discount_type, discount)
 VALUES ('여름 맞이 할인', 'FIXED_AMOUNT', 2000);
+
+INSERT INTO coupon (name, discount_type, discount)
+VALUES ('테스트 코드 할인', 'FIXED_AMOUNT', 1000000);
 
 
 INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
