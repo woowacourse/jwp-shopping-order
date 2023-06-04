@@ -2,6 +2,8 @@ package cart.ui;
 
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.AuthenticationNotFoundException;
+import cart.exception.AuthenticationTypeMismatchException;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -27,12 +29,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationNotFoundException();
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            throw new AuthenticationTypeMismatchException();
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
