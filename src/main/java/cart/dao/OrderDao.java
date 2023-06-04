@@ -46,4 +46,9 @@ public class OrderDao {
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
+
+    public OrderEntity findById(Long id) {
+        final String sql = "SELECT * FROM shopping_order WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
 }

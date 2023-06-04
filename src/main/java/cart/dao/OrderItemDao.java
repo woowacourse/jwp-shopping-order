@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.OrderedItemEntity;
+import cart.entity.OrderItemEntity;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -10,10 +10,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderedItemDao {
+public class OrderItemDao {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<OrderedItemEntity> rowMapper = (rs, rowNum) ->
-            new OrderedItemEntity(
+    private final RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) ->
+            new OrderItemEntity(
                     rs.getLong("id"),
                     rs.getLong("product_id"),
                     rs.getLong("shopping_order_id"),
@@ -23,11 +23,11 @@ public class OrderedItemDao {
                     rs.getInt("quantity")
             );
 
-    public OrderedItemDao(JdbcTemplate jdbcTemplate) {
+    public OrderItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void batchSave(List<OrderedItemEntity> orderedItemEntities) {
+    public void batchSave(List<OrderItemEntity> orderItemEntities) {
         final String sql = "INSERT INTO ordered_item "
                 + "(`product_id`, `shopping_order_id`, `product_name_at_order`, `product_price_at_order`, `product_image_url_at_order`, `quantity`)"
                 + " VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,18 +35,23 @@ public class OrderedItemDao {
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1, orderedItemEntities.get(i).getProductId());
-                ps.setLong(2, orderedItemEntities.get(i).getShoppingOrderId());
-                ps.setString(3, orderedItemEntities.get(i).getProductNameAtOrder());
-                ps.setInt(4, orderedItemEntities.get(i).getProductPriceAtOrder());
-                ps.setString(5, orderedItemEntities.get(i).getProductImageUrlAtOrder());
-                ps.setInt(6, orderedItemEntities.get(i).getQuantity());
+                ps.setLong(1, orderItemEntities.get(i).getProductId());
+                ps.setLong(2, orderItemEntities.get(i).getShoppingOrderId());
+                ps.setString(3, orderItemEntities.get(i).getProductNameAtOrder());
+                ps.setInt(4, orderItemEntities.get(i).getProductPriceAtOrder());
+                ps.setString(5, orderItemEntities.get(i).getProductImageUrlAtOrder());
+                ps.setInt(6, orderItemEntities.get(i).getQuantity());
             }
 
             @Override
             public int getBatchSize() {
-                return orderedItemEntities.size();
+                return orderItemEntities.size();
             }
         });
+    }
+
+    public List<OrderItemEntity> findByOrderId(Long orderId) {
+        final String sql = "SELECT * FROM ordered_item WHERE shopping_order_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }

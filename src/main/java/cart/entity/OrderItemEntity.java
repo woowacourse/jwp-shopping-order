@@ -1,6 +1,6 @@
 package cart.entity;
 
-public class OrderedItemEntity {
+public class OrderItemEntity {
     private final Long id;
     private final Long productId;
     private final Long shoppingOrderId;
@@ -9,8 +9,8 @@ public class OrderedItemEntity {
     private final String productImageUrlAtOrder;
     private final int quantity;
 
-    public OrderedItemEntity(Long id, Long productId, Long shoppingOrderId, String productNameAtOrder,
-                             int productPriceAtOrder, String productImageUrlAtOrder, int quantity) {
+    public OrderItemEntity(Long id, Long productId, Long shoppingOrderId, String productNameAtOrder,
+                           int productPriceAtOrder, String productImageUrlAtOrder, int quantity) {
         this.id = id;
         this.productId = productId;
         this.shoppingOrderId = shoppingOrderId;

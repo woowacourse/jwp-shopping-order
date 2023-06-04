@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -40,6 +41,7 @@ public class OrderItemIntegrationTest extends IntegrationTest {
     @Test
     void addCartItem() {
         // given
+        // memberId = 1L인 사용자의 장바구니 안에 들어있는 아이템 : {'치킨', 10000원, 2개}, {'샐러드', 20000, 4개}
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         List<Long> cartItemIds = cartItems.stream()
                 .map(CartItem::getId)
@@ -54,10 +56,17 @@ public class OrderItemIntegrationTest extends IntegrationTest {
 
         // when
         ExtractableResponse<Response> saveOrderResponse = saveOrderRequest(member, orderRequest);
+        long orderId = getIdFromCreatedResponse(saveOrderResponse);
 
+        ExtractableResponse<Response> findOrderDetailResponse = findOrderDetailRequest(member, orderId);
+        OrderDetailResponse orderDetailResponse = findOrderDetailResponse.jsonPath()
+                .getObject(".", OrderDetailResponse.class);
         // then
         assertAll(
-                () -> assertThat(saveOrderResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+                () -> assertThat(saveOrderResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(orderDetailResponse.getUsedPoint()).isEqualTo(300),
+                () -> assertThat(orderDetailResponse.getSavedPoint()).isEqualTo(1000),
+                () -> assertThat(orderDetailResponse.getProducts()).hasSize(2)
         );
     }
 
@@ -71,5 +80,20 @@ public class OrderItemIntegrationTest extends IntegrationTest {
                 .then()
                 .log().all()
                 .extract();
+    }
+
+    private ExtractableResponse<Response> findOrderDetailRequest(Member member, Long orderId) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + orderId)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
+        return Long.parseLong(response.header("Location").split("/")[2]);
     }
 }
