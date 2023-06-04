@@ -85,7 +85,6 @@ class OrderDaoTest {
         orderDao.save(new OrderEntity(MEMBER.getId()+1, 3000));
         orderDao.save(new OrderEntity(MEMBER.getId()+1, 3000));
 
-
         // when
         List<OrderEntity> actual = orderDao.findAllByMemberId(MEMBER.getId());
 
