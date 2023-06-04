@@ -35,7 +35,8 @@ CREATE TABLE orders
     member_id    BIGINT NOT NULL,
     delivery_fee BIGINT NOT NULL,
     coupon_id    BIGINT,
-    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at   TIMESTAMP,
+    order_status VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE order_item

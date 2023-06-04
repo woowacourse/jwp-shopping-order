@@ -17,7 +17,8 @@ public class CouponQueryService {
   private final CouponDao couponDao;
   private final MemberCouponQueryService memberCouponQueryService;
 
-  public CouponQueryService(final CouponDao couponDao, final MemberCouponQueryService memberCouponQueryService) {
+  public CouponQueryService(final CouponDao couponDao,
+      final MemberCouponQueryService memberCouponQueryService) {
     this.couponDao = couponDao;
     this.memberCouponQueryService = memberCouponQueryService;
   }

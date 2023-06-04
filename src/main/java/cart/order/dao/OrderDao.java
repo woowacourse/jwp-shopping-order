@@ -6,9 +6,15 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
+import cart.order.domain.OrderStatus;
 import cart.order.exception.NotFoundOrderException;
 import cart.value_object.Money;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -54,7 +60,15 @@ public class OrderDao {
       final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
       final long couponId = rs.getLong("coupon_id");
       final Coupon coupon = couponDao.findById(couponId);
-      return new Order(id, member, new Money(deliveryFee), coupon);
+      final Date createdAt = rs.getDate("created_at");
+      final Instant instant = createdAt.toInstant();
+      final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+      final String orderStatus = rs.getString("order_status");
+      return new Order(
+          id, member,
+          new Money(deliveryFee), coupon,
+          OrderStatus.valueOf(orderStatus), zonedDateTime
+      );
     }, memberId);
   }
 
@@ -69,7 +83,15 @@ public class OrderDao {
         final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
         final long couponId = rs.getLong("coupon_id");
         final Coupon coupon = couponDao.findById(couponId);
-        return new Order(id, member, new Money(deliveryFee), coupon);
+        final Timestamp createdAt = rs.getTimestamp("created_at");
+        final Instant instant = createdAt.toInstant();
+        final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        final String orderStatus = rs.getString("order_status");
+        return new Order(
+            id, member,
+            new Money(deliveryFee), coupon,
+            OrderStatus.findOrderStatus(orderStatus), zonedDateTime
+        );
       }, orderId);
     } catch (EmptyResultDataAccessException exception) {
       throw new NotFoundOrderException("해당 주문은 존재하지 않습니다.");

@@ -19,7 +19,8 @@ public class RegisterOrderRequest {
       final List<Long> cartItemIds,
       final BigDecimal totalPrice,
       final BigDecimal deliveryFee,
-      final Long couponId) {
+      final Long couponId
+  ) {
     this.cartItemIds = cartItemIds;
     this.totalPrice = totalPrice;
     this.deliveryFee = deliveryFee;

@@ -1,5 +1,6 @@
 package cart.order.application;
 
+import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
@@ -10,6 +11,8 @@ import cart.order_item.application.OrderItemQueryService;
 import cart.order_item.application.mapper.OrderItemMapper;
 import cart.order_item.domain.OrderItem;
 import cart.order_item.domain.OrderedItems;
+import cart.value_object.Money;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -32,14 +35,34 @@ public class OrderQueryService {
 
   public List<OrderResponse> searchOrders(final Member member) {
     final List<Order> orders = orderDao.findByMemberId(member.getId());
+    final List<OrderResponse> orderResponses = new ArrayList<>();
 
-    return orders.stream()
-        .map(order -> new OrderResponse(
-            order.getId(),
-            OrderItemMapper.mapToOrderItemResponse(
-                orderItemQueryService.searchOrderItemsByOrderId(order)
-            )))
-        .collect(Collectors.toList());
+
+    for (final Order order : orders) {
+      final Money totalPayments = new Money(0);
+
+      final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
+
+      final OrderedItems orderedItems = new OrderedItems(orderItems);
+
+      final Money totalPrice = orderedItems.calculateAllItemPrice();
+
+      totalPayments.add(totalPrice).add(order.getDeliveryFee());
+
+      final Coupon coupon = order.getCoupon();
+
+      final OrderResponse orderResponse = new OrderResponse(
+          order.getId(),
+          OrderItemMapper.mapToOrderItemResponse(orderItems),
+          coupon.discount(totalPayments).getValue(),
+          order.getCreatedAt(),
+          order.getOrderStatus().getValue(
+          ));
+
+      orderResponses.add(orderResponse);
+    }
+
+    return orderResponses;
   }
 
   public SpecificOrderResponse searchOrder(final Member member, final Long orderId) {
