@@ -15,8 +15,8 @@ import static org.mockito.Mockito.verify;
 import cart.domain.Money;
 import cart.domain.coupon.IssuableCoupon;
 import cart.dto.MemberCouponsResponse;
-import cart.repository.CouponRepository;
-import cart.repository.MemberCouponRepository;
+import cart.infrastructure.repository.JdbcCouponRepository;
+import cart.infrastructure.repository.JdbcMemberCouponRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -35,10 +35,10 @@ class CouponServiceTest {
     private CouponService couponService;
 
     @Mock
-    private MemberCouponRepository memberCouponRepository;
+    private JdbcMemberCouponRepository memberCouponRepository;
 
     @Mock
-    private CouponRepository couponRepository;
+    private JdbcCouponRepository couponRepository;
 
     @Test
     void 멤버의_사용_가능한_모든_쿠폰을_조회한다() {

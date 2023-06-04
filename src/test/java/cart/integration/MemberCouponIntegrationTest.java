@@ -12,9 +12,9 @@ import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.MemberCoupon;
-import cart.repository.CouponRepository;
-import cart.repository.MemberCouponRepository;
-import cart.repository.MemberRepository;
+import cart.infrastructure.repository.JdbcCouponRepository;
+import cart.infrastructure.repository.JdbcMemberCouponRepository;
+import cart.infrastructure.repository.JdbcMemberRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,13 +31,13 @@ import org.springframework.http.HttpStatus;
 public class MemberCouponIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JdbcMemberRepository memberRepository;
 
     @Autowired
-    private MemberCouponRepository memberCouponRepository;
+    private JdbcMemberCouponRepository memberCouponRepository;
 
     @Autowired
-    private CouponRepository couponRepository;
+    private JdbcCouponRepository couponRepository;
 
 
     private Member 밀리;

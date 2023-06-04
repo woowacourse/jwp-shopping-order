@@ -24,9 +24,9 @@ import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CouponException;
 import cart.exception.OrderException;
-import cart.repository.CartItemRepository;
-import cart.repository.MemberCouponRepository;
-import cart.repository.OrderRepository;
+import cart.infrastructure.repository.JdbcCartItemRepository;
+import cart.infrastructure.repository.JdbcMemberCouponRepository;
+import cart.infrastructure.repository.JdbcOrderRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -46,13 +46,13 @@ class OrderServiceTest {
     private OrderService orderService;
 
     @Mock
-    private OrderRepository orderRepository;
+    private JdbcOrderRepository orderRepository;
 
     @Mock
-    private CartItemRepository cartItemRepository;
+    private JdbcCartItemRepository cartItemRepository;
 
     @Mock
-    private MemberCouponRepository memberCouponRepository;
+    private JdbcMemberCouponRepository memberCouponRepository;
 
     @Mock
     private CouponService couponService;

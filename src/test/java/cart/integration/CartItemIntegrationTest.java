@@ -11,8 +11,8 @@ import static cart.integration.IntegrationTestFixture.응답_코드_검증;
 
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.repository.MemberRepository;
-import cart.repository.ProductRepository;
+import cart.infrastructure.repository.JdbcMemberRepository;
+import cart.infrastructure.repository.JdbcProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,10 +23,10 @@ import org.springframework.http.HttpStatus;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JdbcMemberRepository memberRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private JdbcProductRepository productRepository;
 
     private Member 밀리;
     private Member 박스터;

@@ -22,11 +22,11 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.IssuableCoupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.repository.CartItemRepository;
-import cart.repository.CouponRepository;
-import cart.repository.MemberCouponRepository;
-import cart.repository.MemberRepository;
-import cart.repository.ProductRepository;
+import cart.infrastructure.repository.JdbcCartItemRepository;
+import cart.infrastructure.repository.JdbcCouponRepository;
+import cart.infrastructure.repository.JdbcMemberCouponRepository;
+import cart.infrastructure.repository.JdbcMemberRepository;
+import cart.infrastructure.repository.JdbcProductRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,19 +40,19 @@ import org.springframework.http.HttpStatus;
 public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JdbcMemberRepository memberRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private JdbcProductRepository productRepository;
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private JdbcCartItemRepository cartItemRepository;
 
     @Autowired
-    private MemberCouponRepository memberCouponRepository;
+    private JdbcMemberCouponRepository memberCouponRepository;
 
     @Autowired
-    private CouponRepository couponRepository;
+    private JdbcCouponRepository couponRepository;
 
 
     private Member 밀리;

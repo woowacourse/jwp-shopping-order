@@ -1,7 +1,7 @@
 package cart;
 
 import cart.controller.MemberArgumentResolver;
-import cart.repository.MemberRepository;
+import cart.domain.repository.MemberRepository;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
     private final MemberRepository memberRepository;
 
     public WebMvcConfig(MemberRepository memberRepository) {

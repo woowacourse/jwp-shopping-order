@@ -16,8 +16,8 @@ import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
 import cart.exception.ProductException;
-import cart.repository.CartItemRepository;
-import cart.repository.ProductRepository;
+import cart.infrastructure.repository.JdbcCartItemRepository;
+import cart.infrastructure.repository.JdbcProductRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +38,10 @@ class CartItemServiceTest {
     private CartItemService cartItemService;
 
     @Mock
-    private CartItemRepository cartItemRepository;
+    private JdbcCartItemRepository cartItemRepository;
 
     @Mock
-    private ProductRepository productRepository;
+    private JdbcProductRepository productRepository;
 
     @Test
     void 장바구니에_상품을_추가한다() {

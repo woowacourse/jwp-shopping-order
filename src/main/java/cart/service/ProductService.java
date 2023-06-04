@@ -1,11 +1,11 @@
 package cart.service;
 
 import cart.domain.Product;
+import cart.domain.repository.ProductRepository;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ExceptionType;
 import cart.exception.ProductException;
-import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

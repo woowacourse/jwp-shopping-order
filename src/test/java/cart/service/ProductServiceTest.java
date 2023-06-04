@@ -13,7 +13,7 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductException;
-import cart.repository.ProductRepository;
+import cart.infrastructure.repository.JdbcProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -33,7 +33,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Mock
-    private ProductRepository productRepository;
+    private JdbcProductRepository productRepository;
 
     @Test
     void 전체_상품을_조회한다() {
