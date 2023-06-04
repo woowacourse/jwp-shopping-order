@@ -3,10 +3,11 @@ package cart.dao;
 import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.member.MemberEmail;
-import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.order.SavedPoint;
+import cart.domain.order.UsedPoint;
 import cart.domain.product.Product;
 import cart.domain.product.ProductImageUrl;
 import cart.domain.product.ProductName;
@@ -43,7 +44,7 @@ public class OrderProductDaoTest {
     @BeforeEach
     void setUp() {
         final Member member = new Member(1L, new MemberEmail("a@a.com"), null);
-        final Order order = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
+        final Order order = new Order(member, new UsedPoint(1000), new SavedPoint(500), new DeliveryFee(3000));
         final Product product1 = new Product(new ProductName("초콜릿"), new ProductPrice(500), new ProductImageUrl("초콜릿URL"));
         final Product product2 = new Product(new ProductName("사탕"), new ProductPrice(1000), new ProductImageUrl("사탕URL"));
         orderId = orderDao.insert(order);

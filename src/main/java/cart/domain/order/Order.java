@@ -1,7 +1,6 @@
 package cart.domain.order;
 
 import cart.domain.member.Member;
-import cart.domain.member.MemberPoint;
 import cart.exception.authorization.OrderException;
 
 import java.time.LocalDateTime;
@@ -11,18 +10,18 @@ public class Order {
 
     private final Long id;
     private final Member member;
-    private final MemberPoint usedPoint;
-    private final MemberPoint savedPoint;
+    private final UsedPoint usedPoint;
+    private final SavedPoint savedPoint;
     private final DeliveryFee deliveryFee;
     private final LocalDateTime orderedAt;
 
-    public Order(final Member member, final MemberPoint usedPoint, final MemberPoint savedPoint, final DeliveryFee deliveryFee) {
+    public Order(final Member member, final UsedPoint usedPoint, final SavedPoint savedPoint, final DeliveryFee deliveryFee) {
         this(-1, member, usedPoint, savedPoint, deliveryFee, null);
     }
 
     public Order(final long id, final Member member,
-                 final MemberPoint usedPoint,
-                 final MemberPoint savedPoint,
+                 final UsedPoint usedPoint,
+                 final SavedPoint savedPoint,
                  final DeliveryFee deliveryFee,
                  final LocalDateTime orderedAt) {
         this.id = id;
@@ -51,20 +50,20 @@ public class Order {
         return member.getId();
     }
 
-    public MemberPoint getUsedPoint() {
+    public UsedPoint getUsedPoint() {
         return usedPoint;
     }
 
     public Integer getUsedPointValue() {
-        return usedPoint.getPoint();
+        return usedPoint.getUsedPoint();
     }
 
-    public MemberPoint getSavedPoint() {
+    public SavedPoint getSavedPoint() {
         return savedPoint;
     }
 
     public Integer getSavedPointValue() {
-        return savedPoint.getPoint();
+        return savedPoint.getSavedPoint();
     }
 
     public DeliveryFee getDeliveryFee() {

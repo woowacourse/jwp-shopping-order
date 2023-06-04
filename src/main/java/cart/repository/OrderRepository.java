@@ -5,10 +5,10 @@ import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
-import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.order.UsedPoint;
 import cart.domain.product.Product;
 import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -30,7 +30,7 @@ public class OrderRepository {
         this.orderProductDao = orderProductDao;
     }
 
-    public Long save(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
+    public Long save(final CartItems cartItems, final Member member, final UsedPoint usedPoint) {
         final Order order = new Order(member, usedPoint, cartItems.getSavedPoint(), new DeliveryFee(cartItems.getDeliveryFee()));
         final Long orderId = orderDao.insert(order);
         final Order findOrder = orderDao.findById(orderId)

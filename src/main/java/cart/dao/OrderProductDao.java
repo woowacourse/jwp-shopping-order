@@ -3,10 +3,11 @@ package cart.dao;
 import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.member.MemberEmail;
-import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.order.SavedPoint;
+import cart.domain.order.UsedPoint;
 import cart.domain.product.ProductImageUrl;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
@@ -36,8 +37,8 @@ public class OrderProductDao {
         final Order order = new Order(
                 result.getLong("order_id"),
                 member,
-                new MemberPoint(result.getInt("used_point")),
-                new MemberPoint(result.getInt("saved_point")),
+                new UsedPoint(result.getInt("used_point")),
+                new SavedPoint(result.getInt("saved_point")),
                 new DeliveryFee(result.getInt("delivery_fee")),
                 result.getTimestamp("created_at").toLocalDateTime());
 

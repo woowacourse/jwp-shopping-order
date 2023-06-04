@@ -5,6 +5,7 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.order.UsedPoint;
 import cart.domain.product.ProductPrice;
 import cart.exception.business.point.InvalidPointUseException;
 import cart.repository.CartItemRepository;
@@ -45,7 +46,7 @@ public class OrderService {
         validateInvalidPointUse(request, cartItems, totalPrice);
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), new ProductPrice(totalPrice));
         memberRepository.save(updatedMember);
-        final Long orderId = orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
+        final Long orderId = orderRepository.save(cartItems, updatedMember, new UsedPoint(request.getPoint()));
         cartItemRepository.deleteByIds(cartItems.getCartItemIds());
         return orderId;
     }

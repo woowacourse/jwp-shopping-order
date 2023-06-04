@@ -1,9 +1,9 @@
 package cart.domain.cartitem;
 
 import cart.domain.member.Member;
-import cart.domain.member.MemberPoint;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.order.SavedPoint;
 import cart.domain.product.Product;
 
 import java.util.List;
@@ -20,13 +20,13 @@ public class CartItems {
     private final List<CartItem> cartItems;
     private final int totalPrice;
     private final int deliveryFee;
-    private final MemberPoint savedPoint;
+    private final SavedPoint savedPoint;
 
     public CartItems(final List<CartItem> cartItems) {
         this.cartItems = cartItems;
         this.totalPrice = calculateTotalPrice(cartItems);
         this.deliveryFee = calculateDeliveryFee(totalPrice);
-        this.savedPoint = new MemberPoint(calculateSavedPoint(totalPrice));
+        this.savedPoint = new SavedPoint(calculateSavedPoint(totalPrice));
     }
 
     private int calculateSavedPoint(final int price) {
@@ -88,7 +88,7 @@ public class CartItems {
         return deliveryFee;
     }
 
-    public MemberPoint getSavedPoint() {
+    public SavedPoint getSavedPoint() {
         return savedPoint;
     }
 }

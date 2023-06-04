@@ -2,9 +2,10 @@ package cart.dao;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberEmail;
-import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
+import cart.domain.order.SavedPoint;
+import cart.domain.order.UsedPoint;
 import cart.exception.notfound.OrderNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class OrderDaoTest {
     void insertAndFind() {
         // given
         final Member member = new Member(1L, new MemberEmail("a@a.com"), null);
-        final Order order = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
+        final Order order = new Order(member, new UsedPoint(1000), new SavedPoint(500), new DeliveryFee(3000));
         final Long orderId = orderDao.insert(order);
 
         // when
@@ -44,9 +45,9 @@ public class OrderDaoTest {
     void findAllByMemberId() {
         // given
         final Member member = new Member(1L, new MemberEmail("a@a.com"), null);
-        final Order order1 = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
-        final Order order2 = new Order(member, new MemberPoint(2000), new MemberPoint(500), new DeliveryFee(3000));
-        final Order order3 = new Order(member, new MemberPoint(3000), new MemberPoint(500), new DeliveryFee(0));
+        final Order order1 = new Order(member, new UsedPoint(1000), new SavedPoint(500), new DeliveryFee(3000));
+        final Order order2 = new Order(member, new UsedPoint(2000), new SavedPoint(500), new DeliveryFee(3000));
+        final Order order3 = new Order(member, new UsedPoint(3000), new SavedPoint(500), new DeliveryFee(0));
         final Long orderId1 = orderDao.insert(order1);
         final Long orderId2 = orderDao.insert(order2);
         final Long orderId3 = orderDao.insert(order3);
@@ -57,11 +58,11 @@ public class OrderDaoTest {
         // then
         assertAll(
                 () -> assertThat(orders).hasSize(3),
-                () -> assertThat(orders.get(0).getUsedPoint()).isEqualTo(new MemberPoint(1000)),
+                () -> assertThat(orders.get(0).getUsedPoint()).isEqualTo(new UsedPoint(1000)),
                 () -> assertThat(orders.get(0).getDeliveryFee()).isEqualTo(new DeliveryFee(3000)),
-                () -> assertThat(orders.get(1).getUsedPoint()).isEqualTo(new MemberPoint(2000)),
+                () -> assertThat(orders.get(1).getUsedPoint()).isEqualTo(new UsedPoint(2000)),
                 () -> assertThat(orders.get(1).getDeliveryFee()).isEqualTo(new DeliveryFee(3000)),
-                () -> assertThat(orders.get(2).getUsedPoint()).isEqualTo(new MemberPoint(3000)),
+                () -> assertThat(orders.get(2).getUsedPoint()).isEqualTo(new UsedPoint(3000)),
                 () -> assertThat(orders.get(2).getDeliveryFee()).isEqualTo(new DeliveryFee(0))
         );
     }

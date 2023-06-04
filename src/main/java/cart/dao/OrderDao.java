@@ -5,6 +5,8 @@ import cart.domain.member.MemberEmail;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
+import cart.domain.order.SavedPoint;
+import cart.domain.order.UsedPoint;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,8 +50,8 @@ public class OrderDao {
         return new Order(
                 result.getLong("order_id"),
                 member,
-                new MemberPoint(result.getInt("used_point")),
-                new MemberPoint(result.getInt("saved_point")),
+                new UsedPoint(result.getInt("used_point")),
+                new SavedPoint(result.getInt("saved_point")),
                 new DeliveryFee(result.getInt("delivery_fee")),
                 result.getTimestamp("created_at").toLocalDateTime());
     };

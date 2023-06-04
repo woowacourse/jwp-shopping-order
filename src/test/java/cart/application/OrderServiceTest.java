@@ -12,6 +12,8 @@ import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.order.SavedPoint;
+import cart.domain.order.UsedPoint;
 import cart.domain.product.Product;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
@@ -90,7 +92,7 @@ public class OrderServiceTest {
                 assertAll(
                         () -> assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(updatedPoint)),
                         () -> assertThat(order.getDeliveryFee()).isEqualTo(new DeliveryFee(0)),
-                        () -> assertThat(order.getUsedPoint()).isEqualTo(new MemberPoint(1000))
+                        () -> assertThat(order.getUsedPoint()).isEqualTo(new UsedPoint(1000))
                 );
             }
         }
@@ -125,7 +127,7 @@ public class OrderServiceTest {
                 assertAll(
                         () -> assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(updatedPoint)),
                         () -> assertThat(order.getDeliveryFee()).isEqualTo(new DeliveryFee(3000)),
-                        () -> assertThat(order.getUsedPoint()).isEqualTo(new MemberPoint(1000))
+                        () -> assertThat(order.getUsedPoint()).isEqualTo(new UsedPoint(1000))
                 );
             }
         }
@@ -197,8 +199,8 @@ public class OrderServiceTest {
                 // then
                 assertAll(
                         () -> assertThat(order.getDeliveryFee()).isEqualTo(new DeliveryFee(3000)),
-                        () -> assertThat(order.getUsedPoint()).isEqualTo(new MemberPoint(3500)),
-                        () -> assertThat(order.getSavedPoint()).isEqualTo(new MemberPoint(50))
+                        () -> assertThat(order.getUsedPoint()).isEqualTo(new UsedPoint(3500)),
+                        () -> assertThat(order.getSavedPoint()).isEqualTo(new SavedPoint(50))
                 );
             }
 
