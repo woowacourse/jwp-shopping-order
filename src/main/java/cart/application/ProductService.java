@@ -2,8 +2,11 @@ package cart.application;
 
 import cart.domain.Product;
 import cart.domain.repository.ProductRepository;
+import cart.dto.PageInfo;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.dto.ProductResponses;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +23,16 @@ public class ProductService {
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    }
+
+    public ProductResponses findProductsByPage(final Integer page, final Integer size) {
+        List<Product> products = productRepository.findAll();
+        final List<Product> partition = Lists.partition(products, size).get(page - 1);
+        final List<ProductResponse> productResponses = partition.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+        final PageInfo pageInfo = new PageInfo(page, size, products.size(), productResponses.size());
+        return new ProductResponses(pageInfo,productResponses);
     }
 
     public ProductResponse getProductById(Long productId) {
