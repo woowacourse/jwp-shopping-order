@@ -1,4 +1,4 @@
 ### 현재 포인트 및 소멸 예정 포인트 조회
-GET http://localhost:8080/point
+GET http://localhost:8080/points
 Content-Type: application/json
 Authorization: basic YUBhLmNvbToxMjM0

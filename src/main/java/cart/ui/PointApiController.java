@@ -17,7 +17,7 @@ public class PointApiController {
         this.pointService = pointService;
     }
 
-    @GetMapping("/point")
+    @GetMapping("/points")
     public ResponseEntity<GetPointResponse> showPoint(Member member) {
         return ResponseEntity.ok(pointService.getPointStatus(member));
     }
