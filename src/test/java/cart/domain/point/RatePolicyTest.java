@@ -16,7 +16,7 @@ public class RatePolicyTest {
 
     @ParameterizedTest
     @CsvSource(value = {"50, 3", "100, 5", "225, 12", "10000, 500", "9, 1", "10, 1", "0, 0"}, delimiter = ',')
-    void 포인트_적립률에따라_적립될_포인트를_계산한다(long price, long expectedPoint) {
+    void 포인트_적립률_5퍼센트_올림을_적용하여_적립될_포인트를_계산한다(long price, long expectedPoint) {
         // given, when
         long actualPoint = pointPolicy.calculateEarnedPoint(하디, price);
 
