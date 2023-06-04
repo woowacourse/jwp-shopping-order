@@ -5,8 +5,6 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:schema-test.sql
-      data-locations: classpath:data.sql
   h2:
     console:
       enabled: true
