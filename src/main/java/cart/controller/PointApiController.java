@@ -1,6 +1,6 @@
-package cart.ui;
+package cart.controller;
 
-import cart.application.PointService;
+import cart.service.PointService;
 import cart.domain.Member;
 import cart.dto.point.PointResponse;
 import org.springframework.http.ResponseEntity;

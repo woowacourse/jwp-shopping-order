@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.product;
 
 public class ProductRequest {
     private String name;

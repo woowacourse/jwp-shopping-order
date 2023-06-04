@@ -1,6 +1,6 @@
 package cart.domain.point;
 
-public class PointPolicy implements PointPolicyStrategy{
+public class PointPolicy10Percent implements PointPolicyStrategy{
     private static final double POINT_POLICY = 0.1;
 
     @Override

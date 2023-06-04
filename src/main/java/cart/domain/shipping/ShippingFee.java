@@ -1,6 +1,7 @@
-package cart.domain;
+package cart.domain.shipping;
 
 import cart.dao.entity.ShippingFeeEntity;
+
 
 public class ShippingFee {
 

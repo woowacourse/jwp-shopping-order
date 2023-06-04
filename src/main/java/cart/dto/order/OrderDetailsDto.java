@@ -1,6 +1,6 @@
 package cart.dto.order;
 
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductResponse;
 
 public class OrderDetailsDto {
     private Long quantity;

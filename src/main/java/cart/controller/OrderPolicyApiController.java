@@ -1,15 +1,11 @@
-package cart.ui;
+package cart.controller;
 
-import cart.application.OrderPolicyService;
-import cart.domain.Member;
-import cart.dto.order.OrdersResponse;
+import cart.service.OrderPolicyService;
 import cart.dto.orderpolicy.OrderPolicyResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/order-policy")

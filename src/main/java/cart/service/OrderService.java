@@ -1,10 +1,10 @@
-package cart.application;
+package cart.service;
 
 import cart.dao.CartItemDao;
 import cart.domain.Member;
 import cart.domain.point.Point;
-import cart.domain.ShippingDiscountPolicy;
-import cart.domain.ShippingFee;
+import cart.domain.shipping.ShippingDiscountPolicy;
+import cart.domain.shipping.ShippingFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.point.PointPolicyStrategy;
@@ -12,17 +12,17 @@ import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
-import cart.dto.orderpolicy.OrderPolicyResponse;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
-
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -37,6 +37,7 @@ public class OrderService {
         this.pointPolicyStrategy = pointPolicyStrategy;
     }
 
+    @Transactional
     public OrderCreateResponse createOrder(final Member member, final OrderRequest orderRequest) {
         final List<OrderItem> orderItemList = orderRequest.getOrder().stream()
                 .map(orderItemDto -> new OrderItem(cartItemDao.findById(orderItemDto.getCartItemId()).getProduct(), orderItemDto.getQuantity()))

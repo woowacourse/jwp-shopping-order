@@ -1,6 +1,6 @@
-package cart.ui;
+package cart.controller;
 
-import cart.application.OrderService;
+import cart.service.OrderService;
 import cart.domain.Member;
 import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;

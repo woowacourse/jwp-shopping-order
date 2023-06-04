@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.shipping;
 
 import cart.dao.entity.ShippingDiscountPolicyEntity;
 
