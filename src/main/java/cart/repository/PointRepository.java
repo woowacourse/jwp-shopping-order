@@ -43,7 +43,6 @@ public class PointRepository {
     }
 
     private List<PointEntity> getPointsNotExpired(List<PointEntity> pointEntities) {
-        System.out.println(pointEntities);
         return pointEntities.stream()
                 .filter(this::isNotExpiredPoint)
                 .collect(Collectors.toList());
@@ -54,7 +53,6 @@ public class PointRepository {
     }
 
     private List<PointHistoryEntity> getPointHistoryEntities(List<PointEntity> pointsNotExpired) {
-        System.out.println(pointsNotExpired);
         return pointHistoryDao.findByPointIds(pointsNotExpired.stream()
                 .map(PointEntity::getId)
                 .collect(Collectors.toList()));
