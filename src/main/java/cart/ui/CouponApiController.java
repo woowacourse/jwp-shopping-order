@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -26,7 +27,7 @@ public class CouponApiController {
     }
 
     @PostMapping
-    public ResponseEntity<CouponResponse> makeCoupon(@RequestBody CouponRequest couponRequest) {
+    public ResponseEntity<CouponResponse> makeCoupon(@Valid @RequestBody CouponRequest couponRequest) {
         CouponResponse response = couponService.makeCoupon(couponRequest);
         return ResponseEntity.created(URI.create("/coupon/" + response.getId()))
                 .body(response);
@@ -39,14 +40,12 @@ public class CouponApiController {
     }
 
     @PostMapping("/me")
-    public ResponseEntity<Void> issueCouponToMember(Member member, @RequestBody CouponIssueRequest couponIssueRequest) {
+    public ResponseEntity<Void> issueCouponToMember(Member member, @Valid @RequestBody CouponIssueRequest couponIssueRequest) {
         Long issuedId = couponService.issueCouponToMember(member, couponIssueRequest);
         return ResponseEntity.created(URI.create("/member-coupon/" + issuedId)).build();
     }
 
-    @
-
-            GetMapping("/me")
+    @GetMapping("/me")
     public ResponseEntity<CouponsResponse> getAllMemberCoupons(Member member) {
         CouponsResponse allUnusedCouponsResponse = couponService.getAllUnusedCoupons(member);
         return ResponseEntity.ok().body(allUnusedCouponsResponse);

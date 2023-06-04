@@ -7,6 +7,7 @@ import cart.exception.CouponException;
 import cart.exception.OrderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -34,6 +35,14 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleWrongDiscountInputException(Exception exception) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> validHandler(final MethodArgumentNotValidException exception) {
+        final String message = exception.getAllErrors().get(0).getDefaultMessage();
+
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(message));
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -27,7 +28,7 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderIdResponse> order(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderIdResponse> order(Member member, @Valid @RequestBody OrderRequest orderRequest) {
         OrderIdResponse response = orderService.makeOrder(member, orderRequest);
 
         return ResponseEntity.created(URI.create("/orders/" + response.getOrderId()))

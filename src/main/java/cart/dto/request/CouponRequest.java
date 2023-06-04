@@ -1,10 +1,19 @@
 package cart.dto.request;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class CouponRequest {
 
+    @NotNull(message = "name 필드가 필요합니다.")
     private final String name;
+
+    @NotNull(message = "type 필드가 필요합니다.")
     private final String type;
-    private final int amount;
+
+    @NotNull(message = "amount 필드가 필요합니다.")
+    @Positive(message = "쿠폰의 할인양은 양수여야 합니다.")
+    private final Integer amount;
 
     public CouponRequest(final String name, final String type, final int amount) {
         this.name = name;
