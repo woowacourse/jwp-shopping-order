@@ -33,4 +33,13 @@ public class CartItemRepository {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public Long save(CartItem cartItem) {
+        return cartItemDao.save(new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getMember().getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getQuantity()
+        ));
+    }
 }

@@ -8,6 +8,7 @@ import cart.dto.CartItemResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,9 +33,9 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> cartItemSave(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
-
+    public ResponseEntity<Void> cartItemSave(Member member,
+                                             @Validated @RequestBody CartItemRequest cartItemRequest) {
+        Long cartItemId = cartItemService.save(member, cartItemRequest);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 

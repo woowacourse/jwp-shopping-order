@@ -35,7 +35,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
-    public Long save(CartItem cartItem) {
+    public Long save(CartItemEntity cartItemEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -44,9 +44,9 @@ public class CartItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
-            ps.setInt(3, cartItem.getQuantity());
+            ps.setLong(1, cartItemEntity.getMember_id());
+            ps.setLong(2, cartItemEntity.getProduct_id());
+            ps.setInt(3, cartItemEntity.getQuantity());
 
             return ps;
         }, keyHolder);
