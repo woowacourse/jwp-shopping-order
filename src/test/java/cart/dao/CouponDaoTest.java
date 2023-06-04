@@ -67,7 +67,6 @@ class CouponDaoTest {
         assertThat(actual).isEmpty();
     }
 
-
     private void assertCouponEntity(CouponEntity actual, Coupon expected) {
         assertAll(
                 () -> assertThat(actual.getId()).isPositive(),
