@@ -28,6 +28,13 @@ public class Request {
             this.requestSpecification = requestSpecification;
         }
 
+        public static Builder 요청_생성() {
+            final RequestSpecification request = RestAssured
+                    .given().log().all()
+                    .contentType(ContentType.JSON);
+            return new Builder(request);
+        }
+
         public static Builder 사용자의_요청_생성(final Member 사용자) {
             final RequestSpecification request = RestAssured
                     .given().log().all()
