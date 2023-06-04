@@ -2,6 +2,7 @@ package cart.dao.entity;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 
 import java.util.Map;
 import java.util.Objects;
@@ -19,14 +20,29 @@ public class CartItemEntity {
         this.quantity = quantity;
     }
 
+    public static CartItemEntity from(final CartItem cartItem) {
+        return new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getMember().getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getQuantity()
+        );
+    }
+
     public CartItem toCartItem(final Map<Long, ProductEntity> allProductsById, final Member member) {
-        if (!Objects.equals(memberId, member.getId())) {
-            throw new UnsupportedOperationException("장바구니 정보와 회원 정보가 일치하지 않습니다.");
-        }
         return new CartItem(
                 id,
                 quantity,
                 allProductsById.get(productId).toProduct(),
+                member
+        );
+    }
+
+    public CartItem toCartItem(final Product product, final Member member) {
+        return new CartItem(
+                id,
+                quantity,
+                product,
                 member
         );
     }

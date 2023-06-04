@@ -38,6 +38,15 @@ public class MemberCouponDao {
             new Date(rs.getDate("created_at").getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
     );
 
+    public Long save(final MemberCouponEntity memberCouponEntity) {
+        return simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
+                .addValue("member_id", memberCouponEntity.getMemberId())
+                .addValue("coupon_id", memberCouponEntity.getCouponId())
+                .addValue("is_used", false)
+                .addValue("expired_at", memberCouponEntity.getExpiredAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        ).longValue();
+    }
+
     public List<MemberCouponEntity> findUsableByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM member_coupon " +
                 "WHERE is_used = false " +
@@ -55,12 +64,6 @@ public class MemberCouponDao {
         }
     }
 
-    //예외 컨트롤
-    public void updateUsedById(final Long id) {
-        final String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ?";
-        jdbcTemplate.update(sql, true, id);
-    }
-
     public List<MemberCouponEntity> findByIds(final List<Long> ids) {
         final String sql = "SELECT * FROM member_coupon WHERE id IN (%s) ";
 
@@ -70,15 +73,6 @@ public class MemberCouponDao {
                 ids.toArray(),
                 rowMapper
         );
-    }
-
-    public Long save(final MemberCouponEntity memberCouponEntity) {
-        return simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
-                .addValue("member_id", memberCouponEntity.getMemberId())
-                .addValue("coupon_id", memberCouponEntity.getCouponId())
-                .addValue("is_used", false)
-                .addValue("expired_at", memberCouponEntity.getExpiredAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        ).longValue();
     }
 
     public void update(final MemberCouponEntity memberCouponEntity) {
