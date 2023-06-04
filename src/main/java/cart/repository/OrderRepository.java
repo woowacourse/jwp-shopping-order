@@ -30,7 +30,6 @@ public class OrderRepository {
     private final OrderCouponDao orderCouponDao;
     private final MemberCouponDao memberCouponDao;
 
-
     public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, OrderCouponDao orderCouponDao,
                            MemberCouponDao memberCouponDao) {
         this.orderDao = orderDao;
@@ -39,7 +38,6 @@ public class OrderRepository {
         this.memberCouponDao = memberCouponDao;
     }
 
-    //TODO: save도 배치 save 이후 findAllByOrderId를 통해 배치 2번 때리자
     public Long save(Order order) {
         Long orderId = orderDao.save(OrderEntity.from(order));
 
@@ -68,19 +66,6 @@ public class OrderRepository {
         return createSingleOrder(orderItemEntities, orderCoupons, orderEntity);
     }
 
-    private Order createSingleOrder(List<OrderItemEntity> orderItemEntities,
-                                    Map<Long, List<MemberCoupon>> orderCoupons,
-                                    OrderEntity orderEntity) {
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemEntity orderItemEntity : orderItemEntities) {
-            OrderItem orderItem = orderItemEntity.toDomain(
-                    orderCoupons.getOrDefault(orderItemEntity.getId(), new ArrayList<>()));
-            orderItems.add(orderItem);
-        }
-
-        return new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems, orderEntity.getTotalPrice());
-    }
-
     public List<Order> findAllByMemberId(Long memberId) {
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
         Map<Long, OrderItemEntity> orderItemEntities = orderItemDao.findAllByMemberId(memberId).stream().
@@ -103,6 +88,19 @@ public class OrderRepository {
         }
 
         return orders;
+    }
+
+    private Order createSingleOrder(List<OrderItemEntity> orderItemEntities,
+                                    Map<Long, List<MemberCoupon>> orderCoupons,
+                                    OrderEntity orderEntity) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItemEntity orderItemEntity : orderItemEntities) {
+            OrderItem orderItem = orderItemEntity.toDomain(
+                    orderCoupons.getOrDefault(orderItemEntity.getId(), new ArrayList<>()));
+            orderItems.add(orderItem);
+        }
+
+        return new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems, orderEntity.getTotalPrice());
     }
 
     private Map<Long, List<MemberCoupon>> createOrderCouponsByOrderItemId(

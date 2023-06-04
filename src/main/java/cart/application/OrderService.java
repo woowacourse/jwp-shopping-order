@@ -39,14 +39,9 @@ public class OrderService {
     }
 
     public Long order(OrderRequest request, Long memberId) {
-        List<Long> couponIds = request.getOrderItemRequests().stream()
-                .flatMap(orderItemRequest -> orderItemRequest.getCoupons().stream())
-                .map(OrderCouponRequest::getCouponId)
-                .collect(toList());
-        List<MemberCoupon> memberCoupons = couponRepository.findAllByMemberCouponIds(couponIds);
+        List<MemberCoupon> memberCoupons = getMemberCoupons(request);
         Map<Long, MemberCoupon> memberCouponsById = memberCoupons.stream()
                 .collect(toMap(MemberCoupon::getId, Function.identity()));
-
         List<OrderItem> orderItems = getOrderItems(request, memberCouponsById);
         couponRepository.useCoupons(memberCoupons);
         clearCartItems(request, memberId);
@@ -55,6 +50,14 @@ public class OrderService {
                 .mapToInt(OrderItem::getTotalPrice)
                 .sum();
         return orderRepository.save(new Order(memberId, orderItems, totalPrice));
+    }
+
+    private List<MemberCoupon> getMemberCoupons(OrderRequest request) {
+        List<Long> couponIds = request.getOrderItemRequests().stream()
+                .flatMap(orderItemRequest -> orderItemRequest.getCoupons().stream())
+                .map(OrderCouponRequest::getCouponId)
+                .collect(toList());
+        return couponRepository.findAllByMemberCouponIds(couponIds);
     }
 
     private void clearCartItems(OrderRequest request, Long memberId) {
