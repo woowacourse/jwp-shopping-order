@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.request.MemberCreateRequest;
+import cart.dto.response.OrderItemsResponse;
 import cart.dto.response.PointResponse;
 import java.net.URI;
 import javax.validation.Valid;
@@ -30,7 +31,13 @@ public class MemberApiController {
     }
 
     @GetMapping("/points")
-    public PointResponse showMemberPoint(Member member) {
-        return PointResponse.of(member);
+    public ResponseEntity<PointResponse> showMemberPoint(Member member) {
+        return ResponseEntity.ok(PointResponse.of(member));
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<OrderItemsResponse> showOrders(Member member) {
+        OrderItemsResponse response = memberService.findOrders(member);
+        return ResponseEntity.ok(response);
     }
 }

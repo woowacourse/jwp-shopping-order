@@ -19,7 +19,8 @@
 
 ## 주문
 - [x] 사용자는 장바구니에 담은 상품들을 주문할 수 있다.
-- [ ] 이전 주문내역을 조회할 수 있다.
+- [x] 이전 주문내역들을 조회할 수 있다.
+- [ ] 이전 주문내역 중 하나를 상세 조회할 수 있다.
 
 # API 설계
 
@@ -169,20 +170,22 @@ Header
 Body
 
 ```json
-[
-  {
-    "orderId": 1,
-    "orderPrice": 25000,
-    "totalAmount": 2,
-    "previewName": "PET보틀-정사각(370ml)"
-  },
-  {
-    "orderId": 2,
-    "orderPrice": 1400,
-    "totalAmount": 3,
-    "previewName": "[든든] 동원 스위트콘"
-  }
-]
+{
+  "orderItems": [
+      {
+        "orderId": 1,
+        "orderPrice": 25000,
+        "totalAmount": 2,
+        "previewName": "PET보틀-정사각(370ml)"
+      },
+      {
+        "orderId": 2,
+        "orderPrice": 1400,
+        "totalAmount": 3,
+        "previewName": "[든든] 동원 스위트콘"
+      }
+  ]
+}
 ```
 ---
 ### `GET /members/orders/{orderId}`
