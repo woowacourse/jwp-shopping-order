@@ -16,24 +16,26 @@ public class Order {
     private final Long id;
     private final Member member;
     private final OrderItems orderItems;
+    private final Money totalDiscountedPrice;
     private final LocalDateTime generateTime;
-
 
     public Order(
             final Long id,
             final Member member,
-            final OrderItems orderItems
+            final OrderItems orderItems,
+            final Money totalDiscountedPrice,
+            final LocalDateTime localDateTime
     ) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
-        this.generateTime = LocalDateTime.now();
+        this.totalDiscountedPrice = totalDiscountedPrice;
+        this.generateTime = localDateTime;
     }
 
     public Order(final Member member, final List<OrderItem> orderItems) {
-        this(null, member, new OrderItems(orderItems));
+        this(null, member, new OrderItems(orderItems), null, LocalDateTime.now());
     }
-
 
     public Bill makeBill() {
         Money totalDiscountedPrice = orderItems.getTotalDiscountedPrice(member);
@@ -45,6 +47,20 @@ public class Order {
                 totalDiscountedPrice,
                 shippingFee,
                 totalDiscountedPrice.plus(shippingFee));
+    }
+
+    public Bill readBill() {
+        Money totalPrinciplePrice = orderItems.getTotalPrinciplePrice();
+        Money itemBenefit = orderItems.getItemBenefit();
+        Money shippingFee = determineShippingFee(totalDiscountedPrice);
+        return new Bill(
+                itemBenefit,
+                totalPrinciplePrice.minus(totalDiscountedPrice).minus(itemBenefit),
+                totalPrinciplePrice,
+                totalDiscountedPrice,
+                shippingFee,
+                totalDiscountedPrice.plus(shippingFee)
+        );
     }
 
     private Money determineShippingFee(final Money purchasePrice) {
@@ -64,6 +80,10 @@ public class Order {
 
     public OrderItems getOrderItems() {
         return orderItems;
+    }
+
+    public Money getTotalDiscountedPrice() {
+        return totalDiscountedPrice;
     }
 
     public LocalDateTime getGenerateTime() {

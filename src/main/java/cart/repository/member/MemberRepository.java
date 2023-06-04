@@ -52,6 +52,7 @@ public class MemberRepository {
 
     private MemberEntity makeMemberEntity(final Member member) {
         return new MemberEntity(
+                member.getId(),
                 member.getEmail(),
                 member.getPassword(),
                 member.getRank().name(),

@@ -8,6 +8,7 @@ import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.repository.order.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class OrderService {
         this.memberService = memberService;
     }
 
+    @Transactional
     public Long save(final Member member, final OrderRequest orderRequest) {
         Order order = orderRepository.makeOrder(member, orderRequest.getCartItemIds());
         Bill bill = order.makeBill();
@@ -39,13 +41,13 @@ public class OrderService {
     public List<OrderResponse> findByMember(final Member member) {
         List<Order> orders = orderRepository.findByMember(member);
         return orders.stream()
-                .map(order -> OrderResponse.from(order, member, order.makeBill()))
+                .map(order -> OrderResponse.from(order, member, order.readBill()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public OrderResponse findById(final Member member, final Long id) {
         Order order = orderRepository.findById(member, id);
-        Bill bill = order.makeBill();
+        Bill bill = order.readBill();
         return OrderResponse.from(order, member, bill);
     }
 }

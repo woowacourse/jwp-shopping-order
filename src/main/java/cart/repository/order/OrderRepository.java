@@ -8,6 +8,7 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
+import cart.domain.value.Money;
 import cart.entity.OrderEntity;
 import cart.repository.cart.CartItemRepository;
 import org.springframework.stereotype.Repository;
@@ -43,16 +44,6 @@ public class OrderRepository {
         return orderId;
     }
 
-    private static List<OrderItem> cartItemToOrderItems(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(cartItem -> new OrderItem(cartItem.getProduct().getName(),
-                        cartItem.getProduct().getPrice(),
-                        cartItem.getProduct().getImageUrl(),
-                        cartItem.getQuantity(),
-                        cartItem.getProduct().getDiscountRate()))
-                .collect(Collectors.toList());
-    }
-
     public List<Order> findByMember(final Member member) {
         List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
         List<Order> orders = new ArrayList<>();
@@ -63,17 +54,29 @@ public class OrderRepository {
         return orders;
     }
 
-    private static Order orderEntityToOrder(final Member member, final OrderEntity orderEntity, List<OrderItem> orderItems) {
-        return new Order(
-                orderEntity.getId(),
-                member,
-                new OrderItems(orderItems)
-        );
-    }
-
     public Order findById(final Member member, final Long id) {
         OrderEntity orderEntity = orderDao.findById(id).orElseThrow(IllegalArgumentException::new);
         List<OrderItem> orderItems = orderItemDao.findByOrderId(orderEntity.getId());
         return orderEntityToOrder(member, orderEntity, orderItems);
+    }
+
+    private List<OrderItem> cartItemToOrderItems(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(cartItem -> new OrderItem(cartItem.getProduct().getName(),
+                        cartItem.getProduct().getPrice(),
+                        cartItem.getProduct().getImageUrl(),
+                        cartItem.getQuantity(),
+                        cartItem.getProduct().getDiscountRate()))
+                .collect(Collectors.toList());
+    }
+
+    private Order orderEntityToOrder(final Member member, final OrderEntity orderEntity, List<OrderItem> orderItems) {
+        return new Order(
+                orderEntity.getId(),
+                member,
+                new OrderItems(orderItems),
+                new Money(orderEntity.getDiscountedTotalItemPrice()),
+                orderEntity.getOrderedAt()
+        );
     }
 }

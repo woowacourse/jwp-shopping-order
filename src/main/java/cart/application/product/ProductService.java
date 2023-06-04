@@ -5,6 +5,7 @@ import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,16 +29,19 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
+    @Transactional
     public Long createProduct(final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.getIsDiscounted(), productRequest.getDiscountRate());
         return productRepository.create(product);
     }
 
+    @Transactional
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.getIsDiscounted(), productRequest.getDiscountRate());
         productRepository.update(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(final Long productId) {
         productRepository.delete(productId);
     }

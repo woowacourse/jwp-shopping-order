@@ -10,9 +10,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,7 +48,7 @@ public class OrderDao {
             ps.setLong(1, bill.getTotalItemPrice());
             ps.setLong(2, bill.getDiscountedTotalItemPrice());
             ps.setInt(3, bill.getShippingFee());
-            ps.setDate(4, Date.valueOf(order.getGenerateTime().toLocalDate()));
+            ps.setTimestamp(4, Timestamp.valueOf(order.getGenerateTime()));
             ps.setLong(5, order.getMember().getId());
 
             return ps;

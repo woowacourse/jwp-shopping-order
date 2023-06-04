@@ -17,7 +17,7 @@ public class OrderEntity {
             final int discountedTotalItemPrice,
             final int shippingFee,
             final LocalDateTime orderedAt,
-            Long memberId
+            final Long memberId
     ) {
         this.id = id;
         this.totalItemPrice = totalItemPrice;
@@ -45,5 +45,9 @@ public class OrderEntity {
 
     public LocalDateTime getOrderedAt() {
         return orderedAt;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 }

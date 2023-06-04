@@ -8,6 +8,7 @@ import cart.dto.cart.CartItemResponse;
 import cart.repository.cart.CartItemRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,10 +29,12 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         return cartItemRepository.save(new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
     }
 
+    @Transactional
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
@@ -45,6 +48,7 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(final Member member, final Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
