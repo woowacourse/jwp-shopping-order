@@ -2,7 +2,7 @@ package cart.db.repository;
 
 import cart.db.dao.ProductDao;
 import cart.db.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.exception.BadRequestException;
 import org.springframework.stereotype.Repository;
 

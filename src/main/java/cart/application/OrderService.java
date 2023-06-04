@@ -3,12 +3,12 @@ package cart.application;
 import cart.db.repository.CouponRepository;
 import cart.db.repository.OrderRepository;
 import cart.db.repository.ProductRepository;
-import cart.domain.Item;
-import cart.domain.Product;
+import cart.domain.product.Item;
+import cart.domain.product.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.dto.ItemRequest;
+import cart.dto.product.ItemRequest;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.exception.BadRequestException;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 
 @Service
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderRepository orderRepository;

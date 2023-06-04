@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 public class Product {
     private final Long id;

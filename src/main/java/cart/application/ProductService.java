@@ -1,15 +1,17 @@
 package cart.application;
 
 import cart.db.repository.ProductRepository;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.domain.product.Product;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;

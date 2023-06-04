@@ -1,7 +1,7 @@
 package cart.domain.cart;
 
-import cart.domain.Item;
-import cart.domain.Product;
+import cart.domain.product.Item;
+import cart.domain.product.Product;
 import cart.domain.member.Member;
 import cart.exception.AuthorizationException;
 

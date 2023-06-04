@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.db.repository.CartItemRepository;
 import cart.db.repository.ProductRepository;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
@@ -19,7 +19,7 @@ import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 
 @Service
 public class CartItemService {
-    
+
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 

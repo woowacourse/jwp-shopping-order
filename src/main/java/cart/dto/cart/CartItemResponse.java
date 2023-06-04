@@ -1,8 +1,8 @@
 package cart.dto.cart;
 
 import cart.domain.cart.CartItem;
-import cart.domain.Item;
-import cart.dto.ProductResponse;
+import cart.domain.product.Item;
+import cart.dto.product.ProductResponse;
 
 public class CartItemResponse {
     private Long id;

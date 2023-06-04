@@ -12,6 +12,7 @@ import static cart.exception.ErrorCode.DUPLICATED_NAME;
 import static cart.exception.ErrorCode.NOT_AUTHENTICATION_MEMBER;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private static final Long CONGRATULATION_COUPON_ID_TO_NEW_MEMBER = 1L;

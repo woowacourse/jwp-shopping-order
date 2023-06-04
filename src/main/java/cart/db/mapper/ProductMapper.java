@@ -1,7 +1,7 @@
 package cart.db.mapper;
 
 import cart.db.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;

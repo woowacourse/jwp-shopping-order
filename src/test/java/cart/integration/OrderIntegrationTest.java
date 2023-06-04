@@ -2,9 +2,9 @@ package cart.integration;
 
 import cart.db.repository.MemberRepository;
 import cart.domain.member.Member;
-import cart.dto.ItemRequest;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ItemRequest;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import cart.dto.cart.CartItemResponse;
 import cart.dto.coupon.OrderCouponResponse;
 import cart.dto.login.MemberRequest;

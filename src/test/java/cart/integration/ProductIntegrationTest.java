@@ -1,8 +1,8 @@
 package cart.integration;
 
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.domain.product.Product;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import cart.exception.ErrorResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

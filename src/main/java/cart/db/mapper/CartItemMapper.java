@@ -2,7 +2,7 @@ package cart.db.mapper;
 
 import cart.db.entity.CartItemDetailEntity;
 import cart.db.entity.CartItemEntity;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 

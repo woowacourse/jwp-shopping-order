@@ -1,9 +1,9 @@
 package cart.db.mapper;
 
 import cart.db.entity.*;
-import cart.domain.Item;
-import cart.domain.Items;
-import cart.domain.Product;
+import cart.domain.product.Item;
+import cart.domain.product.Items;
+import cart.domain.product.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
