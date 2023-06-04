@@ -36,9 +36,7 @@ public class CartItemService {
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> findAllCartItems(AuthInfo authInfo) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail()) // TODO: AOP 적용?
-                .orElseThrow(MemberNotFoundException::new);
-
+        Member member = findMemberByEmail(authInfo.getEmail());
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
@@ -46,21 +44,15 @@ public class CartItemService {
     }
 
     public Long createCartItem(AuthInfo authInfo, CartItemRequest cartItemRequest) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
-        Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(ProductNotFoundException::new);
-
+        Member member = findMemberByEmail(authInfo.getEmail());
+        Product product = findProductById(cartItemRequest.getProductId());
         CartItem inserted = cartItemRepository.insert(new CartItem(null, 1, product, member));
         return inserted.getId();
     }
 
     public void updateQuantity(AuthInfo authInfo, Long id, CartItemQuantityRequest request) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
-        CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(CartItemNotFoundException::new);
-         // TODO: id + QuantityRequest 합치기
+        Member member = findMemberByEmail(authInfo.getEmail());
+        CartItem cartItem = findCartItemById(id);
         cartItem.validateIsOwnedBy(member);
         if (request.getQuantity() == 0) {
             cartItemRepository.deleteById(id);
@@ -71,12 +63,24 @@ public class CartItemService {
     }
 
     public void remove(AuthInfo authInfo, Long id) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
-        CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(CartItemNotFoundException::new);
-
+        Member member = findMemberByEmail(authInfo.getEmail());
+        CartItem cartItem = findCartItemById(id);
         cartItem.validateIsOwnedBy(member);
         cartItemRepository.deleteById(id);
+    }
+
+    private Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    private Product findProductById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+    }
+
+    private CartItem findCartItemById(Long cartItemId) {
+        return cartItemRepository.findById(cartItemId)
+                .orElseThrow(CartItemNotFoundException::new);
     }
 }

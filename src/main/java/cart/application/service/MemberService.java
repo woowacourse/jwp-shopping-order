@@ -22,9 +22,7 @@ public class MemberService {
     }
 
     public PointResponse getPoint(AuthInfo authInfo) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
-
+        Member member = getMemberByEmail(authInfo.getEmail());
         return new PointResponse(member.getPoint());
     }
 

@@ -40,9 +40,7 @@ public class OrderService {
     }
 
     public long issue(AuthInfo authInfo, OrderRequest request) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
-
+        Member member = findMemberByEmail(authInfo.getEmail());
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
         long originalPoint = member.getPoint();
@@ -87,9 +85,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders(AuthInfo authInfo) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
-
+        Member member = findMemberByEmail(authInfo.getEmail());
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
                 .map(order -> new OrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo())))
@@ -110,13 +106,16 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public SpecificOrderResponse getSpecificOrder(AuthInfo authInfo, Long orderId) {
-        Member member = memberRepository.findByEmail(authInfo.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = findMemberByEmail(authInfo.getEmail());
         Order order = orderRepository.findById(orderId)
                         .orElseThrow(OrderNotFoundException::new);
-
         order.validateIsIssuedBy(member);
         return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
+    }
+
+    private Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
     }
 }
