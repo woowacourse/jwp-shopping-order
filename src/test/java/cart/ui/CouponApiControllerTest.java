@@ -6,17 +6,16 @@ import cart.application.CouponService;
 import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.SaveCouponRequest;
+import cart.integration.IntegrationTest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CouponApiControllerTest {
+class CouponApiControllerTest extends IntegrationTest {
 
   private static final String HEADER = "Authorization";
   private static final String TYPE = "Basic ";

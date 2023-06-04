@@ -109,7 +109,7 @@ public class OrderService {
         }).collect(Collectors.toList());
   }
 
-  private static HashMap<Long, List<OrderProductResponse>> sortProductsByOrder(List<ProductOrder> productOrders) {
+  private static HashMap<Long, List<OrderProductResponse>> sortProductsByOrder(final List<ProductOrder> productOrders) {
     final HashMap<Long, List<OrderProductResponse>> productsByOrderId = new HashMap<>();
     for (ProductOrder productOrder : productOrders) {
       final Long key = productOrder.getOrderId();
@@ -120,5 +120,22 @@ public class OrderService {
       productsByOrderId.put(key, responses);
     }
     return productsByOrderId;
+  }
+
+  public AllOrderResponse getOrder(final Long orderId) {
+    final List<ProductOrder> productOrders = orderDao.findOrderByOrderId(orderId);
+
+    final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(productOrders);
+
+    return new AllOrderResponse(orderId, orderProductResponses);
+  }
+
+  private static List<OrderProductResponse> makeOrderProductResponses(List<ProductOrder> productOrders) {
+    return productOrders.stream()
+        .map(productOrder -> {
+          final Product product = productOrder.getProduct();
+          return new OrderProductResponse(product.getId(), product.getName(), product.getPrice().getValue(),
+              product.getImageUrl(), productOrder.getQuantity());
+        }).collect(Collectors.toList());
   }
 }

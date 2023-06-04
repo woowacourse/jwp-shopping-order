@@ -8,6 +8,7 @@ import cart.dto.OrderResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,11 @@ public class OrderApiController {
   @GetMapping
   public ResponseEntity<List<AllOrderResponse>> getAllOrders(Member member) {
     return ResponseEntity.ok(orderService.getAllOrders(member));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<AllOrderResponse> getOrder(Member member, @PathVariable Long id) {
+    return ResponseEntity.ok(orderService.getOrder(id));
   }
 
   @PostMapping
