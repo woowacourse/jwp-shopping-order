@@ -4,6 +4,8 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
+import cart.exception.BusinessException;
 import cart.ui.dto.request.CartItemQuantityUpdateRequest;
 import cart.ui.dto.request.CartItemRequest;
 import cart.ui.dto.request.RemoveCartItemsRequest;
@@ -41,9 +43,10 @@ public class CartItemService {
             cartItemDao.updateQuantity(updatedCartItem);
             return cartItem.getId();
         }
+        final Product product = productDao.getProductById(cartItemRequest.getProductId())
+            .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
         return cartItemDao.save(
-            new CartItem(cartItemRequest.getQuantity(), productDao.getProductById(cartItemRequest.getProductId()),
-                member));
+            new CartItem(cartItemRequest.getQuantity(), product, member));
     }
 
     @Transactional

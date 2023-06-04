@@ -59,7 +59,8 @@ public class OrderService {
         final List<Amount> amounts = orderRequest.getProducts()
             .stream()
             .map(it -> {
-                final Product product = productDao.getProductById(it.getProductId());
+                final Product product = productDao.getProductById(it.getProductId())
+                    .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
                 addToProducts(products, it.getQuantity(), product);
                 return product.getAmount().multiply(it.getQuantity());
             })

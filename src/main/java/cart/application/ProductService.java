@@ -3,6 +3,7 @@ package cart.application;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.domain.vo.Amount;
+import cart.exception.BusinessException;
 import cart.ui.dto.request.ProductRequest;
 import cart.ui.dto.response.ProductResponse;
 import java.util.List;
@@ -26,7 +27,8 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(final Long productId) {
-        final Product product = productDao.getProductById(productId);
+        final Product product = productDao.getProductById(productId)
+            .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
         return ProductResponse.of(product);
     }
 

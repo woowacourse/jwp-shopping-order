@@ -2,13 +2,13 @@ package cart.dao;
 
 import cart.domain.Product;
 import cart.domain.vo.Amount;
-import cart.exception.BusinessException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -22,6 +22,13 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Product> rowMapper = (rs, rowNum) -> new Product(
+        rs.getLong("id"),
+        rs.getString("name"),
+        Amount.of(rs.getInt("price")),
+        rs.getString("image_url")
+    );
+
     public List<Product> getAllProducts() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -33,18 +40,10 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(final Long productId) {
+    public Optional<Product> getProductById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-                final String name = rs.getString("name");
-                final int price = rs.getInt("price");
-                final String imageUrl = rs.getString("image_url");
-                return new Product(productId, name, Amount.of(price), imageUrl);
-            });
-        } catch (final EmptyResultDataAccessException e) {
-            throw new BusinessException("존재하지 않는 데이터입니다.");
-        }
+        final List<Product> result = jdbcTemplate.query(sql, rowMapper, productId);
+        return result.stream().findAny();
     }
 
     public Long createProduct(final Product product) {

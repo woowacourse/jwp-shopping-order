@@ -65,7 +65,7 @@ class OrderServiceTest {
         final OrderRequest request = new OrderRequest(products, 250_000, 3_000, "address", 1L);
 
         given(productDao.getProductById(anyLong()))
-            .willReturn(product1, product2);
+            .willReturn(Optional.of(product1), Optional.of(product2));
         given(couponDao.findByCouponIdAndMemberId(anyLong(), anyLong()))
             .willReturn(Optional.of(coupon));
         given(orderDao.save(any(Order.class), anyLong()))
@@ -92,7 +92,7 @@ class OrderServiceTest {
         //given
         final OrderRequest request = new OrderRequest(products, 25_000, 3_000, "address", 1L);
         given(productDao.getProductById(anyLong()))
-            .willReturn(product1, product2);
+            .willReturn(Optional.of(product1), Optional.of(product2));
 
         //when
         //then
@@ -106,7 +106,7 @@ class OrderServiceTest {
         //given
         final OrderRequest request = new OrderRequest(products, 250_000, 3_000, "address", 1L);
         given(productDao.getProductById(anyLong()))
-            .willReturn(product1, product2);
+            .willReturn(Optional.of(product1), Optional.of(product2));
         given(couponDao.findByCouponIdAndMemberId(anyLong(), anyLong()))
             .willReturn(Optional.empty());
 
@@ -126,7 +126,7 @@ class OrderServiceTest {
             Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()),
             Amount.of(3_000), "address");
         given(productDao.getProductById(anyLong()))
-            .willReturn(product1, product2);
+            .willReturn(Optional.of(product1), Optional.of(product2));
         given(orderDao.save(any(Order.class), anyLong()))
             .willReturn(order);
 
