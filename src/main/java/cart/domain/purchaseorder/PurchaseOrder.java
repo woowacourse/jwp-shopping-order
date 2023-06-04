@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.purchaseorder;
 
 import cart.domain.point.Point;
 import cart.domain.point.UsedPoint;

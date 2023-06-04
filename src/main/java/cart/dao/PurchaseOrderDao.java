@@ -1,9 +1,9 @@
 package cart.dao;
 
 import cart.domain.Member;
-import cart.domain.OrderStatus;
 import cart.domain.Pagination;
-import cart.domain.PurchaseOrderInfo;
+import cart.domain.purchaseorder.OrderStatus;
+import cart.domain.purchaseorder.PurchaseOrderInfo;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

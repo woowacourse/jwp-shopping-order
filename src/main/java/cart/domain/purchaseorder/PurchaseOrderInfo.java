@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.purchaseorder;
 
+import cart.domain.Member;
 import cart.exception.PurchaseOrderException;
 
 import java.time.LocalDateTime;

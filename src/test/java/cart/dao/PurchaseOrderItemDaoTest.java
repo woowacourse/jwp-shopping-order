@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.domain.PurchaseOrderItem;
+import cart.domain.purchaseorder.PurchaseOrderItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

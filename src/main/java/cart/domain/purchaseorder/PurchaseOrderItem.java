@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.purchaseorder;
+
+import cart.domain.Product;
 
 public class PurchaseOrderItem {
     private Long id;

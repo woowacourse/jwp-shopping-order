@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.domain.PurchaseOrderItem;
+import cart.domain.purchaseorder.PurchaseOrderItem;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
