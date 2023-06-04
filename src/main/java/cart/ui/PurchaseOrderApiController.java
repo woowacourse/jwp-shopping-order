@@ -5,6 +5,7 @@ import cart.application.PurchaseOrderService;
 import cart.domain.Member;
 import cart.dto.purchaseorder.PurchaseOrderRequest;
 import cart.dto.purchaseorder.response.PurchaseOrderPageResponse;
+import cart.dto.purchaseorder.response.PurchaseOrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,17 @@ public class PurchaseOrderApiController {
                              .build();
     }
 
-    @GetMapping("{page}")
-    public ResponseEntity<PurchaseOrderPageResponse> showPurchaseOrders(Member member, @PathVariable int page) {
+    @GetMapping
+    public ResponseEntity<PurchaseOrderPageResponse> showPurchaseOrders(Member member, @RequestParam int page) {
         PurchaseOrderPageResponse purchaseOrderPageResponse = purchaseOrderService.getAllByMemberId(member, page);
         return ResponseEntity.ok()
                              .body(purchaseOrderPageResponse);
+    }
+
+    @GetMapping("{orderId}")
+    public ResponseEntity<PurchaseOrderResponse> showPurchaseOrder(@PathVariable Long orderId) {
+        PurchaseOrderResponse purchaseOrderResponse = purchaseOrderService.getPurchaseOrderByOrderId(orderId);
+        return ResponseEntity.ok()
+                             .body(purchaseOrderResponse);
     }
 }

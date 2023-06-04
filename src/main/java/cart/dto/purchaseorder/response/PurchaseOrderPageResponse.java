@@ -32,7 +32,7 @@ public class PurchaseOrderPageResponse {
         return pageSize;
     }
 
-    public List<PurchaseOrderItemInfoResponse> getPurchaseOrderItemsResponses() {
+    public List<PurchaseOrderItemInfoResponse> getContents() {
         return contents;
     }
 

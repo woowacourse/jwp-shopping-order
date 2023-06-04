@@ -36,10 +36,10 @@ public class PurchaseOrderService {
         Pagination pagination = Pagination.create(totalOrders, page);
 
         List<PurchaseOrderInfo> purchaseOrderInfos = purchaseOrderDao.findMemberByIdWithPagination(member.getId(), pagination);
-        List<PurchaseOrderItemInfoResponse> purchaseOrderItemInfoRespons = getPurchaseOrderItemInfoResponse(purchaseOrderInfos);
+        List<PurchaseOrderItemInfoResponse> purchaseOrderItemInfoResponses = getPurchaseOrderItemInfoResponse(purchaseOrderInfos);
 
         return new PurchaseOrderPageResponse(pagination.getTotalPage(), pagination.getCurrentPage(),
-                purchaseOrderItemInfoRespons.size(), purchaseOrderItemInfoRespons);
+                purchaseOrderItemInfoResponses.size(), purchaseOrderItemInfoResponses);
     }
 
     private List<PurchaseOrderItemInfoResponse> getPurchaseOrderItemInfoResponse(List<PurchaseOrderInfo> purchaseOrderInfos) {
