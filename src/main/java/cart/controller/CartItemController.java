@@ -1,11 +1,13 @@
 package cart.controller;
 
 import cart.config.auth.Auth;
-import cart.domain.Order;
+import cart.domain.order.Order;
 import cart.domain.Member;
-import cart.dto.*;
+import cart.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.dto.cartitem.CartItemRequest;
+import cart.dto.cartitem.CartItemResponse;
+import cart.dto.order.OrderResponse;
 import cart.service.CartItemService;
-import cart.service.CouponService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +19,9 @@ import java.util.List;
 public class CartItemController {
 
     private final CartItemService cartItemService;
-    private final CouponService couponService;
 
-    public CartItemController(CartItemService cartItemService, CouponService couponService) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
-        this.couponService = couponService;
     }
 
     @GetMapping

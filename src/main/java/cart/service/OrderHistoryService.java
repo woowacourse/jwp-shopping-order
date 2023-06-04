@@ -1,11 +1,11 @@
 package cart.service;
 
 import cart.domain.Member;
-import cart.domain.OrderCartItemEntity;
-import cart.domain.OrderEntity;
-import cart.dto.OrderDetailHistoryResponse;
-import cart.dto.OrderHistoryResponse;
-import cart.dto.OrderItemHistoryResponse;
+import cart.entity.OrderCartItemEntity;
+import cart.entity.OrderEntity;
+import cart.dto.order.OrderDetailHistoryResponse;
+import cart.dto.order.OrderHistoryResponse;
+import cart.dto.order.OrderItemHistoryResponse;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 

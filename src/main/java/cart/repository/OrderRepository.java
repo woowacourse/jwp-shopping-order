@@ -1,8 +1,12 @@
 package cart.repository;
 
-import cart.dao.OrderCartItemDao;
-import cart.dao.OrderDao;
+import cart.dao.order.OrderCartItemDao;
+import cart.dao.order.OrderDao;
 import cart.domain.*;
+import cart.domain.order.Order;
+import cart.domain.order.OrderCartItem;
+import cart.entity.OrderCartItemEntity;
+import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

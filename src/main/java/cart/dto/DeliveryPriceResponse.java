@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Price;
+import cart.domain.value.Price;
 
 public class DeliveryPriceResponse {
     private final int originalPrice;

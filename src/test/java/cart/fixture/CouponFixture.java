@@ -2,9 +2,9 @@ package cart.fixture;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.ProductCoupon;
-import cart.domain.policy.DiscountPolicyResolver;
-import cart.domain.policy.PercentDiscountPolicy;
-import cart.domain.policy.PriceDiscountPolicy;
+import cart.domain.disount.DiscountPolicyResolver;
+import cart.domain.disount.PercentDiscountPolicy;
+import cart.domain.disount.PriceDiscountPolicy;
 
 public class CouponFixture {
     public static final Coupon PRODUCT_COUPON1_Percent_10 = new ProductCoupon(

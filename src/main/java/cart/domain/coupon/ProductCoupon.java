@@ -1,7 +1,7 @@
 package cart.domain.coupon;
 
-import cart.domain.Price;
-import cart.domain.policy.DiscountPolicy;
+import cart.domain.value.Price;
+import cart.domain.disount.DiscountPolicy;
 
 import java.util.Objects;
 

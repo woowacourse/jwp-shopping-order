@@ -1,7 +1,8 @@
 package cart.dao;
 
-import cart.domain.OrderEntity;
-import org.assertj.core.api.Assertions;
+import cart.dao.order.DbOrderDao;
+import cart.dao.order.OrderDao;
+import cart.entity.OrderEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 class DbOrderDaoTest {

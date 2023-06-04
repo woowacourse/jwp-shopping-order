@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.Price;
+import cart.domain.value.Price;
 
 public interface Coupon {
 

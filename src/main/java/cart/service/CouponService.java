@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.CouponDao;
+import cart.dao.coupon.CouponDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.Member;
 import cart.dto.CouponResponse;

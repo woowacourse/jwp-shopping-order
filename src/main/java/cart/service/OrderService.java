@@ -1,13 +1,11 @@
 package cart.service;
 
-import cart.dao.CouponBoxDao;
-import cart.dao.CouponDao;
+import cart.dao.coupon.CouponBoxDao;
 import cart.domain.*;
-import cart.dto.OrderReqeust;
+import cart.domain.order.Order;
+import cart.dto.order.OrderReqeust;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class OrderService {

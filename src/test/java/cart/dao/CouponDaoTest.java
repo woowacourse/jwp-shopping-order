@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.coupon.CouponDao;
 import cart.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

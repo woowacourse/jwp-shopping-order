@@ -1,9 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.policy.DiscountPolicy;
-import cart.domain.policy.FreeDiscountPolicy;
-import cart.domain.policy.PercentDiscountPolicy;
-import cart.domain.policy.PriceDiscountPolicy;
+import cart.domain.disount.DiscountPolicy;
 
 public class CouponResolver {
     public static Coupon of(Long id, String name, DiscountPolicy discountPolicy, String category) {

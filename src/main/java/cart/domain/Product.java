@@ -1,9 +1,10 @@
 package cart.domain;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.policy.NoDiscountPolicy;
-import cart.domain.policy.DiscountPolicy;
-import cart.domain.policy.PriceDiscountPolicy;
+import cart.domain.disount.NoDiscountPolicy;
+import cart.domain.disount.DiscountPolicy;
+import cart.domain.disount.PriceDiscountPolicy;
+import cart.domain.value.Price;
 
 public class Product {
     private Long id;
