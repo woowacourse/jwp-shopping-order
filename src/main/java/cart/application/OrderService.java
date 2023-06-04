@@ -5,6 +5,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderRepository;
+import cart.domain.pointmanager.DefaultPointManager;
 import cart.dto.OrderListResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -29,7 +30,7 @@ public class OrderService {
         final int usedPoints = orderRequest.getUsedPoints();
         final List<CartItem> orderedCartItems = cartItemService.findSelectedCartItems(member, orderRequest.getCartItemIds());
 
-        final Order order = Order.of(member, usedPoints, orderedCartItems);
+        final Order order = Order.of(member, usedPoints, orderedCartItems, new DefaultPointManager());
 
         final Long orderId = orderRepository.saveOrder(order);
         orderedCartItems.forEach(item -> cartItemService.remove(member, item.getId()));

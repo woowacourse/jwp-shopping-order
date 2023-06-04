@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.Fixture;
+import cart.domain.pointmanager.DefaultPointManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class OrderCheckoutTest {
         final List<CartItem> cartItems = List.of(Fixture.cartItem1);
 
         // when
-        final OrderCheckout actual = OrderCheckout.of(currentPoints, cartItems);
+        final OrderCheckout actual = OrderCheckout.of(currentPoints, cartItems, new DefaultPointManager());
 
         // then
         assertAll(

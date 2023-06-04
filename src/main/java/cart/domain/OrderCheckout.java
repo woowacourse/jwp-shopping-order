@@ -1,11 +1,11 @@
 package cart.domain;
 
+import cart.domain.pointmanager.PointManager;
+
 import java.util.List;
 
 public class OrderCheckout {
 
-    private static final double POINT_CHARGE_RATE = 0.1;
-    private static final double POINT_SPEND_RATE = 0.1;
     private final List<CartItem> cartItems;
     private final int totalPrice;
     private final int currentPoints;
@@ -20,11 +20,11 @@ public class OrderCheckout {
         this.availablePoints = availablePoints;
     }
 
-    public static OrderCheckout of(final int currentPoints, final List<CartItem> cartItems) {
+    public static OrderCheckout of(final int currentPoints, final List<CartItem> cartItems, final PointManager pointManager) {
         final int totalPrice = calculateTotalPrice(cartItems);
-        final int earnedPoints = (int) calculateEarnedPoints(totalPrice);
-        final int limitPoints = (int) calculateLimitPoints(totalPrice);
-        final int availablePoints = Math.min(currentPoints, limitPoints);
+        final int earnedPoints = pointManager.calculateEarnedPoints(totalPrice);
+        final int limitPoints = pointManager.calculateLimitPoints(totalPrice);
+        final int availablePoints = pointManager.calculateAvailablePoints(currentPoints, limitPoints);
 
         return new OrderCheckout(cartItems, totalPrice, currentPoints, earnedPoints, availablePoints);
     }
@@ -34,14 +34,6 @@ public class OrderCheckout {
                         cartItem.getProduct().getPrice() * cartItem.getQuantity())
                 .mapToInt(i -> i)
                 .sum();
-    }
-
-    private static double calculateEarnedPoints(final int totalPrice) {
-        return totalPrice * POINT_CHARGE_RATE;
-    }
-
-    private static double calculateLimitPoints(final int totalPrice) {
-        return totalPrice * POINT_SPEND_RATE;
     }
 
     public List<CartItem> getCartItems() {

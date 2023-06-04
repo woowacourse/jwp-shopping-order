@@ -2,8 +2,8 @@ package cart.application;
 
 import cart.Fixture;
 import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.OrderCheckout;
+import cart.domain.pointmanager.DefaultPointManager;
 import cart.dto.CheckoutResponse;
 import cart.exception.CartItemException;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +26,6 @@ class CartItemServiceTest {
     @InjectMocks
     private CartItemService cartItemService;
     @Mock
-    private ProductDao productDao;
-    @Mock
     private CartItemDao cartItemDao;
 
     @DisplayName("선택된 장바구니 상품으로 주문 확인서를 생성한다")
@@ -40,7 +38,7 @@ class CartItemServiceTest {
         final CheckoutResponse actual = cartItemService.makeCheckout(Fixture.memberA, List.of(Fixture.cartItem1.getId()));
 
         // then
-        final CheckoutResponse expected = CheckoutResponse.of(OrderCheckout.of(Fixture.memberA.getPoints(), List.of(Fixture.cartItem1)));
+        final CheckoutResponse expected = CheckoutResponse.of(OrderCheckout.of(Fixture.memberA.getPoints(), List.of(Fixture.cartItem1), new DefaultPointManager()));
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 

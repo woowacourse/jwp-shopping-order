@@ -6,6 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.OrderCheckout;
 import cart.domain.Product;
+import cart.domain.pointmanager.DefaultPointManager;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -67,7 +68,7 @@ public class CartItemService {
     public CheckoutResponse makeCheckout(final Member member, final List<Long> ids) {
         final List<CartItem> checkedCartItems = findSelectedCartItems(member, ids);
 
-        final OrderCheckout orderCheckout = OrderCheckout.of(member.getPoints(), checkedCartItems);
+        final OrderCheckout orderCheckout = OrderCheckout.of(member.getPoints(), checkedCartItems, new DefaultPointManager());
 
         return CheckoutResponse.of(orderCheckout);
     }

@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.pointmanager.PointManager;
 import cart.exception.OrderException;
 import cart.exception.PointException;
 
@@ -7,8 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Order {
-
-    public static final double POINT_CHARGE_RATE = 0.1;
+    
     private final Long id;
     private final Long memberId;
     private final List<OrderItem> orderItems;
@@ -33,14 +33,16 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public static Order of(final Member member, final int usedPoints, final List<CartItem> cartItems) {
+    public static Order of(final Member member, final int usedPoints, final List<CartItem> cartItems, final PointManager pointManager) {
         validateCartItems(cartItems);
-        validatePoint(member.getPoints(), usedPoints);
 
         final List<OrderItem> orderItems = cartItems.stream().map(OrderItem::of).collect(Collectors.toList());
         final int totalPrice = calculateTotalPrice(orderItems);
+
+        validatePoint(totalPrice, member.getPoints(), usedPoints, pointManager);
+
         final int payPrice = totalPrice - usedPoints;
-        final int earnedPoints = (int) calculateEarnedPoints(totalPrice);
+        final int earnedPoints = pointManager.calculateEarnedPoints(totalPrice);
 
         return new Order(member.getId(), orderItems, totalPrice, payPrice, earnedPoints, usedPoints);
     }
@@ -51,12 +53,6 @@ public class Order {
         }
     }
 
-    private static void validatePoint(final int memberPoint, final int usedPoints) {
-        if (memberPoint < usedPoints) {
-            throw new PointException.NotEnough(memberPoint, usedPoints);
-        }
-    }
-
     private static int calculateTotalPrice(final List<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(orderItem -> orderItem.getPrice() * orderItem.getQuantity())
@@ -64,8 +60,14 @@ public class Order {
                 .sum();
     }
 
-    private static double calculateEarnedPoints(final int totalPrice) {
-        return totalPrice * POINT_CHARGE_RATE;
+    private static void validatePoint(final int totalPrice, final int memberPoint, final int usedPoints, final PointManager pointManager) {
+        final int limitPoints = pointManager.calculateLimitPoints(totalPrice);
+        if (limitPoints < usedPoints) {
+            throw new PointException.BiggerThenLimit(limitPoints, usedPoints);
+        }
+        if (memberPoint < usedPoints) {
+            throw new PointException.NotEnough(memberPoint, usedPoints);
+        }
     }
 
     public Long getId() {

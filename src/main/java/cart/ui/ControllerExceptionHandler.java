@@ -61,6 +61,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({OrderException.EmptyOrder.class,
             PointException.NotEnough.class,
+            PointException.BiggerThenLimit.class,
             PointException.NegativePoint.class})
     public ResponseEntity<ExceptionResponse> handleException(final RuntimeException ex) {
         logger.info("", ex);
