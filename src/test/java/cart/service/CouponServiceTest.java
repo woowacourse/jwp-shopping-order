@@ -42,13 +42,13 @@ class CouponServiceTest {
 
     @Test
     void 멤버의_사용_가능한_모든_쿠폰을_조회한다() {
-        given(memberCouponRepository.findNotExpiredAllByMember(밀리))
+        given(memberCouponRepository.findNotExpired(밀리))
                 .willReturn(List.of(
                         밀리_쿠폰_10퍼센트,
                         밀리_쿠폰_1000원
                 ));
 
-        MemberCouponsResponse couponsResponse = couponService.findAllByMember(밀리);
+        MemberCouponsResponse couponsResponse = couponService.findAll(밀리);
 
         assertThat(couponsResponse.getFixedCoupon()).hasSize(1);
         assertThat(couponsResponse.getRateCoupon()).hasSize(1);

@@ -44,10 +44,10 @@ public class OrderService {
 
     public Long register(OrderRequest orderRequest, Member member) {
         List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
-                .map(this::getCartItem)
+                .map(this::findCartItem)
                 .collect(Collectors.toList());
 
-        MemberCoupon memberCoupon = getMemberCoupon(orderRequest.getCouponId(), member);
+        MemberCoupon memberCoupon = findMemberCoupon(orderRequest.getCouponId(), member);
 
         Order order = Order.of(member, cartItems, orderRequest.getDeliveryFee(), memberCoupon);
 
@@ -64,7 +64,7 @@ public class OrderService {
         return savedOrder.getId();
     }
 
-    private MemberCoupon getMemberCoupon(Long couponId, Member member) {
+    private MemberCoupon findMemberCoupon(Long couponId, Member member) {
         if (couponId == -1L) {
             return new MemberCoupon(member, Coupon.NONE);
         }
@@ -81,7 +81,7 @@ public class OrderService {
         }
     }
 
-    private CartItem getCartItem(Long cartItemId) {
+    private CartItem findCartItem(Long cartItemId) {
         return cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
     }

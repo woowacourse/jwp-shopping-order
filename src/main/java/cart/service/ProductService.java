@@ -31,7 +31,7 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public Long registerProduct(ProductRequest productRequest) {
+    public Long create(ProductRequest productRequest) {
         Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
@@ -44,10 +44,10 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductException(ExceptionType.NOT_FOUND_PRODUCT));
         product.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productRepository.updateProduct(product);
+        productRepository.update(product);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteById(Long productId) {
         productRepository.deleteProduct(productId);
     }
 }

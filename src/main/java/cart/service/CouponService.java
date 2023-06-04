@@ -23,21 +23,21 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public MemberCouponsResponse findAllByMember(Member member) {
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpiredAllByMember(member);
+    public MemberCouponsResponse findAll(Member member) {
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpired(member);
         return MemberCouponsResponse.from(memberCoupons);
     }
 
     public void issueByOrderPrice(Money totalOrderPrice, Member member) {
-        List<IssuableCoupon> issuableCoupons = getSatisfyIssuableCoupons(totalOrderPrice);
+        List<IssuableCoupon> issuableCoupons = findSatisfyIssuableCoupons(totalOrderPrice);
         Money money = getMaxIssueConditionPrice(issuableCoupons);
-        List<MemberCoupon> memberCoupons = getSatisfyMemberCoupon(member, issuableCoupons, money);
+        List<MemberCoupon> memberCoupons = findSatisfyMemberCoupon(member, issuableCoupons, money);
         if (!memberCoupons.isEmpty()) {
             memberCouponRepository.saveAll(memberCoupons);
         }
     }
 
-    private List<IssuableCoupon> getSatisfyIssuableCoupons(Money totalOrderPrice) {
+    private List<IssuableCoupon> findSatisfyIssuableCoupons(Money totalOrderPrice) {
         return couponRepository.findAllIssuable().stream()
                 .filter(coupon -> coupon.isSatisfied(totalOrderPrice))
                 .collect(Collectors.toList());
@@ -50,8 +50,8 @@ public class CouponService {
                 .orElse(Money.ZERO);
     }
 
-    private List<MemberCoupon> getSatisfyMemberCoupon(Member member, List<IssuableCoupon> issuableCoupons,
-                                                      Money money) {
+    private List<MemberCoupon> findSatisfyMemberCoupon(Member member, List<IssuableCoupon> issuableCoupons,
+                                                       Money money) {
         return issuableCoupons.stream()
                 .filter(issuableCoupon -> issuableCoupon.getMoney().equals(money))
                 .map(IssuableCoupon::getCoupon)

@@ -35,9 +35,9 @@ public class ProductRepository {
         return new Product(id, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public void updateProduct(Product product) {
+    public void update(Product product) {
         ProductEntity productEntity = toEntity(product);
-        productDao.updateProduct(productEntity);
+        productDao.update(productEntity);
     }
 
     private ProductEntity toEntity(Product product) {

@@ -105,7 +105,7 @@ class CartItemServiceTest {
                 ));
 
         // when
-        List<CartItemResponse> responses = cartItemService.findByMember(member);
+        List<CartItemResponse> responses = cartItemService.findBy(member);
 
         // then
         assertThat(responses).map(CartItemResponse::getId)

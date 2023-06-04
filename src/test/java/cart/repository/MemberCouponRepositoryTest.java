@@ -121,7 +121,7 @@ class MemberCouponRepositoryTest {
                 .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
 
         // when
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpiredAllByMember(밀리);
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpired(밀리);
 
         // then
         assertThat(memberCoupons).hasSize(2);

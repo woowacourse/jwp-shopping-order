@@ -28,20 +28,20 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderRequest orderRequest,
-                                            @AuthPrincipal Member member) {
+    public ResponseEntity<Void> register(@RequestBody OrderRequest orderRequest,
+                                         @AuthPrincipal Member member) {
         Long id = orderService.register(orderRequest, member);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailResponse> getOrder(@PathVariable Long id, @AuthPrincipal Member member) {
+    public ResponseEntity<OrderDetailResponse> find(@PathVariable Long id, @AuthPrincipal Member member) {
         OrderDetailResponse response = orderService.findById(id, member);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrders(@AuthPrincipal Member member) {
+    public ResponseEntity<List<OrderResponse>> findAll(@AuthPrincipal Member member) {
         List<OrderResponse> responses = orderService.findAll(member);
         return ResponseEntity.ok().body(responses);
     }

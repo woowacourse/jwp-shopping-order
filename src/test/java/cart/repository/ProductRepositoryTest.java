@@ -84,10 +84,10 @@ class ProductRepositoryTest {
         Product updateProduct = new Product(1L, "밀리", BigDecimal.valueOf(10000), "http://millie.com");
 
         // when
-        productRepository.updateProduct(updateProduct);
+        productRepository.update(updateProduct);
 
         // then
-        verify(productDao, times(1)).updateProduct(any());
+        verify(productDao, times(1)).update(any());
     }
 
     @Test
