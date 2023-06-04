@@ -22,7 +22,7 @@ class CartItemTest {
         CartItem cartItem = new CartItem(product, member);
 
         // expect
-        assertDoesNotThrow(() -> cartItem.checkOwner(member));
+        assertDoesNotThrow(() -> cartItem.validateOwner(member));
     }
 
     @Test
@@ -36,7 +36,7 @@ class CartItemTest {
         Member other = new Member("other@email.com", "password");
 
         // then
-        assertThatThrownBy(() -> cartItem.checkOwner(other))
+        assertThatThrownBy(() -> cartItem.validateOwner(other))
                 .isInstanceOf(CartItemException.class);
     }
 

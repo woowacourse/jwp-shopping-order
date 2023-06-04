@@ -55,7 +55,7 @@ public class Order {
 
     private static void validateOwner(Member member, List<CartItem> cartItems) {
         for (CartItem cartItem : cartItems) {
-            cartItem.checkOwner(member);
+            cartItem.validateOwner(member);
         }
     }
 
@@ -80,7 +80,7 @@ public class Order {
         return beforeDiscountPrice.subtract(coupon.discountPrice(beforeDiscountPrice).getValue());
     }
 
-    public void checkOwner(Member member) {
+    public void validateOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
         }

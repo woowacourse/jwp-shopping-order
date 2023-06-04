@@ -23,7 +23,7 @@ public class CartItem {
         this.item = item;
     }
 
-    public void checkOwner(Member member) {
+    public void validateOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new CartItemException(ExceptionType.NO_AUTHORITY_CART_ITEM);
         }

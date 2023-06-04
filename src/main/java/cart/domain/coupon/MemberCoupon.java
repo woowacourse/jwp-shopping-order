@@ -37,7 +37,7 @@ public class MemberCoupon {
     public void check(Member member) {
         if (coupon.isCoupon()) {
             checkExpiredDate();
-            checkOwner(member);
+            validateOwner(member);
         }
     }
 
@@ -51,7 +51,7 @@ public class MemberCoupon {
         return !expiredDate.isBefore(LocalDate.now());
     }
 
-    private void checkOwner(Member member) {
+    private void validateOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new CouponException(ExceptionType.NO_AUTHORITY_COUPON);
         }
