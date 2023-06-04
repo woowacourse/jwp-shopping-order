@@ -1,9 +1,9 @@
 package cart.dto.cartitem;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 public class CartItemQuantityUpdateRequest {
-    @Positive(message = "변경할 장바구니 상품의 수량은 1이상이어야 합니다.")
+    @PositiveOrZero(message = "장바구니 상품의 수량은 0 이상의 값이어야 합니다.")
     private int quantity;
 
     public CartItemQuantityUpdateRequest() {
