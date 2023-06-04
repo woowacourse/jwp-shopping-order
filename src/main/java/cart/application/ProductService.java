@@ -8,6 +8,7 @@ import cart.dto.response.ProductResponse;
 import cart.entity.ProductEntity;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +30,13 @@ public class ProductService {
 		return productDao.createProduct(product);
 	}
 
+	@Transactional(readOnly = true)
 	public List<ProductResponse> getAllProducts() {
 		List<Product> products = productDao.getAllProducts();
 		return products.stream().map(ProductResponse::of).collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public ProductResponse getProductById(Long productId) {
 		final ProductEntity productEntity = productDao.getProductById(productId);
 		final Product product = Product.from(productEntity);

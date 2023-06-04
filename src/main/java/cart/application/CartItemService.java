@@ -34,11 +34,13 @@ public class CartItemService {
 		return cartItemDao.save(new CartItem(member, product));
 	}
 
+	@Transactional(readOnly = true)
 	public List<CartItemResponse> findByMember(Member member) {
 		List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
 		return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public CartItemResponse findById(Long cartItemId) {
 		final CartItem cartItem = cartItemDao.findById(cartItemId);
 		return CartItemResponse.of(cartItem);
