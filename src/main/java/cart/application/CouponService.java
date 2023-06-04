@@ -6,6 +6,7 @@ import cart.domain.Amount;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.dto.AvailableCouponResponse;
 import cart.dto.CouponResponse;
 import cart.dto.SaveCouponRequest;
 import java.util.List;
@@ -43,5 +44,16 @@ public class CouponService {
 
   public void issueCoupon(final Member member, final Long couponId) {
     memberCouponDao.save(member.getId(), couponId);
+  }
+
+  public List<AvailableCouponResponse> findAvailableCoupons(final Member member, final int totalAmount) {
+    final List<MemberCoupon> availableMemberCoupons = memberCouponDao.findAvailableCouponsByMemberIdAndTotalAmount(
+        member.getId(), totalAmount);
+
+    return availableMemberCoupons.stream()
+        .map(memberCoupon -> {
+          final Coupon coupon = memberCoupon.getCoupon();
+          return new AvailableCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
+        }).collect(Collectors.toList());
   }
 }

@@ -5,6 +5,10 @@ public class Member {
     private String email;
     private String password;
 
+    public Member(String email, String password) {
+        this(null, email, password);
+    }
+
     public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
