@@ -2,12 +2,7 @@ package cart.controller;
 
 import cart.config.auth.Auth;
 import cart.domain.Order;
-import cart.domain.Price;
-import cart.domain.coupon.Coupon;
 import cart.domain.Member;
-import cart.domain.coupon.Coupons;
-import cart.domain.coupon.ProductCoupon;
-import cart.domain.coupon.SingleCoupon;
 import cart.dto.*;
 import cart.service.CartItemService;
 import cart.service.CouponService;
@@ -16,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
@@ -59,7 +52,7 @@ public class CartItemController {
 
     @GetMapping("/coupons")
     public ResponseEntity<OrderResponse> applyCoupons(@Auth Member member, @RequestParam(name = "id") List<Long> couponIds) {
-        Order order = cartItemService.applyCoupons(member, couponIds);
+        Order order = cartItemService.prepareOrder(member, couponIds);
         return ResponseEntity.ok().body(OrderResponse.from(order));
     }
 

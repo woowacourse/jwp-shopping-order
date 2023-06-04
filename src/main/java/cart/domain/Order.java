@@ -15,7 +15,7 @@ public class Order {
 
     public Order(List<OrderCartItem> orderCartItems, Coupon coupon) {
         this.orderCartItems = orderCartItems;
-        if (!coupon.getCategory().equals(SingleCoupon.CATEGORY)) {
+        if (coupon != null && !coupon.getCategory().equals(SingleCoupon.CATEGORY)) {
             throw new IllegalArgumentException("지원하지 않는 쿠폰입니다.");
         }
         this.coupon = coupon;

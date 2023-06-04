@@ -9,7 +9,7 @@ public class OrderCartItem {
 
     public OrderCartItem(CartItem cartItem, Coupon coupon) {
         this.cartItem = cartItem;
-        if (!coupon.getCategory().equals(ProductCoupon.CATEGORY)) {
+        if (coupon != null && !coupon.getCategory().equals(ProductCoupon.CATEGORY)) {
             throw new IllegalArgumentException("지원하지 않는 쿠폰입니다.");
         }
         this.coupon = coupon;

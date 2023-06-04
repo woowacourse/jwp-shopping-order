@@ -2,17 +2,12 @@ package cart.controller;
 
 import cart.config.auth.Auth;
 import cart.domain.Member;
-import cart.service.CouponService;
+import cart.dto.OrderReqeust;
 import cart.service.PaymentsService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/payments")
@@ -23,4 +18,9 @@ public class PaymentsController {
         this.paymentsService = paymentsService;
     }
 
+    @PostMapping
+    public ResponseEntity<Void> payment(@Auth Member member, @RequestBody OrderReqeust orderReqeust) {
+        Long id = paymentsService.order(member, orderReqeust);
+        return ResponseEntity.created(URI.create("/payments/" + id)).build();
+    }
 }

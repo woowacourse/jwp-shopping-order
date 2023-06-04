@@ -1,36 +1,31 @@
 package cart.service;
 
-import cart.dao.CartItemDao;
-import cart.dao.CouponDao;
 import cart.domain.*;
-import cart.dto.CouponResponse;
-import cart.dto.ProductResponse;
+import cart.dto.OrderReqeust;
+import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PaymentsService {
-    private final CouponDao couponDao;
-    private final CartItemDao cartItemDao;
+    private final CartItemService cartItemService;
 
-    public PaymentsService(CouponDao couponDao, CartItemDao cartItemDao) {
-        this.couponDao = couponDao;
-        this.cartItemDao = cartItemDao;
+    private final OrderRepository orderRepository;
+
+    public PaymentsService(CartItemService cartItemService, OrderRepository orderRepository) {
+        this.cartItemService = cartItemService;
+        this.orderRepository = orderRepository;
     }
 
-    public void applyCoupons(Member member){
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        List<Product> products = cartItems.stream()
-                .map(cartItem -> cartItem.getProduct())
-                .collect(Collectors.toList());
+    public Long order(Member member, OrderReqeust orderReqeust) {
+        Order order = cartItemService.order(member, orderReqeust);
+        Long id = orderRepository.insert(member, order);
 
+        for (Long cartItemId : orderReqeust.getCartItemIds()) {
+            cartItemService.remove(member, cartItemId);
+        }
 
-
-
-
+        return id;
     }
-
 }
+
 
