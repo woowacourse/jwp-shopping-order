@@ -21,6 +21,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static cart.TestFeatures.회원2;
@@ -30,6 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @JdbcTest
 @Sql({"/schema.sql", "/data.sql", "/member2_data.sql"})
 class PaymentServiceTest {
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -44,6 +48,7 @@ class PaymentServiceTest {
     private MemberRewardPointDao memberRewardPointDao;
     private OrderMemberUsedPointDao orderMemberUsedPointDao;
     private CartItemDao cartItemDao;
+    private MemberDao memberDao;
 
     private PaymentService paymentService;
 
@@ -74,10 +79,10 @@ class PaymentServiceTest {
         );
 
         // when
-        paymentService.createPurchaseOrder(member, purchaseOrderRequest);
+        Long purchaseOrderId = paymentService.createPurchaseOrder(member, purchaseOrderRequest);
 
         // then
-        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(7L);
+        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(purchaseOrderId);
         List<PurchaseOrderItem> purchaseOrderItems = purchaseOrderItemDao.findAllByPurchaseOrderId(purchaseOrderInfo.getId());
         Point point = memberRewardPointDao.getPointByOrderId(purchaseOrderInfo.getId());
         List<Point> points = memberRewardPointDao.getAllByMemberId(회원2.getId());
@@ -90,15 +95,16 @@ class PaymentServiceTest {
                 () -> assertThat(purchaseOrderItems.size()).isEqualTo(2),
                 () -> assertThat(point).usingRecursiveComparison()
                                        .ignoringFields("createdAt", "expiredAt")
-                                       .isEqualTo(new Point(7L, 7_520, null, null)),
+                                       .isEqualTo(new Point(8L, 7_520, null, null)),
                 () -> assertThat(points).usingRecursiveFieldByFieldElementComparator()
                                         .usingRecursiveFieldByFieldElementComparatorIgnoringFields("createdAt", "expiredAt")
                                         .contains(new Point(4L, 0, null, null),
                                                 new Point(5L, 200, null, null),
-                                                new Point(6L, 1_000, null, null)),
+                                                new Point(6L, 1_000, null, null),
+                                                new Point(7L, 1_200, null, null)),
                 () -> assertThat(usedPoints).usingRecursiveFieldByFieldElementComparator()
-                                            .contains(new UsedPoint(4L, 4L, 500),
-                                                    new UsedPoint(5L, 5L, 500)),
+                                            .contains(new UsedPoint(7L, 4L, 500),
+                                                    new UsedPoint(8L, 5L, 500)),
                 () -> assertThat(cartItems.size()).isEqualTo(0)
         );
     }
@@ -136,6 +142,66 @@ class PaymentServiceTest {
 
         // then
         assertThatThrownBy(() -> paymentService.createPurchaseOrder(member, purchaseOrderRequest))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("주문을 취소할 수 있다 - 취소가 가능한 경우")
+    @Test
+    void deleteOrder() {
+        // given
+        UsedPoint 주문_사용_포인트1 = new UsedPoint(4L, 4L, 500);
+        UsedPoint 주문_사용_포인트2 = new UsedPoint(5L, 5L, 400);
+        UsedPoint 주문_사용_포인트3 = new UsedPoint(6L, 6L, 1100);
+
+        Point 이전_주문_적립_포인트1 = new Point(4L, 1000, LocalDateTime.parse("2023-05-20 12:12:12", formatter), LocalDateTime.parse("2023-05-25 12:12:12", formatter));
+        Point 이전_주문_적립_포인트2 = new Point(5L, 1100, LocalDateTime.parse("2023-05-18 12:12:12", formatter), LocalDateTime.parse("2023-05-29 12:12:12", formatter));
+        Point 이전_주문_적립_포인트3 = new Point(6L, 2100, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2023-05-30 12:12:12", formatter));
+
+        Point 취소한_주문_적립_포인트 = new Point(7L, 1100, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2023-06-15 12:12:12", formatter));
+
+        PurchaseOrderInfo 취소한_주문 = new PurchaseOrderInfo(7L, 회원2, LocalDateTime.parse("2023-05-31 17:11:12", formatter), 21_000, 2_000, OrderStatus.CANCELLED);
+
+        Member member = 회원2;
+        Long orderId = 7L;
+
+        // when
+        paymentService.deleteOrder(member, orderId);
+
+        assertAll(
+                () -> assertThat(orderMemberUsedPointDao.getAllUsedPointByOrderId(orderId))
+                        .usingRecursiveFieldByFieldElementComparator()
+                        .doesNotContain(주문_사용_포인트1, 주문_사용_포인트2, 주문_사용_포인트3),
+                () -> assertThat(memberRewardPointDao.getAllByMemberId(member.getId()))
+                        .usingRecursiveFieldByFieldElementComparator()
+                        .contains(이전_주문_적립_포인트1, 이전_주문_적립_포인트2, 이전_주문_적립_포인트3)
+                        .doesNotContain(취소한_주문_적립_포인트),
+                () -> assertThat(purchaseOrderDao.findById(orderId))
+                        .usingRecursiveComparison()
+                        .isEqualTo(취소한_주문)
+        );
+    }
+
+    @DisplayName("주문을 취소할 수 있다 - 이미 취소가 된 경우")
+    @Test
+    void alreadyDeleteOrder() {
+        // given
+        Member member = 회원2;
+        Long orderId = 8L;
+
+        // then
+        assertThatThrownBy(() -> paymentService.deleteOrder(member, orderId))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("주문을 취소할 수 있다 - 해당 주문에 대한 적립 포인트를 사용한 경우")
+    @Test
+    void deleteUsedPointOrder() {
+        // given
+        Member member = 회원2;
+        Long orderId = 5L;
+
+        // then
+        assertThatThrownBy(() -> paymentService.deleteOrder(member, orderId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
