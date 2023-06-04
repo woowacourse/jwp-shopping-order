@@ -12,13 +12,13 @@ public class Order {
     private final Amount deliveryAmount;
     private final String address;
 
-    public Order(final List<OrderItem> orderItems, final MemberCoupon coupon, final Amount totalProductAmount, final Amount deliveryAmount, final String address) {
+    public Order(final List<OrderItem> orderItems, final MemberCoupon coupon, final Amount totalProductAmount,
+                 final Amount deliveryAmount, final String address) {
         this(null, orderItems, coupon, totalProductAmount, deliveryAmount, address);
     }
 
-    public Order(final Long id, final List<OrderItem> orderItems, final MemberCoupon coupon, final Amount totalProductAmount,
-                 final Amount deliveryAmount,
-                 final String address) {
+    public Order(final Long id, final List<OrderItem> orderItems, final MemberCoupon coupon,
+                 final Amount totalProductAmount, final Amount deliveryAmount, final String address) {
         this.id = id;
         this.orderItems = orderItems;
         this.coupon = coupon;

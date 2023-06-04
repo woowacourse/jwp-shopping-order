@@ -1,7 +1,6 @@
 package cart.domain.vo;
 
 import cart.exception.BusinessException;
-import java.util.List;
 import java.util.Objects;
 
 public class Amount {
@@ -21,20 +20,6 @@ public class Amount {
 
     public static Amount of(final int value) {
         return new Amount(value);
-    }
-
-    public static Amount of(final List<Amount> amounts) {
-        return Amount.of(amounts.stream()
-            .mapToInt(Amount::getValue)
-            .sum());
-    }
-
-    public Amount minus(final Amount amount) {
-        return new Amount(value - amount.value);
-    }
-
-    public Amount multiply(final int quantity) {
-        return new Amount(value * quantity);
     }
 
     public boolean isLessThan(final Amount minAmount) {
