@@ -109,7 +109,7 @@ public class CartItemDao {
             return new CartItem(cartItemId, quantity, product, member, checked);
         }, id);
         if (cartItems.isEmpty()) {
-            throw new CartItemNotFoundException(id);
+            throw new CartItemNotFoundException();
         }
         return cartItems.get(0);
     }
@@ -118,7 +118,7 @@ public class CartItemDao {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         final int affected = jdbcTemplate.update(sql, id);
         if (affected == 0) {
-            throw new CartItemNotFoundException(id);
+            throw new CartItemNotFoundException();
         }
     }
 
@@ -126,7 +126,7 @@ public class CartItemDao {
         String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
         final int affected = jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), cartItem.getId());
         if (affected == 0) {
-            throw new CartItemNotFoundException(cartItem.getId());
+            throw new CartItemNotFoundException();
         }
     }
 

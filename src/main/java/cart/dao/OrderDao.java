@@ -72,7 +72,7 @@ public class OrderDao {
         String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
         final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, orderRowMapper, id, memberId);
         if (orderEntities.isEmpty()) {
-            throw new OrderNotFoundException(id);
+            throw new OrderNotFoundException();
         }
         return orderEntities.get(0);
     }

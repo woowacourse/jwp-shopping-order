@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.exception.notfound.MemberNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,14 +21,20 @@ public class MemberDao {
 
     public Member getMemberById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
+        if (members.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+        return members.get(0);
     }
 
     public Member getMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
+        if (members.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+        return members.get(0);
     }
 
     public void updateMember(Member member) {

@@ -41,7 +41,7 @@ public class ProductDao {
             return new Product(productId, name, price, imageUrl);
         }, productId);
         if (product.isEmpty()) {
-            throw new ProductNotFoundException(productId);
+            throw new ProductNotFoundException();
         }
         return product.get(0);
     }
@@ -69,7 +69,7 @@ public class ProductDao {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         final int affected = jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
         if (affected == 0) {
-            throw new ProductNotFoundException(productId);
+            throw new ProductNotFoundException();
         }
     }
 
@@ -77,7 +77,7 @@ public class ProductDao {
         String sql = "DELETE FROM product WHERE id = ?";
         final int affected = jdbcTemplate.update(sql, productId);
         if (affected == 0) {
-            throw new ProductNotFoundException(productId);
+            throw new ProductNotFoundException();
         }
     }
 }

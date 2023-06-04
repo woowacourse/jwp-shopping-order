@@ -1,7 +1,6 @@
 package cart.exception;
 
 import cart.exception.notfound.NotFoundException;
-import cart.exception.notfound.NotFoundResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,8 +25,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<NotFoundResponse> handleProductNotFoundException(NotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new NotFoundResponse(exception.getId(), exception.getName()));
+    public ResponseEntity<String> handleProductNotFoundException(NotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getClass().getSimpleName());
     }
 
     @ExceptionHandler({
