@@ -24,15 +24,15 @@ public class MemberCouponDao {
 
     private static final RowMapper<MemberCoupon> memberCouponRowMapper = ((rs, rowNum) ->
             new MemberCoupon(
-                    rs.getLong("member_coupon.id"),
-                    rs.getLong("member_coupon.member_id"),
+                    rs.getLong("id"),
+                    rs.getLong("member_id"),
                     new Coupon(
                             rs.getLong("coupon.id"),
                             rs.getString("coupon.name"),
-                            CouponType.from(rs.getString("type")),
-                            rs.getInt("discount_amount")
+                            CouponType.from(rs.getString("coupon.type")),
+                            rs.getInt("coupon.discount_amount")
                     ),
-                    rs.getBoolean("member_coupon.used")
+                    rs.getBoolean("used")
             ));
 
     public MemberCouponDao(JdbcTemplate jdbcTemplate) {
