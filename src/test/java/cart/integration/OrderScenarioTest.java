@@ -107,7 +107,7 @@ public class OrderScenarioTest extends ScenarioFixture {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(사용자1.getEmail(), 사용자1.getPassword())
                 .when()
-                .get("/cart-items/coupon?id={coupon1},{coupon2}", 전체10프로할인쿠폰.getId(), 배송비무료쿠폰.getId())
+                .get("/cart-items/coupon/{coupon1},{coupon2}", 전체10프로할인쿠폰.getId(), 배송비무료쿠폰.getId())
                 .then().log().all()
                 .extract();
 
