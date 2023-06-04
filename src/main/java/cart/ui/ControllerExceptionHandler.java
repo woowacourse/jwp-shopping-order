@@ -1,8 +1,9 @@
 package cart.ui;
 
 import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
 import cart.exception.bill.BillException;
+import cart.exception.cart.CartItemNotFoundException;
+import cart.exception.cart.IllegalMemberException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    @ExceptionHandler(IllegalMemberException.class)
+    public ResponseEntity<Void> handleException(IllegalMemberException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
@@ -37,5 +38,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> handleBillException(BillException exception) {
         String errorMessage = exception.getMessage();
         return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<String> handleCartItemNotFoundException(CartItemNotFoundException exception) {
+        String errorMessage = exception.getMessage();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
 }

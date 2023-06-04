@@ -3,12 +3,12 @@ package cart.domain.cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.domain.value.Quantity;
-import cart.exception.CartItemException;
+import cart.exception.cart.IllegalMemberException;
 
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
+    private final Long id;
     private Quantity quantity;
     private final Product product;
     private final Member member;
@@ -46,7 +46,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new IllegalMemberException();
         }
     }
 

@@ -5,6 +5,7 @@ import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.entity.CartItemEntity;
+import cart.exception.cart.CartItemNotFoundException;
 import cart.repository.member.MemberRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.List;
 public class CartItemRepository {
 
     private final ProductRepository productRepository;
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final CartItemDao cartItemDao;
 
     public CartItemRepository(final ProductRepository productRepository, final MemberRepository memberRepository, final CartItemDao cartItemDao) {
@@ -40,7 +41,7 @@ public class CartItemRepository {
     }
 
     public CartItem findById(final Long id) {
-        CartItemEntity cartItemEntity = cartItemDao.findById(id).orElseThrow();
+        CartItemEntity cartItemEntity = cartItemDao.findById(id).orElseThrow(CartItemNotFoundException::new);
         Product product = productRepository.findById(cartItemEntity.getProductId());
         Member member = memberRepository.findById(cartItemEntity.getMemberId());
         return makeCartItem(cartItemEntity, product, member);
