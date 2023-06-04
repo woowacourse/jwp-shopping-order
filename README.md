@@ -1,5 +1,9 @@
 # jwp-shopping-order
 
+### 로컬 환경 실행 방법
+src/main/resources 의 localenv.md 파일 이름을   
+external.properties 로 변경 후 실행
+
 ### API 명세
 [API 명세](API.md)
 
