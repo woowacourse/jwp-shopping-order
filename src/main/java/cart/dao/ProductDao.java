@@ -21,7 +21,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAllProducts() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
@@ -33,7 +33,7 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Product findProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         List<Product> products = jdbcTemplate.query(sql, (rs, rowNum) -> {
             String name = rs.getString("name");

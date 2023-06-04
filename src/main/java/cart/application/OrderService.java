@@ -78,7 +78,7 @@ public class OrderService {
                 .map(cartItemRequest -> new CartItem(
                         cartItemRequest.getId(),
                         cartItemRequest.getQuantity(),
-                        productDao.getProductById(cartItemRequest.getProductId()),
+                        productDao.findProductById(cartItemRequest.getProductId()),
                         member,
                         true
                 )).collect(Collectors.toList());

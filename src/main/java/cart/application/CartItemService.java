@@ -40,7 +40,7 @@ public class CartItemService {
     }
 
     public Long add(final Member member, final CartItemAddRequest cartItemAddRequest) {
-        Product newProduct = productDao.getProductById(cartItemAddRequest.getProductId());
+        Product newProduct = productDao.findProductById(cartItemAddRequest.getProductId());
         CartItem cartItem = new CartItem(member, newProduct);
         return cartItemDao.save(cartItem);
     }

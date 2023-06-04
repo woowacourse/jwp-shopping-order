@@ -30,14 +30,14 @@ public class ProductApiController {
 
     @Operation(summary = "상품 전체 조회")
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> findAllProducts() {
+        return ResponseEntity.ok(productService.findAllProducts());
     }
 
     @Operation(summary = "상품 단건 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
     @Operation(summary = "상품 생성")

@@ -30,13 +30,13 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
+    public Member findMemberById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
+    public Member findMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
         return members.isEmpty() ? null : members.get(0);
@@ -57,7 +57,7 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }

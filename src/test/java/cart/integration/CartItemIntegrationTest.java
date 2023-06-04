@@ -30,7 +30,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private Long productId;
     private Long productId2;
     private Member member;
-    private Member member2;
 
     @BeforeEach
     void setUp() {
@@ -39,8 +38,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.findMemberById(1L);
     }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")

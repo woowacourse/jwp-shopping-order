@@ -33,7 +33,7 @@ public class CartItemApiController {
 
     @Operation(summary = "장바구니 상품 조회")
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Member member) {
+    public ResponseEntity<List<CartItemResponse>> findCartItems(@Auth Member member) {
         return ResponseEntity.ok(cartItemService.findAllByMember(member));
     }
 

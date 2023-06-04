@@ -21,7 +21,7 @@ class OrderServiceTest extends ServiceTest {
         ));
         final Long id = orderService.createOrder(request, new Member(1L, "a@a.com", "1234", 1000));
         final OrderResponse response = orderService.findById(id, new Member(1L, "a@a.com", "1234", 1000));
-        final Member member = memberDao.getMemberById(1L);
+        final Member member = memberDao.findMemberById(1L);
 
         assertAll(
                 () -> assertThat(member.getPoints()).isEqualTo(10780),

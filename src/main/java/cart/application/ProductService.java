@@ -23,13 +23,13 @@ public class ProductService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+    public List<ProductResponse> findAllProducts() {
+        List<Product> products = productDao.findAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+    public ProductResponse findProductById(Long productId) {
+        Product product = productDao.findProductById(productId);
         return ProductResponse.of(product);
     }
 
