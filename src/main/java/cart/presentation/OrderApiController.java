@@ -31,7 +31,7 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getAllOrders(final Member member) {
-        List<OrderResponse> orderResponses = orderService.getAllOrdersBy(member.getId());
+        List<OrderResponse> orderResponses = orderService.getAllOrderBy(member.getId());
 
         return ResponseEntity.ok(orderResponses);
     }
