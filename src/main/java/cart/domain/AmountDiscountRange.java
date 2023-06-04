@@ -17,8 +17,12 @@ public enum AmountDiscountRange {
 
     public static int findDiscountAmount(final int totalPrice) {
         return Arrays.stream(AmountDiscountRange.values())
-                .filter(amountDiscountRange -> amountDiscountRange.lowerBoundPrice <= totalPrice)
+                .filter(amountDiscountRange -> amountDiscountRange.checkDiscountablePrice(totalPrice))
                 .mapToInt(amountDiscountRange -> amountDiscountRange.discountAmount)
                 .max().orElse(0);
+    }
+
+    private boolean checkDiscountablePrice(final int totalPrice) {
+        return lowerBoundPrice <= totalPrice;
     }
 }
