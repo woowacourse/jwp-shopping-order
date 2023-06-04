@@ -4,11 +4,11 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.cart.CartItemCreateResponse;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +28,9 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    public CartItemCreateResponse add(Member member, CartItemRequest cartItemRequest) {
+        final Long cartItemId = cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return new CartItemCreateResponse(cartItemId);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
