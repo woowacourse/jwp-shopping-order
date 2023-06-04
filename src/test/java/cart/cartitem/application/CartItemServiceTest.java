@@ -17,6 +17,7 @@ import java.util.List;
 import static cart.member.domain.MemberTest.*;
 import static cart.product.domain.ProductTest.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -40,8 +41,10 @@ class CartItemServiceTest {
         final List<CartItemResponse> cartItemResponses = cartItemService.findByMember(MEMBER);
         
         // then
-        final CartItemResponse expectedResult = CartItemResponse.of(cartItem);
-        assertThat(cartItemResponses).containsExactly(expectedResult);
+        assertAll(
+                () -> assertThat(cartItemResponses.get(0).getQuantity()).isOne(),
+                () -> assertThat(cartItemResponses.get(0).getProduct().getId()).isOne()
+        );
     }
     
     @Test

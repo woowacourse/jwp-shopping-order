@@ -50,7 +50,6 @@ public class CartItemRepository {
     
     public CartItem findById(final Long id) {
         final CartItemEntity cartItemEntity = cartItemDao.findById(id);
-        System.out.println("cartItemEntity = " + cartItemEntity);
         final ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
         final MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId());
         return new CartItem(
