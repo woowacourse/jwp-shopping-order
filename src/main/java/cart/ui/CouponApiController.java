@@ -6,7 +6,6 @@ import cart.dto.request.CouponIssueRequest;
 import cart.dto.request.CouponRequest;
 import cart.dto.response.CouponResponse;
 import cart.dto.response.CouponsResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +26,9 @@ public class CouponApiController {
     }
 
     @PostMapping
-    public ResponseEntity<CouponResponse> makeCoupon(CouponRequest couponRequest) {
+    public ResponseEntity<CouponResponse> makeCoupon(@RequestBody CouponRequest couponRequest) {
         CouponResponse response = couponService.makeCoupon(couponRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.created(URI.create("/coupon/" + response.getId()))
                 .body(response);
     }
 
@@ -42,12 +41,12 @@ public class CouponApiController {
     @PostMapping("/me")
     public ResponseEntity<Void> issueCouponToMember(Member member, @RequestBody CouponIssueRequest couponIssueRequest) {
         Long issuedId = couponService.issueCouponToMember(member, couponIssueRequest);
-        return ResponseEntity.created(URI.create("coupons/me/" + issuedId)).build();
+        return ResponseEntity.created(URI.create("/member-coupon/" + issuedId)).build();
     }
 
     @
 
-    GetMapping("/me")
+            GetMapping("/me")
     public ResponseEntity<CouponsResponse> getAllMemberCoupons(Member member) {
         CouponsResponse allUnusedCouponsResponse = couponService.getAllUnusedCoupons(member);
         return ResponseEntity.ok().body(allUnusedCouponsResponse);

@@ -54,16 +54,14 @@ public class OrderRepository {
         return orderId;
     }
 
-    public List<Order> findAllByMember(Member member) {
-
-        return null;
+    public Order findById(Long orderId) {
+        OrdersEntity ordersEntity = ordersDao.findById(orderId);
+        return getOrder(ordersEntity);
     }
 
-    public Order findById(Long orderId) {
-
-        OrdersEntity ordersEntity = ordersDao.findById(orderId);
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
-        List<Long> memberCouponIds = orderCouponDao.findAllByOrderId(orderId).stream()
+    private Order getOrder(OrdersEntity ordersEntity) {
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(ordersEntity.getId());
+        List<Long> memberCouponIds = orderCouponDao.findAllByOrderId(ordersEntity.getId()).stream()
                 .map(OrderCouponEntity::getMemberCouponId)
                 .collect(Collectors.toList());
         List<MemberCoupon> appliedCoupons = memberCouponRepository.findAllById(memberCouponIds);
@@ -87,5 +85,12 @@ public class OrderRepository {
                 new Money(ordersEntity.getDeliveryFee()),
                 orderOwner
         );
+    }
+
+    public List<Order> findAllByMember(Member member) {
+        List<OrdersEntity> ordersEntities = ordersDao.findAllByMemberId(member.getId());
+        return ordersEntities.stream()
+                .map(this::getOrder)
+                .collect(Collectors.toList());
     }
 }

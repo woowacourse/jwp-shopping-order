@@ -12,6 +12,7 @@ import cart.dto.ProductDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderIdResponse;
 import cart.dto.response.OrderResponse;
+import cart.dto.response.OrdersResponse;
 import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
@@ -114,5 +115,14 @@ public class OrderService {
         Order order = orderRepository.findById(orderId);
         order.checkOwner(member);
         return OrderResponse.of(order);
+    }
+
+    @Transactional
+    public OrdersResponse findAllOrderInfo(final Member member) {
+        List<Order> orders = orderRepository.findAllByMember(member);
+        List<OrderResponse> responses = orders.stream()
+                .map(OrderResponse::of)
+                .collect(Collectors.toList());
+        return new OrdersResponse(responses);
     }
 }

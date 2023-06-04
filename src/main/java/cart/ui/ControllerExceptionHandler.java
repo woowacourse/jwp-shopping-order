@@ -22,7 +22,7 @@ public class ControllerExceptionHandler {
             ItemException.IllegalMember.class,
             OrderException.IllegalMember.class
     })
-    public ResponseEntity<ExceptionResponse> handleException(ItemException.IllegalMember exception) {
+    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse(exception.getMessage()));
     }
