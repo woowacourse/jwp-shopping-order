@@ -4,7 +4,10 @@ import cart.domain.Amount;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import java.sql.SQLException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -106,6 +109,27 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public List<CartItem> findAllByIds(final List<Long> cartItemIds) {
+        return cartItemIds.stream()
+            .map(this::findById)
+            .collect(Collectors.toList());
+    }
+
+    public void deleteAll(final List<CartItem> cartItems) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, cartItems.get(i).getId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return cartItems.size();
+            }
+        });
     }
 }
 

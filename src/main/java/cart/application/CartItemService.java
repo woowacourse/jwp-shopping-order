@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.RemoveCartItemsRequest;
 import cart.exception.BusinessException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -62,5 +63,13 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public void remove(final Member member, final RemoveCartItemsRequest request) {
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(request.getCartItemIds());
+        for (final CartItem cartItem : cartItems) {
+            cartItem.checkOwner(member);
+        }
+        cartItemDao.deleteAll(cartItems);
     }
 }
