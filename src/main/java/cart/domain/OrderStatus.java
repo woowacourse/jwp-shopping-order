@@ -8,11 +8,11 @@ import java.util.function.Function;
 
 public enum OrderStatus {
 
-    PENDING("결제완료"),
-    PROCESSING("배송준비중"),
-    SHIPPED("배송중"),
-    DELIVERED("배송완료"),
-    CANCELLED("주문취소");
+    PENDING("Pending"),
+    PROCESSING("Processing"),
+    SHIPPED("Shipped"),
+    DELIVERED("Delivered"),
+    CANCELED("Canceled");
 
     private static final Map<String, OrderStatus> statusByName = Arrays.stream(values())
         .collect(toMap(OrderStatus::getDisplayName, Function.identity()));

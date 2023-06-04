@@ -33,7 +33,7 @@ public class Order {
     }
 
     public Order cancel() {
-        return new Order(id, member, orderAt, payAmount, OrderStatus.CANCELLED, quantityAndProducts);
+        return new Order(id, member, orderAt, payAmount, OrderStatus.CANCELED, quantityAndProducts);
     }
 
     public Long getId() {
