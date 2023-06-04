@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class MemberApiController {
 
-    @GetMapping("/my")
+    @GetMapping("/profile")
     public ResponseEntity<MemberResponse> myMemberInfo(Member member) {
-        // TODO: 5/30/23 서비스로 뺴기 
+        // TODO: 5/30/23 서비스로 뺴기
         MemberResponse memberResponse = new MemberResponse(member.getId(), member.getEmail(), member.getNickname());
 
         return ResponseEntity.status(HttpStatus.OK)
