@@ -3,6 +3,7 @@ package cart.domain;
 import static java.util.stream.Collectors.toList;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.exception.IllegalMemberException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,6 +76,10 @@ public class Order {
         if (!this.member.equals(member)) {
             throw new IllegalMemberException();
         }
+    }
+
+    public boolean isUnusedCoupon() {
+        return !coupon.isCoupon();
     }
 
     public Long getId() {

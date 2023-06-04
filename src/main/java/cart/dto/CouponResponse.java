@@ -1,8 +1,8 @@
 package cart.dto;
 
-import cart.domain.MemberCoupon;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
+import cart.domain.coupon.MemberCoupon;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -84,6 +84,17 @@ public class CouponResponse {
 
         public BigDecimal getMinOrderPrice() {
             return minOrderPrice;
+        }
+
+        @Override
+        public String toString() {
+            return "RateCouponResponse{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", discountRate=" + discountRate +
+                    ", expiredDate=" + expiredDate +
+                    ", minOrderPrice=" + minOrderPrice +
+                    '}';
         }
     }
 

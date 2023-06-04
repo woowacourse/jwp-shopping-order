@@ -1,10 +1,10 @@
 package cart.domain.coupon;
 
 import cart.domain.Money;
-import cart.domain.coupon.policy.DiscountPolicy;
-import cart.domain.coupon.policy.FixedDiscountPolicy;
-import cart.domain.coupon.policy.NoneDiscountPolicy;
-import cart.domain.coupon.policy.RateDiscountPolicy;
+import cart.domain.coupon.discountpolicy.DiscountPolicy;
+import cart.domain.coupon.discountpolicy.FixedDiscountPolicy;
+import cart.domain.coupon.discountpolicy.NoneDiscountPolicy;
+import cart.domain.coupon.discountpolicy.RateDiscountPolicy;
 import java.math.BigDecimal;
 
 public enum CouponType {

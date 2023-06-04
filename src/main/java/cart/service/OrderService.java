@@ -2,10 +2,10 @@ package cart.service;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -28,12 +28,14 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final CouponService couponService;
 
     public OrderService(CartItemRepository cartItemRepository, OrderRepository orderRepository,
-                        MemberCouponRepository memberCouponRepository) {
+                        MemberCouponRepository memberCouponRepository, CouponService couponService) {
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
         this.memberCouponRepository = memberCouponRepository;
+        this.couponService = couponService;
     }
 
     public Long register(OrderRequest orderRequest, Member member) {
@@ -52,6 +54,9 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
         deleteOrdered(cartItems, memberCoupon);
+        if (order.isUnusedCoupon()) {
+            couponService.issueByOrderPrice(totalPrice, member);
+        }
         return savedOrder.getId();
     }
 

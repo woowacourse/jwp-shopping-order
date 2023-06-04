@@ -71,4 +71,14 @@ public class MemberCouponDao {
 
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
+
+    public void saveAll(List<MemberCouponEntity> memberCoupons) {
+        String sql = "INSERT INTO member_coupon (member_id, coupon_id, expired_date) VALUES (?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, memberCoupons, memberCoupons.size(), ((ps, memberCoupon) -> {
+            ps.setLong(1, memberCoupon.getMemberId());
+            ps.setLong(2, memberCoupon.getCouponId());
+            ps.setDate(3, Date.valueOf(memberCoupon.getExpiredDate()));
+        }));
+    }
 }

@@ -78,9 +78,9 @@ public class OrderIntegrationTestFixture {
     public static ExtractableResponse<Response> 주문_상세_조회_요청(Member 사용자, Long 주문_ID) {
         return RestAssured.given()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE).log().all()
                 .get("/orders/{id}", 주문_ID)
-                .then()
+                .then().log().all()
                 .extract();
     }
 

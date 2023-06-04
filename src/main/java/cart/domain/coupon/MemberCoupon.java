@@ -1,6 +1,6 @@
-package cart.domain;
+package cart.domain.coupon;
 
-import cart.domain.coupon.Coupon;
+import cart.domain.Member;
 import cart.exception.IllegalCouponException;
 import cart.exception.IllegalMemberException;
 import java.time.LocalDate;

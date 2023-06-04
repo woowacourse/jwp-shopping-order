@@ -4,8 +4,8 @@ import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
@@ -81,5 +81,13 @@ public class MemberCouponRepository {
                 .map(this::toDomain)
                 .filter(MemberCoupon::isNotExpired)
                 .collect(Collectors.toList());
+    }
+
+    public void saveAll(List<MemberCoupon> memberCoupons) {
+        List<MemberCouponEntity> memberCouponEntities = memberCoupons.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
+
+        memberCouponDao.saveAll(memberCouponEntities);
     }
 }

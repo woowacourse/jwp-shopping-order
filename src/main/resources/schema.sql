@@ -1,9 +1,9 @@
 CREATE TABLE product
 (
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name       VARCHAR(255)  NOT NULL,
-    price      BIGINT        NOT NULL,
-    image_url  VARCHAR(2048) NOT NULL
+    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name      VARCHAR(255)  NOT NULL,
+    price     BIGINT        NOT NULL,
+    image_url VARCHAR(2048) NOT NULL
 );
 
 CREATE TABLE member
@@ -34,11 +34,19 @@ CREATE TABLE coupon
 
 CREATE TABLE member_coupon
 (
-    id           BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id    BIGINT    NOT NULL,
-    coupon_id    BIGINT    NOT NULL,
-    expired_date DATE NOT NULL,
+    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT NOT NULL,
+    coupon_id    BIGINT NOT NULL,
+    expired_date DATE   NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
+);
+
+CREATE TABLE coupon_issue_condition
+(
+    id              BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    coupon_id       BIGINT NOT NULL,
+    min_issue_price BIGINT NOT NULL,
     FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
 );
 

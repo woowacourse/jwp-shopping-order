@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
-import cart.domain.MemberCoupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;

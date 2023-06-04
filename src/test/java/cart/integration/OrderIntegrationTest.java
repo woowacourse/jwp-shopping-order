@@ -2,6 +2,10 @@ package cart.integration;
 
 import static cart.integration.IntegrationTestFixture.아이디를_반환한다;
 import static cart.integration.IntegrationTestFixture.응답_코드_검증;
+import static cart.integration.MemberCouponIntegrationTestFixture.정률_쿠폰;
+import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_조회_응답;
+import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_조회_응답_검증;
+import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_조회_요청;
 import static cart.integration.OrderIntegrationTestFixture.사용자_주문_목록_응답;
 import static cart.integration.OrderIntegrationTestFixture.사용자_주문_전체_조회_요청;
 import static cart.integration.OrderIntegrationTestFixture.주문_상세_조회_요청;
@@ -12,17 +16,20 @@ import static cart.integration.OrderIntegrationTestFixture.주문_조회_응답_
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.Money;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
+import cart.domain.coupon.IssuableCoupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -60,6 +67,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private CartItem 장바구니_밀리_햄버거;
 
     private Coupon 쿠폰_10퍼센트;
+    private Coupon 구매_증정_쿠폰;
 
     private MemberCoupon 밀리_쿠폰_10퍼센트;
 
@@ -78,7 +86,9 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         쿠폰_10퍼센트 = couponRepository.save(
                 new Coupon("10퍼센트 할인 쿠폰", CouponType.RATE, BigDecimal.valueOf(10), new Money(1000)));
-
+        구매_증정_쿠폰 = couponRepository.save(
+                new Coupon("구매 증정 쿠폰", CouponType.RATE, BigDecimal.valueOf(20), new Money(1000)));
+        couponRepository.saveIssuableCoupon(new IssuableCoupon(구매_증정_쿠폰, new Money(15000)));
         밀리_쿠폰_10퍼센트 = memberCouponRepository.save(new MemberCoupon(밀리, 쿠폰_10퍼센트));
     }
 
@@ -104,6 +114,17 @@ public class OrderIntegrationTest extends IntegrationTest {
             var 응답 = 주문_요청(밀리, 3000, 밀리_쿠폰_10퍼센트.getId(), 33001, 장바구니_밀리_치킨.getId(), 장바구니_밀리_피자.getId());
 
             응답_코드_검증(응답, HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        void 쿠폰을_사용하지_않으면_조건에_맞는_쿠폰을_발급한다() {
+            var 응답 = 주문_요청(밀리, 3000, -1L, 33000, 장바구니_밀리_치킨.getId(), 장바구니_밀리_피자.getId());
+
+            쿠폰_전체_조회_응답_검증(쿠폰_조회_요청(밀리), 쿠폰_전체_조회_응답(
+                    List.of(정률_쿠폰(밀리_쿠폰_10퍼센트.getId(), "10퍼센트 할인 쿠폰", 10, LocalDate.now().plusDays(3), 1000),
+                            정률_쿠폰(null, "구매 증정 쿠폰", 20, LocalDate.now().plusDays(3), 1000)),
+                    List.of()
+            ));
         }
     }
 

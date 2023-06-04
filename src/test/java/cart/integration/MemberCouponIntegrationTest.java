@@ -8,10 +8,10 @@ import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_
 import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_조회_요청;
 
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
+import cart.domain.coupon.MemberCoupon;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;

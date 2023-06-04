@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.exception.IllegalCouponException;
 import cart.exception.IllegalMemberException;
 import java.time.LocalDate;

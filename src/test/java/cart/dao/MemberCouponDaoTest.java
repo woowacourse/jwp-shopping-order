@@ -98,4 +98,24 @@ class MemberCouponDaoTest {
                 .ignoringExpectedNullFields()
                 .isEqualTo(List.of(memberCoupon1, memberCoupon2));
     }
+
+    @Test
+    void 멤버_쿠폰을_모두_저장한다() {
+        // given
+        MemberCouponEntity memberCoupon1 = new MemberCouponEntity(memberId, couponId, LocalDate.of(3000, 6, 16));
+        MemberCouponEntity memberCoupon2 = new MemberCouponEntity(memberId, couponId, LocalDate.of(3000, 6, 8));
+        List<MemberCouponEntity> memberCouponEntities = List.of(memberCoupon1, memberCoupon2);
+
+        // when
+        memberCouponDao.saveAll(memberCouponEntities);
+
+        // then
+        List<MemberCouponEntity> findMemberCouponEntities = memberCouponDao.findByMemberId(memberId);
+
+        assertThat(findMemberCouponEntities).hasSize(2);
+        assertThat(findMemberCouponEntities).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(memberCouponEntities);
+    }
+
 }

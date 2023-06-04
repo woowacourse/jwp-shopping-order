@@ -55,6 +55,9 @@ class OrderServiceTest {
     @Mock
     private MemberCouponRepository memberCouponRepository;
 
+    @Mock
+    private CouponService couponService;
+
     @Test
     void 주문을_등록한다() {
         given(cartItemRepository.findById(anyLong()))
@@ -139,5 +142,37 @@ class OrderServiceTest {
 
         assertThat(responses).map(OrderResponse::getId)
                 .containsExactly(1L, 2L);
+    }
+
+    @Test
+    void 주문을_할_때_쿠폰을_사용하지_않으면_쿠폰을_발급한다() {
+        given(cartItemRepository.findById(anyLong()))
+                .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
+        given(orderRepository.save(any()))
+                .willReturn(주문_밀리_치킨_피자_3000원);
+
+        Long id = orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(123000)), 밀리);
+
+        verify(couponService, times(1)).issueByOrderPrice(any(), any());
+        verify(cartItemRepository, times(2)).deleteById(any());
+        verify(memberCouponRepository, never()).delete(any());
+        assertThat(id).isEqualTo(1L);
+    }
+
+    @Test
+    void 주문을_할_때_쿠폰을_사용하면_쿠폰을_발급하지_않는다() {
+        given(cartItemRepository.findById(anyLong()))
+                .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
+        given(orderRepository.save(any()))
+                .willReturn(주문_밀리_치킨_피자_3000원);
+        given(memberCouponRepository.findById(anyLong()))
+                .willReturn(Optional.of(밀리_쿠폰_10퍼센트));
+
+        Long id = orderService.register(new OrderRequest(of(1L, 2L), 1L, 3000, valueOf(111000)), 밀리);
+
+        verify(couponService, never()).issueByOrderPrice(any(), any());
+        verify(cartItemRepository, times(2)).deleteById(any());
+        verify(memberCouponRepository, times(1)).delete(any());
+        assertThat(id).isEqualTo(1L);
     }
 }

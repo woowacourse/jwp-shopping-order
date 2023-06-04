@@ -3,8 +3,8 @@ package cart.domain.coupon;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Money;
-import cart.domain.coupon.policy.DiscountPolicy;
-import cart.domain.coupon.policy.NoneDiscountPolicy;
+import cart.domain.coupon.discountpolicy.DiscountPolicy;
+import cart.domain.coupon.discountpolicy.NoneDiscountPolicy;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

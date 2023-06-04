@@ -1,4 +1,4 @@
-package cart.domain.coupon.policy;
+package cart.domain.coupon.discountpolicy;
 
 import cart.domain.Money;
 import java.math.BigDecimal;
