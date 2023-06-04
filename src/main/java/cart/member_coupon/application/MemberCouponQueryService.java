@@ -3,8 +3,8 @@ package cart.member_coupon.application;
 import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.member_coupon.dao.MemberCouponDao;
-import cart.member_coupon.dao.MemberCouponEntity;
 import cart.member_coupon.domain.MemberCoupon;
+import cart.member_coupon.domain.UsedStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,11 @@ public class MemberCouponQueryService {
     this.memberCouponDao = memberCouponDao;
   }
 
-  public List<Coupon> searchCouponsIdOwenByMember(final Member member) {
-    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(member.getId());
+  public List<Coupon> searchCouponsOwnedByMember(final Member member) {
+    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(
+        member.getId(),
+        UsedStatus.UNUSED.getValue()
+    );
 
     return memberCoupons.stream()
         .map(MemberCoupon::getCoupon)

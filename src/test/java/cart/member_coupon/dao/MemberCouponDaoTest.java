@@ -14,6 +14,7 @@ import cart.coupon.domain.FixDiscountCoupon;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member_coupon.domain.MemberCoupon;
+import cart.member_coupon.domain.UsedStatus;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -54,6 +55,7 @@ class MemberCouponDaoTest {
     final long memberId = 1L;
     final Member member = new Member(null, null, null);
     final Coupon coupon = new EmptyCoupon();
+    final String usedCondition = UsedStatus.UNUSED.getValue();
 
     when(memberDao.getMemberById(anyLong()))
         .thenReturn(member);
@@ -62,7 +64,10 @@ class MemberCouponDaoTest {
         .thenReturn(coupon);
 
     //when
-    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(memberId);
+    final List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(
+        memberId,
+        usedCondition
+    );
 
     //then
     assertEquals(2, memberCoupons.size());

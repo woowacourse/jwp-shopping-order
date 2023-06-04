@@ -27,7 +27,7 @@ class MemberCouponQueryServiceTest {
     final Member member = memberDao.getMemberById(1L);
 
     //when
-    final List<Coupon> coupons = memberCouponQueryService.searchCouponsIdOwenByMember(member);
+    final List<Coupon> coupons = memberCouponQueryService.searchCouponsOwnedByMember(member);
 
     //then
     assertEquals(2, coupons.size());

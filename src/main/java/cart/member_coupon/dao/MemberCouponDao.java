@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,13 +21,6 @@ public class MemberCouponDao {
 
   private final CouponDao couponDao;
 
-  private final RowMapper<MemberCouponEntity> rowMapper = (rs, rowNum) ->
-      new MemberCouponEntity(
-          rs.getLong("member_id"),
-          rs.getLong("coupon_id"),
-          rs.getString("used_yn")
-      );
-
   public MemberCouponDao(
       final JdbcTemplate jdbcTemplate,
       final MemberDao memberDao,
@@ -39,7 +31,7 @@ public class MemberCouponDao {
     this.couponDao = couponDao;
   }
 
-  public List<MemberCoupon> findByMemberId(final Long memberId) {
+  public List<MemberCoupon> findByMemberId(final Long memberId, final String usedCondition) {
     final String sql = "SELECT * FROM MEMBER_COUPON MC WHERE MC.member_id = ? and MC.used_yn = ?";
 
     return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -49,7 +41,7 @@ public class MemberCouponDao {
       final Coupon coupon = couponDao.findById(couponId);
       final String usedYn = rs.getString("used_yn");
       return new MemberCoupon(member, coupon, UsedStatus.mapToUsedStatus(usedYn));
-    }, memberId, "N");
+    }, memberId, usedCondition);
   }
 
   public void updateMemberCoupon(final Long couponId, final Long memberId, final String usedYn) {
