@@ -12,7 +12,7 @@ public class FixedAmountPointPolicy implements PointPolicy {
         this.amount = amount;
     }
 
-    private static void validateAmount(long amount) {
+    private void validateAmount(long amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("음수는 입력될 수 없습니다.");
         }
