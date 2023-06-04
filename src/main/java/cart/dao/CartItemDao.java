@@ -54,8 +54,8 @@ public class CartItemDao {
         final Product product = new Product(productId, productName, productPrice, productImageUrl);
 
         final Long cartItemId = result.getLong("cartItem_id");
-        final int quantity = result.getInt("quantity");
-        return new CartItem(cartItemId, member, product, new Quantity(quantity));
+        final Quantity quantity = new Quantity(result.getInt("quantity"));
+        return new CartItem(cartItemId, member, product, quantity);
     };
 
     public Long insert(final CartItem cartItem) {

@@ -2,7 +2,7 @@ package cart.domain.cartitem;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.authorization.CartItemException;
+import cart.exception.authorization.CartItemAccessForbiddenException;
 
 import java.util.Objects;
 
@@ -29,8 +29,8 @@ public class CartItem {
     }
 
     public void checkOwner(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException(member.getEmail());
+        if (!Objects.equals(this.member, member)) {
+            throw new CartItemAccessForbiddenException(member.getEmail());
         }
     }
 

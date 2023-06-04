@@ -30,12 +30,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
     public Product getProductById(final Long productId) {
         return productRepository.findById(productId);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Transactional

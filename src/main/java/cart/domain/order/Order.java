@@ -1,7 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.member.Member;
-import cart.exception.authorization.OrderException;
+import cart.exception.authorization.OrderAccessForbiddenException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -34,7 +34,7 @@ public class Order {
 
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member, member)) {
-            throw new OrderException(member.getEmail());
+            throw new OrderAccessForbiddenException(member.getEmail());
         }
     }
 
