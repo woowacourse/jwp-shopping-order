@@ -32,6 +32,15 @@ public class MemberRepository {
         return convertToDomain(memberEntity);
     }
 
+    public void updatePoint(Member member) {
+        memberDao.updatePoint(new MemberEntity(
+                member.getId(),
+                member.getEmail(),
+                member.getPassword(),
+                member.getPoint().getPoint()
+        ));
+    }
+
     private Member convertToDomain(MemberEntity memberEntity) {
         return new Member(
                 memberEntity.getId(),

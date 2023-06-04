@@ -31,6 +31,16 @@ public class CartItemRepository {
         return convertToDomain(memberRepository.findById(cartItemEntity.getMember_id()), cartItemEntity);
     }
 
+    public List<CartItem> findByIds(Member member, List<Long> ids) {
+        List<CartItemEntity> cartItemEntities = ids.stream()
+                .map(cartItemDao::findById)
+                .collect(Collectors.toList());
+
+        return cartItemEntities.stream()
+                .map(cartItemEntity -> convertToDomain(member, cartItemEntity))
+                .collect(Collectors.toList());
+    }
+
     public List<CartItem> findByMemberId(Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
         Member member = memberRepository.findById(memberId);
@@ -45,6 +55,10 @@ public class CartItemRepository {
 
     public void deleteById(Long id) {
         cartItemDao.deleteById(id);
+    }
+
+    public void deleteByIds(List<Long> cartItemIds) {
+        cartItemIds.forEach(this::deleteById);
     }
 
     private CartItem convertToDomain(Member member, CartItemEntity cartItemEntity) {

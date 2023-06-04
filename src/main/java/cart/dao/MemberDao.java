@@ -35,4 +35,9 @@ public class MemberDao {
         final String sql = "SELECT * FROM member WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
+
+    public void updatePoint(MemberEntity memberEntity) {
+        final String sql = "UPDATE member SET point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, memberEntity.getPoint(), memberEntity.getId());
+    }
 }
