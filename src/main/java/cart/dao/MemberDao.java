@@ -1,6 +1,9 @@
 package cart.dao;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberEmail;
+import cart.domain.member.MemberPassword;
+import cart.domain.member.MemberPoint;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,9 +32,9 @@ public class MemberDao {
 
     private final RowMapper<Member> memberRowMapper = (rs, rowNum) -> new Member(
             rs.getLong("id"),
-            rs.getString("email"),
-            rs.getString("password"),
-            rs.getInt("point")
+            new MemberEmail(rs.getString("email")),
+            new MemberPassword(rs.getString("password")),
+            new MemberPoint(rs.getInt("point"))
     );
 
     public Long insert(final Member member) {

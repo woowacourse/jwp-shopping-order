@@ -63,8 +63,8 @@ public class OrderServiceTest {
         @Nested
         @DisplayName("만약 총 주문 가격이 5이상 초과이라면")
         class ContextWithDiscountDeliveryFee {
-            private final int quantity1 = 1;
-            private final int quantity2 = 2;
+            private final Quantity quantity1 = new Quantity(1);
+            private final Quantity quantity2 = new Quantity(2);
             private final int usedPoint = 1000;
             private Long orderId;
 
@@ -83,8 +83,8 @@ public class OrderServiceTest {
                 final Order order = orderDao.findById(orderId).orElseThrow(OrderNotFoundException::new);
 
                 int remainPoint = member.getPointValue() - usedPoint;
-                final int cartItemPrice1 = product1.getPriceValue() * quantity1;
-                final int cartItemPrice2 = product2.getPriceValue() * quantity2;
+                final int cartItemPrice1 = product1.getPriceValue() * quantity1.getQuantity();
+                final int cartItemPrice2 = product2.getPriceValue() * quantity2.getQuantity();
                 final int updatedPoint = (int) (remainPoint + (cartItemPrice1 + cartItemPrice2) * 0.1);
 
                 assertAll(
@@ -98,8 +98,8 @@ public class OrderServiceTest {
         @Nested
         @DisplayName("만약 총 주문 가격이 5만원 미만이라면")
         class ContextWithNonDiscountDeliveryFee {
-            private final int quantity1 = 1;
-            private final int quantity2 = 1;
+            private final Quantity quantity1 = new Quantity(1);
+            private final Quantity quantity2 = new Quantity(1);
             private final int usedPoint = 1000;
             private Long orderId;
 
@@ -119,8 +119,8 @@ public class OrderServiceTest {
                 final Order order = orderDao.findById(orderId).orElseThrow(OrderNotFoundException::new);
 
                 int remainPoint = member.getPointValue() - usedPoint;
-                final int cartItemPrice1 = product1.getPriceValue() * quantity1;
-                final int cartItemPrice2 = product2.getPriceValue() * quantity2;
+                final int cartItemPrice1 = product1.getPriceValue() * quantity1.getQuantity();
+                final int cartItemPrice2 = product2.getPriceValue() * quantity2.getQuantity();
                 final int updatedPoint = (int) (remainPoint + (cartItemPrice1 + cartItemPrice2) * 0.1);
                 assertAll(
                         () -> assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(updatedPoint)),
@@ -174,8 +174,8 @@ public class OrderServiceTest {
 
                 // when, then
                 assertThat(cartItems).doesNotContain(
-                        new CartItem(1L, null, null, 0),
-                        new CartItem(2L, null, null, 0)
+                        new CartItem(1L, null, null, new Quantity(0)),
+                        new CartItem(2L, null, null, new Quantity(0))
                 );
             }
         }

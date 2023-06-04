@@ -9,21 +9,18 @@ import java.util.Objects;
 
 public class Order {
 
-    private Long id;
+    private final Long id;
     private final Member member;
     private final MemberPoint usedPoint;
     private final MemberPoint savedPoint;
     private final DeliveryFee deliveryFee;
-    private LocalDateTime orderedAt;
+    private final LocalDateTime orderedAt;
 
     public Order(final Member member, final MemberPoint usedPoint, final MemberPoint savedPoint, final DeliveryFee deliveryFee) {
-        this.member = member;
-        this.usedPoint = usedPoint;
-        this.savedPoint = savedPoint;
-        this.deliveryFee = deliveryFee;
+        this(-1, member, usedPoint, savedPoint, deliveryFee, null);
     }
 
-    public Order(final Long id, final Member member,
+    public Order(final long id, final Member member,
                  final MemberPoint usedPoint,
                  final MemberPoint savedPoint,
                  final DeliveryFee deliveryFee,

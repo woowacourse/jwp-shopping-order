@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberEmail;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
@@ -40,9 +41,9 @@ public class OrderDao {
     private final RowMapper<Order> orderMapper = (result, count) -> {
         final Member member = new Member(
                 result.getLong("member_id"),
-                result.getString("email"),
+                new MemberEmail(result.getString("email")),
                 null,
-                result.getInt("point"));
+                new MemberPoint(result.getInt("point")));
 
         return new Order(
                 result.getLong("order_id"),

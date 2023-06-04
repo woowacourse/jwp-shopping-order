@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberEmail;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
@@ -27,7 +28,7 @@ public class OrderDaoTest {
     @Test
     void insertAndFind() {
         // given
-        final Member member = new Member(1L, "a@a.com", null);
+        final Member member = new Member(1L, new MemberEmail("a@a.com"), null);
         final Order order = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
         final Long orderId = orderDao.insert(order);
 
@@ -42,7 +43,7 @@ public class OrderDaoTest {
     @Test
     void findAllByMemberId() {
         // given
-        final Member member = new Member(1L, "a@a.com", null);
+        final Member member = new Member(1L, new MemberEmail("a@a.com"), null);
         final Order order1 = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
         final Order order2 = new Order(member, new MemberPoint(2000), new MemberPoint(500), new DeliveryFee(3000));
         final Order order3 = new Order(member, new MemberPoint(3000), new MemberPoint(500), new DeliveryFee(0));

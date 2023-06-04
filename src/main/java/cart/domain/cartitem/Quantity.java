@@ -4,10 +4,16 @@ import java.util.Objects;
 
 public class Quantity {
 
+    public static final int INITIAL_VALUE = 1;
+
     private final int quantity;
 
     public Quantity(final int quantity) {
         this.quantity = quantity;
+    }
+
+    public static Quantity create() {
+        return new Quantity(INITIAL_VALUE);
     }
 
     public Quantity add() {

@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
+import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.repository.CartItemRepository;
@@ -56,7 +57,7 @@ public class CartItemService {
             cartItemRepository.delete(cartItem);
             return;
         }
-        final CartItem updatedCartItem = cartItem.updateQuantity(request.getQuantity());
+        final CartItem updatedCartItem = cartItem.updateQuantity(new Quantity(request.getQuantity()));
         cartItemRepository.save(updatedCartItem);
     }
 

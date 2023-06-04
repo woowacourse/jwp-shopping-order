@@ -1,6 +1,9 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import cart.domain.product.ProductImageUrl;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,9 +36,9 @@ public class ProductDao {
 
     final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
-        final String name = rs.getString("name");
-        final int price = rs.getInt("price");
-        final String imageUrl = rs.getString("image_url");
+        final ProductName name = new ProductName(rs.getString("name"));
+        final ProductPrice price = new ProductPrice(rs.getInt("price"));
+        final ProductImageUrl imageUrl = new ProductImageUrl(rs.getString("image_url"));
 
         return new Product(id, name, price, imageUrl);
     };

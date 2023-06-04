@@ -37,7 +37,7 @@ public class CartItemDaoTest {
         final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
         final Product product = productDao.findById(1L).orElseThrow(ProductNotFoundException::new);
 
-        final CartItem cartItem = new CartItem(member, product, 3);
+        final CartItem cartItem = new CartItem(member, product, new Quantity(3));
 
         // when
         final Long cartItemId = cartItemDao.insert(cartItem);
@@ -121,7 +121,7 @@ public class CartItemDaoTest {
         final CartItem cartItem = cartItemDao.findById(1L).orElseThrow(CartItemNotFoundException::new);
 
         // when
-        final CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getMember(), cartItem.getProduct(), 5);
+        final CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getMember(), cartItem.getProduct(), new Quantity(5));
         cartItemDao.update(updateCartItem);
 
         // then

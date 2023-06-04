@@ -14,21 +14,14 @@ public class CartItem {
     private final Member member;
 
     public CartItem(final Member member, final Product product) {
-        this(null, member, product, 1);
+        this(-1, member, product, Quantity.create());
     }
 
-    public CartItem(final Member member, final Product product, final int quantity) {
-        this(null, member, product, quantity);
+    public CartItem(final Member member, final Product product, final Quantity quantity) {
+        this(-1, member, product, quantity);
     }
 
-    public CartItem(final Long id, final Member member, final Product product, final int quantity) {
-        this.id = id;
-        this.member = member;
-        this.product = product;
-        this.quantity = new Quantity(quantity);
-    }
-
-    public CartItem(final Long id, final Member member, final Product product, final Quantity quantity) {
+    public CartItem(final long id, final Member member, final Product product, final Quantity quantity) {
         this.id = id;
         this.member = member;
         this.product = product;
@@ -41,7 +34,7 @@ public class CartItem {
         }
     }
 
-    public CartItem updateQuantity(int quantity) {
+    public CartItem updateQuantity(final Quantity quantity) {
         return new CartItem(id, member, product, quantity);
     }
 

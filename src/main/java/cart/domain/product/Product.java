@@ -9,15 +9,16 @@ public class Product {
     private final ProductPrice productPrice;
     private final ProductImageUrl productImageUrl;
 
-    public Product(final String productName, final int productPrice, final String productImageUrl) {
-        this(null, productName, productPrice, productImageUrl);
+    public Product(final ProductName productName, final ProductPrice productPrice, final ProductImageUrl productImageUrl) {
+        this(-1, productName, productPrice, productImageUrl);
     }
 
-    public Product(final Long id, final String productName, final int productPrice, final String productImageUrl) {
+    public Product(final long id, final ProductName productName,
+                   final ProductPrice productPrice, final ProductImageUrl productImageUrl) {
         this.id = id;
-        this.productName = new ProductName(productName);
-        this.productPrice = new ProductPrice(productPrice);
-        this.productImageUrl = new ProductImageUrl(productImageUrl);
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productImageUrl = productImageUrl;
     }
 
     public Long getId() {

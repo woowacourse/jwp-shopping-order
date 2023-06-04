@@ -27,8 +27,7 @@ public class ProductDaoTest {
     @Autowired
     private ProductDao productDao;
 
-    final Product product = new Product("초콜릿", 500, "초콜릿URL");
-
+    final Product product = new Product(new ProductName("초콜릿"), new ProductPrice(500), new ProductImageUrl("초콜릿URL"));
 
     @DisplayName("상품을 추가하고 찾아온다.")
     @Test
@@ -51,9 +50,9 @@ public class ProductDaoTest {
     @Test
     void getProductsByIds() {
         // given
-        final Product product1 = new Product("초콜릿1", 501, "초콜릿URL1");
-        final Product product2 = new Product("초콜릿2", 502, "초콜릿URL2");
-        final Product product3 = new Product("초콜릿3", 503, "초콜릿URL3");
+        final Product product1 = new Product(new ProductName("초콜릿1"), new ProductPrice(501), new ProductImageUrl("초콜릿URL1"));
+        final Product product2 = new Product(new ProductName("초콜릿2"), new ProductPrice(502), new ProductImageUrl("초콜릿URL2"));
+        final Product product3 = new Product(new ProductName("초콜릿3"), new ProductPrice(503), new ProductImageUrl("초콜릿URL3"));
         final Long productId1 = productDao.insert(product1);
         final Long productId2 = productDao.insert(product2);
         final Long productId3 = productDao.insert(product3);
@@ -76,7 +75,12 @@ public class ProductDaoTest {
         // given
         final Long productId = productDao.insert(product);
         final Product findProduct = productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
-        final Product updateProduct = new Product(findProduct.getId(), "초콜릿아님", findProduct.getPriceValue(), findProduct.getImageUrlValue());
+        final Product updateProduct = new Product(
+                findProduct.getId(),
+                new ProductName("초콜릿아님"),
+                new ProductPrice(findProduct.getPriceValue()),
+                new ProductImageUrl(findProduct.getImageUrlValue())
+        );
 
         // when
         productDao.update(updateProduct);

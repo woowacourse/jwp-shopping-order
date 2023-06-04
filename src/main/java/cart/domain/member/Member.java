@@ -1,5 +1,6 @@
 package cart.domain.member;
 
+import cart.domain.product.ProductPrice;
 import cart.exception.business.point.PointAbusedException;
 
 import java.util.Objects;
@@ -11,38 +12,31 @@ public class Member {
     private final MemberPassword password;
     private final MemberPoint point;
 
-    public Member(final String email, final String password) {
-        this(null, email, password);
+    public Member(final MemberEmail email, final MemberPassword password) {
+        this(-1, email, password);
     }
 
-    public Member(final Long id, final String email, final String password) {
-        this(id, email, password, 0);
+    public Member(final long id, final MemberEmail email, final MemberPassword password) {
+        this(id, email, password, MemberPoint.create());
     }
 
-    public Member(final Long id, final String email, final String password, final Integer point) {
-        this.id = id;
-        this.email = new MemberEmail(email);
-        this.password = new MemberPassword(password);
-        this.point = new MemberPoint(point);
-    }
-
-    public Member(final Long id, final MemberEmail email, final MemberPassword password, final MemberPoint point) {
+    public Member(final long id, final MemberEmail email, final MemberPassword password, final MemberPoint point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.point = point;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(new MemberPassword(password));
+    public boolean checkPassword(final MemberPassword password) {
+        return this.password.equals(password);
     }
 
-    public Member updatePoint(final MemberPoint requestedPoint, final int totalPrice) {
+    public Member updatePoint(final MemberPoint requestedPoint, final ProductPrice productTotalPrice) {
         if (point.isLowerThan(requestedPoint)) {
             throw new PointAbusedException(point, requestedPoint);
         }
         final MemberPoint minusPoint = point.minus(requestedPoint);
-        final MemberPoint resultPoint = minusPoint.addPointByTotalPrice(totalPrice);
+        final MemberPoint resultPoint = minusPoint.addPointByTotalPrice(productTotalPrice);
 
         return new Member(id, email, password, resultPoint);
     }
@@ -57,10 +51,6 @@ public class Member {
 
     public String getEmailValue() {
         return email.getEmail();
-    }
-
-    public MemberPassword getPassword() {
-        return password;
     }
 
     public String getPasswordValue() {

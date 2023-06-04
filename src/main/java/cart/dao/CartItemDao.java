@@ -1,8 +1,13 @@
 package cart.dao;
 
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
+import cart.domain.member.MemberEmail;
 import cart.domain.product.Product;
+import cart.domain.product.ProductImageUrl;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,18 +44,18 @@ public class CartItemDao {
 
     final RowMapper<CartItem> cartItemRowMapper = (result, rowNum) -> {
         final Long memberId = result.getLong("member_id");
-        final String email = result.getString("email");
+        final MemberEmail email = new MemberEmail(result.getString("email"));
         final Member member = new Member(memberId, email, null);
 
         final Long productId = result.getLong("product_id");
-        final String productName = result.getString("name");
-        final int productPrice = result.getInt("price");
-        final String productImageUrl = result.getString("image_url");
+        final ProductName productName = new ProductName( result.getString("name"));
+        final ProductPrice productPrice = new ProductPrice(result.getInt("price"));
+        final ProductImageUrl productImageUrl = new ProductImageUrl(result.getString("image_url"));
         final Product product = new Product(productId, productName, productPrice, productImageUrl);
 
         final Long cartItemId = result.getLong("cartItem_id");
         final int quantity = result.getInt("quantity");
-        return new CartItem(cartItemId, member, product, quantity);
+        return new CartItem(cartItemId, member, product, new Quantity(quantity));
     };
 
     public Long insert(final CartItem cartItem) {
