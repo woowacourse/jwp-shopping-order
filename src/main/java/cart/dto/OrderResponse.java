@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.OrderEntity;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,4 +13,13 @@ public class OrderResponse {
     private final String orderDateTime;
     private final List<OrderItemResponse> orderItems;
     private final int totalPrice;
+
+    public static OrderResponse of(final OrderEntity orderEntity, final List<OrderItemResponse> orderItemResponses) {
+        return new OrderResponse(
+                orderEntity.getId(),
+                orderEntity.getCreatedAt(),
+                orderItemResponses,
+                orderEntity.getTotalPrice()
+        );
+    }
 }

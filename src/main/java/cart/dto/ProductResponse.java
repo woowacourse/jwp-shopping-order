@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.OrderItemEntity;
 import cart.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,5 +17,15 @@ public class ProductResponse {
 
     public static ProductResponse from(final Product product) {
         return new ProductResponse(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), product.getStock());
+    }
+
+    public static ProductResponse of(final OrderItemEntity orderItemEntity, final Product product) {
+        return new ProductResponse(
+                orderItemEntity.getProductId(),
+                orderItemEntity.getProductPrice(),
+                orderItemEntity.getProductName(),
+                orderItemEntity.getProductImageUrl(),
+                product.getStock()
+        );
     }
 }
