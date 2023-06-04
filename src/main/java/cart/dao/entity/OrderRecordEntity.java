@@ -7,19 +7,19 @@ import cart.domain.OrderItem;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class OrderEntity {
+public class OrderRecordEntity {
     private final Long id;
     private final long memberId;
     private final Timestamp orderTime;
 
-    public OrderEntity(final Long id, final long memberId, final Timestamp orderTime) {
+    public OrderRecordEntity(final Long id, final long memberId, final Timestamp orderTime) {
         this.id = id;
         this.memberId = memberId;
         this.orderTime = orderTime;
     }
 
-    public static OrderEntity from(final Order order) {
-        return new OrderEntity(order.getId(), order.getMember().getId(), Timestamp.valueOf(order.getOrderTime()));
+    public static OrderRecordEntity from(final Order order) {
+        return new OrderRecordEntity(order.getId(), order.getMember().getId(), Timestamp.valueOf(order.getOrderTime()));
     }
 
     public long getMemberId() {
