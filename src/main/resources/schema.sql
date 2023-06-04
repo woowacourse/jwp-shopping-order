@@ -36,34 +36,35 @@ CREATE TABLE purchase_order
 
 CREATE TABLE purchase_order_item
 (
-    id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT       NOT NULL,
-    product_id        BIGINT       NOT NULL,
-    name              VARCHAR(255) NOT NULL,
-    price             INT          NOT NULL,
-    image_url         VARCHAR(255) NOT NULL,
-    quantity          INT          NOT NULL,
+    id         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id   BIGINT       NOT NULL,
+    product_id BIGINT       NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    price      INT          NOT NULL,
+    image_url  VARCHAR(255) NOT NULL,
+    quantity   INT          NOT NULL,
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE member_point
+CREATE TABLE member_reward_point
 (
-    id         BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT      NOT NULL,
-    point      INT         NOT NULL,
-    created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expired_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status     VARCHAR(50) NOT NULL,
-    purchase_order_id  BIGINT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    id              BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id       BIGINT    NOT NULL,
+    point           INT       NOT NULL,
+    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expired_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reward_order_id BIGINT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (reward_order_id) REFERENCES purchase_order (id)
 );
 
-CREATE TABLE order_used_member_point
+CREATE TABLE order_member_used_point
 (
-    id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
-    member_point_id   BIGINT NOT NULL,
+    id                   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id             BIGINT NOT NULL,
+    used_reward_point_id BIGINT NOT NULL,
+    used_point           INT    NOT NULL,
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
-    FOREIGN KEY (member_point_id) REFERENCES member (id)
+    FOREIGN KEY (used_reward_point_id) REFERENCES member_reward_point (id)
 );
