@@ -39,22 +39,22 @@ public class OrderQueryService {
 
 
     for (final Order order : orders) {
-      final Money totalPayments = new Money(0);
-
       final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
 
       final OrderedItems orderedItems = new OrderedItems(orderItems);
 
       final Money totalPrice = orderedItems.calculateAllItemPrice();
 
-      totalPayments.add(totalPrice).add(order.getDeliveryFee());
+      final Money totalItemPrice = totalPrice.add(order.getDeliveryFee());
 
       final Coupon coupon = order.getCoupon();
+
+      final Money totalPayments = coupon.discount(totalItemPrice);
 
       final OrderResponse orderResponse = new OrderResponse(
           order.getId(),
           OrderItemMapper.mapToOrderItemResponse(orderItems),
-          coupon.discount(totalPayments).getValue(),
+          totalPayments.getValue(),
           order.getCreatedAt(),
           order.getOrderStatus().getValue(
           ));

@@ -1,4 +1,4 @@
-###
+### 주문 생성
 POST http://localhost:8080/orders
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
@@ -10,6 +10,6 @@ Content-Type: application/json
   "couponId" : 1
 }
 
-###
+### 사용자의 모든 주문 조회
 GET http://localhost:8080/orders
 Authorization: Basic YUBhLmNvbToxMjM0

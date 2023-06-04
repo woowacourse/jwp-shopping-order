@@ -60,14 +60,14 @@ public class OrderDao {
       final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
       final long couponId = rs.getLong("coupon_id");
       final Coupon coupon = couponDao.findById(couponId);
-      final Date createdAt = rs.getDate("created_at");
+      final Timestamp createdAt = rs.getTimestamp("created_at");
       final Instant instant = createdAt.toInstant();
       final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
       final String orderStatus = rs.getString("order_status");
       return new Order(
           id, member,
           new Money(deliveryFee), coupon,
-          OrderStatus.valueOf(orderStatus), zonedDateTime
+          OrderStatus.findOrderStatus(orderStatus), zonedDateTime
       );
     }, memberId);
   }
