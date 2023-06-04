@@ -37,7 +37,7 @@ public class CartItemService {
 	@Transactional(readOnly = true)
 	public List<CartItemResponse> findByMember(Member member) {
 		List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-		return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+		return CartItemResponse.ofCartItems(cartItems);
 	}
 
 	@Transactional(readOnly = true)

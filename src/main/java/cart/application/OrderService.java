@@ -127,20 +127,9 @@ public class OrderService {
 	public OrderResponse findById(final Long orderId, final Member member) {
 		final OrderEntity orderEntity = orderDao.findById(orderId, member.getId());
 		final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
-		final List<OrderItemResponse> orderItemResponses = parseOrderItemEntitiesToResponses(orderItemEntities);
+		final List<OrderItemResponse> orderItemResponses = OrderItemResponse.from(orderItemEntities);
 		return new OrderResponse(orderEntity.getId(), orderEntity.getSavingRate(), orderEntity.getPoints(),
 			orderItemResponses);
-	}
-
-	private List<OrderItemResponse> parseOrderItemEntitiesToResponses(final List<OrderItemEntity> orderItemEntities) {
-		return orderItemEntities.stream()
-			.map(orderItemEntity -> new OrderItemResponse(
-				orderItemEntity.getProductId(),
-				orderItemEntity.getProductName(),
-				orderItemEntity.getProductPrice(),
-				orderItemEntity.getProductQuantity(),
-				orderItemEntity.getProductImageUrl()
-			)).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -150,7 +139,7 @@ public class OrderService {
 		List<OrderResponse> orderResponses = new ArrayList<>();
 		for (final OrderEntity orderEntity : orderEntities) {
 			List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderEntity.getId());
-			final List<OrderItemResponse> orderItemResponses = parseOrderItemEntitiesToResponses(orderItemEntities);
+			final List<OrderItemResponse> orderItemResponses = OrderItemResponse.from(orderItemEntities);
 			orderResponses.add(new OrderResponse(
 				orderEntity.getId(),
 				orderEntity.getSavingRate(),

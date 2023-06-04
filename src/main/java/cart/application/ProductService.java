@@ -33,7 +33,7 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public List<ProductResponse> getAllProducts() {
 		List<Product> products = productDao.getAllProducts();
-		return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+		return ProductResponse.ofProducts(products);
 	}
 
 	@Transactional(readOnly = true)

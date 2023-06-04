@@ -1,5 +1,10 @@
 package cart.dto.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import cart.entity.OrderItemEntity;
+
 public class OrderItemResponse {
     private final Long productId;
     private final String name;
@@ -13,6 +18,17 @@ public class OrderItemResponse {
         this.price = price;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
+    }
+
+    public static List<OrderItemResponse> from(final List<OrderItemEntity> orderItemEntities){
+        return orderItemEntities.stream()
+            .map(orderItemEntity -> new OrderItemResponse(
+                orderItemEntity.getProductId(),
+                orderItemEntity.getProductName(),
+                orderItemEntity.getProductPrice(),
+                orderItemEntity.getProductQuantity(),
+                orderItemEntity.getProductImageUrl()
+            )).collect(Collectors.toList());
     }
 
     public Long getProductId() {
