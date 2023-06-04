@@ -136,7 +136,8 @@ public class OrderRepository {
                         orderProduct.getProductName(),
                         orderProduct.getProductPrice(),
                         orderProduct.getProductImageUrl()
-                )
+                ),
+                orderProduct.getQuantity()
         );
     }
 }
