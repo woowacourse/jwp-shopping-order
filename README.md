@@ -44,9 +44,12 @@
     - [주문 조회](#주문-조회)
     - [단일 주문 조회](#단일-주문-조회)
     - [주문 생성](#주문-생성)
-
-
-
+- [예외처리](#예외처리)
+  - [인증](#인증-예외처리)
+  - [상품](#상품-예외처리)
+  - [장바구니](#장바구니-예외처리)
+  - [포인트](#포인트-예외처리)
+  - [주문](#주문-예외처리)
 
 
 ## 사용자
@@ -359,4 +362,103 @@ Content-Type: application/json
 ```
 HTTP/1.1 201 Created
 Location: /orders/{orderId}
+```
+
+## 예외처리
+
+### 인증 예외처리
+- CASE :
+  - 요청 메세지에 Authorization 헤더가 없는 경우
+  - basic 인증 방식이 아닌 경우
+  - Email과 password가 일치하지 않는 경우
+```
+  HTTP/1.1 401 Unauthorized
+```
+
+<br/>
+
+### 상품 예외처리
+- CASE : 서버에 존재하지 않는 상품을 조회, 수정, 삭제하는 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    ProductNotFoundException
+  }
+```
+
+<br/>
+
+### 장바구니 예외처리
+- CASE : 서버에 존재하지 않는 장바구니 아이템을 조회, 수정, 삭제하는 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    CartItemNotFoundException
+  }
+```
+
+<br/>
+
+- CASE : 다른 유저의 장바구니 아이템을 수정, 삭제하는 경우
+```
+  HTTP/1.1 403 Forbidden
+```
+
+<br/>
+
+### 포인트 예외처리
+- CASE : 포인트 사용량이 보유량보다 많거나 최소단위(10)를 지키지 않은 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    OrderNotFoundException
+  }
+```
+
+<br/>
+
+### 주문 예외처리
+- CASE : 서버에 존재하지 않는 주문을 조회, 수정, 삭제하는 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    OrderNotFoundException
+  }
+```
+
+<br/>
+
+- CASE : 요청으로 들어온 상품이 DB에서 체크되지 않은 상태인 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    InvalidOrderCheckedException
+  }
+```
+
+<br/>
+
+- CASE : 주문 요청과 DB 수량이 다른 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    InvalidOrderQuantityException
+  }
+```
+
+<br/>
+
+- CASE : 주문 요청과 DB의 상품 id가 다른 경우
+```
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/json
+  {
+    InvalidOrderProductException
+  }
 ```
