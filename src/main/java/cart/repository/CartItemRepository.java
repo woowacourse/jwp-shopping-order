@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Product;
@@ -22,12 +21,10 @@ import org.springframework.stereotype.Repository;
 public class CartItemRepository {
 
     private final CartItemDao cartItemDao;
-    private final MemberDao memberDao;
     private final ProductDao productDao;
 
-    public CartItemRepository(final CartItemDao cartItemDao, final MemberDao memberDao, final ProductDao productDao) {
+    public CartItemRepository(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.memberDao = memberDao;
         this.productDao = productDao;
     }
 
@@ -68,6 +65,7 @@ public class CartItemRepository {
         if (mayBeCartItemEntity.isEmpty()) {
             return Optional.empty();
         }
+
         final CartItemEntity cartItemEntity = mayBeCartItemEntity.get();
         final Product product = productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(ProductNotFoundException::new)

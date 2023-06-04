@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
@@ -31,20 +30,17 @@ public class OrderRepository {
 
     private final OrderDao orderDao;
     private final CouponDao couponDao;
-    private final CartItemDao cartItemDao;
     private final OrderItemDao orderItemDao;
     private final MemberCouponDao memberCouponDao;
 
     public OrderRepository(
             final OrderDao orderDao,
             final CouponDao couponDao,
-            final CartItemDao cartItemDao,
             final OrderItemDao orderItemDao,
             final MemberCouponDao memberCouponDao
     ) {
         this.orderDao = orderDao;
         this.couponDao = couponDao;
-        this.cartItemDao = cartItemDao;
         this.orderItemDao = orderItemDao;
         this.memberCouponDao = memberCouponDao;
     }

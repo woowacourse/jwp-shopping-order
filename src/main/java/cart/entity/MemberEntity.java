@@ -22,10 +22,6 @@ public class MemberEntity {
         return new MemberEntity(member.getId(), member.getEmail(), member.getPassword());
     }
 
-    public Member toDomain() {
-        return new Member(id, email, password);
-    }
-
     public Long getId() {
         return id;
     }

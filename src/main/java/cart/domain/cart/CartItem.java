@@ -1,6 +1,5 @@
 package cart.domain.cart;
 
-import cart.domain.VO.Money;
 import cart.exception.cart.InvalidCartItemOwnerException;
 import java.util.Objects;
 
@@ -20,10 +19,6 @@ public class CartItem {
         this.quantity = quantity;
         this.memberId = memberId;
         this.product = product;
-    }
-
-    public Money calculateTotalPrice() {
-        return product.getPrice().times(quantity);
     }
 
     public void checkOwner(final Long memberId) {
