@@ -96,7 +96,7 @@ public class CouponDao {
 
     public List<Coupon> findAll() {
         final String sql =
-            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, "
+            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount "
                 + "FROM coupon c";
         return jdbcTemplate.query(sql, onlyCouponRowMapper);
     }

@@ -65,7 +65,7 @@ class CouponDaoTest {
 
     @Test
     @DisplayName("모든 쿠폰을 조회한다.")
-    void testFindAllByMember() {
+    void testFindAll() {
         //given
         final Member savedMember = memberDao.addMember(member);
         final Coupon savedCoupon1 = couponDao.save(coupon1, savedMember.getId());
@@ -79,16 +79,5 @@ class CouponDaoTest {
         for (int index = 0; index < coupons.size(); index++) {
             assertThat(coupons.get(index).getId()).isEqualTo(expectedCoupons.get(index).getId());
         }
-    }
-
-    @Test
-    @DisplayName("회원이 가지고있는 모든 쿠폰 중 ")
-    void testFindAllByMemberWhereIsNotUsed() {
-        //given
-
-        //when
-
-        //then
-
     }
 }
