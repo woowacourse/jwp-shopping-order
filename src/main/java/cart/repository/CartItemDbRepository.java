@@ -46,4 +46,9 @@ public class CartItemDbRepository implements CartItemRepository {
     public void deleteById(final Long id) {
         this.cartItemDao.deleteById(id);
     }
+
+    @Override
+    public void deleteByProductId(Long productId) {
+        this.cartItemDao.deleteByProductId(productId);
+    }
 }

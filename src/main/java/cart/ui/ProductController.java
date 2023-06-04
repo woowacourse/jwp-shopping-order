@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.application.CartItemService;
 import cart.application.ProductService;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -16,9 +17,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final CartItemService cartItemService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CartItemService cartItemService) {
         this.productService = productService;
+        this.cartItemService = cartItemService;
     }
 
     @GetMapping
@@ -49,6 +52,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        cartItemService.deleteByProduct(id);
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
