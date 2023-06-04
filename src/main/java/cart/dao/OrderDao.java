@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderDao {
 
-    private static final RowMapper<OrderEntity> rowMapper = ((rs, rowNum) -> {
+    private static final RowMapper<OrderEntity> ROW_MAPPER = ((rs, rowNum) -> {
         Long id = rs.getLong("id");
         Long memberId = rs.getLong("member_id");
         Long couponId = rs.getLong("coupon_id");
@@ -71,7 +71,7 @@ public class OrderDao {
         String sql = "SELECT * FROM orders WHERE id = ?";
 
         try {
-            OrderEntity orderEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            OrderEntity orderEntity = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
             return Optional.ofNullable(orderEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -81,6 +81,6 @@ public class OrderDao {
     public List<OrderEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT * FROM orders WHERE member_id = ?";
 
-        return jdbcTemplate.query(sql, rowMapper, memberId);
+        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 }

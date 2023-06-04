@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
-    private static final RowMapper<ProductEntity> rowMapper = ((rs, rowNum) -> {
+    private static final RowMapper<ProductEntity> ROW_MAPPER = ((rs, rowNum) -> {
         Long productId = rs.getLong("id");
         String name = rs.getString("name");
         BigDecimal price = rs.getBigDecimal("price");
@@ -33,13 +33,13 @@ public class ProductDao {
 
     public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public Optional<ProductEntity> findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

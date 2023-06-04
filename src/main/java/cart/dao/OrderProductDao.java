@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderProductDao {
 
-    private static final RowMapper<OrderProductEntity> rowMapper = ((rs, rowNum) -> {
+    private static final RowMapper<OrderProductEntity> ROW_MAPPER = ((rs, rowNum) -> {
         Long id = rs.getLong("id");
         Long orderId = rs.getLong("orders_id");
         Long productId = rs.getLong("product_id");
@@ -43,11 +43,11 @@ public class OrderProductDao {
 
     public List<OrderProductEntity> findAll() {
         String sql = "select * from orders_product";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public List<OrderProductEntity> findByOrderId(Long orderId) {
         String sql = "SELECT * FROM orders_product WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, orderId);
+        return jdbcTemplate.query(sql, ROW_MAPPER, orderId);
     }
 }

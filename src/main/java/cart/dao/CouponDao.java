@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CouponDao {
 
-    private static final RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<CouponEntity> ROW_MAPPER = (rs, rowNum) -> {
         long id = rs.getLong("id");
         String name = rs.getString("name");
         String type = rs.getString("type");
@@ -34,7 +34,7 @@ public class CouponDao {
     public Optional<CouponEntity> findById(Long id) {
         String sql = "SELECT * FROM coupon WHERE id = ?";
         try {
-            CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
             return Optional.ofNullable(couponEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

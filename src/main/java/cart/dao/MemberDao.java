@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberDao {
 
-    private static final RowMapper<MemberEntity> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<MemberEntity> ROW_MAPPER = (rs, rowNum) -> {
         long id = rs.getLong("id");
         String email = rs.getString("email");
         String password = rs.getString("password");
@@ -47,7 +47,7 @@ public class MemberDao {
     public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         try {
-            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
             return Optional.ofNullable(memberEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -57,7 +57,7 @@ public class MemberDao {
     public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, email);
+            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, ROW_MAPPER, email);
             return Optional.ofNullable(memberEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -66,7 +66,7 @@ public class MemberDao {
 
     public List<MemberEntity> getAllMembers() {
         String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 }
 

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CouponIssueConditionDao {
 
-    private static final RowMapper<CouponIssueConditionEntity> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<CouponIssueConditionEntity> ROW_MAPPER = (rs, rowNum) -> {
         long id = rs.getLong("id");
         long couponId = rs.getLong("coupon_id");
         BigDecimal minIssuePrice = rs.getBigDecimal("min_issue_price");
@@ -30,7 +30,7 @@ public class CouponIssueConditionDao {
 
     public List<CouponIssueConditionEntity> findAll() {
         String sql = "SELECT * FROM coupon_issue_condition";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public Long save(CouponIssueConditionEntity couponIssueCondition) {

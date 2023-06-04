@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberCouponDao {
 
-    private static final RowMapper<MemberCouponEntity> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<MemberCouponEntity> ROW_MAPPER = (rs, rowNum) -> {
         long id = rs.getLong("id");
         long memberId = rs.getLong("member_id");
         long couponId = rs.getLong("coupon_id");
@@ -34,7 +34,7 @@ public class MemberCouponDao {
     public Optional<MemberCouponEntity> findById(Long couponId) {
         String sql = "SELECT * FROM member_coupon WHERE id = ?";
         try {
-            MemberCouponEntity memberCoupon = jdbcTemplate.queryForObject(sql, rowMapper, couponId);
+            MemberCouponEntity memberCoupon = jdbcTemplate.queryForObject(sql, ROW_MAPPER, couponId);
             return Optional.ofNullable(memberCoupon);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -69,7 +69,7 @@ public class MemberCouponDao {
     public List<MemberCouponEntity> findByMemberId(Long memberId) {
         String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
 
-        return jdbcTemplate.query(sql, rowMapper, memberId);
+        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
     public void saveAll(List<MemberCouponEntity> memberCoupons) {

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CartItemDao {
 
-    private static final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<CartItemEntity> ROW_MAPPER = (rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
         String email = rs.getString("member_email");
         Long productId = rs.getLong("product_id");
@@ -48,7 +48,7 @@ public class CartItemDao {
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.member_id = ? ";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
+        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
     public Long save(CartItemEntity cartItem) {
@@ -81,7 +81,7 @@ public class CartItemDao {
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ? ";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
