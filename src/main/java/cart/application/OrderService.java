@@ -57,6 +57,7 @@ public class OrderService {
         return OrderResponse.of(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getOrders(final Member member) {
         final List<Order> orders = orderRepository.findByMember(member);
         return orders.stream()
@@ -64,6 +65,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse getOrderById(final Member member, final Long id) {
         final Order order = orderRepository.findById(member, id);
         return OrderResponse.of(order);

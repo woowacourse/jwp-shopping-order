@@ -12,7 +12,9 @@ import cart.dto.ProductStockResponse;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -29,6 +31,7 @@ public class ProductService {
         return ProductStockResponse.of(productStock);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductStockResponse> getAllProductStockResponses() {
         final List<ProductStock> productStocks = productRepository.getAllProductStocks();
         return productStocks.stream()
@@ -36,6 +39,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductStockResponse getProductStockResponseById(final Long id) {
         final Optional<ProductStock> productStock = productRepository.getProductStockById(id);
         return ProductStockResponse.of(productStock.orElseThrow(() -> new ProductNotFoundException(id)));

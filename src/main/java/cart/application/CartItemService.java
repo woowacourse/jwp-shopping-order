@@ -10,7 +10,9 @@ import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.repository.CartItemRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class CartItemService {
 
@@ -26,6 +28,7 @@ public class CartItemService {
         return CartItemResponse.of(cartItem);
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
         return cartItemRepository.findByMember(member)
                 .stream()
