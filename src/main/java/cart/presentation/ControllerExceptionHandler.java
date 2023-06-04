@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.application.exception.ExpectedException;
+import cart.application.exception.ApplicationException;
 import cart.presentation.dto.response.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ public class ControllerExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
-    @ExceptionHandler(ExpectedException.class)
-    public ResponseEntity<ExceptionResponse> handleExpectedException(ExpectedException e) {
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ExceptionResponse> handleExpectedException(ApplicationException e) {
         logger.debug(e.getMessage());
         HttpStatus status = ExceptionStatusMapper.of(e);
         return ResponseEntity.status(status)

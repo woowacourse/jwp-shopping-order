@@ -4,6 +4,7 @@ import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Product;
 import cart.application.repository.CartItemRepository;
+import cart.persistence.exception.CannotFindDataException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CartItemPersistenceAdapter implements CartItemRepository {
@@ -38,11 +40,12 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
                 .addValue("product_id", cartItem.getProduct().getId())
                 .addValue("quantity", cartItem.getQuantity());
         namedParameterJdbcTemplate.update(sql, namedParameters, keyHolder);
-        return findById(keyHolder.getKeyAs(Long.class));
+        return findById(keyHolder.getKeyAs(Long.class))
+                .orElseThrow(() -> new CannotFindDataException());
     }
 
     @Override
-    public CartItem findById(Long id) {
+    public Optional<CartItem> findById(Long id) {
         String sql = JOIN_QUERY + "WHERE cart_item.id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
         List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
@@ -51,8 +54,7 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
             return makeCartItem(rs, member, product);
         });
         return cartItems.stream()
-                .findAny()
-                .orElseThrow();
+                .findAny();
     }
 
     @Override
