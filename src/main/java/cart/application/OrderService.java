@@ -19,6 +19,7 @@ public class OrderService {
     private final ProductDao productDao;
     private final OrderRepository orderRepository;
     private final PointRepository pointRepository;
+
     private final OrderPage orderPage;
     private final PointAccumulationPolicy pointAccumulationPolicy;
 
