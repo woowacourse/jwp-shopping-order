@@ -23,6 +23,10 @@ public class IssuableCoupon {
         return !totalOrderPrice.isLessThan(money.getValue());
     }
 
+    public boolean isSameCondition(Money money) {
+        return this.money.equals(money);
+    }
+
     public Long getId() {
         return id;
     }

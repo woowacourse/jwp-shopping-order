@@ -66,7 +66,7 @@ public class CouponService {
     private List<MemberCoupon> findAllSatisfyMemberCoupon(Member member, List<IssuableCoupon> issuableCoupons,
                                                           Money money) {
         return issuableCoupons.stream()
-                .filter(issuableCoupon -> issuableCoupon.getMoney().equals(money))
+                .filter(issuableCoupon -> issuableCoupon.isSameCondition(money))
                 .map(IssuableCoupon::getCoupon)
                 .map(coupon -> new MemberCoupon(member, coupon))
                 .collect(Collectors.toList());
