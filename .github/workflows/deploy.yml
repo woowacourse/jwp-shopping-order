@@ -25,4 +25,4 @@ jobs:
           fi
       - name: deploy
         run: |
-          sudo java -jar build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
+          sudo nohup java -jar build/libs/jwp-shopping-order.jar --spring.config.location=file:/home/ubuntu/application.properties &
