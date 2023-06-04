@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.domain.Pagination;
 import cart.domain.purchaseorder.OrderStatus;
 import cart.domain.purchaseorder.PurchaseOrderInfo;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PurchaseOrderDao {
@@ -60,13 +62,17 @@ public class PurchaseOrderDao {
         return jdbcTemplate.query(sql, source, getPurchaseOrderRowMapper());
     }
 
-    public PurchaseOrderInfo findById(Long id) {
+    public Optional<PurchaseOrderInfo> findById(Long id) {
         String sql = "SELECT o.id as order_id, member.id as member_id, member.email as email, member.password as password, o.order_at, o.payment, o.used_point, o.status "
                 + "FROM purchase_order AS o "
                 + "JOIN member ON o.member_id = member.id "
                 + "WHERE o.id = :id";
-        SqlParameterSource source = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject(sql, source, getPurchaseOrderRowMapper());
+        try {
+            SqlParameterSource source = new MapSqlParameterSource("id", id);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, source, getPurchaseOrderRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<PurchaseOrderInfo> getPurchaseOrderRowMapper() {

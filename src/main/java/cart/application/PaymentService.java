@@ -181,9 +181,13 @@ public class PaymentService {
     }
 
     private void updatePurchaseOrderStatus(Long orderId) {
-        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(orderId);
-        purchaseOrderInfo.changeStatus(CANCELLED);
-        purchaseOrderDao.updateStatus(purchaseOrderInfo);
+        purchaseOrderDao.findById(orderId)
+                        .ifPresent(purchaseOrderInfo -> {
+                                    purchaseOrderInfo.changeStatus(CANCELLED);
+                                    purchaseOrderDao.updateStatus(purchaseOrderInfo);
+
+                                }
+                        );
     }
 
     private void checkAlreadyUsed(Point rewardPoint) {

@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import static cart.TestFeatures.*;
 import static org.assertj.core.api.Assertions.*;
@@ -32,12 +33,12 @@ class PurchaseOrderDaoTest {
     @Autowired
     DataSource dataSource;
     private PurchaseOrderDao purchaseOrderDao;
-    private PurchaseOrderItemDao purchaseOrderItemDao;
+    private MemberDao memberDao;
 
     @BeforeEach
     void setup() {
-        purchaseOrderItemDao = new PurchaseOrderItemDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
         purchaseOrderDao = new PurchaseOrderDao(namedParameterJdbcTemplate, dataSource);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
     @DisplayName("PurchaseOrder를 통해 주문을 저장한다")
@@ -76,6 +77,19 @@ class PurchaseOrderDaoTest {
                                         .contains(회원1_주문1, 회원1_주문2, 회원1_주문3);
     }
 
+    @DisplayName("PurchaseOrder에서 특정 회원의 주문 목록이 비어있으면 빈 값을 반환한다")
+    @Test
+    void findEmptyByMemberId() {
+        // given
+        Long memberId = 100L;
+
+        // when
+        List<PurchaseOrderInfo> resultOrderInfos = purchaseOrderDao.findAllByMemberId(memberId);
+
+        // then
+        assertThat(resultOrderInfos).isEmpty();
+    }
+
     @DisplayName("PurchaseOrder를 특정 회원의 주문 목록을 페이징 처리를 통해 조회할 수 있다")
     @Test
     void findMemberByIdWithPagination() {
@@ -98,11 +112,24 @@ class PurchaseOrderDaoTest {
         Long purchaseOrderId = 1L;
 
         // when
-        PurchaseOrderInfo result = purchaseOrderDao.findById(purchaseOrderId);
+        PurchaseOrderInfo result = purchaseOrderDao.findById(purchaseOrderId).orElseThrow();
 
         // then
         assertThat(result).usingRecursiveComparison()
                           .isEqualTo(회원1_주문1);
+    }
+
+    @DisplayName("존재하지 않는 PurchaseOrder 아이디를 조회했을 때 빈 값을 반환한다")
+    @Test
+    void findEmptyById() {
+        // given
+        Long purchaseOrderId = 100L;
+
+        // when
+        Optional<PurchaseOrderInfo> result = purchaseOrderDao.findById(purchaseOrderId);
+
+        // then
+        assertThat(result).isEmpty();
     }
 
     @DisplayName("특정 회원의 전체 주문 목록 개수를 조회할 수 있다")

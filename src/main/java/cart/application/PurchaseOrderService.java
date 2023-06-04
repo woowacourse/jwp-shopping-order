@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,10 +67,15 @@ public class PurchaseOrderService {
     }
 
     public PurchaseOrderResponse getPurchaseOrderByOrderId(Long orderId) {
-        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(orderId);
-        List<PurchaseOrderItemResponse> purchaseOrderItemResponses = getPurchaseOrderItemResponses(orderId);
-        Point savedPoint = memberRewardPointDao.getPointByOrderId(orderId);
-        return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(), purchaseOrderInfo.getPayment(), purchaseOrderInfo.getUsedPoint(), savedPoint.getPointAmount(), purchaseOrderItemResponses);
+        Optional<PurchaseOrderInfo> purchaseOrderInfoById = purchaseOrderDao.findById(orderId);
+        if (purchaseOrderInfoById.isPresent()) {
+            PurchaseOrderInfo purchaseOrderInfo = purchaseOrderInfoById.get();
+            List<PurchaseOrderItemResponse> purchaseOrderItemResponses = getPurchaseOrderItemResponses(orderId);
+            Point savedPoint = memberRewardPointDao.getPointByOrderId(orderId);
+            return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(), purchaseOrderInfo.getPayment(),
+                    purchaseOrderInfo.getUsedPoint(), savedPoint.getPointAmount(), purchaseOrderItemResponses);
+        }
+        throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");
     }
 
     private List<PurchaseOrderItemResponse> getPurchaseOrderItemResponses(Long orderId) {

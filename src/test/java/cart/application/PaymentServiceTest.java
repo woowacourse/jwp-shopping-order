@@ -82,7 +82,7 @@ class PaymentServiceTest {
         Long purchaseOrderId = paymentService.createPurchaseOrder(member, purchaseOrderRequest);
 
         // then
-        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(purchaseOrderId);
+        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(purchaseOrderId).orElseThrow();
         List<PurchaseOrderItem> purchaseOrderItems = purchaseOrderItemDao.findAllByPurchaseOrderId(purchaseOrderInfo.getId());
         Point point = memberRewardPointDao.getPointByOrderId(purchaseOrderInfo.getId());
         List<Point> points = memberRewardPointDao.getAllByMemberId(회원2.getId());
@@ -175,7 +175,7 @@ class PaymentServiceTest {
                         .usingRecursiveFieldByFieldElementComparator()
                         .contains(이전_주문_적립_포인트1, 이전_주문_적립_포인트2, 이전_주문_적립_포인트3)
                         .doesNotContain(취소한_주문_적립_포인트),
-                () -> assertThat(purchaseOrderDao.findById(orderId))
+                () -> assertThat(purchaseOrderDao.findById(orderId).orElseThrow())
                         .usingRecursiveComparison()
                         .isEqualTo(취소한_주문)
         );
