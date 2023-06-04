@@ -1,5 +1,9 @@
-package cart.domain;
+package cart.domain.order;
 
+import cart.domain.member.Member;
+import cart.domain.price.Point;
+import cart.domain.price.Price;
+import cart.domain.product.Product;
 import cart.exception.IllegalOrderException;
 import cart.exception.NumberRangeException;
 import cart.exception.UnauthorizedAccessException;

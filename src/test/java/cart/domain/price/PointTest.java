@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.price;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

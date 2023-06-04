@@ -1,6 +1,6 @@
 package cart.repository.dto;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 import java.time.LocalDateTime;
 
 public class OrderEntity {

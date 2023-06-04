@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
-import cart.config.Principal;
+import cart.config.auth.Principal;
 import cart.dto.User;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailResponse;

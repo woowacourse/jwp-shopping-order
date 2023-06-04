@@ -1,4 +1,4 @@
-package cart.config;
+package cart.config.auth;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 

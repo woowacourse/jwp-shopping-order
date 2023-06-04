@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.MemberService;
-import cart.config.Principal;
+import cart.config.auth.Principal;
 import cart.dto.User;
 import cart.dto.response.PointResponse;
 import cart.dto.response.Response;

@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.cart;
 
+import cart.domain.product.Product;
+import cart.domain.member.Member;
 import cart.exception.UnauthorizedAccessException;
 
 public class CartItem {

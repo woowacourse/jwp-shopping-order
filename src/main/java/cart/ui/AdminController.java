@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.dao.AdminCartDao;
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

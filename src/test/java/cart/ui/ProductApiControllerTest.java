@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.MockAuthProviderConfig;
 import cart.application.ProductService;
 import cart.dao.MemberDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

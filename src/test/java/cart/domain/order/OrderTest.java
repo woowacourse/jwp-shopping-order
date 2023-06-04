@@ -1,9 +1,13 @@
-package cart.domain;
+package cart.domain.order;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.member.Member;
+import cart.domain.price.Point;
+import cart.domain.price.Price;
+import cart.domain.product.Product;
 import cart.exception.IllegalOrderException;
 import cart.exception.NumberRangeException;
 import java.time.LocalDateTime;

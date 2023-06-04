@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.order.OrderItem;
+import cart.domain.product.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

@@ -5,11 +5,11 @@ import static java.util.stream.Collectors.toList;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.Point;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.price.Point;
+import cart.domain.product.Product;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailResponse;
@@ -62,11 +62,6 @@ public class OrderService {
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다."));
     }
 
-    private void decreaseMemberPoint(Member member, Point spendPoint) {
-        validatePoint(member, spendPoint);
-        member.decreasePoint(spendPoint);
-    }
-
     private List<OrderItem> createOrderItems(OrderRequest orderRequest) {
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderItemRequest orderItem : orderRequest.getOrderItems()) {
@@ -76,6 +71,11 @@ public class OrderService {
             orderItems.add(new OrderItem(null, product, quantity, product.getPrice() * quantity));
         }
         return orderItems;
+    }
+
+    private void decreaseMemberPoint(Member member, Point spendPoint) {
+        validatePoint(member, spendPoint);
+        member.decreasePoint(spendPoint);
     }
 
     private void validatePoint(Member member, Point point) {

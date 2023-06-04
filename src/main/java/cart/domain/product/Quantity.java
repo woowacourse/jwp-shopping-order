@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import cart.exception.NumberRangeException;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.price;
 
 import cart.exception.NumberRangeException;
 import java.math.BigDecimal;

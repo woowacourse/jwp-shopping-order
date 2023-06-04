@@ -1,4 +1,4 @@
-package cart.config;
+package cart.config.auth;
 
 import cart.dto.User;
 import cart.exception.AuthenticationException;

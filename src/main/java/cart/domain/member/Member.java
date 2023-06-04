@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.member;
 
+import cart.domain.price.Point;
 import java.util.Objects;
 
 public class Member {

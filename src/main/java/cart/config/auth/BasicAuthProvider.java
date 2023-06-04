@@ -1,4 +1,4 @@
-package cart.config;
+package cart.config.auth;
 
 import cart.application.MemberService;
 import cart.dto.User;

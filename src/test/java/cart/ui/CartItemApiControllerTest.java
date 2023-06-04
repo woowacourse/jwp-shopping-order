@@ -17,12 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.MockAuthProviderConfig;
 import cart.application.CartItemService;
-import cart.config.AuthProvider;
+import cart.config.auth.AuthProvider;
 import cart.dto.User;
 import cart.dao.MemberDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;

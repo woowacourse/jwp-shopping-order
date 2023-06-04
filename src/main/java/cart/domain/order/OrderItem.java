@@ -1,5 +1,8 @@
-package cart.domain;
+package cart.domain.order;
 
+import cart.domain.price.Price;
+import cart.domain.product.Product;
+import cart.domain.product.Quantity;
 import java.util.Objects;
 
 public class OrderItem {

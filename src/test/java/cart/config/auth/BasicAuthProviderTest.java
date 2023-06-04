@@ -1,7 +1,8 @@
-package cart.config;
+package cart.config.auth;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 
 import cart.application.MemberService;
 import cart.dto.User;

@@ -20,10 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.MockAuthProviderConfig;
 import cart.application.OrderService;
-import cart.config.AuthProvider;
+import cart.config.auth.AuthProvider;
 import cart.dto.User;
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailResponse;

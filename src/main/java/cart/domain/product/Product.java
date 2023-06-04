@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.product;
 
+import cart.domain.price.Price;
 import java.util.Objects;
 
 public class Product {

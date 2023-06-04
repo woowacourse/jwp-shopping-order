@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.dto.User;
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import cart.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;

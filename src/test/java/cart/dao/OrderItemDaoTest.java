@@ -3,8 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.order.OrderItem;
+import cart.domain.product.Product;
 import cart.repository.dto.OrderEntity;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
 import io.restassured.response.ExtractableResponse;
@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class OrderIntegrationTest extends IntegrationTest {
+class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
     ProductDao productDao;
