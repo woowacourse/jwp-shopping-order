@@ -4,7 +4,6 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -33,8 +32,6 @@ public class OrderService {
     private OrderItemDao orderItemDao;
     @Autowired
     private MemberDao memberDao;
-    @Autowired
-    private ProductDao productDao;
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
         Long orderId = makeOrder(member, orderCreateRequest);
@@ -156,7 +153,6 @@ public class OrderService {
     }
 
     private int calculateTotalItemDiscountedPriceForOrder(List<OrderedItem> orderedItems) {
-
         List<Integer> itemDiscountedPrice = new ArrayList<>();
         for (OrderedItem orderedItem : orderedItems) {
             calculateItemDiscountedPriceForOrder(itemDiscountedPrice, orderedItem);
@@ -165,11 +161,19 @@ public class OrderService {
     }
 
     private void calculateItemDiscountedPriceForOrder(List<Integer> itemDiscountedPrice, OrderedItem orderedItem) {
-        int discountedPrice = productDao.getProductByName(orderedItem.getName()).getDiscountedPrice();
         for (int i = 0; i < orderedItem.getQuantity(); i++) {
+            int discountedPrice = calculateDiscountedPrice(orderedItem);
             itemDiscountedPrice.add(discountedPrice);
         }
     }
+
+    public int calculateDiscountedPrice(OrderedItem orderedItem) {
+        if (orderedItem.getDiscountRate() > 0) {
+            return orderedItem.getPrice() - ((orderedItem.getDiscountRate() * orderedItem.getPrice() / 100 - orderedItem.getPrice()) * -1);
+        }
+        return 0;
+    }
+
 
     private int calculateTotalMemberDiscountAmountForOrder(Order order, int totalItemDiscountedAmount) {
         return order.getTotalItemPrice() - order.getDiscountedTotalItemPrice() - totalItemDiscountedAmount;
