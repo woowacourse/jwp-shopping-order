@@ -39,8 +39,11 @@ public class CartController {
         return ResponseEntity.ok(couponService.findCouponsByMember(member.getId()));
     }
 
-    @GetMapping("/cart-items/coupon")
-    public ResponseEntity<DiscountResponse> applyCoupon(@Auth Member member, @RequestParam(required = false) List<Long> id) {
-        return ResponseEntity.ok(cartService.discountWithCoupons(member, id));
+    @GetMapping(value = {"/cart-items/coupon/{couponIds}", "/cart-items/coupon"})
+    public ResponseEntity<DiscountResponse> applyCoupon(@Auth Member member, @PathVariable(required = false) List<Long> couponIds) {
+        if (couponIds == null) {
+            couponIds = List.of();
+        }
+        return ResponseEntity.ok(cartService.discountWithCoupons(member, couponIds));
     }
 }
