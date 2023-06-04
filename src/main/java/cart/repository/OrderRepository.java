@@ -26,4 +26,12 @@ public class OrderRepository {
         return orderId;
     }
 
+    public List<OrderEntity> findAllOrder(Member member) {
+        return orderDao.findAll(member.getId());
+    }
+
+    public List<OrderCartItemEntity> findOrderItemsByOrderId(Long orderId) {
+        return orderCartItemDao.findByOrderId(orderId);
+    }
+
 }

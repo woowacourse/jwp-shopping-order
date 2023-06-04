@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -54,4 +55,12 @@ public class DbOrderDao implements OrderDao {
         String sql = "select * from ordered where id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
+
+    @Override
+    public List<OrderEntity> findAll(Long memberId) {
+        String sql = "select * from ordered where member_id = ?";
+        return jdbcTemplate.query(sql,rowMapper,memberId);
+    }
+
+
 }

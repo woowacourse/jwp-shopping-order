@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -54,5 +55,11 @@ public class DbOrderCartItemDao implements OrderCartItemDao {
     public OrderCartItemEntity findById(Long id) {
         String sql = "select * from ordered_item where id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
+    @Override
+    public List<OrderCartItemEntity> findByOrderId(Long orderId) {
+        String sql = "select * from ordered_item where ordered_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }

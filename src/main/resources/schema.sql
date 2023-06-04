@@ -53,6 +53,8 @@ CREATE TABLE ordered_item (
     name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     image_url VARCHAR(255) NOT NULL,
+    total_price INT NOT NULL,
+    total_discount_price INT NOT NULL,
     FOREIGN KEY (ordered_id) REFERENCES ordered(id)
 );
 
