@@ -8,6 +8,7 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PointHistoryEntity;
 import cart.exception.OrderException;
+import cart.exception.OrderServerException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ class OrderRepositoryTest {
 
     @DisplayName("주문 정보를 저장할 수 있다.")
     @Test
-    void save() {
+    void save_success() {
         OrderItem orderItem1 = new OrderItem(product1, 2, 20000);
         OrderItem orderItem2 = new OrderItem(product2, 3, 60000);
         OrderItemEntity orderItemEntity1 = new OrderItemEntity(2L, product1, 2, 20000);
@@ -97,6 +98,20 @@ class OrderRepositoryTest {
         );
     }
 
+    @DisplayName("멤버가 잘못된 경우 주문 정보를 저장할 수 없다.")
+    @Test
+    void save_fail() {
+        OrderItem orderItem1 = new OrderItem(product1, 2, 20000);
+        OrderItem orderItem2 = new OrderItem(product2, 3, 60000);
+
+        List<OrderItem> orderItems = List.of(orderItem1, orderItem2);
+        Order order = new Order(points, orderItems);
+
+        assertThatThrownBy(() -> orderRepository.save(100L, order))
+                .isInstanceOf(OrderServerException.class)
+                .hasMessageContaining("해당 주문 정보를 데이터베이스에 저장할 수 없습니다.");
+    }
+
     @DisplayName("사용자에 대한 주문 정보를 반환할 수 있다.")
     @Test
     void findAllByMember() {
@@ -114,7 +129,7 @@ class OrderRepositoryTest {
 
     @DisplayName("주문 번호를 사용해 주문 이력을 확인할수 있다.")
     @Test
-    void find() {
+    void find_success() {
         OrderItem orderItem1 = new OrderItem(product1, 3, 30000);
         OrderItem orderItem2 = new OrderItem(product2, 2, 40000);
         Order order = orderRepository.findOrder(member.getId(), 1L);
@@ -124,6 +139,15 @@ class OrderRepositoryTest {
                 () -> assertThat(order.getOrderItems()).containsExactlyInAnyOrder(orderItem1, orderItem2),
                 () -> assertThat(order.getTotalUsedPoint()).isEqualTo(1000)
         );
+    }
+
+    @DisplayName("주문 번호를 사용해 주문 이력을 확인할수 있다.")
+    @ParameterizedTest
+    @CsvSource(value = {"100:1", "1:100"}, delimiter = ':')
+    void find_fail(Long memberId, Long orderId) {
+        assertThatThrownBy(() -> orderRepository.findOrder(memberId, orderId))
+                .isInstanceOf(OrderException.class)
+                .hasMessageContaining("해당 주문을 찾을 수 없습니다.");
     }
 
     @DisplayName("주문을 취소할 수 있다.")

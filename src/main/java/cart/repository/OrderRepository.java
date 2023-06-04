@@ -9,6 +9,8 @@ import cart.entity.OrderItemEntity;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import cart.exception.OrderException;
+import cart.exception.OrderServerException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,7 +24,9 @@ import java.util.stream.Collectors;
 public class OrderRepository {
 
     private static final int NO_UPDATE_ROW = 0;
-    private static final String INVALID_ORDER_DELETE_MESSAGE = "해당 주문 번호에 대한 주문을 취소할 수 없습니다.";
+    private static final String INVALID_DELETE_MESSAGE = "해당 주문 번호에 대한 주문을 취소할 수 없습니다.";
+    private static final String INVALID_SAVE_MESSAGE = "해당 주문 정보를 데이터베이스에 저장할 수 없습니다.";
+    private static final String INVALID_FIND_MESSAGE = "해당 주문을 찾을 수 없습니다.";
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
@@ -35,16 +39,20 @@ public class OrderRepository {
     }
 
     public Long save(Long memberId, Order order) {
-        OrderEntity orderEntity = new OrderEntity(memberId, order.getOrderStatus().getOrderStatusId());
-        Long orderId = orderDao.save(orderEntity);
+        try {
+            OrderEntity orderEntity = new OrderEntity(memberId, order.getOrderStatus().getOrderStatusId());
+            Long orderId = orderDao.save(orderEntity);
 
-        List<OrderItemEntity> orderItemEntities = getOrderItemEntities(order);
+            List<OrderItemEntity> orderItemEntities = getOrderItemEntities(order);
 
-        orderItemDao.saveAll(orderId, orderItemEntities);
+            orderItemDao.saveAll(orderId, orderItemEntities);
 
-        List<PointEntity> pointEntities = getPointEntities(order);
-        pointHistoryDao.saveAll(orderId, pointEntities);
-        return orderId;
+            List<PointEntity> pointEntities = getPointEntities(order);
+            pointHistoryDao.saveAll(orderId, pointEntities);
+            return orderId;
+        } catch (DataAccessException exception) {
+            throw new OrderServerException(INVALID_SAVE_MESSAGE);
+        }
     }
 
     private List<OrderItemEntity> getOrderItemEntities(Order order) {
@@ -68,7 +76,7 @@ public class OrderRepository {
 
     private void validateDelete(int deletedRowCount) {
         if (isNotDeleted(deletedRowCount)) {
-            throw new OrderException(INVALID_ORDER_DELETE_MESSAGE);
+            throw new OrderException(INVALID_DELETE_MESSAGE);
         }
     }
 
@@ -128,12 +136,16 @@ public class OrderRepository {
     }
 
     public Order findOrder(Long memberId, Long orderId) {
-        OrderEntity orderEntity = orderDao.findBy(memberId, orderId);
-        OrderStatus orderStatus = OrderStatus.findOrderStatusById(orderEntity.getOrderStatusId());
-        Points points = getPoints(orderId);
-        List<OrderItem> orderItems = getOrderItems(orderId);
-        LocalDate createAt = orderEntity.getCreateAt();
-        return new Order(orderId, orderStatus, points, orderItems, createAt);
+        try {
+            OrderEntity orderEntity = orderDao.findBy(memberId, orderId);
+            OrderStatus orderStatus = OrderStatus.findOrderStatusById(orderEntity.getOrderStatusId());
+            Points points = getPoints(orderId);
+            List<OrderItem> orderItems = getOrderItems(orderId);
+            LocalDate createAt = orderEntity.getCreateAt();
+            return new Order(orderId, orderStatus, points, orderItems, createAt);
+        } catch (DataAccessException exception) {
+            throw new OrderException(INVALID_FIND_MESSAGE);
+        }
     }
 
     private List<OrderItem> getOrderItems(Long orderId) {
