@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,25 +27,12 @@ public class ProductDao {
 
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product WHERE is_deleted = FALSE";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            boolean isDeleted = rs.getBoolean("is_deleted");
-            return new Product(productId, name, price, imageUrl, isDeleted);
-        });
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ? AND is_deleted = FALSE";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            boolean isDeleted = rs.getBoolean("is_deleted");
-            return new Product(productId, name, price, imageUrl, isDeleted);
-        });
+        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, productRowMapper);
     }
 
     public List<Product> getProductByIds(List<Long> productIds) {
@@ -52,13 +40,7 @@ public class ProductDao {
 
         Map<String, Object> params = Collections.singletonMap("ids", productIds);
 
-        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            final Long id = rs.getLong("id");
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
-            return new Product(id, name, price, imageUrl);
-        });
+        return namedParameterJdbcTemplate.query(sql, params, productRowMapper);
     }
 
     public Long createProduct(Product product) {
@@ -89,4 +71,13 @@ public class ProductDao {
         String sql = "UPDATE product SET is_deleted = TRUE WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
+
+    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
+        Long productId = rs.getLong("id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        boolean isDeleted = rs.getBoolean("is_deleted");
+        return new Product(productId, name, price, imageUrl, isDeleted);
+    };
 }

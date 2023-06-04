@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -38,12 +39,15 @@ public class OrderItemDao {
     }
 
     public List<OrderItemEntity> getOrderItemsByOrderId(Long orderId) {
-        String sql = "SELECT id, product_id, quantity FROM order_item where orders_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{orderId}, (rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            Long productId = rs.getLong("product_id");
-            int quantity = rs.getInt("quantity");
-            return new OrderItemEntity(id, orderId, productId, quantity);
-        });
+        String sql = "SELECT id, orders_id product_id, quantity FROM order_item where orders_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{orderId}, orderItemRowMapper);
     }
+
+    private final RowMapper<OrderItemEntity> orderItemRowMapper = (rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        Long orderId = rs.getLong("orders_id");
+        Long productId = rs.getLong("product_id");
+        int quantity = rs.getInt("quantity");
+        return new OrderItemEntity(id, orderId, productId, quantity);
+    };
 }

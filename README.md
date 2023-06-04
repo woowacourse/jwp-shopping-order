@@ -152,10 +152,10 @@
        - 그렇다면 그냥 기존의 전체 조회 API 없애버리면서 Request Mapping 충돌 없애자
     2. 전체 조회 API를 그대로 남길 것이라면, 전체 조회 API의 응답으로도 pagination 정보를 보내는 게 좋을지?(의미 없는 값 넣어서)
 ## 추후 리팩토링
-- [ ] Dao 중복 코드 제거
+- [x] Dao 중복 코드 제거
 - [ ] Dao 레벨에선 엔티티만 다루도록 수정 + Repository 레벨에서 객체 조립 후 반환
 
 ## 할일
 - [x] 주문 생성 기능 서비스 테스트 작성
-- [ ] 주문 내역 조회시, response의 키 값 cartItems -> orderItems로 바꾸는 거 어떤지 팀원과 논의한 후에 변경하기
+- [x] 주문 내역 조회시, response의 키 값 cartItems -> orderItems로 바꾸는 거 어떤지 팀원과 논의한 후에 변경하기
 - [x] Product 조회 시에 is_deleted = 0인 row만 조회하도록 수정
