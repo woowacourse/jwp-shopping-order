@@ -1,0 +1,4 @@
+### 주문 목록 조회
+GET http://localhost:8080/orders?orderPage=1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json

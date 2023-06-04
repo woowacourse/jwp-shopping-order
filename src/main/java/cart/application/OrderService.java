@@ -32,6 +32,7 @@ public class OrderService {
     }
 
     public OrderPageResponse findOrders(Member member, int pageNumber) {
+        System.out.println(member);
         List<Order> orders = orderRepository.findAllByMemberId(member.getId());
 
         List<OrderResponse> orderResponses = orders.stream()
