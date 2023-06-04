@@ -55,7 +55,7 @@ class PointDaoTest {
     void findByOrderId() {
         PointEntity expected = new PointEntity(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
 
-        PointEntity point = pointDao.findBy(1L, 1L);
+        PointEntity point = pointDao.findExistsBy(1L, 1L);
 
         assertThat(point).isEqualTo(expected);
     }
@@ -88,7 +88,7 @@ class PointDaoTest {
     void deleteByOrderId() {
         pointDao.delete(1L, 1L);
 
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject("select id from point where orders_id = 1 ", Long.class))
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject("select id from point where orders_id = 1 and status = 1 ", Long.class))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
