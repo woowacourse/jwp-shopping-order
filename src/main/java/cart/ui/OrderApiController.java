@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.request.OrderRequest;
-import cart.dto.response.OrderResponse;
+import cart.dto.response.OrderDetailResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +24,14 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(final Member member, @RequestBody OrderRequest orderRequest) {
-        final OrderResponse orderResponse = orderService.order(orderRequest, member);
-        return ResponseEntity.created(URI.create("/orders/" + orderResponse.getId())).body(orderResponse);
+    public ResponseEntity<OrderDetailResponse> createOrder(final Member member, @RequestBody OrderRequest orderRequest) {
+        final OrderDetailResponse orderDetailResponse = orderService.order(orderRequest, member);
+        return ResponseEntity.created(URI.create("/orders/" + orderDetailResponse.getId())).body(orderDetailResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> showOrderDetail(final Member member, @PathVariable Long id) {
-        final OrderResponse orderResponse = orderService.showOrderDetail(member, id);
-        return ResponseEntity.ok(orderResponse);
+    public ResponseEntity<OrderDetailResponse> showOrderDetail(final Member member, @PathVariable Long id) {
+        final OrderDetailResponse orderDetailResponse = orderService.showOrderDetail(member, id);
+        return ResponseEntity.ok(orderDetailResponse);
     }
 }

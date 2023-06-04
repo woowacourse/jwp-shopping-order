@@ -2,7 +2,7 @@ package cart.dto.response;
 
 import java.util.List;
 
-public class OrderResponse {
+public class OrderDetailResponse {
 
     private final Long id;
     private final Integer totalProductAmount;
@@ -11,9 +11,9 @@ public class OrderResponse {
     private final String address;
     private final List<OrderProductResponse> products;
 
-    public OrderResponse(final Long id, final Integer totalProductAmount, final Integer deliveryAmount,
-        final Integer discountedProductAmount, final String address,
-        final List<OrderProductResponse> products) {
+    public OrderDetailResponse(final Long id, final Integer totalProductAmount, final Integer deliveryAmount,
+                               final Integer discountedProductAmount, final String address,
+                               final List<OrderProductResponse> products) {
         this.id = id;
         this.totalProductAmount = totalProductAmount;
         this.deliveryAmount = deliveryAmount;

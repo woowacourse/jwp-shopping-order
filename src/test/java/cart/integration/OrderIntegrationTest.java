@@ -10,7 +10,7 @@ import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.CartItemResponse;
-import cart.dto.response.OrderResponse;
+import cart.dto.response.OrderDetailResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -59,11 +59,11 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = order(orderRequest);
 
         // then
-        final OrderResponse orderResponse = response.as(OrderResponse.class);
+        final OrderDetailResponse orderDetailResponse = response.as(OrderDetailResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(orderResponse.getTotalProductAmount()).isEqualTo(65_000);
-        assertThat(orderResponse.getDiscountedProductAmount()).isEqualTo(65_000);
-        assertThat(orderResponse.getDeliveryAmount()).isEqualTo(2_000);
+        assertThat(orderDetailResponse.getTotalProductAmount()).isEqualTo(65_000);
+        assertThat(orderDetailResponse.getDiscountedProductAmount()).isEqualTo(65_000);
+        assertThat(orderDetailResponse.getDeliveryAmount()).isEqualTo(2_000);
     }
 
     @DisplayName("쿠폰을 사용하여 주문한다.")
@@ -79,11 +79,11 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = order(orderRequest);
 
         // then
-        final OrderResponse orderResponse = response.as(OrderResponse.class);
+        final OrderDetailResponse orderDetailResponse = response.as(OrderDetailResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(orderResponse.getTotalProductAmount()).isEqualTo(65_000);
-        assertThat(orderResponse.getDiscountedProductAmount()).isEqualTo(coupon.calculateDiscountedAmount(65_000));
-        assertThat(orderResponse.getDeliveryAmount()).isEqualTo(2_000);
+        assertThat(orderDetailResponse.getTotalProductAmount()).isEqualTo(65_000);
+        assertThat(orderDetailResponse.getDiscountedProductAmount()).isEqualTo(coupon.calculateDiscountedAmount(65_000));
+        assertThat(orderDetailResponse.getDeliveryAmount()).isEqualTo(2_000);
     }
 
     @DisplayName("주문하면 장바구니에서 해당 상품이 삭제된다.")
@@ -113,15 +113,15 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
                 65_000, 2_000, "서울특별시 송파구", null);
-        final OrderResponse orderResponse = order(orderRequest).as(OrderResponse.class);
+        final OrderDetailResponse orderDetailResponse = order(orderRequest).as(OrderDetailResponse.class);
 
         // when
-        final ExtractableResponse<Response> response = getOrderDetailResponse(orderResponse.getId());
+        final ExtractableResponse<Response> response = getOrderDetailResponse(orderDetailResponse.getId());
 
         // then
-        final OrderResponse result = response.as(OrderResponse.class);
+        final OrderDetailResponse result = response.as(OrderDetailResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(result).usingRecursiveComparison().isEqualTo(orderResponse);
+        assertThat(result).usingRecursiveComparison().isEqualTo(orderDetailResponse);
     }
 
     private Long createProduct(final ProductRequest productRequest1) {
@@ -173,6 +173,14 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/orders/{id}", id)
+                .then().extract();
+    }
+
+    private ExtractableResponse<Response> getAllOrders() {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders")
                 .then().extract();
     }
 }

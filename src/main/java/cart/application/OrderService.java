@@ -12,8 +12,8 @@ import cart.domain.repository.OrderRepository;
 import cart.domain.repository.ProductRepository;
 import cart.domain.vo.Amount;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderDetailResponse;
 import cart.dto.response.OrderProductResponse;
-import cart.dto.response.OrderResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public OrderResponse order(final OrderRequest orderRequest, final Member member) {
+    public OrderDetailResponse order(final OrderRequest orderRequest, final Member member) {
         final List<OrderItem> orderItems = findOrderItems(orderRequest);
         final MemberCoupon coupon = findCouponIfExists(member.getId(), orderRequest.getCouponId());
         final Order order = orderRepository.create(
@@ -46,7 +46,7 @@ public class OrderService {
         }
         final int discountedProductAmount = order.discountProductAmount().getValue();
         useCoupon(member, coupon, orderRequest.getCouponId());
-        return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
+        return new OrderDetailResponse(order.getId(), orderRequest.getTotalProductAmount(),
                 order.getDeliveryAmount().getValue(), discountedProductAmount, order.getAddress(),
                 makeOrderProductResponses(orderItems));
     }
@@ -81,14 +81,14 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderResponse showOrderDetail(final Member member, final Long id) {
+    public OrderDetailResponse showOrderDetail(final Member member, final Long id) {
         final Order order = orderRepository.findById(id, member.getId());
 
         final List<OrderProductResponse> orderProductResponses = order.getOrderItems().stream()
                 .map(it -> new OrderProductResponse(it.getProduct().getId(), it.getProduct().getName(),
                         it.getProduct().getAmount().getValue(), it.getProduct().getImageUrl(), it.getQuantity()))
                 .collect(Collectors.toList());
-        return new OrderResponse(order.getId(), order.getTotalProductAmount().getValue(),
+        return new OrderDetailResponse(order.getId(), order.getTotalProductAmount().getValue(),
                 order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
                 orderProductResponses);
     }
