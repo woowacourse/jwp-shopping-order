@@ -15,7 +15,7 @@ public class ProductResponse {
     @Schema(description = "상품 이미지 url", example = "http://www.example.com/chciken.jpg")
     private final String imageUrl;
 
-    private ProductResponse(final Long id, final String name, final int price, final String imageUrl) {
+    public ProductResponse(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

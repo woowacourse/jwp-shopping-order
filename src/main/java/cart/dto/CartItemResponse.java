@@ -13,7 +13,7 @@ public class CartItemResponse {
     @Schema(description = "장바구니 상품 정보")
     private final ProductResponse product;
 
-    private CartItemResponse(final Long id, final int quantity, final ProductResponse product) {
+    public CartItemResponse(final Long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
