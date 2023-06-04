@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS payment, order_item, orders, cart_item, product, member;
+
 CREATE TABLE IF NOT EXISTS product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,

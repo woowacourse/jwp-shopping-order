@@ -1,0 +1,7 @@
+spring:
+  profile:
+    default: local
+  thymeleaf:
+    cache: false
+  config:
+    import: classpath:/jwt-shopping-order-submodule/application-prod.yml
