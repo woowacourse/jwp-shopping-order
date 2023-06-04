@@ -15,7 +15,7 @@ public class CreateProductRequest {
     private String name;
 
     @Positive(message = "상품 가격은 최소 " + MINIMUM_PRICE + "원부터입니다. 입력값: ${validatedValue}")
-    private int price;
+    private Integer price;
 
     @NotNull(message = "이미지 주소를 입력해야 합니다.")
     @URL(protocol = "https", message = "이미지 주소는 https://로 시작해야 합니다. 입력값: ${validatedValue}")

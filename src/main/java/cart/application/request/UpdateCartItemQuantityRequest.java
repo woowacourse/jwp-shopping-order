@@ -5,7 +5,7 @@ import javax.validation.constraints.PositiveOrZero;
 public class UpdateCartItemQuantityRequest {
 
     @PositiveOrZero(message = "수량은 음수가 될 수 없습니다. 입력값: ${validatedValue}")
-    private int quantity;
+    private Integer quantity;
 
     public UpdateCartItemQuantityRequest() {
     }
