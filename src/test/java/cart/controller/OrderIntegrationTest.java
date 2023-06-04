@@ -116,7 +116,7 @@ class OrderIntegrationTest extends IntegrationTest {
         List<CouponResponseDto> couponResponseDtos = given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when().get("/coupon")
+                .when().get("/coupons")
                 .then().statusCode(HttpStatus.OK.value())
                 .extract().as(new TypeRef<>() {});
 
