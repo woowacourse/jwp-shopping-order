@@ -34,7 +34,7 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
         final var cart = new Cart(cartItems);
 
-        saleService.applySales(cart, DiscountTarget.TOTAL);
+        saleService.applySales(cart);
 
         return cartItems.stream()
                 .map(CartItemResponse::from)
@@ -45,7 +45,7 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
         final var cart = new Cart(cartItems);
 
-        applyDiscountPolicy(cart);
+        saleService.applySales(cart);
 
         return new DeliveryResponse(cart.calculateFinalDeliveryPrice(), Cart.MAN_FREE_DELIVERY_PRICE);
     }
@@ -54,7 +54,7 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
         final var cart = new Cart(cartItems);
 
-        applyDiscountPolicyExceptTotalPrice(cart);
+        saleService.applySales(cart, DiscountTarget.TOTAL);
         couponService.applyCoupons(cart, couponIds);
 
         return DiscountResponse.from(cart);
@@ -64,22 +64,11 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
         final var cart = new Cart(cartItems);
 
-        applyDiscountPolicyExceptTotalPrice(cart);
+        saleService.applySales(cart, DiscountTarget.TOTAL);
         couponService.applyCoupons(cart, orderRequest.getCouponIds());
+        saleService.applySalesApplyingToTotalPrice(cart);
+
 
         return orderService.order(member.getId(), cart, orderRequest);
-    }
-
-    private void applyDiscountPolicy(Cart cart) {
-        applyDiscountPolicyExceptTotalPrice(cart);
-        applyDiscountPolicyToTotalPrice(cart);
-    }
-
-    private void applyDiscountPolicyToTotalPrice(Cart cart) {
-        saleService.applySalesApplyingToTotalPrice(cart);
-    }
-
-    private void applyDiscountPolicyExceptTotalPrice(Cart cart) {
-        saleService.applySales(cart, DiscountTarget.TOTAL);
     }
 }
