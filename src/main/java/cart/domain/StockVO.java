@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public final class StockVO {
 
     private int stock;
@@ -13,5 +15,18 @@ public final class StockVO {
 
     public int getStock() {
         return stock;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StockVO)) return false;
+        StockVO stockVO = (StockVO) o;
+        return stock == stockVO.stock;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stock);
     }
 }
