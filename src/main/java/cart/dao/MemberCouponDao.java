@@ -41,7 +41,7 @@ public class MemberCouponDao {
             String sql = "SELECT * " +
                     "FROM member_coupon " +
                     "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
-                    "WHERE member_coupon.member_id = ? and member_coupon.id = ? and availability = ?";
+                    "WHERE member_coupon.member_id = ? and member_coupon.id = ? and available = ?";
 
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId, true));
         } catch (DataAccessException e) {
@@ -50,13 +50,13 @@ public class MemberCouponDao {
     }
 
     public void updateUsedCouponAvailabilityById(Long memberCouponId) {
-        String sql = "UPDATE member_coupon SET availability = ? WHERE id = ? and availability = ?";
+        String sql = "UPDATE member_coupon SET available = ? WHERE id = ? and available = ?";
 
         jdbcTemplate.update(sql, false, memberCouponId, true);
     }
 
     public boolean checkByCouponIdAndMemberId(Long couponId, Long memberId) {
-        String sql = "select exists(select * from member_coupon where coupon_id = ? and availability = ? and member_id = ?)";
+        String sql = "select exists(select * from member_coupon where coupon_id = ? and available = ? and member_id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, couponId, true, memberId);
     }
@@ -70,13 +70,13 @@ public class MemberCouponDao {
         String sql = "SELECT * " +
                 "FROM member_coupon " +
                 "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
-                " where member_id = ? and availability = ?";
+                " where member_id = ? and available = ?";
 
         return jdbcTemplate.query(sql, rowMapper, memberId, true);
     }
 
     public void updateUnUsedCouponAvailabilityById(Long memberCouponId) {
-        String sql = "UPDATE member_coupon SET availability = ? WHERE id = ?";
+        String sql = "UPDATE member_coupon SET available = ? WHERE id = ?";
         jdbcTemplate.update(sql, true, memberCouponId);
     }
 }

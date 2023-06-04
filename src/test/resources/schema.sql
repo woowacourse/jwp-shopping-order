@@ -33,7 +33,7 @@ CREATE TABLE if not exists member_coupon(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     coupon_id BIGINT NOT NULL,
     member_id BIGINT NOT NULL,
-    availability BOOLEAN NOT NULL,
+    available BOOLEAN NOT NULL,
     FOREIGN KEY (coupon_id) REFERENCES coupon(id),
     FOREIGN KEY (member_id) REFERENCES member(id)
 );

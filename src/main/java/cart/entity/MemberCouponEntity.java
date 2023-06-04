@@ -4,17 +4,17 @@ public class MemberCouponEntity {
     private final Long id;
     private final Long couponId;
     private final Long memberId;
-    private final Boolean availability;
+    private final Boolean available;
 
-    public MemberCouponEntity(Long couponId, Long memberId, Boolean availability) {
-        this(null,couponId,memberId,availability);
+    public MemberCouponEntity(Long couponId, Long memberId, Boolean available) {
+        this(null,couponId,memberId,available);
     }
 
-    public MemberCouponEntity(Long id, Long couponId, Long memberId, Boolean availability) {
+    public MemberCouponEntity(Long id, Long couponId, Long memberId, Boolean available) {
         this.id = id;
         this.couponId = couponId;
         this.memberId = memberId;
-        this.availability = availability;
+        this.available = available;
     }
 
     public Long getId() {
@@ -29,7 +29,7 @@ public class MemberCouponEntity {
         return memberId;
     }
 
-    public Boolean getAvailability() {
-        return availability;
+    public Boolean getAvailable() {
+        return available;
     }
 }

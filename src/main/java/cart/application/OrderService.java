@@ -34,8 +34,7 @@ public class OrderService {
 
         List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectedCartIds());
 
-        Order order = new Order(
-                member, cartItems,
+        Order order = new Order(member, cartItems,
                 couponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
 
         return orderRepository.save(order);
