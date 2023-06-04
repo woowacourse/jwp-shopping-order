@@ -25,16 +25,6 @@ public class CouponDao {
         rs.getBoolean("is_used")
     );
 
-    public Optional<Coupon> findById(final Long couponId) {
-        final String sql =
-            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, mc.is_used as is_used "
-                + "FROM member_coupon as mc "
-                + "INNER JOIN coupon c on mc.coupon_id = c.id "
-                + "WHERE c.id = ?";
-        final List<Coupon> coupons = jdbcTemplate.query(sql, defaultRowMapper, couponId);
-        return coupons.stream().findAny();
-    }
-
     private final RowMapper<Coupon> onlyCouponRowMapper = (rs, rowNum) -> new Coupon(
         rs.getLong("id"),
         rs.getString("name"),
@@ -42,6 +32,15 @@ public class CouponDao {
         Amount.of(rs.getInt("min_amount")),
         false
     );
+
+    public Optional<Coupon> findById(final Long couponId) {
+        final String sql =
+            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount "
+                + "FROM coupon as c "
+                + "WHERE c.id = ?";
+        final List<Coupon> coupons = jdbcTemplate.query(sql, onlyCouponRowMapper, couponId);
+        return coupons.stream().findAny();
+    }
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
