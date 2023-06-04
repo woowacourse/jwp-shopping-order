@@ -8,14 +8,16 @@ public class OrderResponse {
     private Long orderId;
     private int payAmount;
     private LocalDate orderAt;
+    private String orderStatus;
     private String productName;
     private String productImageUrl;
     private int totalProductCount;
 
-    public OrderResponse(Long orderId, int payAmount, LocalDate orderAt, String productName, String productImageUrl, int totalProductCount) {
+    public OrderResponse(Long orderId, int payAmount, LocalDate orderAt, String orderStatus, String productName, String productImageUrl, int totalProductCount) {
         this.orderId = orderId;
         this.payAmount = payAmount;
         this.orderAt = orderAt;
+        this.orderStatus = orderStatus;
         this.productName = productName;
         this.productImageUrl = productImageUrl;
         this.totalProductCount = totalProductCount;
@@ -31,6 +33,10 @@ public class OrderResponse {
 
     public LocalDate getOrderAt() {
         return orderAt;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
     public String getProductName() {
@@ -50,12 +56,12 @@ public class OrderResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderResponse that = (OrderResponse) o;
-        return payAmount == that.payAmount && totalProductCount == that.totalProductCount && Objects.equals(orderId, that.orderId) && Objects.equals(orderAt, that.orderAt) && Objects.equals(productName, that.productName) && Objects.equals(productImageUrl, that.productImageUrl);
+        return payAmount == that.payAmount && totalProductCount == that.totalProductCount && Objects.equals(orderId, that.orderId) && Objects.equals(orderAt, that.orderAt) && Objects.equals(orderStatus, that.orderStatus) && Objects.equals(productName, that.productName) && Objects.equals(productImageUrl, that.productImageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, payAmount, orderAt, productName, productImageUrl, totalProductCount);
+        return Objects.hash(orderId, payAmount, orderAt, orderStatus, productName, productImageUrl, totalProductCount);
     }
 
     @Override
@@ -64,6 +70,7 @@ public class OrderResponse {
                 "orderId=" + orderId +
                 ", payAmount=" + payAmount +
                 ", orderAt=" + orderAt +
+                ", orderStatus='" + orderStatus + '\'' +
                 ", productName='" + productName + '\'' +
                 ", productImageUrl='" + productImageUrl + '\'' +
                 ", totalProductCount=" + totalProductCount +

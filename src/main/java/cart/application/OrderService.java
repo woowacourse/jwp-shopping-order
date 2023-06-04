@@ -32,14 +32,14 @@ public class OrderService {
     }
 
     public OrderPageResponse findOrders(Member member, int pageNumber) {
-        System.out.println(member);
         List<Order> orders = orderRepository.findAllByMemberId(member.getId());
 
         List<OrderResponse> orderResponses = orders.stream()
                 .skip(orderPage.calculateSkipNumber(pageNumber))
                 .limit(orderPage.getLimit())
-                .map(order -> new OrderResponse(order.getId(), order.getTotalPayAmount(), order.getOrderAt(),
-                        order.getFirstItemName(), order.getFirstItemImageUrl(), order.getItemSize()))
+                .map(order -> new OrderResponse(order.getId(), order.getTotalPayAmount(),
+                        order.getOrderAt(), order.getOrderStatus().getOrderStatus(), order.getFirstItemName(),
+                        order.getFirstItemImageUrl(), order.getItemSize()))
                 .collect(Collectors.toList());
 
         return new OrderPageResponse(orderPage.calculateTotalPages(orders.size()), pageNumber, orderResponses);
