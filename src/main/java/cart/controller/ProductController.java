@@ -87,11 +87,6 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "상품 수정 성공."
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "상품 수정 실패.",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
     @PutMapping("/{id}")
@@ -108,11 +103,6 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "204",
                     description = "상품 삭제 성공."
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "상품 삭제 실패.",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
     @DeleteMapping("/{id}")
