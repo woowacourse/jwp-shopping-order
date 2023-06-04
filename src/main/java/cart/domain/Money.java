@@ -32,7 +32,7 @@ public class Money {
         return new Money(this.money - other.money);
     }
 
-    public boolean isLargerThan(Money money) {
+    public boolean isBiggerThan(Money money) {
         return this.money > money.money;
     }
 
