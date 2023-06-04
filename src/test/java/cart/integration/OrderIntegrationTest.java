@@ -20,6 +20,7 @@ import cart.entity.ProductEntity;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.NotEnoughPointException;
 import cart.exception.NotEnoughStockException;
+import cart.exception.OrderNotFoundException;
 import cart.exception.PriceNotMatchException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
@@ -199,6 +200,115 @@ class OrderIntegrationTest extends IntegrationTest {
         );
     }
 
+    @DisplayName("정상적인 주문 조회를 한다.")
+    @Test
+    void getOrders() {
+        final OrderRequest orderRequest1 = new OrderRequest(List.of(1L, 2L, 3L), 300, 190_000);
+        final OrderRequest orderRequest2 = new OrderRequest(List.of(4L, 5L), 300, 120_000);
+        requestCreateOrder(member1, orderRequest1);
+        requestCreateOrder(member1, orderRequest2);
+        final ExtractableResponse<Response> response = requestGetOrders(member1);
+        final JsonPath jsonPath = response.jsonPath();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(jsonPath.getList(".")).hasSize(2),
+                () -> assertThat(jsonPath.getLong("[0].orderId")).isEqualTo(2L),
+                () -> assertThat(jsonPath.getString("[0].createdAt")).isNotNull(),
+                () -> assertThat(jsonPath.getList("[0].orderItems")).hasSize(2),
+                () -> assertThat(jsonPath.getLong("[0].orderItems[0].productId")).isEqualTo(1),
+                () -> assertThat(jsonPath.getString("[0].orderItems[0].productName")).isEqualTo("치킨"),
+                () -> assertThat(jsonPath.getInt("[0].orderItems[0].quantity")).isEqualTo(3),
+                () -> assertThat(jsonPath.getInt("[0].orderItems[0].price")).isEqualTo(10_000),
+                () -> assertThat(jsonPath.getString("[0].orderItems[0].imageUrl")).isEqualTo("http://example.com/chicken.jpg"),
+                () -> assertThat(jsonPath.getLong("[0].orderItems[1].productId")).isEqualTo(2),
+                () -> assertThat(jsonPath.getString("[0].orderItems[1].productName")).isEqualTo("피자"),
+                () -> assertThat(jsonPath.getInt("[0].orderItems[1].quantity")).isEqualTo(6),
+                () -> assertThat(jsonPath.getInt("[0].orderItems[1].price")).isEqualTo(15_000),
+                () -> assertThat(jsonPath.getString("[0].orderItems[1].imageUrl")).isEqualTo("http://example.com/pizza.jpg"),
+                () -> assertThat(jsonPath.getInt("[0].totalPrice")).isEqualTo(120_000),
+                () -> assertThat(jsonPath.getInt("[0].usedPoint")).isEqualTo(300),
+                () -> assertThat(jsonPath.getInt("[0].earnedPoint")).isEqualTo(6_000),
+                () -> assertThat(jsonPath.getLong("[1].orderId")).isEqualTo(1L),
+                () -> assertThat(jsonPath.getString("[1].createdAt")).isNotNull(),
+                () -> assertThat(jsonPath.getList("[1].orderItems")).hasSize(3),
+                () -> assertThat(jsonPath.getLong("[1].orderItems[0].productId")).isEqualTo(1),
+                () -> assertThat(jsonPath.getString("[1].orderItems[0].productName")).isEqualTo("치킨"),
+                () -> assertThat(jsonPath.getInt("[1].orderItems[0].quantity")).isEqualTo(3),
+                () -> assertThat(jsonPath.getInt("[1].orderItems[0].price")).isEqualTo(10_000),
+                () -> assertThat(jsonPath.getString("[1].orderItems[0].imageUrl")).isEqualTo("http://example.com/chicken.jpg"),
+                () -> assertThat(jsonPath.getLong("[1].orderItems[1].productId")).isEqualTo(2),
+                () -> assertThat(jsonPath.getString("[1].orderItems[1].productName")).isEqualTo("피자"),
+                () -> assertThat(jsonPath.getInt("[1].orderItems[1].quantity")).isEqualTo(4),
+                () -> assertThat(jsonPath.getInt("[1].orderItems[1].price")).isEqualTo(15_000),
+                () -> assertThat(jsonPath.getString("[1].orderItems[1].imageUrl")).isEqualTo("http://example.com/pizza.jpg"),
+                () -> assertThat(jsonPath.getLong("[1].orderItems[2].productId")).isEqualTo(3),
+                () -> assertThat(jsonPath.getString("[1].orderItems[2].productName")).isEqualTo("샐러드"),
+                () -> assertThat(jsonPath.getInt("[1].orderItems[2].quantity")).isEqualTo(5),
+                () -> assertThat(jsonPath.getInt("[1].orderItems[2].price")).isEqualTo(20_000),
+                () -> assertThat(jsonPath.getString("[1].orderItems[2].imageUrl")).isEqualTo("http://example.com/salad.jpg"),
+                () -> assertThat(jsonPath.getInt("[1].totalPrice")).isEqualTo(190_000),
+                () -> assertThat(jsonPath.getInt("[1].usedPoint")).isEqualTo(300),
+                () -> assertThat(jsonPath.getInt("[1].earnedPoint")).isEqualTo(9_500)
+        );
+    }
+
+    @DisplayName("주문 내역이 없을 때 주문 조회를 한다.")
+    @Test
+    void getOrdersWhenEmpty() {
+        final ExtractableResponse<Response> response = requestGetOrders(member1);
+        final JsonPath jsonPath = response.jsonPath();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(jsonPath.getList(".")).isEmpty()
+        );
+    }
+
+    @DisplayName("주문 id로 개별 주문 조회를 한다.")
+    @Test
+    void getOrderById() {
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L, 2L, 3L), 300, 190_000);
+        requestCreateOrder(member1, orderRequest);
+        final ExtractableResponse<Response> response = requestGetOrderById(member1, 1L);
+        final JsonPath jsonPath = response.jsonPath();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(jsonPath.getLong("orderId")).isEqualTo(1L),
+                () -> assertThat(jsonPath.getString("createdAt")).isNotNull(),
+                () -> assertThat(jsonPath.getList("orderItems")).hasSize(3),
+                () -> assertThat(jsonPath.getLong("orderItems[0].productId")).isEqualTo(1L),
+                () -> assertThat(jsonPath.getString("orderItems[0].productName")).isEqualTo("치킨"),
+                () -> assertThat(jsonPath.getInt("orderItems[0].quantity")).isEqualTo(3),
+                () -> assertThat(jsonPath.getInt("orderItems[0].price")).isEqualTo(10_000),
+                () -> assertThat(jsonPath.getString("orderItems[0].imageUrl")).isEqualTo("http://example.com/chicken.jpg"),
+                () -> assertThat(jsonPath.getLong("orderItems[1].productId")).isEqualTo(2L),
+                () -> assertThat(jsonPath.getString("orderItems[1].productName")).isEqualTo("피자"),
+                () -> assertThat(jsonPath.getInt("orderItems[1].quantity")).isEqualTo(4),
+                () -> assertThat(jsonPath.getInt("orderItems[1].price")).isEqualTo(15_000),
+                () -> assertThat(jsonPath.getString("orderItems[1].imageUrl")).isEqualTo("http://example.com/pizza.jpg"),
+                () -> assertThat(jsonPath.getLong("orderItems[2].productId")).isEqualTo(3L),
+                () -> assertThat(jsonPath.getString("orderItems[2].productName")).isEqualTo("샐러드"),
+                () -> assertThat(jsonPath.getInt("orderItems[2].quantity")).isEqualTo(5),
+                () -> assertThat(jsonPath.getInt("orderItems[2].price")).isEqualTo(20_000),
+                () -> assertThat(jsonPath.getString("orderItems[2].imageUrl")).isEqualTo("http://example.com/salad.jpg"),
+                () -> assertThat(jsonPath.getInt("totalPrice")).isEqualTo(190_000),
+                () -> assertThat(jsonPath.getInt("usedPoint")).isEqualTo(300),
+                () -> assertThat(jsonPath.getInt("earnedPoint")).isEqualTo(9_500)
+        );
+    }
+
+    @DisplayName("존재하지 않는 id로 개별 주문 조회를 한다.")
+    @Test
+    void getOrderByNoExistId() {
+        final ExtractableResponse<Response> response = requestGetOrderById(member1, 1L);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo(new OrderNotFoundException(1L).getMessage())
+        );
+    }
+
     private ExtractableResponse<Response> requestCreateOrder(final Member member, final OrderRequest orderRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -206,6 +316,26 @@ class OrderIntegrationTest extends IntegrationTest {
                 .body(orderRequest)
                 .when()
                 .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> requestGetOrders(final Member member) {
+        return given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> requestGetOrderById(final Member member, final Long id) {
+        return given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + id)
                 .then()
                 .log().all()
                 .extract();
