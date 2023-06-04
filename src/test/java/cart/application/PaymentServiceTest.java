@@ -86,7 +86,7 @@ class PaymentServiceTest {
         PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(purchaseOrderId)
                                                               .orElseThrow();
         List<PurchaseOrderItem> purchaseOrderItems = purchaseOrderItemDao.findAllByPurchaseOrderId(purchaseOrderInfo.getId());
-        Point point = memberRewardPointDao.getPointByOrderId(purchaseOrderInfo.getId());
+        Point point = memberRewardPointDao.getPointByOrderId(purchaseOrderInfo.getId()).get();
         List<Point> points = memberRewardPointDao.getAllByMemberId(회원2.getId());
         List<UsedPoint> usedPoints = orderMemberUsedPointDao.getAllUsedPointByOrderId(purchaseOrderInfo.getId());
         List<CartItem> cartItems = cartItemDao.findByMemberId(회원2.getId());

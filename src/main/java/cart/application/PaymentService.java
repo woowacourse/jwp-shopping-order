@@ -157,7 +157,8 @@ public class PaymentService {
 
     public void deleteOrder(Member member, Long orderId) {
         checkCanceledOrder(orderId);
-        Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId);
+        Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId)
+                                                       .orElseThrow(() -> new IllegalArgumentException("삭제 중 문제가 발생했습니다."));
         checkAlreadyUsed(rewardPointByOrder);
         updateUsedAndRewardPoint(member, orderId, rewardPointByOrder);
         updatePurchaseOrderStatus(orderId);

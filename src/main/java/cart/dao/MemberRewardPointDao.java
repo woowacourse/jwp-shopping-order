@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.point.Point;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberRewardPointDao {
@@ -57,10 +59,14 @@ public class MemberRewardPointDao {
         return namedParameterJdbcTemplate.query(sql, source, rowMapper);
     }
 
-    public Point getPointByOrderId(Long orderId) {
+    public Optional<Point> getPointByOrderId(Long orderId) {
         String sql = "SELECT id, point, created_at, expired_at FROM member_reward_point WHERE reward_order_id = :reward_order_id";
-        SqlParameterSource source = new MapSqlParameterSource("reward_order_id", orderId);
-        return namedParameterJdbcTemplate.queryForObject(sql, source, rowMapper);
+        try {
+            SqlParameterSource source = new MapSqlParameterSource("reward_order_id", orderId);
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, source, rowMapper));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public void updatePoints(List<Point> points) {

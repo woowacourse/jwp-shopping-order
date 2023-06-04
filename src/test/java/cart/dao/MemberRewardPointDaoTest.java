@@ -94,7 +94,7 @@ class MemberRewardPointDaoTest {
         Long orderId = 1L;
 
         // when
-        Point point = memberRewardPointDao.getPointByOrderId(orderId);
+        Point point = memberRewardPointDao.getPointByOrderId(orderId).get();
 
         // then
         assertThat(point).usingRecursiveComparison()
