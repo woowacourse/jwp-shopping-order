@@ -15,16 +15,16 @@ public class OrderResponse {
     @Schema(description = "주문 id", example = "1")
     private final Long id;
     @Schema(description = "총 금액", example = "50000")
-    private final BigDecimal totalItemPrice;
+    private final BigDecimal totalItemsPrice;
     @Schema(description = "할인 금액", example = "3000")
     private final BigDecimal discountPrice;
     @Schema(description = "배달비", example = "3000")
     private final BigDecimal deliveryFee;
     private final List<OrderItemDto> orderItems;
 
-    public OrderResponse(final Long id, final BigDecimal totalItemPrice, final BigDecimal discountPrice, final BigDecimal deliveryFee, final List<OrderItemDto> orderItems) {
+    public OrderResponse(final Long id, final BigDecimal totalItemsPrice, final BigDecimal discountPrice, final BigDecimal deliveryFee, final List<OrderItemDto> orderItems) {
         this.id = id;
-        this.totalItemPrice = totalItemPrice;
+        this.totalItemsPrice = totalItemsPrice;
         this.discountPrice = discountPrice;
         this.deliveryFee = deliveryFee;
         this.orderItems = orderItems;
@@ -50,8 +50,8 @@ public class OrderResponse {
         return id;
     }
 
-    public BigDecimal getTotalItemPrice() {
-        return totalItemPrice;
+    public BigDecimal getTotalItemsPrice() {
+        return totalItemsPrice;
     }
 
     public BigDecimal getDiscountPrice() {

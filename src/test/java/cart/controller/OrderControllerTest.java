@@ -142,7 +142,7 @@ class OrderControllerTest {
                         .header("Authorization", header)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalItemPrice", is(18800)))
+                .andExpect(jsonPath("$.totalItemsPrice", is(18800)))
                 .andExpect(jsonPath("$.discountPrice", is(1000)))
                 .andExpect(jsonPath("$.deliveryFee", is(3000)))
                 .andExpect(jsonPath("$.orderItems", hasSize(2)))
