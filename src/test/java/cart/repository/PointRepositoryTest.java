@@ -87,10 +87,10 @@ class PointRepositoryTest {
         pointRepository.updatePoint(MemberFixture.MEMBER, Point.valueOf(100), Price.valueOf(1000), Timestamp.valueOf("2023-05-31 10:00:00"));
         final List<PointEntity> result = pointDao.findRemainingPointsByMemberId(MemberFixture.MEMBER.getId());
         assertAll(
-                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(50),
-                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(100),
-                () -> assertThat(result.get(2).getLeftPoint()).isEqualTo(300),
-                () -> assertThat(result.get(3).getLeftPoint()).isEqualTo(100)
+                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(100),
+                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(300),
+                () -> assertThat(result.get(2).getLeftPoint()).isEqualTo(100),
+                () -> assertThat(result.get(3).getLeftPoint()).isEqualTo(50)
         );
     }
 
@@ -101,9 +101,9 @@ class PointRepositoryTest {
         pointRepository.updatePoint(MemberFixture.MEMBER, Point.valueOf(200), Price.valueOf(1000), Timestamp.valueOf("2023-05-31 10:00:00"));
         final List<PointEntity> result = pointDao.findRemainingPointsByMemberId(MemberFixture.MEMBER.getId());
         assertAll(
-                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(50),
-                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(300),
-                () -> assertThat(result.get(2).getLeftPoint()).isEqualTo(100)
+                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(300),
+                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(100),
+                () -> assertThat(result.get(2).getLeftPoint()).isEqualTo(50)
         );
     }
 
@@ -114,9 +114,9 @@ class PointRepositoryTest {
         pointRepository.updatePoint(MemberFixture.MEMBER, Point.valueOf(201), Price.valueOf(1000), Timestamp.valueOf("2023-05-31 10:00:00"));
         final List<PointEntity> result = pointDao.findRemainingPointsByMemberId(MemberFixture.MEMBER.getId());
         assertAll(
-                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(50),
-                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(299),
-                () -> assertThat(result.get(2).getLeftPoint()).isEqualTo(100)
+                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(299),
+                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(100),
+                () -> assertThat(result.get(2).getLeftPoint()).isEqualTo(50)
         );
     }
 
@@ -127,8 +127,8 @@ class PointRepositoryTest {
         pointRepository.updatePoint(MemberFixture.MEMBER, Point.valueOf(500), Price.valueOf(1000), Timestamp.valueOf("2023-05-31 10:00:00"));
         final List<PointEntity> result = pointDao.findRemainingPointsByMemberId(MemberFixture.MEMBER.getId());
         assertAll(
-                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(50),
-                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(100)
+                () -> assertThat(result.get(0).getLeftPoint()).isEqualTo(100),
+                () -> assertThat(result.get(1).getLeftPoint()).isEqualTo(50)
         );
     }
 }
