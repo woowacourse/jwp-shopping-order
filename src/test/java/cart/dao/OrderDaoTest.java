@@ -76,7 +76,7 @@ class OrderDaoTest {
         final Order savedOrder = orderDao.save(order, savedMember.getId());
 
         //when
-        final Order result = orderDao.findById(order.getId())
+        final Order result = orderDao.findById(savedOrder.getId())
             .orElseThrow(RuntimeException::new);
 
         //then

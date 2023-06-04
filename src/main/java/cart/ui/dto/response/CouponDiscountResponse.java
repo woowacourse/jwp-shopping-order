@@ -16,4 +16,8 @@ public class CouponDiscountResponse {
     public int getDiscountedProductAmount() {
         return discountedProductAmount;
     }
+
+    public int getDiscountAmount() {
+        return discountAmount;
+    }
 }

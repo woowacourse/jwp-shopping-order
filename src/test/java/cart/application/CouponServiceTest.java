@@ -93,6 +93,7 @@ class CouponServiceTest {
 
         //then
         assertThat(response.getDiscountedProductAmount()).isEqualTo(29_000);
+        assertThat(response.getDiscountAmount()).isEqualTo(1_000);
     }
 
     @Test
