@@ -1,9 +1,8 @@
 package cart.repository;
 
 import cart.dao.MemberDao;
-import cart.domain.member.Member;
-import cart.domain.vo.Money;
 import cart.dao.entity.MemberEntity;
+import cart.domain.member.Member;
 import cart.exception.MemberException;
 import org.springframework.stereotype.Repository;
 
@@ -34,9 +33,5 @@ public class MemberRepository {
 
     public void updateMember(MemberEntity memberEntity) {
         memberDao.updateMember(memberEntity);
-    }
-
-    public void updateMinusMoney(Long memberId, Money minusMoney) {
-        memberDao.updateMoney(memberId, minusMoney);
     }
 }
