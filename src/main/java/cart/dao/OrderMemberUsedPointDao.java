@@ -73,8 +73,25 @@ public class OrderMemberUsedPointDao {
     }
 
     public boolean isAlreadyUsedReward(Long rewardPointId) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM order_member_used_point WHERE used_reward_point_id = :used_reward_point_id)";
+        String sql = "SELECT EXISTS(SELECT 1 FROM order_member_used_point WHERE used_reward_point_id = :가used_reward_point_id)";
         SqlParameterSource source = new MapSqlParameterSource("used_reward_point_id", rewardPointId);
         return namedParameterJdbcTemplate.queryForObject(sql, source, Boolean.class);
+    }
+
+    public void deleteAll(List<UsedPoint> usedPoints) {
+        String sql = "DELETE FROM order_member_used_point WHERE id = ?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        UsedPoint usedPoint = usedPoints.get(i);
+                        ps.setLong(1, usedPoint.getId());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return usedPoints.size();
+                    }
+                }
+        );
     }
 }

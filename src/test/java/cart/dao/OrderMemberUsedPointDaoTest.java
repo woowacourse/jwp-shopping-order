@@ -129,4 +129,18 @@ class OrderMemberUsedPointDaoTest {
         // then
         assertThat(isAlreadyUsed).isFalse();
     }
+
+    @DisplayName("usedPoint 리스트에 해당된 행을 삭제할 수 있다")
+    @Test
+    void deleteAll() {
+        // given
+        List<UsedPoint> deletePoint = List.of(주문1_포인트_사용1, 주문1_포인트_사용2, 주문1_포인트_사용3);
+
+        // when
+        orderMemberUsedPointDao.deleteAll(deletePoint);
+
+        // then
+        assertThat(getAllUsedPoint()).usingRecursiveFieldByFieldElementComparator()
+                                     .doesNotContain(주문1_포인트_사용1, 주문1_포인트_사용2, 주문1_포인트_사용3);
+    }
 }
