@@ -2,6 +2,7 @@ package cart.persistence.coupon;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,6 @@ import cart.error.exception.BadRequestException;
 @Repository
 public class CouponJdbcRepository implements CouponRepository {
 
-	private static final RowMapper<CouponInfo> COUPON_INFO_ROW_MAPPER = new CouponInfoRowMapper();
 	public static final RowMapper<CouponJoinSerialNumber> COUPON_JOIN_SERIAL_NUMBER_ROW_MAPPER = new CouponJoinSerialNumberRowMapper();
 
 	private final JdbcTemplate jdbcTemplate;
@@ -47,9 +47,12 @@ public class CouponJdbcRepository implements CouponRepository {
 	}
 
 	@Override
-	public List<CouponInfo> findAll() {
-		final String sql = "SELECT * FROM coupon";
-		return jdbcTemplate.query(sql, COUPON_INFO_ROW_MAPPER);
+	public List<Coupon> findAll() {
+		final String sql = createBaseOrderQuery("");
+		final List<CouponJoinSerialNumber> couponJoinSerialNumbers = jdbcTemplate.query(sql,
+			COUPON_JOIN_SERIAL_NUMBER_ROW_MAPPER);
+		validateCouponExist(couponJoinSerialNumbers);
+		return convertToCoupon(couponJoinSerialNumbers);
 	}
 
 	@Override
@@ -58,7 +61,7 @@ public class CouponJdbcRepository implements CouponRepository {
 		final List<CouponJoinSerialNumber> couponJoinSerialNumbers = jdbcTemplate.query(sql,
 			COUPON_JOIN_SERIAL_NUMBER_ROW_MAPPER, couponId);
 		validateCouponExist(couponJoinSerialNumbers);
-		return convertToCoupon(couponJoinSerialNumbers);
+		return convertToCoupon(couponJoinSerialNumbers).get(0);
 	}
 
 	@Override
@@ -98,11 +101,14 @@ public class CouponJdbcRepository implements CouponRepository {
 		}
 	}
 
-	private Coupon convertToCoupon(final List<CouponJoinSerialNumber> couponJoinSerialNumbers) {
-		final List<SerialNumber> serialNumbers = convertToSerialNumbers(couponJoinSerialNumbers);
-		final CouponInfo couponInfo = couponJoinSerialNumbers.get(0).getCouponInfo();
+	private List<Coupon> convertToCoupon(final List<CouponJoinSerialNumber> couponJoinSerialNumbers) {
+		final Map<CouponInfo, List<SerialNumber>> couponMap = couponJoinSerialNumbers.stream()
+			.collect(Collectors.groupingBy(CouponJoinSerialNumber::getCouponInfo,
+				Collectors.mapping(CouponJoinSerialNumber::getSerialNumber, Collectors.toList())));
 
-		return new Coupon(couponInfo, serialNumbers);
+		return couponMap.entrySet().stream()
+			.map(entry -> new Coupon(entry.getKey(), entry.getValue()))
+			.collect(Collectors.toList());
 	}
 
 	private List<SerialNumber> convertToSerialNumbers(final List<CouponJoinSerialNumber> couponJoinSerialNumbers) {

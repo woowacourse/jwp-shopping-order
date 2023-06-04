@@ -46,7 +46,7 @@ class CouponJdbcRepositoryTest {
 	@Test
 	void findAll() {
 		// when
-		List<CouponInfo> coupons = couponJdbcRepository.findAll();
+		final List<Coupon> coupons = couponJdbcRepository.findAll();
 
 		// then
 		assertThat(coupons).isNotEmpty();

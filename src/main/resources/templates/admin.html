@@ -8,14 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<header class="gnb">
-    <nav>
-        <ul class="gnb-group">
-            <li><a href="/settings">설정</a></li>
-            <li class="nav-admin"><a href="/admin">관리자</a></li>
-        </ul>
-    </nav>
-</header>
+<div th:replace="header :: header"></div>
 <div class="container">
     <div class="btn-group">
         <button class="add-btn" onclick="showAddModal()">상품 추가</button>

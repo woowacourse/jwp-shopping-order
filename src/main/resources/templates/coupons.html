@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>쿠폰 생성 페이지</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div th:replace="header :: header"></div>
+<div class="container">
+    <div class="btn-group">
+        <button class="add-btn" onclick="showAddModal()">쿠폰 추가</button>
+    </div>
+    <table>
+        <tr>
+            <th>아이디</th>
+            <th>쿠폰명</th>
+            <th>할인액 (혹은 할인율)</th>
+        </tr>
+        <tbody>
+        <tr th:each="coupon : ${coupons}">
+            <td th:text="${coupon.id}"></td>
+            <td th:text="${coupon.name}"></td>
+            <td th:text="${coupon.discount}"></td>
+            <td>
+                <button th:onclick="showEditModal([[${coupon}]])">수정</button>
+                <button th:onclick="deleteCoupon([[${coupon.id}]])">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="modal" class="modal" data-form-type="add">
+        <div class="modal-content">
+            <span class="close" onclick="hideAddModal()">&times;</span>
+            <form id="form">
+                <label for="name">이름</label><br>
+                <input type="text" id="name" name="name" required><br>
+
+                <label for="couponType">쿠폰 타입</label><br>
+                <select id="couponType" name="couponType">
+                    <option value="PERCENTAGE">퍼센트 할인</option>
+                    <option value="FIXED_AMOUNT">금액 할인</option>
+                </select><br>
+
+                <label for="discount">할인율</label><br>
+                <input type="number" id="discount" name="discount" required><br>
+
+                <label for="couponCount">쿠폰 갯수</label><br>
+                <input type="number" id="couponCount" name="couponCount" required><br>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/coupon.js}"></script>
+</body>
+</html>

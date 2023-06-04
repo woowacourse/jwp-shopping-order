@@ -7,7 +7,7 @@ import cart.domain.coupon.type.CouponInfo;
 public interface CouponRepository {
 	Long createCoupon(CouponInfo couponInfo);
 
-	List<CouponInfo> findAll();
+	List<Coupon> findAll();
 
 	Coupon findCouponById(Long couponId);
 

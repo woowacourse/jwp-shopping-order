@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.application.coupon.dto.AdminCouponResponse;
 import cart.application.coupon.dto.CouponDetailResponse;
 import cart.application.coupon.dto.CouponResponse;
 import cart.domain.coupon.Coupon;
@@ -21,16 +22,17 @@ public class CouponQueryService {
 	private final CouponRepository couponRepository;
 	private final MemberCouponRepository memberCouponRepository;
 
-
-
 	public CouponQueryService(final CouponRepository couponRepository,
 		final MemberCouponRepository memberCouponRepository) {
 		this.couponRepository = couponRepository;
 		this.memberCouponRepository = memberCouponRepository;
 	}
 
-	public List<CouponResponse> findAll() {
-		return convertToCouponResponses(couponRepository.findAll());
+	public List<AdminCouponResponse> findAll() {
+		final List<Coupon> coupons = couponRepository.findAll();
+		return coupons.stream()
+			.map(AdminCouponResponse::from)
+			.collect(Collectors.toList());
 	}
 
 	public List<CouponResponse> findByMemberId(final Long memberId) {
@@ -45,7 +47,7 @@ public class CouponQueryService {
 
 	private List<CouponResponse> convertToCouponResponses(final List<CouponInfo> couponInfos) {
 		return couponInfos.stream()
-			.map(couponInfo -> new CouponResponse(couponInfo.getId(), couponInfo.getName(), couponInfo.getDiscount()))
+			.map(CouponResponse::new)
 			.collect(Collectors.toList());
 	}
 }

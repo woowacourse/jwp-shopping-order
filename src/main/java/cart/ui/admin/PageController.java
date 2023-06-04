@@ -34,4 +34,11 @@ public class PageController {
 		model.addAttribute("members", memberQueryService.findAll());
 		return "settings";
 	}
+
+	@GetMapping("/coupons")
+	public String coupons(Model model) {
+		model.addAttribute("coupons", couponQueryService.findAll());
+		return "coupons";
+	}
+
 }
