@@ -39,7 +39,7 @@ public class AuthApiController {
         )
     })
     @PostMapping("/login")
-    public ResponseEntity<Void> addCartItems(@RequestHeader HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Void> addCartItems(HttpServletRequest httpServletRequest) {
         memberService.logIn(httpServletRequest);
         return ResponseEntity.ok().build();
     }

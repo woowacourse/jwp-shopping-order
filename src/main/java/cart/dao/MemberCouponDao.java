@@ -1,13 +1,10 @@
 package cart.dao;
 
-import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,42 +60,42 @@ public class MemberCouponDao {
         }, memberId);
     }
 
-    public MemberCoupon findByIdIfCanBeUsed(Long memberId, Long memberCouponId) {
+    public MemberCoupon findByIdIfUsable(Long memberId, Long memberCouponId) {
         String query = "SELECT c.id, c.name, c.min_order_price, c.max_discount_price, c.type, " +
             "c.discount_amount, c.discount_percentage, "+
             "mc.coupon_id, mc.expired_at, " +
             "m.email, m.password, m.nickname " +
             "FROM member_coupon mc " +
             "INNER JOIN coupon c ON mc.coupon_id = c.id " +
-            "INNER JOIN member m ON mc.member_id = m.id" +
+            "INNER JOIN member m ON mc.member_id = m.id " +
             "WHERE m.id = ? AND mc.id = ? AND mc.is_used = false";
 
         try {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
-                Long couponId = resultSet.getLong("c.id");
-                String couponName = resultSet.getString("c.name");
-                Integer minOrderPrice = resultSet.getInt("c.min_order_price");
-                Integer maxDiscountPrice = resultSet.getInt("c.max_discount_price");
-                CouponType couponType = CouponType.valueOf(resultSet.getString("c.type"));
-                Integer discountAmount = resultSet.getInt("c.discount_amount");
-                Double discountPercentage = resultSet.getDouble("c.discount_percentage");
+                Long couponId = resultSet.getLong("id");
+                String couponName = resultSet.getString("name");
+                Integer minOrderPrice = resultSet.getInt("min_order_price");
+                Integer maxDiscountPrice = resultSet.getInt("max_discount_price");
+                CouponType couponType = CouponType.valueOf(resultSet.getString("type"));
+                Integer discountAmount = resultSet.getInt("discount_amount");
+                Double discountPercentage = resultSet.getDouble("discount_percentage");
 
                 Coupon coupon = new Coupon(couponId, couponName, minOrderPrice, couponType, discountAmount,
                     discountPercentage,
                     maxDiscountPrice);
 
-                String email = resultSet.getString("m.email");
-                String password = resultSet.getString("m.password");
-                String nickname = resultSet.getString("m.nickname");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String nickname = resultSet.getString("nickname");
 
                 Member member = new Member(memberId, email, password, nickname);
 
-                Timestamp expiredAt = resultSet.getTimestamp("mc.expired_at");
+                Timestamp expiredAt = resultSet.getTimestamp("expired_at");
 
                 return new MemberCoupon(memberCouponId, member, coupon, expiredAt);
             }, memberId, memberCouponId);
         } catch (EmptyResultDataAccessException e) {
-            throw new BadRequestException(ExceptionType.COUPON_UNVAILABLE);
+            throw new BadRequestException(ExceptionType.COUPON_UNAVAILABLE);
         }
     }
 

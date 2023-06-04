@@ -1,6 +1,7 @@
 package cart.application;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,24 +80,33 @@ public class OrderService {
             throw new BadRequestException(ExceptionType.CART_ITEM_EMPTY);
         }
 
-        List<Long> cartItemIds = orderRequest.getProducts()
+        List<Long> cartItemIds = cartItemRequests
             .stream()
-            .map(CartItemRequest::getProductId)
+            .map(CartItemRequest::getCartItemId)
             .collect(Collectors.toUnmodifiableList());
 
-        List<OrderItem> orderItems = cartItemRequests.stream()
-            .map(request -> new OrderItem(
-                null,
-                null,
-                request.getProductId(),
-                request.getName(),
-                request.getPrice(),
-                request.getImageUrl(),
-                request.getQuantity()))
-            .collect(Collectors.toUnmodifiableList());
+        List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+
+        if (cartItemRequests.size() != cartItems.size()) {
+            throw new BadRequestException(ExceptionType.CART_ITEM_NO_EXIST);
+        }
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (int i = 0; i < cartItemRequests.size(); i++) {
+            orderItems.add(
+                new OrderItem(
+                    null,
+                    null,
+                    cartItems.get(i).getId(),
+                    cartItemRequests.get(i).getName(),
+                    cartItemRequests.get(i).getPrice(),
+                    cartItemRequests.get(i).getImageUrl(),
+                    cartItemRequests.get(i).getQuantity()
+                )
+            );
+        }
 
         Long memberCouponId = orderRequest.getCouponId();
-        MemberCoupon memberCoupon = memberCouponDao.findByIdIfCanBeUsed(member.getId(), memberCouponId);
+        MemberCoupon memberCoupon = memberCouponDao.findByIdIfUsable(member.getId(), memberCouponId);
 
         Order order = new Order(member, orderItems, memberCoupon);
 
@@ -111,6 +121,7 @@ public class OrderService {
     @Transactional
     public void deleteOrder(Member member, Long orderId) {
         orderDao.validate(member.getId(), orderId);
+        orderItemDao.deleteAllOf(orderId);
         orderDao.delete(orderId);
     }
 

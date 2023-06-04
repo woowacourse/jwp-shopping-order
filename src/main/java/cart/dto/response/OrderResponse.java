@@ -23,4 +23,12 @@ public class OrderResponse {
                 .collect(Collectors.toUnmodifiableList())
         );
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<OrderItemResponse> getProducts() {
+        return products;
+    }
 }

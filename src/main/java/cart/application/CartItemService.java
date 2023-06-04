@@ -1,6 +1,7 @@
 package cart.application;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
+import cart.exception.BadRequestException;
+import cart.exception.ExceptionType;
 
 @Service
 public class CartItemService {
@@ -29,7 +32,14 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        Long productId = cartItemRequest.getCartItemId();
+        for (CartItem cartItem : cartItems) {
+            if (Objects.equals(cartItem.getId(), productId)) {
+                throw new BadRequestException(ExceptionType.CART_ITEM_ALREADY_EXIST);
+            }
+        }
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(productId)));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

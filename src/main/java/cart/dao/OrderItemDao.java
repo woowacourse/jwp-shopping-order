@@ -69,4 +69,9 @@ public class OrderItemDao {
             }
         ).collect(Collectors.toUnmodifiableList());
     }
+
+    public void deleteAllOf(Long orderId) {
+        String query = "DELETE FROM order_item WHERE order_id = ?";
+        jdbcTemplate.update(query, orderId);
+    }
 }

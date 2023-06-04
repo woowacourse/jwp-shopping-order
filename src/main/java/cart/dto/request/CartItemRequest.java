@@ -1,7 +1,7 @@
 package cart.dto.request;
 
 public class CartItemRequest {
-    private Long productId;
+    private Long cartItemId;
     private int quantity;
     private String name;
     private int price;
@@ -10,16 +10,16 @@ public class CartItemRequest {
     public CartItemRequest() {
     }
 
-    public CartItemRequest(Long productId, int quantity, String name, int price, String imageUrl) {
-        this.productId = productId;
+    public CartItemRequest(Long cartItemId, int quantity, String name, int price, String imageUrl) {
+        this.cartItemId = cartItemId;
         this.quantity = quantity;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public int getQuantity() {
