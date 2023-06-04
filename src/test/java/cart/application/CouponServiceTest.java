@@ -1,16 +1,21 @@
 package cart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
+import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.dto.AvailableCouponResponse;
 import cart.dto.CouponResponse;
+import cart.dto.DiscountAmountResponse;
+import cart.exception.BusinessException;
 import cart.factory.CouponFactory;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +27,9 @@ class CouponServiceTest {
 
   @Mock
   private MemberCouponDao memberCouponDao;
+
+  @Mock
+  private CouponDao couponDao;
 
   @InjectMocks
   private CouponService couponService;
@@ -66,5 +74,32 @@ class CouponServiceTest {
     final List<AvailableCouponResponse> actual = couponService.findAvailableCoupons(member, totalAmount);
 
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+  }
+
+  @Test
+  void calculateDiscountAmount() {
+    final Member member = new Member(1L, "email", "password");
+    final int totalAmount = 15000;
+    final int discountAmount = 1000;
+    final Coupon coupon = CouponFactory.createCoupon(1L, "coupon1", discountAmount, 10000);
+    given(memberCouponDao.existsByMemberIdAndCouponId(member.getId(), coupon.getId())).willReturn(true);
+    given(couponDao.findById(coupon.getId())).willReturn(Optional.of(coupon));
+    final DiscountAmountResponse expect = new DiscountAmountResponse(totalAmount - discountAmount,
+        discountAmount);
+
+    final DiscountAmountResponse actual = couponService.calculateDiscountAmount(member, coupon.getId(),
+        totalAmount);
+
+    assertThat(actual).usingRecursiveComparison().isEqualTo(expect);
+  }
+
+  @Test
+  void calculateDiscountAmountWithInvalidCoupon() {
+    final Member member = new Member(1L, "email", "password");
+    final Coupon coupon = CouponFactory.createCoupon(1L, "coupon1", 1000, 10000);
+    given(memberCouponDao.existsByMemberIdAndCouponId(member.getId(), coupon.getId())).willReturn(false);
+
+    assertThatThrownBy(() -> couponService.calculateDiscountAmount(member, coupon.getId(), 15000))
+        .isInstanceOf(BusinessException.class);
   }
 }

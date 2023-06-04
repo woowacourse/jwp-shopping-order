@@ -4,6 +4,7 @@ import cart.application.CouponService;
 import cart.domain.Member;
 import cart.dto.AvailableCouponResponse;
 import cart.dto.CouponResponse;
+import cart.dto.DiscountAmountResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +28,20 @@ public class CouponApiController {
     return ResponseEntity.ok(couponService.findMemberCouponsByMemberId(member));
   }
 
-  @PostMapping("/{couponId}")
-  public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable Long couponId) {
-    couponService.issueCoupon(member, couponId);
+  @PostMapping("/{id}")
+  public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable Long id) {
+    couponService.issueCoupon(member, id);
     return ResponseEntity.ok().build();
   }
 
   @GetMapping("/active")
   public ResponseEntity<List<AvailableCouponResponse>> findAvailableCoupons(final Member member, final int total) {
     return ResponseEntity.ok(couponService.findAvailableCoupons(member, total));
+  }
+
+  @GetMapping("/{id}/discount")
+  public ResponseEntity<DiscountAmountResponse> calculateDiscountAmount(final Member member,
+      @PathVariable Long id, final int total) {
+    return ResponseEntity.ok(couponService.calculateDiscountAmount(member, id, total));
   }
 }

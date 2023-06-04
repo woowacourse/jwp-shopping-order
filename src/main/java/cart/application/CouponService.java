@@ -8,7 +8,9 @@ import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.dto.AvailableCouponResponse;
 import cart.dto.CouponResponse;
+import cart.dto.DiscountAmountResponse;
 import cart.dto.SaveCouponRequest;
+import cart.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -55,5 +57,21 @@ public class CouponService {
           final Coupon coupon = memberCoupon.getCoupon();
           return new AvailableCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
         }).collect(Collectors.toList());
+  }
+
+  public DiscountAmountResponse calculateDiscountAmount(final Member member, final Long couponId, final int totalAmount) {
+    checkCouponOwner(member, couponId);
+    final Coupon coupon = couponDao.findById(couponId)
+        .orElseThrow(() -> new BusinessException("찾는 쿠폰이 존재하지 않습니다"));
+
+    final Amount discountedAmount = coupon.apply(new Amount(totalAmount));
+
+    return new DiscountAmountResponse(discountedAmount.getValue(), totalAmount - discountedAmount.getValue());
+  }
+
+  private void checkCouponOwner(Member member, Long couponId) {
+    if (!memberCouponDao.existsByMemberIdAndCouponId(member.getId(), couponId)) {
+      throw new BusinessException("해당 쿠폰을 가지고 있지 않습니다.");
+    }
   }
 }

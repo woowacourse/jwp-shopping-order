@@ -74,4 +74,20 @@ class CouponApiControllerTest {
         .statusCode(HttpStatus.OK.value())
         .body("couponResponse", hasSize(1));
   }
+
+  @Test
+  void calculateDiscountAmount() {
+    final Long couponId = couponService.createCoupon(new SaveCouponRequest("1000원 할인", 10000, 1000));
+    final Member member = memberService.findByEmail(EMAIL);
+    couponService.issueCoupon(member, couponId);
+
+    RestAssured
+        .given()
+        .header(HEADER, TYPE + Base64Coder.encodeString(EMAIL + DELIMITER + PASSWORD))
+        .queryParam("total", 15000)
+        .when()
+        .get("/coupons/" + couponId + "/discount")
+        .then()
+        .statusCode(HttpStatus.OK.value());
+  }
 }

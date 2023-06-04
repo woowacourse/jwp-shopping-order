@@ -7,6 +7,7 @@ import cart.domain.MemberCoupon;
 import cart.factory.CouponFactory;
 import java.util.List;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +86,17 @@ class MemberCouponDaoTest {
     final List<MemberCoupon> memberCoupons = memberCouponDao.findAvailableCouponsByMemberIdAndTotalAmount(member.getId(), 15000);
 
     assertThat(memberCoupons).hasSize(1);
+  }
+
+  @Test
+  void existsByMemberIdAndCouponId() {
+    memberDao.addMember(new Member("email", "password"));
+    final Member member = memberDao.getMemberByEmail("email");
+    final Long couponId = couponDao.createCoupon(CouponFactory.createCoupon("1000원 할인", 1000, 10000));
+    memberCouponDao.save(member.getId(), couponId);
+
+    final boolean isExist = memberCouponDao.existsByMemberIdAndCouponId(member.getId(), couponId);
+
+    assertThat(isExist).isTrue();
   }
 }

@@ -106,4 +106,18 @@ public class MemberCouponDao {
 
     return jdbcTemplate.query(sql, new Object[]{totalAmount, memberId, false}, getMemberCouponRowMapper());
   }
+
+  public boolean existsByMemberIdAndCouponId(Long memberId, Long couponId) {
+    String sql =
+        "SELECT member.id, member.email, member.password, "
+            + "member_coupon.id, member_coupon.coupon_id, member_coupon.is_used, "
+            + "coupon.name, coupon.min_amount, coupon.discount_amount "
+            + "FROM member_coupon "
+            + "INNER JOIN member ON member_coupon.member_id = member.id "
+            + "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id "
+            + "WHERE member_coupon.member_id = ? AND member_coupon.coupon_id = ?";
+    final List<MemberCoupon> memberCoupon = jdbcTemplate.query(sql, new Object[]{memberId, couponId},
+        getMemberCouponRowMapper());
+    return !memberCoupon.isEmpty();
+  }
 }
