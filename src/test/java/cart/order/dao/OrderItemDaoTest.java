@@ -1,20 +1,17 @@
 package cart.order.dao;
 
-import cart.cartitem.domain.CartItem;
 import cart.config.DaoTest;
-import cart.fixtures.MemberFixtures;
 import cart.order.application.dto.OrderItemDto;
 import cart.order.domain.CartOrder;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static cart.fixtures.MemberFixtures.*;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 class OrderItemDaoTest extends DaoTest {

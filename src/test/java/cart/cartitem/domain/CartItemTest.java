@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
-import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.MemberFixtures.Member_Ber;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

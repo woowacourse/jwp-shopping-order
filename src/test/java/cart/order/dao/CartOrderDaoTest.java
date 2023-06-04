@@ -2,14 +2,13 @@ package cart.order.dao;
 
 import cart.config.DaoTest;
 import cart.order.domain.CartOrder;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static cart.fixtures.MemberFixtures.*;
-import static org.assertj.core.api.Assertions.*;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 class CartOrderDaoTest extends DaoTest {

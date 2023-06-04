@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
-import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.MemberFixtures.Member_Ber;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;

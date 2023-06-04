@@ -5,8 +5,8 @@ import cart.cartitem.ui.response.CartItemResponse;
 import cart.member.domain.Member;
 import cart.product.domain.Product;
 
-import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.MemberFixtures.Member_Ber;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
