@@ -1,8 +1,11 @@
 package cart.acceptance.steps;
 
+import static cart.acceptance.steps.CommonSteps.추가;
+import static cart.acceptance.steps.Request.Builder.사용자의_요청_생성;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.cart.Product;
+import cart.domain.member.Member;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemResponse;
 import cart.dto.cart.CartItemSaveRequest;
@@ -57,5 +60,13 @@ public class CartItemSteps {
                 상품.getPrice().getLongValue()
         );
         return new CartItemResponse(null, 수량, productResponse);
+    }
+
+    public static String 장바구니에_상품을_추가하고_번호를_반환한다(final Member 사용자, final String 상품_번호) {
+        final var 저장_요청 = 사용자의_요청_생성(사용자)
+                .전송_정보(장바구니_추가_요청_정보(상품_번호))
+                .요청_위치(추가, 장바구니_URL)
+                .요청_결과_반환();
+        return 장바구니_상품_번호를_구한다(저장_요청);
     }
 }
