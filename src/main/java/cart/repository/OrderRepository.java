@@ -10,7 +10,6 @@ import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderProductEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -61,14 +60,18 @@ public class OrderRepository {
     }
 
     // 사용자별 주문 내역
-    public List<OrderProducts> findOrderProductsByMemberId(long memberId) {
-        List<Long> orderIds = orderDao.getOrderIdsByMemberId(memberId);
-        List<OrderProducts> orderProducts = new ArrayList<>();
-        for (long orderId : orderIds) {
-            List<OrderProductEntity> orderProductEntities = orderDao.getOrderItemsByOrderId(orderId);
-            orderProducts.add(toOrderProducts(orderId, orderProductEntities));
-        }
-        return orderProducts;
+    public List<Order> findOrderProductsByMemberId(Member member) {
+        List<Long> orderIds = orderDao.getOrderIdsByMemberId(member.getId());
+        return orderIds.stream()
+                .map(orderId -> findOrderById(member, orderId))
+                .collect(toList());
+    }
+
+    public Order findOrderById(Member member, long orderId) {
+        OrderEntity orderEntity = orderDao.getOrderById(orderId);
+        OrderProducts orderProducts = toOrderProducts(orderId, orderDao.getOrderItemsByOrderId(orderId));
+        Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
+        return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }
 
     private static OrderProducts toOrderProducts(long orderId, List<OrderProductEntity> orderProductEntities) {
@@ -84,13 +87,5 @@ public class OrderRepository {
                         .totalPrice(orderProductEntity.getTotalPrice())
                         .build()
                 ).collect(collectingAndThen(toList(), (orderProducts) -> new OrderProducts(orderId, orderProducts)));
-    }
-
-    // 주문 상세
-    public Order findOrderById(Member member, long orderId) {
-        OrderEntity orderEntity = orderDao.getOrderById(orderId);
-        OrderProducts orderProducts = toOrderProducts(orderId, orderDao.getOrderItemsByOrderId(orderId));
-        Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-        return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }
 }

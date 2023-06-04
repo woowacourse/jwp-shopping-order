@@ -11,10 +11,10 @@ public class OrderProduct {
     private final int quantity;
     private final int totalPrice;
 
-    private OrderProduct(Long id, long productId, long orderId, String name, int price, String imageUrl, int quantity, int totalPrice) {
+    private OrderProduct(Long id, long orderId, long productId, String name, int price, String imageUrl, int quantity, int totalPrice) {
         this.id = id;
-        this.productId = productId;
         this.orderId = orderId;
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

@@ -3,7 +3,6 @@ package cart.application;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.domain.order.OrderProducts;
 import cart.dto.order.OrderProductsRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -32,15 +31,14 @@ public class OrderService {
         cartItems.forEach(cartItem -> cartItemRepository.deleteById(cartItem.getId()));
         // 주문 목록에 저장
         long orderId = orderRepository.createOrder(order);
-
         // 포인트 정보 저장
         memberRepository.updatePoint(member.getId(), member.getPoint());
         return orderId;
     }
 
     // 사용자별 주문 내역
-    public List<OrderProducts> getOrderByMember(Member member) {
-        return orderRepository.findOrderProductsByMemberId(member.getId());
+    public List<Order> getOrderByMember(Member member) {
+        return orderRepository.findOrderProductsByMemberId(member);
     }
 
     // 주문 상세

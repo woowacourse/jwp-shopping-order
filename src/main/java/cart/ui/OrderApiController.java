@@ -3,11 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.domain.order.OrderProduct;
-import cart.domain.order.OrderProducts;
-import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
-import cart.dto.order.OrderProductsResponse;
 import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/orders")
@@ -39,36 +36,21 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderProductsResponse>> showOrder(Member member) {
-        List<OrderProducts> orderProducts = orderService.getOrderByMember(member);
-        return ResponseEntity.ok(toOrderProductsResponse(orderProducts));
-    }
-
-    private List<OrderProductsResponse> toOrderProductsResponse(List<OrderProducts> orderProductsOfOrders) {
-        return orderProductsOfOrders.stream()
-                .map(orderProductsOfOrder -> new OrderProductsResponse(orderProductsOfOrder.getOrderId(), toOrderProductResponse(orderProductsOfOrder.getOrderProducts())))
-                .collect(Collectors.toList());
-    }
-
-    private List<OrderProductResponse> toOrderProductResponse(List<OrderProduct> orderProducts) {
-        return orderProducts.stream()
-                .map(orderProduct -> new OrderProductResponse(
-                        orderProduct.getProductId(),
-                        orderProduct.getName(),
-                        orderProduct.getPrice(),
-                        orderProduct.getImageUrl(),
-                        orderProduct.getQuantity(),
-                        orderProduct.getTotalPrice()
-                )).collect(Collectors.toList());
+    public ResponseEntity<List<OrderResponse>> showOrder(Member member) {
+        List<Order> orders = orderService.getOrderByMember(member);
+        List<OrderResponse> orderResponses = orders.stream()
+                .map(this::toOrderResponse)
+                .collect(toList());
+        return ResponseEntity.ok(orderResponses);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> showOrderDetail(Member member, @PathVariable long id) {
         Order orderDetail = orderService.getOrderDetailById(member, id);
-        return ResponseEntity.ok(toOrderDetailResponse(orderDetail));
+        return ResponseEntity.ok(toOrderResponse(orderDetail));
     }
 
-    private OrderResponse toOrderDetailResponse(Order order) {
+    private OrderResponse toOrderResponse(Order order) {
         return new OrderResponse(
                 order.getId(),
                 order.getOrderProducts(),

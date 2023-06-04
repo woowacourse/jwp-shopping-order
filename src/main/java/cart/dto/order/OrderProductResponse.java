@@ -41,4 +41,16 @@ public class OrderProductResponse {
     public int getTotalPrice() {
         return totalPrice;
     }
+
+    @Override
+    public String toString() {
+        return "OrderProductResponse{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
 }
