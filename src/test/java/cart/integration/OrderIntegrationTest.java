@@ -76,7 +76,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(orderDetailResponse.getUsedPoint()).isEqualTo(300),
-                () -> assertThat(orderDetailResponse.getSavedPoint()).isEqualTo(calculateExpectedPoint(products)),
+                () -> assertThat(orderDetailResponse.getSavedPoint()).isEqualTo(calculateExpectedSavingPoint(products)),
                 () -> assertThat(orderDetailResponse.getProducts()).extracting(OrderItemResponse::getProduct)
                         .usingRecursiveComparison()
                         .isEqualTo(products)
@@ -131,14 +131,14 @@ public class OrderIntegrationTest extends IntegrationTest {
 
                 () -> assertThat(orderDetailResponses.get(0).getUsedPoint()).isEqualTo(300),
                 () -> assertThat(orderDetailResponses.get(0).getSavedPoint()).isEqualTo(
-                        calculateExpectedPoint(products)),
+                        calculateExpectedSavingPoint(products)),
                 () -> assertThat(orderDetailResponses.get(0).getProducts()).extracting(OrderItemResponse::getProduct)
                         .usingRecursiveComparison()
                         .isEqualTo(products),
 
                 () -> assertThat(orderDetailResponses.get(1).getUsedPoint()).isEqualTo(500),
                 () -> assertThat(orderDetailResponses.get(1).getSavedPoint()).isEqualTo(
-                        calculateExpectedPoint(productsWithoutPizza)),
+                        calculateExpectedSavingPoint(productsWithoutPizza)),
                 () -> assertThat(orderDetailResponses.get(1).getProducts()).extracting(OrderItemResponse::getProduct)
                         .usingRecursiveComparison()
                         .isEqualTo(productsWithoutPizza)
@@ -167,7 +167,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private int calculateExpectedPoint(final List<ProductEntity> products) {
+    private int calculateExpectedSavingPoint(final List<ProductEntity> products) {
         return Point.fromPayment(
                 products.stream()
                         .mapToInt(ProductEntity::getPrice)

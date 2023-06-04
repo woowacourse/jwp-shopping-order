@@ -2,6 +2,22 @@ spring:
   profiles:
     active: mysql
 
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    path: /api
+    disable-swagger-default-url: true
+    doc-expansion: none
+  paths-to-match:
+    - /**
+    -
 ---
 spring:
 

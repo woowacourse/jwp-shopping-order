@@ -1,7 +1,9 @@
 package cart.domain;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.util.Objects;
 
+@Hidden
 public class Member {
 
     private final Long id;
