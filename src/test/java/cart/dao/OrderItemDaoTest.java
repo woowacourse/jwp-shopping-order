@@ -40,7 +40,6 @@ class OrderItemDaoTest {
         orderItemDao = new OrderItemDao(jdbcTemplate);
     }
 
-
     @Test
     void 주문_상품을_저장한다() {
         // given

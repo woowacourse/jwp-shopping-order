@@ -8,12 +8,12 @@ import static cart.fixture.JdbcTemplateFixture.insertOrder;
 import static cart.fixture.JdbcTemplateFixture.insertOrderItem;
 import static cart.fixture.JdbcTemplateFixture.insertProduct;
 import static cart.fixture.MemberFixture.MEMBER;
+import static cart.fixture.OrderItemFixture.getOrderItemEntity;
 import static cart.fixture.ProductFixture.CHICKEN;
 import static cart.fixture.ProductFixture.PIZZA;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import cart.domain.MemberCoupon;
-import cart.domain.Product;
 import cart.entity.OrderCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
@@ -46,9 +46,6 @@ class OrderCouponDaoTest {
     @Test
     void 배치_세이브_테스트() {
         // given
-        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000);
-        OrderItemEntity orderItemChicken = getOrderItemEntity(1L, orderEntity.getId(), CHICKEN, 10);
-        OrderItemEntity orderItemPizza = getOrderItemEntity(2L, orderEntity.getId(), PIZZA, 5);
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
         insertProduct(PIZZA, jdbcTemplate);
@@ -58,6 +55,9 @@ class OrderCouponDaoTest {
         insertMemberCoupon(memberCouponA, jdbcTemplate);
         insertMemberCoupon(memberCouponB, jdbcTemplate);
 
+        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000);
+        OrderItemEntity orderItemChicken = getOrderItemEntity(1L, orderEntity.getId(), 10, CHICKEN);
+        OrderItemEntity orderItemPizza = getOrderItemEntity(2L, orderEntity.getId(), 5, PIZZA);
         insertOrder(orderEntity, jdbcTemplate);
         insertOrderItem(orderItemChicken, jdbcTemplate);
         insertOrderItem(orderItemPizza, jdbcTemplate);
@@ -65,12 +65,7 @@ class OrderCouponDaoTest {
                 new OrderCouponEntity(orderItemChicken.getId(), memberCouponA.getId()),
                 new OrderCouponEntity(orderItemPizza.getId(), memberCouponB.getId()));
 
-        // when
+        // when & then
         assertThatNoException().isThrownBy(() -> orderCouponDao.batchSave(orderCouponEntities));
-    }
-
-    private OrderItemEntity getOrderItemEntity(Long id, Long orderId, Product product, int quantity) {
-        return new OrderItemEntity(id, orderId, product.getId(), quantity, product.getName(), product.getPrice(),
-                product.getImageUrl(), 5000);
     }
 }

@@ -26,7 +26,6 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     private static final String API_URL = "/products";
 
-
     @Test
     void 상품을_추가한다() {
         // when

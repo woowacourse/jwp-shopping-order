@@ -44,7 +44,6 @@ public class JdbcTemplateFixture {
                 orderItemEntity.getTotalPrice());
     }
 
-
     public static void insertOrderCoupon(OrderCouponEntity orderCouponEntity, JdbcTemplate jdbcTemplate) {
         String sql = "INSERT INTO order_coupon(order_item_id, member_coupon_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, orderCouponEntity.getOrderItemId(), orderCouponEntity.getMemberCouponId());
