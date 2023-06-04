@@ -53,8 +53,7 @@ public class CartItemService {
 			return new CartItemUpdateResponse(0, false);
 		}
 
-		cartItem.changeQuantity(request.getQuantity());
-		cartItem.changeChecked(request.isChecked());
+		cartItem.changeCartItem(request.getQuantity(), request.isChecked());
 		cartItemDao.update(cartItem);
 		return new CartItemUpdateResponse(cartItem.getQuantity(), cartItem.isChecked());
 	}
