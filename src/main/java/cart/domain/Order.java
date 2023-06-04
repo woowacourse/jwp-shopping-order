@@ -7,9 +7,12 @@ import cart.domain.coupon.MemberCoupon;
 import cart.exception.ExceptionType;
 import cart.exception.OrderException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Order {
+
+    private static final DateTimeFormatter ORDER_NUMBER_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 
     private final Long id;
     private final Member member;
@@ -25,7 +28,7 @@ public class Order {
         this.items = items;
         this.deliveryFee = deliveryFee;
         this.orderDate = LocalDateTime.now();
-        this.orderNumber = orderDate.toString() + member.getId();
+        this.orderNumber = createOrderNumber(member.getId());
         this.coupon = coupon;
     }
 
@@ -40,7 +43,6 @@ public class Order {
         this.coupon = coupon;
     }
 
-
     public static Order of(Member member, List<CartItem> cartItems, int deliveryFee, MemberCoupon memberCoupon) {
         memberCoupon.check(member);
         validateOwner(member, cartItems);
@@ -54,6 +56,10 @@ public class Order {
         for (CartItem cartItem : cartItems) {
             cartItem.checkOwner(member);
         }
+    }
+
+    private String createOrderNumber(Long memberId) {
+        return orderDate.format(ORDER_NUMBER_FORMAT) + memberId;
     }
 
     public Money calculateTotalPrice() {
