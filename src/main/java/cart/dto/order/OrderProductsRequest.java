@@ -32,6 +32,10 @@ public class OrderProductsRequest {
         return point;
     }
 
+    public int getDeliveryFee() {
+        return deliveryFee;
+    }
+
     @Override
     public String toString() {
         return "OrderProductsRequest{" +

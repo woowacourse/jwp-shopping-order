@@ -29,9 +29,9 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, List<CartItem> cartItems, int usedPoint) {
+    public static Order of(Member member, List<CartItem> cartItems, int usedPoint, int deliveryFee) {
         OrderProducts orderProducts = OrderProducts.of(cartItems);
-        Payment payment = new Payment(orderProducts.calculateTotalPrice(), usedPoint);
+        Payment payment = new Payment(orderProducts.calculateTotalPrice() + deliveryFee, usedPoint);
         member.pay(payment);
         return new Order(member, orderProducts, payment);
     }
