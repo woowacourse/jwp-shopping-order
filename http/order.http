@@ -1,25 +1,25 @@
 ### 주문 목록 조회
-GET http://localhost:8080/orders?page=2
+GET http://localhost:8080/orders?page=1
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 ### 주문 상세 정보 조회
-GET http://localhost:8080/orders/1
+GET http://localhost:8080/orders/9
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 ### 주문 취소
-DELETE http://localhost:8080/orders/100
+DELETE http://localhost:8080/orders/7
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 ### 주문
-POST http://3.35.234.166:8080/orders
+POST http://localhost:8080/orders
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 {
-	"usedPoint": 0,
+	"usedPoint": 12000,
 	"products": [
 		{
 			"productId": 1,

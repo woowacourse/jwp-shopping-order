@@ -42,13 +42,13 @@ public class OrderDao {
             return ps;
         }, keyHolder);
 
-        return (Long) keyHolder.getKeys().get("ID");
+        return Long.parseLong(String.valueOf(keyHolder.getKey()));
     }
 
-    public int delete(Long memberId, Long orderId) {
+    public void delete(Long memberId, Long orderId) {
         String sql = "update orders set orders_status_id = ? where member_id = ? and id = ?";
 
-        return jdbcTemplate.update(sql, OrderStatus.CANCELLED.getOrderStatusId(), memberId, orderId);
+        jdbcTemplate.update(sql, OrderStatus.CANCELLED.getOrderStatusId(), memberId, orderId);
     }
 
     private static class OrderRowMapper implements RowMapper<OrderEntity> {

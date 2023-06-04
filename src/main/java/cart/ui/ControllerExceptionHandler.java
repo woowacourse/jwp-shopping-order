@@ -31,13 +31,13 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(OrderServerException.class)
     public ResponseEntity<String> handleOrderServerException(OrderServerException exception) {
-        System.out.println(exception.getStackTrace());
+        System.out.println(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(INTERNAL_SERVER_ERROR_MESSAGE);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {
-        System.out.println(exception.getStackTrace());
+        System.out.println(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(INTERNAL_SERVER_ERROR_MESSAGE);
     }
 }

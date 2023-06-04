@@ -26,8 +26,14 @@ public class PointDao {
         return jdbcTemplate.queryForObject(sql, new PointRowMapper(), memberId, orderId);
     }
 
+    public PointEntity findExistsBy(Long memberId, Long orderId) {
+        String sql = "select id, earned_point, comment, create_at, expired_at from point where member_id = ? and orders_id = ? and status = 1";
+
+        return jdbcTemplate.queryForObject(sql, new PointRowMapper(), memberId, orderId);
+    }
+
     public List<PointEntity> findByMemberId(Long memberId) {
-        String sql = "select id, earned_point, comment, create_at, expired_at from point where member_id = ?";
+        String sql = "select id, earned_point, comment, create_at, expired_at from point where member_id = ? and status = 1";
 
         return jdbcTemplate.query(sql, new PointRowMapper(), memberId);
     }
@@ -51,7 +57,7 @@ public class PointDao {
     }
 
     public void delete(Long memberId, Long orderId) {
-        String sql = "delete from point where member_id = ? and orders_id = ?";
+        String sql = "update point set status = 0 where member_id = ? and orders_id = ?";
 
         jdbcTemplate.update(sql, memberId, orderId);
     }

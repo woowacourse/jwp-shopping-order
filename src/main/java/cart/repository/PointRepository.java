@@ -11,7 +11,6 @@ import cart.exception.OrderServerException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,7 +118,7 @@ public class PointRepository {
     private void validateDelete(Long memberId, Long orderId) {
         PointEntity pointEntity;
         try {
-            pointEntity = pointDao.findBy(memberId, orderId);
+            pointEntity = pointDao.findExistsBy(memberId, orderId);
         } catch (DataAccessException exception) {
             throw new OrderException(NO_POINT_MESSAGE);
         }

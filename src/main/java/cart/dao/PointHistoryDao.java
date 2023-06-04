@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Repository
 public class PointHistoryDao {
 
-    private static final long DUMMY = -1L;
+    private static final String DUMMY = "-1";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -28,13 +28,21 @@ public class PointHistoryDao {
     }
 
     public List<PointHistoryEntity> findByPointIds(List<Long> pointIds) {
-        pointIds.add(DUMMY);
-        String inSql = pointIds.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
+        String inSql = getInSql(pointIds);
         String sql = String.format("select id, orders_id, point_id, used_point from point_history where point_id in (%s)", inSql);
 
         return jdbcTemplate.query(sql, new PointHistoryRowMapper());
+    }
+
+    private String getInSql(List<Long> pointIds) {
+        String inSql = pointIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        if (inSql.isEmpty()) {
+            inSql = DUMMY;
+        }
+        return inSql;
     }
 
     public List<PointHistoryEntity> findByOrderId(Long orderId) {

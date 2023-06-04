@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Repository
 public class OrderItemDao {
 
-    private static final long DUMMY = -1L;
+    private static final String DUMMY = "-1";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -38,14 +38,20 @@ public class OrderItemDao {
     }
 
     public List<OrderItemEntity> findAllByOrderIds(List<Long> orderIds) {
-        orderIds.add(DUMMY);
-        String inSql = orderIds.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-
+        String inSql = getInSql(orderIds);
         String sql = String.format("select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
                 " left join product on orders_item.product_id = product.id where orders_item.orders_id in (%s)", inSql);
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
+    }
+
+    private String getInSql(List<Long> orderIds) {
+        String inSql = orderIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+        if (inSql.isEmpty()) {
+            inSql = DUMMY;
+        }
+        return inSql;
     }
 
     public void saveAll(Long orderId, List<OrderItemEntity> orderItems) {
