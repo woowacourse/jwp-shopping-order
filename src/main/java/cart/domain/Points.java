@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 public class Points implements Iterable<Point> {
 
+    private static final String INVALID_USE_POINT_MESSAGE = "사용가능한 포인트보다 더 많은 포인트를 사용할 수 없습니다.";
+
     List<Point> points;
 
     public Points(List<Point> points) {
@@ -41,7 +43,7 @@ public class Points implements Iterable<Point> {
     private void validate(Point usePoint) {
         Point totalPoint = Point.from(getTotalPoint());
         if (usePoint.isGreaterThan(totalPoint)) {
-            throw new OrderException("사용가능한 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
+            throw new OrderException(INVALID_USE_POINT_MESSAGE);
         }
     }
 

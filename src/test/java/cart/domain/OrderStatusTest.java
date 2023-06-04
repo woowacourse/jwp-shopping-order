@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.OrderServerException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,6 @@ class OrderStatusTest {
     @Test
     void findOrderStatusById_fail() {
         assertThatThrownBy(() -> OrderStatus.findOrderStatusById(6))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(OrderServerException.class);
     }
 }

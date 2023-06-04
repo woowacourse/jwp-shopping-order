@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class Point {
 
+    private static final String INVALID_SUBTRACT_MESSAGE = "포인트는 빼려고하는 값이 더 작아야합니다.";
+
     private final Long id;
     private final int value;
     private final String comment;
@@ -35,7 +37,7 @@ public class Point {
 
     public Point subtract(Point other) {
         if (value < other.value) {
-            throw new OrderServerException("포인트는 빼려고하는 값이 더 작아야합니다.");
+            throw new OrderServerException(INVALID_SUBTRACT_MESSAGE);
         }
         return Point.of(id, value - other.value, comment, createAt, expiredAt);
     }
