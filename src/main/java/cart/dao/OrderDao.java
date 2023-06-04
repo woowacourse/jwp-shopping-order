@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +54,12 @@ public class OrderDao {
             int shippingFee = rs.getInt("shipping_fee");
             LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
 
-            return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAt, memberId);
+            ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+            ZonedDateTime seoulTime = orderedAt.atZone(ZoneOffset.UTC).withZoneSameInstant(seoulZoneId);
+            LocalDateTime orderedAtSeoul = seoulTime.toLocalDateTime();
+
+
+            return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAtSeoul, memberId);
         });
     }
 
@@ -66,7 +72,12 @@ public class OrderDao {
             int discountedTotalItemPrice = rs.getInt("discounted_total_item_price");
             int shippingFee = rs.getInt("shipping_fee");
 
-            return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAt, memberId);
+            ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+            ZonedDateTime seoulTime = orderedAt.atZone(ZoneOffset.UTC).withZoneSameInstant(seoulZoneId);
+            LocalDateTime orderedAtSeoul = seoulTime.toLocalDateTime();
+
+
+            return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAtSeoul, memberId);
         });
     }
 
@@ -79,7 +90,12 @@ public class OrderDao {
             int discountedTotalItemPrice = rs.getInt("discounted_total_item_price");
             int shippingFee = rs.getInt("shipping_fee");
 
-            return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAt, memberId);
+            ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+            ZonedDateTime seoulTime = orderedAt.atZone(ZoneOffset.UTC).withZoneSameInstant(seoulZoneId);
+            LocalDateTime orderedAtSeoul = seoulTime.toLocalDateTime();
+
+
+            return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAtSeoul, memberId);
         },memberId);
     }
 }
