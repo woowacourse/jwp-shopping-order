@@ -7,7 +7,7 @@ public class Amount {
 
     private final int value;
 
-    public Amount(final int value) {
+    private Amount(final int value) {
         validate(value);
         this.value = value;
     }
