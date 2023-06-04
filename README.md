@@ -30,7 +30,7 @@
 
 ### 주문 목록 조회 -> 10개씩
 
-#### GET /orders/?orderPage=n HTTP/1.1
+#### GET /orders?page=n HTTP/1.1
 
 #### HTTP/1.1 200 OK
 

@@ -20,8 +20,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<OrderPageResponse> getOrderPages(Member member, @RequestParam("orderPage") Integer orderPage) {
-        OrderPageResponse orders = orderService.findOrders(member, orderPage);
+    public ResponseEntity<OrderPageResponse> getOrderPages(Member member, @RequestParam("page") Integer page) {
+        OrderPageResponse orders = orderService.findOrders(member, page);
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
