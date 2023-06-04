@@ -59,8 +59,11 @@ public class CouponService {
         return coupon;
     }
 
-    public List<PossibleCouponResponse> findPossibleCouponByMember(final Member member) {
-        final List<Coupon> coupons = couponDao.findAllByMemberWhereIsNotUsed(member);
+    public List<PossibleCouponResponse> findPossibleCouponByMember(final Member member, final int totalProductAmount) {
+        final List<Coupon> coupons = couponDao.findAllByMemberWhereIsNotUsed(member)
+            .stream()
+            .filter(it -> Amount.of(totalProductAmount).isMoreOrEqualsThan(it.getMinAmount()))
+            .collect(Collectors.toList());
         return coupons.stream()
             .map(this::makePossibleCouponResponse)
             .collect(Collectors.toUnmodifiableList());

@@ -10,8 +10,10 @@ import cart.domain.Member;
 import cart.domain.vo.Amount;
 import cart.ui.dto.request.ProductRequest;
 import cart.ui.dto.response.CouponDiscountResponse;
+import cart.ui.dto.response.PossibleCouponResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -107,5 +109,27 @@ class CouponApiControllerTest extends IntegrationTest {
 
         //then
         assertThat(couponDiscountResponse.getDiscountedProductAmount()).isEqualTo(12_000);
+    }
+
+    @Test
+    @DisplayName("사용 가능한 쿠폰을 반환한다.")
+    void testFindActiveCouponByMember() {
+        //given
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/coupons/" + "active" + "?total=" + 10_000)
+            .then()
+            .log().all()
+            .extract();
+        final List<PossibleCouponResponse> possibleCouponResponses = List.of(
+            response.as(PossibleCouponResponse[].class));
+
+        //then
+        final PossibleCouponResponse possibleCouponResponse1 = new PossibleCouponResponse(coupon1.getId(),
+            coupon1.getName(), coupon1.getMinAmount().getValue());
+        assertThat(possibleCouponResponses).usingRecursiveComparison().isEqualTo(List.of(possibleCouponResponse1));
     }
 }

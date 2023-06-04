@@ -68,13 +68,10 @@ class CouponServiceTest {
             .willReturn(coupons);
 
         //when
-        final List<PossibleCouponResponse> responses = couponService.findPossibleCouponByMember(member);
+        final List<PossibleCouponResponse> responses = couponService.findPossibleCouponByMember(member, 10_000);
 
         //then
-        final List<PossibleCouponResponse> expectedResponse = coupons.stream()
-            .map(this::makePossibleCouponResponse)
-            .collect(Collectors.toUnmodifiableList());
-        assertThat(responses).usingRecursiveComparison().isEqualTo(expectedResponse);
+        assertThat(responses).usingRecursiveComparison().isEqualTo(List.of(makePossibleCouponResponse(coupon1)));
     }
 
     private PossibleCouponResponse makePossibleCouponResponse(final Coupon coupon) {

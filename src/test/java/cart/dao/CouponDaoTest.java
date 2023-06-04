@@ -80,4 +80,19 @@ class CouponDaoTest {
             assertThat(coupons.get(index).getId()).isEqualTo(expectedCoupons.get(index).getId());
         }
     }
+
+    @Test
+    @DisplayName("id로 쿠폰을 찾는다.")
+    void testFindById() {
+        //given
+        final Member savedMember = memberDao.addMember(member);
+        final Coupon savedCoupon = couponDao.save(coupon1, savedMember.getId());
+
+        //when
+        final Coupon coupon = couponDao.findById(savedCoupon.getId())
+            .orElseThrow(RuntimeException::new);
+
+        //then
+        assertThat(coupon).usingRecursiveComparison().isEqualTo(savedCoupon);
+    }
 }

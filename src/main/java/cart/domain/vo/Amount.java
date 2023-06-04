@@ -41,6 +41,10 @@ public class Amount {
         return value < minAmount.value;
     }
 
+    public boolean isMoreOrEqualsThan(final Amount amount) {
+        return value >= amount.value;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
