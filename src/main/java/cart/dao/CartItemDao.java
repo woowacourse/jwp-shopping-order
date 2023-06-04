@@ -6,22 +6,24 @@ import cart.domain.CartItems;
 import cart.entity.CartItemEntity;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<CartItemEntity> findByMemberId(Long memberId) {
@@ -38,22 +40,12 @@ public class CartItemDao {
     }
 
     public Long save(CartItem cartItem) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("member_id", cartItem.getMember().getId());
+        parameterSource.addValue("product_id", cartItem.getProduct().getId());
+        parameterSource.addValue("quantity", cartItem.getQuantity());
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
-            ps.setInt(3, cartItem.getQuantity());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     public CartItemEntity findById(Long id) {
@@ -92,7 +84,7 @@ public class CartItemDao {
         });
     }
 
-    public boolean existsByMemberIdAndProductId(Long productId, Long memberId) {
+    public boolean existsByProductIdAndMemberId(Long productId, Long memberId) {
         String sql = "SELECT COUNT(*) FROM cart_item WHERE product_id = ? AND member_id = ?";
         Integer integer = jdbcTemplate.queryForObject(sql, Integer.class, productId, memberId);
 

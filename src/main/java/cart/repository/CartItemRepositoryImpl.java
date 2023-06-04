@@ -19,7 +19,9 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
     private final MemberDao memberDao;
-    public CartItemRepositoryImpl(final ProductDao productDao, final CartItemDao cartItemDao, final MemberDao memberDao) {
+
+    public CartItemRepositoryImpl(final ProductDao productDao, final CartItemDao cartItemDao,
+                                  final MemberDao memberDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
         this.memberDao = memberDao;
@@ -53,7 +55,7 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     }
 
     public Long add(Member member, Long productId) {
-        if (cartItemDao.existsByMemberIdAndProductId(productId, member.getId())) {
+        if (cartItemDao.existsByProductIdAndMemberId(productId, member.getId())) {
             return updateCartItemQuantity(member, productId);
         }
 

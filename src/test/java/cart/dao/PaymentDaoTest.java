@@ -5,6 +5,7 @@ import static cart.fixture.OrderFixture.ORDER_1;
 import static cart.fixture.PaymentFixture.PAYMENT_1;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import cart.entity.PaymentEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,31 @@ class PaymentDaoTest {
     @Test
     @DisplayName("결제 정보를 저장한다.")
     void save() {
+        // when
         Long paymentId = paymentDao.save(PAYMENT_1, orderId, memberId);
 
+        // then
         assertThat(paymentId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("주문 ID로 결제 정보를 조회한다.")
+    void findByOrderId() {
+        // given
+        Long id = paymentDao.save(PAYMENT_1, orderId, memberId);
+
+        // when
+        PaymentEntity paymentEntity = paymentDao.findByOrderId(orderId);
+
+        // then
+        assertThat(paymentEntity)
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(new PaymentEntity(id,
+                        memberId,
+                        PAYMENT_1.getOriginalPrice().getValue(),
+                        PAYMENT_1.getDiscountPrice().getValue(),
+                        PAYMENT_1.getFinalPrice().getValue(),
+                        null));
     }
 }

@@ -38,7 +38,7 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, productEntityRowMapper(), productId);
     }
 
-    public RowMapper<ProductEntity> productEntityRowMapper() {
+    private RowMapper<ProductEntity> productEntityRowMapper() {
         return (rs, rowNum) -> new ProductEntity(
                 rs.getLong("id"),
                 rs.getString("name"),
