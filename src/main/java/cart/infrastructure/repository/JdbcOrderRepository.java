@@ -55,13 +55,25 @@ public class JdbcOrderRepository implements OrderRepository {
         final List<OrderItem> orderItems = findOrderItems(id);
         final OrderEntity orderEntity = orderDao.findById(id)
                 .orElseThrow(NoSuchElementException::new);
+        final MemberCoupon memberCoupon = findMemberCoupon(memberId, orderEntity);
+        return orderEntity.toDomain(orderItems, memberCoupon);
+    }
+
+    private MemberCoupon findMemberCoupon(final Long memberId, final OrderEntity orderEntity) {
         final Coupon coupon = couponDao.findById(orderEntity.getCouponId())
                 .orElse(CouponEntity.empty())
                 .toDomain();
-        final MemberCoupon memberCoupon = memberCouponDao.findByCouponIdAndMemberId(orderEntity.getCouponId(), memberId)
+        return memberCouponDao.findByCouponIdAndMemberId(orderEntity.getCouponId(), memberId)
                 .orElse(MemberCouponEntity.empty(memberId))
                 .toDomain(coupon);
-        return orderEntity.toDomain(orderItems, memberCoupon);
+    }
+
+    @Override
+    public List<Order> findAll(final Long memberId) {
+        final List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+        return orderEntities.stream()
+                .map(it -> it.toDomain(findOrderItems(it.getId()), findMemberCoupon(memberId, it)))
+                .collect(Collectors.toList());
     }
 
     private List<OrderItem> findOrderItems(final Long id) {

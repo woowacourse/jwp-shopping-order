@@ -2,6 +2,7 @@ package cart.infrastructure.dao;
 
 import cart.entity.OrderEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -54,5 +55,10 @@ public class OrderDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderEntity> findAllByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM `order` WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

@@ -14,6 +14,7 @@ import cart.domain.vo.Amount;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailResponse;
 import cart.dto.response.OrderProductResponse;
+import cart.dto.response.OrderResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -84,12 +85,23 @@ public class OrderService {
     public OrderDetailResponse showOrderDetail(final Member member, final Long id) {
         final Order order = orderRepository.findById(id, member.getId());
 
-        final List<OrderProductResponse> orderProductResponses = order.getOrderItems().stream()
-                .map(it -> new OrderProductResponse(it.getProduct().getId(), it.getProduct().getName(),
-                        it.getProduct().getAmount().getValue(), it.getProduct().getImageUrl(), it.getQuantity()))
-                .collect(Collectors.toList());
+        final List<OrderProductResponse> orderProductResponses = getOrderProductResponses(order);
         return new OrderDetailResponse(order.getId(), order.getTotalProductAmount().getValue(),
                 order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
                 orderProductResponses);
+    }
+
+    private List<OrderProductResponse> getOrderProductResponses(final Order order) {
+        return order.getOrderItems().stream()
+                .map(it -> new OrderProductResponse(it.getProduct().getId(), it.getProduct().getName(),
+                        it.getProduct().getAmount().getValue(), it.getProduct().getImageUrl(), it.getQuantity()))
+                .collect(Collectors.toList());
+    }
+
+    public List<OrderResponse> showAllOrders(final Member member) {
+        final List<Order> orders = orderRepository.findAll(member.getId());
+        return orders.stream()
+                .map(it -> new OrderResponse(it.getId(), getOrderProductResponses(it)))
+                .collect(Collectors.toList());
     }
 }

@@ -4,7 +4,9 @@ import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailResponse;
+import cart.dto.response.OrderResponse;
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,5 +35,11 @@ public class OrderApiController {
     public ResponseEntity<OrderDetailResponse> showOrderDetail(final Member member, @PathVariable Long id) {
         final OrderDetailResponse orderDetailResponse = orderService.showOrderDetail(member, id);
         return ResponseEntity.ok(orderDetailResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> showAllOrders(final Member member) {
+        final List<OrderResponse> orderResponses = orderService.showAllOrders(member);
+        return ResponseEntity.ok(orderResponses);
     }
 }
