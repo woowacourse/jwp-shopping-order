@@ -29,11 +29,11 @@ public class CartItem {
     }
 
     public boolean validateProduct(final Long productId, final Long memberId) {
-        return !(product.isEqualId(productId) && member.isEqualId(memberId));
+        return product.isEqualId(productId) && member.isEqualId(memberId);
     }
 
     public boolean validateQuantity(final Integer quantity) {
-        return this.quantity != quantity;
+        return this.quantity == quantity;
     }
 
     public void checkOwner(Member member) {
