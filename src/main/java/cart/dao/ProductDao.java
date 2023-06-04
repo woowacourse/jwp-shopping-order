@@ -37,7 +37,7 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
-    public Long create(ProductEntity productEntity) {
+    public Long save(ProductEntity productEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

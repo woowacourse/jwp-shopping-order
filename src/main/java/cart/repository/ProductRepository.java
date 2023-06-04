@@ -30,7 +30,7 @@ public class ProductRepository {
 
     public Long save(Product product) {
         ProductEntity productEntity = convertToEntity(product);
-        return productDao.create(productEntity);
+        return productDao.save(productEntity);
     }
 
     public void update(Product product) {
