@@ -13,7 +13,8 @@ public class MemberDao {
             new MemberEntity(
                     rs.getLong("id"),
                     rs.getString("email"),
-                    rs.getString("password")
+                    rs.getString("password"),
+                    rs.getInt("point")
             );
 
     public MemberDao(JdbcTemplate jdbcTemplate) {

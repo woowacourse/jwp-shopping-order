@@ -74,10 +74,10 @@ INSERT INTO product (name, price, image_url)
 VALUES ('조명', 60000,
         'https://images.unsplash.com/photo-1563099045-dd7d9aebaa49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8JUVDJUExJUIwJUVCJUFBJTg1fGVufDB8fDB8fHww&auto=format&fit=crop&w=900&q=60');
 
-INSERT INTO member (email, password)
-VALUES ('kangsj9665@gmail.com', '1234');
-INSERT INTO member (email, password)
-VALUES ('yis092521@gmail.com', '1234');
+INSERT INTO member (email, password, point)
+VALUES ('kangsj9665@gmail.com', '1234', 1000);
+INSERT INTO member (email, password, point)
+VALUES ('yis092521@gmail.com', '1234', 1000);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2);

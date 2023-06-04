@@ -36,7 +36,8 @@ public class MemberRepository {
         return new Member(
                 memberEntity.getId(),
                 memberEntity.getEmail(),
-                memberEntity.getPassword()
+                memberEntity.getPassword(),
+                memberEntity.getPoint()
         );
     }
 }
