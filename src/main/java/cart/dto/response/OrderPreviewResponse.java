@@ -10,8 +10,7 @@ public class OrderPreviewResponse {
     private final Integer extraProductCount;
     @JsonProperty("date")
     private final LocalDateTime createdAt;
-    @JsonProperty("price")
-    private final Integer finalPrice;
+    private final Integer paymentAmount;
 
     public OrderPreviewResponse(
             final Long id,
@@ -19,14 +18,14 @@ public class OrderPreviewResponse {
             final String mainProductImage,
             final Integer extraProductCount,
             final LocalDateTime createdAt,
-            final Integer finalPrice
+            final Integer paymentAmount
     ) {
         this.id = id;
         this.mainProductName = mainProductName;
         this.mainProductImage = mainProductImage;
         this.extraProductCount = extraProductCount;
         this.createdAt = createdAt;
-        this.finalPrice = finalPrice;
+        this.paymentAmount = paymentAmount;
     }
 
     public Long getId() {
@@ -49,7 +48,7 @@ public class OrderPreviewResponse {
         return createdAt;
     }
 
-    public Integer getFinalPrice() {
-        return finalPrice;
+    public Integer getPaymentAmount() {
+        return paymentAmount;
     }
 }

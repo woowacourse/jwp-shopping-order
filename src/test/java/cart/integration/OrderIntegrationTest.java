@@ -61,7 +61,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getString("[0].mainProductName")).isEqualTo("치킨");
         assertThat(response.jsonPath().getInt("[0].extraProductCount")).isEqualTo(1);
-        assertThat(response.jsonPath().getInt("[0].price")).isEqualTo(45_000);
+        assertThat(response.jsonPath().getInt("[0].paymentAmount")).isEqualTo(45_000);
     }
 
     @Test
