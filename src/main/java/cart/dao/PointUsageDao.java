@@ -71,7 +71,7 @@ public class PointUsageDao {
 
             @Override
             public int getBatchSize() {
-                return 100;
+                return pointUsages.size();
             }
         });
     }
