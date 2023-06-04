@@ -40,4 +40,8 @@ public enum FixedDiscountPolicy implements DiscountPolicy{
     public int getDiscountPrice() {
         return discountPrice;
     }
+
+    public int getMinimumPrice() {
+        return inclusiveMin;
+    }
 }

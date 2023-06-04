@@ -101,6 +101,16 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .containsExactly(saveId1, saveId2);
     }
 
+    @DisplayName("모든 할인 정책을 조회한다")
+    @Test
+    void showAllDiscountPolicies() {
+        // when
+        final DiscountPolicyResponse response = discountPoliciesSelectRequest().as(DiscountPolicyResponse.class);
+
+        // then
+        assertThat(response.getFixedDiscountPolicy()).hasSize(FixedDiscountPolicy.values().length - 1);
+    }
+
     private ExtractableResponse<Response> orderCreateRequest(final OrderCreateRequest orderCreateRequest) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -117,6 +127,15 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/orders/" + saveId)
                 .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
+    private ExtractableResponse<Response> discountPoliciesSelectRequest() {
+        return RestAssured.given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders/discount-policies")
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
     }

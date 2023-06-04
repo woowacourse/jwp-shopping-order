@@ -46,4 +46,11 @@ public class OrderApiController {
 
         return ResponseEntity.ok(ordersSelectResponse);
     }
+
+    @GetMapping("/discount-policies")
+    public ResponseEntity<DiscountPolicyResponse> showAllDiscountPolicies(Member member) {
+        DiscountPolicyResponse discountPolicyResponse = orderService.getAllDiscountPolicies();
+
+        return ResponseEntity.ok(discountPolicyResponse);
+    }
 }

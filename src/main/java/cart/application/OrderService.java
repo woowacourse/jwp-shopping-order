@@ -70,7 +70,6 @@ public class OrderService {
     }
 
     public DiscountPolicyResponse getAllDiscountPolicies() {
-        // TODO: 2023/06/04 0원 할인인 경우는 포함하지 않을지 물어보기
         final List<FixedDiscountPolicyResponse> policies = Arrays.stream(FixedDiscountPolicy.values())
                 .filter(policy -> policy.getDiscountPrice() != 0)
                 .map(policy -> FixedDiscountPolicyResponse.from(policy))
