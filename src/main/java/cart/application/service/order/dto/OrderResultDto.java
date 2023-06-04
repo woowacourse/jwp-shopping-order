@@ -1,6 +1,8 @@
 package cart.application.service.order.dto;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderResultDto {
@@ -10,9 +12,10 @@ public class OrderResultDto {
     private final List<UsedCoupon> usedCoupons;
     private final int usedPoint;
     private final int paymentPrice;
-    private final Timestamp createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private final LocalDateTime createdAt;
 
-    public OrderResultDto(Long orderId, List<OrderedItemResult> orderedItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice, Timestamp createdAt) {
+    public OrderResultDto(Long orderId, List<OrderedItemResult> orderedItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice, LocalDateTime createdAt) {
         this.orderId = orderId;
         this.orderedItems = orderedItems;
         this.usedCoupons = usedCoupons;
@@ -23,10 +26,6 @@ public class OrderResultDto {
 
     public long getOrderId() {
         return orderId;
-    }
-
-    public OrderResultDto(Long orderId, List<OrderedItemResult> orderedItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice) {
-        this(orderId, orderedItems, usedCoupons, usedPoint, paymentPrice, null);
     }
 
     public List<OrderedItemResult> getOrderedItems() {
@@ -45,7 +44,7 @@ public class OrderResultDto {
         return paymentPrice;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 }

@@ -23,6 +23,7 @@ public class OrderJdbcRepository implements OrderRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
+                .usingColumns("member_id", "total_price", "payment_price", "point")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -39,9 +40,8 @@ public class OrderJdbcRepository implements OrderRepository {
                     rs.getInt("orders.total_price"),
                     rs.getInt("orders.point"),
                     memberRowMapper.mapRow(rs, rowNum),
-                    rs.getTimestamp("orders.created_at")
+                    rs.getTimestamp("orders.created_at").toLocalDateTime()
             ));
-
 
     @Override
     public Long createOrder(final Order order) {

@@ -3,8 +3,9 @@ package cart.ui.order.dto.response;
 import cart.application.service.order.dto.OrderResultDto;
 import cart.application.service.order.dto.OrderedItemResult;
 import cart.application.service.order.dto.UsedCoupon;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderResponse {
@@ -14,12 +15,13 @@ public class OrderResponse {
     private List<UsedCoupon> usedCoupons;
     private int usedPoint;
     private int paymentPrice;
-    private Timestamp createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(Long orderId, List<OrderedItemResult> orderItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice, Timestamp createdAt) {
+    public OrderResponse(Long orderId, List<OrderedItemResult> orderItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice, LocalDateTime createdAt) {
         this.orderId = orderId;
         this.orderItems = orderItems;
         this.usedCoupons = usedCoupons;
@@ -59,7 +61,7 @@ public class OrderResponse {
         return paymentPrice;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 }

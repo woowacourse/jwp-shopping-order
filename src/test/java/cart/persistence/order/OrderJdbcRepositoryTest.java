@@ -84,6 +84,7 @@ class OrderJdbcRepositoryTest {
         Order savedOrder2 = new Order(order2Id, order2.getPaymentPrice(), order2.getTotalPrice(), order2.getPoint(), order2.getMember(), order2.getCreatedAt());
 
         Order orderResult = orderJdbcRepository.findOrderBy(order1Id).get();
+
         assertThat(orderResult).isEqualTo(savedOrder1);
     }
 

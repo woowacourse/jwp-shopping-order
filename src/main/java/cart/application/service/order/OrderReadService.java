@@ -36,15 +36,17 @@ public class OrderReadService {
         List<OrderResultDto> orderResults = new ArrayList<>();
         List<Order> orders = orderRepository.findOrdersByMemberId(memberAuth.getId());
         for (Order order : orders) {
+            System.out.println("전체 " + order.getCreatedAt());
             List<OrderedItemResult> orderedItemResults = makeOrderItemResults(order);
             List<UsedCoupon> usedCoupons = makeUsedCoupons(order);
-            orderResults.add(new OrderResultDto(order.getId(), orderedItemResults, usedCoupons, order.getPoint(), order.getPaymentPrice()));
+            orderResults.add(new OrderResultDto(order.getId(), orderedItemResults, usedCoupons, order.getPoint(), order.getPaymentPrice(), order.getCreatedAt()));
         }
         return orderResults;
     }
 
     public OrderResultDto findOrderBy(Long orderId) {
         Order order = orderRepository.findOrderBy(orderId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 주문입니다."));
+        System.out.println("단건 " + order.getCreatedAt());
         List<OrderedItemResult> orderedItemResults = makeOrderItemResults(order);
         List<UsedCoupon> usedCoupons = makeUsedCoupons(order);
         return new OrderResultDto(order.getId(), orderedItemResults, usedCoupons, order.getPoint(), order.getPaymentPrice(), order.getCreatedAt());
