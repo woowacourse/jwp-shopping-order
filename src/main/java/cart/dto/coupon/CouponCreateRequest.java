@@ -14,7 +14,7 @@ public class CouponCreateRequest {
     @NotNull(message = "정률이라면 %를 입력해주시고, 아니라면 할인할 가격을 입력해주세요.")
     private Integer amount;
 
-    public CouponCreateRequest() {
+    private CouponCreateRequest() {
 
     }
 

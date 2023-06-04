@@ -10,7 +10,7 @@ public class MemberCreateRequest {
     @NotBlank(message = "패스워드를 입력해주세요.")
     private String password;
 
-    public MemberCreateRequest() {
+    private MemberCreateRequest() {
 
     }
 

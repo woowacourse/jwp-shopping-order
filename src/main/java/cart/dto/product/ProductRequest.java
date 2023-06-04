@@ -14,7 +14,7 @@ public class ProductRequest {
     @NotBlank(message = "상품의 이미지를 입력해주세요.")
     private String imageUrl;
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public ProductRequest(final String productName, final int productPrice, final String imageUrl) {

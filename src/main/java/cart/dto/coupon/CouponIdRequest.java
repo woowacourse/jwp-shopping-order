@@ -4,7 +4,7 @@ public class CouponIdRequest {
 
     private Long id;
 
-    public CouponIdRequest() {
+    private CouponIdRequest() {
 
     }
 

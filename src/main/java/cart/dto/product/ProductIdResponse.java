@@ -4,7 +4,7 @@ public class ProductIdResponse {
 
     private Long id;
 
-    public ProductIdResponse() {
+    private ProductIdResponse() {
     }
 
     public ProductIdResponse(final Long id) {

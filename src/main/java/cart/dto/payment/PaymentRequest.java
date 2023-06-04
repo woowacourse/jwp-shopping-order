@@ -14,7 +14,7 @@ public class PaymentRequest {
     @NotNull(message = "쿠폰의 아이디를 입력해주세요.")
     private List<CouponIdRequest> coupons;
 
-    public PaymentRequest() {
+    private PaymentRequest() {
     }
 
     public PaymentRequest(final List<ProductIdRequest> products, final List<CouponIdRequest> coupons) {

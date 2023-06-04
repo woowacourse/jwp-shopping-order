@@ -7,7 +7,7 @@ public class CartItemQuantityUpdateRequest {
     @NotNull(message = "수량을 입력해주세요")
     private Integer quantity;
 
-    public CartItemQuantityUpdateRequest() {
+    private CartItemQuantityUpdateRequest() {
     }
 
     public CartItemQuantityUpdateRequest(int quantity) {
