@@ -10,11 +10,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private static class MemberRowMapper implements RowMapper<Member> {
+        @Override
+        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+        }
     }
 
     public Member getMemberById(Long id) {
@@ -47,12 +53,5 @@ public class MemberDao {
     public List<Member> getAllMembers() {
         final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
-    }
-
-    private static class MemberRowMapper implements RowMapper<Member> {
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
-        }
     }
 }

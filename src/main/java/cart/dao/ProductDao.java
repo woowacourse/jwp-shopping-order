@@ -13,8 +13,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
-
     private final JdbcTemplate jdbcTemplate;
+
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
             new ProductEntity(
                     rs.getLong("id"),
@@ -22,10 +26,6 @@ public class ProductDao {
                     rs.getInt("price"),
                     rs.getString("image_url")
             );
-
-    public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
