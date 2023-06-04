@@ -37,7 +37,7 @@ public class OrderItemEntity {
     }
 
     public Product toProduct() {
-        return new Product(name, price, imageUrl);
+        return new Product(productId, name, price, imageUrl);
     }
 
     public Long getId() {

@@ -27,8 +27,8 @@ public class OrderDao {
     private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) ->
             new OrderEntity(
                     rs.getLong("id"),
-                    rs.getLong("memberId"),
-                    rs.getLong("shippingFee"),
+                    rs.getLong("member_id"),
+                    rs.getLong("shipping_fee"),
                     rs.getLong("total_products_price"),
                     rs.getLong("used_point"),
                     rs.getTimestamp("created_at").toString()
@@ -60,12 +60,12 @@ public class OrderDao {
 
 
     public List<OrderEntity> findByMemberId(Long memberId) {
-        String sql = "select * from order where member_id = ?";
+        String sql = "select * from `order` where member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
     public Optional<OrderEntity> findById(final Long id) {
-        final String sql = "SELECT * FROM order WHERE id = ?";
+        final String sql = "SELECT * FROM `order` WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (final EmptyResultDataAccessException e) {

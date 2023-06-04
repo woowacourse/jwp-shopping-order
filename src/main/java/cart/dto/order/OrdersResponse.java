@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 public class OrdersResponse {
     private Long orderId;
     private String orderDate;
-    private List<OrderDetailsDto> orderDetailResponses;
+    private List<OrderDetailsDto> orderDetails;
 
     public OrdersResponse() {
     }
 
-    public OrdersResponse(Long orderId, String orderDate, List<OrderDetailsDto> orderDetailResponses) {
+    public OrdersResponse(Long orderId, String orderDate, List<OrderDetailsDto> orderDetails) {
         this.orderId = orderId;
         this.orderDate = orderDate;
-        this.orderDetailResponses = orderDetailResponses;
+        this.orderDetails = orderDetails;
     }
 
     public static OrdersResponse from(Order order) {
@@ -36,6 +36,6 @@ public class OrdersResponse {
     }
 
     public List<OrderDetailsDto> getOrderDetails() {
-        return orderDetailResponses;
+        return orderDetails;
     }
 }

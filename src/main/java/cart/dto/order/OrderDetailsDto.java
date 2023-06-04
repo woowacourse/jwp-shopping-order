@@ -4,21 +4,21 @@ import cart.dto.ProductResponse;
 
 public class OrderDetailsDto {
     private Long quantity;
-    private ProductResponse productResponse;
+    private ProductResponse product;
 
     public OrderDetailsDto() {
     }
 
-    public OrderDetailsDto(Long quantity, ProductResponse productResponse) {
+    public OrderDetailsDto(Long quantity, ProductResponse product) {
         this.quantity = quantity;
-        this.productResponse = productResponse;
+        this.product = product;
     }
 
     public Long getQuantity() {
         return quantity;
     }
 
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public ProductResponse getProduct() {
+        return product;
     }
 }
