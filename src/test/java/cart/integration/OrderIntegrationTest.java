@@ -11,6 +11,7 @@ import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.CartItemResponse;
 import cart.dto.response.OrderDetailResponse;
+import cart.dto.response.OrderResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -122,6 +123,27 @@ public class OrderIntegrationTest extends IntegrationTest {
         final OrderDetailResponse result = response.as(OrderDetailResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(result).usingRecursiveComparison().isEqualTo(orderDetailResponse);
+    }
+
+    @DisplayName("사용자의 전체 주문 정보를 조회할 수 있다.")
+    @Test
+    void showAllOrders() {
+        // given
+        final Coupon coupon = couponRepository.findAll().get(0);
+        postCoupon(coupon.getId());
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+                65_000, 2_000, "서울특별시 송파구", coupon.getId());
+        final OrderDetailResponse orderDetailResponse = order(orderRequest).as(OrderDetailResponse.class);
+
+        // when
+        final ExtractableResponse<Response> response = getAllOrders();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final List<OrderResponse> orderResponses = response.jsonPath().getList(".", OrderResponse.class);
+        assertThat(orderResponses.get(0).getId()).isEqualTo(orderDetailResponse.getId());
+        assertThat(orderResponses.get(0).getProducts()).usingRecursiveComparison()
+                .isEqualTo(orderDetailResponse.getProducts());
     }
 
     private Long createProduct(final ProductRequest productRequest1) {
