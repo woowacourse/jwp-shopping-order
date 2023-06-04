@@ -32,7 +32,7 @@ public class OrderService {
     public Long save(Member member, OrderRequest orderRequest) {
         validationSave(orderRequest);
 
-        List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectCartIds());
+        List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectedCartIds());
 
         Order order = new Order(
                 member, cartItems,
@@ -42,7 +42,7 @@ public class OrderService {
     }
 
     private static void validationSave(OrderRequest orderRequest) {
-        if (orderRequest.getSelectCartIds().isEmpty()) {
+        if (orderRequest.getSelectedCartIds().isEmpty()) {
             throw new OrderException("주문 상품이 비어있습니다.");
         }
     }
