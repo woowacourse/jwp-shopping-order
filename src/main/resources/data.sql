@@ -19,14 +19,6 @@ INSERT INTO member (email, password, grade, total_purchase_amount)
 SELECT 'b@b.com', '1234', 'gold', 0
 WHERE NOT EXISTS (SELECT 1 FROM member WHERE email = 'b@b.com');
 
-DELETE FROM product
-WHERE name IN (
-  SELECT name
-  FROM product
-  GROUP BY name
-  HAVING COUNT(*) > 1
-);
-
 INSERT INTO cart_item (member_id, product_id, quantity)
 SELECT 1, 1, 2
 WHERE NOT EXISTS (
