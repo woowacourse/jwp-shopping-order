@@ -1,7 +1,12 @@
 package cart.dto;
 
+import cart.domain.CartItem;
+import cart.domain.CartItems;
+import cart.domain.Member;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OrderRequest {
     private List<OrderCartItemRequest> products;
@@ -13,6 +18,13 @@ public class OrderRequest {
     public OrderRequest(final List<OrderCartItemRequest> products, final Long couponId) {
         this.products = products;
         this.couponId = couponId;
+    }
+
+    public CartItems toCartItems(final Member member) {
+        List<CartItem> cartItems = products.stream()
+                .map(orderCartItemRequest -> orderCartItemRequest.toCartItem(member))
+                .collect(Collectors.toList());
+        return new CartItems(cartItems);
     }
 
     public List<OrderCartItemRequest> getProducts() {

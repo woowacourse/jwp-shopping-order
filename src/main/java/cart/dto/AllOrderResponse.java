@@ -1,7 +1,10 @@
 package cart.dto;
 
+import cart.domain.Order;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class AllOrderResponse {
     private List<OrderResponse> orders;
@@ -11,6 +14,13 @@ public class AllOrderResponse {
 
     public AllOrderResponse(final List<OrderResponse> orders) {
         this.orders = orders;
+    }
+
+    public static AllOrderResponse from(final List<Order> allOrders) {
+        List<OrderResponse> orderResponses = allOrders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+        return new AllOrderResponse(orderResponses);
     }
 
     public List<OrderResponse> getOrders() {

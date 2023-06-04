@@ -1,5 +1,9 @@
 package cart.dto;
 
+import cart.domain.Coupon;
+import cart.domain.CouponInfo;
+import cart.domain.MemberCoupon;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -23,6 +27,31 @@ public class OrderCouponResponse {
         this.isAvailable = isAvailable;
         this.discountPrice = discountPrice;
         this.expiredAt = expiredAt;
+    }
+
+    public static OrderCouponResponse of(final MemberCoupon memberCoupon, final int totalPrice) {
+        Coupon coupon = memberCoupon.getCoupon();
+        CouponInfo couponInfo = coupon.getCouponInfo();
+        if (coupon.isAvailable(totalPrice)) {
+            return new OrderCouponResponse(
+                    memberCoupon.getId(),
+                    couponInfo.getName(),
+                    couponInfo.getMinOrderPrice(),
+                    couponInfo.getMaxDiscountPrice(),
+                    true,
+                    memberCoupon.calculateDiscount(totalPrice),
+                    memberCoupon.getExpiredAt()
+            );
+        }
+        return new OrderCouponResponse(
+                couponInfo.getId(),
+                couponInfo.getName(),
+                couponInfo.getMinOrderPrice(),
+                couponInfo.getMaxDiscountPrice(),
+                false,
+                null,
+                memberCoupon.getExpiredAt()
+        );
     }
 
     public Long getId() {

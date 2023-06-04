@@ -1,5 +1,9 @@
 package cart.dto;
 
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.Product;
+
 import java.util.Objects;
 
 public class OrderCartItemRequest {
@@ -18,6 +22,15 @@ public class OrderCartItemRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public CartItem toCartItem(final Member member) {
+        return new CartItem(
+                cartItemId,
+                quantity,
+                new Product(null, name, price, imageUrl),
+                member
+        );
     }
 
     public Long getCartItemId() {

@@ -1,7 +1,10 @@
 package cart.application;
 
 import cart.domain.*;
-import cart.dto.*;
+import cart.dto.AllOrderResponse;
+import cart.dto.OrderCartItemRequest;
+import cart.dto.OrderDetailResponse;
+import cart.dto.OrderRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
@@ -13,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-
     private final MemberCouponRepository memberCouponRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
@@ -28,7 +30,7 @@ public class OrderService {
     public Long createOrder(final Member member, final OrderRequest request) {
         MemberCoupon memberCoupon = findCouponIfExist(request.getCouponId());
         CartItems cartItems = new CartItems(findCartItemsRequest(request));
-        CartItems selectedCartItems = new CartItems(convertToCartItems(member, request));
+        CartItems selectedCartItems = request.toCartItems(member);
 
         // TODO: 6/4/23 이 과정이 하나의 도메인 로직으로 들어가도 될듯
         cartItems.checkStatus(selectedCartItems, member);
@@ -40,43 +42,6 @@ public class OrderService {
         memberCouponRepository.update(usedMemberCoupon);
         cartItemRepository.deleteAll(cartItems.getCartItems());
         return orderRepository.save(order);
-    }
-
-    @Transactional(readOnly = true)
-    public AllOrderResponse findAllOrderByMember(final Member member) {
-        List<Order> allOrders = orderRepository.findAllByMember(member);
-
-        for (Order order : allOrders) {
-            order.checkOwner(member);
-        }
-
-        return convertToAllOrderResponse(allOrders);
-    }
-
-    private AllOrderResponse convertToAllOrderResponse(final List<Order> allOrders) {
-        List<OrderResponse> orderResponses = allOrders.stream()
-                .map(this::convertToOrderResponse)
-                .collect(Collectors.toList());
-        return new AllOrderResponse(orderResponses);
-    }
-
-    @Transactional(readOnly = true)
-    public OrderDetailResponse findOrderByIdAndMember(final Long id, final Member member) {
-        Order order = orderRepository.findById(id);
-
-        order.checkOwner(member);
-
-        return convertToOrderDetailResponse(order);
-    }
-
-    @Transactional(readOnly = true)
-    public void cancelOrder(final Long orderId, final Member member) {
-        Order order = orderRepository.findById(orderId);
-
-        Order canceledOrder = order.cancel();
-
-        memberCouponRepository.update(canceledOrder.getMemberCoupon());
-        orderRepository.delete(canceledOrder);
     }
 
     private MemberCoupon findCouponIfExist(final Long memberCouponId) {
@@ -93,53 +58,33 @@ public class OrderService {
         return cartItemRepository.findByIds(currentCartIds);
     }
 
-    private List<CartItem> convertToCartItems(final Member member, final OrderRequest request) {
-        return request.getProducts().stream()
-                .map(orderCartItemRequest -> convertToCartItem(orderCartItemRequest, member))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public AllOrderResponse findAllOrderByMember(final Member member) {
+        List<Order> allOrders = orderRepository.findAllByMember(member);
+
+        for (Order order : allOrders) {
+            order.checkOwner(member);
+        }
+
+        return AllOrderResponse.from(allOrders);
     }
 
-    private CartItem convertToCartItem(final OrderCartItemRequest orderCartItemRequest, final Member member) {
-        return new CartItem(
-                orderCartItemRequest.getCartItemId(),
-                orderCartItemRequest.getQuantity(),
-                new Product(null, orderCartItemRequest.getName(), orderCartItemRequest.getPrice(), orderCartItemRequest.getImageUrl()),
-                member
-        );
+    @Transactional(readOnly = true)
+    public OrderDetailResponse findOrderByIdAndMember(final Long id, final Member member) {
+        Order order = orderRepository.findById(id);
+
+        order.checkOwner(member);
+
+        return OrderDetailResponse.from(order);
     }
 
-    private OrderDetailResponse convertToOrderDetailResponse(final Order order) {
-        List<OrderItemResponse> orderItemResponses = order.getOrderItems()
-                .stream()
-                .map(this::convertToOrderItemResponse)
-                .collect(Collectors.toList());
-        return new OrderDetailResponse(
-                order.getId(),
-                orderItemResponses,
-                order.calculateTotalPrice(),
-                order.calculateDiscountPrice(),
-                order.getShippingFee().getCharge()
-        );
-    }
+    @Transactional(readOnly = true)
+    public void cancelOrder(final Long orderId, final Member member) {
+        Order order = orderRepository.findById(orderId);
 
-    private OrderResponse convertToOrderResponse(final Order order) {
-        List<OrderItemResponse> orderItemResponses = order.getOrderItems()
-                .stream()
-                .map(this::convertToOrderItemResponse)
-                .collect(Collectors.toList());
-        return new OrderResponse(
-                order.getId(),
-                orderItemResponses
-        );
-    }
+        Order canceledOrder = order.cancel();
 
-    private OrderItemResponse convertToOrderItemResponse(final OrderItem orderItem) {
-        return new OrderItemResponse(
-                orderItem.getProduct().getId(),
-                orderItem.getProduct().getName(),
-                orderItem.getProduct().getPrice(),
-                orderItem.getProduct().getImageUrl(),
-                orderItem.getQuantity()
-        );
+        memberCouponRepository.update(canceledOrder.getMemberCoupon());
+        orderRepository.delete(canceledOrder);
     }
 }

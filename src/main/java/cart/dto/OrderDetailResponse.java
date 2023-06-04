@@ -1,7 +1,10 @@
 package cart.dto;
 
+import cart.domain.Order;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OrderDetailResponse {
     private Long orderId;
@@ -19,6 +22,20 @@ public class OrderDetailResponse {
         this.totalPrice = totalPrice;
         this.discountPrice = discountPrice;
         this.shippingFee = shippingFee;
+    }
+
+    public static OrderDetailResponse from(final Order order) {
+        List<OrderItemResponse> orderItemResponses = order.getOrderItems()
+                .stream()
+                .map(OrderItemResponse::from)
+                .collect(Collectors.toList());
+        return new OrderDetailResponse(
+                order.getId(),
+                orderItemResponses,
+                order.calculateTotalPrice(),
+                order.calculateDiscountPrice(),
+                order.getShippingFee().getCharge()
+        );
     }
 
     public Long getOrderId() {

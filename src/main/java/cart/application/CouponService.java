@@ -1,7 +1,9 @@
 package cart.application;
 
 import cart.domain.*;
-import cart.dto.*;
+import cart.dto.AllCouponResponse;
+import cart.dto.AllOrderCouponResponse;
+import cart.dto.MemberCouponRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
@@ -10,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CouponService {
@@ -42,57 +43,13 @@ public class CouponService {
         selectedCartItems.checkNotEmpty();
         Integer totalPrice = selectedCartItems.calculateTotalPrice();
 
-        return convertToAllOrderCouponResponse(memberCoupons, totalPrice);
+        return AllOrderCouponResponse.of(memberCoupons, totalPrice);
     }
 
     @Transactional(readOnly = true)
     public AllCouponResponse findAllCoupon() {
         List<Coupon> allCoupons = couponRepository.findAllCoupons();
 
-        List<CouponResponse> couponResponses = allCoupons.stream()
-                .map(coupon -> new CouponResponse(
-                        coupon.getCouponInfo().getId(),
-                        coupon.getCouponInfo().getName(),
-                        coupon.getCouponInfo().getMinOrderPrice(),
-                        coupon.getCouponInfo().getMaxDiscountPrice(),
-                        CouponType.from(coupon).name(),
-                        coupon.getDiscountAmount(),
-                        coupon.getDiscountPercentage()
-                ))
-                .collect(Collectors.toList());
-
-        return new AllCouponResponse(couponResponses);
-    }
-
-    private AllOrderCouponResponse convertToAllOrderCouponResponse(final List<MemberCoupon> memberCoupons, final int totalPrice) {
-        List<OrderCouponResponse> orderCouponResponses = memberCoupons.stream()
-                .map(memberCoupon -> convertToOrderResponse(memberCoupon, totalPrice))
-                .collect(Collectors.toList());
-        return new AllOrderCouponResponse(orderCouponResponses);
-    }
-
-    private OrderCouponResponse convertToOrderResponse(final MemberCoupon memberCoupon, final int totalPrice) {
-        Coupon coupon = memberCoupon.getCoupon();
-        CouponInfo couponInfo = coupon.getCouponInfo();
-        if (coupon.isAvailable(totalPrice)) {
-            return new OrderCouponResponse(
-                    memberCoupon.getId(),
-                    couponInfo.getName(),
-                    couponInfo.getMinOrderPrice(),
-                    couponInfo.getMaxDiscountPrice(),
-                    true,
-                    memberCoupon.calculateDiscount(totalPrice),
-                    memberCoupon.getExpiredAt()
-            );
-        }
-        return new OrderCouponResponse(
-                couponInfo.getId(),
-                couponInfo.getName(),
-                couponInfo.getMinOrderPrice(),
-                couponInfo.getMaxDiscountPrice(),
-                false,
-                null,
-                memberCoupon.getExpiredAt()
-        );
+        return AllCouponResponse.from(allCoupons);
     }
 }

@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.domain.OrderItem;
+
 import java.util.Objects;
 
 public class OrderItemResponse {
@@ -18,6 +20,16 @@ public class OrderItemResponse {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+    }
+
+    public static OrderItemResponse from(final OrderItem orderItem) {
+        return new OrderItemResponse(
+                orderItem.getProduct().getId(),
+                orderItem.getProduct().getName(),
+                orderItem.getProduct().getPrice(),
+                orderItem.getProduct().getImageUrl(),
+                orderItem.getQuantity()
+        );
     }
 
     public Long getId() {

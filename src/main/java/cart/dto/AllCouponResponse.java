@@ -1,7 +1,10 @@
 package cart.dto;
 
+import cart.domain.Coupon;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class AllCouponResponse {
     private List<CouponResponse> coupons;
@@ -11,6 +14,14 @@ public class AllCouponResponse {
 
     public AllCouponResponse(final List<CouponResponse> coupons) {
         this.coupons = coupons;
+    }
+
+    public static AllCouponResponse from(final List<Coupon> coupons) {
+        List<CouponResponse> couponResponses = coupons.stream()
+                .map(CouponResponse::from)
+                .collect(Collectors.toList());
+
+        return new AllCouponResponse(couponResponses);
     }
 
     public List<CouponResponse> getCoupons() {
