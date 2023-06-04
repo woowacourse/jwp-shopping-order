@@ -12,7 +12,7 @@ import cart.domain.Product;
 import cart.domain.Products;
 import cart.domain.vo.Amount;
 import cart.exception.BusinessException;
-import cart.ui.dto.request.CartItemRequest;
+import cart.ui.dto.request.OrderProductRequest;
 import cart.ui.dto.request.OrderRequest;
 import cart.ui.dto.response.OrderListResponse;
 import cart.ui.dto.response.OrderProductResponse;
@@ -59,7 +59,7 @@ public class OrderService {
         final List<Amount> amounts = orderRequest.getProducts()
             .stream()
             .map(it -> {
-                final Product product = productDao.getProductById(it.getProductId())
+                final Product product = productDao.getProductById(it.getId())
                     .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
                 addToProducts(products, it.getQuantity(), product);
                 return product.getAmount().multiply(it.getQuantity());
@@ -107,18 +107,18 @@ public class OrderService {
             .collect(Collectors.toUnmodifiableList());
         for (int index = 0; index < deduplicatedProducts.size(); index++) {
             final Product product = deduplicatedProducts.get(index);
-            final CartItemRequest cartItemRequest = orderRequest.getProducts().get(index);
+            final OrderProductRequest orderProductRequest = orderRequest.getProducts().get(index);
             final OrderProductResponse orderProductResponse = new OrderProductResponse(product.getId(),
                 product.getName(), product.getAmount().getValue(),
-                product.getImageUrl(), cartItemRequest.getQuantity());
+                product.getImageUrl(), orderProductRequest.getQuantity());
             orderProductResponses.add(orderProductResponse);
         }
         return orderProductResponses;
     }
 
     private void deleteCartItem(final OrderRequest orderRequest, final Long memberId) {
-        for (final CartItemRequest product : orderRequest.getProducts()) {
-            cartItemDao.delete(memberId, product.getProductId());
+        for (final OrderProductRequest product : orderRequest.getProducts()) {
+            cartItemDao.delete(memberId, product.getId());
         }
     }
 

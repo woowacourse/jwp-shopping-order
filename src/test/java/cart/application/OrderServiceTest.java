@@ -18,7 +18,7 @@ import cart.domain.Product;
 import cart.domain.Products;
 import cart.domain.vo.Amount;
 import cart.exception.BusinessException;
-import cart.ui.dto.request.CartItemRequest;
+import cart.ui.dto.request.OrderProductRequest;
 import cart.ui.dto.request.OrderRequest;
 import cart.ui.dto.response.OrderListResponse;
 import cart.ui.dto.response.OrderProductResponse;
@@ -40,7 +40,8 @@ class OrderServiceTest {
     private final Product product1 = new Product(1L, "product1", Amount.of(10_000), "imageUrl1");
     private final Product product2 = new Product(2L, "product2", Amount.of(20_000), "imageUrl2");
     private final Coupon coupon = new Coupon(1L, "name", Amount.of(1_000), Amount.of(10_000), false);
-    private final List<CartItemRequest> products = List.of(new CartItemRequest(1L, 5), new CartItemRequest(2L, 10));
+    private final List<OrderProductRequest> products = List.of(new OrderProductRequest(1L, 5),
+        new OrderProductRequest(2L, 10));
     private final Order order = new Order(1L, new Products(List.of(product1, product2)),
         Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), Amount.of(29_000),
         Amount.of(3_000), "address");

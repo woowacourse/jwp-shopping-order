@@ -8,7 +8,7 @@ import cart.dao.MemberDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
-import cart.ui.dto.request.CartItemRequest;
+import cart.ui.dto.request.OrderProductRequest;
 import cart.ui.dto.request.OrderRequest;
 import cart.ui.dto.request.ProductRequest;
 import cart.ui.dto.response.OrderProductResponse;
@@ -49,12 +49,13 @@ class OrderApiControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("장바구니의 물품들을 주문을 한다.")
+    @DisplayName("쿠폰을 적용하여 장바구니의 물품들을 주문을 한다.")
     void testOrder() {
         //given
-        final CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 3);
-        final CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 3);
-        final OrderRequest request = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2), 75_000, 3_000,
+        final OrderProductRequest orderProductRequest1 = new OrderProductRequest(productId1, 3);
+        final OrderProductRequest orderProductRequest2 = new OrderProductRequest(productId2, 3);
+        final OrderRequest request = new OrderRequest(List.of(orderProductRequest1, orderProductRequest2), 75_000,
+            3_000,
             "address", coupon.getId());
 
         //when
@@ -67,6 +68,29 @@ class OrderApiControllerTest extends IntegrationTest {
             new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3));
         final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(), request.getTotalProductAmount(),
             72_000, request.getDeliveryAmount(), request.getAddress(), products);
+
+        assertThat(orderResponse).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("쿠폰을 적용하지 않고 장바구니의 물품들을 주문을 한다.")
+    void testOrderWhenCouponIdIsNull() {
+        //given
+        final OrderProductRequest orderProductRequest1 = new OrderProductRequest(productId1, 3);
+        final OrderProductRequest orderProductRequest2 = new OrderProductRequest(productId2, 3);
+        final OrderRequest request = new OrderRequest(List.of(orderProductRequest1, orderProductRequest2), 75_000,
+            3_000, "address", null);
+
+        //when
+        final ExtractableResponse<Response> response = order(request);
+        final OrderResponse orderResponse = response.as(OrderResponse.class);
+
+        //then
+        final List<OrderProductResponse> products = List.of(
+            new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
+            new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3));
+        final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(), request.getTotalProductAmount(),
+            75_000, request.getDeliveryAmount(), request.getAddress(), products);
 
         assertThat(orderResponse).usingRecursiveComparison().isEqualTo(expectedResponse);
     }
@@ -88,11 +112,11 @@ class OrderApiControllerTest extends IntegrationTest {
     @DisplayName("id로 주문을 조회한다.")
     void testFindOrderById() {
         //given
-        final CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 3);
-        final CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 3);
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2), 75_000, 3_000,
-            "address", coupon.getId());
-        final OrderResponse orderResponse = order(orderRequest).as(OrderResponse.class);
+        final OrderProductRequest orderProductRequest1 = new OrderProductRequest(productId1, 3);
+        final OrderProductRequest orderProductRequest2 = new OrderProductRequest(productId2, 3);
+        final OrderRequest request = new OrderRequest(List.of(orderProductRequest1, orderProductRequest2), 75_000,
+            3_000, "address", coupon.getId());
+        final OrderResponse orderResponse = order(request).as(OrderResponse.class);
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
@@ -114,7 +138,7 @@ class OrderApiControllerTest extends IntegrationTest {
             new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3),
             new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3));
         final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(),
-            orderRequest.getTotalProductAmount(), 72_000, orderRequest.getDeliveryAmount(), orderRequest.getAddress(),
+            request.getTotalProductAmount(), 72_000, request.getDeliveryAmount(), request.getAddress(),
             products);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(expectedResponse);
@@ -124,11 +148,11 @@ class OrderApiControllerTest extends IntegrationTest {
     @DisplayName("회원별 주문 목록을 조회한다.")
     void testFindOrderByMember() {
         //given
-        final CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 3);
-        final CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 3);
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2), 75_000, 3_000,
-            "address", coupon.getId());
-        final OrderResponse orderResponse = order(orderRequest).as(OrderResponse.class);
+        final OrderProductRequest orderProductRequest1 = new OrderProductRequest(productId1, 3);
+        final OrderProductRequest orderProductRequest2 = new OrderProductRequest(productId2, 3);
+        final OrderRequest request = new OrderRequest(List.of(orderProductRequest1, orderProductRequest2), 75_000,
+            3_000, "address", coupon.getId());
+        final OrderResponse orderResponse = order(request).as(OrderResponse.class);
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
