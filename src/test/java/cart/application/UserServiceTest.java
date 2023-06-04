@@ -31,7 +31,6 @@ class UserServiceTest {
     @Test
     void getUserResponse() {
         given(pointRepository.getTotalLeftPoint(any())).willReturn(Point.valueOf(1000));
-        given(pointRepository.getEarningRate()).willReturn(5.0);
         final UserResponse result = userService.getUserResponse(MemberFixture.MEMBER);
         assertAll(
                 () -> assertThat(result.getEmail()).isEqualTo("odo1@woowa.com"),

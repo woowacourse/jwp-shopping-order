@@ -7,7 +7,6 @@ import cart.dao.PointDao;
 import cart.domain.Member;
 import cart.domain.OrderPoint;
 import cart.domain.Point;
-import cart.domain.PointManager;
 import cart.domain.Price;
 import cart.entity.PointEntity;
 import cart.exception.NotEnoughPointException;
@@ -17,11 +16,9 @@ import org.springframework.stereotype.Repository;
 public class PointRepository {
 
     private final PointDao pointDao;
-    private final PointManager pointManager;
 
-    public PointRepository(final PointDao pointDao, final PointManager pointManager) {
+    public PointRepository(final PointDao pointDao) {
         this.pointDao = pointDao;
-        this.pointManager = pointManager;
     }
 
     public Point getTotalLeftPoint(final Member member) {
@@ -33,10 +30,6 @@ public class PointRepository {
         return Point.valueOf(pointEntities.stream()
                 .mapToInt(PointEntity::getLeftPoint)
                 .sum());
-    }
-
-    public double getEarningRate() {
-        return pointManager.getEarningRate();
     }
 
     public OrderPoint updatePoint(final Member member, final Point usedPoint, final Price totalPrice, final Timestamp createdAt) {
@@ -73,8 +66,8 @@ public class PointRepository {
     }
 
     private PointEntity addPoint(final Member member, final Price totalPrice, final Timestamp createdAt) {
-        final Point earnedPoint = pointManager.getPoint(totalPrice);
-        final Timestamp expiredAt = pointManager.getExpiredAt(createdAt);
+        final Point earnedPoint = Point.getEarnedPoint(totalPrice);
+        final Timestamp expiredAt = Point.getExpiredAt(createdAt);
         return pointDao.insert(new PointEntity(earnedPoint.getValue(), earnedPoint.getValue(), member.getId(), expiredAt, createdAt));
     }
 }

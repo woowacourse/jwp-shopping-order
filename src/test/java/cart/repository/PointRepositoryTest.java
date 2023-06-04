@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import cart.dao.PointDao;
-import cart.domain.DefaultPointManager;
 import cart.domain.Point;
 import cart.domain.Price;
 import cart.entity.PointEntity;
@@ -30,7 +29,7 @@ class PointRepositoryTest {
     @Autowired
     void setUp(final JdbcTemplate jdbcTemplate) {
         pointDao = new PointDao(jdbcTemplate);
-        pointRepository = new PointRepository(pointDao, new DefaultPointManager());
+        pointRepository = new PointRepository(pointDao);
     }
 
     @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertPoint.sql"})
@@ -38,11 +37,6 @@ class PointRepositoryTest {
     void getTotalLeftPoint() {
         final Point totalLeftPoint = pointRepository.getTotalLeftPoint(MemberFixture.MEMBER);
         assertThat(totalLeftPoint).isEqualTo(Point.valueOf(600));
-    }
-
-    @Test
-    void getEarningRate() {
-        assertThat(pointRepository.getEarningRate()).isEqualTo(5);
     }
 
     @DisplayName("포인트가 모자랄 때 예외를 발생시킨다.")

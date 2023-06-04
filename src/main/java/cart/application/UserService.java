@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.dto.UserResponse;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class UserService {
         return new UserResponse(
                 member.getEmail(),
                 pointRepository.getTotalLeftPoint(member).getValue(),
-                pointRepository.getEarningRate()
+                Point.getEarningRate()
         );
     }
 }
