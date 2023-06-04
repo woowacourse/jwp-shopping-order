@@ -45,8 +45,7 @@ public class Point {
     public boolean isToBeExpired(LocalDateTime compareDateTime) {
         Duration duration = Duration.between(compareDateTime, expiredAt);
         long days = duration.toDays();
-        System.out.println(days);
-        return days <= 30;
+        return 0 <= days && days <= 30;
     }
 
     public Long getId() {
@@ -54,6 +53,10 @@ public class Point {
     }
 
     public Integer getPointAmount() {
+        LocalDateTime now = LocalDateTime.now();
+        if (expiredAt.isBefore(now)) {
+            return 0;
+        }
         return pointAmount;
     }
 

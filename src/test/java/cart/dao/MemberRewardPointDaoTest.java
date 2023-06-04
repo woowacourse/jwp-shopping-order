@@ -107,17 +107,17 @@ class MemberRewardPointDaoTest {
         // given
         List<Point> updatePoints = List.of(
                 new Point(1L, 0, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-25 12:12:12", formatter)),
+                        LocalDateTime.parse("2023-06-25 12:12:12", formatter)),
                 new Point(3L, 500, LocalDateTime.parse("2023-05-15 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-30 12:12:12", formatter))
+                        LocalDateTime.parse("2029-05-30 12:12:12", formatter))
         );
         List<Point> expectResult = List.of(
                 new Point(1L, 0, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-25 12:12:12", formatter)),
+                        LocalDateTime.parse("2023-06-25 12:12:12", formatter)),
                 new Point(2L, 700, LocalDateTime.parse("2023-05-18 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-29 12:12:12", formatter)),
+                        LocalDateTime.parse("2023-06-29 12:12:12", formatter)),
                 new Point(3L, 500, LocalDateTime.parse("2023-05-15 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-30 12:12:12", formatter))
+                        LocalDateTime.parse("2029-05-30 12:12:12", formatter))
         );
 
         // when

@@ -18,7 +18,7 @@ class PointTest {
     @Test
     void isToBeExpired() {
         // given
-        LocalDateTime compareDateTime = LocalDateTime.parse("2023-05-15 12:12:12", formatter);
+        LocalDateTime compareDateTime = LocalDateTime.parse("2023-06-15 12:12:12", formatter);
         Point point = 회원1_주문1_포인트;
 
         // when

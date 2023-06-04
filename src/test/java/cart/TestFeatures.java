@@ -38,9 +38,9 @@ public class TestFeatures {
     public static final PurchaseOrderInfo 회원1_주문2 = new PurchaseOrderInfo(2L, 회원1, LocalDateTime.parse("2023-05-25 14:13:12", formatter), 12_000, 4_000, OrderStatus.CANCELED);
     public static final PurchaseOrderInfo 회원1_주문3 = new PurchaseOrderInfo(3L, 회원1, LocalDateTime.parse("2023-05-31 17:11:12", formatter), 21_000, 2_000, OrderStatus.PENDING);
 
-    public static final Point 회원1_주문1_포인트 = new Point(1L, 500, LocalDateTime.parse("2023-05-20 12:12:12", formatter), LocalDateTime.parse("2023-05-25 12:12:12", formatter));
-    public static final Point 회원1_주문2_포인트 = new Point(2L, 700, LocalDateTime.parse("2023-05-18 12:12:12", formatter), LocalDateTime.parse("2023-05-29 12:12:12", formatter));
-    public static final Point 회원1_주문3_포인트 = new Point(3L, 1000, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2023-05-30 12:12:12", formatter));
+    public static final Point 회원1_주문1_포인트 = new Point(1L, 500, LocalDateTime.parse("2023-05-20 12:12:12", formatter), LocalDateTime.parse("2023-06-25 12:12:12", formatter));
+    public static final Point 회원1_주문2_포인트 = new Point(2L, 700, LocalDateTime.parse("2023-05-18 12:12:12", formatter), LocalDateTime.parse("2023-06-29 12:12:12", formatter));
+    public static final Point 회원1_주문3_포인트 = new Point(3L, 1000, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2029-05-30 12:12:12", formatter));
     public static final Point 회원1_주문4_포인트 = new Point(4L, 1230, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2023-07-30 12:12:12", formatter));
 
     public static final UsedPoint 주문1_포인트_사용1 = new UsedPoint(1L, 1L, 500);

@@ -65,6 +65,7 @@ class PaymentServiceTest {
                 memberRewardPointDao, orderMemberUsedPointDao, cartItemDao);
     }
 
+    // TODO: 2023/06/04 테스트 다시 살펴보기
     @DisplayName("주문을 수행하면, 각 테이블에 알맞은 정보가 들어어가고 수정되어야 한다")
     @Test
     void createPurchaseOrder() {
@@ -82,7 +83,8 @@ class PaymentServiceTest {
         Long purchaseOrderId = paymentService.createPurchaseOrder(member, purchaseOrderRequest);
 
         // then
-        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(purchaseOrderId).orElseThrow();
+        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(purchaseOrderId)
+                                                              .orElseThrow();
         List<PurchaseOrderItem> purchaseOrderItems = purchaseOrderItemDao.findAllByPurchaseOrderId(purchaseOrderInfo.getId());
         Point point = memberRewardPointDao.getPointByOrderId(purchaseOrderInfo.getId());
         List<Point> points = memberRewardPointDao.getAllByMemberId(회원2.getId());
@@ -99,12 +101,15 @@ class PaymentServiceTest {
                 () -> assertThat(points).usingRecursiveFieldByFieldElementComparator()
                                         .usingRecursiveFieldByFieldElementComparatorIgnoringFields("createdAt", "expiredAt")
                                         .contains(new Point(4L, 0, null, null),
-                                                new Point(5L, 200, null, null),
-                                                new Point(6L, 1_000, null, null),
-                                                new Point(7L, 1_200, null, null)),
+                                                new Point(5L, 0, null, null),
+                                                new Point(6L, 0, null, null),
+                                                new Point(7L, 200, null, null),
+                                                new Point(8L, 7520, null, null)),
                 () -> assertThat(usedPoints).usingRecursiveFieldByFieldElementComparator()
-                                            .contains(new UsedPoint(7L, 4L, 500),
-                                                    new UsedPoint(8L, 5L, 500)),
+                                            .contains(new UsedPoint(7L, 4L, 0),
+                                                    new UsedPoint(8L, 5L, 0),
+                                                    new UsedPoint(9L, 6L, 0),
+                                                    new UsedPoint(10L, 7L, 1000)),
                 () -> assertThat(cartItems.size()).isEqualTo(0)
         );
     }
@@ -175,7 +180,8 @@ class PaymentServiceTest {
                         .usingRecursiveFieldByFieldElementComparator()
                         .contains(이전_주문_적립_포인트1, 이전_주문_적립_포인트2, 이전_주문_적립_포인트3)
                         .doesNotContain(취소한_주문_적립_포인트),
-                () -> assertThat(purchaseOrderDao.findById(orderId).orElseThrow())
+                () -> assertThat(purchaseOrderDao.findById(orderId)
+                                                 .orElseThrow())
                         .usingRecursiveComparison()
                         .isEqualTo(취소한_주문)
         );

@@ -24,13 +24,13 @@ class MemberPointsTest {
         // 포인트 사용 순서는 유효기간에 따라 3L -> 1L -> 2L이다
         List<Point> points = List.of(
                 new Point(1L, 100, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2023-06-01 12:12:12", formatter)),
+                        LocalDateTime.parse("2023-06-30 12:12:12", formatter)),
                 new Point(2L, 300, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2023-06-06 12:12:12", formatter)),
+                        LocalDateTime.parse("2029-06-06 12:12:12", formatter)),
                 new Point(3L, 200, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2023-05-29 12:12:12", formatter)),
+                        LocalDateTime.parse("2029-05-29 12:12:12", formatter)),
                 new Point(4L, 1000, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                        LocalDateTime.parse("2030-05-29 12:12:12", formatter))
+                        LocalDateTime.parse("2039-05-29 12:12:12", formatter))
         );
         memberPoints = new MemberPoints(member, points);
     }
@@ -52,13 +52,13 @@ class MemberPointsTest {
                                                           .contains(
                                                                   new Point(1L, 0,
                                                                           LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                                                                          LocalDateTime.parse("2023-06-01 12:12:12", formatter)),
+                                                                          LocalDateTime.parse("2023-06-30 12:12:12", formatter)),
                                                                   new Point(2L, 300,
                                                                           LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                                                                          LocalDateTime.parse("2023-06-06 12:12:12", formatter)),
+                                                                          LocalDateTime.parse("2029-06-06 12:12:12", formatter)),
                                                                   new Point(3L, 0,
                                                                           LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                                                                          LocalDateTime.parse("2023-05-29 12:12:12", formatter))
+                                                                          LocalDateTime.parse("2029-05-29 12:12:12", formatter))
                                                           )
         );
     }
@@ -82,13 +82,13 @@ class MemberPointsTest {
                                                           .contains(
                                                                   new Point(1L, 0,
                                                                           LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                                                                          LocalDateTime.parse("2023-06-01 12:12:12", formatter)),
+                                                                          LocalDateTime.parse("2023-06-30 12:12:12", formatter)),
                                                                   new Point(2L, 200,
                                                                           LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                                                                          LocalDateTime.parse("2023-06-06 12:12:12", formatter)),
+                                                                          LocalDateTime.parse("2029-06-06 12:12:12", formatter)),
                                                                   new Point(3L, 0,
                                                                           LocalDateTime.parse("2023-05-20 12:12:12", formatter),
-                                                                          LocalDateTime.parse("2023-05-29 12:12:12", formatter))
+                                                                          LocalDateTime.parse("2029-05-29 12:12:12", formatter))
                                                           )
         );
     }
@@ -110,6 +110,6 @@ class MemberPointsTest {
         int toBeExpiredPoints = memberPoints.getToBeExpiredPoints();
 
         // then
-        assertThat(toBeExpiredPoints).isEqualTo(600);
+        assertThat(toBeExpiredPoints).isEqualTo(100);
     }
 }
