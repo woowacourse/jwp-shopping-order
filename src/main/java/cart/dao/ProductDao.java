@@ -38,7 +38,7 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
-    public Long createProduct(Product product) {
+    public Long createProduct(ProductEntity productEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -47,9 +47,9 @@ public class ProductDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
+            ps.setString(1, productEntity.getName());
+            ps.setInt(2, productEntity.getPrice());
+            ps.setString(3, productEntity.getImageUrl());
 
             return ps;
         }, keyHolder);

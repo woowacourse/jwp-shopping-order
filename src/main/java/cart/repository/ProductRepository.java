@@ -38,4 +38,12 @@ public class ProductRepository {
                 productEntity.getImageUrl()
         );
     }
+
+    public Long createProduct(Product product) {
+        ProductEntity productEntity = new ProductEntity(null,
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl());
+        return productDao.createProduct(productEntity);
+    }
 }
