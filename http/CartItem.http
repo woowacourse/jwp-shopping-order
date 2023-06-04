@@ -1,0 +1,7 @@
+### GET /cart-items a@a.com:1234
+GET http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### GET /cart-items b@b.com:1234
+GET http://localhost:8080/cart-items
+Authorization: Basic YkBiLmNvbToxMjM0
