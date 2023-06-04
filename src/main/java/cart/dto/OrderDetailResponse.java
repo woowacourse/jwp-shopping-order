@@ -2,10 +2,13 @@ package cart.dto;
 
 import cart.domain.Coupon;
 import cart.domain.Order;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 
 public class OrderDetailResponse {
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private Long orderId;
     private List<OrderItemResponse> products;
@@ -13,6 +16,8 @@ public class OrderDetailResponse {
     private Long totalPayments;
     private Long deliveryFee;
     private CouponResponse coupon;
+    private String createdAt;
+    private String orderStatus;
 
     public OrderDetailResponse() {
     }
@@ -22,13 +27,17 @@ public class OrderDetailResponse {
                                final Long totalPrice,
                                final Long totalPayments,
                                final Long deliveryFee,
-                               final CouponResponse coupon) {
+                               final CouponResponse coupon,
+                               final String createdAt,
+                               final String orderStatus) {
         this.orderId = orderId;
         this.products = products;
         this.totalPrice = totalPrice;
         this.totalPayments = totalPayments;
         this.deliveryFee = deliveryFee;
         this.coupon = coupon;
+        this.createdAt = createdAt;
+        this.orderStatus = orderStatus;
     }
 
     public static OrderDetailResponse from(final Order order) {
@@ -40,7 +49,9 @@ public class OrderDetailResponse {
                     order.totalProductPrice().getValue(),
                     order.totalPayments().getValue(),
                     order.getDeliveryFee().getValue(),
-                    CouponResponse.from(coupon)
+                    CouponResponse.from(coupon),
+                    DATE_FORMAT.format(order.getCreatedAt()),
+                    order.getStatus().getValue()
             );
         }
         return new OrderDetailResponse(
@@ -49,7 +60,9 @@ public class OrderDetailResponse {
                 order.totalProductPrice().getValue(),
                 order.totalPayments().getValue(),
                 order.getDeliveryFee().getValue(),
-                null
+                null,
+                DATE_FORMAT.format(order.getCreatedAt()),
+                order.getStatus().getValue()
         );
     }
 
@@ -75,5 +88,13 @@ public class OrderDetailResponse {
 
     public CouponResponse getCoupon() {
         return coupon;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
     }
 }

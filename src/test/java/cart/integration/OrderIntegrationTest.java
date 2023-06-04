@@ -210,6 +210,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(order.getDeliveryFee()).isEqualTo(deliveryFee);
         assertThat(order.getCoupon()).isNotNull();
         assertThat(order.getCoupon().getId()).isEqualTo(couponId);
+        assertThat(order.getCreatedAt()).isNotNull();
+        assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.COMPLETE.getValue());
     }
 
     @DisplayName("잘못된 아이디의 주문 상세 정보 조회 요청 시 실패한다.")
