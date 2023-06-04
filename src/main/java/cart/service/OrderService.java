@@ -94,9 +94,10 @@ public class OrderService {
     private void validateFee(final OrderRequest orderRequest) {
         Integer totalProductPrice = orderRequest.getTotalProductPrice();
         Integer totalDeliveryFee = orderRequest.getTotalDeliveryFee();
+        Integer usePoint = orderRequest.getUsePoint();
         Integer totalPrice = orderRequest.getTotalPrice();
 
-        if (totalProductPrice + totalDeliveryFee != totalPrice) {
+        if (totalPrice != (totalProductPrice + totalDeliveryFee - usePoint)) {
             throw new MismatchedTotalFeeException();
         }
     }
