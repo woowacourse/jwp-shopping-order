@@ -7,7 +7,6 @@ import cart.domain.point.MemberPoints;
 import cart.domain.point.Point;
 import cart.domain.point.SavePointPolicy;
 import cart.domain.point.UsedPoint;
-import cart.domain.purchaseorder.OrderStatus;
 import cart.domain.purchaseorder.PurchaseOrder;
 import cart.domain.purchaseorder.PurchaseOrderInfo;
 import cart.domain.purchaseorder.PurchaseOrderItem;
@@ -23,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static cart.domain.purchaseorder.OrderStatus.CANCELLED;
 
 @Transactional
 @Service
@@ -157,17 +158,23 @@ public class PaymentService {
     public void deleteOrder(Member member, Long orderId) {
         Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId);
         checkAlreadyUsed(rewardPointByOrder);
+        updateUsedAndRewardPoint(member, orderId, rewardPointByOrder);
+        updatePurchaseOrderStatus(orderId);
+    }
 
+    private void updateUsedAndRewardPoint(Member member, Long orderId, Point rewardPointByOrder) {
         List<Point> rewardPointByMember = memberRewardPointDao.getAllByMemberId(member.getId());
-        MemberPoints memberPoints = new MemberPoints(member, rewardPointByMember);
         memberRewardPointDao.deleteById(rewardPointByOrder.getId());
 
+        MemberPoints memberPoints = new MemberPoints(member, rewardPointByMember);
         List<UsedPoint> usedPoints = orderMemberUsedPointDao.getAllUsedPointByOrderId(orderId);
         memberPoints.cancelledPoints(usedPoints);
         orderMemberUsedPointDao.deleteAll(usedPoints);
+    }
 
+    private void updatePurchaseOrderStatus(Long orderId) {
         PurchaseOrderInfo purchaseOrderInfo = purchaseOrderDao.findById(orderId);
-        purchaseOrderInfo.changeStatus(OrderStatus.CANCELLED);
+        purchaseOrderInfo.changeStatus(CANCELLED);
         purchaseOrderDao.updateStatus(purchaseOrderInfo);
     }
 
