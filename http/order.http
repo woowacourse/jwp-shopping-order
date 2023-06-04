@@ -14,7 +14,7 @@ Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 ### 주문
-POST http://localhost:8080/orders
+POST http://3.35.234.166:8080/orders
 Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 

@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.*;
@@ -17,15 +18,17 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final ProductDao productDao;
+    private final CartItemDao cartItemDao;
     private final OrderRepository orderRepository;
     private final PointRepository pointRepository;
 
     private final OrderPage orderPage;
     private final PointAccumulationPolicy pointAccumulationPolicy;
 
-    public OrderService(ProductDao productDao, OrderRepository orderRepository, PointRepository pointRepository,
+    public OrderService(ProductDao productDao, CartItemDao cartItemDao, OrderRepository orderRepository, PointRepository pointRepository,
                         OrderPage orderPage, PointAccumulationPolicy pointAccumulationPolicy) {
         this.productDao = productDao;
+        this.cartItemDao = cartItemDao;
         this.orderRepository = orderRepository;
         this.pointRepository = pointRepository;
         this.orderPage = orderPage;
@@ -74,6 +77,11 @@ public class OrderService {
 
         Long orderId = orderRepository.save(member.getId(), order);
         pointRepository.save(member.getId(), orderId, order.calculateSavedPoint(pointAccumulationPolicy)); // 주문 취소 문제 때문에 포인트 적립 시기를 늦출 수 있으나 백/프론트 일관성 유지를 위해 주문 시 적립되는 것으로 유지
+
+        List<Long> productIds = getProductIds(orderItems);
+        for (Long productId : productIds) {
+            cartItemDao.delete(member.getId(), productId);
+        }
     }
 
     private Map<Long, Product> getProducts(List<ProductOrderRequest> productOrderRequests) {
@@ -101,6 +109,12 @@ public class OrderService {
             orderItems.add(new OrderItem(product, quantity, totalCost));
         }
         return orderItems;
+    }
+
+    private List<Long> getProductIds(List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> orderItem.getProduct().getId())
+                .collect(Collectors.toList());
     }
 
     public void deleteOrder(Member member, Long orderId) {

@@ -1,12 +1,12 @@
 package cart.application;
 
+import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.*;
 import cart.exception.OrderException;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +33,9 @@ class OrderServiceTest {
     private ProductDao productDao;
 
     @Mock
+    private CartItemDao cartItemDao;
+
+    @Mock
     private OrderRepository orderRepository;
 
     @Mock
@@ -43,7 +46,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService(productDao, orderRepository, pointRepository,
+        orderService = new OrderService(productDao, cartItemDao, orderRepository, pointRepository,
                 new OrderPage(10), new OrderPointAccumulationPolicy(new OrderPointExpirePolicy()));
         member = new Member(1L, "kong", "123");
     }

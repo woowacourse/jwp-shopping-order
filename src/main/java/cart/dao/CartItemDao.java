@@ -12,9 +12,12 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 public class CartItemDao {
+
+    private static final Long DUMMY = -1L;
 
     private final JdbcTemplate jdbcTemplate;
 
