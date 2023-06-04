@@ -5,6 +5,8 @@ import cart.exception.bill.BillException;
 import cart.exception.cart.CartItemNotFoundException;
 import cart.exception.cart.IllegalMemberException;
 import cart.exception.member.MemberNotFoundException;
+import cart.exception.product.ProductException;
+import cart.exception.product.ProductNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,14 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleInvalidValueException(MethodArgumentNotValidException exception) {
+        String errorMessage = exception.getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
@@ -33,14 +43,6 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleInvalidValueException(MethodArgumentNotValidException exception) {
-        String errorMessage = exception.getFieldErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body(errorMessage);
-    }
-
     @ExceptionHandler(BillException.class)
     public ResponseEntity<String> handleBillException(BillException exception) {
         String errorMessage = exception.getMessage();
@@ -49,6 +51,12 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(CartItemNotFoundException.class)
     public ResponseEntity<String> handleCartItemNotFoundException(CartItemNotFoundException exception) {
+        String errorMessage = exception.getMessage();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException exception) {
         String errorMessage = exception.getMessage();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
