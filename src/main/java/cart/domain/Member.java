@@ -34,6 +34,12 @@ public class Member {
         return this.password.equals(password);
     }
 
+    public Member savePoint(final int totalProductPrice) {
+        Point newPoint = point.calculatePointBy(totalProductPrice);
+
+        return new Member(id, email, password, point.add(newPoint));
+    }
+
     public int getPointValue() {
         return point.getValue();
     }
