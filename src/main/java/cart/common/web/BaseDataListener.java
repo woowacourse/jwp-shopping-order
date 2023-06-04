@@ -39,7 +39,6 @@ public class BaseDataListener implements ApplicationListener<ContextRefreshedEve
     public void onApplicationEvent(ContextRefreshedEvent event) {
         final var memberId = memberRepository.addMember(new Member(null, "a@a.gmail.com", "1234"));
         final var member2Id = memberRepository.addMember(new Member(null, "b@b.gmail.com", "1234"));
-        final var member = memberRepository.getMemberById(memberId);
 
         final var chickenId = productRepository.createProduct(new Product("치킨", 10_000, "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"));
         productRepository.createProduct(new Product("샐러드", 20000, "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"));
@@ -54,6 +53,14 @@ public class BaseDataListener implements ApplicationListener<ContextRefreshedEve
 
         final var freeDeliveryPolicyId = discountPolicyService.savePolicy(DiscountCondition.from(DiscountTarget.DELIVERY, DiscountUnit.PERCENTAGE, 100));
         final var freeDeliveryCouponId = couponRepository.save("배송비 무료 쿠폰", freeDeliveryPolicyId);
+
+        couponRepository.giveCouponToMember(memberId, tenPercentForAllDiscountCouponId);
+        couponRepository.giveCouponToMember(memberId, twentyPercentForAllDiscountCouponId);
+        couponRepository.giveCouponToMember(memberId, freeDeliveryCouponId);
+
+        couponRepository.giveCouponToMember(member2Id, tenPercentForAllDiscountCouponId);
+        couponRepository.giveCouponToMember(member2Id, twentyPercentForAllDiscountCouponId);
+        couponRepository.giveCouponToMember(member2Id, freeDeliveryCouponId);
 
         final var chicken3000DiscountId = discountPolicyService.savePolicy(DiscountCondition.makeConditionForSpecificProducts(List.of(chickenId), DiscountUnit.ABSOLUTE, 3000));
         saleRepository.save("치킨만 3,000원 할인", chicken3000DiscountId);
