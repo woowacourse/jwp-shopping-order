@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.PointDao;
 import cart.dao.entity.PointEntity;
-import cart.domain.Point;
+import cart.domain.point.Point;
 import org.springframework.stereotype.Repository;
 
 @Repository

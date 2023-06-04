@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.point;
 
 import java.util.Objects;
 
@@ -16,11 +16,6 @@ public class Point {
             throw new IllegalStateException("회원의 포인트가 부족합니다.");
         }
         return this.point - requestPoint;
-    }
-
-    public Long getPointByPolicy(Long amountPayment) {
-        double caculatedPoint = amountPayment * POINT_POLICY;
-        return (long) caculatedPoint;
     }
 
     public Long getPoint() {

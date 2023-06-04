@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.domain.Member;
-import cart.domain.Point;
+import cart.domain.point.Point;
 import cart.dto.point.PointResponse;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;

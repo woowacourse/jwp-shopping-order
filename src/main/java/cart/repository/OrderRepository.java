@@ -9,7 +9,7 @@ import cart.dao.entity.OrderItemEntity;
 import cart.dao.entity.ShippingDiscountPolicyEntity;
 import cart.dao.entity.ShippingFeeEntity;
 import cart.domain.Member;
-import cart.domain.Point;
+import cart.domain.point.Point;
 import cart.domain.ShippingDiscountPolicy;
 import cart.domain.ShippingFee;
 import cart.domain.order.Order;

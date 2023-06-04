@@ -2,11 +2,12 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.domain.Member;
-import cart.domain.Point;
+import cart.domain.point.Point;
 import cart.domain.ShippingDiscountPolicy;
 import cart.domain.ShippingFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.point.PointPolicyStrategy;
 import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
@@ -26,11 +27,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartItemDao cartItemDao;
     private final PointRepository pointRepository;
+    private final PointPolicyStrategy pointPolicyStrategy;
 
-    public OrderService(OrderRepository orderRepository, CartItemDao cartItemDao, PointRepository pointRepository) {
+    public OrderService(OrderRepository orderRepository, CartItemDao cartItemDao, PointRepository pointRepository, PointPolicyStrategy pointPolicyStrategy) {
         this.orderRepository = orderRepository;
         this.cartItemDao = cartItemDao;
         this.pointRepository = pointRepository;
+        this.pointPolicyStrategy = pointPolicyStrategy;
     }
 
     public OrderCreateResponse createOrder(final Member member, final OrderRequest orderRequest) {
@@ -51,7 +54,7 @@ public class OrderService {
         final Point memberPoint = pointRepository.findPointByMemberId(member.getId());
 
         pointRepository.updatePoint(member.getId(), memberPoint.minus(orderRequest.getUsedPoint()));
-        final Long earnedPoint = memberPoint.getPointByPolicy(newOrder.getTotalPrice() - orderRequest.getUsedPoint());
+        final Long earnedPoint = pointPolicyStrategy.caclulatePointWithPolicy(newOrder.getTotalPrice() - orderRequest.getUsedPoint());
         pointRepository.updatePoint(member.getId(), earnedPoint);
 
         return new OrderCreateResponse(orderId, earnedPoint);

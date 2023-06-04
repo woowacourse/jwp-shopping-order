@@ -2,7 +2,7 @@ package cart.domain.order;
 
 
 import cart.domain.Member;
-import cart.domain.Point;
+import cart.domain.point.Point;
 
 import java.util.List;
 
