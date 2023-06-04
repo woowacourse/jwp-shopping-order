@@ -37,8 +37,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(final Member member, @RequestBody final OrderRequestDto requestDto) {
-        final Long orderId = orderService.order(member, requestDto);
-        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
+    public ResponseEntity<OrderResponseDto> order(final Member member, @RequestBody final OrderRequestDto requestDto) {
+        final OrderResponseDto result = orderService.order(member, requestDto);
+        return ResponseEntity.created(URI.create("/orders/" + result.getId())).body(result);
     }
 }

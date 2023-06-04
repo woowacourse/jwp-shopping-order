@@ -37,12 +37,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(final Member member, final OrderRequestDto requestDto) {
+    public OrderResponseDto order(final Member member, final OrderRequestDto requestDto) {
         final List<CartItem> cartItems = requestDto.getCartItemIds().stream()
                 .map(cartItemDao::findById)
                 .collect(toUnmodifiableList());
         final Order order = createOrder(member, requestDto, cartItems);
-        return orderRepository.save(order, cartItems).getId();
+        final Order savedOrder = orderRepository.save(order, cartItems);
+        return OrderResponseDto.from(savedOrder);
     }
 
     private Order createOrder(final Member member, final OrderRequestDto orderRequestDto,
