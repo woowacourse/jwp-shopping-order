@@ -27,6 +27,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findAllByMember(final Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream()
@@ -34,6 +35,7 @@ public class CartItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CartItemResponse findById(final Long cartItemId) {
         CartItem cartItem = cartItemDao.findById(cartItemId);
         return CartItemResponse.of(cartItem);

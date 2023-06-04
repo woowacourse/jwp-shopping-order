@@ -23,11 +23,13 @@ public class ProductService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAllProducts() {
         List<Product> products = productDao.findAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(Long productId) {
         Product product = productDao.findProductById(productId);
         return ProductResponse.of(product);
