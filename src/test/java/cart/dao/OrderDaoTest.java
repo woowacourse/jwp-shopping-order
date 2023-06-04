@@ -35,14 +35,10 @@ class OrderDaoTest {
         OrderDto orderDto = OrderDto.of(order);
         Long id = orderDao.insert(orderDto);
 
-        OrderDto actual = orderDao.selectBy(id);
-        System.out.println("actual = " + actual);
-        assertThat(actual)
+        assertThat(orderDao.selectBy(id))
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(orderDto);
-
-
     }
 
     @Test
