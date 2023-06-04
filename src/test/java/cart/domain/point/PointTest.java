@@ -40,9 +40,21 @@ class PointTest {
         final Point point = new Point(30);
 
         // when
-        final Point result = point.substract(new Point(10));
+        final Point result = point.subtract(new Point(10));
 
         // then
         assertThat(result.getPoint()).isEqualTo(20);
+    }
+
+    @Test
+    void 포인트는_다른_포인트보다_더_큰지_검사할_수_있다() {
+        // given
+        final Point point = new Point(30);
+
+        // when
+        final boolean result = point.isMoreThan(new Point(10));
+
+        // then
+        assertThat(result).isTrue();
     }
 }

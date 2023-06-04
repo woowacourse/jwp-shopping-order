@@ -21,8 +21,12 @@ public class Point {
         return new Point(this.point + other.point);
     }
 
-    public Point substract(final Point other) {
+    public Point subtract(final Point other) {
         return new Point(this.point - other.point);
+    }
+
+    public boolean isMoreThan(final Point other) {
+        return this.point > other.point;
     }
 
     public int getPoint() {
