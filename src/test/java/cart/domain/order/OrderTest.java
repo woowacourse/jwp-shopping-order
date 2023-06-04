@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class OrderTest {
 
     private Member 하디_멤버 = new Member(1L, "hardy", "1234");
-    private Member 현구막_멤버 = new Member(2L, "hardy", "1234");
+    private Member 현구막_멤버 = new Member(2L, "hyeongumak", "1234");
     private CartItem 하디_피자_장바구니_아이템 = new CartItem(3L, 하디_멤버, 피자);
     private CartItem 하디_샐러드_장바구니_아이템 = new CartItem(1L, 하디_멤버, 샐러드);
     private CartItem 하디_치킨_장바구니_아이템 = new CartItem(1L, 하디_멤버, 치킨);
