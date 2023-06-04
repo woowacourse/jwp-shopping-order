@@ -2,19 +2,18 @@ package cart.domain.repository;
 
 import cart.domain.Product;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Component
 public interface ProductRepository {
-    List<Product> getAllProducts();
+    List<Product> findAll();
 
-    Product getProductById(Long productId);
+    Product findById(Long productId);
 
-    Long createProduct(Product product);
+    Long save(Product product);
 
-    void updateProduct(Long productId, Product product);
+    void updateById(Long productId, Product product);
 
-    void deleteProduct(Long productId);
+    void deleteById(Long productId);
 }

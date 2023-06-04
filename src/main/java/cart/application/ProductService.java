@@ -17,32 +17,32 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.getAllProducts();
+    public List<ProductResponse> findAll() {
+        List<Product> products = productRepository.findAll();
 
         return products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.getProductById(productId);
+    public ProductResponse findById(Long productId) {
+        Product product = productRepository.findById(productId);
 
         return ProductResponse.from(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    public Long save(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
 
-        return productRepository.createProduct(product);
+        return productRepository.save(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
+    public void updateById(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productRepository.updateProduct(productId, product);
+        productRepository.updateById(productId, product);
     }
 
-    public void deleteProduct(Long productId) {
-        productRepository.deleteProduct(productId);
+    public void deleteById(Long productId) {
+        productRepository.deleteById(productId);
     }
 }

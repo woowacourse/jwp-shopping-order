@@ -29,12 +29,12 @@ class OrderProductDaoTest {
 
     @Test
     void saveOrderProductsByOrderId() {
-        Long orderId = orderDao.saveOrder(new OrderEntity(1L, 1000, 1000));
+        Long orderId = orderDao.save(new OrderEntity(1L, 1000, 1000));
         OrderProductEntity orderProduct = new OrderProductEntity("오션", "ocean.com", 10000, 10, orderId);
         List<OrderProductEntity> orderProducts = List.of(orderProduct);
 
-        orderProductDao.saveOrderProductsByOrderId(orderId, orderProducts);
-        OrderProductEntity findOrderProduct = orderProductDao.findAllByOrderId(orderId).get(0);
+        orderProductDao.save(orderId, orderProducts);
+        OrderProductEntity findOrderProduct = orderProductDao.findOrderProductByOrderId(orderId).get(0);
 
         assertAll(
                 () -> assertThat(findOrderProduct.getName()).isEqualTo("오션"),

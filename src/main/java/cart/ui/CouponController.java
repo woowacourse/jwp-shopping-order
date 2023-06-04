@@ -24,20 +24,20 @@ public class CouponController {
     }
 
     @PostMapping("/users/coupons")
-    public ResponseEntity<Void> publishUserCoupon(Member member, @RequestBody CouponCreateRequest couponCreateRequest) {
-        Long savedId = couponService.publishUserCoupon(member, couponCreateRequest);
+    public ResponseEntity<Void> save(Member member, @RequestBody CouponCreateRequest couponCreateRequest) {
+        Long savedId = couponService.save(member, couponCreateRequest);
         return ResponseEntity.created(URI.create("/coupons/" + savedId)).build();
     }
 
     @GetMapping("/users/coupons")
-    public ResponseEntity<List<CouponResponse>> getUserCoupons(Member member) {
-        List<CouponResponse> coupons = couponService.getUserCoupon(member);
+    public ResponseEntity<List<CouponResponse>> findByMemberId(Member member) {
+        List<CouponResponse> coupons = couponService.findByMemberId(member);
         return ResponseEntity.ok(coupons);
     }
 
     @GetMapping("/coupons")
-    public ResponseEntity<List<CouponIssuableResponse>> getCoupons(Member member) {
-        List<CouponIssuableResponse> coupons = couponService.getCoupons(member);
+    public ResponseEntity<List<CouponIssuableResponse>> findAll(Member member) {
+        List<CouponIssuableResponse> coupons = couponService.findAll(member);
         return ResponseEntity.ok(coupons);
     }
 }

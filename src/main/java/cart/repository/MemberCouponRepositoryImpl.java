@@ -26,33 +26,33 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     }
 
     @Override
-    public Coupon findAvailableCouponByMember(Member member, Long couponId) {
-        return toDomain(memberCouponDao.findAvailableCouponByMember(member.getId(), couponId).orElse(CouponEntity.EMPTY));
+    public Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId) {
+        return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(member.getId(), couponId).orElse(CouponEntity.EMPTY));
     }
 
     @Override
-    public void changeUserUsedCouponAvailability(Coupon coupon) {
-        memberCouponDao.changeUserUsedCouponAvailability(coupon.getId());
+    public void updateUsedCouponAvailability(Coupon coupon) {
+        memberCouponDao.updateUsedCouponAvailabilityById(coupon.getId());
     }
 
     @Override
-    public List<Coupon> findMemberCoupons(Member member) {
-        return memberCouponDao.findCouponByMemberId(member.getId()).stream()
+    public List<Coupon> findAllByMemberId(Member member) {
+        return memberCouponDao.findAllByMemberId(member.getId()).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void changeUserUnUsedCouponAvailability(Member member, Long memberCouponId) {
-        if (!memberCouponDao.checkMemberCouponById(member.getId(), memberCouponId)) {
-            memberCouponDao.changeUserUnUsedCouponAvailability(memberCouponId);
+    public void updateUnUsedCouponAvailability(Member member, Long memberCouponId) {
+        if (!memberCouponDao.checkByCouponIdAndMemberId(member.getId(), memberCouponId)) {
+            memberCouponDao.updateUnUsedCouponAvailabilityById(memberCouponId);
         }
     }
 
     @Override
-    public Coupon publishBonusCoupon(Long id, Member member) {
-        Coupon coupon = toDomain(couponDao.findCouponByName(toEntity(Coupon.BONUS_COUPON)).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다.")));
-        Long userCouponId = memberCouponDao.createUserCoupon(new MemberCouponEntity(coupon.getId(), member.getId(), true));
+    public Coupon saveBonusCoupon(Long id, Member member) {
+        Coupon coupon = toDomain(couponDao.findByName(toEntity(Coupon.BONUS_COUPON)).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다.")));
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), member.getId(), true));
         return new Coupon(userCouponId, coupon.getName(),
                 DiscountType.from(coupon.getCouponTypes().getCouponTypeName()),
                 coupon.getMinimumPrice(), coupon.getDiscountPrice(), coupon.getDiscountRate());

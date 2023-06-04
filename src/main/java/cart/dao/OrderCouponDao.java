@@ -24,29 +24,29 @@ public class OrderCouponDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void saveOrderCoupon(Long orderId, Long memberCouponId) {
+    public void save(Long orderId, Long memberCouponId) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(new OrderCouponEntity(memberCouponId, orderId));
         insertAction.executeAndReturnKey(params).longValue();
     }
 
-    public void deleteOrderCoupon(Long orderId) {
+    public void deleteByOrderId(Long orderId) {
         String sql = "DELETE FROM order_coupon WHERE order_id = ?";
         jdbcTemplate.update(sql, orderId);
     }
 
-    public Long findByOrderId(Long orderId) {
+    public Long findIdByOrderId(Long orderId) {
         String sql = "select member_coupon_id from order_coupon where order_id = ?";
 
         return jdbcTemplate.queryForObject(sql, Long.class, orderId);
     }
 
-    public boolean checkOrderCouponByOrderId(Long orderId) {
+    public boolean checkByOrderId(Long orderId) {
         String sql = "select exists(select * from order_coupon where order_id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, orderId);
     }
 
-    public Optional<CouponEntity> findCouponByOrderId(Long orderId) {
+    public Optional<CouponEntity> findByOrderId(Long orderId) {
         try {
             String sql = "SELECT * " +
                     "FROM order_coupon " +

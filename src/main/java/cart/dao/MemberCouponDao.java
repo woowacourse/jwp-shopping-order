@@ -36,7 +36,7 @@ public class MemberCouponDao {
                     rs.getDouble("discount_rate")
             );
 
-    public Optional<CouponEntity> findAvailableCouponByMember(Long memberId, Long couponId) {
+    public Optional<CouponEntity> findAvailableCouponByIdAndMemberId(Long memberId, Long couponId) {
         try {
             String sql = "SELECT * " +
                     "FROM member_coupon " +
@@ -49,24 +49,24 @@ public class MemberCouponDao {
         }
     }
 
-    public void changeUserUsedCouponAvailability(Long couponId) {
+    public void updateUsedCouponAvailabilityById(Long memberCouponId) {
         String sql = "UPDATE member_coupon SET availability = ? WHERE id = ? and availability = ?";
 
-        jdbcTemplate.update(sql, false, couponId, true);
+        jdbcTemplate.update(sql, false, memberCouponId, true);
     }
 
-    public boolean checkMemberCouponById(Long memberId, Long couponId) {
+    public boolean checkByCouponIdAndMemberId(Long couponId, Long memberId) {
         String sql = "select exists(select * from member_coupon where coupon_id = ? and availability = ? and member_id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, couponId, true, memberId);
     }
 
-    public Long createUserCoupon(MemberCouponEntity memberCouponEntity) {
+    public Long save(MemberCouponEntity memberCouponEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(memberCouponEntity);
         return insertAction.executeAndReturnKey(params).longValue();
     }
 
-    public List<CouponEntity> findCouponByMemberId(Long memberId) {
+    public List<CouponEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT * " +
                 "FROM member_coupon " +
                 "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
@@ -75,7 +75,7 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, rowMapper, memberId, true);
     }
 
-    public void changeUserUnUsedCouponAvailability(Long memberCouponId) {
+    public void updateUnUsedCouponAvailabilityById(Long memberCouponId) {
         String sql2 = "UPDATE member_coupon SET availability = ? WHERE id = ?";
         jdbcTemplate.update(sql2, true, memberCouponId);
     }

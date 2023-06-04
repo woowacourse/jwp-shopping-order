@@ -19,13 +19,13 @@ public class OrderProductRepositoryImpl implements OrderProductRepository {
     }
 
     @Override
-    public void saveOrderProductsByOrderId(Long orderSavedId, Order order) {
+    public void save(Long orderSavedId, Order order) {
         List<OrderProductEntity> orderProducts = order.getCartProducts().stream()
                 .map(it -> new OrderProductEntity(it.getProduct().getName(),
                         it.getProduct().getImageUrl(), it.getProduct().getPrice(),
                         it.getQuantity(), orderSavedId))
                 .collect(Collectors.toList());
 
-        orderProductDao.saveOrderProductsByOrderId(orderSavedId, orderProducts);
+        orderProductDao.save(orderSavedId, orderProducts);
     }
 }

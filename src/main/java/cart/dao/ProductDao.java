@@ -38,12 +38,12 @@ public class ProductDao {
                     rs.getString("image_url")
             );
 
-    public List<ProductEntity> getAllProducts() {
+    public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<ProductEntity> getProductById(Long productId) {
+    public Optional<ProductEntity> findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
@@ -52,17 +52,17 @@ public class ProductDao {
         }
     }
 
-    public Long createProduct(Product product) {
+    public Long save(Product product) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(product);
         return insertAction.executeAndReturnKey(params).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateById(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteById(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }

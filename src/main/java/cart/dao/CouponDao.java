@@ -29,19 +29,19 @@ public class CouponDao {
             );
 
 
-    public Boolean checkCouponById(Long id) {
+    public Boolean checkById(Long id) {
         String sql = "select exists(select * from coupon where id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
-    public List<CouponEntity> findAllCoupons() {
+    public List<CouponEntity> findAll() {
         String sql = "select * from coupon";
 
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<CouponEntity> findCouponByName(CouponEntity coupon) {
+    public Optional<CouponEntity> findByName(CouponEntity coupon) {
         try {
             String sql = "select * from coupon where name like ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, coupon.getName()));

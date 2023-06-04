@@ -24,21 +24,21 @@ public class CouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public Long publishUserCoupon(Member member, CouponCreateRequest request) {
-        return couponRepository.publishUserCoupon(member, request.getId());
+    public Long save(Member member, CouponCreateRequest request) {
+        return couponRepository.save(member, request.getId());
     }
 
     @Transactional(readOnly = true)
-    public List<CouponResponse> getUserCoupon(Member member) {
-        return couponRepository.getUserCoupon(member).stream()
+    public List<CouponResponse> findByMemberId(Member member) {
+        return couponRepository.findByMemberId(member).stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<CouponIssuableResponse> getCoupons(Member member) {
-        List<Coupon> coupons = couponRepository.findAllCoupons();
-        List<Coupon> memberCoupons = memberCouponRepository.findMemberCoupons(member);
+    public List<CouponIssuableResponse> findAll(Member member) {
+        List<Coupon> coupons = couponRepository.findAll();
+        List<Coupon> memberCoupons = memberCouponRepository.findAllByMemberId(member);
 
         return coupons.stream()
                 .map(it -> CouponIssuableResponse.of(it, !memberCoupons.contains(it)))

@@ -32,8 +32,8 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("사용자의 유효한 쿠폰을 찾는다.")
     void findAvailableCouponByMember() {
-        Long userCouponId = memberCouponDao.createUserCoupon(memberCoupon);
-        CouponEntity coupon = memberCouponDao.findAvailableCouponByMember(1L, userCouponId).get();
+        Long userCouponId = memberCouponDao.save(memberCoupon);
+        CouponEntity coupon = memberCouponDao.findAvailableCouponByIdAndMemberId(1L, userCouponId).get();
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("5000원 할인 쿠폰"),
                 () -> assertThat(coupon.getDiscountType()).isEqualTo("deduction"),
@@ -44,25 +44,25 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("사용자의 유효한 쿠폰을 유효하지 않은 쿠폰으로 변경한다.")
     void changeUserUsedCouponAvailability() {
-        Long userCouponId = memberCouponDao.createUserCoupon(memberCoupon);
-        memberCouponDao.changeUserUsedCouponAvailability(userCouponId);
+        Long userCouponId = memberCouponDao.save(memberCoupon);
+        memberCouponDao.updateUsedCouponAvailabilityById(userCouponId);
 
-        assertThat(memberCouponDao.checkMemberCouponById(1L, userCouponId)).isFalse();
+        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, userCouponId)).isFalse();
     }
 
     @Test
     @DisplayName("사용자의 쿠폰을 id로 조회한다.")
     void checkMemberCouponById() {
-        Long userCouponId = memberCouponDao.createUserCoupon(memberCoupon);
+        Long userCouponId = memberCouponDao.save(memberCoupon);
 
-        assertThat(memberCouponDao.checkMemberCouponById(1L, userCouponId)).isTrue();
+        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, userCouponId)).isTrue();
     }
 
     @Test
     @DisplayName("사용자 쿠폰을 발급한다.")
     void createUserCoupon() {
-        memberCouponDao.createUserCoupon(memberCoupon);
-        CouponEntity coupon = memberCouponDao.findCouponByMemberId(1L).get(0);
+        memberCouponDao.save(memberCoupon);
+        CouponEntity coupon = memberCouponDao.findAllByMemberId(1L).get(0);
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("5000원 할인 쿠폰"),
                 () -> assertThat(coupon.getDiscountType()).isEqualTo("deduction"),
@@ -73,8 +73,8 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("사용자 id로 쿠폰을 찾는다.")
     void findCouponByMemberId() {
-        memberCouponDao.createUserCoupon(memberCoupon);
-        List<CouponEntity> coupons = memberCouponDao.findCouponByMemberId(1L);
+        memberCouponDao.save(memberCoupon);
+        List<CouponEntity> coupons = memberCouponDao.findAllByMemberId(1L);
         CouponEntity coupon = coupons.get(0);
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("5000원 할인 쿠폰"),
@@ -86,10 +86,10 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("사용자의 유효하지 않은 쿠폰을 유효한 쿠폰으로 바꾼다.")
     void changeUserUnUsedCouponAvailability() {
-        Long userCouponId = memberCouponDao.createUserCoupon(memberCoupon);
-        memberCouponDao.changeUserUsedCouponAvailability(userCouponId);
-        assertThat(memberCouponDao.checkMemberCouponById(1L, 1L)).isFalse();
-        memberCouponDao.changeUserUnUsedCouponAvailability(userCouponId);
-        assertThat(memberCouponDao.checkMemberCouponById(1L, 1L)).isTrue();
+        Long userCouponId = memberCouponDao.save(memberCoupon);
+        memberCouponDao.updateUsedCouponAvailabilityById(userCouponId);
+        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, 1L)).isFalse();
+        memberCouponDao.updateUnUsedCouponAvailabilityById(userCouponId);
+        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, 1L)).isTrue();
     }
 }

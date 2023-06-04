@@ -28,7 +28,7 @@ class CouponDaoTest {
     @Test
     @DisplayName("쿠폰을 확인한다.")
     void checkCouponById() {
-        assertThat(couponDao.checkCouponById(1L)).isTrue();
+        assertThat(couponDao.checkById(1L)).isTrue();
     }
 
     @Test
@@ -36,13 +36,13 @@ class CouponDaoTest {
     void findAllCoupons() {
         Coupon coupon = new Coupon("5000원 할인 쿠폰", DiscountType.from("deduction"), 10000, 5000, 0);
 
-        assertThat(couponDao.findAllCoupons().get(0).getName()).isEqualTo(coupon.getName());
+        assertThat(couponDao.findAll().get(0).getName()).isEqualTo(coupon.getName());
     }
 
     @Test
     @DisplayName("쿠폰을 확인한다.")
     void findCouponByName() {
         CouponEntity coupon = new CouponEntity("5000원 할인 쿠폰", "deduction", 10000, 5000, 0.0);
-        assertThat(couponDao.findCouponByName(coupon).get().getName()).isEqualTo(coupon.getName());
+        assertThat(couponDao.findByName(coupon).get().getName()).isEqualTo(coupon.getName());
     }
 }

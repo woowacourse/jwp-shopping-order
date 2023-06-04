@@ -19,29 +19,29 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productDao.getAllProducts().stream().map(this::toDomain).collect(Collectors.toList());
+    public List<Product> findAll() {
+        return productDao.findAll().stream().map(this::toDomain).collect(Collectors.toList());
     }
 
     @Override
-    public Product getProductById(Long productId) {
-        return toDomain(productDao.getProductById(productId)
+    public Product findById(Long productId) {
+        return toDomain(productDao.findById(productId)
                 .orElseThrow(() -> new ProductException("잘못된 상품입니다.")));
     }
 
     @Override
-    public Long createProduct(Product product) {
-        return productDao.createProduct(product);
+    public Long save(Product product) {
+        return productDao.save(product);
     }
 
     @Override
-    public void updateProduct(Long productId, Product product) {
-        productDao.updateProduct(productId, product);
+    public void updateById(Long productId, Product product) {
+        productDao.updateById(productId, product);
     }
 
     @Override
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    public void deleteById(Long productId) {
+        productDao.deleteById(productId);
     }
 
     private Product toDomain(ProductEntity entity) {

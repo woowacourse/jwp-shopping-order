@@ -8,15 +8,15 @@ import java.util.List;
 
 @Component
 public interface OrderRepository {
-    Long saveOrder(Order order);
+    Long save(Order order);
 
     List<Order> findAllByMemberId(Member member);
 
-    Order findByOrderId(Member member, Long orderId);
+    Order findByIdAndMemberId(Member member, Long orderId);
 
-    void deleteOrder(Long orderId);
+    void deleteById(Long orderId);
 
-    void confirmOrder(Long orderId, Member member);
+    void confirmById(Long orderId, Member member);
 
-    boolean checkConfirmState(Long orderId);
+    boolean checkConfirmStateById(Long orderId);
 }

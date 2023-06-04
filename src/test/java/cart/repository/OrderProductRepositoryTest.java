@@ -29,8 +29,8 @@ class OrderProductRepositoryTest {
     void saveOrderProductsByOrderId() {
         Member member = new Member(1L, "a@a", "123");
         Order order = new Order(member, List.of(new CartItem(member, new Product("오션", 10000, "ocean.com"))), Coupon.EMPTY);
-        Long orderId = orderRepository.saveOrder(order);
+        Long orderId = orderRepository.save(order);
 
-        assertDoesNotThrow(() -> orderProductRepository.saveOrderProductsByOrderId(orderId, order));
+        assertDoesNotThrow(() -> orderProductRepository.save(orderId, order));
     }
 }

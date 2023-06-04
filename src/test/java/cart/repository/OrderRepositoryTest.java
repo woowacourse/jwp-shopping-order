@@ -38,41 +38,41 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("주문을 저장한다.")
     void saveOrder() {
-        Member member = memberDao.getMemberById(1L);
-        Long 오션 = productRepository.createProduct(new Product("오션", 1000, "ocean.jpg"));
-        Long 바다 = productRepository.createProduct(new Product("바다", 100, "바다.jpg"));
-        Long 카트_오션 = cartItemRepository.save(new CartItem(member, productRepository.getProductById(오션)));
-        Long 카트_바다 = cartItemRepository.save(new CartItem(member, productRepository.getProductById(바다)));
+        Member member = memberDao.findById(1L);
+        Long 오션 = productRepository.save(new Product("오션", 1000, "ocean.jpg"));
+        Long 바다 = productRepository.save(new Product("바다", 100, "바다.jpg"));
+        Long 카트_오션 = cartItemRepository.save(new CartItem(member, productRepository.findById(오션)));
+        Long 카트_바다 = cartItemRepository.save(new CartItem(member, productRepository.findById(바다)));
         List<CartItem> cartItems = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
-        assertDoesNotThrow(() -> orderRepository.saveOrder(new Order(member, cartItems, Coupon.EMPTY)));
+        assertDoesNotThrow(() -> orderRepository.save(new Order(member, cartItems, Coupon.EMPTY)));
     }
 
     @Test
     @DisplayName("특정 사용자의 주문을 조회한다.")
     void findAllByMemberId() {
-        Member member = memberDao.getMemberById(1L);
-        Long 오션 = productRepository.createProduct(new Product("오션", 1000, "ocean.jpg"));
-        Long 바다 = productRepository.createProduct(new Product("바다", 100, "바다.jpg"));
-        CartItem cartItem1 = new CartItem(1L, 1, productRepository.getProductById(오션), member);
-        CartItem cartItem2 = new CartItem(2L, 1, productRepository.getProductById(바다), member);
+        Member member = memberDao.findById(1L);
+        Long 오션 = productRepository.save(new Product("오션", 1000, "ocean.jpg"));
+        Long 바다 = productRepository.save(new Product("바다", 100, "바다.jpg"));
+        CartItem cartItem1 = new CartItem(1L, 1, productRepository.findById(오션), member);
+        CartItem cartItem2 = new CartItem(2L, 1, productRepository.findById(바다), member);
         Long 카트_오션 = cartItemRepository.save(cartItem1);
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
-        Long 동해 = productRepository.createProduct(new Product("동해", 1000, "동해.jpg"));
-        Long 서해 = productRepository.createProduct(new Product("서해", 100, "서해.jpg"));
-        CartItem cartItem3 = new CartItem(1L, 1, productRepository.getProductById(동해), member);
-        CartItem cartItem4 = new CartItem(2L, 1, productRepository.getProductById(서해), member);
+        Long 동해 = productRepository.save(new Product("동해", 1000, "동해.jpg"));
+        Long 서해 = productRepository.save(new Product("서해", 100, "서해.jpg"));
+        CartItem cartItem3 = new CartItem(1L, 1, productRepository.findById(동해), member);
+        CartItem cartItem4 = new CartItem(2L, 1, productRepository.findById(서해), member);
         Long 카트_동해 = cartItemRepository.save(cartItem3);
         Long 카트_서해 = cartItemRepository.save(cartItem4);
         List<CartItem> cartItems2 = List.of(cartItemRepository.findById(카트_동해), cartItemRepository.findById(카트_서해));
         Order order1 = new Order(member, cartItems1, Coupon.EMPTY);
         Order order2 = new Order(member, cartItems2, Coupon.EMPTY);
-        Long orderId1 = orderRepository.saveOrder(order1);
-        Long orderId2 = orderRepository.saveOrder(order2);
-        orderProductRepository.saveOrderProductsByOrderId(orderId1,order1);
-        orderProductRepository.saveOrderProductsByOrderId(orderId2,order2);
+        Long orderId1 = orderRepository.save(order1);
+        Long orderId2 = orderRepository.save(order2);
+        orderProductRepository.save(orderId1,order1);
+        orderProductRepository.save(orderId2,order2);
 
         List<Order> orders = orderRepository.findAllByMemberId(member);
 
@@ -91,20 +91,20 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("특정 사용자의 특정 주문을 조회한다.")
     void findByOrderId() {
-        Member member = memberDao.getMemberById(1L);
-        Long 오션 = productRepository.createProduct(new Product("오션", 1000, "ocean.jpg"));
-        Long 바다 = productRepository.createProduct(new Product("바다", 100, "바다.jpg"));
-        CartItem cartItem1 = new CartItem(1L, 1, productRepository.getProductById(오션), member);
-        CartItem cartItem2 = new CartItem(2L, 1, productRepository.getProductById(바다), member);
+        Member member = memberDao.findById(1L);
+        Long 오션 = productRepository.save(new Product("오션", 1000, "ocean.jpg"));
+        Long 바다 = productRepository.save(new Product("바다", 100, "바다.jpg"));
+        CartItem cartItem1 = new CartItem(1L, 1, productRepository.findById(오션), member);
+        CartItem cartItem2 = new CartItem(2L, 1, productRepository.findById(바다), member);
         Long 카트_오션 = cartItemRepository.save(cartItem1);
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
-        Long orderId1 = orderRepository.saveOrder(requestOrder);
-        orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
+        Long orderId1 = orderRepository.save(requestOrder);
+        orderProductRepository.save(orderId1,requestOrder);
 
-        Order order = orderRepository.findByOrderId(member, orderId1);
+        Order order = orderRepository.findByIdAndMemberId(member, orderId1);
 
         assertAll(
                 () -> assertThat(order.getMember()).usingRecursiveComparison().isEqualTo(member),
@@ -116,42 +116,42 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("특정 사용자의 특정 주문을 취소한다.")
     void deleteOrder() {
-        Member member = memberDao.getMemberById(1L);
-        Long 오션 = productRepository.createProduct(new Product("오션", 1000, "ocean.jpg"));
-        Long 바다 = productRepository.createProduct(new Product("바다", 100, "바다.jpg"));
-        CartItem cartItem1 = new CartItem(1L, 1, productRepository.getProductById(오션), member);
-        CartItem cartItem2 = new CartItem(2L, 1, productRepository.getProductById(바다), member);
+        Member member = memberDao.findById(1L);
+        Long 오션 = productRepository.save(new Product("오션", 1000, "ocean.jpg"));
+        Long 바다 = productRepository.save(new Product("바다", 100, "바다.jpg"));
+        CartItem cartItem1 = new CartItem(1L, 1, productRepository.findById(오션), member);
+        CartItem cartItem2 = new CartItem(2L, 1, productRepository.findById(바다), member);
         Long 카트_오션 = cartItemRepository.save(cartItem1);
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
-        Long orderId1 = orderRepository.saveOrder(requestOrder);
-        orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
+        Long orderId1 = orderRepository.save(requestOrder);
+        orderProductRepository.save(orderId1,requestOrder);
 
-        assertDoesNotThrow(()->orderRepository.deleteOrder(requestOrder.getId()));
+        assertDoesNotThrow(()->orderRepository.deleteById(requestOrder.getId()));
     }
 
     @Test
     @DisplayName("특정 사용자의 주문을 확정한다.")
     void confirmOrder() {
-        Member member = memberDao.getMemberById(1L);
-        Long 오션 = productRepository.createProduct(new Product("오션", 1000, "ocean.jpg"));
-        Long 바다 = productRepository.createProduct(new Product("바다", 100, "바다.jpg"));
-        CartItem cartItem1 = new CartItem(1L, 1, productRepository.getProductById(오션), member);
-        CartItem cartItem2 = new CartItem(2L, 1, productRepository.getProductById(바다), member);
+        Member member = memberDao.findById(1L);
+        Long 오션 = productRepository.save(new Product("오션", 1000, "ocean.jpg"));
+        Long 바다 = productRepository.save(new Product("바다", 100, "바다.jpg"));
+        CartItem cartItem1 = new CartItem(1L, 1, productRepository.findById(오션), member);
+        CartItem cartItem2 = new CartItem(2L, 1, productRepository.findById(바다), member);
         Long 카트_오션 = cartItemRepository.save(cartItem1);
         Long 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
 
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
-        Long orderId1 = orderRepository.saveOrder(requestOrder);
-        orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
+        Long orderId1 = orderRepository.save(requestOrder);
+        orderProductRepository.save(orderId1,requestOrder);
 
-        orderRepository.confirmOrder(orderId1,member);
+        orderRepository.confirmById(orderId1,member);
         assertAll(
-                ()->assertThat(orderRepository.findByOrderId(member,orderId1).getMember().getEmail()).isEqualTo(member.getEmail()),
-                ()->assertThat(orderRepository.findByOrderId(member,orderId1).calculatePrice()).isEqualTo(requestOrder.calculatePrice())
+                ()->assertThat(orderRepository.findByIdAndMemberId(member,orderId1).getMember().getEmail()).isEqualTo(member.getEmail()),
+                ()->assertThat(orderRepository.findByIdAndMemberId(member,orderId1).calculatePrice()).isEqualTo(requestOrder.calculatePrice())
 
         );
     }

@@ -22,32 +22,32 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveOrder(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Void> save(Member member, @RequestBody OrderRequest orderRequest) {
         Long savedId = orderService.save(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + savedId)).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdersResponse>> getOrders(Member member) {
+    public ResponseEntity<List<OrdersResponse>> findAllByMemberId(Member member) {
         List<OrdersResponse> orders = orderService.findAllByMemberId(member);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrder(Member member, @PathVariable("id") Long id) {
-        OrderResponse order = orderService.findByOrderId(member, id);
+    public ResponseEntity<OrderResponse> findByIdAndMemberId(Member member, @PathVariable("id") Long id) {
+        OrderResponse order = orderService.findByIdAndMemberId(member, id);
         return ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelOrder(Member member, @PathVariable("id") Long id) {
-        orderService.cancelOrder(member, id);
+    public ResponseEntity<Void> deleteById(Member member, @PathVariable("id") Long id) {
+        orderService.deleteById(member, id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/confirm")
-    public ResponseEntity<CouponConfirmResponse> confirmOrder(Member member, @PathVariable("id") Long id) {
-        CouponConfirmResponse response = orderService.confirmOrder(member, id);
+    public ResponseEntity<CouponConfirmResponse> confirmById(Member member, @PathVariable("id") Long id) {
+        CouponConfirmResponse response = orderService.confirmById(member, id);
         return ResponseEntity.ok(response);
     }
 }

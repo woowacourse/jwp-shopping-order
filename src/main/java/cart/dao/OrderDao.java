@@ -40,12 +40,12 @@ public class OrderDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
-    public Long saveOrder(OrderEntity orderEntity) {
+    public Long save(OrderEntity orderEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(orderEntity);
         return insertAction.executeAndReturnKey(params).longValue();
     }
 
-    public Optional<OrderEntity> findByOrderId(Long memberId, Long orderId) {
+    public Optional<OrderEntity> findByIdAndMemberId(Long memberId, Long orderId) {
         try {
             String sql = "select * from orders where id = ? and member_id = ?";
 
@@ -55,19 +55,19 @@ public class OrderDao {
         }
     }
 
-    public void deleteOrderById(Long orderId) {
+    public void deleteById(Long orderId) {
         String sql = "delete from orders where id = ?";
 
         jdbcTemplate.update(sql, orderId);
     }
 
-    public void confirmOrder(Long orderId, Long memberId) {
+    public void confirmByOrderIdAndMemberId(Long orderId, Long memberId) {
         String sql = "UPDATE orders SET confirm_state = ? WHERE id = ? and member_id = ?";
 
         jdbcTemplate.update(sql, true, orderId, memberId);
     }
 
-    public boolean checkConfirmState(Long orderId) {
+    public boolean checkConfirmStateById(Long orderId) {
         String sql = "select exists(select * from orders where id = ? and confirm_state = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, orderId, true);

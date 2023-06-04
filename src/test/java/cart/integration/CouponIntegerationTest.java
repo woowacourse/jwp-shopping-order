@@ -30,7 +30,7 @@ class CouponIntegerationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-        member = memberDao.getMemberById(1L);
+        member = memberDao.findById(1L);
     }
 
     @Test

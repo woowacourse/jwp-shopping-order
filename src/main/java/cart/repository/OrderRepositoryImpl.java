@@ -32,8 +32,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Long saveOrder(Order order) {
-        return orderDao.saveOrder(toEntity(order));
+    public Long save(Order order) {
+        return orderDao.save(toEntity(order));
     }
 
     @Override
@@ -43,24 +43,24 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order findByOrderId(Member member, Long orderId) {
-        return toDomain(orderDao.findByOrderId(member.getId(), orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
+    public Order findByIdAndMemberId(Member member, Long orderId) {
+        return toDomain(orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
     }
 
     @Override
-    public void deleteOrder(Long orderId) {
-        orderDao.deleteOrderById(orderId);
+    public void deleteById(Long orderId) {
+        orderDao.deleteById(orderId);
     }
 
     @Override
-    public void confirmOrder(Long orderId, Member member) {
-        OrderEntity orderEntity = orderDao.findByOrderId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
-        orderDao.confirmOrder(orderEntity.getId(), member.getId());
+    public void confirmById(Long orderId, Member member) {
+        OrderEntity orderEntity = orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
+        orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), member.getId());
     }
 
     @Override
-    public boolean checkConfirmState(Long orderId) {
-        return orderDao.checkConfirmState(orderId);
+    public boolean checkConfirmStateById(Long orderId) {
+        return orderDao.checkConfirmStateById(orderId);
     }
 
     private OrderEntity toEntity(Order order) {
@@ -71,12 +71,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private Order toDomain(OrderEntity orderEntity) {
-        Member member = memberDao.getMemberById(orderEntity.getMemberId());
-        List<CartItem> products = orderProductDao.findAllByOrderId(orderEntity.getId()).stream()
+        Member member = memberDao.findById(orderEntity.getMemberId());
+        List<CartItem> products = orderProductDao.findOrderProductByOrderId(orderEntity.getId()).stream()
                 .map(it -> new CartItem(it.getId(), it.getQuantity(),
                         new Product(it.getId(), it.getName(), it.getPrice(), it.getImage_url()), member))
                 .collect(Collectors.toList());
-        CouponEntity couponEntity = orderCouponDao.findCouponByOrderId(orderEntity.getId()).orElse(CouponEntity.EMPTY);
+        CouponEntity couponEntity = orderCouponDao.findByOrderId(orderEntity.getId()).orElse(CouponEntity.EMPTY);
         Coupon coupon = new Coupon(couponEntity.getId(), couponEntity.getName(), DiscountType.from(couponEntity.getDiscountType()),
                 couponEntity.getMinimumPrice(), couponEntity.getDiscountPrice(), couponEntity.getDiscountRate());
         return new Order(orderEntity.getId(), member, products, orderEntity.getConfirmState(), coupon);

@@ -39,17 +39,17 @@ public class OrderService {
             throw new OrderException("주문 상품이 비어있습니다.");
         }
 
-        List<CartItem> cartItems = cartItemRepository.findAllByIds(member, orderRequest.getSelectCartIds());
+        List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectCartIds());
 
         Order order = new Order(
                 member, cartItems,
-                memberCouponRepository.findAvailableCouponByMember(member, orderRequest.getCouponId()));
+                memberCouponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
 
-        Long orderSavedId = orderRepository.saveOrder(order);
-        cartItemRepository.deleteByMemberCartItemIds(member.getId(), cartItems);
-        orderProductRepository.saveOrderProductsByOrderId(orderSavedId, order);
-        memberCouponRepository.changeUserUsedCouponAvailability(order.getCoupon());
-        orderCouponRepository.saveOrderCoupon(orderSavedId, order);
+        Long orderSavedId = orderRepository.save(order);
+        cartItemRepository.deleteByIdsAndMemberId(member.getId(), cartItems);
+        orderProductRepository.save(orderSavedId, order);
+        memberCouponRepository.updateUsedCouponAvailability(order.getCoupon());
+        orderCouponRepository.save(orderSavedId, order);
         return orderSavedId;
     }
 
@@ -61,26 +61,26 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderResponse findByOrderId(Member member, Long orderId) {
-        Order order = orderRepository.findByOrderId(member, orderId);
+    public OrderResponse findByIdAndMemberId(Member member, Long orderId) {
+        Order order = orderRepository.findByIdAndMemberId(member, orderId);
 
         return OrderResponse.of(order);
     }
 
-    public void cancelOrder(Member member, Long orderId) {
-        if (orderRepository.checkConfirmState(orderId)) {
+    public void deleteById(Member member, Long orderId) {
+        if (orderRepository.checkConfirmStateById(orderId)) {
             throw new OrderException("주문 확정 주문은 취소할 수 없습니다.");
         }
-        Long memberCouponId = orderCouponRepository.deleteOrderCoupon(orderId);
+        Long memberCouponId = orderCouponRepository.deleteByOrderId(orderId);
         if (memberCouponId != null) {
-            memberCouponRepository.changeUserUnUsedCouponAvailability(member, memberCouponId);
+            memberCouponRepository.updateUnUsedCouponAvailability(member, memberCouponId);
         }
-        orderRepository.deleteOrder(orderId);
+        orderRepository.deleteById(orderId);
     }
 
-    public CouponConfirmResponse confirmOrder(Member member, Long orderId) {
-        orderRepository.confirmOrder(orderId, member);
-        Coupon coupon = memberCouponRepository.publishBonusCoupon(orderId, member);
+    public CouponConfirmResponse confirmById(Member member, Long orderId) {
+        orderRepository.confirmById(orderId, member);
+        Coupon coupon = memberCouponRepository.saveBonusCoupon(orderId, member);
 
         return CouponConfirmResponse.from(CouponResponse.from(coupon));
     }

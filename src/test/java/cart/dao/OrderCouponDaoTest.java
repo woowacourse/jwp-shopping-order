@@ -31,43 +31,43 @@ class OrderCouponDaoTest {
     @Test
     @DisplayName("주문시 사용한 쿠폰을 저장한다.")
     void saveOrderCoupon() {
-        Long userCouponId = memberCouponDao.createUserCoupon(new MemberCouponEntity(1L, 1L, true));
-        Long orderId = orderDao.saveOrder(new OrderEntity(1L, 1000, 1000));
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(1L, 1L, true));
+        Long orderId = orderDao.save(new OrderEntity(1L, 1000, 1000));
 
-        orderCouponDao.saveOrderCoupon(orderId, userCouponId);
+        orderCouponDao.save(orderId, userCouponId);
 
-        assertThat(orderCouponDao.checkOrderCouponByOrderId(orderId)).isTrue();
+        assertThat(orderCouponDao.checkByOrderId(orderId)).isTrue();
     }
 
     @Test
     @DisplayName("주문시 사용한 쿠폰을 삭제한다.")
     void deleteOrderCoupon() {
-        Long userCouponId = memberCouponDao.createUserCoupon(new MemberCouponEntity(1L, 1L, true));
-        Long orderId = orderDao.saveOrder(new OrderEntity(1L, 1000, 1000));
-        orderCouponDao.saveOrderCoupon(orderId, userCouponId);
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(1L, 1L, true));
+        Long orderId = orderDao.save(new OrderEntity(1L, 1000, 1000));
+        orderCouponDao.save(orderId, userCouponId);
 
-        orderCouponDao.deleteOrderCoupon(orderId);
+        orderCouponDao.deleteByOrderId(orderId);
 
-        assertThat(orderCouponDao.checkOrderCouponByOrderId(orderId)).isFalse();
+        assertThat(orderCouponDao.checkByOrderId(orderId)).isFalse();
     }
 
     @Test
     @DisplayName("주문 id로 사용한 쿠폰을 찾을 수 있다.")
     void findByOrderId() {
-        Long userCouponId = memberCouponDao.createUserCoupon(new MemberCouponEntity(1L, 1L, true));
-        Long orderId = orderDao.saveOrder(new OrderEntity(1L, 1000, 1000));
-        orderCouponDao.saveOrderCoupon(orderId, userCouponId);
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(1L, 1L, true));
+        Long orderId = orderDao.save(new OrderEntity(1L, 1000, 1000));
+        orderCouponDao.save(orderId, userCouponId);
 
-        assertDoesNotThrow(() -> orderCouponDao.findByOrderId(orderId));
+        assertDoesNotThrow(() -> orderCouponDao.findIdByOrderId(orderId));
     }
 
     @Test
     @DisplayName("주문 id로 주문 시 사용한 쿠폰 유무를 확인할 수 있다.")
     void checkOrderCouponByOrderId() {
-        Long userCouponId = memberCouponDao.createUserCoupon(new MemberCouponEntity(1L, 1L, true));
-        Long orderId = orderDao.saveOrder(new OrderEntity(1L, 1000, 1000));
-        orderCouponDao.saveOrderCoupon(orderId, userCouponId);
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(1L, 1L, true));
+        Long orderId = orderDao.save(new OrderEntity(1L, 1000, 1000));
+        orderCouponDao.save(orderId, userCouponId);
 
-        assertThat(orderCouponDao.checkOrderCouponByOrderId(orderId)).isTrue();
+        assertThat(orderCouponDao.checkByOrderId(orderId)).isTrue();
     }
 }

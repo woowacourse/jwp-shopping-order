@@ -37,29 +37,29 @@ class OrderDaoTest {
     @Test
     @DisplayName("주문을 저장한다.")
     void saveOrder() {
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.findById(1L);
         final OrderEntity orderEntity = new OrderEntity(member.getId(), member.getId(), 10000, 10000, false);
 
-        assertDoesNotThrow(() -> orderDao.saveOrder(orderEntity));
+        assertDoesNotThrow(() -> orderDao.save(orderEntity));
     }
 
     @Test
     @DisplayName("주문을 조회한다.")
     void findAllByMember() {
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.findById(1L);
         OrderEntity orderEntity = new OrderEntity(member.getId(), member.getId(), 10000, 10000, false);
-        Long orderId = orderDao.saveOrder(orderEntity);
+        Long orderId = orderDao.save(orderEntity);
         assertAll(
-                () -> assertThat(orderDao.findByOrderId(member.getId(), orderId).get().getOriginalPrice()).isEqualTo(10000),
-                () -> assertThat(orderDao.findByOrderId(member.getId(), orderId).get().getConfirmState()).isEqualTo(false),
-                () -> assertThat(orderDao.findByOrderId(member.getId(), orderId).get().getMemberId()).isEqualTo(member.getId())
+                () -> assertThat(orderDao.findByIdAndMemberId(member.getId(), orderId).get().getOriginalPrice()).isEqualTo(10000),
+                () -> assertThat(orderDao.findByIdAndMemberId(member.getId(), orderId).get().getConfirmState()).isEqualTo(false),
+                () -> assertThat(orderDao.findByIdAndMemberId(member.getId(), orderId).get().getMemberId()).isEqualTo(member.getId())
         );
     }
 
     @Test
     @DisplayName("특정 사용자의 주문을 모두 조회한다.")
     void findAllByMemberId() {
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.findById(1L);
         createProduct();
         Long savedOrderId = createOrder(member);
         saveOrderProduct(savedOrderId);
@@ -76,14 +76,14 @@ class OrderDaoTest {
     @Test
     @DisplayName("특정 사용자의 특정 주문을 조회한다.")
     void findByOrderId() {
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.findById(1L);
         createProduct();
         Long savedOrderId1 = createOrder(member);
         saveOrderProduct(savedOrderId1);
         Long savedOrderId2 = createOrder(member);
         saveOrderProduct(savedOrderId2);
 
-        OrderEntity order = orderDao.findByOrderId(member.getId(), savedOrderId1).get();
+        OrderEntity order = orderDao.findByIdAndMemberId(member.getId(), savedOrderId1).get();
 
         assertAll(
                 () -> assertThat(order.getMemberId()).isEqualTo(member.getId()),
@@ -95,39 +95,39 @@ class OrderDaoTest {
     @Test
     @DisplayName("특정 사용자의 특정 주문을 취소한다.")
     void cancelOrder() {
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.findById(1L);
         createProduct();
         Long savedOrderId1 = createOrder(member);
         saveOrderProduct(savedOrderId1);
 
-        assertDoesNotThrow(() -> orderDao.deleteOrderById(savedOrderId1));
+        assertDoesNotThrow(() -> orderDao.deleteById(savedOrderId1));
     }
 
     @Test
     @DisplayName("특정 사용자의 특정 주문을 확정한다.")
     void confirmOrder() {
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.findById(1L);
         createProduct();
         Long savedOrderId1 = createOrder(member);
         saveOrderProduct(savedOrderId1);
-        orderDao.confirmOrder(savedOrderId1, member.getId());
-        assertThat(orderDao.checkConfirmState(savedOrderId1)).isTrue();
+        orderDao.confirmByOrderIdAndMemberId(savedOrderId1, member.getId());
+        assertThat(orderDao.checkConfirmStateById(savedOrderId1)).isTrue();
     }
 
     private void saveOrderProduct(Long savedOrderId) {
         List<OrderProductEntity> orderProducts = List.of(new OrderProductEntity(1L, "오션", "오션.com", 10000, 1, savedOrderId));
 
-        orderProductDao.saveOrderProductsByOrderId(savedOrderId, orderProducts);
+        orderProductDao.save(savedOrderId, orderProducts);
     }
 
     private Long createOrder(Member member) {
         OrderEntity orderEntity = new OrderEntity(member.getId(), 10000, 10000);
-        Long savedOrderId = orderDao.saveOrder(orderEntity);
+        Long savedOrderId = orderDao.save(orderEntity);
         return savedOrderId;
     }
 
     private void createProduct() {
         Product product = new Product("오션", 10000, "오션.com");
-        productDao.createProduct(product);
+        productDao.save(product);
     }
 }

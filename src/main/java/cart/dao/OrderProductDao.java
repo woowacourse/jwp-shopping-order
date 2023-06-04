@@ -27,7 +27,7 @@ public class OrderProductDao {
                     rs.getLong("order_id")
             );
 
-    public void saveOrderProductsByOrderId(Long orderSavedId, List<OrderProductEntity> orderProducts) {
+    public void save(Long orderSavedId, List<OrderProductEntity> orderProducts) {
         String sql = "Insert into order_product (name,image_url,price,quantity,order_id) VALUES (?,?,?,?,?)";
 
         jdbcTemplate.batchUpdate(sql, orderProducts, orderProducts.size(),
@@ -40,7 +40,7 @@ public class OrderProductDao {
                 });
     }
 
-    public List<OrderProductEntity> findAllByOrderId(Long orderId) {
+    public List<OrderProductEntity> findOrderProductByOrderId(Long orderId) {
         String sql = "Select * from order_product where order_id = ?";
 
         return jdbcTemplate.query(sql, rowMapper, orderId);

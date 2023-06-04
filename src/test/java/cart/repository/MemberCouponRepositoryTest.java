@@ -34,10 +34,10 @@ class MemberCouponRepositoryTest {
     @DisplayName("사용자의 유효한 쿠폰을 조회한다.")
     void findAvailableCouponByMember() {
         Member member = new Member(1L, "a@a", "123");
-        Long orderId = orderRepository.saveOrder(new Order(member, List.of(new CartItem(member, new Product("오션", 10000, "ocean.com"))),
-                couponRepository.findAllCoupons().get(0)));
-        Coupon publishBonusCoupon = memberCouponRepository.publishBonusCoupon(orderId, member);
-        Coupon coupon = memberCouponRepository.findAvailableCouponByMember(member, publishBonusCoupon.getId());
+        Long orderId = orderRepository.save(new Order(member, List.of(new CartItem(member, new Product("오션", 10000, "ocean.com"))),
+                couponRepository.findAll().get(0)));
+        Coupon publishBonusCoupon = memberCouponRepository.saveBonusCoupon(orderId, member);
+        Coupon coupon = memberCouponRepository.findAvailableCouponByIdAndMemberId(member, publishBonusCoupon.getId());
 
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("주문확정_1000원_할인_보너스쿠폰"),
@@ -50,21 +50,21 @@ class MemberCouponRepositoryTest {
     @DisplayName("사용자의 쿠폰을 사용완료 상태로 바꾼다.")
     void changeUserUsedCouponAvailability() {
         Member member = new Member(1L, "a@a", "123");
-        Long couponId = couponRepository.publishUserCoupon(member, 1L);
-        Coupon coupon = memberCouponRepository.findAvailableCouponByMember(member, couponId);
+        Long couponId = couponRepository.save(member, 1L);
+        Coupon coupon = memberCouponRepository.findAvailableCouponByIdAndMemberId(member, couponId);
 
-        memberCouponRepository.changeUserUsedCouponAvailability(coupon);
+        memberCouponRepository.updateUsedCouponAvailability(coupon);
 
-        assertThat(memberCouponRepository.findAvailableCouponByMember(member, couponId)).usingRecursiveComparison().isEqualTo(Coupon.EMPTY);
+        assertThat(memberCouponRepository.findAvailableCouponByIdAndMemberId(member, couponId)).usingRecursiveComparison().isEqualTo(Coupon.EMPTY);
     }
 
     @Test
     @DisplayName("사용자가 보유중인 쿠폰을 조회한다.")
     void findMemberCoupons() {
         Member member = new Member(1L, "a@a", "123");
-        Long couponId = couponRepository.publishUserCoupon(member, 1L);
+        Long couponId = couponRepository.save(member, 1L);
 
-        List<Coupon> coupons = memberCouponRepository.findMemberCoupons(member);
+        List<Coupon> coupons = memberCouponRepository.findAllByMemberId(member);
 
         assertAll(
                 () -> assertThat(coupons.get(0).getName()).isEqualTo("5000원 할인 쿠폰"),
@@ -77,12 +77,12 @@ class MemberCouponRepositoryTest {
     @DisplayName("사용자의 쿠폰을 사용이전 상태로 바꾼다.")
     void changeUserUnUsedCouponAvailability() {
         Member member = new Member(1L, "a@a", "123");
-        Long couponId = couponRepository.publishUserCoupon(member, 1L);
-        Coupon coupon = memberCouponRepository.findAvailableCouponByMember(member, couponId);
+        Long couponId = couponRepository.save(member, 1L);
+        Coupon coupon = memberCouponRepository.findAvailableCouponByIdAndMemberId(member, couponId);
 
-        memberCouponRepository.changeUserUsedCouponAvailability(coupon);
-        memberCouponRepository.changeUserUnUsedCouponAvailability(member, couponId);
-        Coupon memberCoupon = memberCouponRepository.findAvailableCouponByMember(member, couponId);
+        memberCouponRepository.updateUsedCouponAvailability(coupon);
+        memberCouponRepository.updateUnUsedCouponAvailability(member, couponId);
+        Coupon memberCoupon = memberCouponRepository.findAvailableCouponByIdAndMemberId(member, couponId);
         assertAll(
                 () -> assertThat(memberCoupon.getName()).isEqualTo("5000원 할인 쿠폰"),
                 () -> assertThat(memberCoupon.getCouponTypes().getCouponTypeName()).isEqualTo("deduction"),
@@ -94,11 +94,11 @@ class MemberCouponRepositoryTest {
     @DisplayName("사용자에게 보너스 쿠폰을 지급한다.")
     void publishBonusCoupon() {
         Member member = new Member(1L, "a@a", "123");
-        Long orderId = orderRepository.saveOrder(new Order(member, List.of(new CartItem(member, new Product("오션", 10000, "ocean.com"))),
-                couponRepository.findAllCoupons().get(0)));
+        Long orderId = orderRepository.save(new Order(member, List.of(new CartItem(member, new Product("오션", 10000, "ocean.com"))),
+                couponRepository.findAll().get(0)));
 
-        Coupon coupon = memberCouponRepository.publishBonusCoupon(orderId, member);
-        Coupon memberCoupon = memberCouponRepository.findAvailableCouponByMember(member, coupon.getId());
+        Coupon coupon = memberCouponRepository.saveBonusCoupon(orderId, member);
+        Coupon memberCoupon = memberCouponRepository.findAvailableCouponByIdAndMemberId(member, coupon.getId());
 
         assertAll(
                 () -> assertThat(memberCoupon.getName()).isEqualTo("주문확정_1000원_할인_보너스쿠폰"),

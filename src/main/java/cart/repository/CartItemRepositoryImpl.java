@@ -30,7 +30,6 @@ public class CartItemRepositoryImpl implements CartItemRepository {
 
     @Override
     public List<CartItem> findByMemberId(Long id) {
-
         return cartItemDao.findByMemberId(id).stream()
                 .map(this::toDomain).collect(Collectors.toList());
     }
@@ -57,17 +56,17 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     }
 
     @Override
-    public List<CartItem> findAllByIds(Member member, List<Long> cartProductIds) {
-        return cartItemDao.findAllByIds(member.getId(), cartProductIds).stream()
+    public List<CartItem> findAllByIdsAndMemberId(Member member, List<Long> cartProductIds) {
+        return cartItemDao.findAllByIdsAndMemberId(member.getId(), cartProductIds).stream()
                 .map(this::toDomain).collect(Collectors.toList());
     }
 
     @Override
-    public void deleteByMemberCartItemIds(Long memberId, List<CartItem> cartItems) {
+    public void deleteByIdsAndMemberId(Long memberId, List<CartItem> cartItems) {
         List<Long> cartItemIds = cartItems.stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
-        cartItemDao.deleteByMemberCartItemIds(memberId, cartItemIds);
+        cartItemDao.deleteByIdsAndMemberId(memberId, cartItemIds);
     }
 
     private CartItemEntity toEntity(CartItem cartItem) {
@@ -76,13 +75,13 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     }
 
     private CartItem toDomain(CartItemEntity entity) {
-        ProductEntity productEntity = productDao.getProductById(entity.getProductId())
+        ProductEntity productEntity = productDao.findById(entity.getProductId())
                 .orElseThrow(() -> new ProductException("잘못된 상품 입니다."));
 
         Product product = new Product(productEntity.getId(), productEntity.getName(),
                 productEntity.getPrice(), productEntity.getImageUrl());
 
-        Member member = memberDao.getMemberById(entity.getMemberId());
+        Member member = memberDao.findById(entity.getMemberId());
 
         return new CartItem(entity.getId(), entity.getQuantity(), product, member);
     }

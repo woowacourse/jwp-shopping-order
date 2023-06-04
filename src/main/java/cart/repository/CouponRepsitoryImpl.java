@@ -26,28 +26,28 @@ public class CouponRepsitoryImpl implements CouponRepository {
     }
 
     @Override
-    public Long publishUserCoupon(Member member, Long couponId) {
-        if (!couponDao.checkCouponById(couponId)) {
+    public Long save(Member member, Long couponId) {
+        if (!couponDao.checkById(couponId)) {
             throw new CouponException("해당 쿠폰을 찾을 수 없습니다.");
         }
 
-        if (memberCouponDao.checkMemberCouponById(member.getId(), couponId)) {
+        if (memberCouponDao.checkByCouponIdAndMemberId(member.getId(), couponId)) {
             throw new CouponException("이미 존재하는 쿠폰입니다.");
         }
 
-        return memberCouponDao.createUserCoupon(new MemberCouponEntity(couponId, member.getId(), true));
+        return memberCouponDao.save(new MemberCouponEntity(couponId, member.getId(), true));
     }
 
     @Override
-    public List<Coupon> getUserCoupon(Member member) {
-        return memberCouponDao.findCouponByMemberId(member.getId()).stream()
+    public List<Coupon> findByMemberId(Member member) {
+        return memberCouponDao.findAllByMemberId(member.getId()).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Coupon> findAllCoupons() {
-        return couponDao.findAllCoupons().stream()
+    public List<Coupon> findAll() {
+        return couponDao.findAll().stream()
                 .map(this::toDomain).collect(Collectors.toList());
     }
 

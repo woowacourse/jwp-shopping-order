@@ -15,18 +15,18 @@ public class OrderCouponRepositoryImpl implements OrderCouponRepository {
     }
 
     @Override
-    public void saveOrderCoupon(Long orderId, Order order) {
+    public void save(Long orderId, Order order) {
         if (DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
             return;
         }
-        orderCouponDao.saveOrderCoupon(orderId, order.getCoupon().getId());
+        orderCouponDao.save(orderId, order.getCoupon().getId());
     }
 
     @Override
-    public Long deleteOrderCoupon(Long orderId) {
-        if (orderCouponDao.checkOrderCouponByOrderId(orderId)) {
-            Long memberCouponId = orderCouponDao.findByOrderId(orderId);
-            orderCouponDao.deleteOrderCoupon(orderId);
+    public Long deleteByOrderId(Long orderId) {
+        if (orderCouponDao.checkByOrderId(orderId)) {
+            Long memberCouponId = orderCouponDao.findIdByOrderId(orderId);
+            orderCouponDao.deleteByOrderId(orderId);
             return memberCouponId;
         }
         return null;
