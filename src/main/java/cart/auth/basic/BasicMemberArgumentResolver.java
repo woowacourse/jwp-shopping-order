@@ -1,21 +1,26 @@
-package cart.ui.argumentresolver;
+package cart.auth.basic;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import cart.exception.MemberException;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+import java.util.List;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
+public class BasicMemberArgumentResolver implements HandlerMethodArgumentResolver {
+    private static final int USERNAME_AND_PASSWORD_SIZE = 2;
+    private static final int USERNAME = 0;
+    private static final int PASSWORD = 1;
     private final MemberDao memberDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
+    public BasicMemberArgumentResolver(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
@@ -26,30 +31,19 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            throw new AuthenticationException("현재 입력된 사용자 정보가 없습니다.");
+        List<String> usernameAndPassword = BasicDecoder.decode(webRequest.getHeader(AUTHORIZATION));
+        if (usernameAndPassword.size() != USERNAME_AND_PASSWORD_SIZE) {
+            throw new AuthenticationException("basic 인증 도중에 예외가 발생하였습니다.");
         }
 
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다.");
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
-
-        // 본인 여부 확인
+        String email = usernameAndPassword.get(USERNAME);
+        String password = usernameAndPassword.get(PASSWORD);
         Member member = memberDao.getByMemberEmail(email)
                 .orElseThrow(MemberException.NotFound::new)
                 .toDomain();
 
         if (!member.isSamePassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("회원 정보가 일치하지 않습니다.");
         }
 
         return member;
