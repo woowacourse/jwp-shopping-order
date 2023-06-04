@@ -27,14 +27,14 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> findOrdersByMember(Member member) {
-        List<OrderResponse> orderResponses = orderService.findOrdersByMemberId(member.getId());
+    public ResponseEntity<List<OrderResponse>> getOrders(Member member) {
+        List<OrderResponse> orderResponses = orderService.getOrders(member.getId());
         return ResponseEntity.ok().body(orderResponses);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> findOrderById(Member member, @PathVariable final Long orderId) {
-        OrderResponse orderResponse = orderService.findOrderById(member, orderId);
+    public ResponseEntity<OrderResponse> getOrder(Member member, @PathVariable final Long orderId) {
+        OrderResponse orderResponse = orderService.getOrder(member, orderId);
         return ResponseEntity.ok().body(orderResponse);
     }
 }

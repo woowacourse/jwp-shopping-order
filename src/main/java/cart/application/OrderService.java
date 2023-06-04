@@ -59,13 +59,13 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public OrderResponse findOrderById(final Member member, final Long orderId) {
+    public OrderResponse getOrder(final Member member, final Long orderId) {
         Order order = orderRepository.findById(orderId);
         order.checkOwner(member);
         return new OrderResponse(order);
     }
 
-    public List<OrderResponse> findOrdersByMemberId(final Long memberId) {
+    public List<OrderResponse> getOrders(final Long memberId) {
         List<Order> orders = orderRepository.findByMemberId(memberId);
         return orders.stream()
                 .map(OrderResponse::new)

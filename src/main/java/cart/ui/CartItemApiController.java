@@ -22,8 +22,8 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+    public ResponseEntity<List<CartItemResponse>> getCartItems(Member member) {
+        return ResponseEntity.ok(cartItemService.getCartItems(member));
     }
 
     @PostMapping
