@@ -33,6 +33,12 @@ public class Cart {
 		return new ArrayList<>(cartItems.values());
 	}
 
+	public Optional<CartItem> getCartItemByProductId(final Long productId) {
+		return getCartItems().stream()
+			.filter(cartItem -> cartItem.getProductId().equals(productId))
+			.findFirst();
+	}
+
 	private static Map<Long, CartItem> cartItemsToMapById(final List<CartItem> cartItems) {
 		return cartItems.stream()
 			.collect(Collectors.toMap(CartItem::getId, Function.identity()));

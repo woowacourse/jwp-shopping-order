@@ -3,6 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +14,9 @@ import org.springframework.http.MediaType;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
-import cart.ui.order.dto.OrderDetailResponse;
-import cart.ui.order.dto.OrderRequest;
-import cart.ui.order.dto.OrderResponse;
+import cart.application.order.dto.OrderDetailResponse;
+import cart.application.order.dto.OrderRequest;
+import cart.application.order.dto.OrderResponse;
 
 public class OrderIntegrationTest extends IntegrationTest {
 
@@ -69,7 +70,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 		//then
 		assertThat(orderDetailResponse.getOrderId()).isEqualTo(orderId);
 		assertThat(orderDetailResponse.getProducts()).hasSize(3);
-		assertThat(orderDetailResponse.getTotalPrice()).isEqualTo(585400L);
+		assertThat(orderDetailResponse.getTotalPrice()).isEqualTo(BigDecimal.valueOf(585400L));
 	}
 
 	@Test
@@ -78,11 +79,11 @@ public class OrderIntegrationTest extends IntegrationTest {
 		//given
 		final Member member = memberRepository.findById(1L).get();
 		final List<Long> cartItemIdList = List.of(1L, 2L);
-		final long totalPrice = 380400L;
-		final long deliveryFee = 3000L;
+		final BigDecimal totalPrice = BigDecimal.valueOf(380400L);
+		final BigDecimal deliveryFee = BigDecimal.valueOf(3000L);
 
 		//when
-		final OrderRequest orderRequest = new OrderRequest(cartItemIdList, totalPrice, deliveryFee);
+		final OrderRequest orderRequest = new OrderRequest(cartItemIdList, totalPrice, deliveryFee, null);
 
 		final String location = given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -99,9 +100,27 @@ public class OrderIntegrationTest extends IntegrationTest {
 		assertThat(location).isNotNull();
 	}
 
+
 	@Test
 	@DisplayName("주문을 취소한다.")
 	void cancelOrderTest() {
+	    //given
+		final Member member = memberRepository.findById(1L).get();
+		final long orderId = 3L;
+
+	    //when
+		given().log().all()
+			.auth().preemptive().basic(member.getEmail(), member.getPassword())
+			.when()
+			.patch("/orders/{orderId}", orderId)
+			.then()
+			.log().all()
+			.statusCode(HttpStatus.OK.value());
+	}
+
+	@Test
+	@DisplayName("주문 내역을 삭제한다.")
+	void deleteOrderHistoryTest() {
 		// given
 		final Member member = memberRepository.findById(1L).get();
 		final long orderId = 1L;

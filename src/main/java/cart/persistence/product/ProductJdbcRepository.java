@@ -1,7 +1,6 @@
 package cart.persistence.product;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,9 +32,9 @@ public class ProductJdbcRepository implements ProductRepository {
 
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = connection.prepareStatement(sql, new String[] {"ID"});
 			ps.setString(1, product.getName());
-			ps.setLong(2, product.getPrice());
+			ps.setBigDecimal(2, product.getPrice());
 			ps.setString(3, product.getImageUrl());
 			return ps;
 		}, keyHolder);

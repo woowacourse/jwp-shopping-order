@@ -31,7 +31,7 @@ public class Orders {
 
 	public List<Order> getOrders() {
 		return orders.values().stream()
-			.sorted(Comparator.comparing(Order::getId).reversed())
+			.sorted(Comparator.comparing(Order::getCreatedAt).reversed())
 			.collect(Collectors.toList());
 	}
 

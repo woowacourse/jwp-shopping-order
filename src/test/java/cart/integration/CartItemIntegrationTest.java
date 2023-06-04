@@ -3,6 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +18,11 @@ import org.springframework.http.MediaType;
 
 import cart.domain.member.Member;
 import cart.persistence.member.MemberJdbcRepository;
-import cart.ui.cart.dto.CartItemQuantityUpdateRequest;
-import cart.ui.cart.dto.CartItemRemoveRequest;
-import cart.ui.cart.dto.CartItemRequest;
-import cart.ui.cart.dto.CartItemResponse;
-import cart.ui.product.dto.ProductRequest;
+import cart.application.cart.dto.CartItemQuantityUpdateRequest;
+import cart.application.cart.dto.CartItemRemoveRequest;
+import cart.application.cart.dto.CartItemRequest;
+import cart.application.cart.dto.CartItemResponse;
+import cart.application.product.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
@@ -39,8 +40,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
 	void setUp() {
 		super.setUp();
 
-		productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg"));
-		productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg"));
+		productId = createProduct(
+			new ProductRequest("치킨", BigDecimal.valueOf(10_000L), "http://example.com/chicken.jpg"));
+		productId2 = createProduct(
+			new ProductRequest("피자", BigDecimal.valueOf(15_000L), "http://example.com/pizza.jpg"));
 
 		member = memberJdbcRepository.findById(1L).get();
 		member2 = memberJdbcRepository.findById(2L).get();
@@ -62,7 +65,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 		CartItemRequest cartItemRequest = new CartItemRequest(productId);
 		ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
-		assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 	}
 
 	@DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
@@ -127,7 +130,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
 		ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
 
-		assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
 	}
 
 	@DisplayName("장바구니에 담긴 아이템을 삭제한다.")

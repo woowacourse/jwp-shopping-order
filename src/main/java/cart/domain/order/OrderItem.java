@@ -1,5 +1,7 @@
 package cart.domain.order;
 
+import java.math.BigDecimal;
+
 import cart.domain.cart.CartItem;
 import cart.domain.product.Product;
 
@@ -19,8 +21,8 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 
-	public Long calculatePrice() {
-		return product.getPrice() * quantity;
+	public BigDecimal calculatePrice() {
+		return product.getPrice().multiply(BigDecimal.valueOf(quantity));
 	}
 
 	public Long getId() {

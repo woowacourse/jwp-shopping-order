@@ -1,7 +1,7 @@
 package cart.persistence.order;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,12 +14,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.domain.order.DeliveryFee;
+import cart.domain.coupon.type.CouponInfo;
+import cart.domain.monetary.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
+import cart.domain.order.OrderStatus;
 import cart.domain.product.Product;
-import cart.error.exception.OrderException;
+import cart.error.exception.ForbiddenException;
 
 @Transactional
 @Repository
@@ -64,21 +66,29 @@ public class OrderJdbcRepository implements OrderRepository {
 	}
 
 	@Override
+	public void updateStatus(final Order order) {
+		final String sql = "UPDATE orders SET order_status = ? WHERE id = ? ";
+		jdbcTemplate.update(sql, order.getOrderStatus().name(), order.getId());
+
+	}
+
+	@Override
 	public void deleteById(final Long id) {
-			final String itemSql = "DELETE FROM order_item WHERE order_id = ?";
-			jdbcTemplate.update(itemSql, id);
+		final String itemSql = "DELETE FROM order_item WHERE order_id = ?";
+		jdbcTemplate.update(itemSql, id);
 		final String orderSql = "DELETE FROM orders WHERE id = ?";
 		jdbcTemplate.update(orderSql, id);
 	}
 
 	private Long insertOrder(final Long memberId, final Order order) {
-		final String orderSql = "INSERT INTO orders (member_id, delivery_fee) VALUES (?, ?)";
+		final String orderSql = "INSERT INTO orders (member_id, coupon_id, delivery_fee) VALUES (?, ?, ?)";
 
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = connection.prepareStatement(orderSql, new String[] {"ID"});
 			ps.setLong(1, memberId);
-			ps.setLong(2, order.getDeliveryFee().getDeliveryFee());
+			ps.setLong(2, order.getCouponInfo().getId());
+			ps.setBigDecimal(3, order.getDeliveryFee());
 			return ps;
 		}, keyHolder);
 
@@ -92,7 +102,7 @@ public class OrderJdbcRepository implements OrderRepository {
 			final Product product = orderItem.getProduct();
 			ps.setLong(1, orderId);
 			ps.setString(2, product.getName());
-			ps.setLong(3, product.getPrice());
+			ps.setBigDecimal(3, product.getPrice());
 			ps.setString(4, product.getImageUrl());
 			ps.setInt(5, orderItem.getQuantity());
 		});
@@ -100,9 +110,13 @@ public class OrderJdbcRepository implements OrderRepository {
 
 	private String createBaseOrderQuery(final String condition) {
 		final String sql =
-			"SELECT orders.id, orders.delivery_fee, order_item.id , order_item.name, order_item.price, order_item.image_url, order_item.quantity "
+			"SELECT orders.id, orders.delivery_fee, "
+				+ "order_item.id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, "
+				+ "orders.coupon_id, coupon.name, coupon.discount_type, coupon.discount, "
+				+ "orders.order_status, orders.created_at "
 				+ "FROM orders "
-				+ "LEFT JOIN order_item ON orders.id = order_item.order_id "
+				+ "JOIN order_item ON orders.id = order_item.order_id "
+				+ "LEFT JOIN coupon ON orders.coupon_id = coupon.id "
 				+ "%s";
 
 		return String.format(sql, condition);
@@ -110,7 +124,7 @@ public class OrderJdbcRepository implements OrderRepository {
 
 	private void validateOrdersExist(final List<OrderJoinItem> orderJoinItems) {
 		if (orderJoinItems.isEmpty()) {
-			throw new OrderException.NotFound();
+			throw new ForbiddenException.Order();
 		}
 	}
 
@@ -128,8 +142,11 @@ public class OrderJdbcRepository implements OrderRepository {
 	private Order convertToOrder(final Long id, final List<OrderJoinItem> orderJoinItems) {
 		final List<OrderItem> orderItems = convertToOrderItem(orderJoinItems);
 		final DeliveryFee deliveryFee = new DeliveryFee(orderJoinItems.get(0).getDeliveryFee());
+		final CouponInfo couponInfo = orderJoinItems.get(0).getCouponInfo();
+		final OrderStatus orderStatus = orderJoinItems.get(0).getOrderStatus();
+		final LocalDateTime createdAt = orderJoinItems.get(0).getCreatedAt();
 
-		return new Order(id, orderItems, deliveryFee);
+		return new Order(id, orderItems, couponInfo, deliveryFee, orderStatus, createdAt);
 	}
 
 	private List<OrderItem> convertToOrderItem(final List<OrderJoinItem> orderJoinItems) {

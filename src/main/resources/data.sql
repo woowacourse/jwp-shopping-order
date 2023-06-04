@@ -60,15 +60,67 @@ VALUES (1, 6, 2);
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 6, 2);
 
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 3000);
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 5000);
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 5000);
 
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (2, 4000);
+
+INSERT INTO coupon (name, discount_type, discount)
+VALUES ('배송비 3000원 할인', 'FIXED_AMOUNT', 3000);
+
+INSERT INTO coupon (name, discount_type, discount)
+VALUES ('신규 가입 할인', 'FIXED_AMOUNT', 5000);
+
+INSERT INTO coupon (name, discount_type, discount)
+VALUES ('여름 맞이 할인', 'FIXED_AMOUNT', 2000);
+
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (1, 'DF-001', true);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (1, 'DF-002', true);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (1, 'DF-003', false);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (2, 'SU-001', false);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (2, 'SU-002', true);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (2, 'SU-003', true);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (3, 'SE-001', false);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (3, 'SE-002', false);
+
+INSERT INTO coupon_serial_number (coupon_id, serial_number, is_issued)
+VALUES (3, 'SE-003', false);
+
+
+
+INSERT INTO member_coupon (member_id, coupon_serial_number_id)
+VALUES (1, 1);
+
+INSERT INTO member_coupon (member_id, coupon_serial_number_id)
+VALUES (2, 2);
+INSERT INTO member_coupon (member_id, coupon_serial_number_id)
+VALUES (2, 5);
+
+INSERT INTO member_coupon (member_id, coupon_serial_number_id)
+VALUES (3, 6);
+
+INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
+VALUES (1, 0, 3000, 'IN_TRANSIT');
+INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
+VALUES (1, 0, 5000, 'CANCELED');
+INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
+VALUES (1, 2, 5000, 'PAID');
+
+INSERT INTO orders (member_id, coupon_id, delivery_fee, order_status)
+VALUES (2, 0, 4000, 'PAID');
 
 -- 1번 주문
 

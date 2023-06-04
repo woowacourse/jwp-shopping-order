@@ -13,7 +13,7 @@ public class ProductRowMapper implements RowMapper<Product> {
 		return new Product(
 			rs.getLong("id"),
 			rs.getString("name"),
-			rs.getLong("price"),
+			rs.getBigDecimal("price"),
 			rs.getString("image_url")
 		);
 	}

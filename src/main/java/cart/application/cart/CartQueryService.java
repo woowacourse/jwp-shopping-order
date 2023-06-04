@@ -6,9 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.application.cart.dto.CartItemDto;
+import cart.application.cart.dto.CartItemResponse;
 import cart.domain.cart.Cart;
-import cart.domain.cart.CartItem;
 import cart.domain.cart.CartRepository;
 
 @Transactional(readOnly = true)
@@ -20,12 +19,11 @@ public class CartQueryService {
 		this.cartRepository = cartRepository;
 	}
 
-	public List<CartItemDto> findByMemberId(final Long memberId) {
+	public List<CartItemResponse> findByMemberId(final Long memberId) {
 		final Cart cart = cartRepository.findByMemberId(memberId);
-		final List<CartItem> cartItems = cart.getCartItems();
 
-		return cartItems.stream()
-			.map(CartItemDto::from)
+		return cart.getCartItems().stream()
+			.map(CartItemResponse::from)
 			.collect(Collectors.toList());
 	}
 

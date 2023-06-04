@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.application.product.dto.ProductDto;
+import cart.application.product.dto.ProductResponse;
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 
@@ -20,18 +20,18 @@ public class ProductQueryService {
 		this.productRepository = productRepository;
 	}
 
-	public List<ProductDto> getAllProducts() {
+	public List<ProductResponse> getAllProducts() {
 		List<Product> products = productRepository.findAll();
 
 		return products.stream()
-			.map(ProductDto::from)
+			.map(ProductResponse::from)
 			.collect(Collectors.toList());
 	}
 
-	public ProductDto getProductById(final Long productId) {
+	public ProductResponse getProductById(final Long productId) {
 		Product product = productRepository.findById(productId)
 			.orElseThrow();
-		return ProductDto.from(product);
+		return ProductResponse.from(product);
 	}
 
 }

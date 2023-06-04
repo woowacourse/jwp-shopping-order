@@ -12,7 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import cart.application.member.MemberQueryService;
 import cart.config.auth.dto.AuthInfo;
 import cart.config.auth.dto.AuthMember;
-import cart.error.exception.AuthenticationException;
+import cart.error.exception.UnauthorizedException;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
@@ -46,7 +46,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
 	private void validateRequest(final HttpServletRequest request) {
 		if (request == null) {
-			throw new AuthenticationException.Unauthorized();
+			throw new UnauthorizedException.Null();
 		}
 	}
 

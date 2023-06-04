@@ -4,11 +4,13 @@ import java.util.List;
 
 public interface OrderRepository {
 
-	Long save(final Long memberId, final Order order);
+	Long save(Long memberId, Order order);
 
-	List<Order> findByMemberId(final Long memberId);
+	List<Order> findByMemberId(Long memberId);
 
 	Order findById(Long id);
+
+	void updateStatus(Order order);
 
 	void deleteById(Long id);
 }

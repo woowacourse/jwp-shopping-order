@@ -2,7 +2,7 @@ package cart.config.auth.dto;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
-import cart.error.exception.AuthenticationException;
+import cart.error.exception.UnauthorizedException;
 
 public class BasicAuthInfo implements AuthInfo {
 
@@ -44,7 +44,7 @@ public class BasicAuthInfo implements AuthInfo {
 
 	private static void validateAuthorization(final String authorization) {
 		if (!authorization.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-			throw new AuthenticationException.Unauthorized();
+			throw new UnauthorizedException.Null();
 		}
 	}
 }
