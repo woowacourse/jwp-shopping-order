@@ -3,7 +3,7 @@ package cart.ui.member;
 import cart.application.member.MemberService;
 import cart.domain.member.Member;
 import cart.domain.value.Password;
-import cart.exception.AuthenticationException;
+import cart.exception.member.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;

@@ -1,9 +1,10 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
+import cart.exception.member.AuthenticationException;
 import cart.exception.bill.BillException;
 import cart.exception.cart.CartItemNotFoundException;
 import cart.exception.cart.IllegalMemberException;
+import cart.exception.member.MemberNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,12 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(IllegalMemberException.class)
     public ResponseEntity<Void> handleException(IllegalMemberException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException exception) {
+        String errorMessage = exception.getMessage();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
