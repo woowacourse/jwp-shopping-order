@@ -10,8 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-import static org.springframework.http.CacheControl.maxAge;
-
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberDao memberDao;
@@ -30,7 +28,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
-                .exposedHeaders(HttpHeaders.LOCATION) // exposed header 지정
+                .exposedHeaders(HttpHeaders.LOCATION)
+                .allowedHeaders("*")// exposed header 지정
                 .maxAge(3000);
+
     }
 }
