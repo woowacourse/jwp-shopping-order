@@ -48,13 +48,12 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
     public Optional<CartItem> findById(Long id) {
         String sql = JOIN_QUERY + "WHERE cart_item.id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-        List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
-            Member member = makeMember(rs);
-            Product product = makeProduct(rs);
-            return makeCartItem(rs, member, product);
-        });
-        return cartItems.stream()
-                .findAny();
+
+        return namedParameterJdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
+            Member member = RowMappingHelper.mapToMember(rs);
+            Product product = RowMappingHelper.mapToProduct(rs);
+            return RowMappingHelper.mapToCartItem(rs, member, product);
+        }).stream().findAny();
     }
 
     @Override
@@ -63,9 +62,9 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 
         return namedParameterJdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
-            Member member = makeMember(rs);
-            Product product = makeProduct(rs);
-            return makeCartItem(rs, member, product);
+            Member member = RowMappingHelper.mapToMember(rs);
+            Product product = RowMappingHelper.mapToProduct(rs);
+            return RowMappingHelper.mapToCartItem(rs, member, product);
         });
     }
 
@@ -95,26 +94,29 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
-    private CartItem makeCartItem(ResultSet rs, Member member, Product product) throws SQLException {
-        Long cartItemId = rs.getLong("cart_item.id");
-        int quantity = rs.getInt("cart_item.quantity");
-        return new CartItem(cartItemId, quantity, product, member);
-    }
+    private static class RowMappingHelper {
 
-    private Product makeProduct(ResultSet rs) throws SQLException {
-        Long productId = rs.getLong("product.id");
-        String name = rs.getString("product.name");
-        int price = rs.getInt("product.price");
-        String imageUrl = rs.getString("product.image_url");
-        Double pointRatio = rs.getDouble("product.point_ratio");
-        Boolean pointAvailable = rs.getBoolean("product.point_available");
-        return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
-    }
+        public static CartItem mapToCartItem(ResultSet rs, Member member, Product product) throws SQLException {
+            Long cartItemId = rs.getLong("cart_item.id");
+            int quantity = rs.getInt("cart_item.quantity");
+            return new CartItem(cartItemId, quantity, product, member);
+        }
 
-    private Member makeMember(ResultSet rs) throws SQLException {
-        Long memberId = rs.getLong("member.id");
-        String email = rs.getString("member.email");
-        Integer point = rs.getInt("member.point");
-        return new Member(memberId, email, null, point);
+        public static Product mapToProduct(ResultSet rs) throws SQLException {
+            Long productId = rs.getLong("product.id");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+            double pointRatio = rs.getDouble("product.point_ratio");
+            boolean pointAvailable = rs.getBoolean("product.point_available");
+            return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
+        }
+
+        public static Member mapToMember(ResultSet rs) throws SQLException {
+            Long memberId = rs.getLong("member.id");
+            String email = rs.getString("member.email");
+            int point = rs.getInt("member.point");
+            return new Member(memberId, email, null, point);
+        }
     }
 }
