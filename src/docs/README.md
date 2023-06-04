@@ -6,9 +6,9 @@
 
 | 구현  | Method |         URL          |   Http 상태코드   |                 Header                  | Request                                                               | Response|      Location       |         설명          |
 |:---:|:------:|:--------------------:|:-------------:|:---------------------------------------:|:----------------------------------------------------------------------|:-------|:-------------------:|:-------------------:|
-|     |  GET   |      `/orders`       |   200 (OK)    | Authorization: basic<br/>email:password | -                                                                     | -      |          -          |   사용자의 주문을 조회한다.    |
+| [x] |  GET   |      `/orders`       |   200 (OK)    | Authorization: basic<br/>email:password | -                                                                     | -      |          -          |   사용자의 주문을 조회한다.    |
 | [x] |  POST  |      `/orders`       | 201 (CREATED) | Authorization: basic<br/>email:password | {<br/><tab/><tab/>"cartIds": [1, 2, 3],<br/><tab/>"point": 1000<br/>} |-| `/orders/{orderId}` |     사용자가 주문한다.      |
-|     |  GET   | `/orders/{orderId}`  |   200 (OK)    | Authorization: basic<br/>email:password | -                                                                     |-|          -          | 해당 주문의 상세 정보를 조회한다. |
+| [x] |  GET   | `/orders/{orderId}`  |   200 (OK)    | Authorization: basic<br/>email:password | -                                                                     |-|          -          | 해당 주문의 상세 정보를 조회한다. |
 | [x] |  GET   | `/members` |   200 (OK)    | Authorization: basic<br/>email:password | -                                                                     |-|          -          |    멤버 정보를 조회한다.     |
 
 
@@ -47,8 +47,7 @@
 
   - 예외
     - 다음의 경우 `400 BAD Request`를 반환한다.
-      - [ ] 잘못된 예외 정보가 입력된 경우 예외를 던진다.
-      - [ ] 아이디가 잘못 입력된 경우 예외를 던진다.
+      - [x] 아이디가 잘못 입력된 경우 예외를 던진다.
 
 ### GET `/members`
 
@@ -61,9 +60,6 @@
         - email
         - money
         - point
-
-
-
 
 ---
 
@@ -97,6 +93,7 @@
 - 사용자 결제 금액을 저장한다.
 - 포인트 사용 금액을 저장한다.
 - 포인트를 적립한다.
+- 사용 가능한 금액을 저장한다.
 
 ### Point
 
