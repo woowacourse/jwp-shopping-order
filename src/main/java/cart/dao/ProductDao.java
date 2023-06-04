@@ -14,11 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
-
-    public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
             new ProductEntity(
                     rs.getLong("id"),
@@ -27,14 +22,8 @@ public class ProductDao {
                     rs.getString("image_url")
             );
 
-    public List<ProductEntity> findAll() {
-        final String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, rowMapper);
-    }
-
-    public ProductEntity findById(Long productId) {
-        final String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Long save(ProductEntity productEntity) {
@@ -56,6 +45,16 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public ProductEntity findById(Long productId) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
+    }
+
     public void update(ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql,
@@ -65,7 +64,7 @@ public class ProductDao {
                 productEntity.getId());
     }
 
-    public void delete(Long productId) {
+    public void deleteById(Long productId) {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }

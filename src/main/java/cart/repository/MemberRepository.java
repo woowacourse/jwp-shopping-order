@@ -15,6 +15,13 @@ public class MemberRepository {
         this.memberDao = memberDao;
     }
 
+    public List<Member> findAll() {
+        List<MemberEntity> memberEntities = memberDao.findAll();
+        return memberEntities.stream()
+                .map(this::convertToDomain)
+                .collect(Collectors.toList());
+    }
+
     public Member findById(Long memberId) {
         MemberEntity memberEntity = memberDao.findById(memberId);
         return convertToDomain(memberEntity);
@@ -23,13 +30,6 @@ public class MemberRepository {
     public Member findByEmail(String memberEmail) {
         MemberEntity memberEntity = memberDao.findByEmail(memberEmail);
         return convertToDomain(memberEntity);
-    }
-
-    public List<Member> findAll() {
-        List<MemberEntity> memberEntities = memberDao.findAll();
-        return memberEntities.stream()
-                .map(this::convertToDomain)
-                .collect(Collectors.toList());
     }
 
     private Member convertToDomain(MemberEntity memberEntity) {

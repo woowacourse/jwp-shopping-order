@@ -16,6 +16,15 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    public Long save(ProductRequest productRequest) {
+        Product product = new Product(
+                null,
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl());
+        return productRepository.save(product);
+    }
+
     public List<ProductResponse> findAll() {
         List<Product> products = productRepository.findAll();
         return products.stream()
@@ -28,15 +37,6 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public Long save(ProductRequest productRequest) {
-        Product product = new Product(
-                null,
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl());
-        return productRepository.save(product);
-    }
-
     public void update(Long productId, ProductRequest productRequest) {
         Product product = new Product(
                 productId,
@@ -46,7 +46,7 @@ public class ProductService {
         productRepository.update(product);
     }
 
-    public void delete(Long productId) {
-        productRepository.delete(productId);
+    public void deleteById(Long productId) {
+        productRepository.deleteById(productId);
     }
 }

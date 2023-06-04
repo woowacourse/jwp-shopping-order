@@ -14,11 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
-
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) ->
             new CartItemEntity(
                     rs.getLong("id"),
@@ -27,14 +22,8 @@ public class CartItemDao {
                     rs.getInt("quantity")
             );
 
-    public List<CartItemEntity> findByMemberId(Long memberId) {
-        final String sql = "SELECT * FROM cart_item WHERE member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
-    }
-
-    public CartItemEntity findById(Long id) {
-        final String sql = "SELECT * FROM cart_item WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Long save(CartItemEntity cartItemEntity) {
@@ -56,19 +45,23 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-
-    public void delete(Long memberId, Long productId) {
-        final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+    public CartItemEntity findById(Long id) {
+        final String sql = "SELECT * FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public void deleteById(Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public List<CartItemEntity> findByMemberId(Long memberId) {
+        final String sql = "SELECT * FROM cart_item WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
     public void updateQuantity(CartItemEntity cartItemEntity) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    }
+
+    public void deleteById(Long id) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

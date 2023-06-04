@@ -15,6 +15,10 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
+    public Long save(Product product) {
+        ProductEntity productEntity = convertToEntity(product);
+        return productDao.save(productEntity);
+    }
 
     public List<Product> findAll() {
         List<ProductEntity> productEntities = productDao.findAll();
@@ -28,18 +32,13 @@ public class ProductRepository {
         return convertToDomain(productEntity);
     }
 
-    public Long save(Product product) {
-        ProductEntity productEntity = convertToEntity(product);
-        return productDao.save(productEntity);
-    }
-
     public void update(Product product) {
         ProductEntity productEntity = convertToEntity(product);
         productDao.update(productEntity);
     }
 
-    public void delete(Long productId) {
-        productDao.delete(productId);
+    public void deleteById(Long productId) {
+        productDao.deleteById(productId);
     }
 
     private Product convertToDomain(ProductEntity productEntity) {

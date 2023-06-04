@@ -27,16 +27,16 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CartItemResponse>> cartItemList(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
-    }
-
     @PostMapping
     public ResponseEntity<Void> cartItemSave(Member member,
                                              @Validated @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.save(member, cartItemRequest);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CartItemResponse>> cartItemList(Member member) {
+        return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
     @PatchMapping("/{id}")
@@ -49,7 +49,7 @@ public class CartItemApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cartItemDelete(Member member, @PathVariable Long id) {
-        cartItemService.delete(member, id);
+        cartItemService.deleteById(member, id);
         return ResponseEntity.noContent().build();
     }
 }
