@@ -79,7 +79,7 @@ public class JdbcOrderRepository implements OrderRepository {
     private List<OrderItem> findOrderItems(final Long id) {
         return productOrderDao.findAllByOrderId(id).stream()
                 .map(it -> {
-                    final Product product = productDao.findById(it.getId())
+                    final Product product = productDao.findById(it.getProductId())
                             .orElseThrow(NoSuchElementException::new).toDomain();
                     return new OrderItem(product, it.getQuantity());
                 }).collect(Collectors.toList());
