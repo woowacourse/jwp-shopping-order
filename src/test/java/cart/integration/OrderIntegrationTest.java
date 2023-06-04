@@ -114,14 +114,14 @@ public class OrderIntegrationTest extends IntegrationTest {
         // then
         OrderResponse body = response.as(OrderResponse.class);
 
-        assertThat(body.getId()).isPositive();
+        assertThat(body.getOrderId()).isPositive();
         OrderItemResponse 첫번째_주문 = body.getOrderItems().get(0);
-        assertThat(첫번째_주문.getId()).isPositive();
+        assertThat(첫번째_주문.getOrderItemId()).isPositive();
         assertThat(첫번째_주문.getProduct().getName()).isEqualTo(치킨_주문.getProduct().getName());
         assertThat(첫번째_주문.getProduct().getPrice()).isEqualTo(치킨_주문.getProduct().getPrice());
         assertThat(첫번째_주문.getProduct().getImageUrl()).isEqualTo(치킨_주문.getProduct().getImageUrl());
         assertThat(첫번째_주문.getCoupons()).isEmpty();
-        assertThat(첫번째_주문.getTotalPrice()).isPositive();
+        assertThat(첫번째_주문.getTotal()).isPositive();
         assertThat(첫번째_주문.getQuantity()).isEqualTo(치킨_주문.getQuantity());
     }
 

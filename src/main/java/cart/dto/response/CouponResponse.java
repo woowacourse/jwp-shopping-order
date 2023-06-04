@@ -4,39 +4,33 @@ import cart.domain.Coupon;
 
 public class CouponResponse {
 
-    private Long id;
+    private Long couponId;
     private String name;
-    private String type;
-    private Integer discountAmount;
+    private DiscountResponse discount;
 
     public CouponResponse() {
     }
 
-    public CouponResponse(Long id, String name, String type, Integer discountAmount) {
-        this.id = id;
+    public CouponResponse(Long couponId, String name, DiscountResponse discount) {
+        this.couponId = couponId;
         this.name = name;
-        this.type = type;
-        this.discountAmount = discountAmount;
+        this.discount = discount;
     }
 
     public static CouponResponse from(Coupon coupon) {
-        return new CouponResponse(coupon.getId(), coupon.getName(), coupon.getType().name(),
-                coupon.getDiscountAmount());
+        DiscountResponse discountResponse = new DiscountResponse(coupon.getType().name(), coupon.getDiscountAmount());
+        return new CouponResponse(coupon.getId(), coupon.getName(), discountResponse);
     }
 
-    public Long getId() {
-        return id;
+    public Long getCouponId() {
+        return couponId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public Integer getDiscountAmount() {
-        return discountAmount;
+    public DiscountResponse getDiscount() {
+        return discount;
     }
 }

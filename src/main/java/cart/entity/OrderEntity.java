@@ -7,19 +7,21 @@ public class OrderEntity {
     private Long id;
     private Long memberId;
     private Integer totalPrice;
+    private Integer deliveryFee;
 
-    public OrderEntity(Long memberId, Integer totalPrice) {
-        this(null, memberId, totalPrice);
+    public OrderEntity(Long memberId, Integer totalPrice, Integer deliveryFee) {
+        this(null, memberId, totalPrice, deliveryFee);
     }
 
-    public OrderEntity(Long id, Long memberId, Integer totalPrice) {
+    public OrderEntity(Long id, Long memberId, Integer totalPrice, Integer deliveryFee) {
         this.id = id;
         this.memberId = memberId;
         this.totalPrice = totalPrice;
+        this.deliveryFee = deliveryFee;
     }
 
     public static OrderEntity from(Order order) {
-        return new OrderEntity(order.getMemberId(), order.getTotalPrice());
+        return new OrderEntity(order.getMemberId(), order.getTotalPrice(), order.getDeliveryFee());
     }
 
     public Long getId() {
@@ -32,5 +34,9 @@ public class OrderEntity {
 
     public Integer getTotalPrice() {
         return totalPrice;
+    }
+
+    public Integer getDeliveryFee() {
+        return deliveryFee;
     }
 }

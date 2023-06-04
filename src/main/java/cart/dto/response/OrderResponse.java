@@ -7,16 +7,16 @@ import java.util.List;
 
 public class OrderResponse {
 
-    private Long id;
-    private List<OrderItemResponse> orderItems;
+    private Long orderId;
     private Integer deliveryFee;
     private Integer total;
+    private List<OrderItemResponse> orderItems;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(Long id, List<OrderItemResponse> orderItems, Integer deliveryFee, Integer total) {
-        this.id = id;
+    public OrderResponse(Long orderId, List<OrderItemResponse> orderItems, Integer deliveryFee, Integer total) {
+        this.orderId = orderId;
         this.orderItems = orderItems;
         this.deliveryFee = deliveryFee;
         this.total = total;
@@ -30,8 +30,8 @@ public class OrderResponse {
         return new OrderResponse(order.getId(), orderItems, 3000, order.getTotalPrice());
     }
 
-    public Long getId() {
-        return id;
+    public Long getOrderId() {
+        return orderId;
     }
 
     public List<OrderItemResponse> getOrderItems() {

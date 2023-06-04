@@ -35,7 +35,6 @@ public class OrderApiController {
         return ResponseEntity.ok(orderResponse);
     }
 
-
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAllByMember(Member member) {
         List<OrderResponse> response = orderService.findAllByMemberId(member.getId());

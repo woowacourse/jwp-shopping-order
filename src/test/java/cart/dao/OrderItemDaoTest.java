@@ -45,7 +45,7 @@ class OrderItemDaoTest {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(PIZZA, jdbcTemplate);
-        insertOrder(new OrderEntity(1L, MEMBER.getId(), 20000), jdbcTemplate);
+        insertOrder(new OrderEntity(1L, MEMBER.getId(), 20000, 3000), jdbcTemplate);
 
         OrderItemEntity orderItemEntity = new OrderItemEntity(1L, PIZZA.getId(), 10, PIZZA.getName(), PIZZA.getPrice(),
                 PIZZA.getImageUrl(), 100000);
@@ -64,7 +64,7 @@ class OrderItemDaoTest {
         insertProduct(CHICKEN, jdbcTemplate);
 
         long orderId = 1L;
-        insertOrder(new OrderEntity(orderId, MEMBER.getId(), 20000), jdbcTemplate);
+        insertOrder(new OrderEntity(orderId, MEMBER.getId(), 20000, 3000), jdbcTemplate);
         OrderItemEntity firstItem = getOrderItemEntity(1L, orderId, 10, PIZZA);
         OrderItemEntity secondItem = getOrderItemEntity(2L, orderId, 5, CHICKEN);
         insertOrderItem(firstItem, jdbcTemplate);
@@ -90,8 +90,8 @@ class OrderItemDaoTest {
         insertProduct(PIZZA, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
 
-        insertOrder(new OrderEntity(1L, MEMBER.getId(), 20000), jdbcTemplate);
-        insertOrder(new OrderEntity(2L, MEMBER.getId(), 10000), jdbcTemplate);
+        insertOrder(new OrderEntity(1L, MEMBER.getId(), 20000, 3000), jdbcTemplate);
+        insertOrder(new OrderEntity(2L, MEMBER.getId(), 10000, 3000), jdbcTemplate);
         OrderItemEntity firstItem = getOrderItemEntity(1L, 1L, 10, PIZZA);
         OrderItemEntity secondItem = getOrderItemEntity(2L, 2L, 5, CHICKEN);
         insertOrderItem(firstItem, jdbcTemplate);

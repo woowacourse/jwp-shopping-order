@@ -49,11 +49,11 @@ public class OrderService {
         int totalPrice = orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
                 .sum();
-        return orderRepository.save(new Order(memberId, orderItems, totalPrice));
+        return orderRepository.save(new Order(memberId, orderItems, totalPrice, request.getDeliveryFee()));
     }
 
     private List<MemberCoupon> getMemberCoupons(OrderRequest request) {
-        List<Long> couponIds = request.getOrderItemRequests().stream()
+        List<Long> couponIds = request.getOrderItems().stream()
                 .flatMap(orderItemRequest -> orderItemRequest.getCoupons().stream())
                 .map(OrderCouponRequest::getCouponId)
                 .collect(toList());
@@ -61,7 +61,7 @@ public class OrderService {
     }
 
     private void clearCartItems(OrderRequest request, Long memberId) {
-        List<CartItem> cartItems = request.getOrderItemRequests().stream()
+        List<CartItem> cartItems = request.getOrderItems().stream()
                 .map(it -> new CartItem(it.getId(), it.getQuantity(), it.getProduct().toDomain(), memberId))
                 .collect(toList());
         cartItemRepository.clear(cartItems);
@@ -69,7 +69,7 @@ public class OrderService {
 
     private List<OrderItem> getOrderItems(OrderRequest request, Map<Long, MemberCoupon> memberCouponsById) {
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemRequest orderItemRequest : request.getOrderItemRequests()) {
+        for (OrderItemRequest orderItemRequest : request.getOrderItems()) {
             Product product = orderItemRequest.getProduct().toDomain();
             List<MemberCoupon> memberCoupons = new ArrayList<>();
             for (OrderCouponRequest coupon : orderItemRequest.getCoupons()) {

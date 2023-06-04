@@ -55,7 +55,7 @@ class OrderCouponDaoTest {
         insertMemberCoupon(memberCouponA, jdbcTemplate);
         insertMemberCoupon(memberCouponB, jdbcTemplate);
 
-        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000);
+        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000, 3000);
         OrderItemEntity orderItemChicken = getOrderItemEntity(1L, orderEntity.getId(), 10, CHICKEN);
         OrderItemEntity orderItemPizza = getOrderItemEntity(2L, orderEntity.getId(), 5, PIZZA);
         insertOrder(orderEntity, jdbcTemplate);

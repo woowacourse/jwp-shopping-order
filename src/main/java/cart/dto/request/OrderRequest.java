@@ -5,18 +5,18 @@ import java.util.List;
 public class OrderRequest {
 
     private Integer deliveryFee;
-    private List<OrderItemRequest> orderItemRequests;
+    private List<OrderItemRequest> orderItems;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(Integer deliveryFee, List<OrderItemRequest> orderItemRequests) {
+    public OrderRequest(Integer deliveryFee, List<OrderItemRequest> orderItems) {
         this.deliveryFee = deliveryFee;
-        this.orderItemRequests = orderItemRequests;
+        this.orderItems = orderItems;
     }
 
-    public List<OrderItemRequest> getOrderItemRequests() {
-        return orderItemRequests;
+    public List<OrderItemRequest> getOrderItems() {
+        return orderItems;
     }
 
     public Integer getDeliveryFee() {

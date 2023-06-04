@@ -6,22 +6,22 @@ import java.util.stream.Collectors;
 
 public class OrderItemResponse {
 
-    private Long id;
+    private Long orderItemId;
     private OrderProductResponse product;
     private Integer quantity;
     private List<OrderCouponResponse> coupons;
-    private Integer totalPrice;
+    private Integer total;
 
     public OrderItemResponse() {
     }
 
-    public OrderItemResponse(Long id, OrderProductResponse product, Integer quantity, List<OrderCouponResponse> coupons,
-                             Integer totalPrice) {
-        this.id = id;
+    public OrderItemResponse(Long orderItemId, OrderProductResponse product, Integer quantity, List<OrderCouponResponse> coupons,
+                             Integer total) {
+        this.orderItemId = orderItemId;
         this.product = product;
         this.quantity = quantity;
         this.coupons = coupons;
-        this.totalPrice = totalPrice;
+        this.total = total;
     }
 
     public static OrderItemResponse from(OrderItem orderItem) {
@@ -33,8 +33,8 @@ public class OrderItemResponse {
                 orderItem.getTotalPrice());
     }
 
-    public Long getId() {
-        return id;
+    public Long getOrderItemId() {
+        return orderItemId;
     }
 
     public OrderProductResponse getProduct() {
@@ -49,7 +49,7 @@ public class OrderItemResponse {
         return coupons;
     }
 
-    public Integer getTotalPrice() {
-        return totalPrice;
+    public Integer getTotal() {
+        return total;
     }
 }

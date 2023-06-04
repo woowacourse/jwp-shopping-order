@@ -48,7 +48,7 @@ class OrderRepositoryTest {
     @Test
     void 아이디를_통해_주문을_찾는다() {
         // given
-        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000);
+        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000, 3000);
         OrderItemEntity orderItemChicken = getOrderItemEntity(1L, orderEntity.getId(), CHICKEN, 10);
         OrderItemEntity orderItemPizza = getOrderItemEntity(2L, orderEntity.getId(), PIZZA, 5);
         Coupon coupon = new Coupon(1L, "10% 쿠폰", CouponType.RATE, 10);

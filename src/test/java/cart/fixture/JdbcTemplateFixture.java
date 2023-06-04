@@ -27,8 +27,8 @@ public class JdbcTemplateFixture {
     }
 
     public static void insertOrder(OrderEntity orderEntity, JdbcTemplate jdbcTemplate) {
-        String sql = "INSERT INTO orders (id, member_id, total_price) VALUES (?,?,?)";
-        jdbcTemplate.update(sql, orderEntity.getId(), orderEntity.getMemberId(), orderEntity.getTotalPrice());
+        String sql = "INSERT INTO orders (id, member_id, total_price, delivery_fee) VALUES (?,?,?,?)";
+        jdbcTemplate.update(sql, orderEntity.getId(), orderEntity.getMemberId(), orderEntity.getTotalPrice(), orderEntity.getDeliveryFee());
     }
 
     public static void insertOrderItem(OrderItemEntity orderItemEntity, JdbcTemplate jdbcTemplate) {

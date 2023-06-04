@@ -18,7 +18,8 @@ public class OrderDao {
             new OrderEntity(
                     rs.getLong("id"),
                     rs.getLong("member_id"),
-                    rs.getInt("total_price")
+                    rs.getInt("total_price"),
+                    rs.getInt("delivery_fee")
             );
 
     private final JdbcTemplate jdbcTemplate;

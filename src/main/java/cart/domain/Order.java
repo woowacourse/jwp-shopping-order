@@ -8,16 +8,18 @@ public class Order {
     private Long memberId;
     private List<OrderItem> orderItems;
     private Integer totalPrice;
+    private Integer deliveryFee;
 
-    public Order(Long memberId, List<OrderItem> orderItems, Integer totalPrice) {
-        this(null, memberId, orderItems, totalPrice);
+    public Order(Long memberId, List<OrderItem> orderItems, Integer totalPrice, Integer deliveryFee) {
+        this(null, memberId, orderItems, totalPrice, deliveryFee);
     }
 
-    public Order(Long id, Long memberId, List<OrderItem> orderItems, Integer totalPrice) {
+    public Order(Long id, Long memberId, List<OrderItem> orderItems, Integer totalPrice, Integer deliveryFee) {
         this.id = id;
         this.memberId = memberId;
         this.orderItems = orderItems;
         this.totalPrice = totalPrice;
+        this.deliveryFee = deliveryFee;
     }
 
     public Long getId() {
@@ -34,5 +36,9 @@ public class Order {
 
     public Integer getTotalPrice() {
         return totalPrice;
+    }
+
+    public Integer getDeliveryFee() {
+        return deliveryFee;
     }
 }

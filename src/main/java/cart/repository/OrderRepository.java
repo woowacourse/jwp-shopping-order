@@ -83,7 +83,7 @@ public class OrderRepository {
         Map<Long, List<OrderItem>> orderItems = createOrderItems(orderItemEntities, orderCoupons);
         for (OrderEntity orderEntity : orderEntities) {
             Order order = new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems.get(orderEntity.getId()),
-                    orderEntity.getTotalPrice());
+                    orderEntity.getTotalPrice(), orderEntity.getDeliveryFee());
             orders.add(order);
         }
 
@@ -100,7 +100,7 @@ public class OrderRepository {
             orderItems.add(orderItem);
         }
 
-        return new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems, orderEntity.getTotalPrice());
+        return new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems, orderEntity.getTotalPrice(), orderEntity.getDeliveryFee());
     }
 
     private Map<Long, List<MemberCoupon>> createOrderCouponsByOrderItemId(
