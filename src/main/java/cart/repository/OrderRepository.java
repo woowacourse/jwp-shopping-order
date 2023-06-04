@@ -8,16 +8,12 @@ import cart.dao.entity.CouponEntity;
 import cart.dao.entity.MemberCouponEntity;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
-import cart.domain.Coupon;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -57,7 +53,7 @@ public class OrderRepository {
 
         Map<Long, List<OrderItem>> orderItemByOrderId = getOrderItemByOrderId(allOrderEntities, orderIds);
 
-        Map<Long, Coupon> couponById = getCouponByOrders(allOrderEntities);
+        Map<Long, MemberCoupon> couponById = findMemberCouponByOrderEntitiesAndMember(allOrderEntities, member);
 
         return allOrderEntities.stream()
                 .map(orderEntity -> orderEntity.toOrder(member, orderItemByOrderId, couponById))
@@ -67,39 +63,36 @@ public class OrderRepository {
     public Order findByIdAndMember(final Long id, final Member member) {
         OrderEntity orderEntity = orderDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
-        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(orderEntity.getCouponId())
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(orderEntity.getMemberCouponId())
                 .orElseThrow(() -> new IllegalArgumentException("멤버 쿠폰이 존재하지 않습니다."));
         CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getId())
                 .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
 
-        Coupon coupon = memberCouponEntity.toCoupon(couponEntity);
+        MemberCoupon memberCoupon = memberCouponEntity.toMemberCoupon(couponEntity.toCoupon(), member);
         List<OrderItem> orderItems = orderItemDao.finByOrderId(orderEntity.getId())
                 .stream()
                 .map(OrderItemEntity::toOrderItem)
                 .collect(Collectors.toList());
-        return Order.of(orderEntity.getId(), orderItems, member, coupon);
+        return Order.of(orderEntity.getId(), orderItems, member, memberCoupon);
     }
 
-    private Map<Long, Coupon> getCouponByOrders(final List<OrderEntity> allOrderEntities) {
-        List<Long> memberCouponIds = allOrderEntities.stream()
-                .map(OrderEntity::getCouponId)
+    private Map<Long, MemberCoupon> findMemberCouponByOrderEntitiesAndMember(final List<OrderEntity> orderEntities, final Member member) {
+        List<Long> memberCouponIds = orderEntities.stream()
+                .map(OrderEntity::getMemberCouponId)
                 .collect(Collectors.toList());
 
         List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByIds(memberCouponIds);
-        Map<Long, MemberCouponEntity> memberCouponEntityById = memberCouponEntities.stream()
-                .collect(Collectors.toMap(MemberCouponEntity::getId, memberCouponEntity -> memberCouponEntity));
 
         List<Long> couponIds = memberCouponEntities.stream()
                 .map(MemberCouponEntity::getCouponId)
                 .collect(Collectors.toList());
-
         List<CouponEntity> couponEntities = couponDao.findByIds(couponIds);
-        Map<Long, CouponEntity> couponEntityById = couponEntities.stream()
-                .collect(Collectors.toMap(CouponEntity::getId, couponEntity -> couponEntity));
+        Map<Long, Coupon> coupons = couponEntities.stream()
+                .collect(Collectors.toMap(CouponEntity::getId, CouponEntity::toCoupon));
 
         return memberCouponEntities.stream()
-                .map(memberCouponEntity -> memberCouponEntity.toCoupon(couponEntityById))
-                .collect(Collectors.toMap(coupon -> coupon.getCouponInfo().getId(), coupon -> coupon));
+                .map(memberCouponEntity -> memberCouponEntity.toMemberCoupon(coupons.get(memberCouponEntity.getCouponId()), member))
+                .collect(Collectors.toMap(MemberCoupon::getId, coupon -> coupon));
     }
 
     private Map<Long, List<OrderItem>> getOrderItemByOrderId(final List<OrderEntity> allOrderEntities, final List<Long> orderIds) {

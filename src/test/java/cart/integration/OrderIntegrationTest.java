@@ -40,7 +40,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 2L,
                 "테스트쿠폰2",
                 15000,
-                2000,
+                null,
                 true,
                 2000,
                 LocalDateTime.parse("2023-06-30 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

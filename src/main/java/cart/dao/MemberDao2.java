@@ -37,4 +37,13 @@ public class MemberDao2 {
             return Optional.empty();
         }
     }
+
+    public Optional<MemberEntity> findById(final Long id) {
+        final String sql = "SELECT * FROM member WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
 }

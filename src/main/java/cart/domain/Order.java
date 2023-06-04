@@ -7,23 +7,23 @@ public class Order {
     private final Long id;
     private final ShippingFee shippingFee;
     private final List<OrderItem> orderItems;
-    private final Coupon coupon;
+    private final MemberCoupon memberCoupon;
     private final Member member;
 
-    public Order(final Long id, final ShippingFee shippingFee, final List<OrderItem> orderItems, final Coupon coupon, final Member member) {
+    public Order(final Long id, final ShippingFee shippingFee, final List<OrderItem> orderItems, final MemberCoupon memberCoupon, final Member member) {
         this.id = id;
         this.shippingFee = shippingFee;
         this.orderItems = orderItems;
-        this.coupon = coupon;
+        this.memberCoupon = memberCoupon;
         this.member = member;
     }
 
-    public static Order of(final Long id, final List<OrderItem> orderItems, final Member member, final Coupon coupon) {
+    public static Order of(final Long id, final List<OrderItem> orderItems, final Member member, final MemberCoupon memberCoupon) {
         Integer price = orderItems.stream()
                 .mapToInt(OrderItem::calculatePrice)
                 .sum();
         ShippingFee shippingFee = ShippingFee.from(price);
-        return new Order(id, shippingFee, orderItems, coupon, member);
+        return new Order(id, shippingFee, orderItems, memberCoupon, member);
     }
 
     public Integer calculateTotalPrice() {
@@ -34,16 +34,11 @@ public class Order {
 
     public Integer calculateDiscountPrice() {
         Integer totalPrice = calculateTotalPrice();
-        return coupon.calculateDiscount(totalPrice);
-    }
-
-    // TODO: 6/1/23 실제 주문하는 로직이 필요할것 같긴 함
-    public void order() {
-
+        return memberCoupon.calculateDiscount(totalPrice);
     }
 
     public void checkOwner(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+        if (!Objects.equals(this.member, member)) {
             throw new IllegalArgumentException("다른 회원의 주문입니다.");
         }
     }
@@ -60,8 +55,8 @@ public class Order {
         return orderItems;
     }
 
-    public Coupon getCoupon() {
-        return coupon;
+    public MemberCoupon getMemberCoupon() {
+        return memberCoupon;
     }
 
     public Member getMember() {
@@ -87,7 +82,7 @@ public class Order {
                 "id=" + id +
                 ", shippingFee=" + shippingFee +
                 ", orderItems=" + orderItems +
-                ", coupon=" + coupon +
+                ", coupon=" + memberCoupon +
                 ", member=" + member +
                 '}';
     }

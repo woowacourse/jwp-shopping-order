@@ -13,13 +13,12 @@ public class AmountCoupon implements Coupon {
 
     @Override
     public boolean isAvailable(final Integer totalPrice) {
-        return couponInfo.isNotExpired()
-                && couponInfo.getMinPrice() <= totalPrice;
+        return couponInfo.getMinOrderPrice() <= totalPrice;
     }
 
     @Override
     public Integer calculateDiscount(final Integer totalPrice) {
-        if (couponInfo.getMinPrice() > totalPrice) {
+        if (couponInfo.getMinOrderPrice() > totalPrice) {
             throw new IllegalArgumentException("주문 금액이 최소 주문 금액보다 작습니다.");
         }
         return discountAmount;
@@ -30,8 +29,14 @@ public class AmountCoupon implements Coupon {
         return couponInfo;
     }
 
+    @Override
     public Integer getDiscountAmount() {
         return discountAmount;
+    }
+
+    @Override
+    public Double getDiscountPercentage() {
+        return null;
     }
 
     @Override

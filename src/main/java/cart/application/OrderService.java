@@ -3,7 +3,7 @@ package cart.application;
 import cart.domain.*;
 import cart.dto.*;
 import cart.repository.CartItemRepository;
-import cart.repository.CouponRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,28 +14,30 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
 
-    public OrderService(final CouponRepository couponRepository, final CartItemRepository cartItemRepository, final OrderRepository orderRepository) {
-        this.couponRepository = couponRepository;
+    public OrderService(final MemberCouponRepository memberCouponRepository, final CartItemRepository cartItemRepository, final OrderRepository orderRepository) {
+        this.memberCouponRepository = memberCouponRepository;
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
     }
 
     @Transactional
     public Long createOrder(final Member member, final OrderRequest request) {
-        Coupon coupon = findCouponIfExist(request.getCouponId());
+        MemberCoupon memberCoupon = findCouponIfExist(request.getCouponId());
         CartItems cartItems = new CartItems(findCartItemsRequest(request));
         CartItems selectedCartItems = new CartItems(convertToCartItems(member, request));
 
+        // TODO: 6/4/23 이 과정이 하나의 도메인 로직으로 들어가도 될듯
         cartItems.checkStatus(selectedCartItems, member);
-        Order order = cartItems.order(member, coupon);
+        memberCoupon.checkExpired();
+        memberCoupon.checkOwner(member);
+        Order order = cartItems.order(member, memberCoupon);
+        MemberCoupon usedMemberCoupon = memberCoupon.use();
 
-        if (coupon != Coupon.EMPTY_COUPON) {
-            couponRepository.update(coupon);
-        }
+        memberCouponRepository.update(usedMemberCoupon);
         cartItemRepository.deleteAll(cartItems.getCartItems());
         return orderRepository.save(order);
     }
@@ -67,11 +69,11 @@ public class OrderService {
         return convertToOrderDetailResponse(order);
     }
 
-    private Coupon findCouponIfExist(final Long couponId) {
-        if (couponId== null) {
-            return Coupon.EMPTY_COUPON;
+    private MemberCoupon findCouponIfExist(final Long memberCouponId) {
+        if (memberCouponId== null) {
+            return new EmptyMemberCoupon();
         }
-        return couponRepository.findById(couponId);
+        return memberCouponRepository.findById(memberCouponId);
     }
 
     private List<CartItem>  findCartItemsRequest(final OrderRequest request) {

@@ -10,15 +10,15 @@ import java.util.Objects;
 public class OrderEntity {
     private final Long id;
     private final Long memberId;
-    private final Long couponId;
+    private final Long memberCouponId;
     private final Integer shippingFee;
     private final Integer totalPrice;
     private final LocalDateTime createdAt;
 
-    public OrderEntity(final Long id, final Long memberId, final Long couponId, final Integer shippingFee, final Integer totalPrice, final LocalDateTime createdAt) {
+    public OrderEntity(final Long id, final Long memberId, final Long memberCouponId, final Integer shippingFee, final Integer totalPrice, final LocalDateTime createdAt) {
         this.id = id;
         this.memberId = memberId;
-        this.couponId = couponId;
+        this.memberCouponId = memberCouponId;
         this.shippingFee = shippingFee;
         this.totalPrice = totalPrice;
         this.createdAt = createdAt;
@@ -28,19 +28,19 @@ public class OrderEntity {
         return new OrderEntity(
                 null,
                 order.getMember().getId(),
-                order.getCoupon().getCouponInfo().getId(),
+                order.getMemberCoupon().getId(),
                 order.getShippingFee().getCharge(),
                 order.calculateTotalPrice(),
                 null
         );
     }
 
-    public Order toOrder(final Member member, final Map<Long, List<OrderItem>> orderItemByOrderId, final Map<Long, Coupon> couponById) {
+    public Order toOrder(final Member member, final Map<Long, List<OrderItem>> orderItemByOrderId, final Map<Long, MemberCoupon> memberCoupons) {
         return new Order(
                 id,
                 ShippingFee.findByCharge(shippingFee),
                 orderItemByOrderId.get(id),
-                couponById.getOrDefault(couponId, Coupon.EMPTY_COUPON),
+                memberCoupons.getOrDefault(memberCouponId, new EmptyMemberCoupon()),
                 member
         );
     }
@@ -53,8 +53,8 @@ public class OrderEntity {
         return memberId;
     }
 
-    public Long getCouponId() {
-        return couponId;
+    public Long getMemberCouponId() {
+        return memberCouponId;
     }
 
     public Integer getShippingFee() {
@@ -76,7 +76,7 @@ public class OrderEntity {
         final OrderEntity that = (OrderEntity) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(memberId, that.memberId)
-                && Objects.equals(couponId, that.couponId)
+                && Objects.equals(memberCouponId, that.memberCouponId)
                 && Objects.equals(shippingFee, that.shippingFee)
                 && Objects.equals(totalPrice, that.totalPrice)
                 && Objects.equals(createdAt, that.createdAt);
@@ -84,7 +84,7 @@ public class OrderEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, memberId, couponId, shippingFee, totalPrice, createdAt);
+        return Objects.hash(id, memberId, memberCouponId, shippingFee, totalPrice, createdAt);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class OrderEntity {
         return "OrderEntity{" +
                 "id=" + id +
                 ", memberId=" + memberId +
-                ", couponId=" + couponId +
+                ", couponId=" + memberCouponId +
                 ", shippingFee=" + shippingFee +
                 ", totalPrice=" + totalPrice +
                 ", createdAt=" + createdAt +

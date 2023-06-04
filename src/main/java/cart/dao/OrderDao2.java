@@ -41,7 +41,7 @@ public class OrderDao2 {
                     new String[]{"id"}
             );
             ps.setLong(1, orderEntity.getMemberId());
-            ps.setLong(2, orderEntity.getCouponId());
+            ps.setLong(2, orderEntity.getMemberCouponId());
             ps.setInt(3, orderEntity.getShippingFee());
             ps.setInt(4, orderEntity.getTotalPrice());
             return ps;

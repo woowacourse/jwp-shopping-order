@@ -6,20 +6,14 @@ import java.util.Objects;
 public class CouponInfo {
     private final Long id;
     private final String name;
-    private final Integer minPrice;
-    private final Integer maxPrice;
-    private final LocalDateTime expiredAt;
+    private final Integer minOrderPrice;
+    private final Integer maxDiscountPrice;
 
-    public CouponInfo(final Long id, final String name, final Integer minPrice, final Integer maxPrice, final LocalDateTime expiredAt) {
+    public CouponInfo(final Long id, final String name, final Integer minOrderPrice, final Integer maxDiscountPrice) {
         this.id = id;
         this.name = name;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
-        this.expiredAt = expiredAt;
-    }
-
-    public boolean isNotExpired() {
-        return expiredAt.isAfter(LocalDateTime.now());
+        this.minOrderPrice = minOrderPrice;
+        this.maxDiscountPrice = maxDiscountPrice;
     }
 
     public Long getId() {
@@ -30,16 +24,12 @@ public class CouponInfo {
         return name;
     }
 
-    public Integer getMinPrice() {
-        return minPrice;
+    public Integer getMinOrderPrice() {
+        return minOrderPrice;
     }
 
-    public Integer getMaxPrice() {
-        return maxPrice;
-    }
-
-    public LocalDateTime getExpiredAt() {
-        return expiredAt;
+    public Integer getMaxDiscountPrice() {
+        return maxDiscountPrice;
     }
 
     @Override
@@ -49,14 +39,13 @@ public class CouponInfo {
         final CouponInfo that = (CouponInfo) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
-                && Objects.equals(minPrice, that.minPrice)
-                && Objects.equals(maxPrice, that.maxPrice)
-                && Objects.equals(expiredAt, that.expiredAt);
+                && Objects.equals(minOrderPrice, that.minOrderPrice)
+                && Objects.equals(maxDiscountPrice, that.maxDiscountPrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, minPrice, maxPrice, expiredAt);
+        return Objects.hash(id, name, minOrderPrice, maxDiscountPrice);
     }
 
     @Override
@@ -64,9 +53,8 @@ public class CouponInfo {
         return "CouponInfo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", minPrice=" + minPrice +
-                ", maxPrice=" + maxPrice +
-                ", expiredAt=" + expiredAt +
+                ", minPrice=" + minOrderPrice +
+                ", maxPrice=" + maxDiscountPrice +
                 '}';
     }
 }

@@ -2,7 +2,7 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class PercentageCoupon implements Coupon{
+public class PercentageCoupon implements Coupon {
     private final CouponInfo couponInfo;
     private final Double discountPercentage;
 
@@ -13,18 +13,17 @@ public class PercentageCoupon implements Coupon{
 
     @Override
     public boolean isAvailable(final Integer totalPrice) {
-        return couponInfo.isNotExpired()
-                && couponInfo.getMinPrice() <= totalPrice;
+        return couponInfo.getMinOrderPrice() <= totalPrice;
     }
 
     @Override
     public Integer calculateDiscount(final Integer totalPrice) {
-        if (couponInfo.getMinPrice() > totalPrice) {
+        if (couponInfo.getMinOrderPrice() > totalPrice) {
             throw new IllegalArgumentException("주문 금액이 최소 주문 금액보다 작습니다.");
         }
         double discountPrice = totalPrice * discountPercentage;
-        if (discountPrice > couponInfo.getMaxPrice()) {
-            return couponInfo.getMaxPrice();
+        if (discountPrice > couponInfo.getMaxDiscountPrice()) {
+            return couponInfo.getMaxDiscountPrice();
         }
         // TODO: 5/29/23 이거 반올림?
         return (int)discountPrice;
@@ -35,6 +34,12 @@ public class PercentageCoupon implements Coupon{
         return couponInfo;
     }
 
+    @Override
+    public Integer getDiscountAmount() {
+        return null;
+    }
+
+    @Override
     public Double getDiscountPercentage() {
         return discountPercentage;
     }

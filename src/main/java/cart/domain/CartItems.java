@@ -1,6 +1,5 @@
 package cart.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,13 +24,13 @@ public class CartItems {
         return new CartItems(selectedCartItems);
     }
 
+    // TODO: 6/4/23 이걸 private 하게 바꿔도 될듯? 
     public void checkStatus(final CartItems other, final Member member) {
         for (CartItem cartItem : other.getCartItems()) {
             cartItem.checkOwner(member);
             validateValue(cartItem, other.getCartItems());
         }
     }
-
 
     private void validateValue(final CartItem currentCartItem, final List<CartItem> otherCartItems) {
         CartItem selectedCartItem = otherCartItems.stream()
@@ -46,6 +45,13 @@ public class CartItems {
                 .filter(cartItem -> Objects.equals(cartItem.getId(), id))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("해당 카트목록이 존재하지 않습니다."));
+    }
+
+    public Order order(final Member member, final MemberCoupon memberCoupon) {
+        List<OrderItem> orderItems = cartItems.stream()
+                .map(CartItem::toOrderItem)
+                .collect(Collectors.toList());
+        return Order.of(null, orderItems, member, memberCoupon);
     }
 
     public List<CartItem> getCartItems() {
@@ -70,12 +76,5 @@ public class CartItems {
         return "CartItems{" +
                 "cartItems=" + cartItems +
                 '}';
-    }
-
-    public Order order(final Member member, final Coupon coupon) {
-        List<OrderItem> orderItems = cartItems.stream()
-                .map(CartItem::toOrderItem)
-                .collect(Collectors.toList());
-        return Order.of(null, orderItems, member, coupon);
     }
 }

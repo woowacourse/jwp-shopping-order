@@ -1,20 +1,21 @@
-package cart.dao.entity;
+package cart.dto;
 
-import cart.domain.*;
-
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class CouponEntity {
+public class CouponResponse {
+    private Long id;
+    private String name;
+    private Integer minOrderPrice;
+    private Integer maxDiscountPrice;
+    private String type;
+    private Integer discountAmount;
+    private Double discountPercentage;
 
-    private final Long id;
-    private final String name;
-    private final Integer minOrderPrice;
-    private final Integer maxDiscountPrice;
-    private final String type;
-    private final Integer discountAmount;
-    private final Double discountPercentage;
+    public CouponResponse() {
+    }
 
-    public CouponEntity(final Long id, final String name, final Integer minOrderPrice, final Integer maxDiscountPrice, final String type, final Integer discountAmount, final Double discountPercentage) {
+    public CouponResponse(final Long id, final String name, final Integer minOrderPrice, final Integer maxDiscountPrice, final String type, final Integer discountAmount, final Double discountPercentage) {
         this.id = id;
         this.name = name;
         this.minOrderPrice = minOrderPrice;
@@ -22,16 +23,6 @@ public class CouponEntity {
         this.type = type;
         this.discountAmount = discountAmount;
         this.discountPercentage = discountPercentage;
-    }
-
-    public Coupon toCoupon() {
-        CouponType couponType = CouponType.from(type);
-        if (couponType == CouponType.FIXED_AMOUNT) {
-            CouponInfo couponInfo = new CouponInfo(id, name, minOrderPrice, null);
-            return new AmountCoupon(couponInfo, discountAmount);
-        }
-        CouponInfo couponInfo = new CouponInfo(id, name, minOrderPrice, maxDiscountPrice);
-        return new PercentageCoupon(couponInfo, discountPercentage);
     }
 
     public Long getId() {
@@ -66,7 +57,7 @@ public class CouponEntity {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final CouponEntity that = (CouponEntity) o;
+        final CouponResponse that = (CouponResponse) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(minOrderPrice, that.minOrderPrice)
@@ -83,7 +74,7 @@ public class CouponEntity {
 
     @Override
     public String toString() {
-        return "CouponEntity{" +
+        return "CouponResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", minOrderPrice=" + minOrderPrice +
