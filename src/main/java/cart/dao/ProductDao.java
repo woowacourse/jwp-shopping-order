@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Product;
 import cart.entity.ProductEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -28,17 +27,17 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> getAllProducts() {
+    public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public ProductEntity getProductById(Long productId) {
+    public ProductEntity findById(Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
-    public Long createProduct(ProductEntity productEntity) {
+    public Long create(ProductEntity productEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -57,12 +56,16 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void update(ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql,
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.getId());
     }
 
-    public void deleteProduct(Long productId) {
+    public void delete(Long productId) {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }

@@ -16,21 +16,29 @@ public class ProductRepository {
     }
 
 
-    public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities = productDao.getAllProducts();
-
+    public List<Product> findAll() {
+        List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
-                .map(productEntity -> new Product(
-                        productEntity.getId(),
-                        productEntity.getName(),
-                        productEntity.getPrice(),
-                        productEntity.getImageUrl()
-                ))
+                .map(this::convertToDomain)
                 .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId);
+    public Product findById(Long productId) {
+        ProductEntity productEntity = productDao.findById(productId);
+        return convertToDomain(productEntity);
+    }
+
+    public Long save(Product product) {
+        ProductEntity productEntity = convertToEntity(product);
+        return productDao.create(productEntity);
+    }
+
+    public void update(Product product) {
+        ProductEntity productEntity = convertToEntity(product);
+        productDao.update(productEntity);
+    }
+
+    private Product convertToDomain(ProductEntity productEntity) {
         return new Product(
                 productEntity.getId(),
                 productEntity.getName(),
@@ -39,11 +47,11 @@ public class ProductRepository {
         );
     }
 
-    public Long createProduct(Product product) {
-        ProductEntity productEntity = new ProductEntity(null,
+    private ProductEntity convertToEntity(Product product) {
+        return new ProductEntity(
+                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl());
-        return productDao.createProduct(productEntity);
     }
 }
