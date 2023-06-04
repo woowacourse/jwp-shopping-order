@@ -6,6 +6,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.exception.ExceptionType;
 import cart.exception.OrderException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -83,6 +84,13 @@ public class Order {
     public void validateOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
+        }
+    }
+
+    public void validateOrderPrice(BigDecimal totalOrderPrice) {
+        Money totalPrice = calculateTotalPrice();
+        if (totalPrice.isNotSameValue(totalOrderPrice)) {
+            throw new OrderException(ExceptionType.INCORRECT_PRICE);
         }
     }
 

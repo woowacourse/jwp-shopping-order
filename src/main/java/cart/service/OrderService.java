@@ -7,7 +7,6 @@ import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
@@ -21,7 +20,6 @@ import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException;
 import cart.exception.CouponException;
-import cart.exception.ExceptionType;
 import cart.exception.MemberException;
 import cart.exception.OrderException;
 import java.util.Collections;
@@ -57,15 +55,12 @@ public class OrderService {
 
         Order order = Order.of(member, cartItems, orderRequest.getDeliveryFee(), memberCoupon);
 
-        Money totalPrice = order.calculateTotalPrice();
-        if (totalPrice.isNotSameValue(orderRequest.getTotalOrderPrice())) {
-            throw new OrderException(ExceptionType.INCORRECT_PRICE);
-        }
+        order.validateOrderPrice(orderRequest.getTotalOrderPrice());
 
         Order savedOrder = orderRepository.save(order);
         deleteOrdered(cartItems, memberCoupon);
         if (order.isUnusedCoupon()) {
-            couponService.issueByOrderPrice(totalPrice, member);
+            couponService.issueByOrderPrice(order.calculateTotalPrice(), member);
         }
         return savedOrder.getId();
     }

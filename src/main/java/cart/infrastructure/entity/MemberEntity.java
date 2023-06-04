@@ -33,13 +33,4 @@ public class MemberEntity {
     public Member toDomain() {
         return new Member(id, email, password);
     }
-
-    @Override
-    public String toString() {
-        return "MemberEntity{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }
