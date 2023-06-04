@@ -2,10 +2,12 @@ package cart.dao;
 
 import cart.domain.Product;
 import cart.domain.vo.Amount;
+import cart.exception.BusinessException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,12 +35,16 @@ public class ProductDao {
 
     public Product getProductById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, Amount.of(price), imageUrl);
-        });
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+                final String name = rs.getString("name");
+                final int price = rs.getInt("price");
+                final String imageUrl = rs.getString("image_url");
+                return new Product(productId, name, Amount.of(price), imageUrl);
+            });
+        } catch (final EmptyResultDataAccessException e) {
+            throw new BusinessException("존재하지 않는 데이터입니다.");
+        }
     }
 
     public Long createProduct(final Product product) {

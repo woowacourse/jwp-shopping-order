@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -76,9 +77,13 @@ public class OrderDao {
                 + "         join product_order po on o.id = po.order_id "
                 + "         join product p on po.product_id = p.id "
                 + "WHERE o.id = ?";
-        final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper,
-            id);
-        return OrderConverter.convertToOrder(orderProductJoinDtos);
+        try {
+            final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper,
+                id);
+            return OrderConverter.convertToOrder(orderProductJoinDtos);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Order> findByMember(final Member member) {
