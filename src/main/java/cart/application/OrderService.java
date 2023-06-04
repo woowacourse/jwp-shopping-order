@@ -21,20 +21,16 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final MemberCouponRepository memberCouponRepository;
     private final OrderRepository orderRepository;
-    private final OrderCouponRepository orderCouponRepository;
 
     public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository,
-                        OrderRepository orderRepository, OrderCouponRepository orderCouponRepository) {
+                        OrderRepository orderRepository) {
         this.cartItemRepository = cartItemRepository;
         this.memberCouponRepository = memberCouponRepository;
         this.orderRepository = orderRepository;
-        this.orderCouponRepository = orderCouponRepository;
     }
 
     public Long save(Member member, OrderRequest orderRequest) {
-        if (orderRequest.getSelectCartIds().isEmpty()) {
-            throw new OrderException("주문 상품이 비어있습니다.");
-        }
+        validationSave(orderRequest);
 
         List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectCartIds());
 
@@ -43,6 +39,12 @@ public class OrderService {
                 memberCouponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
 
         return orderRepository.save(order);
+    }
+
+    private static void validationSave(OrderRequest orderRequest) {
+        if (orderRequest.getSelectCartIds().isEmpty()) {
+            throw new OrderException("주문 상품이 비어있습니다.");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -60,14 +62,14 @@ public class OrderService {
     }
 
     public void deleteById(Member member, Long orderId) {
+        validationDelete(orderId);
+        orderRepository.deleteById(member, orderId);
+    }
+
+    private void validationDelete(Long orderId) {
         if (orderRepository.checkConfirmStateById(orderId)) {
             throw new OrderException("주문 확정 주문은 취소할 수 없습니다.");
         }
-        Long memberCouponId = orderCouponRepository.deleteByOrderId(orderId);
-        if (memberCouponId != null) {
-            memberCouponRepository.updateUnUsedCouponAvailability(member, memberCouponId);
-        }
-        orderRepository.deleteById(orderId);
     }
 
     public CouponConfirmResponse confirmById(Member member, Long orderId) {

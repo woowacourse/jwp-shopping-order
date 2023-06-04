@@ -14,7 +14,7 @@ public interface OrderRepository {
 
     Order findByIdAndMemberId(Member member, Long orderId);
 
-    void deleteById(Long orderId);
+    void deleteById(Member member, Long orderId);
 
     void confirmById(Long orderId, Member member);
 

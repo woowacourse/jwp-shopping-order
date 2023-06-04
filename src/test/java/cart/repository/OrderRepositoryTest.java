@@ -122,7 +122,7 @@ class OrderRepositoryTest {
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Long orderId1 = orderRepository.save(requestOrder);
 
-        assertDoesNotThrow(()->orderRepository.deleteById(requestOrder.getId()));
+        assertDoesNotThrow(()->orderRepository.deleteById(member,requestOrder.getId()));
     }
 
     @Test

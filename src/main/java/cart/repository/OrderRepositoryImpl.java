@@ -68,7 +68,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public void deleteById(Long orderId) {
+    public void deleteById(Member member, Long orderId) {
+        if (orderCouponDao.checkByOrderId(orderId)) {
+            Long memberCouponId = orderCouponDao.findIdByOrderId(orderId);
+            orderCouponDao.deleteByOrderId(orderId);
+            memberCouponDao.updateUnUsedCouponAvailabilityById(memberCouponId);
+        }
+
         orderDao.deleteById(orderId);
     }
 
