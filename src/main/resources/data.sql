@@ -63,6 +63,15 @@ VALUES (1, 5, '2024-06-8');
 INSERT INTO member_coupon (member_id, coupon_id, expired_date)
 VALUES (1, 6, '2024-06-8');
 
+INSERT INTO member_coupon (member_id, coupon_id, expired_date)
+VALUES (2, 1, '2024-06-16');
+INSERT INTO member_coupon (member_id, coupon_id, expired_date)
+VALUES (2, 2, '2024-06-16');
+INSERT INTO member_coupon (member_id, coupon_id, expired_date)
+VALUES (2, 5, '2024-06-8');
+INSERT INTO member_coupon (member_id, coupon_id, expired_date)
+VALUES (2, 6, '2024-06-8');
+
 INSERT INTO coupon_issue_condition (coupon_id, min_issue_price)
 VALUES (8, 5000000000);
 INSERT INTO coupon_issue_condition (coupon_id, min_issue_price)
