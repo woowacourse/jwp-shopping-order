@@ -1,0 +1,125 @@
+## 사용자 API
+### 회원가입
+POST {{baseUrl}}/users/join
+Content-Type: application/json
+
+{
+  "name": "name",
+  "password": "password"
+}
+
+### 로그인
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "name": "name",
+  "password": "password"
+}
+
+> {%
+    client.test("Validate", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json'");
+        client.assert(response.body.token.trim().length > 0);
+    });
+
+    client.log(response.body.token);
+    client.global.set("credentials", response.body.token)
+%}
+
+### 내 쿠폰함 조회
+GET {{baseUrl}}/users/me/coupons
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+## 상품 API
+### 상풍 목록 조회
+GET {{baseUrl}}/products
+Content-Type: application/json
+
+### 상품 조회
+GET {{baseUrl}}/products/1
+Content-Type: application/json
+
+### 상품 추가
+POST {{baseUrl}}/products
+Content-Type: application/json
+
+{
+  "name": "부리또",
+  "price": 30000,
+  "imageUrl": "http://example.com/burrito.jpg"
+}
+
+### 상품 수정
+PUT {{baseUrl}}/products/4
+Content-Type: application/json
+
+{
+  "name": "부리또",
+  "price": 10000,
+  "imageUrl": "http://example.com/burrito.jpg"
+}
+
+### 상품 삭제
+DELETE {{baseUrl}}/products/4
+
+## 장바구니 API
+### 장바구니 아이템 추가
+POST {{baseUrl}}/cart-items
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "productId": 1
+}
+
+### 장바구니 아이템 목록 조회
+GET {{baseUrl}}/cart-items
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+### 장바구니 아이템 수량 변경
+PATCH {{baseUrl}}/cart-items/1
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### 장바구니 아이템 삭제
+DELETE {{baseUrl}}/cart-items/1
+Authorization: Basic {{credentials}}
+
+
+## 주문 API
+### 상품 주문
+POST {{baseUrl}}/orders
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 5
+    },
+    {
+      "productId": 2,
+      "quantity": 100
+    }
+  ],
+  "couponId": 1
+}
+
+### 주문 내역 조회
+GET {{baseUrl}}/orders
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+### 주문 상품 상세 조회
+GET {{baseUrl}}/orders/1
+Authorization: Basic {{credentials}}
+Content-Type: application/json
