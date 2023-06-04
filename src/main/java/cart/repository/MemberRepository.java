@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.dao.MemberDao;
+import cart.domain.Grade;
 import cart.domain.Member;
 import cart.domain.value.Email;
 import cart.entity.MemberEntity;
@@ -51,6 +52,7 @@ public class MemberRepository {
                 memberEntity.getId(),
                 memberEntity.getEmail(),
                 memberEntity.getPassword(),
+                Grade.valueOf(memberEntity.getGrade()),
                 memberEntity.getTotalPurchaseAmount()
         );
     }

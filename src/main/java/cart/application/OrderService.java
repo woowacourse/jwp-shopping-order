@@ -59,10 +59,10 @@ public class OrderService {
         final Order order = new Order(orderItems, request.getShippingFee(), member);
         final Long savedId = orderRepository.saveOrder(order).getId();
 
-        final Member foundMember = memberRepository.findById(member.getId());
-        foundMember.addTotalPurchaseAmount(order.calculateTotalPrice());
-        foundMember.upgradeGrade();
-        memberRepository.update(foundMember);
+        member.addTotalPurchaseAmount(order.calculateTotalPrice());
+        member.upgradeGrade();
+        System.out.println("foundMember.getGrade() = " + member.getGrade());
+        memberRepository.update(member);
         return savedId;
     }
 
