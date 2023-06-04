@@ -8,6 +8,7 @@ import cart.domain.coupon.MemberCoupon;
 import cart.domain.vo.Price;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
+import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
 import cart.service.response.MemberCouponResponse;
 import java.util.List;
@@ -45,5 +46,11 @@ public class CouponService {
         final Coupon coupon = couponRepository.findById(id);
         final MemberCoupon memberCoupon = new MemberCoupon(coupon, member.getId());
         return memberCouponRepository.insert(memberCoupon).getId();
+    }
+
+    public List<CouponResponse> findAll() {
+        return couponRepository.findAll().stream()
+                .map(CouponResponse::from)
+                .collect(toUnmodifiableList());
     }
 }

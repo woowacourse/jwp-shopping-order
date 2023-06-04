@@ -22,6 +22,7 @@ public class CouponDao {
         final String couponType = rs.getString("coupon_type");
         return new CouponDto(couponId, name, value, couponType);
     };
+
     private final SimpleJdbcInsert jdbcInsert;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -56,6 +57,11 @@ public class CouponDao {
                 + "inner join coupon c"
                 + "on mc.member_id = c.id"
                 + "where mc.member_id = " + id;
+        return jdbcTemplate.query(sql, COUPON_DTO_ROW_MAPPER);
+    }
+
+    public List<CouponDto> findAll() {
+        final String sql = "select * from coupon";
         return jdbcTemplate.query(sql, COUPON_DTO_ROW_MAPPER);
     }
 }

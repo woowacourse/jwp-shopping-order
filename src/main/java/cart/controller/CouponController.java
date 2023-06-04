@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.domain.Member;
 import cart.service.CouponService;
+import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
 import cart.service.response.MemberCouponResponse;
 import java.net.URI;
@@ -24,10 +25,16 @@ public class CouponController {
         this.couponService = couponService;
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<List<MemberCouponResponse>> findMemberCoupons(final Member member) {
         final List<MemberCouponResponse> memberCoupons = couponService.findMemberCoupons(member);
         return ResponseEntity.ok(memberCoupons);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CouponResponse>> findCoupons() {
+        final List<CouponResponse> coupons = couponService.findAll();
+        return ResponseEntity.ok(coupons);
     }
 
     @GetMapping("/discount")

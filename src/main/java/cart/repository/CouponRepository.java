@@ -37,4 +37,10 @@ public class CouponRepository {
                 .map(CouponDto::toCoupon)
                 .collect(toUnmodifiableList());
     }
+
+    public List<Coupon> findAll() {
+        return couponDao.findAll().stream()
+                .map(CouponDto::toCoupon)
+                .collect(toUnmodifiableList());
+    }
 }
