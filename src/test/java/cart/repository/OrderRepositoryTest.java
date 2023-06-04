@@ -67,7 +67,6 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (성공)")
     void delete_success() {
-        out.println(cartItemDao.findAll());
         orderRepository.deleteCartItems(List.of(1L, 2L));
 
         List<CartItem> cartItemsAfterDelete = cartItemDao.findByMemberId(MemberFixture.MEMBER_1.getId());

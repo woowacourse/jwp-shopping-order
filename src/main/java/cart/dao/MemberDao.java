@@ -56,5 +56,6 @@ public class MemberDao {
             return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
         }
     }
+
 }
 

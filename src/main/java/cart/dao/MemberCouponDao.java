@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.MemberCoupon;
 import cart.dto.MemberCouponDto;
 import java.util.HashMap;
 import java.util.List;

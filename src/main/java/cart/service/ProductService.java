@@ -1,13 +1,12 @@
 package cart.service;
 
-import cart.domain.Product;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponseDto;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
@@ -47,4 +46,5 @@ public class ProductService {
     public void deleteProduct(Long productId) {
         productDao.deleteProduct(productId);
     }
+
 }

@@ -20,7 +20,6 @@ public class Money {
             throw new IllegalArgumentException("가격이 음수일 수 없습니다.");
         }
     }
-
     public Integer getValue() {
         return value;
     }

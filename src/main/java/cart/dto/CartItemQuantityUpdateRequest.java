@@ -13,4 +13,5 @@ public class CartItemQuantityUpdateRequest {
     public int getQuantity() {
         return quantity;
     }
+
 }

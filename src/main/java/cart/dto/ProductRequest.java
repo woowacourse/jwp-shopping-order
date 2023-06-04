@@ -25,4 +25,5 @@ public class ProductRequest {
     public String getImageUrl() {
         return imageUrl;
     }
+
 }

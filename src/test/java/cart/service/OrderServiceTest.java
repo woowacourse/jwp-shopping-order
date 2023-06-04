@@ -1,5 +1,7 @@
 package cart.service;
 
+import static fixture.CartItemFixture.CART_ITEM_1;
+import static fixture.CartItemFixture.CART_ITEM_2;
 import static fixture.MemberCouponFixture.MEMBER_COUPON_1;
 import static fixture.MemberFixture.MEMBER_1;
 import static fixture.OrderFixture.ORDER_1;
@@ -27,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ServiceTest
 class OrderServiceTest {
 
-
     @Autowired
     private OrderService orderService;
 
@@ -35,7 +36,9 @@ class OrderServiceTest {
     @MethodSource("validateOrder")
     @DisplayName("주문을 진행한다.")
     void orderCartItemsNoCoupon(String testName, Long couponId, Integer discountPrice, Integer totalPrice) {
-        OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L, 2L), couponId);
+        OrderRequestDto orderRequestDto = new OrderRequestDto(
+                List.of(CART_ITEM_1.getId(), CART_ITEM_2.getId()), couponId
+        );
 
         OrderResponseDto orderResponseDto = orderService.orderCartItems(MEMBER_1, orderRequestDto);
 
@@ -83,4 +86,5 @@ class OrderServiceTest {
                         List.of(OrderResponseDto.from(ORDER_1), OrderResponseDto.from(ORDER_2))
                 );
     }
+
 }
