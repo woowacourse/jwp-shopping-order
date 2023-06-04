@@ -18,8 +18,8 @@ public class Point {
         return this.point - requestPoint;
     }
 
-    public Long getPointByPolicy(Long requestPoint) {
-        double caculatedPoint = requestPoint * POINT_POLICY;
+    public Long getPointByPolicy(Long amountPayment) {
+        double caculatedPoint = amountPayment * POINT_POLICY;
         return (long) caculatedPoint;
     }
 

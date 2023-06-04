@@ -33,41 +33,39 @@ public class OrderService {
         this.pointRepository = pointRepository;
     }
 
-    public OrderCreateResponse createOrder(Member member, OrderRequest orderRequest) {
-        System.out.println("orderRequest.getOrderItemDtoList(): "+ orderRequest.getOrder().size());
-        List<OrderItem> orderItemList = orderRequest.getOrder().stream()
+    public OrderCreateResponse createOrder(final Member member, final OrderRequest orderRequest) {
+        final List<OrderItem> orderItemList = orderRequest.getOrder().stream()
                 .map(orderItemDto -> new OrderItem(cartItemDao.findById(orderItemDto.getCartItemId()).getProduct(), orderItemDto.getQuantity()))
                 .collect(toList());
-        System.out.println("orderItemList: "+ orderItemList.size());
 
         // TODO: optional 예외처리 구현하기
-        ShippingFee shippingFee = orderRepository.findShippingFee();
-        ShippingDiscountPolicy shippingDiscountPolicy = orderRepository.findShippingDiscountPolicy();
+        final ShippingFee shippingFee = orderRepository.findShippingFee();
+        final ShippingDiscountPolicy shippingDiscountPolicy = orderRepository.findShippingDiscountPolicy();
 
-        Order newOrder = Order.of(member,
+        final Order newOrder = Order.of(member,
                 shippingFee.getFee(),
                 orderItemList,
                 shippingDiscountPolicy.getThreshold(),
                 new Point(orderRequest.getUsedPoint()));
-        Long orderId = orderRepository.saveOrder(member, newOrder);
-        Point memberPoint = pointRepository.findPointByMemberId(member.getId());
+        final Long orderId = orderRepository.saveOrder(member, newOrder);
+        final Point memberPoint = pointRepository.findPointByMemberId(member.getId());
 
-        pointRepository.updatePoint(member.getId(),memberPoint.minus(orderRequest.getUsedPoint()));
-        Long earnedPoint = memberPoint.getPointByPolicy(newOrder.getTotalPrice());
-        pointRepository.updatePoint(member.getId(),earnedPoint);
+        pointRepository.updatePoint(member.getId(), memberPoint.minus(orderRequest.getUsedPoint()));
+        final Long earnedPoint = memberPoint.getPointByPolicy(newOrder.getTotalPrice() - orderRequest.getUsedPoint());
+        pointRepository.updatePoint(member.getId(), earnedPoint);
 
-        return new OrderCreateResponse(orderId,earnedPoint);
+        return new OrderCreateResponse(orderId, earnedPoint);
     }
 
-    public List<OrdersResponse> findAllOrdersByMember(Member member) {
-        List<Order> orders = orderRepository.findAllOrdersByMember(member);
+    public List<OrdersResponse> findAllOrdersByMember(final Member member) {
+        final List<Order> orders = orderRepository.findAllOrdersByMember(member);
         return orders.stream()
                 .map(OrdersResponse::from)
                 .collect(toList());
     }
 
-    public OrderResponse findOrderDetailsByOrderId(Member member, Long orderId) {
-        Order order = orderRepository.findOrderById(member, orderId);
+    public OrderResponse findOrderDetailsByOrderId(final Member member, final Long orderId) {
+        final Order order = orderRepository.findOrderById(member, orderId);
         return OrderResponse.from(order);
     }
 
