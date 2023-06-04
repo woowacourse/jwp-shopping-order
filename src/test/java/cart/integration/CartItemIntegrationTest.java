@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+@Transactional
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
@@ -37,9 +39,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 0));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 50));
-
         member = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);
     }
@@ -47,6 +46,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
@@ -56,6 +58,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
@@ -66,6 +71,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
     void getCartItems() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
         Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
 
@@ -82,6 +90,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
     void increaseCartItemQuantity() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
@@ -102,6 +113,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
     void decreaseCartItemQuantityToZero() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);
@@ -121,6 +135,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
     void updateOtherMembersCartItem() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
@@ -131,6 +148,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
     void removeCartItem() {
+        productId = createProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("피자2", 15_000, "http://example.com/pizza.jpg", 50));
+
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
         ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
