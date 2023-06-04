@@ -2,7 +2,8 @@ package cart.ui;
 
 import cart.application.ProductService;
 import cart.dto.request.Ids;
-import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductCreateRequest;
+import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
 import java.net.URI;
 import java.util.List;
@@ -45,15 +46,15 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
-        final Long id = productService.addProduct(productRequest);
+    public ResponseEntity<Void> createProduct(@RequestBody final ProductCreateRequest request) {
+        final Long id = productService.addProduct(request);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable final Long id,
-                                              @RequestBody final ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
+                                              @RequestBody final ProductUpdateRequest request) {
+        productService.updateProduct(id, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

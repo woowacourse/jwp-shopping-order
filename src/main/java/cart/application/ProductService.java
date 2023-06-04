@@ -2,7 +2,8 @@ package cart.application;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductCreateRequest;
+import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.NoSuchDataExistException;
 import java.util.List;
@@ -22,7 +23,9 @@ public class ProductService {
 
     public List<ProductResponse> findAllProducts() {
         final List<Product> products = productDao.findAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse findProductById(final Long productId) {
@@ -41,15 +44,16 @@ public class ProductService {
     }
 
     @Transactional
-    public Long addProduct(final ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
+    public Long addProduct(final ProductCreateRequest productCreateRequest) {
+        final Product product = new Product(productCreateRequest.getName(), productCreateRequest.getPrice(),
+                productCreateRequest.getImageUrl());
         return productDao.saveProduct(product);
     }
 
-    public void updateProduct(final Long productId, final ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
+    @Transactional
+    public void updateProduct(final Long productId, final ProductUpdateRequest request) {
+        final Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
+
         productDao.updateProduct(productId, product);
     }
 

@@ -1,14 +1,11 @@
 package cart.dto.request;
 
-public class ProductRequest {
-    private String name;
-    private int price;
-    private String imageUrl;
+public class ProductCreateRequest {
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
 
-    public ProductRequest() {
-    }
-
-    public ProductRequest(final String name, final int price, final String imageUrl) {
+    public ProductCreateRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -18,7 +15,7 @@ public class ProductRequest {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
