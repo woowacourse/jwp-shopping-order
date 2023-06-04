@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import cart.domain.Point;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductAddRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.request.ProductAddRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;

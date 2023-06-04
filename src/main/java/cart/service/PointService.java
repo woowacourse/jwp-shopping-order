@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.domain.Member;
 import cart.domain.Point;
-import cart.dto.PointResponse;
+import cart.dto.response.PointResponse;
 import cart.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

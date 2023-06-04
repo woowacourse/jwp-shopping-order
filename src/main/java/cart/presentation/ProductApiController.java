@@ -1,7 +1,7 @@
 package cart.presentation;
 
-import cart.dto.ProductAddRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductAddRequest;
+import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

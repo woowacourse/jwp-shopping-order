@@ -1,7 +1,7 @@
 package cart.presentation;
 
 import cart.domain.Member;
-import cart.dto.PointResponse;
+import cart.dto.response.PointResponse;
 import cart.service.PointService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

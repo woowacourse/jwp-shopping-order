@@ -1,8 +1,8 @@
 package cart.presentation;
 
 import cart.domain.Member;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderResponse;
 import cart.service.OrderService;
 import java.net.URI;
 import java.util.List;

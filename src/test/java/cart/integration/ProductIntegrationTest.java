@@ -4,8 +4,8 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.ProductAddRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductAddRequest;
+import cart.dto.response.ProductResponse;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

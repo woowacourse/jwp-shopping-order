@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.domain.Product;
 import cart.dao.ProductDao;
-import cart.dto.ProductAddRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductAddRequest;
+import cart.dto.response.ProductResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

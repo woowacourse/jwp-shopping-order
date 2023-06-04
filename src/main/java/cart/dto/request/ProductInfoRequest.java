@@ -1,18 +1,19 @@
-package cart.dto;
+package cart.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public class ProductAddRequest {
+@Getter
+public class ProductInfoRequest {
 
+    private final Long productId;
     private final String name;
     private final Integer price;
     private final String imageUrl;
     private final Integer stock;
 
-    private ProductAddRequest() {
-        this(null, null, null, null);
+    private ProductInfoRequest() {
+        this(null, null, null, null, null);
     }
 }
