@@ -1,6 +1,8 @@
 package cart.exception.product;
 
-public class ProductNotFoundException extends ProductException{
+import cart.exception.comon.NotFoundException;
+
+public class ProductNotFoundException extends NotFoundException {
 
     private static final String PRODUCT_NOT_FOUND_EXCEPTION = "존재하지 않는 상품입니다.";
 
