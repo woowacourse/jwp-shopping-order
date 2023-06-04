@@ -1,17 +1,19 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Point;
 import cart.domain.Product;
-import cart.dto.response.OrderDetailResponse;
 import cart.dto.request.OrderItemRequest;
-import cart.dto.response.OrderItemResponse;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderDetailResponse;
+import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
+import cart.exception.PointNotEnoughException;
 import cart.exception.ProductNotFoundException;
 import cart.repository.OrderRepository;
 import java.time.LocalDateTime;
@@ -26,28 +28,35 @@ public class OrderService {
     private static final int POINT_REWARD_PERCENT = 10;
 
     private final OrderRepository orderRepository;
-    private final PointService pointService;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+    private final MemberDao memberDao;
 
-    public OrderService(OrderRepository orderRepository, PointService pointService, ProductDao productDao,
-                        CartItemDao cartItemDao) {
+    public OrderService(OrderRepository orderRepository, ProductDao productDao,
+                        CartItemDao cartItemDao,
+                        MemberDao memberDao) {
         this.orderRepository = orderRepository;
-        this.pointService = pointService;
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
+        this.memberDao = memberDao;
     }
 
     @Transactional
     public Long createOrder(OrderRequest orderRequest, Member member) {
         List<OrderItem> orderItems = createOrderItems(orderRequest);
         Point spendPoint = new Point(orderRequest.getSpendPoint());
+        decreaseMemberPoint(member, spendPoint);
         Order order = new Order(null, member, orderItems, spendPoint.getAmount(), LocalDateTime.now());
-        pointService.decreasePoint(member, spendPoint);
         Order saveOrder = orderRepository.save(order);
-        pointService.increasePoint(member, saveOrder.calculateRewardPoint(POINT_REWARD_PERCENT));
+        member.increasePoint(saveOrder.calculateRewardPoint(POINT_REWARD_PERCENT));
         deleteCartItems(member, orderItems);
+        memberDao.updateMember(member);
         return saveOrder.getId();
+    }
+
+    private void decreaseMemberPoint(Member member, Point spendPoint) {
+        validatePoint(member, spendPoint);
+        member.decreasePoint(spendPoint);
     }
 
     private List<OrderItem> createOrderItems(OrderRequest orderRequest) {
@@ -59,6 +68,12 @@ public class OrderService {
             orderItems.add(new OrderItem(null, product, quantity, product.getPrice() * quantity));
         }
         return orderItems;
+    }
+
+    private void validatePoint(Member member, Point point) {
+        if (member.hasNotEnoughPoint(point)) {
+            throw new PointNotEnoughException("포인트가 부족합니다.");
+        }
     }
 
     private Product findProduct(Long productId) {
