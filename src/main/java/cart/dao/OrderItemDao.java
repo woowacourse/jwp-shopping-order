@@ -22,15 +22,15 @@ public class OrderItemDao {
     }
 
     public void saveAllItems(Long orderId, Order order) {
-        List<OrderItem> cartItems = order.getOrderItems();
-        int itemCount = cartItems.size();
+        List<OrderItem> orderItems = order.getOrderItems();
+        int itemCount = orderItems.size();
 
         String query = "INSERT INTO order_item (order_id, product_id, `name`, price, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                OrderItem orderItem = cartItems.get(i);
+                OrderItem orderItem = orderItems.get(i);
                 Long productId = orderItem.getProductId();
                 String name = orderItem.getName();
                 int price = orderItem.getPrice();

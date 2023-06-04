@@ -20,6 +20,7 @@ import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.PriceCalculator;
+import cart.dto.request.CartItemRequest;
 import cart.dto.request.MemberCouponAddRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.CouponResponse;
@@ -72,14 +73,26 @@ public class OrderService {
 
     @Transactional
     public Long add(Member member, OrderRequest orderRequest) {
-        List<Long> cartItemIds = orderRequest.getCartItemIds();
-        if (cartItemIds == null) {
+        List<CartItemRequest> cartItemRequests = orderRequest.getProducts();
+
+        if (cartItemRequests == null) {
             throw new BadRequestException(ExceptionType.CART_ITEM_EMPTY);
         }
 
-        List<OrderItem> orderItems = cartItemDao.findByIds(cartItemIds)
+        List<Long> cartItemIds = orderRequest.getProducts()
             .stream()
-            .map(CartItem::toOrderItem)
+            .map(CartItemRequest::getProductId)
+            .collect(Collectors.toUnmodifiableList());
+
+        List<OrderItem> orderItems = cartItemRequests.stream()
+            .map(request -> new OrderItem(
+                null,
+                null,
+                request.getProductId(),
+                request.getName(),
+                request.getPrice(),
+                request.getImageUrl(),
+                request.getQuantity()))
             .collect(Collectors.toUnmodifiableList());
 
         Long memberCouponId = orderRequest.getCouponId();
