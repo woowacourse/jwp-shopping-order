@@ -1,7 +1,7 @@
 package cart.domain;
 
 
-import static cart.domain.CouponType.FIXED;
+import static cart.domain.CouponType.PRICE;
 import static cart.domain.CouponType.RATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +22,7 @@ class CouponTest {
         @Test
         void 천원_할인한다() {
             // given
-            Coupon coupon = new Coupon("1000원 할인 쿠폰", FIXED, 1000);
+            Coupon coupon = new Coupon("1000원 할인 쿠폰", PRICE, 1000);
 
             // when
             int actual = coupon.apply(4000);
@@ -34,7 +34,7 @@ class CouponTest {
         @Test
         void 쿠폰을_적용한_금액은_0미만으로_내려가지않는다() {
             // given
-            Coupon coupon = new Coupon("1000원 할인 쿠폰", FIXED, 3000);
+            Coupon coupon = new Coupon("1000원 할인 쿠폰", PRICE, 3000);
 
             // when
             int actual = coupon.apply(2000);

@@ -16,7 +16,7 @@ class CouponTypeTest {
     @Test
     void 고정금액으로_천원_할인한다() {
         // when
-        int actual = CouponType.FIXED.apply(4000, 1000);
+        int actual = CouponType.PRICE.apply(4000, 1000);
 
         // then
         assertThat(actual).isEqualTo(3000);

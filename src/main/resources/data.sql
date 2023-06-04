@@ -1,8 +1,8 @@
 insert IGNORE  into member values (1, 'a@a.com', '1234');
 insert IGNORE into member values (2, 'b@b.com', '1234');
 
-insert IGNORE into coupon VALUES (1, '1000원 할인 쿠폰', 'FIXED', 1000);
-insert IGNORE into coupon VALUES (2, '2000원 할인 쿠폰', 'FIXED', 2000);
+insert IGNORE into coupon VALUES (1, '1000원 할인 쿠폰', 'PRICE', 1000);
+insert IGNORE into coupon VALUES (2, '2000원 할인 쿠폰', 'PRICE', 2000);
 insert IGNORE into coupon VALUES (3, '10% 할인 쿠폰', 'RATE', 10);
 insert IGNORE into coupon VALUES (4, '20% 할인 쿠폰', 'RATE', 20);
 

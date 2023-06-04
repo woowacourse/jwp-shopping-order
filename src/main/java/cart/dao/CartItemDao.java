@@ -70,7 +70,7 @@ public class CartItemDao {
             return;
         }
 
-        String sql = "DELETE FROM cart_Item WHERE id IN (:ids)";
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         namedParameterJdbcTemplate.update(sql, parameters);

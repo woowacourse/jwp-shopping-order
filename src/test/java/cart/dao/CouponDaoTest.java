@@ -1,6 +1,6 @@
 package cart.dao;
 
-import static cart.domain.CouponType.FIXED;
+import static cart.domain.CouponType.PRICE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -36,7 +36,7 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_저장한다() {
         // given
-        Coupon coupon = new Coupon("1000원 할인 쿠폰", FIXED, 1000);
+        Coupon coupon = new Coupon("1000원 할인 쿠폰", PRICE, 1000);
 
         // when
         Long actual = couponDao.save(coupon);
@@ -48,7 +48,7 @@ class CouponDaoTest {
     @Test
     void 아이디를_통해_쿠폰을_조회한다() {
         // given
-        Coupon expected = new Coupon("1000원 할인 쿠폰", FIXED, 1000);
+        Coupon expected = new Coupon("1000원 할인 쿠폰", PRICE, 1000);
         Long id = couponDao.save(expected);
 
         // when

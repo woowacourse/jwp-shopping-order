@@ -27,7 +27,7 @@ class CouponServiceTest {
     @Test
     void 회원_아이디를_통해_모든_쿠폰을_반환한다() {
         // given
-        Coupon firstCoupon = new Coupon(1L, "1000원 쿠폰", CouponType.FIXED, 1000);
+        Coupon firstCoupon = new Coupon(1L, "1000원 쿠폰", CouponType.PRICE, 1000);
         Coupon secondCoupon = new Coupon(2L, "10% 쿠폰", CouponType.RATE, 10);
         List<MemberCoupon> memberCoupons = List.of(
                 new MemberCoupon(1L, 1L, firstCoupon, false),

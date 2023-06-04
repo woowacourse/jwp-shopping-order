@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 
 public enum CouponType {
 
-    FIXED((paymentAmount, discountAmount) -> paymentAmount - discountAmount),
+    PRICE((paymentAmount, discountAmount) -> paymentAmount - discountAmount),
     RATE((paymentAmount, discountAmount) -> (int) (paymentAmount * (1 - discountAmount / 100.0)));
 
     private final BiFunction<Integer, Integer, Integer> expression;
