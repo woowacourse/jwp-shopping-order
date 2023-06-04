@@ -55,9 +55,8 @@ public class OrderDao {
             LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
 
             ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-            ZonedDateTime seoulTime = orderedAt.atZone(ZoneOffset.UTC).withZoneSameInstant(seoulZoneId);
+            ZonedDateTime seoulTime = orderedAt.atZone(ZoneId.systemDefault()).withZoneSameInstant(seoulZoneId);
             LocalDateTime orderedAtSeoul = seoulTime.toLocalDateTime();
-
 
             return new Order(id, totalItemPrice, discountedTotalItemPrice, shippingFee, orderedAtSeoul, memberId);
         });
@@ -73,7 +72,7 @@ public class OrderDao {
             int shippingFee = rs.getInt("shipping_fee");
 
             ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-            ZonedDateTime seoulTime = orderedAt.atZone(ZoneOffset.UTC).withZoneSameInstant(seoulZoneId);
+            ZonedDateTime seoulTime = orderedAt.atZone(ZoneId.systemDefault()).withZoneSameInstant(seoulZoneId);
             LocalDateTime orderedAtSeoul = seoulTime.toLocalDateTime();
 
 
@@ -91,7 +90,7 @@ public class OrderDao {
             int shippingFee = rs.getInt("shipping_fee");
 
             ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-            ZonedDateTime seoulTime = orderedAt.atZone(ZoneOffset.UTC).withZoneSameInstant(seoulZoneId);
+            ZonedDateTime seoulTime = orderedAt.atZone(ZoneId.systemDefault()).withZoneSameInstant(seoulZoneId);
             LocalDateTime orderedAtSeoul = seoulTime.toLocalDateTime();
 
 
