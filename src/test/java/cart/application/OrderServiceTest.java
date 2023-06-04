@@ -2,7 +2,11 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
-import cart.domain.*;
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.MemberGrade;
+import cart.domain.Order;
+import cart.domain.Product;
 import cart.dto.OrderRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
