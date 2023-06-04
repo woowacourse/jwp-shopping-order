@@ -5,6 +5,8 @@ import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Product Controller")
 @RestController
 @RequestMapping("/products")
 public class ProductApiController {
@@ -27,6 +30,7 @@ public class ProductApiController {
         this.productService = productService;
     }
 
+    @ApiOperation(value = "모든 상품 조회")
     @GetMapping
     public ResponseEntity<Response> getAllProducts() {
         List<ProductResponse> products = productService.getAllProducts();
@@ -34,6 +38,7 @@ public class ProductApiController {
                 .body(new ResultResponse<>("모든 상품이 조회되었습니다.", products));
     }
 
+    @ApiOperation(value = "상품 상세 조회")
     @GetMapping("/{id}")
     public ResponseEntity<Response> getProductById(@PathVariable Long id) {
         ProductResponse product = productService.getProductById(id);
@@ -41,6 +46,7 @@ public class ProductApiController {
                 .body(new ResultResponse<>("상품이 조회되었습니다.", product));
     }
 
+    @ApiOperation(value = "상품 생성")
     @PostMapping
     public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         Long id = productService.createProduct(productRequest);
@@ -48,6 +54,7 @@ public class ProductApiController {
                 .body(new Response("상품이 생성되었습니다."));
     }
 
+    @ApiOperation(value = "상품 수정")
     @PutMapping("/{id}")
     public ResponseEntity<Response> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
@@ -55,6 +62,7 @@ public class ProductApiController {
                 .body(new Response("상품이 수정되었습니다."));
     }
 
+    @ApiOperation(value = "상품 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

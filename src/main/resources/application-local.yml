@@ -4,3 +4,6 @@ spring:
   sql:
     init:
       encoding: utf-8
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
