@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -46,9 +47,7 @@ public class OrderRepository {
         List<Long> orderIds = allOrderEntities.stream()
                 .map(OrderEntity::getId)
                 .collect(Collectors.toList());
-
         Map<Long, List<OrderItem>> orderItemByOrderId = getOrderItemByOrderId(allOrderEntities, orderIds);
-
         Map<Long, MemberCoupon> couponById = findMemberCouponByOrderEntitiesAndMember(allOrderEntities, member);
 
         return allOrderEntities.stream()
@@ -60,21 +59,29 @@ public class OrderRepository {
         OrderEntity orderEntity = orderDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
         List<OrderItemEntity> orderItemEntities = orderItemDao.finByOrderId(orderEntity.getId());
-        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(orderEntity.getMemberCouponId())
-                .orElseThrow(() -> new IllegalArgumentException("멤버 쿠폰이 존재하지 않습니다."));
-        System.out.println(memberCouponEntity);
-        CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId())
-                .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
         MemberEntity memberEntity = memberDao.findById(orderEntity.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다."));
-
         Member member = memberEntity.toMember();
-        Coupon coupon = couponEntity.toCoupon();
-        MemberCoupon memberCoupon = memberCouponEntity.toMemberCoupon(coupon, member);
+
+
+        MemberCoupon memberCoupon = findMemberCoupon(orderEntity, member);
+
         List<OrderItem> orderItems = orderItemEntities.stream()
                 .map(OrderItemEntity::toOrderItem)
                 .collect(Collectors.toList());
         return Order.of(orderEntity.getId(), orderItems, member, memberCoupon);
+    }
+
+    private MemberCoupon findMemberCoupon(final OrderEntity orderEntity, final Member member) {
+        Optional<MemberCouponEntity> maybeMemberCouponEntity = memberCouponDao.findById(orderEntity.getMemberCouponId());
+        if (maybeMemberCouponEntity.isEmpty()) {
+            return new EmptyMemberCoupon();
+        }
+        MemberCouponEntity memberCouponEntity = maybeMemberCouponEntity.get();
+        CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId())
+                .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
+        Coupon coupon = couponEntity.toCoupon();
+        return memberCouponEntity.toMemberCoupon(coupon, member);
     }
 
     public void delete(final Order order) {

@@ -35,7 +35,6 @@ public class MemberCouponEntity {
     }
 
     public MemberCoupon toMemberCoupon(final Coupon coupon, final Member member) {
-        System.out.println(isUsed);
         if (isUsed) {
             return new UsedMemberCoupon(id, coupon, member, expiredAt, createdAt);
         }

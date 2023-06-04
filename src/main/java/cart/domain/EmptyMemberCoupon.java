@@ -28,7 +28,7 @@ public class EmptyMemberCoupon implements MemberCoupon {
 
     @Override
     public Long getId() {
-        throw new UnsupportedOperationException("지원하지 않는 기능입니다.");
+        return null;
     }
 
     @Override

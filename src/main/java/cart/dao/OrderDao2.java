@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,7 @@ public class OrderDao2 {
                     new String[]{"id"}
             );
             ps.setLong(1, orderEntity.getMemberId());
-            ps.setLong(2, orderEntity.getMemberCouponId());
+            ps.setObject(2, orderEntity.getMemberCouponId(), Types.BIGINT);
             ps.setInt(3, orderEntity.getShippingFee());
             ps.setInt(4, orderEntity.getTotalPrice());
             return ps;
