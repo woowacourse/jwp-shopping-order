@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -24,7 +23,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return ProductResponse.createProductResponses(products);
     }
 
     @Transactional(readOnly = true)

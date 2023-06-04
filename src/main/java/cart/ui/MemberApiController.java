@@ -35,6 +35,6 @@ public class MemberApiController {
     )
     @GetMapping
     public ResponseEntity<MemberForOrderResponse> showMemberForOrder(@Parameter(name = "member", description = "인증된 멤버", required = true, hidden = true) Member member) {
-        return ResponseEntity.ok(new MemberForOrderResponse(member.getEmail(), pointService.findByMember(member), pointService.findEarnRateByMember(member)));
+        return ResponseEntity.ok(MemberForOrderResponse.of(member, pointService.findByMember(member), pointService.findEarnRateByMember(member)));
     }
 }

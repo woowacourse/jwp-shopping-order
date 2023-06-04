@@ -5,7 +5,6 @@ import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.OrderDetailResponse;
-import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.exception.NoSuchCartItemException;
 import cart.exception.NoSuchOrderException;
@@ -66,13 +65,8 @@ public class OrderService {
     public List<OrderDetailResponse> findOrderByMember(Member member) {
         List<Orders> orders = orderDao.getOrdersByMemberId(member.getId());
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
-        for (Orders order : orders) {
-            List<OrderProductResponse> orderProductResponses = new ArrayList<>();
-            for (OrderDetail orderDetail : orderDao.getOrderDetailsByOrdersId(order.getId())) {
-                orderProductResponses.add(new OrderProductResponse(orderDetail.getProduct().getId(), orderDetail.getProductName(), orderDetail.getOrderQuantity(), orderDetail.getProductPrice(), orderDetail.getProductImageUrl()));
-            }
-            int totalPrice = orderProductResponses.stream().map(orderProductResponse -> orderProductResponse.getPrice() * orderProductResponse.getQuantity()).reduce(Integer::sum).orElseThrow(() -> new IllegalArgumentException("총 결제 금액 계산 실패"));
-            orderDetailResponses.add(new OrderDetailResponse(order.getId(), order.getCreatedAt(), orderProductResponses, totalPrice, order.getUsedPoint(), order.getEarnedPoint()));
+        for (Orders ordersOne : orders) {
+            orderDetailResponses.add(generateOrderDetailResponse(ordersOne));
         }
 
         return orderDetailResponses;
@@ -80,13 +74,13 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderDetailResponse findOrderDetailByOrderId(Long id) {
-        Orders order = orderDao.getOrdersByOrderId(id).orElseThrow(NoSuchOrderException::new);
-        List<OrderProductResponse> orderProductResponses = new ArrayList<>();
-        for (OrderDetail orderDetail : orderDao.getOrderDetailsByOrdersId(order.getId())) {
-            orderProductResponses.add(new OrderProductResponse(orderDetail.getProduct().getId(), orderDetail.getProductName(), orderDetail.getOrderQuantity(), orderDetail.getProductPrice(), orderDetail.getProductImageUrl()));
-        }
-        int totalPrice = orderProductResponses.stream().map(orderProductResponse -> orderProductResponse.getPrice() * orderProductResponse.getQuantity()).reduce(Integer::sum).orElseThrow(() -> new IllegalArgumentException("총 결제 금액 계산 실패"));
+        Orders orders = orderDao.getOrdersByOrderId(id).orElseThrow(NoSuchOrderException::new);
+        return generateOrderDetailResponse(orders);
+    }
 
-        return new OrderDetailResponse(order.getId(), order.getCreatedAt(), orderProductResponses, totalPrice, order.getUsedPoint(), order.getEarnedPoint());
+    private OrderDetailResponse generateOrderDetailResponse(Orders orders) {
+        List<OrderDetail> orderDetails = orderDao.getOrderDetailsByOrdersId(orders.getId());
+
+        return OrderDetailResponse.of(orders, orderDetails);
     }
 }
