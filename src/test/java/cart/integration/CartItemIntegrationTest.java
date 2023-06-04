@@ -206,7 +206,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     private ExtractableResponse<Response> requestGetCartItems(Member member) {
         return given(this.spec).log().all()
-            .filter(document("add-cart-item"))
+            .filter(document("get-cart-item"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
             .when()

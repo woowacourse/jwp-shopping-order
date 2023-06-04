@@ -38,6 +38,11 @@ operation::delete-product[snippets='http-request,path-parameters,http-response']
 [[장바구니-상품-API]]
 == Cart Item API
 
+[[장바구니-상품-조회-API]]
+=== 장바구니 상품 조회
+
+operation::get-cart-item[snippets='http-request,http-response']
+
 [[장바구니-상품-추가-API]]
 === 장바구니 상품 추가
 
