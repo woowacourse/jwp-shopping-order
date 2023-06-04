@@ -33,14 +33,14 @@ public class ProductService {
         List<Product> products = productRepository.findAll();
 
         return products.stream()
-                .map(ProductResponse::of)
+                .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findByProductId(productId);
 
-        return ProductResponse.of(product);
+        return ProductResponse.from(product);
     }
 
     @Transactional

@@ -42,7 +42,7 @@ class CartItemServiceTest extends ServiceTestConfig {
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
                 .isEqualTo(List.of(
-                        CartItemResponse.of(new CartItem(계란, 회원, 1))
+                        CartItemResponse.from(new CartItem(계란, 회원, 1))
                 ));
     }
 

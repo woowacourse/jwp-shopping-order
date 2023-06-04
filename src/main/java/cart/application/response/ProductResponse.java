@@ -19,7 +19,7 @@ public class ProductResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(Product product) {
+    public static ProductResponse from(Product product) {
         return new ProductResponse(product.getId(), product.getName().getValue(), product.getPrice().getValue().intValue(), product.getImageUrl());
     }
 

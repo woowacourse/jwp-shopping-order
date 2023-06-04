@@ -42,7 +42,7 @@ public class CartItemService {
 
         return cartItems.getCartItems()
                 .stream()
-                .map(CartItemResponse::of)
+                .map(CartItemResponse::from)
                 .collect(Collectors.toList());
     }
 
