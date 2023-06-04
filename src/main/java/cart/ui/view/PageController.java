@@ -1,4 +1,4 @@
-package cart.ui.page;
+package cart.ui.view;
 
 import cart.application.ProductService;
 import cart.repository.dao.MemberDao;
