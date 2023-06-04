@@ -14,10 +14,11 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private SaleService saleService;
+    private final SaleService saleService;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, SaleService saleService) {
         this.productRepository = productRepository;
+        this.saleService = saleService;
     }
 
     public List<ProductResponse> getAllProducts() {
