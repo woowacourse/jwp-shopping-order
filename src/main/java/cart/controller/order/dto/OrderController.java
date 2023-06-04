@@ -22,7 +22,6 @@ public class OrderController {
 
     @PostMapping("/payments")
     public ResponseEntity<Void> order(@Auth Member member, @RequestBody OrderRequest orderRequest) {
-        cartService.order(member, orderRequest);
         final var orderId = cartService.order(member, orderRequest);
         return ResponseEntity.created(URI.create(orderId.toString())).build();
     }
