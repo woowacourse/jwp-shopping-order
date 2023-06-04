@@ -1,6 +1,10 @@
 package cart.entity;
 
+import cart.domain.MemberCoupon;
 import cart.domain.Order;
+import cart.domain.OrderItem;
+import cart.domain.vo.Amount;
+import java.util.List;
 
 public class OrderEntity {
 
@@ -56,5 +60,9 @@ public class OrderEntity {
 
     public String getAddress() {
         return address;
+    }
+
+    public Order toDomain(final List<OrderItem> orderItems, final MemberCoupon memberCoupon) {
+        return new Order(id, orderItems, memberCoupon, Amount.of(totalAmount), Amount.of(deliveryAmount), address);
     }
 }

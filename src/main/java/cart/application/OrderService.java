@@ -80,4 +80,16 @@ public class OrderService {
                         it.getProduct().getAmount().getValue(), it.getProduct().getImageUrl(), it.getQuantity()))
                 .collect(Collectors.toList());
     }
+
+    public OrderResponse showOrderDetail(final Member member, final Long id) {
+        final Order order = orderRepository.findById(id, member.getId());
+
+        final List<OrderProductResponse> orderProductResponses = order.getOrderItems().stream()
+                .map(it -> new OrderProductResponse(it.getProduct().getId(), it.getProduct().getName(),
+                        it.getProduct().getAmount().getValue(), it.getProduct().getImageUrl(), it.getQuantity()))
+                .collect(Collectors.toList());
+        return new OrderResponse(order.getId(), order.getTotalProductAmount().getValue(),
+                order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+                orderProductResponses);
+    }
 }

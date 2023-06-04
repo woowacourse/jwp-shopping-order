@@ -21,6 +21,10 @@ public class CouponEntity {
         return new CouponEntity(id, name, minAmount, discountAmount);
     }
 
+    public static CouponEntity empty() {
+        return new CouponEntity(null, "", 0, 0);
+    }
+
     public static CouponEntity from(final Coupon coupon) {
         return new CouponEntity(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue(),
                 coupon.getDiscountAmount().getValue());

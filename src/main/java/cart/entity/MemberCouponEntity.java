@@ -1,5 +1,6 @@
 package cart.entity;
 
+import cart.domain.Coupon;
 import cart.domain.MemberCoupon;
 
 public class MemberCouponEntity {
@@ -22,6 +23,14 @@ public class MemberCouponEntity {
 
     public static MemberCouponEntity from(final MemberCoupon coupon) {
         return new MemberCouponEntity(coupon.getId(), coupon.isUsed(), coupon.getMemberId(), coupon.getCoupon().getId());
+    }
+
+    public static MemberCouponEntity empty(final long memberId) {
+        return new MemberCouponEntity(null, false, memberId, null);
+    }
+
+    public MemberCoupon toDomain(final Coupon coupon) {
+        return new MemberCoupon(id, memberId, coupon, isUsed);
     }
 
     public Long getId() {
