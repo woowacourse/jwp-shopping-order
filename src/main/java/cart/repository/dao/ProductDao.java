@@ -2,22 +2,24 @@ package cart.repository.dao;
 
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Product> getAllProducts() {
@@ -41,23 +43,13 @@ public class ProductDao {
         });
     }
 
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public long createProduct(Product product) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", product.getId());
+        params.put("name", product.getName());
+        params.put("price", product.getPrice());
+        params.put("image_url", product.getImageUrl());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void updateProduct(Long productId, Product product) {
