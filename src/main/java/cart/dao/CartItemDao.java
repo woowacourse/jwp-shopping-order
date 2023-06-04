@@ -23,20 +23,20 @@ public class CartItemDao {
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart_item")
+                .withTableName("cart_items")
                 .usingGeneratedKeyColumns("id");
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {
         final String sql =
-                "SELECT cart_item.id, cart_item.quantity, "
-                        + "product.id, product.name, product.price, product.image_url, "
-                        + "member.id, member.email, member.password "
-                        + "FROM cart_item "
-                        + "INNER JOIN member ON cart_item.member_id = member.id "
-                        + "INNER JOIN product ON cart_item.product_id = product.id "
-                        + "WHERE member.id = ?";
+                "SELECT cart_items.id, cart_items.quantity, "
+                        + "products.id, products.name, products.price, products.image_url, "
+                        + "members.id, members.email, members.password "
+                        + "FROM cart_items "
+                        + "INNER JOIN members ON cart_items.member_id = members.id "
+                        + "INNER JOIN products ON cart_items.product_id = products.id "
+                        + "WHERE members.id = ?";
         return jdbcTemplate.query(sql, cartItemRowMapper(), memberId);
     }
 
@@ -51,13 +51,13 @@ public class CartItemDao {
 
     public Optional<CartItem> findById(final Long id) {
         final String sql =
-                "SELECT cart_item.id, cart_item.quantity, "
-                        + "product.id, product.name, product.price, product.image_url, "
-                        + "member.id, member.email, member.password "
-                        + "FROM cart_item "
-                        + "INNER JOIN member ON cart_item.member_id = member.id "
-                        + "INNER JOIN product ON cart_item.product_id = product.id "
-                        + "WHERE cart_item.id = ?";
+                "SELECT cart_items.id, cart_items.quantity, "
+                        + "products.id, products.name, products.price, products.image_url, "
+                        + "members.id, members.email, members.password "
+                        + "FROM cart_items "
+                        + "INNER JOIN members ON cart_items.member_id = members.id "
+                        + "INNER JOIN products ON cart_items.product_id = products.id "
+                        + "WHERE cart_items.id = ?";
         final List<CartItem> cartItems = jdbcTemplate.query(sql, cartItemRowMapper(), id);
 
         if (cartItems.isEmpty()) {
@@ -68,41 +68,41 @@ public class CartItemDao {
 
     public List<CartItem> findByIds(final List<Long> ids) {
         final String findByIdsQuery =
-                "SELECT cart_item.id, cart_item.quantity, "
-                        + "product.id, product.name, product.price, product.image_url, "
-                        + "member.id, member.email, member.password "
-                        + "FROM cart_item "
-                        + "INNER JOIN member ON cart_item.member_id = member.id "
-                        + "INNER JOIN product ON cart_item.product_id = product.id "
-                        + "WHERE cart_item.id IN (:cartItemIds)";
+                "SELECT cart_items.id, cart_items.quantity, "
+                        + "products.id, products.name, products.price, products.image_url, "
+                        + "members.id, members.email, members.password "
+                        + "FROM cart_items "
+                        + "INNER JOIN members ON cart_items.member_id = members.id "
+                        + "INNER JOIN products ON cart_items.product_id = products.id "
+                        + "WHERE cart_items.id IN (:cartItemIds)";
         final MapSqlParameterSource parameters = new MapSqlParameterSource("cartItemIds", ids);
 
         return namedParameterJdbcTemplate.query(findByIdsQuery, parameters, cartItemRowMapper());
     }
 
     public void deleteById(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        final String sql = "DELETE FROM cart_items WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public void deleteById(final List<Long> ids) {
-        final String deleteByIdQuery = "DELETE FROM cart_item WHERE id IN (:cartItemIds)";
+        final String deleteByIdQuery = "DELETE FROM cart_items WHERE id IN (:cartItemIds)";
         final MapSqlParameterSource parameters = new MapSqlParameterSource("cartItemIds", ids);
 
         namedParameterJdbcTemplate.update(deleteByIdQuery, parameters);
     }
 
     public void updateQuantity(final Long id, final int quantity) {
-        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        final String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, quantity, id);
     }
 
     public List<CartItem> findAll() {
         final String sql =
-                "SELECT cart_item.id, cart_item.quantity, product.id, product.name, product.price, product.image_url, member.id, member.email, member.password "
-                        + "FROM cart_item "
-                        + "INNER JOIN member ON cart_item.member_id = member.id "
-                        + "INNER JOIN product ON cart_item.product_id = product.id";
+                "SELECT cart_items.id, cart_items.quantity, products.id, products.name, products.price, products.image_url, members.id, members.email, members.password "
+                        + "FROM cart_items "
+                        + "INNER JOIN members ON cart_items.member_id = members.id "
+                        + "INNER JOIN products ON cart_items.product_id = products.id";
         return jdbcTemplate.query(sql, cartItemRowMapper());
     }
 
@@ -118,14 +118,14 @@ public class CartItemDao {
     }
 
     private Member memberMapper(final ResultSet rs) throws SQLException {
-        final Long memberId = rs.getLong("member.id");
+        final Long memberId = rs.getLong("members.id");
         final String email = rs.getString("email");
         final String password = rs.getString("password");
         return new Member(memberId, email, password);
     }
 
     private Product productMapper(final ResultSet rs) throws SQLException {
-        final Long productId = rs.getLong("product.id");
+        final Long productId = rs.getLong("products.id");
         final String name = rs.getString("name");
         final int price = rs.getInt("price");
         final String imageUrl = rs.getString("image_url");

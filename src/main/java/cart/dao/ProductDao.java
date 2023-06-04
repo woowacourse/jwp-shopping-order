@@ -20,25 +20,25 @@ public class ProductDao {
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("product")
+                .withTableName("products")
                 .usingGeneratedKeyColumns("id");
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<Product> findAllProducts() {
-        final String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM products";
         return jdbcTemplate.query(sql, prodcutRowMapper());
     }
 
     public List<Product> findByIds(final List<Long> ids) {
-        final String findByIdsQuery = "SELECT * FROM product WHERE id IN (:productIds)";
+        final String findByIdsQuery = "SELECT * FROM products WHERE id IN (:productIds)";
         final MapSqlParameterSource parameters = new MapSqlParameterSource("productIds", ids);
 
         return namedParameterJdbcTemplate.query(findByIdsQuery, parameters, prodcutRowMapper());
     }
 
     public Optional<Product> findProductById(final Long productId) {
-        final String sql = "SELECT * FROM product WHERE id = ?";
+        final String sql = "SELECT * FROM products WHERE id = ?";
         final List<Product> products = jdbcTemplate.query(sql, prodcutRowMapper(), productId);
 
         if (products.isEmpty()) {
@@ -59,7 +59,7 @@ public class ProductDao {
 
     public void updateProduct(final Long productId, final Product product) {
         final String updateProductQuery
-                = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+                = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
         jdbcTemplate.update(updateProductQuery,
                 product.getName(),
@@ -70,7 +70,7 @@ public class ProductDao {
     }
 
     public void deleteProduct(final Long productId) {
-        final String deleteProductQuery = "DELETE FROM product WHERE id = ?";
+        final String deleteProductQuery = "DELETE FROM products WHERE id = ?";
         jdbcTemplate.update(deleteProductQuery, productId);
     }
 

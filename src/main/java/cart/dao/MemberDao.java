@@ -18,12 +18,12 @@ public class MemberDao {
     public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("member")
+                .withTableName("members")
                 .usingGeneratedKeyColumns("id");
     }
 
     public Optional<Member> findMemberById(final Long id) {
-        final String sql = "SELECT * FROM member WHERE id = ?";
+        final String sql = "SELECT * FROM members WHERE id = ?";
         final List<Member> members = jdbcTemplate.query(sql, memberEntityRowMapper(), id);
 
         if (members.isEmpty()) {
@@ -34,7 +34,7 @@ public class MemberDao {
     }
 
     public Optional<Member> findMemberByEmail(final String email) {
-        final String sql = "SELECT * FROM member WHERE email = ?";
+        final String sql = "SELECT * FROM members WHERE email = ?";
         final List<Member> members = jdbcTemplate.query(sql, memberEntityRowMapper(), email);
 
         if (members.isEmpty()) {
@@ -45,7 +45,7 @@ public class MemberDao {
     }
 
     public List<Member> findAllMembers() {
-        final String sql = "SELECT * from member";
+        final String sql = "SELECT * from members";
         return jdbcTemplate.query(sql, memberEntityRowMapper());
     }
 

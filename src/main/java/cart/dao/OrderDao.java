@@ -28,9 +28,9 @@ public class OrderDao {
 
     public List<Order> findAll() {
         final String findAllQuery =
-                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, member.id, member.email, member.password "
+                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, members.id, members.email, members.password "
                         + "FROM orders "
-                        + "INNER JOIN member ON orders.member_id = member.id";
+                        + "INNER JOIN members ON orders.member_id = members.id";
         return jdbcTemplate.query(findAllQuery, orderRowMapper());
     }
 
@@ -46,9 +46,9 @@ public class OrderDao {
 
     public List<Order> findOrderByMember(final Long memberId) {
         final String findOrderByMemberQuery =
-                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, member.id, member.email, member.password "
+                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, members.id, members.email, members.password "
                         + "FROM orders "
-                        + "INNER JOIN member ON orders.member_id = member.id "
+                        + "INNER JOIN members ON orders.member_id = members.id "
                         + "WHERE orders.member_id = ?";
 
         return jdbcTemplate.query(findOrderByMemberQuery, orderRowMapper(), memberId);
@@ -56,9 +56,9 @@ public class OrderDao {
 
     public Optional<Order> findById(final Long id) {
         final String findByIdQuery =
-                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, member.id, member.email, member.password "
+                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, members.id, members.email, members.password "
                         + "FROM orders "
-                        + "INNER JOIN member ON orders.member_id = member.id "
+                        + "INNER JOIN members ON orders.member_id = members.id "
                         + "WHERE orders.id = ?";
         final List<Order> orders = jdbcTemplate.query(findByIdQuery, orderRowMapper(), id);
 
@@ -81,9 +81,9 @@ public class OrderDao {
     }
 
     private Member memberMapper(final ResultSet rs) throws SQLException {
-        final Long memberId = rs.getLong("member.id");
-        final String email = rs.getString("member.email");
-        final String password = rs.getString("member.password");
+        final Long memberId = rs.getLong("members.id");
+        final String email = rs.getString("members.email");
+        final String password = rs.getString("members.password");
         return new Member(memberId, email, password);
     }
 }
