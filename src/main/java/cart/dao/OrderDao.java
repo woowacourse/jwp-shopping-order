@@ -4,8 +4,6 @@ import cart.dao.entity.OrderEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -57,7 +54,6 @@ public class OrderDao {
         Object id = keys.get("id");
         return ((Number) id).longValue();
     }
-
 
     public List<OrderEntity> findByMemberId(Long memberId) {
         String sql = "select * from `order` where member_id = ?";

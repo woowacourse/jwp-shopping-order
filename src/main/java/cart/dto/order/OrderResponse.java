@@ -9,17 +9,21 @@ import java.util.stream.Collectors;
 public class OrderResponse {
     private Long orderId;
     private String orderDate;
-    private Long totalPriceWithShippingFee;
-    private List<OrderDetailsDto> orderDetailResponses;
+    private Long totalProductsPrice;
+    private Long shippingFee;
+    private Long usedPoint;
+    private List<OrderDetailsDto> orderDetails;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(Long orderId, String orderDate, Long totalPriceWithShippingFee, List<OrderDetailsDto> orderDetailResponses) {
+    public OrderResponse(Long orderId, String orderDate, Long totalProductsPrice, Long shippingFee, Long usedPoint, List<OrderDetailsDto> orderDetails) {
         this.orderId = orderId;
         this.orderDate = orderDate;
-        this.totalPriceWithShippingFee = totalPriceWithShippingFee;
-        this.orderDetailResponses = orderDetailResponses;
+        this.totalProductsPrice = totalProductsPrice;
+        this.shippingFee = shippingFee;
+        this.usedPoint = usedPoint;
+        this.orderDetails = orderDetails;
     }
 
     public static OrderResponse from(final Order order) {
@@ -29,7 +33,9 @@ public class OrderResponse {
 
         return new OrderResponse(order.getId(),
                 order.getCreatedAt(),
-                order.getShippingFee() + order.getTotalPrice(),
+                order.getTotalPrice(),
+                order.getShippingFee(),
+                order.getUsedPoint(),
                 orderDetailsDtoList
         );
     }
@@ -42,11 +48,19 @@ public class OrderResponse {
         return orderDate;
     }
 
-    public Long getTotalPriceWithShippingFee() {
-        return totalPriceWithShippingFee;
+    public Long getTotalProductsPrice() {
+        return totalProductsPrice;
     }
 
-    public List<OrderDetailsDto> getOrderDetailResponses() {
-        return orderDetailResponses;
+    public Long getShippingFee() {
+        return shippingFee;
+    }
+
+    public Long getUsedPoint() {
+        return usedPoint;
+    }
+
+    public List<OrderDetailsDto> getOrderDetails() {
+        return orderDetails;
     }
 }
