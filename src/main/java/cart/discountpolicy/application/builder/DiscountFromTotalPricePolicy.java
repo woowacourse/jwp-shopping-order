@@ -1,7 +1,6 @@
 package cart.discountpolicy.application.builder;
 
 import cart.cart.Cart;
-import cart.discountpolicy.DiscountPolicy;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.product.Product;
 

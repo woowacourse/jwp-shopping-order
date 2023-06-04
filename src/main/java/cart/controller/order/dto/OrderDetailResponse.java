@@ -39,6 +39,7 @@ public class OrderDetailResponse {
                 order.getDiscountFromTotalPrice()
         );
     }
+
     public Long getId() {
         return id;
     }

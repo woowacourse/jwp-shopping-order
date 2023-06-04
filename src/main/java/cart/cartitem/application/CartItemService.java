@@ -4,7 +4,6 @@ import cart.cartitem.CartItem;
 import cart.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
 import cart.cartitem.presentation.dto.CartItemRequest;
 import cart.member.Member;
-import cart.product.Product;
 import cart.product.application.ProductRepository;
 import org.springframework.stereotype.Service;
 

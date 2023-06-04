@@ -28,7 +28,8 @@ public class DiscountPolicyBuilder {
             final var discountTargetPolicyConstructor = targetPolicies.get(discountCondition.getDiscountTarget())
                     .getConstructor(DiscountCondition.class, DiscountUnitPolicy.class);
             return discountTargetPolicyConstructor.newInstance(discountCondition, unitPolicies.get(discountCondition.getDiscountUnit()));
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
             throw new IllegalArgumentException("주어진 조건에 해당하는 할인정책을 생성할 수 없습니다.");
         }
     }

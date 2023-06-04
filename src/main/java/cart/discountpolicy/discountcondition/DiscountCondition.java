@@ -1,7 +1,5 @@
 package cart.discountpolicy.discountcondition;
 
-import cart.product.Product;
-
 import java.util.List;
 
 public class DiscountCondition {

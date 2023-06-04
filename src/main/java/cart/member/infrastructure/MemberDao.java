@@ -2,7 +2,6 @@ package cart.member.infrastructure;
 
 import cart.member.Member;
 import cart.member.application.MemberRepository;
-import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

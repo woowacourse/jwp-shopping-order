@@ -1,13 +1,11 @@
 package cart.sale;
 
 import cart.cart.Cart;
-import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.product.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

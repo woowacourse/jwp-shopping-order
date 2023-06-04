@@ -14,6 +14,17 @@ public class CartItemResponse {
         this.product = product;
     }
 
+    public static CartItemResponse from(CartItem cartItem) {
+        final var productResponse = ProductResponse.from(
+                cartItem.getProductId(),
+                cartItem.getName(),
+                cartItem.getOriginalPrice(),
+                cartItem.getImageUrl(),
+                cartItem.isOnSale(),
+                cartItem.getDiscountPrice());
+        return new CartItemResponse(cartItem.getId(), cartItem.getQuantity(), productResponse);
+    }
+
     public long getId() {
         return id;
     }
@@ -24,16 +35,5 @@ public class CartItemResponse {
 
     public ProductResponse getProduct() {
         return product;
-    }
-
-    public static CartItemResponse from(CartItem cartItem) {
-        final var productResponse = ProductResponse.from(
-                cartItem.getProductId(),
-                cartItem.getName(),
-                cartItem.getOriginalPrice(),
-                cartItem.getImageUrl(),
-                cartItem.isOnSale(),
-                cartItem.getDiscountPrice());
-        return new CartItemResponse(cartItem.getId(), cartItem.getQuantity(), productResponse);
     }
 }

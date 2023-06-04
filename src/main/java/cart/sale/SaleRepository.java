@@ -1,10 +1,8 @@
 package cart.sale;
 
-import cart.discountpolicy.application.DiscountPolicyRepository;
 import cart.discountpolicy.discountcondition.DiscountTarget;
-import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
 
 public interface SaleRepository {
     Long save(String name, Long discountPolicyId);

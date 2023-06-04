@@ -6,8 +6,8 @@ public class Product {
     private final Long id;
     private final String name;
     private final int price;
-    private int discountPrice;
     private final String imageUrl;
+    private int discountPrice;
 
     public Product(String name, int price, String imageUrl) {
         this.id = null;
