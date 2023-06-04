@@ -56,7 +56,6 @@ public class OrderService {
 
     public OrderResponse findOrder(Member member, Long orderId) {
         OrderDto order = orderDao.findById(orderId);
-        // TODO: 2023-06-02 member가 해당 order 권한이는지 검사
         return OrderResponse.of(order);
     }
 

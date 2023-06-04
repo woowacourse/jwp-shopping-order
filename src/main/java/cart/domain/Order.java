@@ -33,8 +33,6 @@ public class Order {
     }
 
     public Money apply(Coupon coupon) {
-        // TODO: 2023-05-31 쿠폰뿐만 아니라 포인트, 할인 등 적용해야 할 경우 이게 확장성있나?
-        // TODO: 2023-06-01 쿠폰 적용 시 필요한 정보가 다양해질 수 있는데, 확장성 좋으려면 어케? 
         return coupon.apply(price);
     }
 
