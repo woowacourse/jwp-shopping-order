@@ -5,7 +5,7 @@ import java.util.List;
 
 public class OrderPostRequest {
     private final List<Long> cartItems;
-    @JsonProperty("totalPrice")
+    @JsonProperty("paymentAmount")
     private final Integer finalPrice;
 
     public OrderPostRequest(final List<Long> cartItems, final Integer finalPrice) {
