@@ -3,7 +3,7 @@ package cart.dto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class PurchaseOrderInfoResponse {
+public class PurchaseOrderItemInfoResponse {
 
     private Long orderId;
     private int payAmount;
@@ -12,8 +12,8 @@ public class PurchaseOrderInfoResponse {
     private String productImageUrl;
     private int totalProductCount;
 
-    public PurchaseOrderInfoResponse(Long orderId, int payAmount, LocalDateTime orderAt,
-                                     String productName, String productImageUrl, int totalProductCount) {
+    public PurchaseOrderItemInfoResponse(Long orderId, int payAmount, LocalDateTime orderAt,
+                                         String productName, String productImageUrl, int totalProductCount) {
         this.orderId = orderId;
         this.payAmount = payAmount;
         this.orderAt = orderAt;
@@ -50,7 +50,7 @@ public class PurchaseOrderInfoResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PurchaseOrderInfoResponse that = (PurchaseOrderInfoResponse) o;
+        PurchaseOrderItemInfoResponse that = (PurchaseOrderItemInfoResponse) o;
         return payAmount == that.payAmount && totalProductCount == that.totalProductCount && Objects.equals(orderId, that.orderId) && Objects.equals(orderAt, that.orderAt) && Objects.equals(productName, that.productName) && Objects.equals(productImageUrl, that.productImageUrl);
     }
 

@@ -3,8 +3,8 @@ package cart.application;
 import cart.dao.PurchaseOrderDao;
 import cart.dao.PurchaseOrderItemDao;
 import cart.domain.Member;
-import cart.dto.PurchaseOrderInfoResponse;
-import cart.dto.PurchaseOrderResponse;
+import cart.dto.PurchaseOrderItemInfoResponse;
+import cart.dto.PurchaseOrderPageResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,23 +44,23 @@ class PurchaseOrderServiceTest {
     @Test
     void getAllByMemberId() {
         // given
-        List<PurchaseOrderInfoResponse> expectInfoResponses = List.of(
-                new PurchaseOrderInfoResponse(회원1_주문1.getId(), 회원1_주문1.getPayment(), 회원1_주문1.getOrderAt(),
+        List<PurchaseOrderItemInfoResponse> expectInfoResponses = List.of(
+                new PurchaseOrderItemInfoResponse(회원1_주문1.getId(), 회원1_주문1.getPayment(), 회원1_주문1.getOrderAt(),
                         주문1_상품1.getProduct().getName(), 주문1_상품1.getProduct().getImageUrl(), 2),
-                new PurchaseOrderInfoResponse(회원1_주문2.getId(), 회원1_주문2.getPayment(), 회원1_주문2.getOrderAt(),
+                new PurchaseOrderItemInfoResponse(회원1_주문2.getId(), 회원1_주문2.getPayment(), 회원1_주문2.getOrderAt(),
                         주문2_상품1.getProduct().getName(), 주문2_상품1.getProduct().getImageUrl(), 2),
-                new PurchaseOrderInfoResponse(회원1_주문3.getId(), 회원1_주문3.getPayment(), 회원1_주문3.getOrderAt(),
+                new PurchaseOrderItemInfoResponse(회원1_주문3.getId(), 회원1_주문3.getPayment(), 회원1_주문3.getOrderAt(),
                         주문3_상품1.getProduct().getName(), 주문3_상품1.getProduct().getImageUrl(), 2)
         );
 
         Member member = 회원1;
 
         // when
-        PurchaseOrderResponse purchaseOrderResponse = purchaseOrderService.getAllByMemberId(member, 1);
+        PurchaseOrderPageResponse purchaseOrderPageResponse = purchaseOrderService.getAllByMemberId(member, 1);
 
         // then
-        assertThat(purchaseOrderResponse).isEqualTo(
-                new PurchaseOrderResponse(1, 1, 3, expectInfoResponses)
+        assertThat(purchaseOrderPageResponse).isEqualTo(
+                new PurchaseOrderPageResponse(1, 1, 3, expectInfoResponses)
         );
     }
 }

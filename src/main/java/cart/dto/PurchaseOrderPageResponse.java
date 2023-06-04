@@ -3,15 +3,15 @@ package cart.dto;
 import java.util.List;
 import java.util.Objects;
 
-public class PurchaseOrderResponse {
+public class PurchaseOrderPageResponse {
 
     private int totalPages;
     private int currentPage;
     private int pageSize;
-    private List<PurchaseOrderInfoResponse> purchaseOrderInfoRespons;
+    private List<PurchaseOrderItemInfoResponse> purchaseOrderInfoRespons;
 
-    public PurchaseOrderResponse(int totalPages, int currentPage, int pageSize,
-                                 List<PurchaseOrderInfoResponse> purchaseOrderInfoRespons) {
+    public PurchaseOrderPageResponse(int totalPages, int currentPage, int pageSize,
+                                     List<PurchaseOrderItemInfoResponse> purchaseOrderInfoRespons) {
         this.totalPages = totalPages;
         this.currentPage = currentPage;
         this.pageSize = pageSize;
@@ -30,7 +30,7 @@ public class PurchaseOrderResponse {
         return pageSize;
     }
 
-    public List<PurchaseOrderInfoResponse> getPurchaseOrderItemsResponses() {
+    public List<PurchaseOrderItemInfoResponse> getPurchaseOrderItemsResponses() {
         return purchaseOrderInfoRespons;
     }
 
@@ -38,7 +38,7 @@ public class PurchaseOrderResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PurchaseOrderResponse that = (PurchaseOrderResponse) o;
+        PurchaseOrderPageResponse that = (PurchaseOrderPageResponse) o;
         return totalPages == that.totalPages && currentPage == that.currentPage && pageSize == that.pageSize && Objects.equals(purchaseOrderInfoRespons, that.purchaseOrderInfoRespons);
     }
 

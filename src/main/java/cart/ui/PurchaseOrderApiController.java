@@ -3,8 +3,8 @@ package cart.ui;
 import cart.application.PaymentService;
 import cart.application.PurchaseOrderService;
 import cart.domain.Member;
+import cart.dto.PurchaseOrderPageResponse;
 import cart.dto.PurchaseOrderRequest;
-import cart.dto.PurchaseOrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +32,9 @@ public class PurchaseOrderApiController {
     }
 
     @GetMapping("{page}")
-    public ResponseEntity<PurchaseOrderResponse> showPurchaseOrders(Member member, @PathVariable int page) {
-        PurchaseOrderResponse purchaseOrderResponse = purchaseOrderService.getAllByMemberId(member, page);
+    public ResponseEntity<PurchaseOrderPageResponse> showPurchaseOrders(Member member, @PathVariable int page) {
+        PurchaseOrderPageResponse purchaseOrderPageResponse = purchaseOrderService.getAllByMemberId(member, page);
         return ResponseEntity.ok()
-                             .body(purchaseOrderResponse);
+                             .body(purchaseOrderPageResponse);
     }
 }

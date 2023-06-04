@@ -3,8 +3,8 @@ package cart.application;
 import cart.dao.PurchaseOrderDao;
 import cart.dao.PurchaseOrderItemDao;
 import cart.domain.*;
-import cart.dto.PurchaseOrderInfoResponse;
-import cart.dto.PurchaseOrderResponse;
+import cart.dto.PurchaseOrderItemInfoResponse;
+import cart.dto.PurchaseOrderPageResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,29 +21,29 @@ public class PurchaseOrderService {
         this.purchaseOrderItemDao = purchaseOrderItemDao;
     }
 
-    public PurchaseOrderResponse getAllByMemberId(Member member, int page) {
+    public PurchaseOrderPageResponse getAllByMemberId(Member member, int page) {
         int totalOrders = purchaseOrderDao.getTotalByMemberId(member.getId());
         Pagination pagination = Pagination.create(totalOrders, page);
 
         List<PurchaseOrderInfo> purchaseOrderInfos = purchaseOrderDao.findMemberByIdWithPagination(member.getId(), pagination);
-        List<PurchaseOrderInfoResponse> purchaseOrderInfoResponses = getPurchaseInfoResponse(purchaseOrderInfos);
+        List<PurchaseOrderItemInfoResponse> purchaseOrderItemInfoRespons = getPurchaseInfoResponse(purchaseOrderInfos);
 
-        return new PurchaseOrderResponse(pagination.getTotalPage(), pagination.getCurrentPage(),
-                purchaseOrderInfoResponses.size(), purchaseOrderInfoResponses);
+        return new PurchaseOrderPageResponse(pagination.getTotalPage(), pagination.getCurrentPage(),
+                purchaseOrderItemInfoRespons.size(), purchaseOrderItemInfoRespons);
     }
 
-    private List<PurchaseOrderInfoResponse> getPurchaseInfoResponse(List<PurchaseOrderInfo> purchaseOrderInfos) {
-        List<PurchaseOrderInfoResponse> purchaseOrderInfoResponses = new ArrayList<>();
+    private List<PurchaseOrderItemInfoResponse> getPurchaseInfoResponse(List<PurchaseOrderInfo> purchaseOrderInfos) {
+        List<PurchaseOrderItemInfoResponse> purchaseOrderItemInfoRespons = new ArrayList<>();
         for (PurchaseOrderInfo purchaseOrderInfo : purchaseOrderInfos) {
             List<PurchaseOrderItem> purchaseOrderItems = getPurchaseItems(purchaseOrderInfo.getId());
             Product firstProduct = purchaseOrderItems.get(0).getProduct();
-            PurchaseOrderInfoResponse purchaseOrderInfoResponse = new PurchaseOrderInfoResponse(
+            PurchaseOrderItemInfoResponse purchaseOrderItemInfoResponse = new PurchaseOrderItemInfoResponse(
                     purchaseOrderInfo.getId(), purchaseOrderInfo.getPayment(), purchaseOrderInfo.getOrderAt(),
                     firstProduct.getName(), firstProduct.getImageUrl(), purchaseOrderItems.size()
             );
-            purchaseOrderInfoResponses.add(purchaseOrderInfoResponse);
+            purchaseOrderItemInfoRespons.add(purchaseOrderItemInfoResponse);
         }
-        return purchaseOrderInfoResponses;
+        return purchaseOrderItemInfoRespons;
     }
 
     private List<PurchaseOrderItem> getPurchaseItems(Long purchaseOrderId) {
