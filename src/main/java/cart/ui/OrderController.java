@@ -4,6 +4,8 @@ import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.DetailOrderResponse;
 import cart.dto.OrderPageResponse;
+import cart.dto.OrderRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +35,11 @@ public class OrderController {
     public ResponseEntity<String> deleteOrder(Member member, @PathVariable Long orderId) {
         orderService.deleteOrder(member, orderId);
         return ResponseEntity.ok().body("ok");
+    }
+
+    @PostMapping
+    public ResponseEntity<String> order(Member member, @RequestBody OrderRequest orderRequest) {
+        orderService.saveOrder(member, orderRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 }
