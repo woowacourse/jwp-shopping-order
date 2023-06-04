@@ -8,6 +8,7 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
+import cart.exception.OrderException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
+
+    private static final int NO_UPDATE_ROW = 0;
+    private static final String INVALID_ORDER_DELETE_MESSAGE = "해당 주문 번호에 대한 주문을 취소할 수 없습니다.";
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
@@ -58,7 +62,18 @@ public class OrderRepository {
     }
 
     public void delete(Long memberId, Long orderId) {
-        orderDao.delete(memberId, orderId);
+        int deletedRowCount = orderDao.delete(memberId, orderId);
+        validateDelete(deletedRowCount);
+    }
+
+    private void validateDelete(int deletedRowCount) {
+        if (isNotDeleted(deletedRowCount)) {
+            throw new OrderException(INVALID_ORDER_DELETE_MESSAGE);
+        }
+    }
+
+    private boolean isNotDeleted(int deletedRowCount) {
+        return deletedRowCount == NO_UPDATE_ROW;
     }
 
     public List<Order> findAllByMemberId(Long memberId) {

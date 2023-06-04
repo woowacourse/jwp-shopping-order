@@ -7,9 +7,12 @@ import cart.domain.*;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PointHistoryEntity;
+import cart.exception.OrderException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +24,7 @@ import java.util.List;
 
 import static cart.ProductFixture.product1;
 import static cart.ProductFixture.product2;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -121,5 +124,21 @@ class OrderRepositoryTest {
                 () -> assertThat(order.getOrderItems()).containsExactlyInAnyOrder(orderItem1, orderItem2),
                 () -> assertThat(order.getTotalUsedPoint()).isEqualTo(1000)
         );
+    }
+
+    @DisplayName("주문을 취소할 수 있다.")
+    @Test
+    void delete_success() {
+        assertThatCode(() -> orderRepository.delete(1L, 1L))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("멤버가 없거나 주문번호가 없는 경우 주문을 취소할 수 없다.")
+    @ParameterizedTest
+    @CsvSource(value = {"100:1", "1:100"}, delimiter = ':')
+    void delete_fail(Long memberId, Long orderId) {
+        assertThatThrownBy(() -> orderRepository.delete(memberId, orderId))
+                .isInstanceOf(OrderException.class)
+                .hasMessageContaining("해당 주문 번호에 대한 주문을 취소할 수 없습니다.");
     }
 }
