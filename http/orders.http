@@ -8,11 +8,11 @@ Authorization: basic YUBhLmNvbToxMjM0
   "products": [
     {
       "productId": 1,
-      "Quantity": 3
+      "quantity": 3
     },
     {
       "productId": 2,
-      "Quantity": 4
+      "quantity": 4
     }
   ]
 }
