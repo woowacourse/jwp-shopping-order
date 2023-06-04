@@ -31,8 +31,9 @@ public class OrderService {
         cartItems.forEach(cartItem -> cartItemRepository.deleteById(cartItem.getId()));
         // 주문 목록에 저장
         long orderId = orderRepository.createOrder(order);
-        // 포인트 정보 저장
+        // 포인트, 결제 내용 정보 저장
         memberRepository.updatePoint(member.getId(), member.getPoint());
+        memberRepository.updateMoney(member.getId(), member.getMoney());
         return orderId;
     }
 

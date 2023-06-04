@@ -15,7 +15,7 @@ public class Order {
     private final Payment payment;
     private LocalDateTime createdAt;
 
-    public Order(Member member, OrderProducts orderProducts, Payment payment) {
+    private Order(Member member, OrderProducts orderProducts, Payment payment) {
         this.member = member;
         this.orderProducts = orderProducts;
         this.payment = payment;

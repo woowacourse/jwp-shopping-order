@@ -55,10 +55,21 @@ public class MemberDao {
         jdbcTemplate.update(sql, updatePoint, memberId);
     }
 
+    public void updateMoney(long memberId, int updateMoney) {
+        String sql = "UPDATE member SET money = ? WHERE id = ?";
+        jdbcTemplate.update(sql, updateMoney, memberId);
+    }
+
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getInt("money"),
+                    rs.getInt("point")
+            );
         }
     }
 }

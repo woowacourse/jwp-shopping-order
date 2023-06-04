@@ -31,6 +31,15 @@ public class Member {
         this.money = INITIAL_MONEY;
     }
 
+    public Member(Long id, String email, String password, int money, int point) {
+        validate(id, email);
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+        this.money = money;
+    }
+
     private void validate(Long id, String email) {
         validateId(id);
         validateEmail(email);
@@ -91,6 +100,10 @@ public class Member {
 
     public int getPoint() {
         return point;
+    }
+
+    public int getMoney() {
+        return money;
     }
 
     @Override

@@ -10,7 +10,6 @@ public class OrderProductsRequest {
     @NotNull
     @Size(min = 1, message = "개수는 최소 1개 이상이어야 합니다. value=${validatedValue}")
     private List<Long> cartIds;
-
     @PositiveOrZero(message = "입력 가능한 포인트는 0포인트 부터입니다.")
     private int point;
     @PositiveOrZero(message = "입력 가능한 배달비는 0원 부터입니다.")
