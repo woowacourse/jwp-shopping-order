@@ -116,7 +116,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 ```
 
-#### 상품 삭제
+### 상품 삭제
 
 `Request`
 
