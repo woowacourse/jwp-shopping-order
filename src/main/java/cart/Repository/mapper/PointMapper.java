@@ -9,7 +9,7 @@ public class PointMapper {
 
     public static PointEntity toPointEntity(Order order, Point updatePoint){
         return new PointEntity(
-                order.getId(),
+                order.getMember().getId(),
                 updatePoint.point()
         );
     }
