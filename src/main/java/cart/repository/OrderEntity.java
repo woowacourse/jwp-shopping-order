@@ -25,7 +25,7 @@ public class OrderEntity {
     }
 
     public static OrderEntity of(Order order) {
-        return new OrderEntity(order.getMember().getId(), order.getOrderAt(), order.getPayAmount(),
+        return new OrderEntity(order.getId(), order.getMember().getId(), order.getOrderAt(), order.getPayAmount(),
             order.getOrderStatus().getDisplayName());
     }
 

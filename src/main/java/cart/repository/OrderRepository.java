@@ -74,6 +74,7 @@ public class OrderRepository {
     }
 
     public void updateStatus(Order order) {
-        orderDao.update(OrderEntity.of(order));
+        Order canceled = order.cancel();
+        orderDao.update(OrderEntity.of(canceled));
     }
 }
