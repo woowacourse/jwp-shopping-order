@@ -8,6 +8,8 @@ import java.util.Objects;
 
 public class Order {
 
+    private static final long NOT_YET_PERSIST_ID = -1;
+
     private final Long id;
     private final Member member;
     private final UsedPoint usedPoint;
@@ -16,7 +18,7 @@ public class Order {
     private final LocalDateTime orderedAt;
 
     public Order(final Member member, final UsedPoint usedPoint, final SavedPoint savedPoint, final DeliveryFee deliveryFee) {
-        this(-1, member, usedPoint, savedPoint, deliveryFee, null);
+        this(NOT_YET_PERSIST_ID, member, usedPoint, savedPoint, deliveryFee, null);
     }
 
     public Order(final long id, final Member member,

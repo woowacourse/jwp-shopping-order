@@ -9,6 +9,8 @@ import java.util.Objects;
 
 public class OrderProduct {
 
+    private static final long NOT_YET_PERSIST_ID = -1;
+
     private final Long id;
     private final Order order;
     private final Long productId;
@@ -17,12 +19,12 @@ public class OrderProduct {
     private final ProductImageUrl productImageUrl;
     private final Quantity quantity;
 
-    public OrderProduct(final Order order, final Long productId, final ProductName productName,
+    public OrderProduct(final Order order, final long productId, final ProductName productName,
                         final ProductPrice productPrice, final ProductImageUrl productImageUrl, final Quantity quantity) {
-        this(null, order, productId, productName, productPrice, productImageUrl, quantity);
+        this(NOT_YET_PERSIST_ID, order, productId, productName, productPrice, productImageUrl, quantity);
     }
 
-    public OrderProduct(final Long id, final Order order, final Long productId, final ProductName productName,
+    public OrderProduct(final long id, final Order order, final long productId, final ProductName productName,
                         final ProductPrice productPrice, final ProductImageUrl productImageUrl, final Quantity quantity) {
         this.id = id;
         this.order = order;

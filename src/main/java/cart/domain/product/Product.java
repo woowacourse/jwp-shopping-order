@@ -4,13 +4,15 @@ import java.util.Objects;
 
 public class Product {
 
+    private static final long NOT_YET_PERSIST_ID = -1;
+
     private final Long id;
     private final ProductName productName;
     private final ProductPrice productPrice;
     private final ProductImageUrl productImageUrl;
 
     public Product(final ProductName productName, final ProductPrice productPrice, final ProductImageUrl productImageUrl) {
-        this(-1, productName, productPrice, productImageUrl);
+        this(NOT_YET_PERSIST_ID, productName, productPrice, productImageUrl);
     }
 
     public Product(final long id, final ProductName productName,

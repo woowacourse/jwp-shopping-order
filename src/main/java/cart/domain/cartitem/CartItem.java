@@ -8,6 +8,8 @@ import java.util.Objects;
 
 public class CartItem {
 
+    private static final long NOT_YET_PERSIST_ID = -1;
+
     private final Long id;
     private final Quantity quantity;
     private final Product product;
@@ -18,7 +20,7 @@ public class CartItem {
     }
 
     public CartItem(final Member member, final Product product, final Quantity quantity) {
-        this(-1, member, product, quantity);
+        this(NOT_YET_PERSIST_ID, member, product, quantity);
     }
 
     public CartItem(final long id, final Member member, final Product product, final Quantity quantity) {

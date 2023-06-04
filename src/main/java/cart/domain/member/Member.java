@@ -7,13 +7,15 @@ import java.util.Objects;
 
 public class Member {
 
+    private static final long NOT_YET_PERSIST_ID = -1;
+
     private final Long id;
     private final MemberEmail email;
     private final MemberPassword password;
     private final MemberPoint point;
 
     public Member(final MemberEmail email, final MemberPassword password) {
-        this(-1, email, password);
+        this(NOT_YET_PERSIST_ID, email, password);
     }
 
     public Member(final long id, final MemberEmail email, final MemberPassword password) {
