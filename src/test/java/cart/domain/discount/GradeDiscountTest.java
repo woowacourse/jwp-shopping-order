@@ -18,10 +18,10 @@ class GradeDiscountTest {
     @CsvSource(value = {"GOLD,0.05", "SILVER,0.03", "BRONZE,0.01"})
     void GOLD_는_5퍼센트_SILVER_는_3퍼센트_BRONZE_는_1퍼센트_할인한다(final String gradeName, final double rate) {
         // given
-        final Discount discount = GradeDiscount.of(Grade.from(gradeName), 1000);
+        final Discount discount = new GradeDiscount(Grade.from(gradeName), 1000);
 
         // expect
-        assertThat(discount.getRate()).isEqualTo(rate);
+        assertThat(discount.getDiscountRate()).isEqualTo(rate);
     }
 
     @ParameterizedTest
@@ -31,16 +31,16 @@ class GradeDiscountTest {
         final int originPrice = 100_000;
 
         // when
-        final Discount discount = GradeDiscount.of(Grade.from(gradeName), originPrice);
+        final Discount discount = new GradeDiscount(Grade.from(gradeName), originPrice);
 
         // then
-        assertThat(discount.getMoney()).isEqualTo(discountedPrice);
+        assertThat(discount.getDiscountedPrice()).isEqualTo(discountedPrice);
     }
 
     @Test
     void 할인_정책_이름을_알_수_있다() {
         // given
-        final Discount discount = GradeDiscount.of(Grade.from("GOLD"), 10_000);
+        final Discount discount = new GradeDiscount(Grade.from("GOLD"), 10_000);
 
         // expect
         assertThat(discount.getName()).isEqualTo("memberGradeDiscount");

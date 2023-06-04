@@ -4,16 +4,10 @@ import java.util.Arrays;
 
 public enum Grade {
 
-    GOLD(0.05),
-    SILVER(0.03),
-    BRONZE(0.01),
+    GOLD,
+    SILVER,
+    BRONZE,
     ;
-
-    private final double discountRate;
-
-    Grade(final double discountRate) {
-        this.discountRate = discountRate;
-    }
 
     public static Grade from(final String name) {
         return Arrays.stream(values())
@@ -24,9 +18,5 @@ public enum Grade {
 
     public String getName() {
         return name();
-    }
-
-    public double getDiscountRate() {
-        return discountRate;
     }
 }

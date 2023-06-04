@@ -20,7 +20,7 @@ public class PriceDiscount implements Discount {
     }
 
     @Override
-    public double getRate() {
+    public double getDiscountRate() {
         if (price >= MAX_DISCOUNT_MONEY) {
             return MAX_DISCOUNT_RATE;
         }
@@ -28,7 +28,7 @@ public class PriceDiscount implements Discount {
     }
 
     @Override
-    public int getMoney() {
-        return (int) (price * getRate());
+    public int getDiscountedPrice() {
+        return (int) (price * getDiscountRate());
     }
 }

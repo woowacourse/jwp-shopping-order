@@ -4,8 +4,8 @@ public interface Discount {
 
     String getName();
 
-    double getRate();
+    double getDiscountRate();
 
-    int getMoney();
+    int getDiscountedPrice();
 
 }

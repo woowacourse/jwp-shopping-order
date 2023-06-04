@@ -14,7 +14,7 @@ public class DiscountService {
 
     public List<DiscountResponse> getDiscount(final int price, final String gradeName) {
         return Stream.of(
-                GradeDiscount.of(Grade.from(gradeName), price), new PriceDiscount(price)
+                new GradeDiscount(Grade.from(gradeName), price), new PriceDiscount(price)
                 ).map(DiscountResponse::from)
                 .collect(Collectors.toList());
     }

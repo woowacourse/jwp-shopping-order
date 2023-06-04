@@ -15,7 +15,7 @@ public class DiscountResponse {
     }
 
     public static DiscountResponse from(final Discount discount) {
-        return new DiscountResponse(discount.getName(), discount.getRate(), discount.getMoney());
+        return new DiscountResponse(discount.getName(), discount.getDiscountRate(), discount.getDiscountedPrice());
     }
 
     public String getPolicyName() {

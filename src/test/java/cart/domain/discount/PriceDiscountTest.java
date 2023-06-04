@@ -19,7 +19,7 @@ class PriceDiscountTest {
         final Discount discount = new PriceDiscount(price);
 
         // expect
-        assertThat(discount.getRate()).isEqualTo(0.1);
+        assertThat(discount.getDiscountRate()).isEqualTo(0.1);
     }
 
     @ParameterizedTest
@@ -29,7 +29,7 @@ class PriceDiscountTest {
         final Discount discount = new PriceDiscount(price);
 
         // expect
-        assertThat(discount.getRate()).isEqualTo(rate);
+        assertThat(discount.getDiscountRate()).isEqualTo(rate);
     }
 
     @ParameterizedTest
@@ -39,7 +39,7 @@ class PriceDiscountTest {
         final Discount discount = new PriceDiscount(price);
 
         // expect
-        assertThat(discount.getMoney()).isEqualTo(discountedPrice);
+        assertThat(discount.getDiscountedPrice()).isEqualTo(discountedPrice);
     }
 
     @Test

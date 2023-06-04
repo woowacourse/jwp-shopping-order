@@ -4,17 +4,16 @@ import cart.domain.Grade;
 
 public class GradeDiscount implements Discount {
     private static final String POLICY_NAME = "memberGradeDiscount";
+    private static final double GOLD_DISCOUNT_RATE = 0.05;
+    private static final double SILVER_DISCOUNT_RATE = 0.03;
+    private static final double BRONZE_DISCOUNT_RATE = 0.01;
 
-    private final double rate;
+    private final Grade grade;
     private final int price;
 
-    private GradeDiscount(final double rate, final int price) {
-        this.rate = rate;
+    public GradeDiscount(final Grade grade, final int price) {
+        this.grade = grade;
         this.price = price;
-    }
-
-    public static GradeDiscount of(final Grade grade, final int price) {
-        return new GradeDiscount(grade.getDiscountRate(), price);
     }
 
     @Override
@@ -23,13 +22,19 @@ public class GradeDiscount implements Discount {
     }
 
     @Override
-    public double getRate() {
-        return rate;
+    public double getDiscountRate() {
+        if (grade == Grade.GOLD) {
+            return GOLD_DISCOUNT_RATE;
+        }
+        if (grade == Grade.SILVER) {
+            return SILVER_DISCOUNT_RATE;
+        }
+        return BRONZE_DISCOUNT_RATE;
     }
 
     @Override
-    public int getMoney() {
-        return (int) (rate * price);
+    public int getDiscountedPrice() {
+        return (int) (getDiscountRate() * price);
     }
 
 }
