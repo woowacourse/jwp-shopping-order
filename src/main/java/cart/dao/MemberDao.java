@@ -33,7 +33,7 @@ public class MemberDao {
     public Optional<Member> findByEmail(final String email) {
         final String sql = "SELECT id, email, password FROM member WHERE email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }

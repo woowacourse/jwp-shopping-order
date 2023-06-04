@@ -70,7 +70,7 @@ public class CartItemDao {
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }

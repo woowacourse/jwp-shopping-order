@@ -55,7 +55,7 @@ public class PointDao {
     public Optional<PointEntity> findById(final Long id) {
         final String sql = "SELECT id, earned_point, left_point, member_id, expired_at, created_at FROM point WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }

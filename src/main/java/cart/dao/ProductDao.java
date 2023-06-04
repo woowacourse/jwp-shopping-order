@@ -54,7 +54,7 @@ public class ProductDao {
     public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT id, name, price, image_url, stock FROM product WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
