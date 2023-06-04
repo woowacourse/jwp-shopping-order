@@ -1,7 +1,7 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.domain.respository.member.MemberRepository;
 import cart.exception.AuthenticationException;
 import cart.exception.MemberNotExistException;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -12,12 +12,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+public class BasicAuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public BasicAuthMemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email)
+        Member member = memberRepository.getMemberByEmail(email)
             .orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
