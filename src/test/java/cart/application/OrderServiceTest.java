@@ -74,7 +74,7 @@ class OrderServiceTest {
         assertThat(orderResponse.getTotalPrice()).isEqualTo(50_000);
         assertThat(orderResponse.getProducts()).hasSize(2);
         final List<ProductInOrderResponse> products = orderResponse.getProducts();
-        assertThat(products).extracting("count").contains(3, 1);
+        assertThat(products).extracting("quantity").contains(3, 1);
         assertThat(products).extracting("name").contains("testProductA", "testProductB");
     }
 

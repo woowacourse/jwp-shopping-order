@@ -81,7 +81,7 @@ public class OrderService {
     }
 
     private OrderResponse toOrderResponse(final Order order, final List<ProductInOrderResponse> productsResponses) {
-        return new OrderResponse(order.getTotalPrice(), order.getFinalPrice(), productsResponses);
+        return new OrderResponse(order.getTotalPrice(), order.getFinalPrice(), order.getCreatedAt(), productsResponses);
     }
 
     private OrderPreviewResponse toOrderPreviewResponse(

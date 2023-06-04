@@ -3,21 +3,21 @@ package cart.dto.response;
 public class ProductInOrderResponse {
     private final Long id;
     private final String name;
-    private final Integer price;
-    private final Integer count;
+    private final Integer singleProductPrice;
+    private final Integer quantity;
     private final String imageUrl;
 
     public ProductInOrderResponse(
             final Long id,
             final String name,
-            final Integer price,
-            final Integer count,
+            final Integer singleProductPrice,
+            final Integer quantity,
             final String imageUrl
     ) {
         this.id = id;
         this.name = name;
-        this.price = price;
-        this.count = count;
+        this.singleProductPrice = singleProductPrice;
+        this.quantity = quantity;
         this.imageUrl = imageUrl;
     }
 
@@ -29,12 +29,12 @@ public class ProductInOrderResponse {
         return name;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getSingleProductPrice() {
+        return singleProductPrice;
     }
 
-    public Integer getCount() {
-        return count;
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public String getImageUrl() {
