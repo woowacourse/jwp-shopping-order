@@ -2,8 +2,8 @@ package cart.domain.order;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
-import cart.exception.customexception.IllegalMemberException;
-import cart.exception.customexception.OrderTotalPriceIsNotMatchedException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class Order {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMemberException();
+            throw new CartException(ErrorCode.ILLEGAL_MEMBER);
         }
     }
 
@@ -60,7 +60,7 @@ public class Order {
         if (actualTotalPrice.equals(totalPrice)) {
             return;
         }
-        throw new OrderTotalPriceIsNotMatchedException();
+        throw new CartException(ErrorCode.ORDER_TOTAL_PRICE_UNMATCHED);
     }
 
     public Long getId() {

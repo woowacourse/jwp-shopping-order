@@ -3,7 +3,8 @@ package cart.domain.order;
 import cart.domain.point.Point;
 import cart.domain.point.PointPolicy;
 import cart.domain.point.RatePointPolicy;
-import cart.exception.customexception.PointExceedTotalPriceException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,7 +48,11 @@ public class OrderPointTest {
 
         // when, then
         assertThatThrownBy(() -> orderPoint.earnPoint(하디, usedPoint, totalPrice, current))
-                .isInstanceOf(PointExceedTotalPriceException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.POINT_EXCEED_TOTAL_PRICE);
+                });
     }
 
     @ParameterizedTest

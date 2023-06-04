@@ -15,9 +15,8 @@ import cart.domain.point.PointPolicy;
 import cart.dto.order.OrderItemResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
-import cart.exception.customexception.CartItemNotFoundException;
-import cart.exception.customexception.OrderNotFoundException;
-import cart.exception.customexception.ProductNotFoundException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,13 +100,13 @@ public class OrderService {
     private List<CartItem> findCartItems(Member member, List<Long> cartIds) {
         List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
         if (!findCartIds.containsAll(cartIds)) {
-            throw new CartItemNotFoundException();
+            throw new CartException(ErrorCode.CART_ITEM_NOT_FOUND);
         }
 
         List<CartItem> cartItems = new ArrayList<>();
         for (Long cartId : cartIds) {
             CartItem cartItem = cartItemDao.findCartItemById(cartId)
-                    .orElseThrow(ProductNotFoundException::new);
+                    .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
             cartItem.checkOwner(member);
             cartItem.checkQuantity();
             cartItems.add(cartItem);
@@ -133,7 +132,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Member member, Long orderId) {
         Order order = orderDao.findOrderById(orderId)
-                .orElseThrow(OrderNotFoundException::new);
+                .orElseThrow(() -> new CartException(ErrorCode.ORDER_NOT_FOUND));
         order.checkOwner(member);
 
         List<OrderItem> orderItems = orderItemDao.findOrderItemsByOrderId(orderId);

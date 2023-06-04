@@ -2,7 +2,8 @@ package cart.application;
 
 import cart.dao.product.ProductDao;
 import cart.dto.product.ProductResponse;
-import cart.exception.customexception.ProductNotFoundException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,6 +49,10 @@ public class ProductServiceTest {
 
         // when, then
         assertThatThrownBy(() -> productService.getProductById(1L))
-                .isInstanceOf(ProductNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND);
+                });
     }
 }

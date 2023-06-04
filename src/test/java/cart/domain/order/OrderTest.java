@@ -2,14 +2,15 @@ package cart.domain.order;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
-import cart.exception.customexception.IllegalMemberException;
-import cart.exception.customexception.OrderTotalPriceIsNotMatchedException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 import static cart.fixture.ProductFixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class OrderTest {
@@ -33,7 +34,11 @@ public class OrderTest {
 
         // when, then
         assertThatThrownBy(() -> order.checkOwner(현구막_멤버))
-                .isInstanceOf(IllegalMemberException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ILLEGAL_MEMBER);
+                });
     }
 
     @Test
@@ -56,7 +61,11 @@ public class OrderTest {
 
         // when, then
         assertThatThrownBy(() -> order.checkTotalPrice(wrongTotalPrice))
-                .isInstanceOf(OrderTotalPriceIsNotMatchedException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ORDER_TOTAL_PRICE_UNMATCHED);
+                });
     }
 
     @Test

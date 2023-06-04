@@ -2,8 +2,8 @@ package cart.config;
 
 import cart.dao.member.MemberDao;
 import cart.domain.member.Member;
-import cart.exception.customexception.AuthenticationException;
-import cart.exception.customexception.MemberNotFoundException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -45,9 +45,9 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         // 본인 여부 확인
         Member member = memberDao.findMemberByEmail(email)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new CartException(ErrorCode.MEMBER_NOT_FOUND));
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new CartException(ErrorCode.AUTHENTICATION);
         }
         return member;
     }

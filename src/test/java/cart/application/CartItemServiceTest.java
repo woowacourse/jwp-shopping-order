@@ -7,9 +7,8 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
-import cart.exception.customexception.CartItemDuplicatedException;
-import cart.exception.customexception.CartItemNotFoundException;
-import cart.exception.customexception.ProductNotFoundException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,7 +60,11 @@ public class CartItemServiceTest {
 
         // when, then
         assertThatThrownBy(() -> cartItemService.add(member, cartItemRequest))
-                .isInstanceOf(ProductNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND);
+                });
     }
 
     @Test
@@ -79,7 +82,11 @@ public class CartItemServiceTest {
 
         // when, then
         assertThatThrownBy(() -> cartItemService.add(member, cartItemRequest))
-                .isInstanceOf(CartItemDuplicatedException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_DUPLICATED);
+                });
     }
 
     @Test
@@ -91,7 +98,11 @@ public class CartItemServiceTest {
 
         // when, then
         assertThatThrownBy(() -> cartItemService.updateQuantity(member, cartId, cartItemQuantityUpdateRequest))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_NOT_FOUND);
+                });
     }
 
     @Test
@@ -102,6 +113,10 @@ public class CartItemServiceTest {
 
         // when, then
         assertThatThrownBy(() -> cartItemService.remove(member, cartId))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_NOT_FOUND);
+                });
     }
 }

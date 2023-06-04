@@ -8,9 +8,8 @@ import cart.domain.product.Product;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import cart.exception.customexception.CartItemDuplicatedException;
-import cart.exception.customexception.CartItemNotFoundException;
-import cart.exception.customexception.ProductNotFoundException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +38,10 @@ public class CartItemService {
     @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productDao.findProductById(cartItemRequest.getProductId())
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
         cartItemDao.findCartItemByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId())
                 .ifPresent(cartItem -> {
-                    throw new CartItemDuplicatedException();
+                    throw new CartException(ErrorCode.CART_ITEM_DUPLICATED);
                 });
         return cartItemDao.save(new CartItem(member, product));
     }
@@ -51,10 +50,10 @@ public class CartItemService {
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
         if (!findCartIds.contains(id)) {
-            throw new CartItemNotFoundException();
+            throw new CartException(ErrorCode.CART_ITEM_NOT_FOUND);
         }
         CartItem cartItem = cartItemDao.findCartItemById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -69,10 +68,10 @@ public class CartItemService {
     public void remove(Member member, Long id) {
         List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
         if (!findCartIds.contains(id)) {
-            throw new CartItemNotFoundException();
+            throw new CartException(ErrorCode.CART_ITEM_NOT_FOUND);
         }
         CartItem cartItem = cartItemDao.findCartItemById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
         cartItem.checkOwner(member);
         cartItemDao.deleteById(id);
     }

@@ -2,8 +2,8 @@ package cart.domain.cartitem;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.customexception.CartItemQuantityExcessException;
-import cart.exception.customexception.IllegalMemberException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 
 import java.util.Objects;
 
@@ -35,13 +35,13 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMemberException();
+            throw new CartException(ErrorCode.ILLEGAL_MEMBER);
         }
     }
 
     public void checkQuantity() {
         if (product.getStock() < quantity) {
-            throw new CartItemQuantityExcessException();
+            throw new CartException(ErrorCode.CART_ITEM_QUANTITY_EXCESS);
         }
     }
 

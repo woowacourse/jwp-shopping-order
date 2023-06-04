@@ -2,7 +2,8 @@ package cart.domain.cartItem;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
-import cart.exception.customexception.CartItemQuantityExcessException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.junit.jupiter.api.Test;
 
 import static cart.fixture.ProductFixture.*;
@@ -22,7 +23,13 @@ public class CartItemTest {
         // given
 
         // when, then
-        assertThatThrownBy(() -> 하디_피자_장바구니_아이템.checkOwner(현구막_멤버));
+        assertThatThrownBy(() -> 하디_피자_장바구니_아이템.checkOwner(현구막_멤버))
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ILLEGAL_MEMBER);
+                });
+        ;
     }
 
     @Test
@@ -39,7 +46,11 @@ public class CartItemTest {
 
         // when, then
         assertThatThrownBy(() -> 하디_치킨_장바구니_아이템.checkQuantity())
-                .isInstanceOf(CartItemQuantityExcessException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_QUANTITY_EXCESS);
+                });
     }
 
     @Test

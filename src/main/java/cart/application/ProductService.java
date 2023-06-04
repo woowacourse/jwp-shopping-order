@@ -4,7 +4,8 @@ import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
-import cart.exception.customexception.ProductNotFoundException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.findProductById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
         return ProductResponse.of(product);
     }
 

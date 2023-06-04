@@ -3,8 +3,8 @@ package cart.domain.order;
 import cart.domain.member.Member;
 import cart.domain.point.Point;
 import cart.domain.point.PointPolicy;
-import cart.exception.customexception.PointExceedTotalPriceException;
-import cart.exception.customexception.PointNotEnoughException;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 
 import java.sql.Timestamp;
 import java.util.Comparator;
@@ -21,7 +21,7 @@ public class OrderPoint {
 
     public Point earnPoint(Member member, long usedPoint, long totalPrice, Timestamp createdAt) {
         if (totalPrice < usedPoint) {
-            throw new PointExceedTotalPriceException();
+            throw new CartException(ErrorCode.POINT_EXCEED_TOTAL_PRICE);
         }
         long earnedPoint = pointPolicy.calculateEarnedPoint(member, totalPrice - usedPoint);
         Timestamp expiredAt = pointPolicy.calculateExpiredAt(createdAt);
@@ -33,7 +33,7 @@ public class OrderPoint {
                 .mapToLong(Point::getLeftPoint)
                 .sum();
         if (availablePoints < usedPoint) {
-            throw new PointNotEnoughException();
+            throw new CartException(ErrorCode.POINT_NOT_ENOUGH);
         }
         List<Point> sortedPoints = points.stream()
                 .sorted(Comparator.comparing(Point::getExpiredAt))

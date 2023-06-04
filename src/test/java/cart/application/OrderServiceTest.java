@@ -13,7 +13,8 @@ import cart.domain.product.Product;
 import cart.dto.order.OrderItemResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
-import cart.exception.customexception.*;
+import cart.exception.customexception.CartException;
+import cart.exception.customexception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +107,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.orderCartItems(현구막_멤버, orderRequest))
-                .isInstanceOf(PointExceedTotalPriceException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.POINT_EXCEED_TOTAL_PRICE);
+                });
     }
 
     @Transactional
@@ -118,7 +123,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.orderCartItems(하디_멤버, orderRequest))
-                .isInstanceOf(PointNotEnoughException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.POINT_NOT_ENOUGH);
+                });
     }
 
     @Transactional
@@ -130,7 +139,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.orderCartItems(현구막_멤버, orderRequest))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_NOT_FOUND);
+                });
     }
 
     @Transactional
@@ -142,7 +155,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.orderCartItems(하디_멤버, orderRequest))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_NOT_FOUND);
+                });
     }
 
     @Transactional
@@ -155,7 +172,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.orderCartItems(하디_멤버, orderRequest))
-                .isInstanceOf(CartItemQuantityExcessException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_QUANTITY_EXCESS);
+                });
     }
 
     @Transactional
@@ -167,7 +188,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.orderCartItems(하디_멤버, orderRequest))
-                .isInstanceOf(OrderTotalPriceIsNotMatchedException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ORDER_TOTAL_PRICE_UNMATCHED);
+                });
     }
 
     @Transactional
@@ -253,7 +278,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.getOrderById(현구막_멤버, orderId))
-                .isInstanceOf(IllegalMemberException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ILLEGAL_MEMBER);
+                });
     }
 
     @Transactional
@@ -264,7 +293,11 @@ public class OrderServiceTest {
 
         // when, then
         assertThatThrownBy(() -> orderService.getOrderById(하디_멤버, notExistOrderId))
-                .isInstanceOf(OrderNotFoundException.class);
+                .isInstanceOf(CartException.class)
+                .satisfies(exception -> {
+                    CartException cartException = (CartException) exception;
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ORDER_NOT_FOUND);
+                });
     }
 
     @Transactional
