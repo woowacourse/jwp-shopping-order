@@ -47,17 +47,6 @@ public class CartItem {
 		return checked;
 	}
 
-	public void validateLegalOrder(final List<CartItem> items) {
-		for (final CartItem item : items) {
-			if (Objects.equals(id, item.id)) {
-				if (this.equals(item)) {
-					return;
-				}
-			}
-		}
-		throw new IllegalArgumentException();
-	}
-
 	public void checkOwner(Member member) {
 		if (!Objects.equals(this.member.getId(), member.getId())) {
 			throw new CartItemException.IllegalMember(this, member);
