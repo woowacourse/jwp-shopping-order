@@ -25,7 +25,7 @@ import cart.application.order.dto.OrderResponse;
 import cart.config.auth.LoginMember;
 import cart.config.auth.dto.AuthMember;
 
-@CrossOrigin(origins = {"https://feb-dain.github.io", "http://localhost:3000"},
+@CrossOrigin(origins = {"https://feb-dain.github.io", "https://cruelladevil.github.io", "http://localhost:3000"},
 	allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH,
 	RequestMethod.DELETE, RequestMethod.OPTIONS},
 	allowCredentials = "true", exposedHeaders = "Location")
