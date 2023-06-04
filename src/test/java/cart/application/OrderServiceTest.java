@@ -71,9 +71,11 @@ class OrderServiceTest {
                 .willReturn(order);
         given(orderRepository.findById(1L))
                 .willReturn(order);
+        given(memberDao.findById(1L))
+                .willReturn(Optional.of(member));
 
-        Long orderId = orderService.createOrder(orderRequest, member);
-        OrderDetailResponse orderDetailResponse = orderService.findOrderById(orderId, member);
+        Long orderId = orderService.createOrder(orderRequest, 1L);
+        OrderDetailResponse orderDetailResponse = orderService.findOrderById(orderId, 1L);
 
         assertAll(
                 () -> assertThat(orderDetailResponse.getOrderId()).isEqualTo(orderId),
@@ -102,8 +104,10 @@ class OrderServiceTest {
                 .willReturn(Optional.of(productB));
         given(orderRepository.save(any(Order.class)))
                 .willReturn(order);
+        given(memberDao.findById(1L))
+                .willReturn(Optional.of(member));
 
-        orderService.createOrder(orderRequest, member);
+        orderService.createOrder(orderRequest, 1L);
 
         assertThat(member.getPoint().getAmount()).isEqualTo(1200);
     }
@@ -117,8 +121,10 @@ class OrderServiceTest {
         Product productA = new Product(1L, "상품A", 2000, "http://image.com/image.png");
         given(productDao.findById(1L))
                 .willReturn(Optional.of(productA));
+        given(memberDao.findById(1L))
+                .willReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> orderService.createOrder(orderRequest, member))
+        assertThatThrownBy(() -> orderService.createOrder(orderRequest, 1L))
                 .isInstanceOf(PointNotEnoughException.class)
                 .hasMessage("포인트가 부족합니다.");
     }
@@ -132,8 +138,10 @@ class OrderServiceTest {
         Product productA = new Product(1L, "상품A", 1000, "http://image.com/image.png");
         given(productDao.findById(1L))
                 .willReturn(Optional.of(productA));
+        given(memberDao.findById(1L))
+                .willReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> orderService.createOrder(orderRequest, member))
+        assertThatThrownBy(() -> orderService.createOrder(orderRequest, 1L))
                 .isInstanceOf(NumberRangeException.class)
                 .hasMessage("포인트는 총 주문 가격보다 클 수 없습니다.");
     }

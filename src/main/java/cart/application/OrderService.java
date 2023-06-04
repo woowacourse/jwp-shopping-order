@@ -1,5 +1,7 @@
 package cart.application;
 
+import static java.util.stream.Collectors.toList;
+
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
@@ -13,13 +15,13 @@ import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailResponse;
 import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
+import cart.exception.MemberNotFoundException;
 import cart.exception.PointNotEnoughException;
 import cart.exception.ProductNotFoundException;
 import cart.repository.OrderRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +44,8 @@ public class OrderService {
     }
 
     @Transactional
-    public Long createOrder(OrderRequest orderRequest, Member member) {
+    public Long createOrder(OrderRequest orderRequest, Long memberId) {
+        Member member = getMember(memberId);
         List<OrderItem> orderItems = createOrderItems(orderRequest);
         Point spendPoint = new Point(orderRequest.getSpendPoint());
         decreaseMemberPoint(member, spendPoint);
@@ -52,6 +55,11 @@ public class OrderService {
         deleteCartItems(member, orderItems);
         memberDao.updateMember(member);
         return saveOrder.getId();
+    }
+
+    private Member getMember(Long memberId) {
+        return memberDao.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다."));
     }
 
     private void decreaseMemberPoint(Member member, Point spendPoint) {
@@ -88,13 +96,13 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDetailResponse findOrderById(Long orderId, Member member) {
+    public OrderDetailResponse findOrderById(Long orderId, Long memberId) {
         Order order = orderRepository.findById(orderId);
-        order.checkOwner(member);
+        order.checkOwner(memberId);
 
         List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream()
                 .map(this::convertToItemResponse)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return new OrderDetailResponse(
                 order.getId(),
@@ -117,11 +125,12 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponse> findAllOrders(Member member) {
+    public List<OrderResponse> findAllOrders(Long memberId) {
+        Member member = getMember(memberId);
         List<Order> orders = orderRepository.findAllByMember(member);
         return orders.stream()
                 .map(this::convertToOrderResponse)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private OrderResponse convertToOrderResponse(Order order) {

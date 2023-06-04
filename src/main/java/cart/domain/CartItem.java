@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.exception.UnauthorizedAccessException;
-import java.util.Objects;
 
 public class CartItem {
     private final Long id;
@@ -36,10 +35,14 @@ public class CartItem {
         return quantity;
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member, member)) {
+    public void checkOwner(Long memberId) {
+        if (!member.isSameId(memberId)) {
             throw new UnauthorizedAccessException("해당 회원의 장바구니가 아닙니다.");
         }
+    }
+
+    public void checkOwner(Member member) {
+        checkOwner(member.getId());
     }
 
     public void changeQuantity(int quantity) {

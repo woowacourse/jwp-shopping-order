@@ -3,6 +3,7 @@ package cart.ui;
 import static cart.helper.RestDocsHelper.prettyDocument;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -17,7 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.MockAuthProviderConfig;
 import cart.application.OrderService;
+import cart.config.AuthProvider;
+import cart.dto.User;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.request.OrderItemRequest;
@@ -29,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -38,11 +43,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(OrderController.class)
 @AutoConfigureRestDocs
+@Import(MockAuthProviderConfig.class)
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 class OrderControllerTest {
@@ -60,11 +67,20 @@ class OrderControllerTest {
     @MockBean
     MemberDao memberDao;
 
+    @Autowired
+    AuthProvider authProvider;
+
+    @BeforeEach
+    void setUp() {
+        given(authProvider.resolveUser(anyString()))
+                .willReturn(new User(1L, "a@a.com"));
+    }
+
     @Test
     void 주문_요청을_정상적으로_처리한다() throws Exception {
         OrderItemRequest orderItemRequest = new OrderItemRequest(1L, 10);
         OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), 1000L);
-        given(orderService.createOrder(any(OrderRequest.class), any(Member.class)))
+        given(orderService.createOrder(any(OrderRequest.class), anyLong()))
                 .willReturn(1L);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
@@ -175,7 +191,7 @@ class OrderControllerTest {
     @Test
     void 회원의_모든_주문을_조회_요청을_정상적으로_처리한다() throws Exception {
         OrderResponse orderResponse = new OrderResponse(1L, "http://image.com/image.png","감자",2, 10000L, LocalDateTime.now());
-        given(orderService.findAllOrders(any(Member.class)))
+        given(orderService.findAllOrders(anyLong()))
                 .willReturn(List.of(orderResponse));
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
@@ -203,7 +219,7 @@ class OrderControllerTest {
         OrderItemResponse orderItemResponse = new OrderItemResponse(1L, "사과", "http:image.com", 1000L, 10);
         OrderDetailResponse orderDetailResponse = new OrderDetailResponse(1L, 1000L, 500L, 500L, LocalDateTime.now(),
                 List.of(orderItemResponse));
-        given(orderService.findOrderById(anyLong(), any(Member.class)))
+        given(orderService.findOrderById(anyLong(), anyLong()))
                 .willReturn(orderDetailResponse);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 

@@ -31,6 +31,10 @@ public class Member {
         return this.password.equals(password);
     }
 
+    public boolean isSameId(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

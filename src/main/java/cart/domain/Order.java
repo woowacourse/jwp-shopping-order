@@ -83,10 +83,14 @@ public class Order {
         return new Point((long) Math.ceil(reward));
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member, member)) {
+    public void checkOwner(Long memberId) {
+        if (!member.isSameId(memberId)) {
             throw new UnauthorizedAccessException("해당 회원의 주문이 아닙니다.");
         }
+    }
+
+    public void checkOwner(Member member) {
+        checkOwner(member.getId());
     }
 
     @Override

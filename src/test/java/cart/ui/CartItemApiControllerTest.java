@@ -3,6 +3,7 @@ package cart.ui;
 import static cart.helper.RestDocsHelper.prettyDocument;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -14,7 +15,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.MockAuthProviderConfig;
 import cart.application.CartItemService;
+import cart.config.AuthProvider;
+import cart.dto.User;
 import cart.dao.MemberDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -25,6 +29,7 @@ import cart.dto.response.CartItemResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -34,12 +39,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = CartItemApiController.class)
 @AutoConfigureRestDocs
+@Import(MockAuthProviderConfig.class)
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 class CartItemApiControllerTest {
@@ -57,12 +64,21 @@ class CartItemApiControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    AuthProvider authProvider;
+
+    @BeforeEach
+    void setUp() {
+        given(authProvider.resolveUser(anyString()))
+                .willReturn(new User(1L, "a@a.com"));
+    }
+
     @Test
     void 회원의_모든_장바구니_품목을_조회한다() throws Exception {
         Product product = new Product(1L, "곰돌이", 10000, "http:localhost:8080");
         CartItem cartItem = new CartItem(1L, 3, product, member);
         CartItemResponse cartItemResponse = CartItemResponse.of(cartItem);
-        given(cartItemService.findAllByMember(any(Member.class))).willReturn(List.of(cartItemResponse));
+        given(cartItemService.findAllByMember(anyLong())).willReturn(List.of(cartItemResponse));
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(get("/cart-items")
@@ -77,7 +93,7 @@ class CartItemApiControllerTest {
     @Test
     void 회원의_장바구니에_품목을_등록한다() throws Exception {
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
-        given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
+        given(cartItemService.add(anyLong(), any(CartItemRequest.class))).willReturn(1L);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/cart-items")
@@ -122,7 +138,7 @@ class CartItemApiControllerTest {
     void 회원의_장바구니_수량을_변경한다() throws Exception {
         CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(10);
         willDoNothing().given(cartItemService)
-                .updateQuantity(any(Member.class), anyLong(), any(CartItemQuantityUpdateRequest.class));
+                .updateQuantity(anyLong(), anyLong(), any(CartItemQuantityUpdateRequest.class));
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/cart-items/{id}", 1L)
@@ -171,7 +187,7 @@ class CartItemApiControllerTest {
     @Test
     void 회원의_장바구니_품목을_삭제한다() throws Exception {
         willDoNothing().given(cartItemService)
-                .remove(any(Member.class), anyLong());
+                .remove(anyLong(), anyLong());
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/cart-items/{id}", 1L)

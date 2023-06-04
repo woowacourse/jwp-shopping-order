@@ -50,7 +50,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Response> handlerAuthenticationException(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new Response("인증이 실패했습니다."));
+                .body(new Response(e.getMessage()));
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
