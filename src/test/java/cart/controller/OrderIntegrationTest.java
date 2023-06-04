@@ -2,7 +2,6 @@ package cart.controller;
 
 import static fixture.MemberFixture.MEMBER_1;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -14,7 +13,6 @@ import cart.controller.response.OrderResponseDto;
 import cart.dao.CouponDao;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.CouponDto;
@@ -24,7 +22,6 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
