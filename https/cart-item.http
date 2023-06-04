@@ -1,6 +1,7 @@
 ### product를 quantity만큼 cart에 담는 기능 추가
 POST http://localhost:8080/cart-items
 Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
 
 {
   "productId": 1,
@@ -8,4 +9,9 @@ Content-Type: application/json
 }
 
 ### response
-HTTP/1.1 201 OK
+HTTP/1.1 201
+Location: /cart-items/4
+Content-Length: 0
+Date: Sun, 04 Jun 2023 14:24:24 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive

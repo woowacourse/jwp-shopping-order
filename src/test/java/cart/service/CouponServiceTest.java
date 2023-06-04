@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import anotation.ServiceTest;
 import cart.controller.response.CouponResponseDto;
+import cart.controller.response.DiscountResponseDto;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -49,16 +50,18 @@ class CouponServiceTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("validateDiscountCalculator")
     @DisplayName("쿠폰을 적용했을 때에 총 가격을 반환")
-    void calculateDiscountPrice(String testName, Integer originPrice, Long memberCouponId,Integer expectedValue) {
-        Integer money = couponService.calculateDiscountPrice(MEMBER_2, originPrice, memberCouponId);
+    void calculateDiscountPrice(String testName, Integer originPrice, Long memberCouponId, DiscountResponseDto expected) {
+        DiscountResponseDto discountResponseDto = couponService.calculateDiscountPrice(MEMBER_2, originPrice, memberCouponId);
 
-        assertThat(money).isEqualTo(expectedValue);
+        assertThat(discountResponseDto)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 
     private static Stream<Arguments> validateDiscountCalculator() {
         return Stream.of(
-                Arguments.of("정액 할인 쿠폰", 10000, MEMBER_COUPON_3.getId(), 5000),
-                Arguments.of("할인율 쿠폰", 10000, MEMBER_COUPON_4.getId(), 9000)
+                Arguments.of("정액 할인 쿠폰", 10000, MEMBER_COUPON_3.getId(), DiscountResponseDto.of(10000, 5000)),
+                Arguments.of("할인율 쿠폰", 10000, MEMBER_COUPON_4.getId(), DiscountResponseDto.of(10000, 9000))
         );
     }
 

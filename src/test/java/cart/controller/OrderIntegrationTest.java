@@ -2,11 +2,13 @@ package cart.controller;
 
 import static fixture.MemberFixture.MEMBER_1;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import cart.controller.request.OrderRequestDto;
 import cart.controller.response.CouponResponseDto;
+import cart.controller.response.DiscountResponseDto;
 import cart.controller.response.OrderProductResponseDto;
 import cart.controller.response.OrderResponseDto;
 import cart.dao.CouponDao;
@@ -129,13 +131,13 @@ class OrderIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("Coupon 으로 인한 할인 가격을 반환받는다.")
     void getDiscountPrice() {
-        Integer totalPriceAfterDiscount = given().log().all()
+        DiscountResponseDto discountResponseDto = given().log().all()
                 .auth().preemptive().basic(MEMBER_1.getEmail(), MEMBER_1.getPassword())
-                .when().get("coupon/discount?origin-price=10000&member-coupon-id=1")
-                .then().statusCode(HttpStatus.OK.value()).extract().as(Integer.class);
+                .when().get("coupons/discount?origin-price=10000&member-coupon-id=1")
+                .then().statusCode(HttpStatus.OK.value()).extract().as(DiscountResponseDto.class);
 
-        assertThat(totalPriceAfterDiscount)
-                .isEqualTo(5000);
+        assertThat(discountResponseDto.getDiscountPrice()).isEqualTo(-5000);
+        assertThat(discountResponseDto.getTotalPrice()).isEqualTo(5000);
     }
 
     private boolean isSameCoupon(CouponResponseDto couponResponseDto) {
@@ -146,7 +148,7 @@ class OrderIntegrationTest extends IntegrationTest {
     private List<CouponResponseDto> createMemberCoupon() {
         ExtractableResponse<Response> response = given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when().post("/coupon/issue")
+                .when().post("/coupons/issue")
                 .then().statusCode(HttpStatus.CREATED.value()).extract();
 
         return response.as(new TypeRef<>() {});

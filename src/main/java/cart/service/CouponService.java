@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.controller.response.CouponResponseDto;
+import cart.controller.response.DiscountResponseDto;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
@@ -37,11 +38,12 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
-    public Integer calculateDiscountPrice(final Member member, final Integer originPrice, final Long memberCouponId) {
+    public DiscountResponseDto calculateDiscountPrice(final Member member, final Integer originPrice, final Long memberCouponId) {
         Optional<Coupon> coupon = couponRepository
                 .findCouponByMemberAndMemberCouponId(member, memberCouponId);
+        int priceAfterDiscount = DiscountCalculator.calculatePriceAfterDiscount(originPrice, coupon);
 
-        return DiscountCalculator.calculatePriceAfterDiscount(originPrice, coupon);
+        return DiscountResponseDto.of(originPrice, priceAfterDiscount);
     }
 
 }

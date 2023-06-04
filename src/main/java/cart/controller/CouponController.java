@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.controller.response.CouponResponseDto;
+import cart.controller.response.DiscountResponseDto;
 import cart.domain.Member;
 import cart.service.CouponService;
 import java.net.URI;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/coupon")
+@RequestMapping("/coupons")
 public class CouponController {
 
     private final CouponService couponService;
@@ -35,7 +36,7 @@ public class CouponController {
     }
 
     @GetMapping("/discount")
-    public ResponseEntity<Integer> getDiscountPrice(Member member, @RequestParam("origin-price") Integer originPrice, @RequestParam("member-coupon-id") Long memberCouponId) {
+    public ResponseEntity<DiscountResponseDto> getDiscountPrice(Member member, @RequestParam("origin-price") Integer originPrice, @RequestParam("member-coupon-id") Long memberCouponId) {
         return ResponseEntity.ok()
                 .body(couponService.calculateDiscountPrice(member, originPrice, memberCouponId));
     }
