@@ -27,10 +27,10 @@ public class MemberCouponDao {
                     rs.getLong("id"),
                     rs.getLong("member_id"),
                     new Coupon(
-                            rs.getLong("coupon.id"),
-                            rs.getString("coupon.name"),
-                            CouponType.from(rs.getString("coupon.type")),
-                            rs.getInt("coupon.discount_amount")
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            CouponType.from(rs.getString("type")),
+                            rs.getInt("discount_amount")
                     ),
                     rs.getBoolean("used")
             ));
