@@ -8,17 +8,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CouponResponse {
+public class MemberCouponsResponse {
 
     private List<RateCouponResponse> rateCoupon;
     private List<FixedCouponResponse> fixedCoupon;
 
-    public CouponResponse(List<RateCouponResponse> rateCoupon, List<FixedCouponResponse> fixedCoupon) {
+    public MemberCouponsResponse(List<RateCouponResponse> rateCoupon, List<FixedCouponResponse> fixedCoupon) {
         this.rateCoupon = rateCoupon;
         this.fixedCoupon = fixedCoupon;
     }
 
-    public static CouponResponse from(List<MemberCoupon> memberCoupons) {
+    public static MemberCouponsResponse from(List<MemberCoupon> memberCoupons) {
         List<RateCouponResponse> rateCouponResponses = memberCoupons.stream()
                 .filter(memberCoupon -> memberCoupon.getCoupon().getCouponType() == CouponType.RATE)
                 .map(RateCouponResponse::from)
@@ -27,7 +27,7 @@ public class CouponResponse {
                 .filter(memberCoupon -> memberCoupon.getCoupon().getCouponType() == CouponType.FIXED)
                 .map(FixedCouponResponse::from)
                 .collect(Collectors.toList());
-        return new CouponResponse(rateCouponResponses, fixedCouponResponses);
+        return new MemberCouponsResponse(rateCouponResponses, fixedCouponResponses);
     }
 
     public List<RateCouponResponse> getRateCoupon() {

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 
 import cart.domain.Money;
 import cart.domain.coupon.IssuableCoupon;
-import cart.dto.CouponResponse;
+import cart.dto.MemberCouponsResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import java.util.List;
@@ -48,10 +48,10 @@ class CouponServiceTest {
                         밀리_쿠폰_1000원
                 ));
 
-        CouponResponse couponResponse = couponService.findAllByMember(밀리);
+        MemberCouponsResponse couponsResponse = couponService.findAllByMember(밀리);
 
-        assertThat(couponResponse.getFixedCoupon()).hasSize(1);
-        assertThat(couponResponse.getRateCoupon()).hasSize(1);
+        assertThat(couponsResponse.getFixedCoupon()).hasSize(1);
+        assertThat(couponsResponse.getRateCoupon()).hasSize(1);
     }
 
     @Test

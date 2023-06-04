@@ -4,7 +4,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.coupon.IssuableCoupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.dto.CouponResponse;
+import cart.dto.MemberCouponsResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import java.util.Comparator;
@@ -23,9 +23,9 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public CouponResponse findAllByMember(Member member) {
+    public MemberCouponsResponse findAllByMember(Member member) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpiredAllByMember(member);
-        return CouponResponse.from(memberCoupons);
+        return MemberCouponsResponse.from(memberCoupons);
     }
 
     public void issueByOrderPrice(Money totalOrderPrice, Member member) {
