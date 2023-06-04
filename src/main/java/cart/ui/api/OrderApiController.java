@@ -59,7 +59,7 @@ public class OrderApiController {
     private List<OrderProductResponse> toOrderProductResponse(List<OrderProduct> orderProducts) {
         return orderProducts.stream()
                 .map(orderProduct -> new OrderProductResponse(
-                        orderProduct.getProductId(),
+                        orderProduct.getId(),
                         orderProduct.getName(),
                         orderProduct.getPrice(),
                         orderProduct.getImageUrl(),

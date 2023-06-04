@@ -2,6 +2,7 @@ package cart.config;
 
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.MemberDao;
+import cart.repository.dao.OrderDao;
 import cart.repository.dao.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -40,6 +41,7 @@ public abstract class ControllerTestConfig {
     protected MemberDao memberDao;
     protected ProductDao productDao;
     protected CartItemDao cartItemDao;
+    protected OrderDao orderDao;
     protected RequestSpecification spec;
 
     @BeforeEach
@@ -47,6 +49,7 @@ public abstract class ControllerTestConfig {
         memberDao = new MemberDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         cartItemDao = new CartItemDao(jdbcTemplate);
+        orderDao = new OrderDao(jdbcTemplate);
 
         RestAssured.port = port;
 

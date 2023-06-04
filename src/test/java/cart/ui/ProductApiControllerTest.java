@@ -39,7 +39,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
 
     @Test
     void getProductById() {
-        상품_계란_등록();
+        Long 계란_아이디 = 상품_계란_등록();
 
         given(spec)
                 .log().all()
@@ -52,7 +52,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products/1")
+                .get("/products/" + 계란_아이디)
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }

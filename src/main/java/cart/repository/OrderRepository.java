@@ -5,7 +5,6 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.order.OrderProducts;
 import cart.domain.payment.Payment;
-import cart.repository.dao.MemberDao;
 import cart.repository.dao.OrderDao;
 import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderProductEntity;
@@ -20,11 +19,9 @@ import static java.util.stream.Collectors.toList;
 public class OrderRepository {
 
     private final OrderDao orderDao;
-    private final MemberDao memberDao;
 
-    public OrderRepository(OrderDao orderDao, MemberDao memberDao) {
+    public OrderRepository(OrderDao orderDao) {
         this.orderDao = orderDao;
-        this.memberDao = memberDao;
     }
 
     public long createOrder(Order order) {
@@ -33,6 +30,14 @@ public class OrderRepository {
         long orderId = orderDao.insertOrder(orderEntity);
         saveOrderItems(orderProducts, orderId);
         return orderId;
+    }
+
+    private static OrderEntity toOrderEntity(Order order) {
+        return new OrderEntity.Builder()
+                .memberId(order.getMember().getId())
+                .totalPayment(order.getPayment().getTotalPrice())
+                .usedPoint(order.getPayment().getUsedPoint())
+                .build();
     }
 
     private void saveOrderItems(OrderProducts orderProducts, long orderId) {
@@ -51,14 +56,6 @@ public class OrderRepository {
                 .productImageUrl(orderProduct.getImageUrl())
                 .quantity(orderProduct.getQuantity())
                 .totalPrice(orderProduct.getTotalPrice())
-                .build();
-    }
-
-    private static OrderEntity toOrderEntity(Order order) {
-        return new OrderEntity.Builder()
-                .memberId(order.getMember().getId())
-                .totalPayment(order.getPayment().getTotalPrice())
-                .usedPoint(order.getPayment().getUsedPoint())
                 .build();
     }
 

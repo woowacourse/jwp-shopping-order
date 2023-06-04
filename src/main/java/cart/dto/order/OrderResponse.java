@@ -1,25 +1,38 @@
 package cart.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class OrderResponse {
 
-    private final long orderId;
-    private final List<OrderProductResponse> orderProducts;
-    private final int orderTotalPrice;
-    private final int usedPoint;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private final LocalDateTime createdAt;
+    private long orderId;
+    private List<OrderProductResponse> orderProducts;
+    private int orderTotalPrice;
+    private int usedPoint;
+    private String createdAt;
+
+    public OrderResponse() {
+    }
 
     public OrderResponse(long orderId, List<OrderProductResponse> orderProducts, int orderTotalPrice, int usedPoint, LocalDateTime createdAt) {
         this.orderId = orderId;
         this.orderProducts = orderProducts;
         this.orderTotalPrice = orderTotalPrice;
         this.usedPoint = usedPoint;
+        this.createdAt = convert(createdAt);
+    }
+
+    public OrderResponse(long orderId, List<OrderProductResponse> orderProducts, int orderTotalPrice, int usedPoint, String createdAt) {
+        this.orderId = orderId;
+        this.orderProducts = orderProducts;
+        this.orderTotalPrice = orderTotalPrice;
+        this.usedPoint = usedPoint;
         this.createdAt = createdAt;
+    }
+
+    private String convert(LocalDateTime createdAt) {
+        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public long getOrderId() {
@@ -38,7 +51,7 @@ public class OrderResponse {
         return usedPoint;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 }

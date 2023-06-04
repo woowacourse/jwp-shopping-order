@@ -33,9 +33,9 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     }
 
     Member 회원_등록() {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        memberDao.addMember(member);
-        return member;
+        final Member member = new Member("a@a.com", "1234");
+        long memberId = memberDao.addMember(member);
+        return new Member(memberId, "a@a.com", "1234");
     }
 
     CartItem 장바구니_등록(final Product 상품, final Member 회원) {

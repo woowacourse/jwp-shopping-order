@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -58,7 +59,9 @@ public class OrderDao {
             preparedStatement.setInt(3, orderEntity.getUsedPoint());
             return preparedStatement;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey().longValue());
+
+        Map<String, Object> keys = keyHolder.getKeys();
+        return Objects.requireNonNull((long) keys.get("id"));
     }
 
     public long insertOrderItems(OrderProductEntity orderProductEntity) {

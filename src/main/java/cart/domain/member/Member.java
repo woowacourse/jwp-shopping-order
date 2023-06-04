@@ -16,7 +16,7 @@ public class Member {
     private static final int MINIMUM_POINT = 0;
     private static final int INITIAL_MONEY = 1_000_000_000;
 
-    private final Long id;
+    private Long id;
     private final String email;
     private final String password;
     private int point;
@@ -25,6 +25,13 @@ public class Member {
     public Member(Long id, String email, String password) {
         validate(id, email);
         this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = INITIAL_POINT;
+        this.money = INITIAL_MONEY;
+    }
+
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
         this.point = INITIAL_POINT;
