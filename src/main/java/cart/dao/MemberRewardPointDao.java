@@ -80,4 +80,9 @@ public class MemberRewardPointDao {
                 }
         );
     }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM member_reward_point WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

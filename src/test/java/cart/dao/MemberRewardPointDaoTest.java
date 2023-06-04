@@ -133,4 +133,18 @@ class MemberRewardPointDaoTest {
         String sql = "SELECT * FROM member_reward_point";
         return namedParameterJdbcTemplate.query(sql, rowMapper);
     }
+
+    @DisplayName("특정 아이디의 포인트를 삭제할 수 있다")
+    @Test
+    void deleteById() {
+        // given
+        Long deleteId = 4L;
+
+        // when
+        memberRewardPointDao.deleteById(deleteId);
+
+        // then
+        assertThat(getAllPoint()).usingRecursiveFieldByFieldElementComparator()
+                                 .doesNotContain(회원1_주문4_포인트);
+    }
 }
