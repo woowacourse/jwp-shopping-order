@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
@@ -23,6 +24,9 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,12 +52,21 @@ class PaginatorApiControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private WebApplicationContext context;
     @MockBean
     private FindOrderService findOrderService;
     @MockBean
     private AddOrderService addOrderService;
     @MockBean
     private CancelOrderService cancelOrderService;
+
+    @BeforeEach
+    void setUp() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+            .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
+            .build();
+    }
 
     @Nested
     class 주문_목록_조회_테스트 {
@@ -119,7 +132,7 @@ class PaginatorApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(jsonRequest))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("0이상의 값을 입력해야 합니다"));
+                .andExpect(content().string("{\"errorMessage\":\"0이상의 값을 입력해야 합니다\"}"));
         }
 
         @Test
@@ -135,7 +148,7 @@ class PaginatorApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(jsonRequest))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("유효하지 않은 상품 id 입니다"));
+                .andExpect(content().string("{\"errorMessage\":\"유효하지 않은 상품 id 입니다\"}"));
         }
 
         @Test
@@ -150,7 +163,7 @@ class PaginatorApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(jsonRequest))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("하나 이상의 상품이 포함되어야 합니다"));
+                .andExpect(content().string("{\"errorMessage\":\"하나 이상의 상품이 포함되어야 합니다\"}"));
         }
 
         @Test
@@ -166,7 +179,7 @@ class PaginatorApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(jsonRequest))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("구매할 상품의 개수는 1개 이상이어야 합니다"));
+                .andExpect(content().string("{\"errorMessage\":\"구매할 상품의 개수는 1개 이상이어야 합니다\"}"));
         }
     }
 }

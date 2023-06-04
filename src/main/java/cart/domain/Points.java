@@ -44,7 +44,6 @@ public class Points {
     private List<PointAddition> findUnusedPointsAscendingByExpireAt() {
         Map<Long, List<PointUsage>> usagesByPointAdditionId = pointUsages.stream()
             .collect(groupingBy(PointUsage::getPointAdditionId));
-        // 아예 사용하지 않은 포인트, 부분적으로 사용된 포인트를 찾는다.
         List<PointAddition> unusedPoints = new ArrayList<>();
         List<PointAddition> partiallyUsedPoints = new ArrayList<>();
         for (PointAddition addition : pointAdditions) {
@@ -56,20 +55,21 @@ public class Points {
             int amount = usages.stream()
                 .mapToInt(PointUsage::getAmount)
                 .sum();
-            // 부분적으로 사용된 포인트가 있다면 남은 잔액으로 변경한다.
             if (addition.getAmount() != amount) {
                 partiallyUsedPoints.add(addition.reduce(amount));
             }
         }
-        // 부분적으로 사용된 포인트가 한 개 이상이라면 동작에 오류가 있는 것. 하나 또는 0개여야 함.
-        if (partiallyUsedPoints.size() > 1) {
-            throw new IllegalPointException("부분적으로 사용된 포인트가 한 개 이상입니다");
-        }
+        assertContainingOnePartiallyUsedPointAtMax(partiallyUsedPoints);
         unusedPoints.addAll(partiallyUsedPoints);
-        // 유효기간이 얼마 남지 않은 것부터로 정렬한다.
         return unusedPoints.stream()
             .sorted(comparing(PointAddition::getExpireAt))
             .collect(toList());
+    }
+
+    private void assertContainingOnePartiallyUsedPointAtMax(List<PointAddition> partiallyUsedPoints) {
+        if (partiallyUsedPoints.size() > 1) {
+            throw new IllegalPointException("부분적으로 사용된 포인트가 한 개 이상입니다");
+        }
     }
 
     private List<PointUsage> getPointsToBeUsed(int usePointAmount, List<PointAddition> sortedPoints) {

@@ -56,7 +56,7 @@ class PointServiceTest {
             // when & then
             assertThatThrownBy(
                 () -> pointService.handlePointProcessInOrder(pointAdditionEvent))
-                .isInstanceOf(IllegalPointException.class)
+                .isInstanceOf(IllegalPointException.UsingMorePointThanPrice.class)
                 .hasMessage("지불할 금액을 초과하는 포인트를 사용할 수 없습니다");
         }
 
@@ -77,7 +77,7 @@ class PointServiceTest {
             // when & then
             assertThatThrownBy(() ->
                 pointService.handlePointProcessInOrder(pointAdditionEvent))
-                .isInstanceOf(IllegalPointException.class)
+                .isInstanceOf(IllegalPointException.PointIsNotEnough.class)
                 .hasMessage("보유한 포인트 이상을 사용할 수 없습니다");
         }
 

@@ -66,7 +66,7 @@ public class PointService {
 
     private void validateNotUsingMorePointThanPrice(int usedPoint, int payAmount) {
         if (usedPoint > payAmount) {
-            throw new IllegalPointException("지불할 금액을 초과하는 포인트를 사용할 수 없습니다");
+            throw new IllegalPointException.UsingMorePointThanPrice();
         }
     }
 
@@ -81,7 +81,7 @@ public class PointService {
 
     private void validateIsPointEnough(int usePointAmount, Points points) {
         if (points.hasNotEnoughPoint(usePointAmount)) {
-            throw new IllegalPointException("보유한 포인트 이상을 사용할 수 없습니다");
+            throw new IllegalPointException.PointIsNotEnough();
         }
     }
 

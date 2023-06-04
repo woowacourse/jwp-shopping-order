@@ -15,27 +15,27 @@ import cart.exception.IllegalOrderException;
 import cart.exception.IllegalPointException;
 
 @RestControllerAdvice
-public class ExceptionAdvice {
+public class RestControllerExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler
-    public ResponseEntity<String> handleDataBindException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorResponse> handleDataBindException(MethodArgumentNotValidException exception) {
         final List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         final String errorMessage = fieldErrors.stream()
             .map(FieldError::getDefaultMessage)
             .collect(Collectors.joining("\n"));
-        return ResponseEntity.badRequest().body(errorMessage);
+        return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 
-    @ExceptionHandler({IllegalOrderException.class, IllegalOrderException.IllegalMember.class, IllegalPointException.class})
-    public ResponseEntity<String> handleServiceExceptions(Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
+    @ExceptionHandler({IllegalOrderException.class, IllegalPointException.class})
+    public ResponseEntity<ErrorResponse> handleServiceExceptions(Exception exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleOtherExceptions(Exception exception) {
+    public ResponseEntity<ErrorResponse> handleOtherExceptions(Exception exception) {
         logger.error("Exception: " + exception.getMessage());
-        return ResponseEntity.internalServerError().body("잠시 후 다시 시도해 주세요.");
+        return ResponseEntity.internalServerError().body(new ErrorResponse("잠시 후 다시 시도해 주세요"));
     }
 }
