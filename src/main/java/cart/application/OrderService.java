@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderService {
     private final CartItemRepository cartItemRepository;
-    private final MemberCouponRepository memberCouponRepository;
+    private final CouponRepository couponRepository;
     private final OrderRepository orderRepository;
 
-    public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository,
+    public OrderService(CartItemRepository cartItemRepository, CouponRepository couponRepository,
                         OrderRepository orderRepository) {
         this.cartItemRepository = cartItemRepository;
-        this.memberCouponRepository = memberCouponRepository;
+        this.couponRepository = couponRepository;
         this.orderRepository = orderRepository;
     }
 
@@ -36,7 +36,7 @@ public class OrderService {
 
         Order order = new Order(
                 member, cartItems,
-                memberCouponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
+                couponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
 
         return orderRepository.save(order);
     }

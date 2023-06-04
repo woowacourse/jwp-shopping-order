@@ -51,6 +51,11 @@ public class CouponRepsitoryImpl implements CouponRepository {
                 .map(this::toDomain).collect(Collectors.toList());
     }
 
+    @Override
+    public Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId) {
+        return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(member.getId(), couponId).orElse(CouponEntity.EMPTY));
+    }
+
     private Coupon toDomain(CouponEntity entity) {
         CouponTypes couponType = DiscountType.from(entity.getDiscountType());
         return new Coupon(entity.getId(), entity.getName(), couponType,

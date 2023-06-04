@@ -14,4 +14,6 @@ public interface CouponRepository {
     List<Coupon> findByMemberId(Member member);
 
     List<Coupon> findAll();
+
+    Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId);
 }
