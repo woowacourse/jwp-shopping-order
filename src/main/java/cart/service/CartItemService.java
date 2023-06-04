@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+
+    private static final Integer DEFAULT_QUANTITY = 1;
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -28,7 +31,12 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Integer quantity = cartItemRequest.getQuantity()
+                .orElseGet(() -> DEFAULT_QUANTITY);
+
+        return cartItemDao.save(
+                new CartItem(quantity, member, productDao.getProductById(cartItemRequest.getProductId()))
+        );
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

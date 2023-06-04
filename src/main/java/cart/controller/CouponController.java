@@ -39,4 +39,5 @@ public class CouponController {
         return ResponseEntity.ok()
                 .body(couponService.calculateDiscountPrice(member, originPrice, memberCouponId));
     }
+
 }
