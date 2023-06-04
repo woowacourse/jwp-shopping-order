@@ -4,10 +4,10 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.dto.cartitem.CartItemRequest;
+import cart.dto.cartitem.CartItemResponse;
+import cart.dto.product.ProductRequest;
 import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

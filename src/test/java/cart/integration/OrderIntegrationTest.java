@@ -4,10 +4,10 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
-import cart.dto.CartItemResponse;
-import cart.dto.OrderItemResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.cartitem.CartItemResponse;
+import cart.dto.order.OrderItemResponse;
+import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.math.BigDecimal;

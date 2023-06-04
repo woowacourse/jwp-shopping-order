@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.order;
 
 import cart.domain.Point;
 

@@ -1,12 +1,10 @@
 package cart.dao;
 
 import cart.dao.entity.PointEntity;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,21 +18,9 @@ public class PointDao {
         );
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert insertAction;
 
     public PointDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("point")
-            .usingGeneratedKeyColumns("id");
-    }
-
-    public long save(PointEntity pointEntity) {
-        Number generatedKey = insertAction.executeAndReturnKey(Map.of(
-            "member_id", pointEntity.getMemberId(),
-            "point", pointEntity.getPoint()
-        ));
-        return generatedKey.longValue();
     }
 
     public Optional<PointEntity> findByMemberId(long memberId) {

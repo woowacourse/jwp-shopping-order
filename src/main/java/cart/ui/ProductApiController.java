@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;

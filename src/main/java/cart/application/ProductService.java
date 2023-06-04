@@ -2,8 +2,8 @@ package cart.application;
 
 import cart.domain.Money;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;

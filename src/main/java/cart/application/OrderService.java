@@ -6,7 +6,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Point;
-import cart.dto.OrderRequest;
+import cart.dto.order.OrderRequest;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
