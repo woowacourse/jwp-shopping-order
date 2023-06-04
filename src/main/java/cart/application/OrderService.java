@@ -5,9 +5,11 @@ import cart.domain.pointRewardPolicy.PointRewardPolicy;
 import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.OrderRepository;
 import cart.dto.*;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,10 +50,18 @@ public class OrderService {
         return orderId;
     }
 
-    public List<OrderResponse> showOrders(final Member member) {
-        List<Order> orders = orderRepository.findOrdersByMemberId(member);
-        return orders.stream()
+    public OrderResponses showOrders(final Member member, final Integer page, final Integer size) {
+        List<Order> orders = orderRepository.findOrdersByMemberId(member)
+                .stream()
+                .sorted(Comparator.comparing(Order::getOrderId).reversed())
+                .collect(Collectors.toList());
+        final List<OrderResponse> orderResponses = orders.stream()
                 .map(order -> getOrderResponse(order)).collect(Collectors.toList());
+        final List<List<OrderResponse>> partitions = Lists.partition(orderResponses, size);
+        final List<OrderResponse> target = partitions.get(page - 1);
+        final PageInfo pageInfo = new PageInfo(page, size, orders.size(), partitions.size());
+        return new OrderResponses(pageInfo,target);
+
     }
 
     public OrderResponse showOrder(final Member member, final Long orderId) {
