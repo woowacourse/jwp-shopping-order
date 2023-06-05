@@ -64,11 +64,11 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantityToChange) {
-        this.quantity = quantity.changeQuantity(quantityToChange);
+        quantity.changeQuantity(quantityToChange);
     }
 
     public void addQuantity(int quantityToAdd) {
-        this.quantity = quantity.addQuantity(quantityToAdd);
+        quantity.addQuantity(quantityToAdd);
     }
 
     public int calculateAllPrice() {

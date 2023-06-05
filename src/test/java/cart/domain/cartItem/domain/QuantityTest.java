@@ -31,10 +31,10 @@ class QuantityTest {
         int quantityToChange = 5;
 
         // when
-        Quantity changedQuantity = quantity.changeQuantity(quantityToChange);
+        quantity.changeQuantity(quantityToChange);
 
         // then
-        assertThat(changedQuantity.getQuantity()).isEqualTo(quantityToChange);
+        assertThat(quantity.getQuantity()).isEqualTo(quantityToChange);
     }
 
     @Test
@@ -47,9 +47,9 @@ class QuantityTest {
         int addedQuantity = currentQuantity + quantityToAdd;
 
         // when
-        Quantity changedQuantity = quantity.addQuantity(quantityToAdd);
+        quantity.addQuantity(quantityToAdd);
 
         // then
-        assertThat(changedQuantity.getQuantity()).isEqualTo(addedQuantity);
+        assertThat(quantity.getQuantity()).isEqualTo(addedQuantity);
     }
 }

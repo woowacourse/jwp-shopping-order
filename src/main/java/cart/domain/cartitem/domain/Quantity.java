@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Quantity {
 
-    private final int quantity;
+    private int quantity;
 
     public Quantity(final int quantity) {
         validatePositive(quantity);
@@ -17,12 +17,12 @@ public class Quantity {
         }
     }
 
-    public Quantity changeQuantity(int quantity) {
-        return new Quantity(quantity);
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public Quantity addQuantity(int quantity) {
-        return new Quantity(this.quantity + quantity);
+    public void addQuantity(int quantity) {
+        this.quantity += quantity;
     }
 
     public int getQuantity() {
