@@ -31,7 +31,7 @@ public enum CouponExceptionType implements BaseExceptionType {
             "한 상품에 하나의 쿠폰만 적용 가능합니다."
     ),
     EXIST_UNUSED_COUPON(
-            404,
+            405,
             HttpStatus.BAD_REQUEST,
             "적용되지 않은 쿠폰이 존재합니다."
     ),

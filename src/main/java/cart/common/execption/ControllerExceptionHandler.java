@@ -21,4 +21,12 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(baseExceptionType.httpStatus())
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleUnexpectedException(Exception e) {
+        log.error("Unexpected Exception", e);
+        return ResponseEntity.internalServerError().body(
+                new ExceptionResponse(99999, "서버 내부에서 알 수 없는 예외가 발생했습니다.")
+        );
+    }
 }
