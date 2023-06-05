@@ -30,7 +30,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             final long productId = rs.getLong("product.id");
             final long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
+            int quantity = rs.getInt("quantity");
             return new CartItemEntity(cartItemId, memberId, productId, quantity);
         });
     }
@@ -50,10 +50,10 @@ public class CartItemDao {
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
         final List<CartItemEntity> cartItemEntities = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            long cartItemId = rs.getLong("cart_item.id");
+            long cartItemId = rs.getLong("id");
             long memberId = rs.getLong("member_id");
             long productId = rs.getLong("id");
-            int quantity = rs.getInt("cart_item.quantity");
+            int quantity = rs.getInt("quantity");
             return new CartItemEntity(cartItemId, memberId, productId, quantity);
         });
         return cartItemEntities.isEmpty() ? null : cartItemEntities.get(0);
