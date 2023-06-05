@@ -1,4 +1,4 @@
-package cart;
+package cart.config;
 
 import cart.controller.MemberArgumentResolver;
 import cart.dao.MemberDao;
