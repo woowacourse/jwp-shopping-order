@@ -662,13 +662,13 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     private void 이미_사용한_쿠폰을_저장한다() {
-        final CouponRequest 비밀의_쿠폰_요청 = new CouponRequest("비밀의 쿠폰", 20, 1);
+        final CouponRequest 비밀의_쿠폰_요청 = new CouponRequest("비밀의 쿠폰", 20, 20);
         쿠폰_저장(비밀의_쿠폰_요청);
 
         final String sql = "INSERT INTO member_coupon(member_id, coupon_id, issued_at, expired_at, is_used) "
             + "VALUES (?, ?, ?, ?, ?)";
         final LocalDateTime issuedAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
-        final LocalDateTime expiredAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(3);
+        final LocalDateTime expiredAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(20);
         jdbcTemplate.update(sql, 1L, 3L, Timestamp.valueOf(issuedAt), Timestamp.valueOf(expiredAt), 1);
     }
 

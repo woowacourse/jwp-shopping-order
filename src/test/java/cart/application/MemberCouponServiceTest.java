@@ -22,9 +22,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Sql({"classpath:init.sql", "classpath:data.sql"})
 class MemberCouponServiceTest {
 
     @Autowired
@@ -38,7 +40,6 @@ class MemberCouponServiceTest {
 
     @Autowired
     private MemberCouponService memberCouponService;
-
 
     @Test
     @DisplayName("회원 가입 축하 쿠폰을 발행한다.")
