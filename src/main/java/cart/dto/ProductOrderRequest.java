@@ -1,8 +1,16 @@
 package cart.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class ProductOrderRequest {
 
+    @NotNull
+    @Positive
     private Long productId;
+
+    @NotNull
+    @Positive
     private Integer quantity;
 
     public ProductOrderRequest() {
