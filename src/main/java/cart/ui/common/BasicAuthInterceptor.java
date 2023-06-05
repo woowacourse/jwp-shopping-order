@@ -27,7 +27,7 @@ public class BasicAuthInterceptor implements HandlerInterceptor {
         }
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         MemberAuth memberAuth = basicAuthenticationExtractor.extract(authorization);
-        MemberResponse member = memberService.getMemberByEmail(memberAuth.getEmail());
+        MemberResponse member = memberService.findByEmail(memberAuth.getEmail());
         if (!member.getPassword().equals(memberAuth.getPassword())) {
             throw new MemberPasswordException("멤버의 비밀번호가 일치하지 않습니다.");
         }

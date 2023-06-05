@@ -41,18 +41,18 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         product = new Product("치킨", 10000, "http://chicken.com");
-        Long productId = productRepository.createProduct(product);
+        Long productId = productRepository.save(product);
         product.assignId(productId);
     }
 
     @Test
-    @DisplayName("getAllProducts 메서드는 모든 상품 정보를 조회한다.")
-    void getAllProducts() {
+    @DisplayName("findAll 메서드는 모든 상품 정보를 조회한다.")
+    void findAll() {
         Product otherProduct = new Product("피자", 13000, "http://pizza.com");
-        Long otherProductId = productRepository.createProduct(otherProduct);
+        Long otherProductId = productRepository.save(otherProduct);
         otherProduct.assignId(otherProductId);
 
-        List<ProductResponse> result = productService.getAllProducts();
+        List<ProductResponse> result = productService.findAll();
 
         assertAll(
                 () -> assertThat(result).hasSize(2),
@@ -63,9 +63,9 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("getProductById 메서드 ID에 해당하는 상품 정보를 조회한다.")
-    void getProductById() {
-        ProductResponse result = productService.getProductById(1L);
+    @DisplayName("findById 메서드 ID에 해당하는 상품 정보를 조회한다.")
+    void findById() {
+        ProductResponse result = productService.findById(product.getId());
 
         assertThat(result).usingRecursiveComparison().isEqualTo(ProductResponse.from(product));
     }
@@ -77,7 +77,7 @@ class ProductServiceTest {
 
         productService.updateProduct(product.getId(), request);
 
-        ProductResponse result = productService.getProductById(product.getId());
+        ProductResponse result = productService.findById(product.getId());
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(product.getId()),
                 () -> assertThat(result.getName()).isEqualTo(request.getName()),
@@ -94,7 +94,7 @@ class ProductServiceTest {
         @DisplayName("상품의 장바구니 상품을 모두 삭제한다.")
         void deleteCartItems() {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
-            Long memberId = memberDao.addMember(memberEntity);
+            Long memberId = memberDao.save(memberEntity);
             Member member = MemberMapper.toDomain(memberEntity);
             member.assignId(memberId);
 
@@ -103,7 +103,7 @@ class ProductServiceTest {
 
             productService.deleteProduct(product.getId());
 
-            List<Product> products = productRepository.getAllProducts();
+            List<Product> products = productRepository.findAll();
             List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
             assertAll(
                     () -> assertThat(products).isEmpty(),
@@ -116,7 +116,7 @@ class ProductServiceTest {
         void deleteProduct() {
             productService.deleteProduct(product.getId());
 
-            List<ProductResponse> result = productService.getAllProducts();
+            List<ProductResponse> result = productService.findAll();
             assertThat(result).isEmpty();
         }
     }

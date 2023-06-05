@@ -58,11 +58,11 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         memberEntity = new MemberEntity("a@a.com", "password1", 1000);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
         memberEntity = memberEntity.assignId(memberId);
 
         productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
-        Long productId = productDao.createProduct(productEntity);
+        Long productId = productDao.save(productEntity);
         productEntity = productEntity.assignId(productId);
 
         orderEntity = new OrderEntity(memberEntity, 0, 0, 0);
@@ -76,8 +76,8 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("getOrders 메서드는 주문 정보 목록을 응답한다.")
-    void getOrders() {
+    @DisplayName("findByMember 메서드는 주문 정보 목록을 응답한다.")
+    void findByMember() {
         OrderEntity newOrderEntity = new OrderEntity(memberEntity, 0, 0, 0);
         Long newOrderId = orderDao.save(newOrderEntity);
         OrderEntity findNewOrderEntity = orderDao.findById(newOrderId).get();
@@ -86,7 +86,7 @@ class OrderServiceTest {
                 new OrderProductEntity(newOrderId, productEntity, "치킨", 10000, "http://chicken.com", 5);
         Long newOrderProductId = orderProductDao.save(newOrderProductEntity);
 
-        List<OrderResponse> result = orderService.getOrders(MemberMapper.toDomain(memberEntity));
+        List<OrderResponse> result = orderService.findByMember(MemberMapper.toDomain(memberEntity));
 
         assertAll(
                 () -> assertThat(result).hasSize(2),
@@ -103,25 +103,25 @@ class OrderServiceTest {
     }
 
     @Nested
-    @DisplayName("getOrderDetail 메서드는 ")
-    class GetOrderDetail {
+    @DisplayName("findById 메서드는 ")
+    class findById {
 
         @Test
         @DisplayName("주문에 접근 권한이 없는 멤버라면 예외를 던진다.")
         void invalidMember() {
             Member member = new Member(-1L, "b@b.com", "password2", 0);
 
-            assertThatThrownBy(() -> orderService.getOrderDetail(orderEntity.getId(), member))
+            assertThatThrownBy(() -> orderService.findById(orderEntity.getId(), member))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("주문을 관리할 수 있는 멤버가 아닙니다.");
         }
 
         @Test
         @DisplayName("주문과 멤버가 유효하다면 주문 정보를 응답한다.")
-        void getOrder() {
+        void findById() {
             Member member = MemberMapper.toDomain(memberEntity);
 
-            OrderResponse response = orderService.getOrderDetail(orderEntity.getId(), member);
+            OrderResponse response = orderService.findById(orderEntity.getId(), member);
 
             Order order = OrderMapper.toDomain(orderEntity, List.of(orderProductEntity));
             OrderResponse expected = OrderResponse.from(order);
@@ -150,7 +150,7 @@ class OrderServiceTest {
         @DisplayName("사용하는 포인트가 총 주문 금액보다 크다면 예외를 던진다.")
         void overPointUse() {
             MemberEntity otherMember = new MemberEntity("b@b.com", "1234", 1000);
-            Long otherMemberId = memberDao.addMember(otherMember);
+            Long otherMemberId = memberDao.save(otherMember);
             MemberEntity savedMember = otherMember.assignId(otherMemberId);
             CartItemEntity cartItemEntityA = new CartItemEntity(savedMember, productEntity, 5);
             Long cartItemA = cartItemDao.save(cartItemEntityA);
@@ -167,7 +167,7 @@ class OrderServiceTest {
         @DisplayName("장바구니 목록을 주문하고 멤버 포인트는 감소하고 남은 장바구니 목록을 응답한다.")
         void processOrder() {
             MemberEntity otherMember = new MemberEntity("b@b.com", "1234", 1000);
-            Long otherMemberId = memberDao.addMember(otherMember);
+            Long otherMemberId = memberDao.save(otherMember);
             MemberEntity savedMember = otherMember.assignId(otherMemberId);
             CartItemEntity cartItemEntityA = new CartItemEntity(savedMember, productEntity, 5);
             Long cartItemA = cartItemDao.save(cartItemEntityA);
@@ -182,7 +182,7 @@ class OrderServiceTest {
             List<OrderEntity> orders = orderDao.findAllByMemberId(savedMember.getId());
             List<OrderProductEntity> orderProducts = orderProductDao.findAllByOrderId(orders.get(0).getId());
             List<CartItemEntity> cartItems = cartItemDao.findByMemberId(savedMember.getId());
-            MemberEntity member = memberDao.getMemberById(savedMember.getId()).get();
+            MemberEntity member = memberDao.findById(savedMember.getId()).get();
             assertAll(
                     () -> assertThat(orders).hasSize(1),
                     () -> assertThat(orderProducts).hasSize(2),

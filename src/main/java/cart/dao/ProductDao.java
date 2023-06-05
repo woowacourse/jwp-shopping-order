@@ -34,12 +34,12 @@ public class ProductDao {
                 .usingColumns("name", "price", "image_url");
     }
 
-    public List<ProductEntity> getAllProducts() {
+    public List<ProductEntity> findAll() {
         String sql = "SELECT id, name, price, image_url, created_at, updated_at FROM product";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Optional<ProductEntity> getProductById(Long productId) {
+    public Optional<ProductEntity> findById(Long productId) {
         String sql = "SELECT id, name, price, image_url, created_at, updated_at FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId));
@@ -48,12 +48,12 @@ public class ProductDao {
         }
     }
 
-    public Long createProduct(ProductEntity productEntity) {
+    public Long save(ProductEntity productEntity) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public void updateProduct(ProductEntity productEntity) {
+    public void update(ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(
                 sql,
@@ -61,7 +61,7 @@ public class ProductDao {
         );
     }
 
-    public void deleteProduct(Long productId) {
+    public void delete(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }

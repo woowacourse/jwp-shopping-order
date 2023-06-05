@@ -34,8 +34,8 @@ public class ProductApiController {
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회한다.")
     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> showProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @Operation(summary = "상폼 조회", description = "상품을 조회한다.")
@@ -46,7 +46,7 @@ public class ProductApiController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @Operation(summary = "상품 등록", description = "상품을 등록한다.")

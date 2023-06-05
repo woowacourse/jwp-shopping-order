@@ -32,19 +32,19 @@ class ProductRepositoryTest {
     private MemberDao memberDao;
 
     @Test
-    @DisplayName("getAllProducts 메서드는 모든 상품을 조회한다.")
-    void getAllProducts() {
+    @DisplayName("findAll 메서드는 모든 상품을 조회한다.")
+    void findAll() {
         Product productA = new Product("치킨", 10000, "http://chicken.com");
         Product productB = new Product("샐러드", 20000, "http://salad.com");
         Product productC = new Product("피자", 13000, "http://pizza.com");
-        Long productIdA = productRepository.createProduct(productA);
-        Long productIdB = productRepository.createProduct(productB);
-        Long productIdC = productRepository.createProduct(productC);
+        Long productIdA = productRepository.save(productA);
+        Long productIdB = productRepository.save(productB);
+        Long productIdC = productRepository.save(productC);
         productA.assignId(productIdA);
         productB.assignId(productIdB);
         productC.assignId(productIdC);
 
-        List<Product> result = productRepository.getAllProducts();
+        List<Product> result = productRepository.findAll();
 
         assertAll(
                 () -> assertThat(result).hasSize(3),
@@ -55,38 +55,38 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("updateProduct 메서드는 상품 정보를 수정한다.")
-    void updateProduct() {
+    @DisplayName("update 메서드는 상품 정보를 수정한다.")
+    void update() {
         Product product = new Product("치킨", 10000, "http://chicken.com");
-        Long savedProductId = productRepository.createProduct(product);
+        Long savedProductId = productRepository.save(product);
         Product updateProduct = new Product(savedProductId, "피자", 13000, "http://pizza.com");
 
-        productRepository.updateProduct(updateProduct);
+        productRepository.update(updateProduct);
 
-        Product result = productRepository.getProductById(savedProductId);
+        Product result = productRepository.findById(savedProductId);
         assertThat(result).usingRecursiveComparison().isEqualTo(updateProduct);
     }
 
     @Nested
-    @DisplayName("deleteProduct 메서드는 ")
-    class DeleteProduct {
+    @DisplayName("delete 메서드는 ")
+    class Delete {
 
         @Test
         @DisplayName("장바구니에 담겨 있는 상품이라면 예외를 던진다.")
         void existCartItemProduct() {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
-            Long savedMemberId = memberDao.addMember(memberEntity);
+            Long savedMemberId = memberDao.save(memberEntity);
             Member member = MemberMapper.toDomain(memberEntity);
             member.assignId(savedMemberId);
 
             Product product = new Product("치킨", 10000, "http://chicken.com");
-            Long savedProductId = productRepository.createProduct(product);
+            Long savedProductId = productRepository.save(product);
             product.assignId(savedProductId);
 
             CartItem cartItem = new CartItem(member, product);
             cartItemRepository.save(cartItem);
 
-            assertThatThrownBy(() -> productRepository.deleteProduct(product.getId()))
+            assertThatThrownBy(() -> productRepository.delete(product.getId()))
                     .isInstanceOf(DataIntegrityViolationException.class);
         }
 
@@ -94,23 +94,23 @@ class ProductRepositoryTest {
         @DisplayName("상품을 삭제한다.")
         void deleteProduct() {
             Product product = new Product("치킨", 10000, "http://chicken.com");
-            Long savedProductId = productRepository.createProduct(product);
+            Long savedProductId = productRepository.save(product);
 
-            productRepository.deleteProduct(savedProductId);
+            productRepository.delete(savedProductId);
 
-            List<Product> result = productRepository.getAllProducts();
+            List<Product> result = productRepository.findAll();
             assertThat(result).isEmpty();
         }
     }
 
     @Nested
-    @DisplayName("getProductById 메서드는 ")
-    class GetProductById {
+    @DisplayName("findById 메서드는 ")
+    class FindById {
 
         @Test
         @DisplayName("ID의 상품이 존재하지 않으면 예외를 던진다.")
         void emptyProduct() {
-            assertThatThrownBy(() -> productRepository.getProductById(-1L))
+            assertThatThrownBy(() -> productRepository.findById(-1L))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 상품이 존재하지 않습니다. 요청 상품 ID: " + -1);
         }
@@ -119,10 +119,10 @@ class ProductRepositoryTest {
         @DisplayName("ID의 상품이 존재하면 상품을 반환한다.")
         void getProduct() {
             Product product = new Product("치킨", 10000, "http://chicken.com");
-            Long savedProductId = productRepository.createProduct(product);
+            Long savedProductId = productRepository.save(product);
             product.assignId(savedProductId);
 
-            Product result = productRepository.getProductById(savedProductId);
+            Product result = productRepository.findById(savedProductId);
 
             assertThat(result).usingRecursiveComparison().isEqualTo(product);
         }

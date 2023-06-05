@@ -32,7 +32,7 @@ public class MemberApiController {
     })
     @GetMapping("/point")
     public ResponseEntity<MemberPointResponse> getMemberPoint(Member member) {
-        MemberPointResponse response = memberService.getMemberPoint(member);
+        MemberPointResponse response = memberService.getPoint(member);
         return ResponseEntity.ok(response);
     }
 }

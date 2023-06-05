@@ -45,10 +45,10 @@ class OrderRepositoryTest {
     @DisplayName("findAllByMemberId 메서드는 멤버 ID에 해당하는 주문 정보 목록을 조회한다.")
     void findAllByMemberId() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
 
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
-        Long productId = productDao.createProduct(productEntity);
+        Long productId = productDao.save(productEntity);
 
         OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
         OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
@@ -83,10 +83,10 @@ class OrderRepositoryTest {
     @DisplayName("findById 메서드는 ID에 해당하는 주문 정보를 조회한다.")
     void findById() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
 
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
-        Long productId = productDao.createProduct(productEntity);
+        Long productId = productDao.save(productEntity);
 
         OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
         Long orderId = orderDao.save(orderEntity);
@@ -108,10 +108,10 @@ class OrderRepositoryTest {
     @DisplayName("save 메서드는 주문을 저장한다.")
     void save() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
 
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
-        Long productId = productDao.createProduct(productEntity);
+        Long productId = productDao.save(productEntity);
 
         OrderProduct orderProduct = new OrderProduct(ProductMapper.toDomain(productEntity.assignId(productId)), 10);
         Order order = new Order(MemberMapper.toDomain(memberEntity.assignId(memberId)), List.of(orderProduct), 1000);

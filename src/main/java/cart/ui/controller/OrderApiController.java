@@ -35,8 +35,8 @@ public class OrderApiController {
     @Operation(summary = "주문 목록 조회", description = "주문 목록을 조회한다.")
     @ApiResponse(responseCode = "200", description = "주문 목록 조회 성공")
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrders(Member member) {
-        List<OrderResponse> response = orderService.getOrders(member);
+    public ResponseEntity<List<OrderResponse>> showOrders(Member member) {
+        List<OrderResponse> response = orderService.findByMember(member);
         return ResponseEntity.ok(response);
     }
 
@@ -48,7 +48,7 @@ public class OrderApiController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getOrderDetail(Member member, @PathVariable Long id) {
-        OrderResponse response = orderService.getOrderDetail(id, member);
+        OrderResponse response = orderService.findById(id, member);
         return ResponseEntity.ok(response);
     }
 

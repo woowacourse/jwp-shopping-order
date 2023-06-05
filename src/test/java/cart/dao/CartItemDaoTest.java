@@ -34,11 +34,11 @@ class CartItemDaoTest {
     @BeforeEach
     void setUp() {
         member = new MemberEntity("a@a.com", "password1", 10);
-        Long memberId = memberDao.addMember(member);
+        Long memberId = memberDao.save(member);
         member = member.assignId(memberId);
 
         product = new ProductEntity("치킨", 10000, "http://chicken.com");
-        Long productId = productDao.createProduct(product);
+        Long productId = productDao.save(product);
         product = product.assignId(productId);
 
         cartItem = new CartItemEntity(member, product, 1);
@@ -67,7 +67,7 @@ class CartItemDaoTest {
     @DisplayName("findByMemberId 메서드는 해당 멤버의 모든 장바구니 상품을 조회한다.")
     void findByMemberId() {
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
-        Long otherMemberId = memberDao.addMember(otherMember);
+        Long otherMemberId = memberDao.save(otherMember);
         otherMember = otherMember.assignId(otherMemberId);
 
         CartItemEntity myCartItem = new CartItemEntity(member, product, 1);
@@ -120,7 +120,7 @@ class CartItemDaoTest {
     @DisplayName("deleteAllByProductId 메서드는 상품 ID에 해당하는 모든 장바구니 상품을 삭제한다.")
     void deleteAllByProductId() {
         MemberEntity newMember = new MemberEntity("b@b.com", "password2", 50);
-        memberDao.addMember(newMember);
+        memberDao.save(newMember);
 
         new CartItemEntity(newMember, product, 1);
         Long newCartItemId = cartItemDao.save(cartItem);

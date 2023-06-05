@@ -34,12 +34,12 @@ public class MemberDao {
                 .usingColumns("email", "password", "point");
     }
 
-    public List<MemberEntity> getAllMembers() {
+    public List<MemberEntity> findAll() {
         String sql = "SELECT id, email, password, point, created_at, updated_at from member";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Optional<MemberEntity> getMemberById(Long id) {
+    public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
@@ -48,7 +48,7 @@ public class MemberDao {
         }
     }
 
-    public Optional<MemberEntity> getMemberByEmail(String email) {
+    public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE email = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, email));
@@ -57,7 +57,7 @@ public class MemberDao {
         }
     }
 
-    public Optional<MemberEntity> getMemberByEmailAndPassword(String email, String password) {
+    public Optional<MemberEntity> findByEmailAndPassword(String email, String password) {
         String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE email = ? and password = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, email, password));
@@ -66,7 +66,7 @@ public class MemberDao {
         }
     }
 
-    public Long addMember(MemberEntity memberEntity) {
+    public Long save(MemberEntity memberEntity) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(memberEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }

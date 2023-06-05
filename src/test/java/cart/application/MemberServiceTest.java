@@ -24,16 +24,16 @@ class MemberServiceTest {
     private MemberDao memberDao;
 
     @Test
-    @DisplayName("getAllMembers 메서드는 모든 멤버를 응답한다.")
-    void getAllMembers() {
+    @DisplayName("findAll 메서드는 모든 멤버를 응답한다.")
+    void findAll() {
         Member memberA = new Member("a@a.com", "password1", 0);
         Member memberB = new Member("b@b.com", "password2", 0);
-        Long memberIdA = memberDao.addMember(MemberMapper.toEntity(memberA));
-        Long memberIdB = memberDao.addMember(MemberMapper.toEntity(memberB));
+        Long memberIdA = memberDao.save(MemberMapper.toEntity(memberA));
+        Long memberIdB = memberDao.save(MemberMapper.toEntity(memberB));
         memberA.assignId(memberIdA);
         memberB.assignId(memberIdB);
 
-        List<MemberResponse> response = memberService.getAllMembers();
+        List<MemberResponse> response = memberService.findAll();
 
         assertAll(
                 () -> assertThat(response).hasSize(2),
@@ -43,39 +43,39 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("getMemberByEmail 메서드는 이메일을 통해 멤버를 응답한다.")
-    void GetMemberByEmail() {
+    @DisplayName("findByEmail 메서드는 이메일을 통해 멤버를 응답한다.")
+    void findByEmail() {
         Member member = new Member("a@a.com", "password1", 0);
-        Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
+        Long memberId = memberDao.save(MemberMapper.toEntity(member));
         member.assignId(memberId);
 
-        MemberResponse response = memberService.getMemberByEmail("a@a.com");
+        MemberResponse response = memberService.findByEmail("a@a.com");
 
         MemberResponse expected = MemberResponse.from(member);
         assertThat(response).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
-    @DisplayName("getMemberByEmailAndPassword 메서드는 이메일, 비밀번호를 통해 멤버를 응답한다.")
-    void GetMemberByEmailAndPassword() {
+    @DisplayName("findByEmailAndPassword 메서드는 이메일, 비밀번호를 통해 멤버를 응답한다.")
+    void findByEmailAndPassword() {
         Member member = new Member("a@a.com", "password1", 0);
-        Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
+        Long memberId = memberDao.save(MemberMapper.toEntity(member));
         member.assignId(memberId);
 
-        MemberResponse response = memberService.getMemberByEmailAndPassword("a@a.com", "password1");
+        MemberResponse response = memberService.findByEmailAndPassword("a@a.com", "password1");
 
         MemberResponse expected = MemberResponse.from(member);
         assertThat(response).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
-    @DisplayName("getMemberPoint 메서드는 멤버의 포인트를 응답한다.")
-    void getMemberPoint() {
+    @DisplayName("getPoint 메서드는 멤버의 포인트를 응답한다.")
+    void getPoint() {
         Member member = new Member("a@a.com", "password1", 1000);
-        Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
+        Long memberId = memberDao.save(MemberMapper.toEntity(member));
         member.assignId(memberId);
 
-        MemberPointResponse response = memberService.getMemberPoint(member);
+        MemberPointResponse response = memberService.getPoint(member);
 
         assertThat(response.getPoint()).isEqualTo(1000);
     }

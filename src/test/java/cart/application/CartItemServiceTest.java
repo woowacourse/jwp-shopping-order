@@ -50,12 +50,12 @@ class CartItemServiceTest {
     @BeforeEach
     void setUp() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
         member = MemberMapper.toDomain(memberEntity);
         member.assignId(memberId);
 
         product = new Product("치킨", 13000, "http://chicken.com");
-        Long productId = productRepository.createProduct(product);
+        Long productId = productRepository.save(product);
         product.assignId(productId);
 
         cartItem = new CartItem(member, product);
@@ -67,7 +67,7 @@ class CartItemServiceTest {
     @DisplayName("findByMember 메서드는 멤버의 장바구니 상품 목록을 조회한다.")
     void findByMember() {
         Product newProduct = new Product("피자", 20000, "http://pizza.com");
-        Long newProductId = productRepository.createProduct(newProduct);
+        Long newProductId = productRepository.save(newProduct);
         newProduct.assignId(newProductId);
 
         CartItem newCartItem = new CartItem(member, newProduct);
@@ -92,7 +92,7 @@ class CartItemServiceTest {
         @DisplayName("멤버 장바구니 상품이 아니라면 예외를 던진다.")
         void notOwner() {
             MemberEntity otherMemberEntity = new MemberEntity("b@b.com", "password2", 10);
-            Long otherMemberId = memberDao.addMember(otherMemberEntity);
+            Long otherMemberId = memberDao.save(otherMemberEntity);
             Member otherMember = MemberMapper.toDomain(otherMemberEntity);
             otherMember.assignId(otherMemberId);
 
@@ -135,7 +135,7 @@ class CartItemServiceTest {
         @DisplayName("장바구니에 존재하지 않는 상품이라면 수량이 1개로 새로 추가된다.")
         void newCartItem() {
             Product newProduct = new Product("피자", 20000, "http://pizza.com");
-            Long newProductId = productRepository.createProduct(newProduct);
+            Long newProductId = productRepository.save(newProduct);
 
             Long cartItemId = cartItemService.add(member, new CartItemRequest(newProductId));
 
@@ -152,7 +152,7 @@ class CartItemServiceTest {
         @DisplayName("장바구니 상품에 대한 권한이 있는 멤버가 아니라면 예외를 던진다.")
         void notOwner() {
             MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 0);
-            Long newMemberId = memberDao.addMember(newMemberEntity);
+            Long newMemberId = memberDao.save(newMemberEntity);
             Member newMember = MemberMapper.toDomain(newMemberEntity);
             newMember.assignId(newMemberId);
 
@@ -198,7 +198,7 @@ class CartItemServiceTest {
         @DisplayName("멤버 장바구니 상품이 아니라면 예외를 던진다.")
         void notOwner() {
             MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 0);
-            Long newMemberId = memberDao.addMember(newMemberEntity);
+            Long newMemberId = memberDao.save(newMemberEntity);
             Member newMember = MemberMapper.toDomain(newMemberEntity);
             newMember.assignId(newMemberId);
 
@@ -229,7 +229,7 @@ class CartItemServiceTest {
         @DisplayName("장바구니 상품에 대한 권한이 있는 멤버가 아니라면 예외를 던진다.")
         void notOwner() {
             MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 0);
-            Long newMemberId = memberDao.addMember(newMemberEntity);
+            Long newMemberId = memberDao.save(newMemberEntity);
             Member newMember = MemberMapper.toDomain(newMemberEntity);
             newMember.assignId(newMemberId);
 

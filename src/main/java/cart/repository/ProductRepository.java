@@ -18,30 +18,30 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
-    public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities = productDao.getAllProducts();
+    public List<Product> findAll() {
+        List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
                 .map(ProductMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId)
+    public Product findById(Long productId) {
+        ProductEntity productEntity = productDao.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
         return ProductMapper.toDomain(productEntity);
     }
 
-    public Long createProduct(Product product) {
+    public Long save(Product product) {
         ProductEntity productEntity = ProductMapper.toEntity(product);
-        return productDao.createProduct(productEntity);
+        return productDao.save(productEntity);
     }
 
-    public void updateProduct(Product product) {
+    public void update(Product product) {
         ProductEntity productEntity = ProductMapper.toEntity(product);
-        productDao.updateProduct(productEntity);
+        productDao.update(productEntity);
     }
 
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    public void delete(Long productId) {
+        productDao.delete(productId);
     }
 }

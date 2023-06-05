@@ -40,12 +40,12 @@ class CartItemRepositoryTest {
     @BeforeEach
     void setUp() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
         member = MemberMapper.toDomain(memberEntity);
         member.assignId(memberId);
 
         product = new Product("치킨", 10000, "http://chicken.com");
-        Long productId = productRepository.createProduct(product);
+        Long productId = productRepository.save(product);
         product.assignId(productId);
 
         cartItem = new CartItem(member, product);
@@ -57,11 +57,11 @@ class CartItemRepositoryTest {
     @DisplayName("findByMemberId 메서드는 멤버의 장바구니 상품 목록을 조회한다.")
     void findByMemberId() {
         Product otherProduct = new Product("피자", 20000, "http://pizza.com");
-        Long otherProductId = productRepository.createProduct(otherProduct);
+        Long otherProductId = productRepository.save(otherProduct);
         otherProduct.assignId(otherProductId);
 
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
-        Long otherMemberId = memberDao.addMember(otherMember);
+        Long otherMemberId = memberDao.save(otherMember);
         otherMember = otherMember.assignId(otherMemberId);
 
         CartItem myCartItem = new CartItem(member, otherProduct);
@@ -83,7 +83,7 @@ class CartItemRepositoryTest {
     @DisplayName("save 메서드는 장바구니 상품을 저장한다.")
     void save() {
         Product newProduct = new Product("피자", 20000, "http://pizza.com");
-        Long newProductId = productRepository.createProduct(newProduct);
+        Long newProductId = productRepository.save(newProduct);
         newProduct.assignId(newProductId);
         CartItem newCartItem = new CartItem(member, newProduct);
 
@@ -122,7 +122,7 @@ class CartItemRepositoryTest {
     @DisplayName("deleteAllByProductId 메서드는 상품 ID에 해당하는 모든 장바구니 상품을 삭제한다.")
     void deleteAllByProductId() {
         MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 50);
-        Long newMemberId = memberDao.addMember(newMemberEntity);
+        Long newMemberId = memberDao.save(newMemberEntity);
         Member newMember = MemberMapper.toDomain(newMemberEntity);
         newMember.assignId(newMemberId);
 

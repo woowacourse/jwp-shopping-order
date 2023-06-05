@@ -26,7 +26,7 @@ class OrderDaoTest {
     @DisplayName("findAllByMemberId 메서드는 멤버의 주문 정보 목록을 반환한다.")
     void findAllByMemberId() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
-        Long memberId = memberDao.addMember(memberEntity);
+        Long memberId = memberDao.save(memberEntity);
 
         OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
         OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
@@ -62,7 +62,7 @@ class OrderDaoTest {
         @DisplayName("ID에 해당하는 주문이 존재하면 주문 정보를 반환한다.")
         void findOrder() {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
-            Long memberId = memberDao.addMember(memberEntity);
+            Long memberId = memberDao.save(memberEntity);
 
             OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
             Long orderId = orderDao.save(orderEntity);

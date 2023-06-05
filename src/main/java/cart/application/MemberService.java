@@ -18,23 +18,23 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public List<MemberResponse> getAllMembers() {
-        List<Member> members = memberRepository.getAllMembers();
+    public List<MemberResponse> findAll() {
+        List<Member> members = memberRepository.findAll();
         return MemberResponse.listOf(members);
     }
 
-    public MemberResponse getMemberByEmail(String email) {
-        Member member = memberRepository.getMemberByEmail(email);
+    public MemberResponse findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
         return MemberResponse.from(member);
     }
 
-    public MemberResponse getMemberByEmailAndPassword(String email, String password) {
-        Member member = memberRepository.getMemberByEmailAndPassword(email, password);
+    public MemberResponse findByEmailAndPassword(String email, String password) {
+        Member member = memberRepository.findByEmailAndPassword(email, password);
         return MemberResponse.from(member);
     }
 
-    public MemberPointResponse getMemberPoint(Member member) {
-        Member renewMember = memberRepository.getMemberById(member.getId());
+    public MemberPointResponse getPoint(Member member) {
+        Member renewMember = memberRepository.findById(member.getId());
         return new MemberPointResponse(renewMember.getPoint());
     }
 }

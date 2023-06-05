@@ -46,9 +46,9 @@ class MemberApiControllerTest extends ControllerTest {
         void getMemberPoint() throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             MemberPointResponse response = new MemberPointResponse(100);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberPoint(any(Member.class))).willReturn(response);
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getPoint(any(Member.class))).willReturn(response);
 
             MvcResult mvcResult = mockMvc.perform(get("/members/point")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))

@@ -39,11 +39,11 @@ class OrderProductDaoTest {
     @BeforeEach
     void setUp() {
         member = new MemberEntity("a@a.com", "password1", 10);
-        Long memberId = memberDao.addMember(member);
+        Long memberId = memberDao.save(member);
         member = member.assignId(memberId);
 
         product = new ProductEntity("치킨", 10000, "http://chicken.com");
-        Long productId = productDao.createProduct(product);
+        Long productId = productDao.save(product);
         product = product.assignId(productId);
 
         order = new OrderEntity(member, 10, 0, 0);

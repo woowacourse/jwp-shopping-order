@@ -40,14 +40,14 @@ class ProductApiControllerTest extends ControllerTest {
     private ProductService productService;
 
     @Test
-    @DisplayName("getAllProducts 메서드는 모든 상품 목록을 조회한다.")
-    void getAllProducts() throws Exception {
+    @DisplayName("showProducts 메서드는 모든 상품 목록을 조회한다.")
+    void showProducts() throws Exception {
         List<ProductResponse> response = List.of(
                 ProductResponse.from(new Product(1L, "치킨", 10000, "http://chicken.com")),
                 ProductResponse.from(new Product(2L, "샐러드", 20000, "http://salad.com")),
                 ProductResponse.from(new Product(3L, "피자", 13000, "http://pizza.com"))
         );
-        given(productService.getAllProducts()).willReturn(response);
+        given(productService.findAll()).willReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(get("/products"))
                 .andDo(print())
@@ -81,7 +81,7 @@ class ProductApiControllerTest extends ControllerTest {
         @DisplayName("ID에 해당하는 상품 정보를 응답한다.")
         void getProductById() throws Exception {
             ProductResponse response = ProductResponse.from(new Product(1L, "치킨", 10000, "http://chicken.com"));
-            given(productService.getProductById(anyLong())).willReturn(response);
+            given(productService.findById(anyLong())).willReturn(response);
 
             MvcResult mvcResult = mockMvc.perform(get("/products/{id}", 1))
                     .andDo(print())

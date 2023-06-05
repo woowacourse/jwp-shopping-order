@@ -45,8 +45,8 @@ class OrderApiControllerTest extends ControllerTest {
     private OrderService orderService;
 
     @Nested
-    @DisplayName("getOrders 메서드는 ")
-    class GetOrders {
+    @DisplayName("showOrders 메서드는 ")
+    class showOrders {
 
         @Test
         @DisplayName("인증 정보가 존재하지 않으면 401 상태를 반환한다.")
@@ -69,9 +69,9 @@ class OrderApiControllerTest extends ControllerTest {
             Order orderA = new Order(1L, member, List.of(orderProductA, orderProductB), 100, now);
             Order orderB = new Order(2L, member, List.of(orderProductA, orderProductB), 500, now);
             List<OrderResponse> response = List.of(OrderResponse.from(orderA), OrderResponse.from(orderB));
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
-            given(orderService.getOrders(any(Member.class))).willReturn(response);
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(orderService.findByMember(any(Member.class))).willReturn(response);
 
             MvcResult mvcResult = mockMvc.perform(get("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))
@@ -107,8 +107,8 @@ class OrderApiControllerTest extends ControllerTest {
         @DisplayName("ID로 변환할 수 없는 타입이라면 400 상태를 반환한다.")
         void invalidIDType(String id) throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(get("/orders/{id}", id)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))
@@ -128,9 +128,9 @@ class OrderApiControllerTest extends ControllerTest {
             LocalDateTime now = LocalDateTime.now();
             Order order = new Order(1L, member, List.of(orderProductA, orderProductB), 0, now);
             OrderResponse response = OrderResponse.from(order);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
-            given(orderService.getOrderDetail(anyLong(), any(Member.class))).willReturn(response);
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(orderService.findById(anyLong(), any(Member.class))).willReturn(response);
 
             MvcResult mvcResult = mockMvc.perform(get("/orders/{id}", 1)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))
@@ -168,8 +168,8 @@ class OrderApiControllerTest extends ControllerTest {
         void emptyIds(List<Long> ids) throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(ids, 500);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -186,8 +186,8 @@ class OrderApiControllerTest extends ControllerTest {
         void emptyPoint() throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(List.of(1L), null);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -204,8 +204,8 @@ class OrderApiControllerTest extends ControllerTest {
         void negativePoint() throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(List.of(1L), -1);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -222,8 +222,8 @@ class OrderApiControllerTest extends ControllerTest {
         void processOrder() throws Exception {
             OrderRequest request = new OrderRequest(List.of(1L), 100);
             Member member = new Member(1L, "a@a.com", "password1", 0);
-            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
-            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.findByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             given(orderService.processOrder(any(Member.class), any(OrderRequest.class))).willReturn(1L);
 
             mockMvc.perform(post("/orders")

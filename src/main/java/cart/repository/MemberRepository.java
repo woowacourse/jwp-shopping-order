@@ -18,27 +18,27 @@ public class MemberRepository {
         this.memberDao = memberDao;
     }
 
-    public List<Member> getAllMembers() {
-        List<MemberEntity> memberEntities = memberDao.getAllMembers();
+    public List<Member> findAll() {
+        List<MemberEntity> memberEntities = memberDao.findAll();
         return memberEntities.stream()
                 .map(MemberMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
-    public Member getMemberByEmail(String email) {
-        return memberDao.getMemberByEmail(email)
+    public Member findByEmail(String email) {
+        return memberDao.findByEmail(email)
                 .map(MemberMapper::toDomain)
                 .orElseThrow(() -> new MemberNotFoundException("해당 멤버가 존재하지 않습니다. 요청 이메일: " + email));
     }
 
-    public Member getMemberById(Long id) {
-        return memberDao.getMemberById(id)
+    public Member findById(Long id) {
+        return memberDao.findById(id)
                 .map(MemberMapper::toDomain)
                 .orElseThrow(() -> new MemberNotFoundException(id));
     }
 
-    public Member getMemberByEmailAndPassword(String email, String password) {
-        return memberDao.getMemberByEmailAndPassword(email, password)
+    public Member findByEmailAndPassword(String email, String password) {
+        return memberDao.findByEmailAndPassword(email, password)
                 .map(MemberMapper::toDomain)
                 .orElseThrow(
                         () -> new MemberNotFoundException("해당 멤버가 존재하지 않습니다. 요청 이메일: " + email + ", 요청 비밀번호: " + password));

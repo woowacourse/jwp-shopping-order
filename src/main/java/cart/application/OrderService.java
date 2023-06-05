@@ -33,12 +33,12 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<OrderResponse> getOrders(Member member) {
+    public List<OrderResponse> findByMember(Member member) {
         List<Order> orders = orderRepository.findAllByMemberId(member.getId());
         return OrderResponse.listOf(orders);
     }
 
-    public OrderResponse getOrderDetail(Long id, Member member) {
+    public OrderResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id);
         order.checkOwner(member);
         return OrderResponse.from(order);

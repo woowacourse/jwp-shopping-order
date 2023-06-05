@@ -51,7 +51,7 @@ public class CartItemService {
 
     @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productRepository.getProductById(cartItemRequest.getProductId());
+        Product product = productRepository.findById(cartItemRequest.getProductId());
         Optional<CartItem> searchCart = cartItemRepository.findByMemberIdAndProductId(member.getId(), product.getId());
 
         if (searchCart.isPresent()) {

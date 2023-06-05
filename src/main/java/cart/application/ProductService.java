@@ -21,32 +21,32 @@ public class ProductService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.getAllProducts();
+    public List<ProductResponse> findAll() {
+        List<Product> products = productRepository.findAll();
         return ProductResponse.listOf(products);
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.getProductById(productId);
+    public ProductResponse findById(Long productId) {
+        Product product = productRepository.findById(productId);
         return ProductResponse.from(product);
     }
 
     @Transactional
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productRepository.createProduct(product);
+        return productRepository.save(product);
     }
 
     @Transactional
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product =
                 new Product(productId, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productRepository.updateProduct(product);
+        productRepository.update(product);
     }
 
     @Transactional
     public void deleteProduct(Long productId) {
         cartItemRepository.deleteAllByProductId(productId);
-        productRepository.deleteProduct(productId);
+        productRepository.delete(productId);
     }
 }

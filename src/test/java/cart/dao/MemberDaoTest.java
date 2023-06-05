@@ -21,15 +21,15 @@ class MemberDaoTest {
     private MemberDao memberDao;
 
     @Test
-    @DisplayName("getAllMembers 메서드는 모든 멤버 데이터를 조회한다.")
-    void getAllMembers() {
-        Long firstMemberId = memberDao.addMember(new MemberEntity("a@a.com", "password1", 0));
-        Long secondMemberId = memberDao.addMember(new MemberEntity("b@b.com", "password2", 0));
+    @DisplayName("findAll 메서드는 모든 멤버 데이터를 조회한다.")
+    void findAll() {
+        Long firstMemberId = memberDao.save(new MemberEntity("a@a.com", "password1", 0));
+        Long secondMemberId = memberDao.save(new MemberEntity("b@b.com", "password2", 0));
 
-        List<MemberEntity> result = memberDao.getAllMembers();
+        List<MemberEntity> result = memberDao.findAll();
 
-        MemberEntity firstMember = memberDao.getMemberById(firstMemberId).get();
-        MemberEntity secondMember = memberDao.getMemberById(secondMemberId).get();
+        MemberEntity firstMember = memberDao.findById(firstMemberId).get();
+        MemberEntity secondMember = memberDao.findById(secondMemberId).get();
         assertAll(
                 () -> assertThat(result).hasSize(2),
                 () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(firstMember),
@@ -41,12 +41,12 @@ class MemberDaoTest {
     @DisplayName("update 메서드는 멤버 정보를 수정한다.")
     void update() {
         MemberEntity member = new MemberEntity("a@a.com", "password1", 0);
-        Long memberId = memberDao.addMember(member);
+        Long memberId = memberDao.save(member);
         MemberEntity newMemberEntity = new MemberEntity(memberId, "b@b.com", "password2", 10);
 
         memberDao.update(newMemberEntity);
 
-        Optional<MemberEntity> result = memberDao.getMemberById(memberId);
+        Optional<MemberEntity> result = memberDao.findById(memberId);
         assertAll(
                 () -> assertThat(result).isNotEmpty(),
                 () -> assertThat(result.get().getId()).isEqualTo(memberId),
@@ -57,19 +57,19 @@ class MemberDaoTest {
     }
 
     @Nested
-    @DisplayName("getMemberById 메서드는 ")
-    class GetMemberById {
+    @DisplayName("findById 메서드는 ")
+    class FindById {
 
         @Test
         @DisplayName("조회 시 ID와 일치하는 멤버가 존재하면 해당 멤버 데이터를 반환한다.")
         void getMember() {
             String email = "a@a.com";
             String password = "password1";
-            Long savedMemberId = memberDao.addMember(new MemberEntity(email, password, 0));
+            Long savedMemberId = memberDao.save(new MemberEntity(email, password, 0));
 
-            Optional<MemberEntity> result = memberDao.getMemberById(savedMemberId);
+            Optional<MemberEntity> result = memberDao.findById(savedMemberId);
 
-            MemberEntity findMember = memberDao.getMemberByEmailAndPassword(email, password).get();
+            MemberEntity findMember = memberDao.findByEmailAndPassword(email, password).get();
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
                     () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(findMember)
@@ -79,24 +79,24 @@ class MemberDaoTest {
         @Test
         @DisplayName("조회 시 ID와 일치하는 멤버가 존재하지 않으면 빈 값을 반환한다.")
         void getEmpty() {
-            Optional<MemberEntity> result = memberDao.getMemberById(-1L);
+            Optional<MemberEntity> result = memberDao.findById(-1L);
 
             assertThat(result).isEmpty();
         }
     }
 
     @Nested
-    @DisplayName("getMemberByEmail 메서드는 ")
-    class GetMemberByEmail {
+    @DisplayName("findByEmail 메서드는 ")
+    class FindByEmail {
 
         @Test
         @DisplayName("조회 시 이메일과 일치하는 멤버가 존재하지 않으면 빈 값을 반환한다.")
         void getEmpty() {
             String email = "a@a.com";
             String password = "password1";
-            memberDao.addMember(new MemberEntity(email, password, 0));
+            memberDao.save(new MemberEntity(email, password, 0));
 
-            Optional<MemberEntity> result = memberDao.getMemberByEmail("b@b.com");
+            Optional<MemberEntity> result = memberDao.findByEmail("b@b.com");
 
             assertThat(result).isEmpty();
         }
@@ -106,11 +106,11 @@ class MemberDaoTest {
         void getMember() {
             String email = "a@a.com";
             String password = "password1";
-            Long savedMemberId = memberDao.addMember(new MemberEntity(email, password, 0));
+            Long savedMemberId = memberDao.save(new MemberEntity(email, password, 0));
 
-            Optional<MemberEntity> result = memberDao.getMemberByEmail(email);
+            Optional<MemberEntity> result = memberDao.findByEmail(email);
 
-            MemberEntity findMember = memberDao.getMemberById(savedMemberId).get();
+            MemberEntity findMember = memberDao.findById(savedMemberId).get();
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
                     () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(findMember)
@@ -127,11 +127,11 @@ class MemberDaoTest {
         void getMember() {
             String email = "a@a.com";
             String password = "password1";
-            Long savedMemberId = memberDao.addMember(new MemberEntity(email, password, 0));
+            Long savedMemberId = memberDao.save(new MemberEntity(email, password, 0));
 
-            Optional<MemberEntity> result = memberDao.getMemberByEmailAndPassword(email, password);
+            Optional<MemberEntity> result = memberDao.findByEmailAndPassword(email, password);
 
-            MemberEntity findMember = memberDao.getMemberById(savedMemberId).get();
+            MemberEntity findMember = memberDao.findById(savedMemberId).get();
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
                     () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(findMember)
@@ -142,9 +142,9 @@ class MemberDaoTest {
         @CsvSource(value = {"b@b.com:password1", "a@a.com:password2", "b@b.com:password2"}, delimiter = ':')
         @DisplayName("조회 시 이메일, 비밀번호와 일치하는 멤버가 존재하지 않으면 빈 값을 반환한다.")
         void getEmpty(String email, String password) {
-            memberDao.addMember(new MemberEntity("a@a.com", "password1", 0));
+            memberDao.save(new MemberEntity("a@a.com", "password1", 0));
 
-            Optional<MemberEntity> result = memberDao.getMemberByEmailAndPassword(email, password);
+            Optional<MemberEntity> result = memberDao.findByEmailAndPassword(email, password);
 
             assertThat(result).isEmpty();
         }
