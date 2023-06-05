@@ -14,9 +14,7 @@ import cart.order.infrastructure.persistence.mapper.OrderItemEntityMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Repository
 public class JdbcOrderRepository implements OrderRepository {
 

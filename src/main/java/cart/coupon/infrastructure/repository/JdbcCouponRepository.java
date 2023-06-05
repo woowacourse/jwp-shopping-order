@@ -10,9 +10,7 @@ import cart.coupon.infrastructure.mapper.CouponEntityMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Repository
 public class JdbcCouponRepository implements CouponRepository {
 
