@@ -24,7 +24,8 @@ jobs:
       - name: check git is already installed
         run: |
           git --version
-          git add build/libs
+          mv build/libs/jwp-shopping-order.jar .
+          git add .
           git stash push
 
       - name: Checkout deploy branch
