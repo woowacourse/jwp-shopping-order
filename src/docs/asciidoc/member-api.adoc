@@ -1,0 +1,12 @@
+[[member-api]]
+== 회원
+
+[[point-inquiry]]
+=== 포인트 조회
+
+*요청*
+include::{snippets}/members/inquiryPoint/http-request.adoc[]
+
+*응답*
+include::{snippets}/members/inquiryPoint/http-response.adoc[]
+include::{snippets}/members/inquiryPoint/response-fields.adoc[]

@@ -1,18 +1,22 @@
 package cart.integration;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class ProductIntegrationTest extends IntegrationTest {
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
+class ProductIntegrationTest extends IntegrationTest {
 
     @Test
-    public void getProducts() {
+    void 상품의_목록을_가져온다() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -24,8 +28,8 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+    void 상품을_생성한다() {
+        var product = new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg");
 
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -39,8 +43,8 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+    void 생성된_상품을_가져온다() {
+        var product = new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg");
 
         // create product
         var location =
@@ -61,7 +65,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .jsonPath()
-                .getObject(".", ProductResponse.class);
+                .getObject("result", ProductResponse.class);
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");
