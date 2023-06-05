@@ -62,6 +62,20 @@ public class CartItemDao {
         }
     }
 
+    public List<CartItemDetailEntity> findByMemberIdAndProductIds(final Long memberId, final List<Long> productIds) {
+        String sql = "SELECT cart_item.id, cart_item.quantity, " +
+                "member.id, member.name, member.password, " +
+                "product.id, product.name, product.price, product.image_url, product.is_deleted " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.member_id = (:memberId) AND cart_item.product_id IN (:productIds) AND product.is_deleted = false";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("memberId", memberId);
+        mapSqlParameterSource.addValue("productIds", productIds);
+        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, new CartItemDetailEntityRowMapper());
+    }
+
     public Long countByIdsAndMemberId(final Long memberId, List<Long> ids) {
         String sql = "SELECT COUNT(*) " +
                 "FROM cart_item " +
@@ -84,17 +98,29 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteByIdsAndMemberId(final Long memberId, final List<Long> ids) {
+    public void deleteByIds(final List<Long> ids) {
+        String sql = "DELETE cart_item FROM cart_item " +
+                "INNER JOIN (SELECT id FROM cart_item WHERE id IN (:ids)) AS subquery " +
+                "ON cart_item.id = subquery.id";
+
+        String h2Sql = "DELETE FROM cart_item " +
+                "WHERE cart_item.id IN (SELECT id FROM (SELECT id FROM cart_item WHERE id IN (:ids)) AS subquery)";
+
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", ids);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+    }
+
+    public void deleteByIds(final Long memberId, final List<Long> ids) {
         String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
                 + " (SELECT cart_item.id FROM cart_item " +
-                "JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId) AND product.is_deleted = false)";
+                "JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId))";
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("ids", ids);
         mapSqlParameterSource.addValue("memberId", memberId);
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
-
 
     private static class CartItemDetailEntityRowMapper implements RowMapper<CartItemDetailEntity> {
         @Override

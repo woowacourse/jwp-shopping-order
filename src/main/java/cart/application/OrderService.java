@@ -26,17 +26,19 @@ import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 @Transactional(readOnly = true)
 public class OrderService {
 
+    private final CartItemService cartItemService;
     private final MemberCouponService memberCouponService;
     private final OrderRepository orderRepository;
     private final CouponRepository couponRepository;
     private final ProductRepository productRepository;
 
     public OrderService(
-            final MemberCouponService memberCouponService,
+            final CartItemService cartItemService, final MemberCouponService memberCouponService,
             final OrderRepository orderRepository,
             final CouponRepository couponRepository,
             final ProductRepository productRepository
     ) {
+        this.cartItemService = cartItemService;
         this.memberCouponService = memberCouponService;
         this.orderRepository = orderRepository;
         this.couponRepository = couponRepository;
@@ -45,17 +47,15 @@ public class OrderService {
 
     @Transactional
     public Long add(final Member member, final OrderRequest orderRequest) {
-        Map<Long, Integer> orderRequestItems = orderRequest.getItems()
+        Map<Long, Integer> requestedItems = orderRequest.getItems()
                 .stream()
                 .collect(Collectors.toMap(ItemRequest::getProductId, ItemRequest::getQuantity));
-
-        List<Product> products = productRepository.findByIds(new ArrayList<>(orderRequestItems.keySet()));
-        if (orderRequestItems.keySet().size() != products.size()) {
-            throw new BadRequestException(INVALID_PRODUCT_ID);
-        }
+        List<Long> productIds = new ArrayList<>(requestedItems.keySet());
+        List<Product> products = productRepository.findByIds(productIds);
+        validateOrderProductRequest(requestedItems, products);
 
         List<Item> items = products.stream()
-                .map(product -> new Item(product, orderRequestItems.get(product.getId())))
+                .map(product -> new Item(product, requestedItems.get(product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         Coupon coupon = null;
@@ -63,6 +63,7 @@ public class OrderService {
             coupon = couponRepository.findById(orderRequest.getCouponId());
             memberCouponService.useMemberCoupon(member, coupon.getId());
         }
+        cartItemService.removeItemsByProductIds(member, productIds);
         Order order = new Order(member, items, coupon);
         return orderRepository.save(order);
     }
@@ -78,5 +79,11 @@ public class OrderService {
         return orders.stream()
                 .map(OrderResponse::new)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void validateOrderProductRequest(final Map<Long, Integer> orderRequestItems, final List<Product> products) {
+        if (orderRequestItems.keySet().size() != products.size()) {
+            throw new BadRequestException(INVALID_PRODUCT_ID);
+        }
     }
 }
