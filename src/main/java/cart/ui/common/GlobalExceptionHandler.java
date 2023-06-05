@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -40,21 +41,21 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException e) {
-        log.warn("Exception from handleBusinessException = ", e);
-        final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
-    }
-
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundException e) {
         log.warn("Exception from handleNotFoundException = ", e);
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException e) {
+        log.warn("Exception from handleBusinessException = ", e);
+        final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
     }
 
@@ -66,6 +67,18 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         final ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+        log.warn("Exception from handleMissingServletRequestParameterException = ", e);
+        final ErrorResponse errorResponse = new ErrorResponse(
+                "잘못된 요청입니다. 입력한 쿼리 파라미터 타입: " + e.getParameterName() +
+                        "올바른 쿼리 파라미터 타입: " + e.getParameterType()
+        );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
