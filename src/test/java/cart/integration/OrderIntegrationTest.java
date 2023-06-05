@@ -1,31 +1,170 @@
 package cart.integration;
 
-import org.junit.jupiter.api.DisplayName;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import cart.domain.member.Email;
+import cart.domain.member.Member;
+import cart.domain.member.Password;
+import cart.dto.request.CartItemResponse;
+import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderItemResponse;
+import cart.dto.response.OrderResponse;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-public class OrderIntegrationTest extends IntegrationTest{
+public class OrderIntegrationTest extends IntegrationTest {
+
+    private Member member1 = new Member(1L, new Email("a@a.com"), new Password("1234"));
+    private Member member2 = new Member(2L, new Email("b@b.com"), new Password("1234"));
+    private final Long pointToUseNotUsed = 0L;
 
     @Test
-    void 고객은_자신의_선택한_장바구니에_있는_상품을_구매하면_장바구니에서_목록이_삭제된다(){
+    void 사용자는_장바구니에_있는_상품을_선택해_주문할_수_있다() {
+        // given, when
+        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(1L), member1, pointToUseNotUsed);
+
+        // then
+        assertAll(
+                () -> assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(orderCreateResponse.header("Location")).contains("/orders/1")
+        );
+
 
     }
 
     @Test
-    void 고객이_상품을_구매할_때_포인트를_사용하면_기존_포인트가_차감된다(){
+    void 사용자는_전체_주문_내역을_확인할_수_있다() {
+        // given
+        createOrder(List.of(1L), member1, pointToUseNotUsed);
+        createOrder(List.of(2L), member1, pointToUseNotUsed);
+        Timestamp time = Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 2, 45, 0));
 
+        // when
+        ExtractableResponse<Response> orderHistoryResponse = findOrderHistoryOfMember(member1);
+
+        // then
+        assertThat(orderHistoryResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(orderHistoryResponse.jsonPath().getInt("size()")).isEqualTo(2);
+        assertThat(orderHistoryResponse.jsonPath().getObject("[0]", OrderResponse.class))
+                .usingRecursiveComparison()
+                .ignoringFields("orderDate")
+                .isEqualTo(new OrderResponse(1L, 20_000L, time,
+                        List.of(
+                                new OrderItemResponse(1L, 2, 10_000L, "치킨",
+                                        "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
+                        )));
+        assertThat(orderHistoryResponse.jsonPath().getObject("[1]", OrderResponse.class))
+                .usingRecursiveComparison()
+                .ignoringFields("orderDate", "orders[0].imageUrl")
+                .isEqualTo(new OrderResponse(2L, 80_000L, time,
+                        List.of(
+                                new OrderItemResponse(2L, 4, 20_000L, "샐러드",
+                                        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
+                        )));
     }
 
     @Test
-    void 고객이_상품을_구매하면_순수_구매_금액의_2_5퍼센트가_포인트로_적립된다(){
+    void 사용자는_상세_주문_내역을_확인할_수_있다() {
+        // given
+        createOrder(List.of(1L, 2L), member1, pointToUseNotUsed);
 
+        // when
+        ExtractableResponse<Response> detailOrderHistory = findDetailOrderHistory(1L, member1);
+
+        // then
+        assertThat(detailOrderHistory.jsonPath().getObject(".", OrderResponse.class))
+                .usingRecursiveComparison()
+                .ignoringFields("orderDate")
+                .ignoringFields("imageUrl")
+                .isEqualTo(new OrderResponse(1L, 100_000L,
+                        Timestamp.valueOf(LocalDateTime.now()),
+                        List.of(
+                                new OrderItemResponse(1L, 2, 10_000L, "치킨",
+                                        "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"),
+                                new OrderItemResponse(2L, 4, 20_000L, "샐러드",
+                                        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
+                        )));
     }
 
     @Test
-    void 고객이_상품을_구매할_때_자신이_가지고_있는_포인트보다_많은_포인트를_사용을_요청하면_실패한다(){
+    void 자신의_장바구니에_없는_장바구니_상품을_주문하면_주문에_실패한다() {
+        // when
+        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(3L), member1, pointToUseNotUsed);
 
+        // then
+        assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    void 주문한_장바구니_상품은_장바구니에서_삭제된다() {
+        // when
+        createOrder(List.of(1L), member1, pointToUseNotUsed);
+        ExtractableResponse<Response> cartItemsOfMember = findCartItemsOfMember(member1);
+
+        // then
+        List<Long> resultCartItemIds = cartItemsOfMember.jsonPath()
+                .getList(".", CartItemResponse.class)
+                .stream()
+                .map(CartItemResponse::getId)
+                .collect(Collectors.toList());
+        Assertions.assertThat(resultCartItemIds).containsExactly(2L);
+    }
+
+    private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member, Long pointToUse) {
+        OrderRequest orderRequest = new OrderRequest(cartItemIds, pointToUse);
+
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> findOrderHistoryOfMember(Member member) {
+        return given()
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
+                .when()
+                .get("/orders")
+                .then()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> findDetailOrderHistory(Long orderId, Member member) {
+        return given()
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
+                .pathParam("id", orderId)
+                .when()
+                .get("/orders/{id}")
+                .then()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> findCartItemsOfMember(Member member) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
+                .when()
+                .get("/cart-items")
+                .then()
+                .log().all()
+                .extract();
     }
 }
