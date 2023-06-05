@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS cart_item
     product_id BIGINT  NOT NULL,
     quantity   INT     NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
+    FOREIGN KEY (product_id)  REFERENCES product (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cart_order
