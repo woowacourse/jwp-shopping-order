@@ -38,7 +38,7 @@ class OrderDaoTest {
     @DisplayName("주문을 저장한다.")
     void testSave() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
         final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
         final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");
@@ -61,7 +61,7 @@ class OrderDaoTest {
     @DisplayName("id로 주문을 찾는다.")
     void testFindById() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
         final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
         final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");
@@ -94,7 +94,7 @@ class OrderDaoTest {
     @DisplayName("회원으로 주문을 찾는다.")
     void testFindByMember() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
         final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
         final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");

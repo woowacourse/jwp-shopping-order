@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -24,19 +25,19 @@ public class MemberDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Member getMemberById(final Long id) {
+    public Optional<Member> findById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
         final List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return members.stream().findAny();
     }
 
-    public Member getMemberByEmail(final String email) {
+    public Optional<Member> findByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         final List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return members.stream().findAny();
     }
 
-    public Member addMember(final Member member) {
+    public Member add(final Member member) {
         final Map<String, Object> params = new HashMap<>();
         params.put("email", member.getEmail());
         params.put("password", member.getPassword());
@@ -44,17 +45,17 @@ public class MemberDao {
         return new Member(id, member.getEmail(), member.getPassword());
     }
 
-    public void updateMember(final Member member) {
+    public void update(final Member member) {
         final String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
     }
 
-    public void deleteMember(final Long id) {
+    public void delete(final Long id) {
         final String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAll() {
         final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }

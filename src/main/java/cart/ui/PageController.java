@@ -8,23 +8,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+
     private final ProductService productService;
     private final MemberDao memberDao;
 
-    public PageController(ProductService productService, MemberDao memberDao) {
+    public PageController(final ProductService productService, final MemberDao memberDao) {
         this.productService = productService;
         this.memberDao = memberDao;
     }
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public String admin(final Model model) {
         model.addAttribute("products", productService.getAllProducts());
         return "admin";
     }
 
     @GetMapping("/settings")
-    public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+    public String members(final Model model) {
+        model.addAttribute("members", memberDao.findAll());
         return "settings";
     }
 }

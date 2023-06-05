@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.vo.Amount;
+import cart.exception.BusinessException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -67,7 +68,7 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItem findById(final Long id) {
+    public Optional<CartItem> findById(final Long id) {
         final String sql =
             "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                 +
@@ -88,7 +89,7 @@ public class CartItemDao {
             final Product product = new Product(productId, name, Amount.of(price), imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+        return cartItems.stream().findAny();
     }
 
 
@@ -134,10 +135,10 @@ public class CartItemDao {
 
     public List<CartItem> findAllByIds(final List<Long> cartItemIds) {
         return cartItemIds.stream()
-            .map(this::findById)
+            .map(id -> this.findById(id).orElseThrow(() -> new BusinessException("카트에 존재하지 않는 상품입니다.")))
             .collect(Collectors.toList());
     }
-
+    
     public void deleteAll(final List<CartItem> cartItems) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {

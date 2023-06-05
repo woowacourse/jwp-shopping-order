@@ -51,7 +51,8 @@ public class CartItemService {
 
     @Transactional
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemDao.findById(id)
+            .orElseThrow(() -> new BusinessException("카트에 존재하지 않는 상품입니다."));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -65,7 +66,8 @@ public class CartItemService {
 
     @Transactional
     public void remove(final Member member, final Long id) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemDao.findById(id)
+            .orElseThrow(() -> new BusinessException("카트에 존재하지 않는 상품입니다."));
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);

@@ -43,7 +43,8 @@ class OrderApiControllerTest extends IntegrationTest {
         productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
+        member = memberDao.findById(1L)
+            .orElseThrow(RuntimeException::new);
 
         coupon = couponDao.save(new Coupon("3000원 할인 쿠폰", Amount.of(3_000), Amount.of(10_000), false), member.getId());
     }

@@ -33,7 +33,7 @@ class CouponDaoTest {
     @DisplayName("쿠폰 아이디와 멤버 아이디로 쿠폰을 찾는다.")
     void testFindByCouponIdAndMemberId() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon = couponDao.save(coupon1, savedMember.getId());
 
         //when
@@ -50,7 +50,7 @@ class CouponDaoTest {
     @DisplayName("쿠폰을 업데이트한다.")
     void testUpdate() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon = couponDao.save(coupon1, savedMember.getId());
         final Coupon usedCoupon = savedCoupon.use();
 
@@ -67,7 +67,7 @@ class CouponDaoTest {
     @DisplayName("모든 쿠폰을 조회한다.")
     void testFindAll() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon1 = couponDao.save(coupon1, savedMember.getId());
         final Coupon savedCoupon2 = couponDao.save(coupon2, savedMember.getId());
 
@@ -85,7 +85,7 @@ class CouponDaoTest {
     @DisplayName("id로 쿠폰을 찾는다.")
     void testFindById() {
         //given
-        final Member savedMember = memberDao.addMember(member);
+        final Member savedMember = memberDao.add(member);
         final Coupon savedCoupon = couponDao.save(coupon1, savedMember.getId());
 
         //when
