@@ -6,14 +6,14 @@ public class OrderItemResponse {
 
     private final long id;
     private final String name;
-    private final int price;
+    private final int singleProductPrice;
     private final int count;
     private final String imageUrl;
 
-    private OrderItemResponse(final long id, final String name, final int price, final int count, final String imageUrl) {
+    private OrderItemResponse(final long id, final String name, final int singleProductPrice, final int count, final String imageUrl) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.singleProductPrice = singleProductPrice;
         this.count = count;
         this.imageUrl = imageUrl;
     }
@@ -35,8 +35,8 @@ public class OrderItemResponse {
         return name;
     }
 
-    public int getPrice() {
-        return price;
+    public int getSingleProductPrice() {
+        return singleProductPrice;
     }
 
     public int getCount() {
