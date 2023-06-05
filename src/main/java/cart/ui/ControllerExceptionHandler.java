@@ -38,4 +38,10 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(InvalidOrderCalculationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("주문 금액과 실제 계산예정금액이 불일치합니다."));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("오류가 발생했습니다." + e.getMessage()));
+    }
+
 }
