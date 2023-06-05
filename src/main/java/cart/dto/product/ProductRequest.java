@@ -15,9 +15,6 @@ public class ProductRequest {
     @Positive(message = "상품의 재고를 1개 이상 입력해주세요.")
     private long stock;
 
-    public ProductRequest() {
-    }
-
     public ProductRequest(String name, long price, String imageUrl, long stock) {
         this.name = name;
         this.price = price;

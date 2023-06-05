@@ -14,10 +14,6 @@ public class OrderRequest {
     @PositiveOrZero(message = "아이템을 1개 이상 주문해주세요.")
     private Long totalPrice;
 
-    public OrderRequest() {
-
-    }
-
     public OrderRequest(List<Long> cartIds, Long point, Long totalPrice) {
         this.cartIds = cartIds;
         this.point = point;
