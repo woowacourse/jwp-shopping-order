@@ -68,8 +68,8 @@ public class MemberDao {
                     rs.getLong("id"),
                     rs.getString("email"),
                     rs.getString("password"),
-                    rs.getInt("money"),
-                    rs.getInt("point")
+                    rs.getLong("money"),
+                    rs.getLong("point")
             );
         }
     }

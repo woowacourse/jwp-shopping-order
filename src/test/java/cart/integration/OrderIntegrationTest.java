@@ -72,7 +72,7 @@ class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("주문을 한 뒤 사용자의 포인트가 10% 적립된다")
     @Test
     void addPointAfterOrderItem() {
-        Integer prevPoint = member.getPoint();
+        long prevPoint = member.getPoint();
         int price = 치킨.PRODUCT.getPrice() + 피자.PRODUCT.getPrice();
         int point = (price / 100) * 10;
 
@@ -86,7 +86,7 @@ class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("주문을 한 뒤 사용자의 사용 포인트를 제외한 결제금액의 포인트가 10% 적립된다")
     @Test
     void addPointAfterOrderItem2() {
-        int prevPoint = member.getPoint();
+        long prevPoint = member.getPoint();
         int usePoint = 100;
         int price = 치킨.PRODUCT.getPrice() + 피자.PRODUCT.getPrice() - usePoint;
         int point = (price / 100) * 10;

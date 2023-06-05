@@ -58,6 +58,14 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<String> handleException(ApiException e) {
+        logger.warn(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+    }
+
+    @ExceptionHandler
     public ResponseEntity<String> handleException(IllegalStateException e) {
         logger.warn(e.getMessage());
         return ResponseEntity

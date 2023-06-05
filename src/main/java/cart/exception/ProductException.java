@@ -2,7 +2,7 @@ package cart.exception;
 
 import static cart.domain.Product.*;
 
-public class ProductException extends RuntimeException {
+public class ProductException extends ApiException {
 
     public ProductException(String message) {
         super(message);

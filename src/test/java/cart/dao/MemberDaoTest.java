@@ -27,8 +27,8 @@ class MemberDaoTest {
             rs.getLong("id"),
             rs.getString("email"),
             rs.getString("password"),
-            rs.getInt("money"),
-            rs.getInt("point")
+            rs.getLong("money"),
+            rs.getLong("point")
     );
 
     @Autowired
@@ -90,7 +90,7 @@ class MemberDaoTest {
         MemberEntity 유저 = 다니.ENTITY;
         long memberId = saveMember(유저);
 
-        MemberEntity 유저_수정 = new MemberEntity(memberId, "유저_수정@email.com", "1q2w3e4r", 4000, 10);
+        MemberEntity 유저_수정 = new MemberEntity(memberId, "유저_수정@email.com", "1q2w3e4r", 4000L, 10L);
         memberDao.update(유저_수정);
 
         String sql = "SELECT * FROM member WHERE id = ?";

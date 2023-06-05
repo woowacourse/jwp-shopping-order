@@ -13,16 +13,16 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private Integer money;
-    private Integer point;
+    private Money money;
+    private Point point;
 
-    public Member(Long id, String email, String password, Integer money, Integer point) {
+    public Member(Long id, String email, String password, long money, long point) {
         validate(email, password);
         this.id = id;
         this.email = email;
         this.password = password;
-        this.money = money;
-        this.point = point;
+        this.money = new Money(money);
+        this.point = new Point(point);
     }
 
     public Member(Long id, String email, String password) {
@@ -58,36 +58,27 @@ public class Member {
         return password;
     }
 
-    public Integer getMoney() {
-        return money;
+    public long getMoney() {
+        return money.getValue();
     }
 
-    public Integer getPoint() {
-        return point;
+    public long getPoint() {
+        return point.getValue();
     }
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
-    public void addPoint(Integer point) {
-        if (point < 0) {
-            throw new IllegalArgumentException("적립하는 포인트는 양수여야합니다.");
-        }
-        this.point += point;
+    public void addPoint(int point) {
+        this.point = this.point.addPoint(point);
     }
 
-    public void usePoint(Integer usePoint) {
-        if (point < usePoint) {
-            throw new IllegalArgumentException("포인트가 부족합니다.");
-        }
-        this.point -= usePoint;
+    public void usePoint(int usePoint) {
+        this.point = this.point.minusPoint(usePoint);
     }
 
-    public void useMoney(Integer useMoney) {
-        if (money < useMoney) {
-            throw new IllegalArgumentException("금액이 부족합니다.");
-        }
-        this.money -= useMoney;
+    public void useMoney(long useMoney) {
+        this.money = this.money.minusMoney(useMoney);
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    private static final String FRONT_LOCAL_HOST = "http://localhost:3000";
     private final MemberRepository memberRepository;
 
     public WebMvcConfig(MemberRepository memberRepository) {
@@ -25,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://3.37.86.118:8080", "http://localhost:8080")
+                .allowedOrigins(FRONT_LOCAL_HOST)
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                 .allowedHeaders("*")
                 .exposedHeaders("*")

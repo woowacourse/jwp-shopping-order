@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class OrderException extends RuntimeException {
+public class OrderException extends ApiException {
 
     public OrderException(String message) {
         super(message);

@@ -4,10 +4,10 @@ public class MemberEntity {
     private final Long id;
     private final String email;
     private final String password;
-    private final Integer money;
-    private final Integer point;
+    private final Long money;
+    private final Long point;
 
-    public MemberEntity(Long id, String email, String password, Integer money, Integer point) {
+    public MemberEntity(Long id, String email, String password, Long money, Long point) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -15,7 +15,7 @@ public class MemberEntity {
         this.point = point;
     }
 
-    public MemberEntity(String email, String password, Integer money, Integer point) {
+    public MemberEntity(String email, String password, Long money, Long point) {
         this(0L, email, password, money, point);
     }
 
@@ -31,11 +31,11 @@ public class MemberEntity {
         return password;
     }
 
-    public Integer getMoney() {
+    public Long getMoney() {
         return money;
     }
 
-    public Integer getPoint() {
+    public Long getPoint() {
         return point;
     }
 }

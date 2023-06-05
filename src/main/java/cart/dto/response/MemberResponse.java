@@ -3,10 +3,10 @@ package cart.dto.response;
 public class MemberResponse {
     private final Long id;
     private final String email;
-    private final Integer money;
-    private final Integer point;
+    private final long money;
+    private final long point;
 
-    public MemberResponse(Long id, String email, Integer money, Integer point) {
+    public MemberResponse(Long id, String email, long money, long point) {
         this.id = id;
         this.email = email;
         this.money = money;
@@ -21,11 +21,11 @@ public class MemberResponse {
         return email;
     }
 
-    public Integer getMoney() {
+    public long getMoney() {
         return money;
     }
 
-    public Integer getPoint() {
+    public long getPoint() {
         return point;
     }
 }

@@ -4,7 +4,7 @@ import cart.domain.CartItem;
 
 import static cart.domain.CartItem.MINIMUM_QUANTITY;
 
-public class CartItemException extends RuntimeException {
+public class CartItemException extends ApiException {
 
     public CartItemException(String message) {
 
