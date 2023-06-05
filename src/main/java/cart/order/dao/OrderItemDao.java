@@ -1,9 +1,8 @@
-package cart.order_item.dao;
+package cart.order.dao;
 
-import cart.order.dao.OrderDao;
 import cart.order.domain.Order;
-import cart.order_item.dao.entity.OrderItemEntity;
-import cart.order_item.domain.OrderItem;
+import cart.order.dao.entity.OrderItemEntity;
+import cart.order.domain.OrderItem;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;

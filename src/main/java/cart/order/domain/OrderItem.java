@@ -1,6 +1,5 @@
-package cart.order_item.domain;
+package cart.order.domain;
 
-import cart.order.domain.Order;
 import cart.value_object.Money;
 
 public class OrderItem {

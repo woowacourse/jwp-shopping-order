@@ -1,10 +1,10 @@
-package cart.order_item.dao.entity;
+package cart.order.dao.entity;
 
 import java.math.BigDecimal;
 
 public class OrderItemEntity {
 
-  private Long id;
+  private final Long id;
   private final Long orderId;
   private final String name;
   private final BigDecimal price;

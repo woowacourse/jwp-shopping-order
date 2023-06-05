@@ -4,14 +4,14 @@ import cart.coupon.application.mapper.CouponMapper;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
+import cart.order.application.mapper.OrderItemMapper;
 import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
+import cart.order.dao.OrderItemDao;
 import cart.order.domain.Order;
+import cart.order.domain.OrderItem;
+import cart.order.domain.OrderedItems;
 import cart.order.exception.CanNotSearchNotMyOrderException;
-import cart.order_item.application.OrderItemQueryService;
-import cart.order_item.application.mapper.OrderItemMapper;
-import cart.order_item.domain.OrderItem;
-import cart.order_item.domain.OrderedItems;
 import cart.value_object.Money;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderQueryService {
 
   private final OrderDao orderDao;
-  private final OrderItemQueryService orderItemQueryService;
+  private final OrderItemDao orderItemDao;
 
-  public OrderQueryService(
-      final OrderDao orderDao,
-      final OrderItemQueryService orderItemQueryService
-  ) {
+  public OrderQueryService(final OrderDao orderDao, final OrderItemDao orderItemDao) {
     this.orderDao = orderDao;
-    this.orderItemQueryService = orderItemQueryService;
+    this.orderItemDao = orderItemDao;
   }
 
   public List<OrderResponse> searchOrders(final Member member) {
@@ -40,7 +37,7 @@ public class OrderQueryService {
     for (final Order order : orders) {
       validateOrderOwner(order, member);
 
-      final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
+      final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
       final OrderedItems orderedItems = new OrderedItems(orderItems);
 
       final Money totalPayments = order.calculateTotalPayments(
@@ -63,7 +60,7 @@ public class OrderQueryService {
     Order order = orderDao.findByOrderId(orderId);
     validateOrderOwner(order, member);
 
-    final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
+    final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
     final OrderedItems orderedItems = new OrderedItems(orderItems);
     final Money totalItemPrice = orderedItems.calculateAllItemPrice();
 

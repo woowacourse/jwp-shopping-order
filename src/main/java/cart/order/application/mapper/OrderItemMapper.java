@@ -1,10 +1,10 @@
-package cart.order_item.application.mapper;
+package cart.order.application.mapper;
 
 import cart.cart_item.domain.CartItem;
-import cart.order_item.application.dto.OrderItemResponse;
+import cart.order.application.dto.OrderItemResponse;
 import cart.order.domain.Order;
-import cart.order_item.dao.entity.OrderItemEntity;
-import cart.order_item.domain.OrderItem;
+import cart.order.dao.entity.OrderItemEntity;
+import cart.order.domain.OrderItem;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;

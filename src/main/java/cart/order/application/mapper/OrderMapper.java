@@ -8,7 +8,7 @@ import cart.order.application.dto.SpecificOrderResponse;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderStatus;
-import cart.order_item.application.dto.OrderItemResponse;
+import cart.order.application.dto.OrderItemResponse;
 import cart.value_object.Money;
 import java.time.ZonedDateTime;
 import java.util.List;

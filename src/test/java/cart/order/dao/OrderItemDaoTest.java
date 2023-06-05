@@ -1,4 +1,4 @@
-package cart.order_item.dao;
+package cart.order.dao;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,11 +8,10 @@ import static org.mockito.Mockito.when;
 
 import cart.coupon.domain.EmptyCoupon;
 import cart.member.domain.Member;
-import cart.order.dao.OrderDao;
+import cart.order.dao.entity.OrderItemEntity;
 import cart.order.domain.Order;
+import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
-import cart.order_item.dao.entity.OrderItemEntity;
-import cart.order_item.domain.OrderItem;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;

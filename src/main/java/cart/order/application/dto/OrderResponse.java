@@ -1,6 +1,5 @@
 package cart.order.application.dto;
 
-import cart.order_item.application.dto.OrderItemResponse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

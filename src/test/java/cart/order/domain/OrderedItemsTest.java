@@ -1,7 +1,9 @@
-package cart.order_item.domain;
+package cart.order.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.order.domain.OrderItem;
+import cart.order.domain.OrderedItems;
 import cart.value_object.Money;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

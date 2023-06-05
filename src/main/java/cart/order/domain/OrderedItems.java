@@ -1,4 +1,4 @@
-package cart.order_item.domain;
+package cart.order.domain;
 
 import cart.value_object.Money;
 import java.util.List;
