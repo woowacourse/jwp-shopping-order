@@ -71,11 +71,11 @@ public class ScenarioFixture extends IntegrationTest {
     }
 
     private void 사용자가_장바구니에_상품_담게하기() {
-        final var 치킨장바구니아이디 = cartItemService.add(사용자1, new CartItemRequest(치킨.getId()));
+        final var 치킨장바구니아이디 = cartItemService.add(사용자1.getId(), new CartItemRequest(치킨.getId()));
         치킨장바구니 = cartItemRepository.findById(치킨장바구니아이디);
-        final var 샐러드장바구니아이디 = cartItemService.add(사용자1, new CartItemRequest(샐러드.getId()));
+        final var 샐러드장바구니아이디 = cartItemService.add(사용자1.getId(), new CartItemRequest(샐러드.getId()));
         샐러드장바구니 = cartItemRepository.findById(샐러드장바구니아이디);
-        final var 피자장바구니아이디 = cartItemService.add(사용자1, new CartItemRequest(피자.getId()));
+        final var 피자장바구니아이디 = cartItemService.add(사용자1.getId(), new CartItemRequest(피자.getId()));
         피자장바구니 = cartItemRepository.findById(피자장바구니아이디);
     }
 

@@ -7,7 +7,6 @@ import cart.controller.cart.dto.CouponResponse;
 import cart.controller.cart.dto.DeliveryResponse;
 import cart.controller.cart.dto.DiscountResponse;
 import cart.coupon.application.CouponService;
-import cart.member.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,26 +25,26 @@ public class CartController {
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Member member) {
-        final var cartItems = cartService.findCartItemsByMember(member);
+    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Long memberId) {
+        final var cartItems = cartService.findCartItemsByMember(memberId);
         return ResponseEntity.ok(cartItems);
     }
 
     @GetMapping("/delivery-policy")
-    public ResponseEntity<DeliveryResponse> showDeliveryPrice(@Auth Member member) {
-        return ResponseEntity.ok(cartService.findDeliveryPrice(member));
+    public ResponseEntity<DeliveryResponse> showDeliveryPrice(@Auth Long memberId) {
+        return ResponseEntity.ok(cartService.findDeliveryPrice(memberId));
     }
 
     @GetMapping("/coupons")
-    public ResponseEntity<List<CouponResponse>> showCoupons(@Auth Member member) {
-        return ResponseEntity.ok(couponService.findCouponsByMember(member.getId()));
+    public ResponseEntity<List<CouponResponse>> showCoupons(@Auth Long memberId) {
+        return ResponseEntity.ok(couponService.findCouponsByMember(memberId));
     }
 
     @GetMapping(value = {"/cart-items/coupon/{couponIds}", "/cart-items/coupon"})
-    public ResponseEntity<DiscountResponse> applyCoupon(@Auth Member member, @PathVariable(required = false) List<Long> couponIds) {
+    public ResponseEntity<DiscountResponse> applyCoupon(@Auth Long memberId, @PathVariable(required = false) List<Long> couponIds) {
         if (couponIds == null) {
             couponIds = List.of();
         }
-        return ResponseEntity.ok(cartService.discountWithCoupons(member, couponIds));
+        return ResponseEntity.ok(cartService.discountWithCoupons(memberId, couponIds));
     }
 }

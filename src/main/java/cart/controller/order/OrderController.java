@@ -5,7 +5,6 @@ import cart.common.auth.Auth;
 import cart.controller.order.dto.OrderDetailResponse;
 import cart.controller.order.dto.OrderRequest;
 import cart.controller.order.dto.OrderResponse;
-import cart.member.Member;
 import cart.order.application.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,19 +23,19 @@ public class OrderController {
     }
 
     @PostMapping("/payments")
-    public ResponseEntity<Void> order(@Auth Member member, @RequestBody OrderRequest orderRequest) {
-        final var orderId = cartService.order(member, orderRequest);
+    public ResponseEntity<Void> order(@Auth Long memberId, @RequestBody OrderRequest orderRequest) {
+        final var orderId = cartService.order(memberId, orderRequest);
         return ResponseEntity.created(URI.create(orderId.toString())).build();
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<OrderResponse>> findOrders(@Auth Member member) {
-        final var orderHistories = orderService.findOrderHistories(member.getId());
+    public ResponseEntity<List<OrderResponse>> findOrders(@Auth Long memberId) {
+        final var orderHistories = orderService.findOrderHistories(memberId);
         return ResponseEntity.ok(orderHistories);
     }
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderDetailResponse> findOrder(@Auth Member member, @PathVariable long orderId) {
+    public ResponseEntity<OrderDetailResponse> findOrder(@Auth Long memberId, @PathVariable long orderId) {
         final var orderHistory = orderService.findOrderHistory(orderId);
         return ResponseEntity.ok(orderHistory);
     }

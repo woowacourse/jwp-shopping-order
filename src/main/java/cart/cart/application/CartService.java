@@ -8,7 +8,6 @@ import cart.controller.cart.dto.DiscountResponse;
 import cart.controller.order.dto.OrderRequest;
 import cart.coupon.application.CouponService;
 import cart.discountpolicy.discountcondition.DiscountTarget;
-import cart.member.Member;
 import cart.order.application.OrderService;
 import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
@@ -30,8 +29,8 @@ public class CartService {
         this.orderService = orderService;
     }
 
-    public List<CartItemResponse> findCartItemsByMember(Member member) {
-        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+    public List<CartItemResponse> findCartItemsByMember(Long memberId) {
+        final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
         saleService.applySales(cart);
@@ -41,8 +40,8 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public DeliveryResponse findDeliveryPrice(Member member) {
-        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+    public DeliveryResponse findDeliveryPrice(Long memberId) {
+        final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
         saleService.applySales(cart);
@@ -50,8 +49,8 @@ public class CartService {
         return new DeliveryResponse(cart.calculateFinalDeliveryPrice(), Cart.MAN_FREE_DELIVERY_PRICE);
     }
 
-    public DiscountResponse discountWithCoupons(Member member, List<Long> couponIds) {
-        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+    public DiscountResponse discountWithCoupons(Long memberId, List<Long> couponIds) {
+        final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
         saleService.applySales(cart, DiscountTarget.TOTAL);
@@ -60,8 +59,8 @@ public class CartService {
         return DiscountResponse.from(cart);
     }
 
-    public Long order(Member member, OrderRequest orderRequest) {
-        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+    public Long order(Long memberId, OrderRequest orderRequest) {
+        final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
         saleService.applySales(cart, DiscountTarget.TOTAL);
@@ -69,6 +68,6 @@ public class CartService {
         saleService.applySalesApplyingToTotalPrice(cart);
 
 
-        return orderService.order(member.getId(), cart, orderRequest);
+        return orderService.order(memberId, cart, orderRequest);
     }
 }

@@ -3,7 +3,6 @@ package cart.cartitem.application;
 import cart.cartitem.CartItem;
 import cart.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
 import cart.cartitem.presentation.dto.CartItemRequest;
-import cart.member.Member;
 import cart.product.application.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +16,14 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
+    public Long add(Long memberId, CartItemRequest cartItemRequest) {
         final var product = productRepository.getProductById(cartItemRequest.getProductId());
-        return cartItemRepository.save(new CartItem(product.getName(), product.getPrice(), 1, product.getImageUrl(), product.getId(), member.getId()));
+        return cartItemRepository.save(new CartItem(product.getName(), product.getPrice(), 1, product.getImageUrl(), product.getId(), memberId));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(Long memberId, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id);
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(memberId);
 
         if (request.getQuantity() == 0) {
             cartItemRepository.deleteById(id);
@@ -35,9 +34,9 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
+    public void remove(Long memberId, Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(memberId);
 
         cartItemRepository.deleteById(id);
     }
