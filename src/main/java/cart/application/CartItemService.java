@@ -49,4 +49,10 @@ public class CartItemService {
 
         cartItemDao.deleteById(id);
     }
+
+    public void removeByIds(Member member, List<Long> cartItemIds) {
+        for (Long cartItemId : cartItemIds) {
+            remove(member, cartItemId);
+        }
+    }
 }

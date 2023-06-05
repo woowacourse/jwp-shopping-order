@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
+import cart.dto.CartItemsDeleteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
@@ -55,9 +56,19 @@ public class CartItemApiController {
 
     @Operation(summary = "장바구니에 담긴 상품 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItem(Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "장바구니에 담긴 여러 상품 삭제")
+    @DeleteMapping
+    public ResponseEntity<Void> removeCartItems(
+            Member member,
+            @RequestBody CartItemsDeleteRequest cartItemsDeleteRequest
+    ) {
+        cartItemService.removeByIds(member, cartItemsDeleteRequest.getCartItemIds());
         return ResponseEntity.noContent().build();
     }
 }
