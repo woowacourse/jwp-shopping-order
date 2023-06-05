@@ -48,6 +48,7 @@ public class PayService {
         orderItemDao.insertAll(orderItems);
 
         updatePoint(member, paymentRequest);
+        clearCart(paymentRequest);
         return new OrderIdResponse(orderHistory.getId());
     }
 
@@ -64,8 +65,7 @@ public class PayService {
 
     private List<CartItem> getCartItems(final PaymentRequest paymentRequest) {
         List<Long> cartItemIds = getCartItemsIdsFrom(paymentRequest);
-        List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
-        return cartItems;
+        return cartItemDao.findByIds(cartItemIds);
     }
 
     private List<Long> getCartItemsIdsFrom(final PaymentRequest paymentRequest) {
@@ -112,5 +112,11 @@ public class PayService {
                 .collect(paymentRequest.getOriginalPrice() - paymentRequest.getPoints());
         member.updatePoint(newPoint);
         memberDao.update(member);
+    }
+
+    private void clearCart(final PaymentRequest paymentRequest) {
+        List<Long> cartItemIds = paymentRequest.getCartItemIds().stream().map(CartItemIdRequest::getCartItemId).collect(
+                Collectors.toList());
+        cartItemDao.deleteAll(cartItemIds);
     }
 }

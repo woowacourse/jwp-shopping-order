@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -114,6 +115,15 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAll(List<Long> cartItemIds) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", cartItemIds);
+
+        jdbcTemplate.update(sql, parameters);
     }
 
     public void updateQuantity(CartItem cartItem) {
