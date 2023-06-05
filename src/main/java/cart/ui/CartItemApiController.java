@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member,
-                                             @RequestBody CartItemRequest request) {
+                                             @Valid @RequestBody CartItemRequest request) {
         final Long cartItemId = cartItemService.addCartItem(member, request);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
@@ -51,7 +52,7 @@ public class CartItemApiController {
     @PatchMapping("/{cartItemId}")
     public ResponseEntity<Void> updateCartItemQuantity(Member member,
                                                        @PathVariable Long cartItemId,
-                                                       @RequestBody CartItemQuantityUpdateRequest request) {
+                                                       @Valid @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, cartItemId, request);
         return ResponseEntity.ok().build();
     }
@@ -65,7 +66,7 @@ public class CartItemApiController {
 
     @DeleteMapping
     public ResponseEntity<Void> removeCartItems(Member member,
-                                                @RequestBody CartItemIdsRequest request) {
+                                                @Valid @RequestBody CartItemIdsRequest request) {
         cartItemService.removeCartItems(member, request);
         return ResponseEntity.noContent().build();
     }

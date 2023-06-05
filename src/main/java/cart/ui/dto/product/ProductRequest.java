@@ -1,8 +1,17 @@
 package cart.ui.dto.product;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 public class ProductRequest {
+
+    @NotEmpty
     private String name;
-    private int price;
+    @NotNull
+    @PositiveOrZero
+    private Integer price;
+    @NotEmpty
     private String imageUrl;
 
     public ProductRequest() {

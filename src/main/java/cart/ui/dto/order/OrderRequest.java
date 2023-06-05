@@ -1,6 +1,7 @@
 package cart.ui.dto.order;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class OrderRequest {
 
     @NotEmpty
     private List<Long> cartItemIds;
+    @NotNull
     @PositiveOrZero
     private Integer point;
 

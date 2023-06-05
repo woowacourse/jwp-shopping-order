@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,14 +44,14 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest request) {
+    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequest request) {
         final Long productId = productService.createProduct(request);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
-                                              @RequestBody ProductRequest request) {
+                                              @Valid @RequestBody ProductRequest request) {
         productService.updateProduct(productId, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

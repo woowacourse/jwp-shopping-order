@@ -1,7 +1,13 @@
 package cart.ui.dto.cartitem;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 public class CartItemQuantityUpdateRequest {
-    private int quantity;
+
+    @NotNull
+    @PositiveOrZero
+    private Integer quantity;
 
     public CartItemQuantityUpdateRequest() {
     }

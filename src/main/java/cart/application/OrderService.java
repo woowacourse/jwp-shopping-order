@@ -36,7 +36,6 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-
     @Transactional
     public Long order(final Member member, final OrderRequest request) {
         final Member findMember = memberRepository.findByEmail(member.getEmailValue());

@@ -1,9 +1,11 @@
 package cart.ui.dto.cartitem;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class CartItemIdsRequest {
 
+    @NotEmpty
     private List<Long> cartItemIds;
 
     public CartItemIdsRequest() {
