@@ -10,6 +10,7 @@ public class Order {
 
     private final Long id;
     private final Member member;
+    // TODO: shippingFee 도메인으로 수정
     private final Long shippingFee;
     private final Long totalPrice;
     private final List<OrderItem> orderItems;
