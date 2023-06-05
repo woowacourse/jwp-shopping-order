@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import cart.domain.OrderStatus;
+import cart.dto.CouponResponse;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -176,8 +177,12 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void showOrders() {
         // given
+        final List<CouponResponse> coupons = 쿠폰_목록_조회(member).jsonPath().getList(".", CouponResponse.class);
+        final CouponResponse coupon = coupons.get(0);
         final List<Long> cartItemIdsToOrder = List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2);
-        주문_정보_추가(member, new OrderRequest(cartItemIdsToOrder, DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
+        final long discountPrice = 3000L;
+        주문_정보_추가(member, new OrderRequest(cartItemIdsToOrder, DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, discountPrice,
+                coupon.getId()));
 
         // when
         final ExtractableResponse<Response> response = 주문_정보_목록_조회(member);
@@ -188,17 +193,20 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderResponses).hasSize(1);
         final OrderResponse orderResponse = orderResponses.get(0);
         assertThat(orderResponse.getOrderStatus()).isEqualTo("결제완료");
+        assertThat(orderResponse.getTotalPayments()).isEqualTo(
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE + discountPrice - coupon.getPriceDiscount());
     }
 
     @DisplayName("주문 상세 정보를 조회한다.")
     @Test
     void showOrderDetail() {
         // given
-        final long couponId = 1L;
+        final List<CouponResponse> coupons = 쿠폰_목록_조회(member).jsonPath().getList(".", CouponResponse.class);
+        final long couponId = coupons.get(0).getId();
         final long deliveryFee = 3000L;
         final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, 1L));
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, couponId));
 
         // when
         final ExtractableResponse<Response> response = 주문_정보_상세_조회(member, getIdFromCreatedResponse(createdResponse));
@@ -380,6 +388,17 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .patch("/orders/{orderId}", orderId)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 쿠폰_목록_조회(final Member member) {
+        return given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/coupons")
                 .then()
                 .log().all()
                 .extract();

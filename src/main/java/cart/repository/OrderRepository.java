@@ -48,9 +48,21 @@ public class OrderRepository {
         final List<Order> orders = new ArrayList<>();
         for (final OrderEntity foundOrder : foundOrders) {
             final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(foundOrder.getId());
-            orders.add(Order.of(foundOrder, foundOrderItems));
+            final Long couponId = foundOrder.getCouponId();
+            orders.add(createOrder(foundOrder, foundOrderItems, couponId));
         }
         return orders;
+    }
+
+    private Order createOrder(final OrderEntity foundOrder,
+                              final List<OrderItemEntity> foundOrderItems,
+                              final Long couponId) {
+        if (Objects.nonNull(couponId)) {
+            final Coupon foundCoupon = couponRepository.findById(couponId)
+                    .orElseThrow(() -> new IllegalStateException("illegal data exists in table ORDERS; coupon_id"));
+            return Order.of(foundOrder, foundOrderItems, foundCoupon);
+        }
+        return Order.of(foundOrder, foundOrderItems);
     }
 
     public Optional<Order> findById(final Long orderId) {
@@ -63,7 +75,7 @@ public class OrderRepository {
         final Long couponId = foundOrder.getCouponId();
         if (Objects.nonNull(couponId)) {
             final Coupon foundCoupon = couponRepository.findById(couponId)
-                    .orElseThrow(() -> new CouponException.IllegalId(couponId));
+                    .orElseThrow(() -> new IllegalStateException("illegal data exists in table ORDERS; coupon_id"));
             return Optional.of(Order.of(foundOrder, foundOrderItems, foundCoupon));
         }
         return Optional.of(Order.of(foundOrder, foundOrderItems));
