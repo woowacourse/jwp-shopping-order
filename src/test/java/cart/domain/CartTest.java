@@ -2,9 +2,11 @@ package cart.domain;
 
 import cart.domain.Member.Member;
 import cart.domain.Product.Product;
+import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.exception.ForbiddenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 
 import java.util.List;
 

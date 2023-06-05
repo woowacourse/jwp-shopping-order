@@ -3,7 +3,7 @@ package cart.application;
 import cart.Repository.MemberRepository;
 import cart.domain.Member.Email;
 import cart.domain.Member.Member;
-import cart.dto.MemberResponse;
+import cart.dto.response.MemberResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

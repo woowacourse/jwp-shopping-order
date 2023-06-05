@@ -2,8 +2,8 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member.Member;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

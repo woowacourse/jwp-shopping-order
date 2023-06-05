@@ -1,8 +1,20 @@
-package cart.dto;
+package cart.dto.request;
+
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 public class ProductRequest {
+    @NotBlank
+    @Length(min = 1, max = 50)
     private String name;
+
+    @NotBlank
+    @Min(0)
     private int price;
+
+    @NotBlank
     private String imageUrl;
 
     public ProductRequest() {

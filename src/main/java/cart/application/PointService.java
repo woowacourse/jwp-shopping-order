@@ -4,8 +4,8 @@ import cart.Repository.PointRepository;
 import cart.domain.Member.Member;
 import cart.domain.Point;
 import cart.domain.Product.Price;
-import cart.dto.OrderPointResponse;
-import cart.dto.UserPointResponse;
+import cart.dto.response.OrderPointResponse;
+import cart.dto.response.UserPointResponse;
 import cart.exception.InvalidRequestException;
 import org.springframework.stereotype.Service;
 

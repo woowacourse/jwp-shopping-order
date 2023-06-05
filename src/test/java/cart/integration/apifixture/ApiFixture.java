@@ -1,10 +1,10 @@
 package cart.integration.apifixture;
 
 import cart.domain.Member.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.OrderRequest;
-import cart.dto.ProductRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.OrderRequest;
+import cart.dto.request.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
