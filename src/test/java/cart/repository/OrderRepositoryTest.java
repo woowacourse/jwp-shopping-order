@@ -29,17 +29,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
 class OrderRepositoryTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private OrderRepository orderRepository;
-    private MemberDao memberDao;
-    private ProductDao productDao;
-
     private final ProductEntity 첫번째_상품_엔티티 = new ProductEntity(null, "치킨", 10_000, "http://example/chicken.png");
     private final ProductEntity 두번째_상품_엔티티 = new ProductEntity(null, "피자", 20_000, "http://example/chicken.png");
     private final MemberEntity 멤버_엔티티 = new MemberEntity(
             null, "vero@email", "password", 20000, null, null
     );
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private OrderRepository orderRepository;
+    private MemberDao memberDao;
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
