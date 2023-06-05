@@ -33,35 +33,39 @@ public class CartItemService {
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Optional<CartItem> cartItemOption = cartItemDao.findByMemberIdAndProductId(member.getId(),
                 cartItemRequest.getProductId());
-        if (cartItemOption.isPresent()) {
-            return plusQuantity(member, cartItemRequest, cartItemOption);
-        }
-        final CartItem cartItem = new CartItem(cartItemRequest.getQuantity(), member,
-                productRepository.findById(cartItemRequest.getProductId()));
-        return cartItemDao.save(cartItem).getId();
+        return cartItemOption
+                .map(cartItem -> plusQuantity(member, cartItemRequest, cartItem))
+                .orElseGet(() -> createNewCartItem(member, cartItemRequest));
     }
 
     private Long plusQuantity(final Member member, final CartItemRequest cartItemRequest,
-                              final Optional<CartItem> cartItemOption) {
-        final CartItem cartItem = cartItemOption.orElseThrow();
-        cartItem.checkOwner(member);
-        cartItem.changeQuantity(cartItem.getQuantity().getValue() + cartItemRequest.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+                              final CartItem cartItem) {
+        final int newQuantity = cartItem.getQuantity().getValue() + cartItemRequest.getQuantity();
+        updateQuantity(member, cartItem, newQuantity);
         return cartItem.getId();
+    }
+
+    private void updateQuantity(final Member member, final CartItem cartItem, final int quantity) {
+        cartItem.checkOwner(member);
+        if (quantity == 0) {
+            cartItemDao.deleteById(cartItem.getId());
+            return;
+        }
+        cartItem.changeQuantity(quantity);
+        cartItemDao.updateQuantity(cartItem);
+    }
+
+    private Long createNewCartItem(final Member member, final CartItemRequest cartItemRequest) {
+        final CartItem cartItem = cartItemDao.save(new CartItem(cartItemRequest.getQuantity(), member,
+                productRepository.findById(cartItemRequest.getProductId())));
+        return cartItemDao.save(cartItem).getId();
     }
 
     @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
-
-        if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
-            return;
-        }
-
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        final CartItem cartItem = cartItemDao.findById(id);
+        final int quantity = request.getQuantity();
+        updateQuantity(member, cartItem, quantity);
     }
 
     @Transactional
