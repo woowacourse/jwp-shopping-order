@@ -34,9 +34,10 @@ public class OrderService {
 
     public Long createOrder(final Member member, final OrderRequest request) {
         CartItems cartItems = orderRepository.findCartItemsByMemberId(member);
-        Payment payment = getPayment(request, cartItems);
-        OrderItems orderItems = createOrderItems(cartItems);
-        return orderRepository.createOrder(new Order(payment, orderItems, member), cartItems);
+        CartItems subCartItems = cartItems.getSubCartItems(request.getCartItemIds());
+        Payment payment = getPayment(request, subCartItems);
+        OrderItems orderItems = createOrderItems(subCartItems);
+        return orderRepository.createOrder(new Order(payment, orderItems, member), subCartItems);
     }
 
     private Payment getPayment(final OrderRequest request, final CartItems cartItems) {
