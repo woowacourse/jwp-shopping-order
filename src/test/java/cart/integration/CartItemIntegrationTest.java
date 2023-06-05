@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -23,7 +22,6 @@ import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Product;
 
-@Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
@@ -158,7 +156,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Exception {
         String encodedAuthHeader = getEncodedAuthHeader(member);
         String jsonRequest = new ObjectMapper().writeValueAsString(cartItemRequest);
-        return mockMvc.perform(MockMvcRequestBuilders.post("/cart-items")
+        return mockMvc.perform(post("/cart-items")
             .header("Authorization", encodedAuthHeader)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(jsonRequest));
@@ -185,7 +183,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         String encodedAuthHeader = getEncodedAuthHeader(member);
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         String jsonRequest = new ObjectMapper().writeValueAsString(quantityUpdateRequest);
-        return mockMvc.perform(MockMvcRequestBuilders.patch("/cart-items/{cartItemId}", cartItemId)
+        return mockMvc.perform(patch("/cart-items/{cartItemId}", cartItemId)
             .header("Authorization", encodedAuthHeader)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(jsonRequest));
