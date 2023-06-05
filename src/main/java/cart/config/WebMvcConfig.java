@@ -28,8 +28,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                        "https://solo5star.github.io/react-shopping-cart-prod",
-                        "https://naveowo.github.io/react-shopping-cart-prod",
+                        "https://solo5star.github.io",
+                        "https://naveowo.github.io",
                         "http://localhost:3000",
                         "http://13.124.87.248"
                 )
