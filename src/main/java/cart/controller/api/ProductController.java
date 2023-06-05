@@ -2,6 +2,7 @@ package cart.controller.api;
 
 import cart.controller.dto.request.ProductRequest;
 import cart.controller.dto.response.ProductResponse;
+import cart.controller.util.IdsConverter;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,11 +54,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getMultiple(@RequestParam(value = "ids", required = false) final String ids) {
+    public ResponseEntity<List<ProductResponse>> getMultiple(@RequestParam(value = "ids", required = false) final List<String> ids) {
         if (ids == null) {
             return ResponseEntity.ok(productService.findAll());
         }
-        final List<ProductResponse> responses = productService.findByIds(ids);
+        final List<ProductResponse> responses = productService.findByIds(IdsConverter.convert(ids));
         return ResponseEntity.ok(responses);
     }
 }

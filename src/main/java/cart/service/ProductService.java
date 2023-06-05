@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.controller.dto.request.ProductRequest;
 import cart.controller.dto.response.ProductResponse;
-import cart.domain.Ids;
 import cart.domain.Price;
 import cart.domain.Product;
 import cart.repository.ProductRepository;
@@ -32,9 +31,8 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public List<ProductResponse> findByIds(final List<String> idsParameter) {
-        final Ids ids = Ids.from(idsParameter);
-        List<Product> products = productRepository.findByIds(ids.getIds());
+    public List<ProductResponse> findByIds(final List<Long> ids) {
+        List<Product> products = productRepository.findByIds(ids);
         return products.stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toUnmodifiableList());
