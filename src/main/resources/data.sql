@@ -25,7 +25,7 @@ INSERT INTO member_coupon (id, member_id, coupon_id, status) VALUES (4, 100, 2, 
 INSERT INTO member_coupon (id, member_id, coupon_id, status) VALUES (5, 100, 2, 1);
 INSERT INTO member_coupon (id, member_id, coupon_id, status) VALUES (6, 100, 3, 1);
 
-INSERT INTO orders (id, member_id, total_price, payment_price, point, created_at)
+INSERT INTO shopping_order (id, member_id, total_price, payment_price, point, created_at)
 VALUES (1, 10, 30000, 3000, 0, '2023-06-03');
 
 
@@ -33,25 +33,3 @@ INSERT INTO ordered_item (id, order_id, product_name, product_price, product_qua
 VALUES (1, 1, '레오배변패드', 30000, 1, 'image');
 
 INSERT INTO point_history (id, member_id, order_id, used_point, earned_point) VALUES (1L, 10L, 1L, 10, 1000);
-
-
--- CREATE TABLE IF NOT EXISTS orders
--- (
---     id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
---     member_id     BIGINT NOT NULL,
---     total_price   INT    NOT NULL,
---     payment_price INT    NOT NULL,
---     point         INT      DEFAULT 0,
---     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
--- );
---
---
--- CREATE TABLE IF NOT EXISTS ordered_item
--- (
---     id               BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
---     order_id         BIGINT       NOT NULL,
---     product_name     VARCHAR(255) NOT NULL,
---     product_price    INT          NOT NULL,
---     product_quantity INT          NOT NULL,
---     product_image    TEXT         NOT NULL
---     );

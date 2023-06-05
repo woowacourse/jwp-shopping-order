@@ -39,7 +39,7 @@ public class OrderJdbcRepository implements OrderRepository {
                                CouponRepository couponRepository, OrderedItemRepository orderedItemRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("orders")
+                .withTableName("shopping_order")
                 .usingGeneratedKeyColumns("id");
         this.memberRepository = memberRepository;
         this.couponRepository = couponRepository;
@@ -59,7 +59,7 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+        final String sql = "SELECT * FROM shopping_order WHERE member_id = ?";
         List<OrderInfoDto> findOrderInfoDtos = jdbcTemplate.query(sql, orderInfoDtoRowMapper, memberId);
         Member findMember = getMember(memberId);
 
@@ -81,7 +81,7 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public Order findById(final Long memberId, final Long id) {
-        final String sql = "SELECT * FROM orders WHERE orders.member_id = ? and orders.id = ? ";
+        final String sql = "SELECT * FROM shopping_order WHERE shopping_order.member_id = ? and shopping_order.id = ? ";
         OrderInfoDto orderInfoDto = jdbcTemplate.queryForObject(sql, orderInfoDtoRowMapper, memberId, id);
         Member member = getMember(orderInfoDto.getMemberId());
         return new Order(orderInfoDto.getId(),
