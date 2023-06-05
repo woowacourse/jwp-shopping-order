@@ -54,7 +54,7 @@ class OrderedItemDaoTest extends DaoTest {
         orderedItemDao.saveAll(items, orderId);
 
         //when
-        final List<OrderedItemEntity> result = orderedItemDao.findByOrderId(orderId);
+        final List<OrderedItemEntity> result = orderedItemDao.findAllByOrderId(orderId);
 
         //then
         Assertions.assertAll(

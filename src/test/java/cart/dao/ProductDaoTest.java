@@ -32,7 +32,7 @@ class ProductDaoTest extends DaoTest {
         final List<Long> ids = List.of(1L, 2L, 3L);
 
         //when
-        final List<Product> result = productDao.findByIds(ids);
+        final List<Product> result = productDao.findAllByIds(ids);
         final List<Long> savedIds = result.stream()
                 .map(Product::getId)
                 .collect(Collectors.toUnmodifiableList());

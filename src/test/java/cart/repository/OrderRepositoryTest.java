@@ -88,7 +88,7 @@ class OrderRepositoryTest {
         orderedItemDao.saveAll(item2, orderId2);
 
         //when
-        final List<Order> results = orderRepository.findOrdersByMember(GOLD_MEMBER);
+        final List<Order> results = orderRepository.findAllByMember(GOLD_MEMBER);
 
         //then
         Assertions.assertAll(

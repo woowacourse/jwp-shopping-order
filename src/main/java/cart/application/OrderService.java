@@ -36,7 +36,7 @@ public class OrderService {
     @Transactional
     public Long add(OrderRequest orderRequest, Member member) {
         final List<Long> cartItemIds = orderRequest.getCartItemIds();
-        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(cartItemIds);
         validateExistentCartItems(cartItemIds, cartItems);
         Order order = Order.from(cartItems, member, priceCalculator);
         return orderRepository.save(order);
@@ -54,7 +54,7 @@ public class OrderService {
     }
 
     public List<OrderResponse> findByMember(Member member) {
-        final List<Order> orders = orderRepository.findOrdersByMember(member);
+        final List<Order> orders = orderRepository.findAllByMember(member);
         return orders.stream()
                 .map(OrderResponse::of)
                 .collect(Collectors.toUnmodifiableList());

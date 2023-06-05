@@ -21,8 +21,8 @@ public class CartItemRepository {
         return cartItemDao.findById(id);
     }
 
-    public CartItems findByMember(Member member) {
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+    public CartItems findAllByMember(Member member) {
+        final List<CartItem> cartItems = cartItemDao.findAllByMemberId(member.getId());
         return CartItems.from(cartItems, member);
     }
 

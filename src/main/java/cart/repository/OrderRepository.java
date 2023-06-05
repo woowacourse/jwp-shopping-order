@@ -51,14 +51,14 @@ public class OrderRepository {
     public Order findOrderByIdAndMember(Long orderId, Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
-        List<OrderedItemEntity> orderedItems = orderedItemDao.findByOrderId(orderId);
+        List<OrderedItemEntity> orderedItems = orderedItemDao.findAllByOrderId(orderId);
         final CartItems cartItems = orderedItemsToCartItems(member, orderedItems);
         return new Order(orderEntity.getId(), orderEntity.getPrice(), member, cartItems);
     }
 
     private CartItems orderedItemsToCartItems(Member member, List<OrderedItemEntity> orderedItems) {
         final List<Long> productIds = collectIds(orderedItems);
-        List<Product> products = productDao.findByIds(productIds);
+        List<Product> products = productDao.findAllByIds(productIds);
         final Map<Long, Product> idToProduct = createTable(products);
 
         final List<CartItem> cartItems = orderedItems.stream()
@@ -82,11 +82,11 @@ public class OrderRepository {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Order> findOrdersByMember(Member member) {
-        final List<OrderEntity> orders = orderDao.findByMember(member);
+    public List<Order> findAllByMember(Member member) {
+        final List<OrderEntity> orders = orderDao.findAllByMember(member);
         List<Order> result = new ArrayList<>();
         for (OrderEntity order : orders) {
-            final List<OrderedItemEntity> items = orderedItemDao.findByOrderId(order.getId());
+            final List<OrderedItemEntity> items = orderedItemDao.findAllByOrderId(order.getId());
             final CartItems cartItems = orderedItemsToCartItems(member, items);
             result.add(new Order(order.getId(), order.getPrice(), member, cartItems));
         }

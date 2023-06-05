@@ -69,7 +69,7 @@ public class ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Product> findByIds(List<Long> ids) {
+    public List<Product> findAllByIds(List<Long> ids) {
         String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
         final String sql = "SELECT * FROM product WHERE id IN (" + inClause + ")";
         return jdbcTemplate.query(sql, rowMapper, ids.toArray());

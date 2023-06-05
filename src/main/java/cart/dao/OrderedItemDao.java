@@ -48,7 +48,7 @@ public class OrderedItemDao {
         );
     }
 
-    public List<OrderedItemEntity> findByOrderId(Long id) {
+    public List<OrderedItemEntity> findAllByOrderId(Long id) {
         final String sql = "SELECT * FROM ordered_item WHERE order_id = ?";
         return jdbcTemplate.query(sql, rowMapper, id);
     }

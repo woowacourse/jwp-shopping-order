@@ -37,7 +37,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
+    public List<CartItem> findAllByMemberId(Long memberId) {
         String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                         +
@@ -96,7 +96,7 @@ public class CartItemDao {
         return jdbcTemplate.update(sql, ids.toArray());
     }
 
-    public List<CartItem> findByIds(List<Long> ids) {
+    public List<CartItem> findAllByIds(List<Long> ids) {
         String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
         final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "

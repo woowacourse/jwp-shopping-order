@@ -76,7 +76,7 @@ class OrderDaoTest extends DaoTest {
         final Long orderId2 = createOrder(10000, Fixture.GOLD_MEMBER, List.of(Fixture.CART_ITEM2));
 
         //when
-        final List<OrderEntity> results = orderDao.findByMember(Fixture.GOLD_MEMBER);
+        final List<OrderEntity> results = orderDao.findAllByMember(Fixture.GOLD_MEMBER);
         final List<Long> ids = results.stream()
                 .map(OrderEntity::getId)
                 .collect(Collectors.toUnmodifiableList());

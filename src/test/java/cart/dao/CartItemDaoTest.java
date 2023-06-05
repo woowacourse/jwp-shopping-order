@@ -46,7 +46,7 @@ class CartItemDaoTest extends DaoTest {
         final List<Long> cartItemIds = List.of(1L, 2L);
 
         //when
-        final List<CartItem> result = cartItemDao.findByIds(cartItemIds);
+        final List<CartItem> result = cartItemDao.findAllByIds(cartItemIds);
 
         //then
         assertThat(result.size()).isEqualTo(cartItemIds.size());

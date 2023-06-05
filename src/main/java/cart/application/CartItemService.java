@@ -28,7 +28,7 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        final CartItems cartItems = cartItemRepository.findByMember(member);
+        final CartItems cartItems = cartItemRepository.findAllByMember(member);
         return cartItems.getCartItems().stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class CartItemService {
 
     @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        final CartItems cartItems = cartItemRepository.findByMember(member);
+        final CartItems cartItems = cartItemRepository.findAllByMember(member);
         cartItems.validateContainDuplicatedProduct(cartItemRequest.getProductId());
         final Product product = productRepository.findById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(product, member);
