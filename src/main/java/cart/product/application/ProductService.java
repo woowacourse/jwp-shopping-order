@@ -2,9 +2,9 @@ package cart.product.application;
 
 import cart.controller.product.dto.ProductRequest;
 import cart.controller.product.dto.ProductResponse;
-import cart.discountpolicy.discountcondition.DiscountTarget;
+import cart.discountpolicy.DiscountPolicy;
 import cart.product.Product;
-import cart.sale.SaleService;
+import cart.sale.application.SaleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,9 +23,11 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.getAllProducts();
-        for (Product product : products) {
-            saleService.applySales(product, DiscountTarget.TOTAL);
+
+        for (DiscountPolicy discountPolicy : saleService.findDiscountPoliciesFromSales()) {
+            products.forEach(product -> product.discount(discountPolicy));
         }
+
         return products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
@@ -33,7 +35,11 @@ public class ProductService {
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.getProductById(productId);
-        saleService.applySales(product);
+
+        for (DiscountPolicy discountPolicy : saleService.findDiscountPoliciesFromSales()) {
+            product.discount(discountPolicy);
+        }
+
         return ProductResponse.from(product);
     }
 

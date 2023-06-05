@@ -7,9 +7,9 @@ import cart.controller.cart.dto.DeliveryResponse;
 import cart.controller.cart.dto.DiscountResponse;
 import cart.controller.order.dto.OrderRequest;
 import cart.coupon.application.CouponService;
-import cart.discountpolicy.discountcondition.DiscountTarget;
+import cart.discountpolicy.DiscountPolicy;
 import cart.order.application.OrderService;
-import cart.sale.SaleService;
+import cart.sale.application.SaleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,9 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
-        saleService.applySales(cart);
+        for (DiscountPolicy discountPolicy : saleService.findDiscountPoliciesFromSales()) {
+            cart.discount(discountPolicy);
+        }
 
         return cartItems.stream()
                 .map(CartItemResponse::from)
@@ -44,7 +46,10 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
-        saleService.applySales(cart);
+        final var discountPolicies = saleService.findDiscountPoliciesFromSales();
+        for (DiscountPolicy discountPolicy : discountPolicies) {
+            cart.discount(discountPolicy);
+        }
 
         return new DeliveryResponse(cart.calculateFinalDeliveryPrice(), Cart.MAN_FREE_DELIVERY_PRICE);
     }
@@ -53,8 +58,15 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
-        saleService.applySales(cart, DiscountTarget.TOTAL);
-        couponService.applyCoupons(cart, couponIds);
+        final var discountPoliciesFromSales = saleService.findDiscountPoliciesFromSales();
+        for (DiscountPolicy discountPolicy : discountPoliciesFromSales) {
+            cart.discount(discountPolicy);
+        }
+
+        final var discountPoliciesFromCoupons = couponService.findDiscountPoliciesFromCouponIds(couponIds);
+        for (DiscountPolicy discountPolicy : discountPoliciesFromCoupons) {
+            cart.discount(discountPolicy);
+        }
 
         return DiscountResponse.from(cart);
     }
@@ -63,10 +75,13 @@ public class CartService {
         final var cartItems = cartItemRepository.findAllByMemberId(memberId);
         final var cart = new Cart(cartItems);
 
-        saleService.applySales(cart, DiscountTarget.TOTAL);
-        couponService.applyCoupons(cart, orderRequest.getCouponIds());
-        saleService.applySalesApplyingToTotalPrice(cart);
+        for (DiscountPolicy discountPolicy : saleService.findDiscountPoliciesFromSales()) {
+            cart.discount(discountPolicy);
+        }
 
+        for (DiscountPolicy discountPolicy : couponService.findDiscountPoliciesFromCouponIds(orderRequest.getCouponIds())) {
+            cart.discount(discountPolicy);
+        }
 
         return orderService.order(memberId, cart, orderRequest);
     }

@@ -88,7 +88,7 @@ class DiscountPolicyServiceTest {
         final var discountPolicyId = discountPolicyService.savePolicy(discountCondition);
 
         final var discountPolicy = discountPolicyRepository.findById(discountPolicyId);
-        discountPolicy.discount(cart);
+        cart.discount(discountPolicy);
 
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
@@ -104,7 +104,7 @@ class DiscountPolicyServiceTest {
         final var discountPolicyId = discountPolicyService.savePolicy(discountCondition);
 
         final var discountPolicy = discountPolicyRepository.findById(discountPolicyId);
-        discountPolicy.discount(cart);
+        cart.discount(discountPolicy);
 
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
@@ -120,7 +120,7 @@ class DiscountPolicyServiceTest {
         final var discountPolicyId = discountPolicyService.savePolicy(discountCondition);
 
         final var discountPolicy = discountPolicyRepository.findById(discountPolicyId);
-        discountPolicy.discount(cart);
+        cart.discount(discountPolicy);
 
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)

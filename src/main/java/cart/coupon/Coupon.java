@@ -1,6 +1,5 @@
 package cart.coupon;
 
-import cart.cart.Cart;
 import cart.discountpolicy.DiscountPolicy;
 
 public class Coupon {
@@ -22,7 +21,7 @@ public class Coupon {
         return id;
     }
 
-    public void apply(Cart cart) {
-        this.discountPolicy.discount(cart);
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
     }
 }

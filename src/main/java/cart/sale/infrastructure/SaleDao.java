@@ -1,7 +1,8 @@
-package cart.sale;
+package cart.sale.infrastructure;
 
 import cart.discountpolicy.application.DiscountPolicyRepository;
-import cart.discountpolicy.discountcondition.DiscountTarget;
+import cart.sale.Sale;
+import cart.sale.application.SaleRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -43,22 +44,9 @@ public class SaleDao implements SaleRepository {
     }
 
     @Override
-    public List<Sale> findAllExcludingTarget(List<DiscountTarget> discountTargets) {
+    public List<Sale> findAllSales() {
         final var sql = "select * from SALE S " +
-                "inner join DISCOUNT_POLICY DP on DP.id = S.discount_policy_id " +
-                "where DP.target != 'TOTAL'";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new Sale(
-                rs.getLong("id"),
-                rs.getString("name"),
-                discountPolicyRepository.findById(rs.getLong("discount_policy_id"))
-        ));
-    }
-
-    @Override
-    public List<Sale> findAllApplyingToTotalPrice() {
-        final var sql = "select * from SALE S " +
-                "inner join DISCOUNT_POLICY DP on DP.id = S.discount_policy_id " +
-                "where DP.target = 'TOTAL'";
+                "inner join DISCOUNT_POLICY DP on DP.id = S.discount_policy_id";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Sale(
                 rs.getLong("id"),
                 rs.getString("name"),

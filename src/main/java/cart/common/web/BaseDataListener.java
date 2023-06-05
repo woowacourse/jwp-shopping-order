@@ -9,7 +9,7 @@ import cart.member.Member;
 import cart.member.application.MemberRepository;
 import cart.product.Product;
 import cart.product.application.ProductRepository;
-import cart.sale.SaleRepository;
+import cart.sale.application.SaleRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;

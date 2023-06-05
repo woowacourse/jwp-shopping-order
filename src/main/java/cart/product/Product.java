@@ -1,5 +1,11 @@
 package cart.product;
 
+import cart.cartitem.CartItem;
+import cart.discountpolicy.DiscountPolicy;
+import cart.discountpolicy.application.builder.DiscountUnitPolicy;
+import cart.discountpolicy.discountcondition.DiscountCondition;
+import cart.discountpolicy.discountcondition.DiscountTarget;
+
 import java.util.Objects;
 
 public class Product {
@@ -43,6 +49,22 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void discount(DiscountPolicy discountPolicy) {
+        if (discountPolicy.isTarget(DiscountTarget.SPECIFIC)) {
+            if (discountPolicy.isApplied(id)) {
+                addDiscountPrice(discountPolicy.calculateDiscountPrice(price));
+            }
+            return;
+        }
+
+        if (discountPolicy.isTarget(DiscountTarget.ALL)) {
+            addDiscountPrice(discountPolicy.calculateDiscountPrice(price));
+            return;
+        }
+
+        throw new IllegalArgumentException("할인정책을 진행할 수 없는 조건입니다.");
     }
 
     public int getDiscountPrice() {

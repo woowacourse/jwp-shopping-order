@@ -2,6 +2,7 @@ package cart.coupon.application;
 
 import cart.cart.Cart;
 import cart.cartitem.CartItem;
+import cart.discountpolicy.DiscountPolicy;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.discountpolicy.discountcondition.DiscountTarget;
@@ -49,7 +50,9 @@ class SaleServiceTest {
         final var discountCondition = DiscountCondition.from(DiscountTarget.DELIVERY, DiscountUnit.ABSOLUTE, 1500);
         final var couponId = couponService.saveCoupon(discountCondition, "배송비 50% 할인 쿠폰");
 
-        couponService.applyCoupons(cart, List.of(couponId));
+        for (DiscountPolicy discountPolicy : couponService.findDiscountPoliciesFromCouponIds(List.of(couponId))) {
+            cart.discount(discountPolicy);
+        }
 
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)

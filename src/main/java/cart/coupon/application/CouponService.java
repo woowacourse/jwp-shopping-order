@@ -1,8 +1,8 @@
 package cart.coupon.application;
 
-import cart.cart.Cart;
 import cart.controller.cart.dto.CouponResponse;
 import cart.coupon.Coupon;
+import cart.discountpolicy.DiscountPolicy;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.order.OrderCoupon;
@@ -43,13 +43,10 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
-    public void applyCoupons(Cart cart, List<Long> couponIds) {
-        final var coupons = couponIds.stream()
+    public List<DiscountPolicy> findDiscountPoliciesFromCouponIds(List<Long> couponIds) {
+        return couponIds.stream()
                 .map(couponRepository::findById)
+                .map(Coupon::getDiscountPolicy)
                 .collect(Collectors.toList());
-
-        for (Coupon coupon : coupons) {
-            coupon.apply(cart);
-        }
     }
 }

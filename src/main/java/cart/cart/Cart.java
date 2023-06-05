@@ -1,6 +1,8 @@
 package cart.cart;
 
 import cart.cartitem.CartItem;
+import cart.discountpolicy.DiscountPolicy;
+import cart.discountpolicy.discountcondition.DiscountTarget;
 
 import java.util.List;
 
@@ -25,15 +27,47 @@ public class Cart {
                 .sum();
     }
 
+    public void discount(DiscountPolicy discountPolicy) {
+        if (discountPolicy.isTarget(DiscountTarget.SPECIFIC)) {
+            for (CartItem cartItem : this.cartItems) {
+                if (discountPolicy.isApplied(cartItem.getProductId())) {
+                    cartItem.addDiscountPrice(discountPolicy.calculateDiscountPrice(cartItem.getOriginalPrice()));
+                }
+            }
+            return;
+        }
+
+        if (discountPolicy.isTarget(DiscountTarget.ALL)) {
+            for (CartItem cartItem : cartItems) {
+                cartItem.addDiscountPrice(discountPolicy.calculateDiscountPrice(cartItem.getOriginalPrice()));
+            }
+            return;
+        }
+
+        if (discountPolicy.isTarget(DiscountTarget.DELIVERY)) {
+            final var discountDeliveryPrice = discountPolicy.calculateDiscountPrice(originalDeliveryPrice);
+            addDiscountForDeliveryPrice(discountDeliveryPrice);
+            return;
+        }
+
+        if (discountPolicy.isTarget(DiscountTarget.TOTAL)) {
+            final var discountPrice = discountPolicy.calculateDiscountPrice(calculateTotalPrice());
+            addDiscountFromTotalPrice(discountPrice);
+            return;
+        }
+
+        throw new IllegalArgumentException("할인정책을 진행할 수 없는 조건입니다.");
+    }
+
     public int calculateFinalDeliveryPrice() {
         return this.originalDeliveryPrice - this.discountDeliveryPrice;
     }
 
-    public void addDiscountForDeliveryPrice(int discountDeliveryPrice) {
+    private void addDiscountForDeliveryPrice(int discountDeliveryPrice) {
         this.discountDeliveryPrice += discountDeliveryPrice;
     }
 
-    public void addDiscountFromTotalPrice(int discountPrice) {
+    private void addDiscountFromTotalPrice(int discountPrice) {
         this.discountFromTotalPrice += discountPrice;
     }
 
