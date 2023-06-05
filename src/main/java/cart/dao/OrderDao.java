@@ -51,7 +51,7 @@ public class OrderDao {
 
   public List<ProductOrder> findAllOrdersByMemberId(Long memberId) {
     String s = "SELECT order.id, "
-        + "product.id, product.name, product.price, product_image_url "
+        + "product.id, product.name, product.price, product.image_url "
         + "FROM `order` "
         + "INNER JOIN product_order ON product_order.order_id = order.id "
         + "INNER JOIN product ON product.id = product_order.product_id "
@@ -76,21 +76,23 @@ public class OrderDao {
       productsByOrderId.put(orderId, products);
     }
 
-    String sql = "SELECT order.id, order.devliery_amount, order.address, "
+    String sql = "SELECT order.id, order.delivery_amount, order.address, "
         + "product.id, product.name, product.image_url, product.price, "
         + "member.id, member.email, member.password, "
-        + "product_order.id, product_order.quantity "
-        + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount" +
+        + "product_order.id, product_order.quantity, "
+        + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount " +
         "FROM `order` " +
+        "INNER JOIN member ON member.id = order.member_id " +
         "INNER JOIN product_order ON product_order.order_id = order.id " +
         "INNER JOIN product ON product_order.product_id = product.id " +
+        "INNER JOIN coupon ON order.coupon_id = coupon.id " +
         "WHERE order.member_id = ?";
 
     return jdbcTemplate.query(sql, new Object[]{memberId}, getProductOrderRowMapper(productsByOrderId));
   }
 
   public List<ProductOrder> findOrderByOrderId(final Long memberId, final Long orderId) {
-    String s = "SELECT product.id, product.name, product.price, product_image_url "
+    String s = "SELECT product.id, product.name, product.price, product.image_url "
         + "FROM `order` "
         + "INNER JOIN product_order ON product_order.order_id = order.id "
         + "INNER JOIN product ON product.id = product_order.product_id "
@@ -107,16 +109,16 @@ public class OrderDao {
     final HashMap<Long, List<Product>> productsByOrderId = new HashMap<>();
     productsByOrderId.put(orderId, products);
 
-    String sql = "SELECT order.id, order.devliery_amount, order.address, "
+    String sql = "SELECT order.id, order.delivery_amount, order.address, "
         + "product.id, product.name, product.image_url, product.price, "
         + "member.id, member.email, member.password, "
-        + "product_order.id, product_order.quantity "
-        + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount" +
+        + "product_order.id, product_order.quantity, "
+        + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount " +
         "FROM `order` " +
         "INNER JOIN member ON member.id = order.member_id " +
         "INNER JOIN product_order ON product_order.order_id = order.id " +
         "INNER JOIN product ON product_order.product_id = product.id " +
-        "INNER JOIN coupon ON order.coupon_id = coupon = coupon.id " +
+        "INNER JOIN coupon ON order.coupon_id = coupon.id " +
         "WHERE order.id = ? AND member.id = ?";
 
     return jdbcTemplate.query(sql, new Object[]{orderId, memberId}, getProductOrderRowMapper(productsByOrderId));
