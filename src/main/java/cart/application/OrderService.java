@@ -50,17 +50,20 @@ public class OrderService {
         return orderId;
     }
 
+    public List<OrderDetailResponse> findByMember(Member member) {
+        List<Order> orders = orderRepository.findByMemberId(member.getId());
+        orders.forEach(order -> order.checkOwner(member));
+
+        return orders.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     public OrderDetailResponse findById(Member member, Long id) {
         Order order = orderRepository.findById(id);
         order.checkOwner(member);
 
-        return new OrderDetailResponse(
-                order.getId(),
-                order.getOrderedAt(),
-                order.getUsedPoint().getPoint(),
-                order.getSavedPoint().getPoint(),
-                OrderItemResponse.of(order.getOrderItems())
-        );
+        return convertToResponse(order);
     }
 
     private int calculateTotalPoint(List<OrderItem> orderItems) {
@@ -76,5 +79,15 @@ public class OrderService {
                         cartItem.getQuantity()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    private OrderDetailResponse convertToResponse(Order order) {
+        return new OrderDetailResponse(
+                order.getId(),
+                order.getOrderedAt(),
+                order.getUsedPoint().getPoint(),
+                order.getSavedPoint().getPoint(),
+                OrderItemResponse.of(order.getOrderItems())
+        );
     }
 }

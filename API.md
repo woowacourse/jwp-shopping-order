@@ -274,59 +274,47 @@ Content-Type: application/json
 
 [
     {
-        "id" : 4,
-        "orderedAt" : 2022-03-16T17:40:00+09:00,
-        "usedPoint" : 300,
-        "savedPoint" : 400,
-        "products": 
-        [
+        "id": 1,
+        "orderedAt": "2023-06-05T11:11:27",
+        "usedPoint": 1000,
+        "savedPoint": 1000,
+        "products": [
             {
                 "id": 1,
-                "quantity": 5,
-                "product": {
+                "quantity": 2,
+                "products": {
                     "id": 1,
-                    "price": 10000,
                     "name": "치킨",
-                    "imageUrl": "http://example.com/chicken.jpg"
+                    "price": 10000,
+                    "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
                 }
             },
             {
                 "id": 2,
-                "quantity": 1,
-                "product": {
+                "quantity": 4,
+                "products": {
                     "id": 2,
+                    "name": "샐러드",
                     "price": 20000,
-                    "name": "피자",
-                    "imageUrl": "http://example.com/pizza.jpg"
+                    "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
                 }
             }
         ]
     },
     {
-        "id" : 4,
-        "orderedAt" : 2022-03-16T17:40:00+09:00,
-        "usedPoint" : 300,
-        "savedPoint" : 400,
-        "products": 
-        [
+        "id": 2,
+        "orderedAt": "2023-06-05T11:11:46",
+        "usedPoint": 1000,
+        "savedPoint": 130,
+        "products": [
             {
-                "id": 1,
-                "quantity": 5,
-                "product": {
-                    "id": 1,
-                    "price": 10000,
-                    "name": "치킨",
-                    "imageUrl": "http://example.com/chicken.jpg"
-                }
-            },
-            {
-                "id": 2,
+                "id": 3,
                 "quantity": 1,
-                "product": {
-                    "id": 2,
-                    "price": 20000,
+                "products": {
+                    "id": 3,
                     "name": "피자",
-                    "imageUrl": "http://example.com/pizza.jpg"
+                    "price": 13000,
+                    "imageUrl": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
                 }
             }
         ]

@@ -4,6 +4,7 @@ import cart.entity.OrderEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,6 +46,11 @@ public class OrderDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public List<OrderEntity> findByMemberId(Long memberId) {
+        final String sql = "SELECT * from shopping_order WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
     public OrderEntity findById(Long id) {

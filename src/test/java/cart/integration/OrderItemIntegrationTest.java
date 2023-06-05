@@ -37,11 +37,10 @@ public class OrderItemIntegrationTest extends IntegrationTest {
         member = memberRepository.findById(1L);
     }
 
-    @DisplayName("장바구니의 모든 아이템을 주문한다.")
+    @DisplayName("장바구니의 아이템을 주문한다.")
     @Test
-    void addCartItem() {
+    void saveOrder() {
         // given
-        // memberId = 1L인 사용자의 장바구니 안에 들어있는 아이템 : {'치킨', 10000원, 2개}, {'샐러드', 20000, 4개}
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         List<Long> cartItemIds = cartItems.stream()
                 .map(CartItem::getId)

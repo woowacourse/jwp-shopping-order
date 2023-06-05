@@ -4,6 +4,8 @@ import cart.dao.OrderDao;
 import cart.domain.Order;
 import cart.domain.Point;
 import cart.entity.OrderEntity;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,8 +28,19 @@ public class OrderRepository {
         return orderId;
     }
 
+    public List<Order> findByMemberId(Long memberId) {
+        List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
+        return orderEntities.stream()
+                .map(this::convertToDomain)
+                .collect(Collectors.toList());
+    }
+
     public Order findById(Long id) {
         OrderEntity orderEntity = orderDao.findById(id);
+        return convertToDomain(orderEntity);
+    }
+
+    private Order convertToDomain(OrderEntity orderEntity) {
         return new Order(
                 orderEntity.getId(),
                 memberRepository.findById(orderEntity.getMemberId()),
