@@ -5,9 +5,9 @@ import cart.member.domain.Member;
 
 public class MemberCoupon {
 
-  private Member member;
+  private final Member member;
 
-  private Coupon coupon;
+  private final Coupon coupon;
 
   private UsedStatus usedStatus;
 
@@ -15,6 +15,10 @@ public class MemberCoupon {
     this.member = member;
     this.coupon = coupon;
     this.usedStatus = usedStatus;
+  }
+
+  public void changeUsedStatus() {
+    usedStatus = usedStatus.opposite();
   }
 
   public Member getMember() {

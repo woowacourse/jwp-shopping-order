@@ -15,6 +15,7 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member_coupon.domain.MemberCoupon;
 import cart.member_coupon.domain.UsedStatus;
+import cart.value_object.Money;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -79,6 +80,9 @@ class MemberCouponDaoTest {
     //given
     final long couponId = 2L;
     final long memberId = 3L;
+
+    when(couponDao.findById(anyLong()))
+        .thenReturn(Optional.of(new FixDiscountCoupon(couponId, "coupon", new Money(5000))));
 
     final MemberCoupon memberCoupon = memberCouponDao.findByMemberAndCouponId(
         couponId,

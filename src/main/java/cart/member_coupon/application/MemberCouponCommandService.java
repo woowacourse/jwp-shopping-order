@@ -4,7 +4,6 @@ import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.member_coupon.dao.MemberCouponDao;
 import cart.member_coupon.domain.MemberCoupon;
-import cart.member_coupon.domain.UsedStatus;
 import cart.member_coupon.exception.NotFoundMemberCouponException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +27,12 @@ public class MemberCouponCommandService {
             memberId)
         .orElseThrow(() -> new NotFoundMemberCouponException("해당 멤버는 현재 쿠폰을 가지고 있지 않습니다."));
 
-    final UsedStatus usedStatus = memberCoupon.getUsedStatus();
+    memberCoupon.changeUsedStatus();
 
-    memberCouponDao.updateMemberCoupon(couponId, memberId, usedStatus.opposite().getValue());
+    memberCouponDao.updateMemberCoupon(
+        couponId,
+        memberId,
+        memberCoupon.getUsedStatus().getValue()
+    );
   }
 }
