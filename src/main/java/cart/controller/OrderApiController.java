@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Member;
+import cart.dto.MemberInfo;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -26,19 +26,19 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@AuthPrincipal Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Void> createOrder(@AuthPrincipal MemberInfo member, @RequestBody OrderRequest orderRequest) {
         Long id = orderService.register(orderRequest, member);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailResponse> getOrder(@AuthPrincipal Member member, @PathVariable Long id) {
+    public ResponseEntity<OrderDetailResponse> getOrder(@AuthPrincipal MemberInfo member, @PathVariable Long id) {
         OrderDetailResponse response = orderService.findById(id, member);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrders(@AuthPrincipal Member member) {
+    public ResponseEntity<List<OrderResponse>> getOrders(@AuthPrincipal MemberInfo member) {
         List<OrderResponse> responses = orderService.findAll(member);
         return ResponseEntity.ok().body(responses);
     }

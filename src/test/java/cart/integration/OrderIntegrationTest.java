@@ -22,6 +22,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.IssuableCoupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.dto.MemberInfo;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
@@ -76,20 +77,22 @@ public class OrderIntegrationTest extends IntegrationTest {
         밀리 = memberRepository.save(new Member("millie@email.com", "millie"));
         박스터 = memberRepository.save(new Member("boxster@email.com", "boxster"));
 
+        MemberInfo 밀리_정보 = new MemberInfo(밀리.getId(), 밀리.getEmail());
+
         상품_치킨 = productRepository.save(new Product("치킨", 10000, "http://chicken.com"));
         상품_피자 = productRepository.save(new Product("피자", 20000, "http://pizza.com"));
         상품_햄버거 = productRepository.save(new Product("햄버거", 7000, "http://hamburger.com"));
 
-        장바구니_밀리_치킨 = cartItemRepository.save(new CartItem(상품_치킨, 밀리));
-        장바구니_밀리_피자 = cartItemRepository.save(new CartItem(상품_피자, 밀리));
-        장바구니_밀리_햄버거 = cartItemRepository.save(new CartItem(상품_햄버거, 밀리));
+        장바구니_밀리_치킨 = cartItemRepository.save(new CartItem(상품_치킨, 밀리_정보));
+        장바구니_밀리_피자 = cartItemRepository.save(new CartItem(상품_피자, 밀리_정보));
+        장바구니_밀리_햄버거 = cartItemRepository.save(new CartItem(상품_햄버거, 밀리_정보));
 
         쿠폰_10퍼센트 = couponRepository.save(
                 new Coupon("10퍼센트 할인 쿠폰", CouponType.RATE, BigDecimal.valueOf(10), new Money(1000)));
         구매_증정_쿠폰 = couponRepository.save(
                 new Coupon("구매 증정 쿠폰", CouponType.RATE, BigDecimal.valueOf(20), new Money(1000)));
         couponRepository.saveIssuableCoupon(new IssuableCoupon(구매_증정_쿠폰, new Money(15000)));
-        밀리_쿠폰_10퍼센트 = memberCouponRepository.save(new MemberCoupon(밀리, 쿠폰_10퍼센트));
+        밀리_쿠폰_10퍼센트 = memberCouponRepository.save(new MemberCoupon(밀리_정보, 쿠폰_10퍼센트));
     }
 
     @Nested

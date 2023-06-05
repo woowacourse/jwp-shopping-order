@@ -5,11 +5,11 @@ import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.domain.Item;
-import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
+import cart.dto.MemberInfo;
 import cart.entity.CouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
@@ -42,7 +42,7 @@ public class OrderRepository {
     }
 
     public Order save(Order order) {
-        Member member = order.getMember();
+        MemberInfo member = order.getMember();
         Money deliveryFee = order.getDeliveryFee();
         Long savedOrderId = orderDao.save(toEntity(order));
 
@@ -65,12 +65,12 @@ public class OrderRepository {
             return Optional.empty();
         }
         OrderEntity orderEntity = savedOrderEntity.get();
-        Member member = getMember(orderEntity);
+        MemberInfo member = getMember(orderEntity);
         Order order = toOrder(orderEntity, member);
         return Optional.of(order);
     }
 
-    public List<Order> findAllByMember(Member member) {
+    public List<Order> findAllByMember(MemberInfo member) {
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
         return orderEntities.stream()
                 .map(orderEntity -> toOrder(orderEntity, member))
@@ -78,7 +78,7 @@ public class OrderRepository {
     }
 
     private OrderEntity toEntity(Order order) {
-        Member member = order.getMember();
+        MemberInfo member = order.getMember();
         Money deliveryFee = order.getDeliveryFee();
         Long couponId = order.getCoupon().getId();
         return new OrderEntity(
@@ -109,13 +109,13 @@ public class OrderRepository {
         );
     }
 
-    private Member getMember(OrderEntity order) {
-        return memberDao.findById(order.getMemberId())
+    private MemberInfo getMember(OrderEntity order) {
+        return memberDao.findMemberInfoById(order.getMemberId())
                 .orElseThrow(() -> new MemberException(ExceptionType.NOT_FOUND_MEMBER))
                 .toDomain();
     }
 
-    private Order toOrder(OrderEntity orderEntity, Member member) {
+    private Order toOrder(OrderEntity orderEntity, MemberInfo member) {
         List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(orderEntity.getId());
         List<Item> items = toItems(orderProductEntities);
         Coupon coupon = toCoupon(orderEntity.getCouponId());

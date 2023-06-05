@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.dto.MemberInfo;
 import cart.exception.CartItemException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -17,7 +18,7 @@ class CartItemTest {
     @Test
     void 장바구니의_주인을_확인한다() {
         // given
-        Member member = new Member("email@email.com", "password");
+        MemberInfo member = new MemberInfo("email@email.com");
         Product product = new Product("지구", 10000, "http://image.com");
         CartItem cartItem = new CartItem(product, member);
 
@@ -28,12 +29,12 @@ class CartItemTest {
     @Test
     void 장바구니의_주인이_아닐_경우_예외가_발생한다() {
         // given
-        Member member = new Member("email@email.com", "password");
+        MemberInfo member = new MemberInfo("email@email.com");
         Product product = new Product("지구", 10000, "http://image.com");
         CartItem cartItem = new CartItem(product, member);
 
         // when
-        Member other = new Member("other@email.com", "password");
+        MemberInfo other = new MemberInfo("other@email.com");
 
         // then
         assertThatThrownBy(() -> cartItem.checkOwner(other))
@@ -43,7 +44,7 @@ class CartItemTest {
     @Test
     void 장바구니에_담긴_상품_수량을_변경한다() {
         // given
-        Member member = new Member("email@email.com", "password");
+        MemberInfo member = new MemberInfo("email@email.com");
         Product product = new Product("지구", 10000, "http://image.com");
         CartItem cartItem = new CartItem(product, member);
 
@@ -56,7 +57,7 @@ class CartItemTest {
 
     @Test
     void 장바구니에_담긴_상품들의_가격을_계산한다() {
-        Member member = new Member("email@email.com", "password");
+        MemberInfo member = new MemberInfo("email@email.com");
         Product product = new Product("지구", 10000, "http://image.com");
         CartItem cartItem = new CartItem(1L, 10, product, member);
 

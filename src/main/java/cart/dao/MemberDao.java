@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
+import cart.entity.MemberInfoEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -16,11 +17,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberDao {
 
-    private static final RowMapper<MemberEntity> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<MemberEntity> memberRowMapper = (rs, rowNum) -> {
         long id = rs.getLong("id");
         String email = rs.getString("email");
         String password = rs.getString("password");
         return new MemberEntity(id, email, password);
+    };
+
+    private static final RowMapper<MemberInfoEntity> memberInfoRowMapper = (rs, rowNum) -> {
+        long id = rs.getLong("id");
+        String email = rs.getString("email");
+        return new MemberInfoEntity(id, email);
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -48,7 +55,17 @@ public class MemberDao {
     public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         try {
-            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, memberRowMapper, id);
+            return Optional.ofNullable(memberEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<MemberInfoEntity> findMemberInfoById(Long id) {
+        String sql = "SELECT id, email FROM member WHERE id = ?";
+        try {
+            MemberInfoEntity memberEntity = jdbcTemplate.queryForObject(sql, memberInfoRowMapper, id);
             return Optional.ofNullable(memberEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -58,7 +75,17 @@ public class MemberDao {
     public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, email);
+            MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, memberRowMapper, email);
+            return Optional.ofNullable(memberEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<MemberInfoEntity> findMemberInfoByEmail(String email) {
+        String sql = "SELECT id, email FROM member WHERE email = ?";
+        try {
+            MemberInfoEntity memberEntity = jdbcTemplate.queryForObject(sql, memberInfoRowMapper, email);
             return Optional.ofNullable(memberEntity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -67,7 +94,7 @@ public class MemberDao {
 
     public List<MemberEntity> findAll() {
         String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, memberRowMapper);
     }
 }
 

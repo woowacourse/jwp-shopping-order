@@ -16,6 +16,7 @@ import cart.domain.coupon.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
+import cart.entity.MemberInfoEntity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -52,8 +53,8 @@ class MemberCouponRepositoryTest {
                 .willReturn(Optional.of(new MemberCouponEntity(1L, 1L, 1L, LocalDate.of(3000, 6, 16))));
         given(couponDao.findById(1L))
                 .willReturn(Optional.of(new CouponEntity(1L, "쿠폰", "RATE", BigDecimal.valueOf(10), BigDecimal.ZERO)));
-        given(memberDao.findById(1L))
-                .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
+        given(memberDao.findMemberInfoById(1L))
+                .willReturn(Optional.of(new MemberInfoEntity(1L, "millie@email.com")));
 
         // when
         Optional<MemberCoupon> findMemberCoupon = memberCouponRepository.findById(1L);
@@ -117,8 +118,8 @@ class MemberCouponRepositoryTest {
                 ));
         given(couponDao.findById(1L))
                 .willReturn(Optional.of(new CouponEntity(1L, "쿠폰", "RATE", BigDecimal.valueOf(10), BigDecimal.ZERO)));
-        given(memberDao.findById(1L))
-                .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
+        given(memberDao.findMemberInfoById(1L))
+                .willReturn(Optional.of(new MemberInfoEntity(1L, "millie@email.com")));
 
         // when
         List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpiredAllByMember(밀리);

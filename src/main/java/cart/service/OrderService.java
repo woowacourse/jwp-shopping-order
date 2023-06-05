@@ -5,11 +5,11 @@ import static cart.exception.ExceptionType.NOT_FOUND_COUPON;
 import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.dto.MemberInfo;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -46,7 +46,7 @@ public class OrderService {
         this.couponService = couponService;
     }
 
-    public Long register(OrderRequest orderRequest, Member member) {
+    public Long register(OrderRequest orderRequest, MemberInfo member) {
         List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
                 .map(this::getCartItem)
                 .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class OrderService {
         return savedOrder.getId();
     }
 
-    private MemberCoupon getMemberCoupon(Long couponId, Member member) {
+    private MemberCoupon getMemberCoupon(Long couponId, MemberInfo member) {
         if (couponId == -1L) {
             return new MemberCoupon(member, Coupon.NONE);
         }
@@ -90,14 +90,14 @@ public class OrderService {
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
     }
 
-    public OrderDetailResponse findById(Long id, Member member) {
+    public OrderDetailResponse findById(Long id, MemberInfo member) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
         order.checkOwner(member);
         return OrderDetailResponse.from(order);
     }
 
-    public List<OrderResponse> findAll(Member member) {
+    public List<OrderResponse> findAll(MemberInfo member) {
         List<Order> orders = orderRepository.findAllByMember(member);
 
         return orders.stream()

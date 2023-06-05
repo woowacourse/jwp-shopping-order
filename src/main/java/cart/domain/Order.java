@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.dto.MemberInfo;
 import cart.exception.ExceptionType;
 import cart.exception.OrderException;
 import java.time.LocalDateTime;
@@ -15,14 +16,14 @@ public class Order {
     private static final DateTimeFormatter ORDER_NUMBER_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 
     private final Long id;
-    private final Member member;
+    private final MemberInfo member;
     private final List<Item> items;
     private final Money deliveryFee;
     private final LocalDateTime orderDate;
     private final String orderNumber;
     private final Coupon coupon;
 
-    public Order(Member member, List<Item> items, Money deliveryFee, Coupon coupon) {
+    public Order(MemberInfo member, List<Item> items, Money deliveryFee, Coupon coupon) {
         this.id = null;
         this.member = member;
         this.items = items;
@@ -34,7 +35,7 @@ public class Order {
 
     public Order(
             Long id,
-            Member member,
+            MemberInfo member,
             List<Item> items,
             Money deliveryFee,
             LocalDateTime orderDate,
@@ -50,7 +51,7 @@ public class Order {
         this.coupon = coupon;
     }
 
-    public static Order of(Member member, List<CartItem> cartItems, int deliveryFee, MemberCoupon memberCoupon) {
+    public static Order of(MemberInfo member, List<CartItem> cartItems, int deliveryFee, MemberCoupon memberCoupon) {
         memberCoupon.check(member);
         validateOwner(member, cartItems);
         List<Item> items = cartItems.stream()
@@ -59,7 +60,7 @@ public class Order {
         return new Order(member, items, new Money(deliveryFee), memberCoupon.getCoupon());
     }
 
-    private static void validateOwner(Member member, List<CartItem> cartItems) {
+    private static void validateOwner(MemberInfo member, List<CartItem> cartItems) {
         for (CartItem cartItem : cartItems) {
             cartItem.checkOwner(member);
         }
@@ -69,7 +70,7 @@ public class Order {
         return orderDate.format(ORDER_NUMBER_FORMAT) + memberId;
     }
 
-    public void checkOwner(Member member) {
+    public void checkOwner(MemberInfo member) {
         if (!this.member.equals(member)) {
             throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
         }
@@ -104,7 +105,7 @@ public class Order {
         return items;
     }
 
-    public Member getMember() {
+    public MemberInfo getMember() {
         return member;
     }
 

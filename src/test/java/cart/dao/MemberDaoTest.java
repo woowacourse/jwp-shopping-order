@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.MemberEntity;
+import cart.entity.MemberInfoEntity;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +63,33 @@ class MemberDaoTest {
 
         // when
         Optional<MemberEntity> savedMember = memberDao.findByEmail("email@email.com");
+
+        // then
+        assertThat(savedMember).isPresent();
+    }
+
+    @Test
+    void 사용자_정보를_id로_조회한다() {
+        // given
+        MemberEntity memberEntity = new MemberEntity("email@email.com", "password");
+        Long id = memberDao.save(memberEntity);
+
+        // when
+        Optional<MemberInfoEntity> savedMember = memberDao.findMemberInfoById(id);
+
+        // then
+        assertThat(savedMember).isPresent();
+        assertThat(savedMember.get().getEmail()).isEqualTo("email@email.com");
+    }
+
+    @Test
+    void 사용자_정보를_email로_조회한다() {
+        // given
+        MemberEntity memberEntity = new MemberEntity("email@email.com", "password");
+        Long id = memberDao.save(memberEntity);
+
+        // when
+        Optional<MemberInfoEntity> savedMember = memberDao.findMemberInfoByEmail("email@email.com");
 
         // then
         assertThat(savedMember).isPresent();

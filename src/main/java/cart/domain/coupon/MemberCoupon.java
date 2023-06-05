@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.Member;
+import cart.dto.MemberInfo;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import java.time.LocalDate;
@@ -10,19 +10,19 @@ public class MemberCoupon {
     private static final int DEFAULT_DATE_PERIOD = 3;
 
     private final Long id;
-    private final Member member;
+    private final MemberInfo member;
     private final Coupon coupon;
     private final LocalDate expiredDate;
 
-    public MemberCoupon(Member member, Coupon coupon) {
+    public MemberCoupon(MemberInfo member, Coupon coupon) {
         this(null, member, coupon, makeDefaultExpiredDate());
     }
 
-    public MemberCoupon(Member member, Coupon coupon, LocalDate expiredDate) {
+    public MemberCoupon(MemberInfo member, Coupon coupon, LocalDate expiredDate) {
         this(null, member, coupon, expiredDate);
     }
 
-    public MemberCoupon(Long id, Member member, Coupon coupon, LocalDate expiredDate) {
+    public MemberCoupon(Long id, MemberInfo member, Coupon coupon, LocalDate expiredDate) {
         this.id = id;
         this.member = member;
         this.coupon = coupon;
@@ -33,7 +33,7 @@ public class MemberCoupon {
         return LocalDate.now().plusDays(DEFAULT_DATE_PERIOD);
     }
 
-    public void check(Member member) {
+    public void check(MemberInfo member) {
         if (coupon.isCoupon()) {
             checkExpiredDate();
             checkOwner(member);
@@ -46,7 +46,7 @@ public class MemberCoupon {
         }
     }
 
-    private void checkOwner(Member member) {
+    private void checkOwner(MemberInfo member) {
         if (!this.member.equals(member)) {
             throw new CouponException(ExceptionType.NO_AUTHORITY_COUPON);
         }
@@ -64,7 +64,7 @@ public class MemberCoupon {
         return id;
     }
 
-    public Member getMember() {
+    public MemberInfo getMember() {
         return member;
     }
 

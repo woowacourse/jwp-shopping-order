@@ -20,6 +20,7 @@ import cart.domain.Order;
 import cart.domain.coupon.CouponType;
 import cart.entity.CouponEntity;
 import cart.entity.MemberEntity;
+import cart.entity.MemberInfoEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
 import java.math.BigDecimal;
@@ -79,8 +80,8 @@ class OrderRepositoryTest {
                         new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000), "http://pizza.com"),
                         new OrderProductEntity(1L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000), "http://chicken.com")
                 ));
-        given(memberDao.findById(any()))
-                .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
+        given(memberDao.findMemberInfoById(any()))
+                .willReturn(Optional.of(new MemberInfoEntity(1L, "millie@email.com")));
         given(couponDao.findById(any()))
                 .willReturn(Optional.of(new CouponEntity(1L, "쿠폰", "RATE", BigDecimal.valueOf(10), BigDecimal.ZERO)));
 
@@ -100,8 +101,8 @@ class OrderRepositoryTest {
                         new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000), "http://pizza.com"),
                         new OrderProductEntity(1L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000), "http://chicken.com")
                 ));
-        given(memberDao.findById(any()))
-                .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
+        given(memberDao.findMemberInfoById(any()))
+                .willReturn(Optional.of(new MemberInfoEntity(1L, "millie@email.com")));
 
         Optional<Order> savedOrder = orderRepository.findById(1L);
 

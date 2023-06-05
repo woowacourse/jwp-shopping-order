@@ -5,6 +5,7 @@ import cart.domain.Money;
 import cart.domain.coupon.IssuableCoupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.dto.CouponsResponse;
+import cart.dto.MemberInfo;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import java.util.Comparator;
@@ -23,12 +24,12 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public CouponsResponse findAllByMember(Member member) {
+    public CouponsResponse findAllByMember(MemberInfo member) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpiredAllByMember(member);
         return CouponsResponse.from(memberCoupons);
     }
 
-    public void issueByOrderPrice(Money totalOrderPrice, Member member) {
+    public void issueByOrderPrice(Money totalOrderPrice, MemberInfo member) {
         List<IssuableCoupon> issuableCoupons = getSatisfyIssuableCoupons(totalOrderPrice);
         Money money = getMaxIssueConditionPrice(issuableCoupons);
         List<MemberCoupon> memberCoupons = getSatisfyMemberCoupon(member, issuableCoupons, money);
@@ -51,7 +52,7 @@ public class CouponService {
     }
 
     private List<MemberCoupon> getSatisfyMemberCoupon(
-            Member member,
+            MemberInfo member,
             List<IssuableCoupon> issuableCoupons,
             Money money
     ) {

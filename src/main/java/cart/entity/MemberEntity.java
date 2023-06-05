@@ -18,6 +18,10 @@ public class MemberEntity {
         this.password = password;
     }
 
+    public Member toDomain() {
+        return new Member(id, email, password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -28,9 +32,5 @@ public class MemberEntity {
 
     public String getPassword() {
         return password;
-    }
-
-    public Member toDomain() {
-        return new Member(id, email, password);
     }
 }

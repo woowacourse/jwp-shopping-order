@@ -4,10 +4,10 @@ import static java.util.stream.Collectors.toList;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
-import cart.domain.Member;
 import cart.domain.Product;
+import cart.dto.MemberInfo;
 import cart.entity.CartItemEntity;
-import cart.entity.MemberEntity;
+import cart.entity.MemberInfoEntity;
 import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.Optional;
@@ -70,11 +70,10 @@ public class CartItemRepository {
         );
     }
 
-    private MemberEntity toEntity(Member member) {
-        return new MemberEntity(
+    private MemberInfoEntity toEntity(MemberInfo member) {
+        return new MemberInfoEntity(
                 member.getId(),
-                member.getEmail(),
-                member.getPassword()
+                member.getEmail()
         );
     }
 }
