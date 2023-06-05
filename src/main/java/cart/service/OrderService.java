@@ -52,7 +52,6 @@ public class OrderService {
         if (couponIdOption.isPresent()) {
             final Long couponId = couponIdOption.get();
             final MemberCoupon memberCoupon = memberCouponRepository.findUnUsedCouponById(couponId);
-            memberCoupon.checkOwner(member);
             return Order.of(member, cartItems, memberCoupon);
         }
         return Order.of(member, cartItems);

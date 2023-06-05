@@ -40,10 +40,15 @@ public class Order {
 
     public static Order of(final Member member, final List<CartItem> cartItems, final MemberCoupon coupon) {
         validateSameMember(member, cartItems);
+        validateCouponOwner(member, coupon);
         final List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> new OrderProduct(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(toList());
         return new Order(null, orderProducts, LocalDateTime.now().withNano(0), member.getId(), coupon);
+    }
+
+    private static void validateCouponOwner(final Member member, final MemberCoupon coupon) {
+        coupon.checkOwner(member);
     }
 
     private static void validateSameMember(final Member member, final List<CartItem> cartItems) {
