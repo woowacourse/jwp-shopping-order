@@ -1,7 +1,7 @@
 package cart.domain.member.domain;
 
 public class Member {
-    private static final int INITITAL_CASH = 5000;
+    private static final int INITIAL_CASH = 5_000;
     private final Long id;
     private final String email;
     private final String password;
@@ -12,7 +12,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.cash = new Cash(INITITAL_CASH);
+        this.cash = new Cash(INITIAL_CASH);
     }
 
     public Member(final Long id, final String email,
