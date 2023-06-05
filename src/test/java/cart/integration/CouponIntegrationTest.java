@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CouponIntegratedTest extends IntegrationTest {
+public class CouponIntegrationTest extends IntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
 
@@ -47,7 +47,7 @@ public class CouponIntegratedTest extends IntegrationTest {
     }
 
     @Test
-    void 유저에게_쿠폰을_발급한다() {
+    void 멤버에게_쿠폰을_발급한다() {
         MemberCouponRequest memberCouponRequest = new MemberCouponRequest(1L);
 
         ExtractableResponse<Response> response = given().log().all()
@@ -64,7 +64,7 @@ public class CouponIntegratedTest extends IntegrationTest {
     }
 
     @Test
-    void 유저의_모든_쿠폰을_조회한다() {
+    void 멤버의_모든_쿠폰을_조회한다() {
         initMemberCoupons(member);
         memberCouponRepository.add(new MemberCoupon(member, coupon));
 
@@ -99,8 +99,7 @@ public class CouponIntegratedTest extends IntegrationTest {
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List<IssuableSearchCouponResponse> issuableSearchCouponResponses = response.jsonPath().getList(".", IssuableSearchCouponResponse.class).stream()
-                .collect(Collectors.toList());
+        List<IssuableSearchCouponResponse> issuableSearchCouponResponses = response.jsonPath().getList(".", IssuableSearchCouponResponse.class);
         assertThat(issuableSearchCouponResponses.get(0)).usingRecursiveComparison()
                 .isEqualTo(IssuableSearchCouponResponse.of(coupon2, true));
         assertThat(issuableSearchCouponResponses.get(1)).usingRecursiveComparison()
