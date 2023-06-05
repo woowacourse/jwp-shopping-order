@@ -7,10 +7,10 @@ import javax.validation.constraints.PositiveOrZero;
 public class CartItemQuantityUpdateRequest {
 
     @PositiveOrZero(message = "장바구니 아이템의 수량은 0개 이상이어야합니다.")
-    private long quantity;
+    private Long quantity;
 
     @JsonCreator
-    public CartItemQuantityUpdateRequest(long quantity) {
+    public CartItemQuantityUpdateRequest(Long quantity) {
         this.quantity = quantity;
     }
 

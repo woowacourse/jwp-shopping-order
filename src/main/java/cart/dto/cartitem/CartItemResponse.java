@@ -6,10 +6,10 @@ import cart.dto.product.ProductResponse;
 public class CartItemResponse {
 
     private Long id;
-    private long quantity;
+    private Long quantity;
     private ProductResponse product;
 
-    private CartItemResponse(Long id, long quantity, ProductResponse product) {
+    private CartItemResponse(Long id, Long quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -27,7 +27,7 @@ public class CartItemResponse {
         return id;
     }
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
