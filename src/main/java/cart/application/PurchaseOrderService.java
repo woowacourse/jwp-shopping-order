@@ -15,12 +15,14 @@ import cart.dto.purchaseorder.response.PurchaseOrderItemResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderPageResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 public class PurchaseOrderService {
 

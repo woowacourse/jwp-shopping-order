@@ -54,7 +54,7 @@ class MemberRewardPointDaoTest {
         // given
         Long memberId = 1L;
         Long orderId = 1L;
-        Point point = new Point(500, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
+        Point point = new Point(0, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
                 LocalDateTime.parse("2023-05-25 12:12:12", formatter));
 
         // when
