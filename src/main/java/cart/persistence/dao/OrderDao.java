@@ -21,7 +21,7 @@ public class OrderDao {
         rs.getInt("totalPrice"),
         rs.getInt("discountedTotalPrice"),
         rs.getInt("deliveryPrice"),
-        rs.getBoolean("is_valid"),
+        rs.getBoolean("isValid"),
         rs.getLong("couponId"),
         rs.getString("couponName"),
         rs.getInt("couponDiscountRate"),
