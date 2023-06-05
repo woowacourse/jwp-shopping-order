@@ -22,10 +22,20 @@ public class ControllerExceptionHandler {
             ProductException.NotFoundProduct.class,
             CartItemException.NotFound.class,
             MemberException.NotFound.class,
-            OrderException.NotFound.class
+            OrderException.NotFound.class,
+            PointException.NotFound.class,
+            PointHistoryException.NotFound.class
     })
     public ResponseEntity<Void> handleNotFoundException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            PointException.BadRequest.class,
+    })
+    public ResponseEntity<Void> handleBadRequestException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @ExceptionHandler(UnKnownException.class)
