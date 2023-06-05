@@ -27,12 +27,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationException();
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            throw new AuthenticationException();
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
@@ -44,7 +44,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
+        if (member == null || !member.checkPassword(password)) {
             throw new AuthenticationException();
         }
         return member;

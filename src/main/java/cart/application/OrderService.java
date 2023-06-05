@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.*;
+import cart.exception.OrderException;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+
+    private static final String INVALID_PRODUCT_ID_MESSAGE = "올바른 상품 번호를 입력해주세요.";
 
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
@@ -102,12 +105,19 @@ public class OrderService {
         for (ProductOrderRequest orderRequestProduct : orderRequestProducts) {
             Long productId = orderRequestProduct.getProductId();
             Product product = productsById.get(productId);
+            validateProductId(product);
             int quantity = orderRequestProduct.getQuantity();
             int totalCost = product.getPrice() * quantity;
 
             orderItems.add(new OrderItem(product, quantity, totalCost));
         }
         return orderItems;
+    }
+
+    private void validateProductId(Product product) {
+        if (product == null) {
+            throw new OrderException(INVALID_PRODUCT_ID_MESSAGE);
+        }
     }
 
     private List<Long> getProductIdsByOrderItems(List<OrderItem> orderItems) {

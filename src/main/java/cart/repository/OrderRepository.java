@@ -50,7 +50,7 @@ public class OrderRepository {
             pointHistoryDao.saveAll(orderId, pointEntities);
             return orderId;
         } catch (DataAccessException exception) {
-            throw new OrderServerException(INVALID_SAVE_MESSAGE);
+            throw new OrderException(INVALID_SAVE_MESSAGE);
         }
     }
 
