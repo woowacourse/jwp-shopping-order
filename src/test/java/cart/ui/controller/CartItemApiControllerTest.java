@@ -93,6 +93,7 @@ class CartItemApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 10);
             CartItemPriceResponse response = new CartItemPriceResponse(49000, 3000);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             given(cartItemService.getTotalPriceWithDeliveryFee(any(Member.class), any(List.class))).willReturn(response);
 
             MvcResult mvcResult = mockMvc.perform(get("/cart-items/price?item=1&item=2")
@@ -186,6 +187,7 @@ class CartItemApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(5);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(patch("/cart-items/{id}", id)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -203,6 +205,7 @@ class CartItemApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(null);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(patch("/cart-items/{id}", 1)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -254,6 +257,7 @@ class CartItemApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             CartItemRemoveRequest request = new CartItemRemoveRequest(null);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(delete("/cart-items")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -272,6 +276,7 @@ class CartItemApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             CartItemRemoveRequest request = new CartItemRemoveRequest(Collections.emptyList());
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(delete("/cart-items")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -290,6 +295,7 @@ class CartItemApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             CartItemRemoveRequest request = new CartItemRemoveRequest(List.of(1L));
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(delete("/cart-items")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -321,6 +327,7 @@ class CartItemApiControllerTest extends ControllerTest {
         void invalidIDType(String id) throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(delete("/cart-items/{id}", id)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -335,6 +342,7 @@ class CartItemApiControllerTest extends ControllerTest {
         void removeCartItem() throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             willDoNothing().given(cartItemService).remove(any(Member.class), anyLong());
 
             mockMvc.perform(delete("/cart-items/{id}", 1)

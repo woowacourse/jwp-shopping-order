@@ -68,6 +68,12 @@ public class OrderResponse {
                 .collect(Collectors.toList());
     }
 
+    public static List<OrderResponse> listOf(List<Order> orders) {
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+    }
+
     public Long getOrderId() {
         return orderId;
     }

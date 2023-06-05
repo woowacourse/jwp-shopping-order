@@ -108,6 +108,7 @@ class OrderApiControllerTest extends ControllerTest {
         void invalidIDType(String id) throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(get("/orders/{id}", id)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))
@@ -168,6 +169,7 @@ class OrderApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(ids, 500);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -185,6 +187,7 @@ class OrderApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(List.of(1L), null);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -202,6 +205,7 @@ class OrderApiControllerTest extends ControllerTest {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(List.of(1L), -1);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))

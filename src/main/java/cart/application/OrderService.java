@@ -35,9 +35,7 @@ public class OrderService {
 
     public List<OrderResponse> getOrders(Member member) {
         List<Order> orders = orderRepository.findAllByMemberId(member.getId());
-        return orders.stream()
-                .map(OrderResponse::from)
-                .collect(Collectors.toList());
+        return OrderResponse.listOf(orders);
     }
 
     public OrderResponse getOrderDetail(Long id, Member member) {

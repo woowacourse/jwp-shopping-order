@@ -5,7 +5,6 @@ import cart.repository.MemberRepository;
 import cart.ui.controller.dto.response.MemberPointResponse;
 import cart.ui.controller.dto.response.MemberResponse;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +20,7 @@ public class MemberService {
 
     public List<MemberResponse> getAllMembers() {
         List<Member> members = memberRepository.getAllMembers();
-        return members.stream()
-                .map(MemberResponse::from)
-                .collect(Collectors.toList());
+        return MemberResponse.listOf(members);
     }
 
     public MemberResponse getMemberByEmail(String email) {

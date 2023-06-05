@@ -13,7 +13,6 @@ import cart.ui.controller.dto.response.CartItemPriceResponse;
 import cart.ui.controller.dto.response.CartItemResponse;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +30,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
-        return cartItems.stream()
-                .map(CartItemResponse::from)
-                .collect(Collectors.toList());
+        return CartItemResponse.listOf(cartItems);
     }
 
     public CartItemPriceResponse getTotalPriceWithDeliveryFee(Member member, List<Long> cartItemIds) {

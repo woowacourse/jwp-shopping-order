@@ -6,7 +6,6 @@ import cart.repository.ProductRepository;
 import cart.ui.controller.dto.request.ProductRequest;
 import cart.ui.controller.dto.response.ProductResponse;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,7 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.getAllProducts();
-        return products.stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
+        return ProductResponse.listOf(products);
     }
 
     public ProductResponse getProductById(Long productId) {

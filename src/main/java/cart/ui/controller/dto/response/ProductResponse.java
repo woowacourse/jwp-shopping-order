@@ -2,6 +2,8 @@ package cart.ui.controller.dto.response;
 
 import cart.domain.product.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(description = "상품 응답")
 public class ProductResponse {
@@ -30,6 +32,12 @@ public class ProductResponse {
 
     public static ProductResponse from(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    public static List<ProductResponse> listOf(List<Product> products) {
+        return products.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

@@ -2,6 +2,8 @@ package cart.ui.controller.dto.response;
 
 import cart.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(description = "멤버 응답")
 public class MemberResponse {
@@ -30,6 +32,12 @@ public class MemberResponse {
 
     public static MemberResponse from(Member member) {
         return new MemberResponse(member.getId(), member.getEmail(), member.getPassword(), member.getPoint());
+    }
+
+    public static List<MemberResponse> listOf(List<Member> members) {
+        return members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {
