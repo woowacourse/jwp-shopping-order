@@ -3,7 +3,7 @@ package cart.application;
 import cart.domain.MemberGrade;
 import cart.domain.discount.MemberGradeDiscountPolicy;
 import cart.domain.discount.PriceDiscountPolicy;
-import cart.dto.DiscountInformationResponse;
+import cart.dto.DiscountResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,14 +18,14 @@ public class DiscountService {
         return totalPrice - discountAmount;
     }
 
-    public List<DiscountInformationResponse> getDiscountInfo(final MemberGrade grade, final int totalPrice) {
+    public List<DiscountResponse> getDiscountInfo(final MemberGrade grade, final int totalPrice) {
         final MemberGradeDiscountPolicy gradeDiscount = new MemberGradeDiscountPolicy(grade);
         final PriceDiscountPolicy priceDiscount = new PriceDiscountPolicy();
 
-        final DiscountInformationResponse gradeResponse = new DiscountInformationResponse(gradeDiscount.getName(),
+        final DiscountResponse gradeResponse = new DiscountResponse(gradeDiscount.getName(),
                 gradeDiscount.getRate(),
                 gradeDiscount.calculateDiscountAmount(totalPrice));
-        final DiscountInformationResponse priceResponse = new DiscountInformationResponse(priceDiscount.getName(),
+        final DiscountResponse priceResponse = new DiscountResponse(priceDiscount.getName(),
                 gradeDiscount.getRate(),
                 gradeDiscount.calculateDiscountAmount(totalPrice));
         return List.of(gradeResponse, priceResponse);

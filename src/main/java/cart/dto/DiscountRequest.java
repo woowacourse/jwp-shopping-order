@@ -2,11 +2,11 @@ package cart.dto;
 
 import cart.domain.MemberGrade;
 
-public final class DiscountInformationRequest {
+public final class DiscountRequest {
     private int price;
     private MemberGrade memberGrade;
 
-    public DiscountInformationRequest() {
+    public DiscountRequest() {
     }
 
     public int getPrice() {

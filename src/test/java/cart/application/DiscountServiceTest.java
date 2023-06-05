@@ -3,7 +3,7 @@ package cart.application;
 import cart.domain.MemberGrade;
 import cart.domain.discount.MemberGradeDiscountPolicy;
 import cart.domain.discount.PriceDiscountPolicy;
-import cart.dto.DiscountInformationResponse;
+import cart.dto.DiscountResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,13 +39,13 @@ class DiscountServiceTest {
         final int totalPrice = 10000;
 
         //when
-        final List<DiscountInformationResponse> info = discountService.getDiscountInfo(grade, totalPrice);
+        final List<DiscountResponse> info = discountService.getDiscountInfo(grade, totalPrice);
 
         //then
         assertSoftly(soft -> {
             assertThat(info).hasSize(2);
             assertThat(info)
-                    .map(DiscountInformationResponse::getPolicyName)
+                    .map(DiscountResponse::getPolicyName)
                     .containsExactlyElementsOf(List.of(
                             new MemberGradeDiscountPolicy(MemberGrade.GOLD).getName(),
                             new PriceDiscountPolicy().getName()));
