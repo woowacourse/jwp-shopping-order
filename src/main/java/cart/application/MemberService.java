@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.application.dto.response.MemberResponse;
+import cart.application.dto.response.OrderResponse;
 import cart.application.dto.response.PointResponse;
 import cart.domain.member.Member;
 import cart.persistence.repository.MemberRepository;
@@ -31,5 +32,9 @@ public class MemberService {
         return new PointResponse(
                 memberRepository.findMemberById(member.getId()).getPoint()
         );
+    }
+
+    public OrderResponse findOrder(final Member member, final Long orderId) {
+        return memberRepository.findOrder(member, orderId);
     }
 }

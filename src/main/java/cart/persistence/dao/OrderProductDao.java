@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -48,14 +47,10 @@ public class OrderProductDao {
         jdbcInsert.executeBatch(sources);
     }
 
-    public List<OrderProductEntity> getOrderProductsByOrderIds(final List<Long> orderIds) {
-        if (orderIds.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        final String sql = "SELECT id, order_id,  product_id, purchased_price, quantity FROM order_product " +
+    public List<OrderProductEntity> findAllByOrderId(final Long orderId) {
+        final String sql = "SELECT id, order_id, product_id, name, image_url, purchased_price, quantity FROM order_product " +
                 "WHERE order_id IN (:order_id)";
-        final SqlParameterSource source = new MapSqlParameterSource("order_id", orderIds);
+        final SqlParameterSource source = new MapSqlParameterSource("order_id", orderId);
         return namedJdbcTemplate.query(sql, source, ORDER_PRODUCT_ENTITY_ROW_MAPPER);
     }
 }
