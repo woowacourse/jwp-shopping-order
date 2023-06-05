@@ -16,8 +16,10 @@ import cart.global.config.AuthMember;
 import cart.global.exception.CartItemNotFoundException;
 import cart.global.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
@@ -30,6 +32,7 @@ public class CartItemService {
         this.memberDao = memberDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(AuthMember authMember) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         List<CartItem> cartItems = cartItemDao.findDescByMemberId(findMember.getId());

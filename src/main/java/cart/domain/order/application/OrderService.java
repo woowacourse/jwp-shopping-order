@@ -20,8 +20,10 @@ import cart.domain.order.validator.OrderValidator;
 import cart.global.config.AuthMember;
 import cart.global.exception.OrderNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final MemberDao memberDao;
@@ -71,6 +73,7 @@ public class OrderService {
         return allCartItems.getCartItemsByCartItemIds(cartItemIds);
     }
 
+    @Transactional(readOnly = true)
     public OrdersResponse findOrders(AuthMember authMember) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         OrderItems orderItems = new OrderItems(orderItemDao.selectAllByMemberId(findMember.getId()));
@@ -78,6 +81,7 @@ public class OrderService {
         return new OrdersResponse(orderResponses);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findOrder(AuthMember authMember, Long orderId) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         checkOrderExist(orderId);

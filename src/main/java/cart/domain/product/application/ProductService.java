@@ -19,8 +19,10 @@ import cart.domain.product.persistence.ProductDao;
 import cart.global.config.AuthMember;
 import cart.global.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ProductService {
 
     private static final int FIRST_PAGE_ID = 0;
@@ -35,16 +37,19 @@ public class ProductService {
         this.memberDao = memberDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.from(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductPagingResponse getAllPagingProductCartItems(AuthMember authMember,
                                                               Long lastProductId, int pageItemCount) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
@@ -71,6 +76,7 @@ public class ProductService {
         return new ProductPagingResponse(productCartItems, isLast);
     }
 
+    @Transactional(readOnly = true)
     public ProductCartItemResponse findProductCartItems(AuthMember authMember, Long productId) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         checkProductExist(productId);

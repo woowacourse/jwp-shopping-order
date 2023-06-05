@@ -8,8 +8,10 @@ import cart.domain.member.persistence.MemberDao;
 import cart.global.config.AuthMember;
 import cart.global.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class MemberService {
 
     private final MemberDao memberDao;
@@ -31,6 +33,7 @@ public class MemberService {
         return new MemberCashChargeResponse(chargedMember.getCash());
     }
 
+    @Transactional(readOnly = true)
     public MemberShowCurrentCashResponse findMemberCurrentCharge(AuthMember authMember) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         return new MemberShowCurrentCashResponse(findMember.getCash());
