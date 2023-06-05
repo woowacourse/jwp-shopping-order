@@ -25,7 +25,7 @@ public class PointController {
         return ResponseEntity.ok(pointByMember);
     }
 
-    @GetMapping("orders/{id}/point")
+    @GetMapping("orders/{orderId}/point")
     public ResponseEntity<PointHistoryResponse> findPointOfMember(@PathVariable final Long orderId) {
         final PointHistoryResponse pointHistory = pointService.findPointHistory(orderId);
 
