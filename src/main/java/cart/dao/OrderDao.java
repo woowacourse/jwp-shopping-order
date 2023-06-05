@@ -13,10 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +32,8 @@ public class OrderDao {
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         final MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        sqlParameterSource.addValue("memberId", order.getOrderingMember().getId());
+        sqlParameterSource.addValue("memberId", order.getOrderingMember()
+                                                     .getId());
         sqlParameterSource.addValue("priceAfterDiscount", order.getPriceAfterDiscount());
         new NamedParameterJdbcTemplate(jdbcTemplate).update(
                 "insert into orders(member_id, price_after_discount) values(:memberId, :priceAfterDiscount)",
@@ -42,7 +41,8 @@ public class OrderDao {
                 keyHolder
         );
 
-        final long orderId = (long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+        final long orderId = ((Number) Objects.requireNonNull(keyHolder.getKeys().get("ID"))).longValue();
+
         final List<OrderItem> orderItems = order.getOrderItems();
 
         jdbcTemplate.batchUpdate("insert into order_items(order_id, name, product_price, quantity, image_url) values(?, ?, ?, ?, ?)", new BatchPreparedStatementSetter() {
@@ -107,8 +107,8 @@ public class OrderDao {
         final List<Long> orderIds = jdbcTemplate.query(ordersQuery, (rs, rowNum) -> rs.getLong("id"), member.getId());
 
         return orderIds.stream()
-                .map(this::findById)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+                       .map(this::findById)
+                       .map(Optional::get)
+                       .collect(Collectors.toList());
     }
 }
