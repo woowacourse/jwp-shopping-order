@@ -21,15 +21,19 @@ public class Product {
         this.productImageUrl = new ProductImageUrl(imageUrl);
     }
 
-    public boolean isSameName(String name) {
+    public boolean isNotSameProduct(String name, int price, String imageUrl) {
+        return !(isSameName(name) && isSamePrice(price) && isSameImageUrl(imageUrl));
+    }
+
+    private boolean isSameName(String name) {
         return this.productName.equals(new ProductName(name));
     }
 
-    public boolean isSamePrice(int price) {
+    private boolean isSamePrice(int price) {
         return this.productPrice.equals(new ProductPrice(price));
     }
 
-    public boolean isSameImageUrl(String imageUrl) {
+    private boolean isSameImageUrl(String imageUrl) {
         return this.productImageUrl.equals(new ProductImageUrl(imageUrl));
     }
 

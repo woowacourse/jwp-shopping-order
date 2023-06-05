@@ -56,8 +56,7 @@ public class CartItem {
     }
 
     public boolean isNotSameProductInfo(String productName, int productPrice, String productImageUrl) {
-        return !(product.isSameName(productName) && product.isSamePrice(productPrice) &&
-                product.isSameImageUrl(productImageUrl));
+        return product.isNotSameProduct(productName, productPrice, productImageUrl);
     }
 
     public boolean isSameId(Long id) {
