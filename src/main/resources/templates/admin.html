@@ -11,6 +11,7 @@
 <header class="gnb">
     <nav>
         <ul class="gnb-group">
+            <li><a href="/coupon">쿠폰 발급</a></li>
             <li><a href="/settings">설정</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
@@ -29,18 +30,18 @@
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price}"></td>
-                <td>
-                    <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
-                </td>
-                <td>
-                    <button th:onclick="showEditModal([[${product}]])">수정</button>
-                    <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
-                </td>
-            </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td>
+                <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
+            </td>
+            <td>
+                <button th:onclick="showEditModal([[${product}]])">수정</button>
+                <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 
@@ -63,7 +64,7 @@
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"> </script>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
 

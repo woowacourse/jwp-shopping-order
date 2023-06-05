@@ -1,0 +1,9 @@
+spring:
+  thymeleaf:
+    cache: false
+  profiles:
+    active: dev
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json

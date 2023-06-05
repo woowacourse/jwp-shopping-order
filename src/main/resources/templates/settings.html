@@ -11,6 +11,7 @@
 <header class="gnb">
     <nav>
         <ul class="gnb-group">
+            <li><a href="/coupon">쿠폰 발급</a></li>
             <li><a href="/settings">설정</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
@@ -23,11 +24,13 @@
             <div class="cart-item-info">
                 <div class="cart-item-name" th:text="${member.email}"></div>
                 <div class="cart-item-price" th:text="${member.password}"></div>
-                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">
+                    Select
+                </button>
             </div>
         </div>
     </div>
 </div>
-<script th:src="@{/js/settings.js}"> </script>
+<script th:src="@{/js/settings.js}"></script>
 </body>
 </html>

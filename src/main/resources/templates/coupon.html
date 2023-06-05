@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>가격 할인 쿠폰 발급 페이지</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/coupon.css}">
+</head>
+<body>
+<header class="gnb">
+    <nav>
+        <ul class="gnb-group">
+            <li><a href="/coupon">쿠폰 발급</a></li>
+            <li><a href="/settings">설정</a></li>
+            <li class="nav-admin"><a href="/admin">관리자</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="container">
+    <div class="coupon">
+        <form id="couponForm">
+            <label for="name">쿠폰명</label><br>
+            <input type="text" id="name" name="name" required><br>
+
+            <div id="myRadio" class="myRadio">
+                <input type="radio" id="pricePolicy" name="type" value="price" checked>
+                &nbsp;
+                <label for="pricePolicy">가격 할인 정책</label>
+                &nbsp;
+                <input type="radio" id="percentPolicy" name="type" value="percent">
+                &nbsp;
+                <label for="percentPolicy">퍼센트 할인 정책</label>
+
+                <input type="radio" id="deliveryFeePolicy" name="type" value="delivery">
+                &nbsp;
+                <label for="deliveryFeePolicy">배달비 할인 정책</label>
+            </div>
+
+            <label for="value">할인 값</label><br>
+            <input type="number" id="value" value="0" name="value" required><br>
+            &nbsp;
+            <label for="minimumPrice">최소 금액</label><br>
+            <input type="number" id="minimumPrice" value="0" name="minimumPrice" required><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/coupon.js}"></script>
+</body>
+</html>
+
