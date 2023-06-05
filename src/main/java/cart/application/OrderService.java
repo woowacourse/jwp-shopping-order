@@ -37,17 +37,22 @@ public class OrderService {
 
         Money deliveryFee = deliveryPolicy.calculate(order);
 
-        Money discounting = Money.from(0);
-        if (isCouponSelected(orderRequest)) {
-            discounting = couponService.apply(order, orderRequest.getCouponId());
-        }
+        Money discountedMoney = applyDiscounting(orderRequest, order);
 
-        Order payed = payService.pay(order, deliveryFee, discounting, member.getId());
+        Order payed = payService.pay(order, deliveryFee, discountedMoney, member.getId());
 
         cartItemDao.deleteByIds(orderRequest.getCartItemIds());
 
         couponService.addCouponDependsOnPay(member, payed);
-        return orderDao.save(payed, discounting);
+        return orderDao.save(payed, discountedMoney);
+    }
+
+    private Money applyDiscounting(OrderRequest orderRequest, Order order) {
+        Money discounting = Money.from(0);
+        if (isCouponSelected(orderRequest)) {
+            discounting = couponService.apply(order, orderRequest.getCouponId());
+        }
+        return discounting;
     }
 
     private boolean isCouponSelected(OrderRequest orderRequest) {
