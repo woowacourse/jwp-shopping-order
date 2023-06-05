@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.CartItemDao;
 import cart.domain.Member;
-import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.product.CartItem;
 import cart.repository.MemberCouponRepository;
@@ -12,7 +11,6 @@ import cart.repository.OrderRepository;
 import cart.service.request.OrderRequestDto;
 import cart.service.response.OrderResponseDto;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,13 +46,9 @@ public class OrderService {
 
     private Order createOrder(final Member member, final OrderRequestDto orderRequestDto,
                               final List<CartItem> cartItems) {
-        final Optional<Long> couponIdOption = orderRequestDto.getOptionalCouponId();
-        if (couponIdOption.isPresent()) {
-            final Long couponId = couponIdOption.get();
-            final MemberCoupon memberCoupon = memberCouponRepository.findUnUsedCouponById(couponId);
-            return Order.of(member, cartItems, memberCoupon);
-        }
-        return Order.of(member, cartItems);
+        return orderRequestDto.getOptionalCouponId()
+                .map(id -> Order.of(member, cartItems, memberCouponRepository.findUnUsedCouponById(id)))
+                .orElseGet(() -> Order.of(member, cartItems));
     }
 
     public List<OrderResponseDto> findOrders(final Member member) {
