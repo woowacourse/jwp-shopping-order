@@ -53,7 +53,7 @@ public class CartItemDao {
                     "FROM cart_item " +
                     "INNER JOIN member ON cart_item.member_id = member.id " +
                     "INNER JOIN product ON cart_item.product_id = product.id " +
-                    "WHERE cart_item.member_id = ?" +
+                    "WHERE cart_item.member_id = ? " +
                     "AND cart_item.product_id = ?";
             return jdbcTemplate.queryForObject(sql,(rs, rowNum) -> {
                 String email = rs.getString("email");
