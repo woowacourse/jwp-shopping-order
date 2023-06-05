@@ -2,6 +2,7 @@ package cart.domain.order;
 
 import cart.domain.member.Member;
 import cart.exception.badrequest.order.OrderOwnerException;
+import cart.exception.badrequest.order.OrderPointException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +56,12 @@ public class Order {
 
     public int getTotalPrice() {
         return orderProducts.calculateTotalPrice() + deliveryFee.getValue();
+    }
+
+    public void checkPointAvailable(int point) {
+        if (point > getTotalPrice()) {
+            throw new OrderPointException("사용하려는 포인트가 총 결제 금액보다 많습니다. 총 결제 금액: " + getTotalPrice() + ", 사용 포인트: " + point);
+        }
     }
 
     public Long getId() {

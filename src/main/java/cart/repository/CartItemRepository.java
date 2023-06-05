@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.CartItemDao;
 import cart.dao.entity.CartItemEntity;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.exception.badrequest.cartitem.CartItemDuplicateException;
 import cart.exception.notfound.CartItemNotFoundException;
 import cart.repository.mapper.CartItemMapper;
@@ -22,7 +23,7 @@ public class CartItemRepository {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItem> findAllInIds(List<Long> ids) {
+    public CartItems findAllInIds(List<Long> ids) {
         Set<Long> uniqueIds = new HashSet<>(ids);
         if (uniqueIds.size() != ids.size()) {
             throw new CartItemDuplicateException();
@@ -33,16 +34,18 @@ public class CartItemRepository {
             throw new CartItemNotFoundException("ID 목록에 존재하지 않는 장바구니 상품이 있습니다.");
         }
 
-        return cartItemEntities.stream()
+        List<CartItem> cartItems = cartItemEntities.stream()
                 .map(CartItemMapper::toDomain)
                 .collect(Collectors.toList());
+        return new CartItems(cartItems);
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
-        List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
-        return cartItemEntities.stream()
+    public CartItems findByMemberId(Long memberId) {
+        List<CartItem> cartItems = cartItemDao.findByMemberId(memberId)
+                .stream()
                 .map(CartItemMapper::toDomain)
                 .collect(Collectors.toList());
+        return new CartItems(cartItems);
     }
 
     public Optional<CartItem> findByMemberIdAndProductId(Long memberId, Long productId) {
@@ -63,14 +66,8 @@ public class CartItemRepository {
         cartItemDao.updateQuantity(CartItemMapper.toEntity(cartItem));
     }
 
-    public void deleteAll(List<CartItem> cartItems) {
-        cartItemDao.deleteAllInIds(extractIds(cartItems));
-    }
-
-    private List<Long> extractIds(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(CartItem::getId)
-                .collect(Collectors.toList());
+    public void deleteAll(CartItems cartItems) {
+        cartItemDao.deleteAllInIds(cartItems.extractAllIds());
     }
 
     public void deleteAllByProductId(Long productId) {

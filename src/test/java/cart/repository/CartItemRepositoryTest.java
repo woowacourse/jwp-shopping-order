@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.badrequest.BadRequestException;
@@ -70,8 +71,9 @@ class CartItemRepositoryTest {
         CartItem otherCartItem = new CartItem(MemberMapper.toDomain(otherMember), otherProduct);
         cartItemRepository.save(otherCartItem);
 
-        List<CartItem> result = cartItemRepository.findByMemberId(member.getId());
+        CartItems cartItems = cartItemRepository.findByMemberId(member.getId());
 
+        List<CartItem> result = cartItems.getCartItems();
         assertAll(
                 () -> assertThat(result).hasSize(2),
                 () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(cartItem),
@@ -112,10 +114,10 @@ class CartItemRepositoryTest {
         Long newCartItemId = cartItemRepository.save(newCartItem);
         newCartItem.assignId(newCartItemId);
 
-        cartItemRepository.deleteAll(List.of(cartItem, newCartItem));
+        cartItemRepository.deleteAll(new CartItems(List.of(cartItem, newCartItem)));
 
-        List<CartItem> result = cartItemRepository.findByMemberId(member.getId());
-        assertThat(result).isEmpty();
+        CartItems cartItems = cartItemRepository.findByMemberId(member.getId());
+        assertThat(cartItems.getCartItems()).isEmpty();
     }
 
     @Test
@@ -131,11 +133,11 @@ class CartItemRepositoryTest {
 
         cartItemRepository.deleteAllByProductId(product.getId());
 
-        List<CartItem> cartItemA = cartItemRepository.findByMemberId(member.getId());
-        List<CartItem> cartItemB = cartItemRepository.findByMemberId(newMember.getId());
+        CartItems cartItemA = cartItemRepository.findByMemberId(member.getId());
+        CartItems cartItemB = cartItemRepository.findByMemberId(newMember.getId());
         assertAll(
-                () -> assertThat(cartItemA).isEmpty(),
-                () -> assertThat(cartItemB).isEmpty()
+                () -> assertThat(cartItemA.getCartItems()).isEmpty(),
+                () -> assertThat(cartItemB.getCartItems()).isEmpty()
         );
     }
 
@@ -144,8 +146,8 @@ class CartItemRepositoryTest {
     void deleteById() {
         cartItemRepository.deleteById(cartItem.getId());
 
-        List<CartItem> result = cartItemRepository.findByMemberId(member.getId());
-        assertThat(result).isEmpty();
+        CartItems result = cartItemRepository.findByMemberId(member.getId());
+        assertThat(result.getCartItems()).isEmpty();
     }
 
     @Nested
@@ -175,8 +177,9 @@ class CartItemRepositoryTest {
             Long newCartItemId = cartItemRepository.save(newCartItem);
             newCartItem.assignId(newCartItemId);
 
-            List<CartItem> result = cartItemRepository.findAllInIds(List.of(cartItem.getId(), newCartItemId));
+            CartItems cartItems = cartItemRepository.findAllInIds(List.of(cartItem.getId(), newCartItemId));
 
+            List<CartItem> result = cartItems.getCartItems();
             assertAll(
                     () -> assertThat(result).hasSize(2),
                     () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(cartItem),

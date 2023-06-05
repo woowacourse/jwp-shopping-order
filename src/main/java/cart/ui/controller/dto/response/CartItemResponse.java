@@ -1,6 +1,7 @@
 package cart.ui.controller.dto.response;
 
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +35,9 @@ public class CartItemResponse {
         );
     }
 
-    public static List<CartItemResponse> listOf(List<CartItem> cartItems) {
-        return cartItems.stream()
+    public static List<CartItemResponse> listOf(CartItems cartItems) {
+        return cartItems.getCartItems()
+                .stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
     }

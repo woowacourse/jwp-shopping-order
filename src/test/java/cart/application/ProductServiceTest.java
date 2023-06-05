@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.repository.CartItemRepository;
@@ -104,10 +105,10 @@ class ProductServiceTest {
             productService.deleteProduct(product.getId());
 
             List<Product> products = productRepository.findAll();
-            List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+            CartItems cartItems = cartItemRepository.findByMemberId(member.getId());
             assertAll(
                     () -> assertThat(products).isEmpty(),
-                    () -> assertThat(cartItems).isEmpty()
+                    () -> assertThat(cartItems.getCartItems()).isEmpty()
             );
         }
 

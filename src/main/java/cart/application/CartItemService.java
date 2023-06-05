@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.order.Fee;
 import cart.domain.product.Product;
@@ -29,24 +30,16 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+        CartItems cartItems = cartItemRepository.findByMemberId(member.getId());
         return CartItemResponse.listOf(cartItems);
     }
 
     public CartItemPriceResponse getTotalPriceWithDeliveryFee(Member member, List<Long> cartItemIds) {
-        List<CartItem> cartItems = cartItemRepository.findAllInIds(cartItemIds);
-        for (CartItem cartItem : cartItems) {
-            cartItem.checkOwner(member);
-        }
-        int totalPrice = calculateTotalPrice(cartItems);
+        CartItems cartItems = cartItemRepository.findAllInIds(cartItemIds);
+        cartItems.checkOwner(member);
+        int totalPrice = cartItems.calculateTotalPrice();
         Fee deliveryFee = Fee.from(totalPrice);
         return new CartItemPriceResponse(totalPrice, deliveryFee.getValue());
-    }
-
-    private int calculateTotalPrice(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .mapToInt(CartItem::getTotalPrice)
-                .sum();
     }
 
     @Transactional
@@ -79,10 +72,8 @@ public class CartItemService {
 
     @Transactional
     public void removeCartItems(Member member, CartItemRemoveRequest request) {
-        List<CartItem> cartItems = cartItemRepository.findAllInIds(request.getCartItemIds());
-        for (CartItem cartItem : cartItems) {
-            cartItem.checkOwner(member);
-        }
+        CartItems cartItems = cartItemRepository.findAllInIds(request.getCartItemIds());
+        cartItems.checkOwner(member);
         cartItemRepository.deleteAll(cartItems);
     }
 
