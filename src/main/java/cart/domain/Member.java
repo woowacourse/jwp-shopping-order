@@ -11,6 +11,10 @@ public class Member {
         this.password = password;
     }
 
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -21,9 +25,5 @@ public class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
     }
 }
