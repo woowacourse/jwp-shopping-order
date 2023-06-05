@@ -1,6 +1,9 @@
 package cart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class CouponRequest {
+    @NotNull
     private Long id;
 
     private CouponRequest() {

@@ -1,10 +1,16 @@
 package cart.dto;
 
+import org.springframework.lang.Nullable;
+
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class OrdersRequest {
+    @NotNull
     private List<Long> selectCartIds;
+    @Nullable
     private Long couponId;
 
     private OrdersRequest() {
@@ -20,11 +26,7 @@ public class OrdersRequest {
         return selectCartIds;
     }
 
-    public Long getCouponId() {
-        return couponId;
-    }
-
-    public boolean isNoCoupon() {
-        return Objects.isNull(couponId);
+    public Optional<Long> getCouponId() {
+        return Optional.ofNullable(couponId);
     }
 }
