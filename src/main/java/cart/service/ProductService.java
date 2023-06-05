@@ -32,7 +32,7 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public List<ProductResponse> findByIds(final String idsParameter) {
+    public List<ProductResponse> findByIds(final List<String> idsParameter) {
         final Ids ids = Ids.from(idsParameter);
         List<Product> products = productRepository.findByIds(ids.getIds());
         return products.stream()
@@ -47,7 +47,7 @@ public class ProductService {
     }
 
     public void update(final long id, final ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(),
+        final Product product = new Product(id, productRequest.getName(),
                 new Price(productRequest.getPrice()), productRequest.getImageUrl());
         productRepository.update(product);
     }
