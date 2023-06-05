@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
@@ -35,13 +36,15 @@ public class OrderServiceTest {
     private CartItemDao cartItemDao;
     @Mock
     private MemberCouponDao memberCouponDao;
+    @Mock
+    private CouponDao couponDao;
 
     private OrderService orderService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderService = new OrderService(orderDao, orderItemDao, cartItemDao, memberCouponDao);
+        orderService = new OrderService(orderDao, orderItemDao, cartItemDao, memberCouponDao, couponDao);
     }
 
     @Test

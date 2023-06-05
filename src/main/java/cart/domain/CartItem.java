@@ -49,9 +49,4 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-    public OrderItem toOrderItem() {
-        return new OrderItem(null, null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
-            this.quantity);
-    }
 }
