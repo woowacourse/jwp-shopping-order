@@ -1,55 +1,57 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.dao.OrderDao;
+import cart.dao.MemberDao;
+import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.MemberGrade;
-import cart.domain.Order;
 import cart.domain.Product;
+import cart.dto.CartItemResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class OrderServiceTest {
 
-    @InjectMocks
+    @Autowired
     private OrderService orderService;
-
-    @Mock
+    @Autowired
+    private MemberDao memberDao;
+    @Autowired
     private CartItemDao cartItemDao;
-    @Mock
-    private OrderDao orderDao;
-    @Mock
-    private DiscountService discountService;
+    @Autowired
+    private ProductDao productDao;
 
     @DisplayName("주문할 수 있다")
     @Test
     void order() {
         //given
-        final Member member = new Member(1L, "abc@naver.com", "123", MemberGrade.GOLD);
-        final OrderRequest orderRequest = new OrderRequest(List.of(1L));
-        final Product product = new Product(1L, "예비군", 200000, "image");
-        final CartItem cartItem = new CartItem(1L, 3, product, member);
-
-        final Order order = new Order(1L, member, 160000, List.of(cartItem));
-
-        when(cartItemDao.findAllByIds(List.of(1L))).thenReturn(List.of(cartItem));
-        when(orderDao.save(any())).thenReturn(order);
+        memberDao.addMember(new Member("abc@naver.com", "123"));
+        final Member member = memberDao.getMemberByEmail("abc@naver.com");
+        final Long productId = productDao.createProduct(new Product("예비군", 200000, "image"));
+        final Product product = productDao.getProductById(productId);
+        final Long cartItemId = cartItemDao.save(new CartItem(member, product));
 
         //when
-        orderService.save(member, orderRequest);
+        final Long orderId = orderService.save(member, new OrderRequest(List.of(cartItemId)));
+        final OrderResponse persisted = orderService.findById(orderId);
+        final List<CartItemResponse> items = persisted.getCartItems();
 
         //then
-        verify(orderDao, times(1)).save(any(Order.class));
+        assertSoftly(soft -> {
+            assertThat(items).hasSize(1);
+            assertThat(items.get(0).getId()).isNull();
+            assertThat(items.get(0).getQuantity()).isOne();
+            assertThat(items.get(0).getProduct().getName()).isEqualTo("예비군");
+        });
     }
 }
