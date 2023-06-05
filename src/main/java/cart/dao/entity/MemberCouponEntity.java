@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import java.util.Objects;
+
 public class MemberCouponEntity {
     private final Long id;
     private final Long memberId;
@@ -27,5 +29,18 @@ public class MemberCouponEntity {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MemberCouponEntity that = (MemberCouponEntity) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

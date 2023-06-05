@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import java.util.Objects;
+
 public class CouponEntity {
     private final long id;
     private final String name;
@@ -39,5 +41,18 @@ public class CouponEntity {
 
     public int getMinimumPrice() {
         return minimumPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CouponEntity coupon = (CouponEntity) o;
+        return id == coupon.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

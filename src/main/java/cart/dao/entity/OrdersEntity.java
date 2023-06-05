@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import java.util.Objects;
+
 public class OrdersEntity {
     private final long id;
     private final long memberId;
@@ -27,5 +29,18 @@ public class OrdersEntity {
 
     public boolean getConfirmState() {
         return confirmState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrdersEntity that = (OrdersEntity) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

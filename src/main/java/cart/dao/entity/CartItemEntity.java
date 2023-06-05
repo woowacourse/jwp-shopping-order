@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import java.util.Objects;
+
 public class CartItemEntity {
     private final long id;
     private final long memberId;
@@ -28,4 +30,18 @@ public class CartItemEntity {
     public int getQuantity() {
         return quantity;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItemEntity cartItem = (CartItemEntity) o;
+        return id == cartItem.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }
