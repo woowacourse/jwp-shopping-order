@@ -62,7 +62,7 @@ public class MemberCouponDao {
 
     public MemberCoupon findByIdIfUsable(Long memberId, Long memberCouponId) {
         String query = "SELECT c.id, c.name, c.min_order_price, c.max_discount_price, c.type, " +
-            "c.discount_amount, c.discount_percentage, "+
+            "c.discount_amount, c.discount_percentage, " +
             "mc.coupon_id, mc.expired_at, " +
             "m.email, m.password, m.nickname " +
             "FROM member_coupon mc " +

@@ -37,7 +37,7 @@ public class CouponApiController {
     )
     @GetMapping
     public ResponseEntity<CouponsResponse> getAllCoupons(Member member) {
-        CouponsResponse couponsResponse = orderService.getAllCoupons();
+        CouponsResponse couponsResponse = orderService.findAllCoupons();
         return ResponseEntity.ok().body(couponsResponse);
     }
 

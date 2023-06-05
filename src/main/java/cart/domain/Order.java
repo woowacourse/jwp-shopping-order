@@ -3,10 +3,10 @@ package cart.domain;
 import java.util.List;
 
 public class Order {
-    private Long id;
     private final Member member;
     private final List<OrderItem> orderItems;
     private final MemberCoupon memberCoupon;
+    private Long id;
 
     public Order(Member member, List<OrderItem> orderItems, MemberCoupon memberCoupon) {
         this.member = member;

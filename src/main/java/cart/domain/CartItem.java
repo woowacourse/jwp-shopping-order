@@ -2,8 +2,8 @@ package cart.domain;
 
 import java.util.Objects;
 
-import cart.exception.ForbiddenException;
 import cart.exception.ExceptionType;
+import cart.exception.ForbiddenException;
 
 public class CartItem {
     private final Product product;
@@ -51,6 +51,7 @@ public class CartItem {
     }
 
     public OrderItem toOrderItem() {
-        return new OrderItem(null, null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), this.quantity);
+        return new OrderItem(null, null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
+            this.quantity);
     }
 }

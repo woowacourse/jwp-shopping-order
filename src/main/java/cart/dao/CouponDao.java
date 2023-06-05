@@ -64,8 +64,8 @@ public class CouponDao {
         String query = "SELECT * FROM coupon";
 
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
-        return rows.stream().map(
-            row -> {
+        return rows.stream()
+            .map(row -> {
                 Long id = (Long)row.get("id");
                 String name = (String)row.get("name");
                 Integer minOrderPrice = (Integer)row.get("min_order_price");
@@ -74,7 +74,7 @@ public class CouponDao {
                 Integer discountAmount = (Integer)row.get("discount_amount");
                 Double discountPercentage = (Double)row.get("discount_percentage");
                 return new Coupon(id, name, minOrderPrice, type, discountAmount, discountPercentage, maxDiscountPrice);
-            }
-        ).collect(Collectors.toUnmodifiableList());
+            })
+            .collect(Collectors.toUnmodifiableList());
     }
 }

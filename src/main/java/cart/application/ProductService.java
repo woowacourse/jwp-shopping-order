@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -13,6 +14,7 @@ import cart.exception.BadRequestException;
 import cart.exception.ExceptionType;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -21,41 +23,45 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    public List<ProductResponse> findAll() {
+        List<Product> products = productDao.findAll();
+        return products.stream()
+            .map(ProductResponse::of)
+            .collect(Collectors.toUnmodifiableList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        if (product == null) {
-            throw new BadRequestException(ExceptionType.PRODUCT_NO_EXIST);
-        }
+    public ProductResponse findById(Long productId) {
+        Product product = productDao.findById(productId);
+        checkExistence(product);
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    @Transactional
+    public Long add(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = productDao.getProductById(productId);
-        if (product == null) {
-            throw new BadRequestException(ExceptionType.PRODUCT_NO_EXIST);
-        }
+    @Transactional
+    public void update(Long productId, ProductRequest productRequest) {
+        Product product = productDao.findById(productId);
+        checkExistence(product);
 
         Product newProduct = new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
-        productDao.updateProduct(productId, newProduct);
+        productDao.update(productId, newProduct);
     }
 
-    public void deleteProduct(Long productId) {
-        Product product = productDao.getProductById(productId);
+    private void checkExistence(Product product) {
         if (product == null) {
             throw new BadRequestException(ExceptionType.PRODUCT_NO_EXIST);
         }
-        productDao.deleteProduct(productId);
+    }
+
+    public void remove(Long productId) {
+        Product product = productDao.findById(productId);
+        checkExistence(product);
+        productDao.delete(productId);
     }
 }

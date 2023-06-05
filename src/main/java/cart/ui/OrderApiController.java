@@ -50,7 +50,7 @@ public class OrderApiController {
     })
     @GetMapping
     public ResponseEntity<OrdersResponse> getAllOrdersOfMember(Member member) {
-        OrdersResponse ordersResponse = orderService.getOrdersOf(member);
+        OrdersResponse ordersResponse = orderService.findOrdersOf(member);
         return ResponseEntity.ok().body(ordersResponse);
     }
 
@@ -78,7 +78,7 @@ public class OrderApiController {
     })
     @GetMapping("{orderId}")
     public ResponseEntity<OrderDetailResponse> getOrder(Member member, @PathVariable Long orderId) {
-        OrderDetailResponse orderDetailResponse = orderService.getOrderOf(member, orderId);
+        OrderDetailResponse orderDetailResponse = orderService.findOrderOf(member, orderId);
         return ResponseEntity.ok().body(orderDetailResponse);
     }
 
@@ -134,7 +134,7 @@ public class OrderApiController {
     })
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(Member member, @PathVariable Long orderId) {
-        orderService.deleteOrder(member, orderId);
+        orderService.remove(member, orderId);
         return ResponseEntity.noContent().build();
     }
 
@@ -163,7 +163,7 @@ public class OrderApiController {
     @GetMapping("/coupons")
     public ResponseEntity<MemberCouponsResponse> getMemberCouponsByItems(Member member,
         @RequestParam("cartItemId") List<Long> cartItemIds) {
-        MemberCouponsResponse memberCouponsResponse = orderService.getMemberCoupons(member, cartItemIds);
+        MemberCouponsResponse memberCouponsResponse = orderService.findMemberCoupons(member, cartItemIds);
         return ResponseEntity.ok().body(memberCouponsResponse);
     }
 }

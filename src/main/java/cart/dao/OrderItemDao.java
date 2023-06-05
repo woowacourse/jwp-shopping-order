@@ -21,7 +21,7 @@ public class OrderItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveAllItems(Long orderId, Order order) {
+    public void saveAllOfOrder(Long orderId, Order order) {
         List<OrderItem> orderItems = order.getOrderItems();
         int itemCount = orderItems.size();
 
@@ -54,7 +54,7 @@ public class OrderItemDao {
         jdbcTemplate.queryForObject("SELECT COUNT(id) FROM order_item WHERE order_id = ?", Integer.class, orderId);
     }
 
-    public List<OrderItem> getAllItems(Long orderId) {
+    public List<OrderItem> findAllByOrderId(Long orderId) {
         String query = "SELECT * FROM order_item WHERE order_id = ?";
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, orderId);
         return rows.stream().map(row -> {

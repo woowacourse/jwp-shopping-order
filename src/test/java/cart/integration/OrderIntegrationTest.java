@@ -38,7 +38,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-        member = memberDao.getMemberById(1L);
+        member = memberDao.findById(1L);
         cartItem1 = cartItemDao.findById(1L);
         cartItem2 = cartItemDao.findById(2L);
         Coupon coupon = new Coupon(

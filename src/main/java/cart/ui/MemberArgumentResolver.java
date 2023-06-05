@@ -39,7 +39,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = emailAndPassword.getKey();
         String password = emailAndPassword.getValue();
 
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.findByEmail(email);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException(ExceptionType.UNAUTHORIZED);
         }

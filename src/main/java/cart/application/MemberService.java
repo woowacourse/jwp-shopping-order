@@ -28,7 +28,8 @@ public class MemberService {
         String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         Map.Entry<String, String> emailAndPassword = BasicAuthorizationDecoder.decode(authorization);
 
-        Member memberByEmail = memberDao.getMemberByEmail(emailAndPassword.getKey());
+        Member memberByEmail = memberDao.findByEmail(emailAndPassword.getKey());
+
         if (!memberByEmail.checkPassword(emailAndPassword.getValue())) {
             throw new BadRequestException(ExceptionType.LOGIN_FAIL);
         }

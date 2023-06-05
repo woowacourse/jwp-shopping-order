@@ -10,6 +10,4 @@ public class ShippingFeePolicy {
         }
         return new Money(0);
     }
-
-    ;
 }

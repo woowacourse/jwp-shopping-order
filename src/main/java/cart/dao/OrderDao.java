@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,7 +30,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Order> getOrdersByMemberId(Long memberId) {
+    public List<Order> findByMemberId(Long memberId) {
         String sql = "SELECT o.id AS order_id, " +
             "o.member_id, " +
             "m.email, " +
@@ -81,23 +80,29 @@ public class OrderDao {
         }
     }
 
-    private void addOrderIfNotAddedBefore(Map<Long, Order> orderMap, Map<String, Object> row, Long orderId,
-        Order order) {
+    private void addOrderIfNotAddedBefore(
+        Map<Long, Order> orderMap,
+        Map<String, Object> row,
+        Long orderId,
+        Order order
+    ) {
         if (order == null) {
             Member member = getMember(row);
+            Order newOrder = getOrder(row, orderId, member);
 
-            Long memberCouponId = (Long)row.get("member_coupon_id");
-            if (memberCouponId != null) {
-                MemberCoupon memberCoupon = getMemberCoupon(row, member, memberCouponId);
-
-                order = new Order(orderId, member, new ArrayList<>(), memberCoupon);
-                orderMap.put(orderId, order);
-                return;
-            }
-
-            order = new Order(orderId, member, new ArrayList<>(), null);
-            orderMap.put(orderId, order);
+            orderMap.put(orderId, newOrder);
         }
+    }
+
+    private Order getOrder(Map<String, Object> row, Long orderId, Member member) {
+        Order order = new Order(orderId, member, new ArrayList<>(), null);
+
+        Long memberCouponId = (Long)row.get("member_coupon_id");
+        if (memberCouponId != null) {
+            MemberCoupon memberCoupon = getMemberCoupon(row, member, memberCouponId);
+            order = new Order(orderId, member, new ArrayList<>(), memberCoupon);
+        }
+        return order;
     }
 
     private Member getMember(Map<String, Object> row) {
@@ -121,6 +126,7 @@ public class OrderDao {
             maxDiscountPrice);
 
         Timestamp expiredAt = (Timestamp)row.get("expired_at");
+
         return new MemberCoupon(memberCouponId, member, coupon, expiredAt);
     }
 
@@ -141,7 +147,7 @@ public class OrderDao {
         }
     }
 
-    public Long addOrder(Order order) {
+    public Long save(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -161,7 +167,7 @@ public class OrderDao {
         return ((Number)keys.get(0).get("ID")).longValue();
     }
 
-    public Order getOrderWithoutOrderItems(Long orderId) {
+    public Order findWithoutOrderItems(Long orderId) {
         String query = "SELECT * FROM `order` " +
             "JOIN member m ON m.id = member_id " +
             "LEFT JOIN member_coupon mc ON mc.id = member_coupon_id " +

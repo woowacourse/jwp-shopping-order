@@ -43,7 +43,7 @@ public class ProductApiController {
     )
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @Operation(summary = "특정 상품 조회", description = "특정 상품을 조회한다.")
@@ -60,7 +60,7 @@ public class ProductApiController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @Operation(summary = "상품 정보 추가", description = "상품 정보를 추가한다.")
@@ -77,7 +77,7 @@ public class ProductApiController {
     })
     @PostMapping
     public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
+        Long id = productService.add(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
@@ -96,7 +96,7 @@ public class ProductApiController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long id,
         @Valid @RequestBody ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
+        productService.update(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -114,7 +114,7 @@ public class ProductApiController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+        productService.remove(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

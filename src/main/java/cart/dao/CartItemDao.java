@@ -35,6 +35,7 @@ public class CartItemDao {
             "SELECT cart_item.id, cart_item.member_id, member.email, member.nickname, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                 + "FROM cart_item " + "INNER JOIN member ON cart_item.member_id = member.id "
                 + "INNER JOIN product ON cart_item.product_id = product.id " + "WHERE cart_item.member_id = ?";
+
         return jdbcTemplate.query(sql, new Object[] {memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
             String nickname = rs.getString("nickname");
@@ -73,21 +74,30 @@ public class CartItemDao {
             "SELECT cart_item.id, cart_item.member_id, member.email, member.nickname, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                 + "FROM cart_item " + "INNER JOIN member ON cart_item.member_id = member.id "
                 + "INNER JOIN product ON cart_item.product_id = product.id " + "WHERE cart_item.id = ?";
+
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[] {id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             String nickname = rs.getString("nickname");
+            Member member = new Member(memberId, email, null, nickname);
+
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
+            Product product = new Product(productId, name, price, imageUrl);
+
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null, nickname);
-            Product product = new Product(productId, name, price, imageUrl);
+
             return new CartItem(cartItemId, quantity, product, member);
         });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+
+        if (cartItems.isEmpty()) {
+            throw new BadRequestException(ExceptionType.CART_ITEM_NO_EXIST);
+        }
+
+        return cartItems.get(0);
     }
 
     public void delete(Long memberId, Long productId) {
@@ -123,13 +133,13 @@ public class CartItemDao {
             final String name = rs.getString("name");
             final int price = rs.getInt("price");
             final String imageUrl = rs.getString("image_url");
+            Product product = new Product(productId, name, price, imageUrl);
 
             final Long memberId = rs.getLong("member_id");
             final String email = rs.getString("email");
             final String nickname = rs.getString("nickname");
-
-            Product product = new Product(productId, name, price, imageUrl);
             Member member = new Member(memberId, email, null, nickname);
+
             return new CartItem(id, quantity, product, member);
         });
 
@@ -156,4 +166,3 @@ public class CartItemDao {
         });
     }
 }
-

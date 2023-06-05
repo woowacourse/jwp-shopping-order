@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
@@ -17,6 +18,7 @@ import cart.exception.BadRequestException;
 import cart.exception.ExceptionType;
 
 @Service
+@Transactional(readOnly = true)
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
@@ -31,17 +33,25 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         Long productId = cartItemRequest.getCartItemId();
+
         for (CartItem cartItem : cartItems) {
-            if (Objects.equals(cartItem.getId(), productId)) {
-                throw new BadRequestException(ExceptionType.CART_ITEM_ALREADY_EXIST);
-            }
+            checkExistence(productId, cartItem);
         }
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(productId)));
+
+        return cartItemDao.save(new CartItem(member, productDao.findById(productId)));
     }
 
+    private void checkExistence(Long productId, CartItem cartItem) {
+        if (Objects.equals(cartItem.getId(), productId)) {
+            throw new BadRequestException(ExceptionType.CART_ITEM_ALREADY_EXIST);
+        }
+    }
+
+    @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -55,6 +65,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);

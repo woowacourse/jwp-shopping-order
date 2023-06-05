@@ -45,7 +45,7 @@ public class OrderDaoTest {
             member));
         Order order = new Order(member, cartItems, coupon);
 
-        Long generatedId = orderDao.addOrder(order);
+        Long generatedId = orderDao.save(order);
 
         assertThat(generatedId).isNotNull();
     }

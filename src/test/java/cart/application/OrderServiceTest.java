@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.application.OrderService;
 import cart.dao.CartItemDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
@@ -11,9 +10,7 @@ import cart.domain.CouponType;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.domain.Money;
-import cart.domain.PriceCalculator;
 import cart.domain.Product;
-import cart.dto.request.OrderRequest;
 import cart.dto.response.MemberCouponResponse;
 import cart.dto.response.MemberCouponsResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,7 +73,7 @@ public class OrderServiceTest {
             MemberCouponResponse.of(memberCoupons.get(1), price)
         ));
 
-        MemberCouponsResponse actualResponse = orderService.getMemberCoupons(member, cartItemIds);
+        MemberCouponsResponse actualResponse = orderService.findMemberCoupons(member, cartItemIds);
 
         assertEquals(expectedResponse.getCoupons().get(0).getId(), actualResponse.getCoupons().get(0).getId());
         assertEquals(expectedResponse.getCoupons().get(1).getId(), actualResponse.getCoupons().get(1).getId());
