@@ -35,9 +35,9 @@ public class OrderContents {
         return orders.stream()
             .map(order -> {
                 List<QuantityAndProduct> quantityAndProducts = order.getQuantityAndProducts();
-                int totalProductCount = (int) quantityAndProducts.stream()
+                int totalProductCount = quantityAndProducts.stream()
                     .mapToInt(QuantityAndProduct::getQuantity)
-                    .count();
+                    .sum();
                 Product representative = quantityAndProducts.get(0).getProduct();
                 return new OrderContents(order.getId(), order.getPayAmount(), order.getOrderAt(),
                     order.getOrderStatus().getDisplayName(), representative.getName(), representative.getImageUrl(), totalProductCount);
