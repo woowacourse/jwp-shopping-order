@@ -14,6 +14,7 @@ import cart.order.domain.OrderedItems;
 import cart.order.exception.CanNotSearchNotMyOrderException;
 import cart.value_object.Money;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,8 @@ public class OrderQueryService {
 
   public List<OrderResponse> searchOrders(final Member member) {
     final List<Order> orders = orderDao.findByMemberId(member.getId());
+    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
+
     final List<OrderResponse> orderResponses = new ArrayList<>();
 
     for (final Order order : orders) {
