@@ -139,6 +139,17 @@ class OrderControllerTest {
 
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(savedCartItem1.getId(), savedCartItem2.getId()), savedMemberCouponId);
+
+        final OrderItem orderItem1 = new OrderItem(savedCartItem1.getProduct().getName(),
+                savedCartItem1.getProduct().getPrice() * savedCartItem1.getQuantity(),
+                savedCartItem1.getProduct().getImageUrl(), savedCartItem1.getQuantity());
+
+        final OrderItem orderItem2 = new OrderItem(savedCartItem2.getProduct().getName(),
+                savedCartItem2.getProduct().getPrice() * savedCartItem2.getQuantity(),
+                savedCartItem2.getProduct().getImageUrl(), savedCartItem2.getQuantity());
+
+        final MemberCoupon memberCoupon = new MemberCoupon(savedMemberCouponId, member, savedCoupon, true);
+
         final String request = objectMapper.writeValueAsString(orderSaveRequest);
 
         // when
@@ -158,11 +169,9 @@ class OrderControllerTest {
         assertThat(findCartItems).isEmpty();
 
         Order findOrder = orderRepository.findById(Long.valueOf(orderId));
-        assertThat(findOrder.getOrderItems()).hasSize(2);
-        assertThat(findOrder.getTotalPrice()).isEqualTo(19000);
-        assertThat(findOrder.getDeliveryFee()).isEqualTo(3000);
-        assertThat(findOrder.getDiscountValue()).isEqualTo(1000);
-        assertThat(findOrder.getCalculateDiscountPrice().longValue()).isEqualTo(18000);
+        assertThat(findOrder).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(new Order(Long.valueOf(orderId), memberCoupon, member, List.of(orderItem1, orderItem2)));
     }
 
     @Test
