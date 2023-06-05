@@ -1,7 +1,9 @@
 package cart.controller;
 
 import cart.domain.Member;
+import cart.exception.AuthTypeException;
 import cart.exception.AuthenticationException;
+import cart.exception.UnAuthorizedException;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -26,15 +28,15 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new UnAuthorizedException();
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            return new AuthTypeException();
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
