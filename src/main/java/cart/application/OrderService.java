@@ -101,7 +101,7 @@ public class OrderService {
 
     @Transactional
     public Long addOrder(final Member member, final OrderPostRequest request) {
-        final List<CartItem> cartItemsByIds = cartItemDao.findByIds(request.getCartItems());
+        final List<CartItem> cartItemsByIds = cartItemDao.findByIds(request.getCartItemIds());
         validateIsMemberCartItems(member, cartItemsByIds);
         final Order order = createOrder(member, cartItemsByIds);
         validateFinalPrice(order.getFinalPrice(), request.getPaymentPrice());
