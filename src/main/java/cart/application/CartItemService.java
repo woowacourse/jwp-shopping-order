@@ -32,7 +32,7 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         final Optional<CartItem> optionalCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
-            cartItemRequest.getProductId());
+            cartItemRequest.getId());
         if (optionalCartItem.isPresent()) {
             final CartItem cartItem = optionalCartItem.get();
             final CartItem updatedCartItem = cartItem.addQuantity(cartItemRequest.getQuantity());
@@ -41,7 +41,7 @@ public class CartItemService {
         }
 
         return cartItemDao.save(new CartItem(member,
-            productDao.getProductById(cartItemRequest.getProductId())
+            productDao.getProductById(cartItemRequest.getId())
                 .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다."))));
     }
 

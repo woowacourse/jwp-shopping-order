@@ -26,7 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedMethods("*")
-            .allowedOrigins("https://dladncks1217.github.io/react-shopping-cart-prod/",
+            .allowedOrigins("https://www.moomin.store/",
+                "https://dladncks1217.github.io/",
                 "https://step1--startling-rabanadas-09fe85.netlify.app/",
                 "http://localhost:3000", "http://127.0.0.1:3000");
     }

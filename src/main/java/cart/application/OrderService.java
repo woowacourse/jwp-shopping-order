@@ -85,7 +85,7 @@ public class OrderService {
 
   private List<Product> findProducts(List<CartItemRequest> requestProducts) {
     final List<Product> products = requestProducts.stream()
-        .map(product -> productDao.getProductById(product.getProductId())
+        .map(product -> productDao.getProductById(product.getId())
             .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다.")))
         .collect(Collectors.toList());
     return products;

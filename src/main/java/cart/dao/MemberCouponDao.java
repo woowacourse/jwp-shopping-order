@@ -101,7 +101,7 @@ public class MemberCouponDao {
             + "coupon.name, coupon.min_amount, coupon.discount_amount "
             + "FROM member_coupon "
             + "INNER JOIN member ON member_coupon.member_id = member.id "
-            + "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id and coupon.min_amount <= ?"
+            + "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id and coupon.min_amount <= ? "
             + "WHERE member_coupon.member_id = ? and member_coupon.is_used = ?";
 
     return jdbcTemplate.query(sql, new Object[]{totalAmount, memberId, false}, getMemberCouponRowMapper());
