@@ -19,15 +19,22 @@ public class GlobalExceptionApiHandler {
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(AuthenticationException e) {
-        log.warn("인증 실패 [이유 : {}]", e.getMessage(), e);
+        log.error("인증 실패 [이유 : {}]", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(BaseException e) {
         ExceptionType exceptionType = e.getExceptionType();
-        log.warn(exceptionType.getErrorMessage(), e);
+        log.error(e.getMessage(), e);
         ErrorResponse errorResponse = new ErrorResponse(exceptionType.getErrorCode());
         return ResponseEntity.status(exceptionType.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error(e.getMessage(), e);
+        ErrorResponse errorResponse = new ErrorResponse(10000);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
