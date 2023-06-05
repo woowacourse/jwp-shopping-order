@@ -31,11 +31,19 @@ public class MemberCouponRepository {
 
     public List<MemberCoupon> findByMemberId(final Long memberId) {
         final List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(memberId);
-        final Map<Long, MemberCouponDto> couponIdMap = memberCouponDtos.stream()
-                .collect(toMap(MemberCouponDto::getCouponId, Function.identity()));
-        return couponRepository.findByIds(couponIdMap.keySet()).stream()
-                .map(coupon -> new MemberCoupon(couponIdMap.get(coupon.getId()).getId(), coupon, memberId))
+        final Map<Long, Coupon> couponMap = findCoupons(memberCouponDtos).stream()
+                .collect(toMap(Coupon::getId, Function.identity()));
+        return memberCouponDtos.stream()
+                .map(couponDto -> new MemberCoupon(couponDto.getId(), couponMap.get(couponDto.getCouponId()), memberId))
                 .collect(toUnmodifiableList());
+    }
+
+    private List<Coupon> findCoupons(final List<MemberCouponDto> memberCouponDtos) {
+        final List<Long> couponIds = memberCouponDtos.stream()
+                .map(MemberCouponDto::getCouponId)
+                .distinct()
+                .collect(toUnmodifiableList());
+        return couponRepository.findByIds(couponIds);
     }
 
     public MemberCoupon findUsedCouponById(final Long id) {
