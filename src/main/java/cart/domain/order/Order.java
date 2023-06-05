@@ -34,16 +34,16 @@ public class Order {
         this(id, orderProducts, timeStamp, memberId, null);
     }
 
+    public static Order of(final Member member, final List<CartItem> cartItems) {
+        return of(member, cartItems, null);
+    }
+
     public static Order of(final Member member, final List<CartItem> cartItems, final MemberCoupon coupon) {
         validateSameMember(member, cartItems);
         final List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> new OrderProduct(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(toList());
         return new Order(null, orderProducts, LocalDateTime.now().withNano(0), member.getId(), coupon);
-    }
-
-    public static Order of(final Member member, final List<CartItem> cartItems) {
-        return of(member, cartItems, null);
     }
 
     private static void validateSameMember(final Member member, final List<CartItem> cartItems) {
