@@ -64,6 +64,7 @@
               "orderId": 1,
               "payAmount": 10000, // 최종 결재 금액 (전체 - 포인트)
               "orderAt": "2024-10-23",
+              "orderStatus": "Pending",
               "productName": "마우스",
               "productImageUrl": "http://example.com/chicken.jpg",
               "totalProductCount": 4
@@ -72,6 +73,7 @@
               "orderId": 1,
               "totalPrice": 10000,
               "orderAt": "2024-10-23",
+              "orderStatus": "Pending",
               "productName": "마우스",
               "productImageUrl": "http://example.com/chicken.jpg",
               "totalProductCount": 4
@@ -80,6 +82,7 @@
               "orderId": 1,
               "totalPrice": 10000,
               "orderAt": "2024-10-23",
+              "orderStatus": "Pending",
               "productName": "마우스",
               "productImageUrl": "http://example.com/chicken.jpg",
               "totalProductCount": 4
@@ -107,6 +110,7 @@
         {
           "orderId": 1,
           "orderAt": "2023-05-26",
+          "orderStatus": "Pending",
           "payAmount": 10000,  // 최종 결재 금액
           "usedPoint": 3000,   // 사용된 포인트
           "savedPoint": 4000,  // 적립된 포인트
