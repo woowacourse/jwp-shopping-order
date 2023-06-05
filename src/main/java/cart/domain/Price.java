@@ -35,6 +35,13 @@ public final class Price {
         }
     }
 
+    public static Price getBigger(final Price price1, final Price price2) {
+        if (price1.isGreaterThanOrEqualTo(price2)) {
+            return price1;
+        }
+        return price2;
+    }
+
     public int getAmount() {
         return amount;
     }
