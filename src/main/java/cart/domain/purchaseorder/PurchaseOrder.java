@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurchaseOrder {
-    private PurchaseOrderInfo purchaseOrderInfo;
-    private List<PurchaseOrderItem> purchaseOrderItems;
-    private List<UsedPoint> usedPoints;
-    private Point rewardPoints;
+    private final PurchaseOrderInfo purchaseOrderInfo;
+    private final List<PurchaseOrderItem> purchaseOrderItems;
+    private final List<UsedPoint> usedPoints;
+    private final Point rewardPoints;
 
     public PurchaseOrder(PurchaseOrderInfo purchaseOrderInfo, List<PurchaseOrderItem> purchaseOrderItems,
                          List<UsedPoint> usedPoints, Point rewardPoints) {
@@ -18,10 +18,6 @@ public class PurchaseOrder {
         this.purchaseOrderItems = new ArrayList<>(purchaseOrderItems);
         this.usedPoints = new ArrayList<>(usedPoints);
         this.rewardPoints = rewardPoints;
-    }
-
-    public void changeStatus(OrderStatus status) {
-        this.purchaseOrderInfo.changeStatus(status);
     }
 
     public int getUsedPoint() {

@@ -97,7 +97,7 @@ class PaymentServiceTest {
                 () -> assertThat(purchaseOrderItems.size()).isEqualTo(2),
                 () -> assertThat(point).usingRecursiveComparison()
                                        .ignoringFields("createdAt", "expiredAt")
-                                       .isEqualTo(new Point(8L, 7_520, null, null)),
+                                       .isEqualTo(new Point(8L, 7520, null, null)),
                 () -> assertThat(points).usingRecursiveFieldByFieldElementComparator()
                                         .usingRecursiveFieldByFieldElementComparatorIgnoringFields("createdAt", "expiredAt")
                                         .contains(new Point(4L, 0, null, null),

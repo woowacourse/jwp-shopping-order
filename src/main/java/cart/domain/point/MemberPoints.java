@@ -49,7 +49,7 @@ public class MemberPoints {
     }
 
     private UsedPoint getUsedPoint(Point point, int usedPoint) {
-        int pointAmount = point.getPointAmount();
+        int pointAmount = point.calculatePointByExpired();
         if (pointAmount <= usedPoint) {
             point.usedAllPoint();
             return new UsedPoint(point.getId(), pointAmount);
@@ -75,7 +75,7 @@ public class MemberPoints {
 
     public int getUsablePoints() {
         return points.stream()
-                     .mapToInt(Point::getPointAmount)
+                     .mapToInt(Point::calculatePointByExpired)
                      .sum();
     }
 
@@ -83,7 +83,7 @@ public class MemberPoints {
         LocalDateTime now = LocalDateTime.now();
         return points.stream()
                      .filter(point -> point.isToBeExpired(now))
-                     .mapToInt(Point::getPointAmount)
+                     .mapToInt(Point::calculatePointByExpired)
                      .sum();
     }
 

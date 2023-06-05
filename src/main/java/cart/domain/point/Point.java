@@ -48,15 +48,19 @@ public class Point {
         return 0 <= days && days <= 30;
     }
 
+    public int calculatePointByExpired() {
+        LocalDateTime now = LocalDateTime.now();
+        if (expiredAt == null || expiredAt.isBefore(now)) {
+            return 0;
+        }
+        return pointAmount;
+    }
+
     public Long getId() {
         return id;
     }
 
     public Integer getPointAmount() {
-        LocalDateTime now = LocalDateTime.now();
-        if (expiredAt == null || expiredAt.isBefore(now)) {
-            return 0;
-        }
         return pointAmount;
     }
 

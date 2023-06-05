@@ -74,7 +74,7 @@ public class PurchaseOrderService {
             Point savedPoint = memberRewardPointDao.getPointByOrderId(orderId).orElse(new Point(0, null, null));
             return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(),
                     purchaseOrderInfo.getStatus(), purchaseOrderInfo.getPayment(),
-                    purchaseOrderInfo.getUsedPoint(), savedPoint.getPointAmount(), purchaseOrderItemResponses);
+                    purchaseOrderInfo.getUsedPoint(), savedPoint.calculatePointByExpired(), purchaseOrderItemResponses);
         }
         throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");
     }

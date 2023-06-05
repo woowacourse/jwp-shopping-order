@@ -46,7 +46,7 @@ public class MemberRewardPointDao {
     public Long save(Long memberId, Point point, Long orderId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", memberId)
-                .addValue("point", point.getPointAmount())
+                .addValue("point", point.calculatePointByExpired())
                 .addValue("created_at", point.getCreatedAt())
                 .addValue("expired_at", point.getExpiredAt())
                 .addValue("reward_order_id", orderId);

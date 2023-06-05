@@ -159,9 +159,9 @@ public class PaymentService {
         checkCanceledOrder(orderId);
         Point rewardPointByOrder = memberRewardPointDao.getPointByOrderId(orderId)
                                                        .orElseThrow(() -> new IllegalArgumentException("삭제 중 문제가 발생했습니다."));
+        updatePurchaseOrderStatus(member, orderId);
         checkAlreadyUsed(rewardPointByOrder);
         updateUsedAndRewardPoint(member, orderId, rewardPointByOrder);
-        updatePurchaseOrderStatus(orderId);
     }
 
     private void checkCanceledOrder(Long orderId) {
@@ -181,9 +181,10 @@ public class PaymentService {
         orderMemberUsedPointDao.deleteAll(usedPoints);
     }
 
-    private void updatePurchaseOrderStatus(Long orderId) {
+    private void updatePurchaseOrderStatus(Member member, Long orderId) {
         purchaseOrderDao.findById(orderId)
                         .ifPresent(purchaseOrderInfo -> {
+                                    purchaseOrderInfo.checkOwner(member);
                                     purchaseOrderInfo.changeStatus(CANCELED);
                                     purchaseOrderInfo.updatePayment(0);
                                     purchaseOrderInfo.updateUsedPoint(0);
