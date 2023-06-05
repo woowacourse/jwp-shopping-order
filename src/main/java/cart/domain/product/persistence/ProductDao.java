@@ -54,7 +54,9 @@ public class ProductDao {
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
+        return jdbcTemplate.query(sql, rowMapper, productId).stream()
+                .findAny()
+                .orElseThrow(() -> new ProductNotFoundException("상품 ID에 해당하는 상품을 찾을 수 없습니다."));
     }
 
     public Long insertProduct(Product product) {

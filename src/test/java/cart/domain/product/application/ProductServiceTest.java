@@ -39,12 +39,11 @@ class ProductServiceTest {
         // given
         AuthMember authMember = new AuthMember(Dooly.EMAIL, Dooly.PASSWORD);
         Long notExistId = -1L;
-        given(productDao.isNotExistById(notExistId)).willReturn(true);
+        given(productDao.getProductById(notExistId)).willThrow(ProductNotFoundException.class);
 
         // when, then
         assertThatThrownBy(() -> productService.findProductCartItems(authMember, notExistId))
-                .isInstanceOf(ProductNotFoundException.class)
-                .hasMessage("상품 ID에 해당하는 상품을 찾을 수 없습니다.");
+                .isInstanceOf(ProductNotFoundException.class);
     }
 
     @Test

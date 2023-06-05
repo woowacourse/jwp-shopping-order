@@ -57,11 +57,10 @@ class CartItemServiceTest {
         AuthMember authMember = new AuthMember(MemberFixtures.Dooly.EMAIL, MemberFixtures.Dooly.PASSWORD);
         Long notExistId = -1L;
         CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(3);
-        given(cartItemDao.isNotExistById(notExistId)).willReturn(true);
+        given(cartItemDao.findById(notExistId)).willThrow(CartItemNotFoundException.class);
 
         // when, then
         assertThatThrownBy(() -> cartItemService.updateQuantity(authMember, notExistId, request))
-                .isInstanceOf(CartItemNotFoundException.class)
-                .hasMessage("장바구니 상품 ID에 해당하는 장바구니 상품을 찾을 수 없습니다.");
+                .isInstanceOf(CartItemNotFoundException.class);
     }
 }

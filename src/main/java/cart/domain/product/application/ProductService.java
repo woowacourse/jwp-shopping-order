@@ -79,7 +79,6 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductCartItemResponse findProductCartItems(AuthMember authMember, Long productId) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
-        checkProductExist(productId);
         Product findProduct = productDao.getProductById(productId);
         Optional<CartItem> cartItem = cartItemDao.selectByMemberIdAndProductId(findMember.getId(), findProduct.getId());
         if (cartItem.isEmpty()) {

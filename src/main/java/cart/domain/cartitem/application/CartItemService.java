@@ -65,7 +65,6 @@ public class CartItemService {
 
     public void updateQuantity(AuthMember authMember, Long id, CartItemQuantityUpdateRequest request) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
-        checkCartItemExist(id);
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(findMember);
         if (request.getQuantity() == 0) {
