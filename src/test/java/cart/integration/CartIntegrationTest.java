@@ -1,11 +1,13 @@
 package cart.integration;
 
 import static cart.exception.ErrorCode.CART_ALREADY_ADD;
+import static cart.exception.ErrorCode.CART_NOT_FOUND;
 import static cart.exception.ErrorCode.PRODUCT_NOT_FOUND;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.application.dto.cartitem.CartRequest;
@@ -322,9 +324,9 @@ public class CartIntegrationTest extends IntegrationTest {
             .when()
             .delete("/cart-items?ids=2,3")
             .then()
-            .statusCode(FORBIDDEN.value())
-            .body("errorCode", equalTo(FORBIDDEN.name()))
-            .body("errorMessage", equalTo("권한이 없습니다."));
+            .statusCode(NOT_FOUND.value())
+            .body("errorCode", equalTo(CART_NOT_FOUND.name()))
+            .body("errorMessage", equalTo("장바구니 정보를 찾을 수 없습니다."));
     }
 
     private void 사용자를_저장한다() {

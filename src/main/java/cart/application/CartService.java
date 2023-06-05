@@ -79,7 +79,7 @@ public class CartService {
     public void removeItems(final String memberName, final List<Long> cartItemIds) {
         final Long count = cartRepository.countByCartItemIdsAndMemberId(cartItemIds, memberName);
         if (count != cartItemIds.size()) {
-            throw new ForbiddenException(ErrorCode.FORBIDDEN);
+            throw new NotFoundException(ErrorCode.CART_NOT_FOUND);
         }
         cartRepository.deleteByCartItemIdsAndMemberId(cartItemIds, memberName);
     }
