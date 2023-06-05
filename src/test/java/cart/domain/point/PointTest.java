@@ -3,6 +3,7 @@ package cart.domain.point;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.domain.product.Price;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -56,5 +57,17 @@ class PointTest {
 
         // then
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void 포인트는_돈을_받아_해당_돈의_포인트를_계산할_수_있다() {
+        // given
+        final Price price = new Price(10000L);
+
+        // when
+        final Point result = Point.calculateFromPrice(price);
+
+        // then
+        assertThat(result.getPoint()).isEqualTo(205L);
     }
 }

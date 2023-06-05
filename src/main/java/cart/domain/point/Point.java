@@ -1,5 +1,7 @@
 package cart.domain.point;
 
+import cart.domain.product.Price;
+
 public class Point {
 
     private static final Long MIN_POINT = 0L;
@@ -16,6 +18,10 @@ public class Point {
         if (MIN_POINT > point) {
             throw new IllegalArgumentException("포인트는 최소 " + MIN_POINT + " 포인트 이상이어야합니다.");
         }
+    }
+
+    public static Point calculateFromPrice(final Price price) {
+        return new Point(price.multiplyAndRound(EARN_POINT_RATE).price());
     }
 
     public Point add(final Point other) {
