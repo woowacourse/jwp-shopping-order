@@ -1,7 +1,13 @@
 package cart.dao;
 
+import cart.domain.Amount;
 import cart.domain.Coupon;
+import cart.domain.Member;
+import cart.domain.Order;
+import cart.domain.Product;
+import cart.domain.Products;
 import cart.factory.CouponFactory;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,10 +23,12 @@ class CouponDaoTest {
   private JdbcTemplate jdbcTemplate;
 
   private CouponDao couponDao;
+  private OrderDao orderDao;
 
   @BeforeEach
   void setUp() {
     couponDao = new CouponDao(jdbcTemplate);
+    orderDao = new OrderDao(jdbcTemplate);
   }
 
   @Test
@@ -30,5 +38,12 @@ class CouponDaoTest {
     final Optional<Coupon> coupon = couponDao.findById(productId);
 
     Assertions.assertThat(coupon).isPresent();
+  }
+
+  @Test
+  void test() {
+    orderDao.createOrder(new Order(1L, new Member(1L, "email", "password"), new Products(List.of(new Product(1L, "name", new Amount(10000), "imageUrl"))),
+        Coupon.empty(), new Amount(3000), "address"));
+
   }
 }

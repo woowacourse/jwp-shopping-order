@@ -46,8 +46,7 @@ CREATE TABLE IF NOT EXISTS `order`
     coupon_id         BIGINT,
     address           VARCHAR(255),
     delivery_amount   INT,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
+    FOREIGN KEY (member_id) REFERENCES member (id)
     );
 
 CREATE TABLE IF NOT EXISTS product_order

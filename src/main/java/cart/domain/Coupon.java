@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.BusinessException;
+import java.util.Objects;
 
 public class Coupon {
 
@@ -31,6 +32,25 @@ public class Coupon {
     return amount.minus(discountAmount);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Coupon coupon = (Coupon) o;
+    return Objects.equals(getId(), coupon.getId()) && Objects.equals(getName(), coupon.getName())
+        && Objects.equals(getDiscountAmount(), coupon.getDiscountAmount()) && Objects.equals(
+        getMinAmount(), coupon.getMinAmount());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId(), getName(), getDiscountAmount(), getMinAmount());
+  }
+
   public Long getId() {
     return id;
   }
@@ -45,5 +65,9 @@ public class Coupon {
 
   public Amount getMinAmount() {
     return minAmount;
+  }
+
+  public boolean isEmpty() {
+    return id == null && name == null && discountAmount == null && minAmount == null;
   }
 }

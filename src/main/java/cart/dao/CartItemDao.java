@@ -73,7 +73,7 @@ public class CartItemDao {
         return (rs, rowNum) -> {
             final Long findMemberId = rs.getLong("member_id");
             final String email = rs.getString("email");
-            final Long findProductId = rs.getLong("id");
+            final Long findProductId = rs.getLong("product.id");
             final String name = rs.getString("name");
             final int price = rs.getInt("price");
             final String imageUrl = rs.getString("image_url");

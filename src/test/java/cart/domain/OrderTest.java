@@ -19,6 +19,6 @@ class OrderTest {
 
     final Amount actualAmount = order.calculateDiscountedAmount(List.of(1, 2));
 
-    Assertions.assertThat(actualAmount).isEqualTo(expectedAmount);
+    Assertions.assertThat(actualAmount).usingRecursiveComparison().isEqualTo(expectedAmount);
   }
 }

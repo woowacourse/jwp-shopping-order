@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
 
@@ -35,7 +36,30 @@ public class Order {
 
   public Amount calculateDiscountedAmount(final List<Integer> quantities) {
     final Amount totalProductAmount = calculateTotalProductAmount(quantities);
+    if (coupon.isEmpty()) {
+      return totalProductAmount;
+    }
     return coupon.apply(totalProductAmount);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Order order = (Order) o;
+    return Objects.equals(getId(), order.getId()) && Objects.equals(getMember(), order.getMember())
+        && Objects.equals(getProducts(), order.getProducts()) && Objects.equals(getCoupon(),
+        order.getCoupon()) && Objects.equals(getDeliveryAmount(), order.getDeliveryAmount())
+        && Objects.equals(getAddress(), order.getAddress());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId(), getMember(), getProducts(), getCoupon(), getDeliveryAmount(), getAddress());
   }
 
   public Long getId() {

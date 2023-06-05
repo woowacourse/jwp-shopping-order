@@ -1,5 +1,7 @@
 package cart.dao;
 
+import static java.sql.Types.NULL;
+
 import cart.domain.Amount;
 import cart.domain.Coupon;
 import cart.domain.Member;
@@ -8,11 +10,13 @@ import cart.domain.Product;
 import cart.domain.ProductOrder;
 import cart.domain.Products;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -39,7 +43,7 @@ public class OrderDao {
       );
 
       ps.setLong(1, order.getMember().getId());
-      ps.setLong(2, order.getCoupon().getId());
+      setCouponId(order, ps);
       ps.setString(3, order.getAddress());
       ps.setInt(4, order.getDeliveryAmount().getValue());
 
@@ -49,13 +53,21 @@ public class OrderDao {
     return Objects.requireNonNull(keyHolder.getKey()).longValue();
   }
 
+  private static void setCouponId(Order order, PreparedStatement ps) throws SQLException {
+    if (order.getCoupon().getId() != null) {
+      ps.setLong(2, order.getCoupon().getId());
+      return;
+    }
+    ps.setLong(2, NULL);
+  }
+
   public List<ProductOrder> findAllOrdersByMemberId(Long memberId) {
-    String s = "SELECT order.id, "
+    String s = "SELECT `order`.id, "
         + "product.id, product.name, product.price, product.image_url "
         + "FROM `order` "
-        + "INNER JOIN product_order ON product_order.order_id = order.id "
+        + "INNER JOIN product_order ON product_order.order_id = `order`.id "
         + "INNER JOIN product ON product.id = product_order.product_id "
-        + "WHERE order.member_id = ?";
+        + "WHERE `order`.member_id = ?";
 
     final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(s, new Object[]{memberId}, (rs, rowNum) -> {
       Long orderId = rs.getLong("order.id");
@@ -64,7 +76,7 @@ public class OrderDao {
       int price = rs.getInt("price");
       String imageUrl = rs.getString("image_url");
       return new OrderProductJoinDto(orderId, productId, name, price, imageUrl);
-    });
+    }).stream().distinct().collect(Collectors.toList());
 
     final HashMap<Long, List<Product>> productsByOrderId = new HashMap<>();
     for (OrderProductJoinDto orderProductJoinDto : orderProductJoinDtos) {
@@ -76,27 +88,29 @@ public class OrderDao {
       productsByOrderId.put(orderId, products);
     }
 
-    String sql = "SELECT order.id, order.delivery_amount, order.address, "
+    String sql = "SELECT `order`.id, `order`.delivery_amount, `order`.address, "
         + "product.id, product.name, product.image_url, product.price, "
         + "member.id, member.email, member.password, "
         + "product_order.id, product_order.quantity, "
         + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount " +
         "FROM `order` " +
-        "INNER JOIN member ON member.id = order.member_id " +
-        "INNER JOIN product_order ON product_order.order_id = order.id " +
+        "INNER JOIN member ON member.id = `order`.member_id " +
+        "INNER JOIN product_order ON product_order.order_id = `order`.id " +
         "INNER JOIN product ON product_order.product_id = product.id " +
-        "INNER JOIN coupon ON order.coupon_id = coupon.id " +
-        "WHERE order.member_id = ?";
+        "LEFT JOIN coupon ON `order`.coupon_id = coupon.id " +
+        "WHERE `order`.member_id = ?";
 
-    return jdbcTemplate.query(sql, new Object[]{memberId}, getProductOrderRowMapper(productsByOrderId));
+    final List<ProductOrder> collect = jdbcTemplate.query(sql, new Object[]{memberId},
+        getProductOrderRowMapper(productsByOrderId)).stream().distinct().collect(Collectors.toList());
+    return collect;
   }
 
   public List<ProductOrder> findOrderByOrderId(final Long memberId, final Long orderId) {
     String s = "SELECT product.id, product.name, product.price, product.image_url "
         + "FROM `order` "
-        + "INNER JOIN product_order ON product_order.order_id = order.id "
+        + "INNER JOIN product_order ON product_order.order_id = `order`.id "
         + "INNER JOIN product ON product.id = product_order.product_id "
-        + "WHERE order.id = ?";
+        + "WHERE `order`.id = ?";
 
     final List<Product> products = jdbcTemplate.query(s, new Object[]{orderId}, (rs, rowNum) -> {
       Long productId = rs.getLong("product.id");
@@ -109,19 +123,19 @@ public class OrderDao {
     final HashMap<Long, List<Product>> productsByOrderId = new HashMap<>();
     productsByOrderId.put(orderId, products);
 
-    String sql = "SELECT order.id, order.delivery_amount, order.address, "
+    String sql = "SELECT `order`.id, `order`.delivery_amount, `order`.address, "
         + "product.id, product.name, product.image_url, product.price, "
         + "member.id, member.email, member.password, "
         + "product_order.id, product_order.quantity, "
         + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount " +
         "FROM `order` " +
-        "INNER JOIN member ON member.id = order.member_id " +
-        "INNER JOIN product_order ON product_order.order_id = order.id " +
+        "INNER JOIN member ON member.id = `order`.member_id " +
+        "INNER JOIN product_order ON product_order.order_id = `order`.id " +
         "INNER JOIN product ON product_order.product_id = product.id " +
-        "INNER JOIN coupon ON order.coupon_id = coupon.id " +
-        "WHERE order.id = ? AND member.id = ?";
+        "LEFT JOIN coupon ON `order`.coupon_id = coupon.id " +
+        "WHERE `order`.id = ?";
 
-    return jdbcTemplate.query(sql, new Object[]{orderId, memberId}, getProductOrderRowMapper(productsByOrderId));
+    return jdbcTemplate.query(sql, new Object[]{orderId}, getProductOrderRowMapper(productsByOrderId));
   }
 
   private RowMapper<ProductOrder> getProductOrderRowMapper(final HashMap<Long, List<Product>> productsByOrderId) {
@@ -186,6 +200,25 @@ public class OrderDao {
 
     public String getImageUrl() {
       return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      OrderProductJoinDto that = (OrderProductJoinDto) o;
+      return getPrice() == that.getPrice() && Objects.equals(getProductId(), that.getProductId())
+          && Objects.equals(getName(), that.getName()) && Objects.equals(getImageUrl(),
+          that.getImageUrl());
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getProductId(), getName(), getPrice(), getImageUrl());
     }
   }
 }

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class ProductOrder {
 
   private final Long id;
@@ -28,5 +30,23 @@ public class ProductOrder {
 
   public int getQuantity() {
     return quantity;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ProductOrder that = (ProductOrder) o;
+    return getQuantity() == that.getQuantity() && Objects.equals(getProduct(), that.getProduct())
+        && Objects.equals(getOrder(), that.getOrder());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getProduct(), getOrder(), getQuantity());
   }
 }
