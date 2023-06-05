@@ -26,12 +26,12 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<OrderEntity> findOrderByMemberId(Long memberId) {
+    public List<OrderEntity> findByMemberId(Long memberId) {
         String sql = "SELECT * FROM purchase_order WHERE member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, new OrderEntityRowMapper());
     }
 
-    public Optional<OrderEntity> findOrderById(Long id) {
+    public Optional<OrderEntity> findById(Long id) {
         String sql = "SELECT * FROM purchase_order WHERE id = ?";
         List<OrderEntity> orders = jdbcTemplate.query(sql, new Object[]{id}, new OrderEntityRowMapper());
         return orders.isEmpty() ? Optional.empty() : Optional.ofNullable(orders.get(0));

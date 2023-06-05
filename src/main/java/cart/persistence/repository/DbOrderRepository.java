@@ -4,18 +4,15 @@ import cart.domain.coupon.Coupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.orderProduct.OrderProduct;
-import cart.domain.product.Product;
 import cart.exception.NoSuchCouponException;
 import cart.exception.NoSuchMemberException;
 import cart.exception.NoSuchOrderException;
 import cart.exception.NoSuchProductException;
 import cart.persistence.dao.*;
-import cart.persistence.entity.CouponEntity;
-import cart.persistence.entity.MemberEntity;
-import cart.persistence.entity.OrderEntity;
-import cart.persistence.entity.OrderProductEntity;
+import cart.persistence.entity.*;
 import cart.persistence.mapper.CouponMapper;
 import cart.persistence.mapper.MemberMapper;
+import cart.persistence.mapper.ProductMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -39,7 +36,7 @@ public class DbOrderRepository implements OrderRepository {
 
     @Override
     public List<Order> findOrderByMemberId(Long memberId) {
-        List<OrderEntity> orderEntities = orderDao.findOrderByMemberId(memberId);
+        List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
         return orderEntities.stream()
                 .map(this::mapToOrder)
                 .collect(Collectors.toList());
@@ -47,7 +44,7 @@ public class DbOrderRepository implements OrderRepository {
 
     @Override
     public Order findOrderById(Long id) {
-        OrderEntity orderEntity = orderDao.findOrderById(id).orElseThrow(() -> new NoSuchOrderException());
+        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(() -> new NoSuchOrderException());
         return mapToOrder(orderEntity);
     }
 
@@ -71,18 +68,18 @@ public class DbOrderRepository implements OrderRepository {
     }
 
     private OrderProduct mapToOrderProduct(OrderProductEntity orderProductEntity) {
-        Product product = productDao.findProductById(orderProductEntity.getProductId()).orElseThrow(() -> new NoSuchProductException());
+        ProductEntity productEntity = productDao.findById(orderProductEntity.getProductId()).orElseThrow(() -> new NoSuchProductException());
         return new OrderProduct(
                 orderProductEntity.getId(),
                 orderProductEntity.getName(),
                 orderProductEntity.getPrice(),
                 orderProductEntity.getImageUrl(),
                 orderProductEntity.getQuantity(),
-                product);
+                ProductMapper.toDomain(productEntity));
     }
 
     private Order mapToOrder(OrderEntity orderEntity) {
-        List<OrderProductEntity> orderProductEntities = orderProductDao.findOrderProductsByOrderId(orderEntity.getId());
+        List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderEntity.getId());
         List<OrderProduct> orderProducts = orderProductEntities.stream()
                 .map(this::mapToOrderProduct)
                 .collect(Collectors.toList());

@@ -30,7 +30,7 @@ public class OrderProductDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public List<OrderProductEntity> findOrderProductsByOrderId(Long orderId) {
+    public List<OrderProductEntity> findByOrderId(Long orderId) {
         String sql = "SELECT * FROM order_product WHERE order_id = ?";
         return jdbcTemplate.query(sql, new Object[]{orderId}, new OrderProductEntityRowMapper());
     }

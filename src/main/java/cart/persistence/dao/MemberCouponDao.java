@@ -31,7 +31,7 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, new MemberCouponEntityRowMapper());
     }
 
-    public List<MemberCouponEntity> findMemberCouponsByMemberId(Long memberId) {
+    public List<MemberCouponEntity> findByMemberId(Long memberId) {
         String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, new MemberCouponEntityRowMapper());
     }
@@ -39,12 +39,6 @@ public class MemberCouponDao {
     public Optional<MemberCouponEntity> findById(Long id) {
         String sql = "SELECT * FROM member_coupon WHERE id = ?";
         List<MemberCouponEntity> memberCoupons = jdbcTemplate.query(sql, new Object[]{id}, new MemberCouponEntityRowMapper());
-        return memberCoupons.isEmpty() ? Optional.empty() : Optional.ofNullable(memberCoupons.get(0));
-    }
-
-    public Optional<MemberCouponEntity> findOneByCouponId(Long couponId) {
-        String sql = "SELECT * FROM member_coupon WHERE coupon_id = ?";
-        List<MemberCouponEntity> memberCoupons = jdbcTemplate.query(sql, new Object[]{couponId}, new MemberCouponEntityRowMapper());
         return memberCoupons.isEmpty() ? Optional.empty() : Optional.ofNullable(memberCoupons.get(0));
     }
 

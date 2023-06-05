@@ -12,6 +12,4 @@ public interface MemberCouponRepository {
     void delete(Long id);
 
     List<MemberCoupon> findMemberCouponsByMemberId(Long memberId);
-
-    MemberCoupon findByCouponId(Long couponId);
 }

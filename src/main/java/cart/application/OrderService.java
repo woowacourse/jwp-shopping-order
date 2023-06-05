@@ -36,7 +36,6 @@ public class OrderService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    // 주문 신청
     public Long addOrder(Member member, OrderRequest orderRequest) {
         List<OrderProduct> orderProducts = getOrderProducts(orderRequest.getSelectCartIds());
         int totalPrice = calculateTotalPriceOfProducts(orderProducts);

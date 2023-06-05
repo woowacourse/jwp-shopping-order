@@ -26,7 +26,7 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<CartItemEntity> findCartItemsByMemberId(Long memberId) {
+    public List<CartItemEntity> findByMemberId(Long memberId) {
         String sql = "SELECT * FROM cart_item WHERE member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, new CartItemEntityRowMapper());
     }

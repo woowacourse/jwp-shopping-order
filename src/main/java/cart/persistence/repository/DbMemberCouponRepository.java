@@ -40,16 +40,10 @@ public class DbMemberCouponRepository implements MemberCouponRepository {
 
     @Override
     public List<MemberCoupon> findMemberCouponsByMemberId(Long memberId) {
-        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findMemberCouponsByMemberId(memberId);
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(memberId);
         return memberCouponEntities.stream()
                 .map(this::mapToMemberCoupon)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public MemberCoupon findByCouponId(Long couponId) {
-        MemberCouponEntity memberCouponEntity = memberCouponDao.findOneByCouponId(couponId).orElseThrow(() -> new NoSuchMemberCouponException());
-        return mapToMemberCoupon(memberCouponEntity);
     }
 
     @Override
