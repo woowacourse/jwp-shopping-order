@@ -1,11 +1,11 @@
 package cart.service;
 
+import cart.auth.Credentials;
 import cart.controller.dto.CouponResponse;
 import cart.controller.dto.CouponTypeResponse;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
-import cart.domain.member.Member;
 import cart.service.coupon.CouponMapper;
 import cart.service.coupon.CouponProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,10 +47,10 @@ class CouponProviderTest {
         // given
         given(couponRepository.findCouponsByMemberId(anyLong())).willReturn(new Coupons(List.of(coupon1, coupon2, coupon3)));
 
-        final Member member = new Member(1L, "a@a.com", "1234");
+        final Credentials credentials = new Credentials(1L, "a@a.com", "1234");
 
         // when
-        final List<CouponResponse> coupons = couponProvider.findCouponByMember(member);
+        final List<CouponResponse> coupons = couponProvider.findCouponByMember(credentials);
 
         // then
         assertAll(

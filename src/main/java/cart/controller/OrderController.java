@@ -1,7 +1,8 @@
 package cart.controller;
 
+import cart.auth.Authenticate;
+import cart.auth.Credentials;
 import cart.controller.dto.OrderResponse;
-import cart.domain.member.Member;
 import cart.service.dto.OrderRequest;
 import cart.service.order.OrderProvider;
 import cart.service.order.OrderService;
@@ -54,8 +55,8 @@ public class OrderController {
             description = "주문 목록 조회 성공"
     )
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrder(final Member member) {
-        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(member);
+    public ResponseEntity<List<OrderResponse>> getOrder(@Authenticate final Credentials credentials) {
+        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(credentials);
         return ResponseEntity.ok(orderResponses);
     }
 }

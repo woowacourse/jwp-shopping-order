@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.controller.MemberArgumentResolver;
+import cart.auth.CredentialsArgumentResolver;
 import cart.dao.MemberDao;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -21,7 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new CredentialsArgumentResolver(memberDao));
     }
 
     @Override

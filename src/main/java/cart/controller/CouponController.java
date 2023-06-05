@@ -1,8 +1,9 @@
 package cart.controller;
 
+import cart.auth.Authenticate;
+import cart.auth.Credentials;
 import cart.controller.dto.CouponResponse;
 import cart.controller.dto.CouponTypeResponse;
-import cart.domain.member.Member;
 import cart.service.coupon.CouponProvider;
 import cart.service.coupon.CouponService;
 import cart.service.dto.CouponReissueRequest;
@@ -37,8 +38,8 @@ public class CouponController {
             description = "쿠폰 발급 성공"
     )
     @PostMapping("/{couponId}")
-    public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable Long couponId) {
-        final Long memberCouponId = couponService.issueCoupon(member, couponId);
+    public ResponseEntity<Void> issueCoupon(@Authenticate final Credentials credentials, @PathVariable Long couponId) {
+        final Long memberCouponId = couponService.issueCoupon(credentials, couponId);
 
         return ResponseEntity.created(URI.create(String.format("/coupons/%s", memberCouponId))).build();
     }
@@ -71,8 +72,8 @@ public class CouponController {
             description = "사용자 쿠폰 전체 조회 성공"
     )
     @GetMapping("/member")
-    public ResponseEntity<List<CouponResponse>> getMemberCoupons(final Member member) {
-        final List<CouponResponse> couponResponses = couponProvider.findCouponByMember(member);
+    public ResponseEntity<List<CouponResponse>> getMemberCoupons(@Authenticate final Credentials credentials) {
+        final List<CouponResponse> couponResponses = couponProvider.findCouponByMember(credentials);
         return ResponseEntity.ok(couponResponses);
     }
 

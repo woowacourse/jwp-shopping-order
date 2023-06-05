@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.auth.Credentials;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
@@ -55,11 +56,11 @@ class CouponServiceTest {
     @Test
     void 쿠폰을_발급한다() {
         // given
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(couponRepository.issue(member, 1L)).willReturn(1L);
+        final Credentials credentials = new Credentials(1L, "a@a.com", "1234");
+        given(couponRepository.issue(any(Member.class), anyLong())).willReturn(1L);
 
         // when
-        final Long saveId = couponService.issueCoupon(member, couponId);
+        final Long saveId = couponService.issueCoupon(credentials, couponId);
 
         // then
         assertThat(saveId).isEqualTo(1L);

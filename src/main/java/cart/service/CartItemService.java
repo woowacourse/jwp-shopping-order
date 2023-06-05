@@ -1,5 +1,7 @@
 package cart.service;
 
+import cart.auth.Authenticate;
+import cart.auth.Credentials;
 import cart.controller.dto.CartItemResponse;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
@@ -22,18 +24,19 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+    public List<CartItemResponse> findByMember(@Authenticate Credentials credentials) {
+        List<CartItem> cartItems = cartItemDao.findByMemberId(credentials.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
+    public Long add(@Authenticate Credentials credentials, CartItemRequest cartItemRequest) {
+        final Member member = new Member(credentials.getId(), credentials.getEmail(), credentials.getPassword());
         return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(@Authenticate Credentials credentials, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+        checkOwner(credentials, cartItem);
 
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
@@ -44,10 +47,15 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
+    public void remove(@Authenticate Credentials credentials, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+        checkOwner(credentials, cartItem);
 
         cartItemDao.deleteById(id);
+    }
+
+    private void checkOwner(final Credentials credentials, final CartItem cartItem) {
+        final Member member = new Member(credentials.getId(), credentials.getEmail(), credentials.getPassword());
+        cartItem.checkOwner(member);
     }
 }

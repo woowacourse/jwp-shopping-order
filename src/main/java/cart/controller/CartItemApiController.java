@@ -1,7 +1,8 @@
 package cart.controller;
 
+import cart.auth.Authenticate;
+import cart.auth.Credentials;
 import cart.controller.dto.CartItemResponse;
-import cart.domain.member.Member;
 import cart.service.CartItemService;
 import cart.service.dto.CartItemQuantityUpdateRequest;
 import cart.service.dto.CartItemRequest;
@@ -22,27 +23,27 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+    public ResponseEntity<List<CartItemResponse>> showCartItems(@Authenticate Credentials credentials) {
+        return ResponseEntity.ok(cartItemService.findByMember(credentials));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<Void> addCartItems(@Authenticate Credentials credentials, @RequestBody CartItemRequest cartItemRequest) {
+        Long cartItemId = cartItemService.add(credentials, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+    public ResponseEntity<Void> updateCartItemQuantity(@Authenticate Credentials credentials, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
+        cartItemService.updateQuantity(credentials, id, request);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
-        cartItemService.remove(member, id);
+    public ResponseEntity<Void> removeCartItems(@Authenticate Credentials credentials, @PathVariable Long id) {
+        cartItemService.remove(credentials, id);
 
         return ResponseEntity.noContent().build();
     }

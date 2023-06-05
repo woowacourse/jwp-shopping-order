@@ -1,5 +1,6 @@
 package cart.service.coupon;
 
+import cart.auth.Credentials;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.member.Member;
@@ -23,7 +24,8 @@ public class CouponService {
         this.memberRepository = memberRepository;
     }
 
-    public Long issueCoupon(final Member member, final Long couponId) {
+    public Long issueCoupon(final Credentials credentials, final Long couponId) {
+        final Member member = new Member(credentials.getId(), credentials.getEmail(), credentials.getPassword());
         return couponRepository.issue(member, couponId);
     }
 

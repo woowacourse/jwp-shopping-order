@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.auth;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
@@ -12,16 +12,17 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+public class CredentialsArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final MemberDao memberDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
+    public CredentialsArgumentResolver(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.hasParameterAnnotation(Authenticate.class);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }
-        return member;
+
+        return new Credentials(member.getId(), member.getEmail(), member.getPassword());
     }
 }

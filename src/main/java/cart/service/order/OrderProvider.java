@@ -1,7 +1,7 @@
 package cart.service.order;
 
+import cart.auth.Credentials;
 import cart.controller.dto.OrderResponse;
-import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -23,8 +23,8 @@ public class OrderProvider {
         this.orderMapper = orderMapper;
     }
 
-    public List<OrderResponse> findOrderByMember(final Member member) {
-        final List<Order> orders = orderRepository.findOrderByMemberId(member.getId());
+    public List<OrderResponse> findOrderByMember(final Credentials credentials) {
+        final List<Order> orders = orderRepository.findOrderByMemberId(credentials.getId());
         return orders.stream()
                 .map(orderMapper::createOrderResponse)
                 .collect(toList());

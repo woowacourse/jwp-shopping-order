@@ -1,10 +1,10 @@
 package cart.service.coupon;
 
+import cart.auth.Credentials;
 import cart.controller.dto.CouponResponse;
 import cart.controller.dto.CouponTypeResponse;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
-import cart.domain.member.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +24,8 @@ public class CouponProvider {
         this.couponMapper = couponMapper;
     }
 
-    public List<CouponResponse> findCouponByMember(final Member member) {
-        final Coupons coupons = couponRepository.findCouponsByMemberId(member.getId());
+    public List<CouponResponse> findCouponByMember(final Credentials credentials) {
+        final Coupons coupons = couponRepository.findCouponsByMemberId(credentials.getId());
         return coupons.getCoupons().stream()
                 .map(couponMapper::toCouponResponse)
                 .collect(toList());
