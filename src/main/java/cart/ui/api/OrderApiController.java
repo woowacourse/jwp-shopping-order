@@ -27,7 +27,7 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(Member member, @Valid @RequestBody OrderRequest request) {
+    public ResponseEntity<Void> orderCartItems(Member member, @Valid @RequestBody OrderRequest request) {
         Long orderId = orderService.createOrder(member, request);
 
         return ResponseEntity
