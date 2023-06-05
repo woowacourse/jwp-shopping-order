@@ -32,6 +32,7 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAll(Member member) {
         List<Order> orders = orderRepository.findAllByMemberId(member.getId());
 
@@ -40,6 +41,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderException.NotFound(id));
@@ -68,7 +70,7 @@ public class OrderService {
         member.addPoint((payMoney / 100) * 10);
         memberRepository.update(member);
     }
-
+    
     private List<CartItem> getCartItems(OrderRequest request) {
         List<CartItem> cartItems = new ArrayList<>();
 
