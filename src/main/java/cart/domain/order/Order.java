@@ -21,7 +21,7 @@ public class Order {
     }
 
     private int calculateTotal(final List<OrderItem> orderItems) {
-        return orderItems.stream().mapToInt(OrderItem::getTotal).sum() + deliveryFee;
+        return orderItems.stream().mapToInt(OrderItem::getTotal).sum();
     }
 
     public Order(final Long id, final Long memberId, final int deliveryFee) {
