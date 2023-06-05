@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
+import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
@@ -70,8 +71,8 @@ public class CartItemApiController {
         )
     })
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemAddRequest cartItemAddRequest) {
+        Long cartItemId = cartItemService.add(member, cartItemAddRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }

@@ -11,6 +11,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
@@ -34,9 +35,9 @@ public class CartItemService {
     }
 
     @Transactional
-    public Long add(Member member, CartItemRequest cartItemRequest) {
+    public Long add(Member member, CartItemAddRequest cartItemAddRequest) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        Long productId = cartItemRequest.getCartItemId();
+        Long productId = cartItemAddRequest.getProductId();
 
         for (CartItem cartItem : cartItems) {
             checkExistence(productId, cartItem);
