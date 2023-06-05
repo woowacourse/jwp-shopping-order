@@ -50,16 +50,19 @@ public class PurchaseOrderService {
     private List<PurchaseOrderItemInfoResponse> getPurchaseOrderItemInfoResponse(List<PurchaseOrderInfo> purchaseOrderInfos) {
         List<PurchaseOrderItemInfoResponse> purchaseOrderItemInfoResponses = new ArrayList<>();
         for (PurchaseOrderInfo purchaseOrderInfo : purchaseOrderInfos) {
-            List<PurchaseOrderItem> purchaseOrderItems = getPurchaseItems(purchaseOrderInfo.getId());
-            Product firstProduct = purchaseOrderItems.get(0)
-                                                     .getProduct();
-            PurchaseOrderItemInfoResponse purchaseOrderItemInfoResponse = new PurchaseOrderItemInfoResponse(
-                    purchaseOrderInfo.getId(), purchaseOrderInfo.getPayment(), purchaseOrderInfo.getOrderAt(),
-                    purchaseOrderInfo.getStatus(), firstProduct.getName(), firstProduct.getImageUrl(), purchaseOrderItems.size()
-            );
+            PurchaseOrderItemInfoResponse purchaseOrderItemInfoResponse = getPurchaseOrderItemInfoResponse(purchaseOrderInfo);
             purchaseOrderItemInfoResponses.add(purchaseOrderItemInfoResponse);
         }
         return purchaseOrderItemInfoResponses;
+    }
+
+    private PurchaseOrderItemInfoResponse getPurchaseOrderItemInfoResponse(PurchaseOrderInfo purchaseOrderInfo) {
+        List<PurchaseOrderItem> purchaseOrderItems = getPurchaseItems(purchaseOrderInfo.getId());
+        Product firstProduct = purchaseOrderItems.get(0).getProduct();
+        return new PurchaseOrderItemInfoResponse(
+                purchaseOrderInfo.getId(), purchaseOrderInfo.getPayment(), purchaseOrderInfo.getOrderAt(),
+                purchaseOrderInfo.getStatus(), firstProduct.getName(), firstProduct.getImageUrl(), purchaseOrderItems.size()
+        );
     }
 
     private List<PurchaseOrderItem> getPurchaseItems(Long purchaseOrderId) {

@@ -29,7 +29,6 @@ public class MemberPoints {
         }
     }
 
-    // TODO: 2023/06/01 indent 1 줄이기
     private List<UsedPoint> getUsedPoints(int usedPointAmount) {
         sortByExpiredAt();
         List<UsedPoint> usedPoints = new ArrayList<>();
