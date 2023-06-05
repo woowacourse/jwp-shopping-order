@@ -42,4 +42,16 @@ public class Product {
     public Boolean isDeleted() {
         return isDeleted;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
+
 }

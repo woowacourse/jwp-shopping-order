@@ -39,7 +39,7 @@ public class OrderItemDao {
     }
 
     public List<OrderItemEntity> getOrderItemsByOrderId(Long orderId) {
-        String sql = "SELECT id, orders_id product_id, quantity FROM order_item where orders_id = ?";
+        String sql = "SELECT id, orders_id, product_id, quantity FROM order_item where orders_id = ?";
         return jdbcTemplate.query(sql, new Object[]{orderId}, orderItemRowMapper);
     }
 

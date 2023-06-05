@@ -50,7 +50,7 @@ public class OrderRepository {
 
         final List<OrderItemEntity> findOrderItems = orderItemDao.getOrderItemsByOrderId(orderId);
         final List<Long> productIds = findOrderItems.stream()
-                .map(OrderItemEntity::getId)
+                .map(OrderItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
         final List<Product> findProducts = productDao.getProductByIds(productIds);

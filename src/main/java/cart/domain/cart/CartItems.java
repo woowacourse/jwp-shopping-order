@@ -40,4 +40,12 @@ public class CartItems {
         return member;
     }
 
+    @Override
+    public String toString() {
+        return "CartItems{" +
+                "cartItems=" + cartItems +
+                ", member=" + member +
+                '}';
+    }
+
 }
