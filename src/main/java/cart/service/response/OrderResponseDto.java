@@ -44,7 +44,7 @@ public class OrderResponseDto {
                 .map(memberCoupon -> new OrderResponseDto(
                         order.getId()
                         , orderProductResponses
-                        , order.getTimeStamp().toString()
+                        , order.getOrderAt().toString()
                         , order.getOriginPrice().getValue()
                         , memberCoupon.getCoupon().getName()
                         , order.getDiscountPrice().getValue()
@@ -52,7 +52,7 @@ public class OrderResponseDto {
                 .orElseGet(() -> new OrderResponseDto(
                         order.getId()
                         , orderProductResponses
-                        , order.getTimeStamp().toString()
+                        , order.getOrderAt().toString()
                         , order.getOriginPrice().getValue()
                         , null
                         , order.getDiscountPrice().getValue()

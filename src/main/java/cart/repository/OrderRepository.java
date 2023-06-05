@@ -52,7 +52,7 @@ public class OrderRepository {
             cartItemDao.delete(cartItem.getMemberId(), cartItem.getProduct().getId());
         }
 
-        return new Order(orderId, orderProductsAfterSave, order.getTimeStamp(), order.getMemberId(),
+        return new Order(orderId, orderProductsAfterSave, order.getOrderAt(), order.getMemberId(),
                 order.getMemberCoupon().orElse(null));
     }
 

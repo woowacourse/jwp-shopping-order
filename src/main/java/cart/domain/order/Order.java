@@ -15,23 +15,23 @@ public class Order {
 
     private final Long id;
     private final List<OrderProduct> orderProducts;
-    private final LocalDateTime timeStamp;
+    private final LocalDateTime orderAt;
     private final Long memberId;
     private final MemberCoupon memberCoupon;
 
-    public Order(final Long id, final List<OrderProduct> orderProducts, final LocalDateTime timeStamp,
+    public Order(final Long id, final List<OrderProduct> orderProducts, final LocalDateTime orderAt,
                  final Long memberId,
                  final MemberCoupon memberCoupon) {
         this.id = id;
         this.orderProducts = orderProducts;
-        this.timeStamp = timeStamp;
+        this.orderAt = orderAt;
         this.memberId = memberId;
         this.memberCoupon = memberCoupon;
     }
 
-    public Order(final Long id, final List<OrderProduct> orderProducts, final LocalDateTime timeStamp,
+    public Order(final Long id, final List<OrderProduct> orderProducts, final LocalDateTime orderAt,
                  final Long memberId) {
-        this(id, orderProducts, timeStamp, memberId, null);
+        this(id, orderProducts, orderAt, memberId, null);
     }
 
     public static Order of(final Member member, final List<CartItem> cartItems) {
@@ -40,15 +40,17 @@ public class Order {
 
     public static Order of(final Member member, final List<CartItem> cartItems, final MemberCoupon coupon) {
         validateSameMember(member, cartItems);
-        validateCouponOwner(member, coupon);
+        validateCheckOwner(member, coupon);
         final List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> new OrderProduct(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(toList());
         return new Order(null, orderProducts, LocalDateTime.now().withNano(0), member.getId(), coupon);
     }
 
-    private static void validateCouponOwner(final Member member, final MemberCoupon coupon) {
-        coupon.checkOwner(member);
+    private static void validateCheckOwner(final Member member, final MemberCoupon coupon) {
+        if (coupon != null) {
+            coupon.checkOwner(member);
+        }
     }
 
     private static void validateSameMember(final Member member, final List<CartItem> cartItems) {
@@ -78,8 +80,8 @@ public class Order {
         return id;
     }
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
+    public LocalDateTime getOrderAt() {
+        return orderAt;
     }
 
     public Long getMemberId() {

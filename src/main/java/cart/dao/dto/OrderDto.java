@@ -1,6 +1,5 @@
 package cart.dao.dto;
 
-import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -24,10 +23,9 @@ public class OrderDto {
     }
 
     public static OrderDto from(final Order order) {
-        final Optional<MemberCoupon> coupon = order.getMemberCoupon();
-        return coupon
-                .map(value -> new OrderDto(order.getId(), order.getMemberId(), value.getId(), order.getTimeStamp()))
-                .orElseGet(() -> new OrderDto(order.getId(), order.getMemberId(), null, order.getTimeStamp()));
+        return order.getMemberCoupon()
+                .map(value -> new OrderDto(order.getId(), order.getMemberId(), value.getId(), order.getOrderAt()))
+                .orElseGet(() -> new OrderDto(order.getId(), order.getMemberId(), null, order.getOrderAt()));
     }
 
     public Long getId() {

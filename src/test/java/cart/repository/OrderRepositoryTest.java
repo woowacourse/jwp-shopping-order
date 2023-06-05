@@ -38,8 +38,8 @@ class OrderRepositoryTest {
         final Order orderAfterSave = orderRepository.save(order, cartItems);
 
         assertThat(orderAfterSave)
-                .extracting(Order::getTimeStamp, Order::getMemberId)
-                .contains(order.getTimeStamp(), MEMBER_1.getId());
+                .extracting(Order::getOrderAt, Order::getMemberId)
+                .contains(order.getOrderAt(), MEMBER_1.getId());
         assertThat(orderAfterSave.getOrderProducts())
                 .usingRecursiveComparison()
                 .isEqualTo(cartItems);
@@ -59,8 +59,8 @@ class OrderRepositoryTest {
         final Order orderAfterSave = orderRepository.findById(orderId);
 
         assertThat(orderAfterSave)
-                .extracting(Order::getTimeStamp, Order::getMemberId)
-                .contains(order.getTimeStamp(), MEMBER_1.getId());
+                .extracting(Order::getOrderAt, Order::getMemberId)
+                .contains(order.getOrderAt(), MEMBER_1.getId());
         assertThat(orderAfterSave.getOrderProducts())
                 .usingRecursiveComparison()
                 .isEqualTo(cartItems);
