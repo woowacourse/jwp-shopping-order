@@ -100,6 +100,9 @@ public class MemberCouponDao {
     }
 
     public void updateUsabilityById(Long memberCouponId) {
+        if (memberCouponId == null) {
+            return;
+        }
         String query = "UPDATE member_coupon SET is_used = true WHERE id = ?";
 
         jdbcTemplate.update(query, memberCouponId);

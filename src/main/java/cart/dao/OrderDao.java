@@ -2,6 +2,7 @@ package cart.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -156,7 +157,10 @@ public class OrderDao {
                 new String[] {"ID"});
 
             ps.setLong(1, order.getMember().getId());
-            ps.setLong(2, order.getMemberCoupon().getId());
+            if (order.getMemberCoupon() != null) {
+                ps.setObject(2, order.getMemberCoupon().getId(), Types.BIGINT);
+            }
+            ps.setObject(2, null, Types.BIGINT);
             ps.setInt(3, order.getShippingFee().value());
             ps.setInt(4, order.getDiscountedPrice().value());
 
@@ -183,19 +187,22 @@ public class OrderDao {
 
                 Member member = new Member(id, email, password, nickname);
 
+                MemberCoupon memberCoupon = null;
                 Long memberCouponId = rs.getLong("coupon_id");
-                String couponName = rs.getString("name");
-                int minOrderPrice = rs.getInt("min_order_price");
-                Integer maxDiscountPrice = rs.getInt("max_discount_price");
-                CouponType type = CouponType.valueOf(rs.getString("type"));
-                Integer discountAmount = rs.getInt("discount_amount");
-                Double discountPercentage = rs.getDouble("discount_percentage");
-                Coupon coupon = new Coupon(memberCouponId, couponName, minOrderPrice, type, discountAmount,
-                    discountPercentage,
-                    maxDiscountPrice);
+                if (memberCouponId != 0) {
+                    String couponName = rs.getString("name");
+                    int minOrderPrice = rs.getInt("min_order_price");
+                    Integer maxDiscountPrice = rs.getInt("max_discount_price");
+                    CouponType type = CouponType.valueOf(rs.getString("type"));
+                    Integer discountAmount = rs.getInt("discount_amount");
+                    Double discountPercentage = rs.getDouble("discount_percentage");
+                    Coupon coupon = new Coupon(memberCouponId, couponName, minOrderPrice, type, discountAmount,
+                        discountPercentage,
+                        maxDiscountPrice);
 
-                Timestamp expiredAt = rs.getTimestamp("expired_at");
-                MemberCoupon memberCoupon = new MemberCoupon(memberCouponId, member, coupon, expiredAt);
+                    Timestamp expiredAt = rs.getTimestamp("expired_at");
+                    memberCoupon = new MemberCoupon(memberCouponId, member, coupon, expiredAt);
+                }
 
                 return new Order(orderId, member, new ArrayList<>(), memberCoupon);
             },

@@ -35,6 +35,9 @@ public class Order {
     }
 
     public Money getDiscountedPrice() {
+        if (memberCoupon == null) {
+            return new Money(0);
+        }
         return memberCoupon.getCoupon().discount(getTotalPrice());
     }
 

@@ -78,7 +78,10 @@ public class OrderService {
 
         Long memberCouponId = orderRequest.getCouponId();
 
-        MemberCoupon memberCoupon = memberCouponDao.findByIdIfUsable(member.getId(), memberCouponId);
+        MemberCoupon memberCoupon = null;
+        if (memberCouponId != null) {
+            memberCoupon = memberCouponDao.findByIdIfUsable(member.getId(), memberCouponId);
+        }
 
         return addOrderAndUpdateData(member, cartItemIds, orderItems, memberCouponId, memberCoupon);
     }
@@ -128,7 +131,8 @@ public class OrderService {
         MemberCoupon memberCoupon
     ) {
         Order order = new Order(member, orderItems, memberCoupon);
-
+        System.out.println(order);
+        System.out.println(order.getMember().getEmail());
         Long orderId = orderDao.save(order);
         orderItemDao.saveAllOfOrder(orderId, order);
         memberCouponDao.updateUsabilityById(memberCouponId);
