@@ -9,10 +9,10 @@ import static cart.integration.CartItemIntegrationTestFixture.장바구니에_�
 import static cart.integration.IntegrationTestFixture.아이디를_반환한다;
 import static cart.integration.IntegrationTestFixture.응답_코드_검증;
 
+import cart.db.repository.JdbcMemberRepository;
+import cart.db.repository.JdbcProductRepository;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.infrastructure.repository.JdbcMemberRepository;
-import cart.infrastructure.repository.JdbcProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

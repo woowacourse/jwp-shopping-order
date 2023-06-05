@@ -7,14 +7,14 @@ import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_
 import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_조회_응답_검증;
 import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_조회_요청;
 
+import cart.db.repository.JdbcCouponRepository;
+import cart.db.repository.JdbcMemberCouponRepository;
+import cart.db.repository.JdbcMemberRepository;
 import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.MemberCoupon;
-import cart.infrastructure.repository.JdbcCouponRepository;
-import cart.infrastructure.repository.JdbcMemberCouponRepository;
-import cart.infrastructure.repository.JdbcMemberRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
