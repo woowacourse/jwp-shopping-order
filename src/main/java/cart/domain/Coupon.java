@@ -6,6 +6,10 @@ public class Coupon {
     private final CouponType type;
     private final int amount;
 
+    public Coupon(String name, CouponType type, int amount) {
+        this(null, name, type, amount);
+    }
+
     public Coupon(Long id, String name, CouponType type, int amount) {
         this.id = id;
         this.name = name;
@@ -21,8 +25,8 @@ public class Coupon {
         return name;
     }
 
-    public CouponType getType() {
-        return type;
+    public String getType() {
+        return type.getText();
     }
 
     public int getAmount() {

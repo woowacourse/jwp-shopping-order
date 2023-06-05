@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.dto.CouponCreateRequest;
 import cart.dto.CouponIssueRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -46,7 +47,7 @@ public class CouponIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                 .body(couponIssueRequest)
                 .when()
-                .post("/coupons")
+                .post("/coupons/me")
                 .then()
                 .log().all()
                 .extract();
@@ -66,6 +67,55 @@ public class CouponIntegrationTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getString(".")).contains("name", "퍼센트 할인 쿠폰", "가격 쿠폰")
+        );
+    }
+
+    @DisplayName("사용자가 보유한 쿠폰을 조회한다.")
+    @Test
+    void shouldReturnCouponsOfMemberWhenRequest() {
+        CouponIssueRequest couponIssueRequest = new CouponIssueRequest(1L);
+
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .body(couponIssueRequest)
+                .when()
+                .post("/coupons/me")
+                .then()
+                .log().all()
+                .extract();
+
+        ExtractableResponse<Response> response = given().log().all()
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .when()
+                .get("/coupons/me")
+                .then()
+                .log().all()
+                .extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.body().jsonPath().getString(".")).contains("name", "퍼센트 할인 쿠폰")
+        );
+    }
+
+    @DisplayName("쿠폰을 생성한다")
+    @Test
+    void shouldCreateCouponWhenRequest() {
+        CouponCreateRequest couponCreateRequest = new CouponCreateRequest("percent", 10, "신규 회원 환영 쿠폰");
+
+        ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(couponCreateRequest)
+                .when()
+                .post("/coupons")
+                .then()
+                .log().all()
+                .extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(response.body().jsonPath().getString(".")).contains("name", "신규 회원 환영 쿠폰")
         );
     }
 }
