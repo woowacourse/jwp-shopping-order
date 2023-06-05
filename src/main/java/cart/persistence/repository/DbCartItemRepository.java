@@ -9,7 +9,9 @@ import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.MemberEntity;
+import cart.persistence.entity.ProductEntity;
 import cart.persistence.mapper.MemberMapper;
+import cart.persistence.mapper.ProductMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class DbCartItemRepository implements cart.domain.cartItem.CartItemReposi
 
     @Override
     public List<CartItem> findCartItemsByMemberId(Long memberId) {
-        List<CartItemEntity> cartItemEntities = cartItemDao.findCartItemsByMemberId(memberId);
+        List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
         return cartItemEntities.stream()
                 .map(this::mapToCartItem)
                 .collect(Collectors.toList());
@@ -72,11 +74,12 @@ public class DbCartItemRepository implements cart.domain.cartItem.CartItemReposi
 
     private CartItem mapToCartItem(CartItemEntity cartItemEntity) {
         MemberEntity memberEntity = memberDao.findById(cartItemEntity.getMemberId()).orElseThrow(() -> new NoSuchMemberException());
+        ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId()).orElseThrow(() -> new NoSuchProductException());
 
         return new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
-                productDao.findProductById(cartItemEntity.getProductId()).orElseThrow(() -> new NoSuchProductException()), // TODO repository 생성
+                ProductMapper.toDomain(productEntity),
                 MemberMapper.toDomain(memberEntity)
         );
     }

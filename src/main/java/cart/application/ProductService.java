@@ -1,10 +1,9 @@
 package cart.application;
 
 import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.exception.NoSuchProductException;
-import cart.persistence.dao.ProductDao;
 import cart.util.ModelSortHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,36 +15,36 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productRepository.findAll();
         ModelSortHelper.sortByIdInDescending(products);
         return products.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public ProductResponse findProductById(Long productId) {
-        Product product = productDao.findProductById(productId).orElseThrow(() -> new NoSuchProductException());
+        Product product = productRepository.findById(productId);
         return ProductResponse.from(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productRepository.add(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        productRepository.update(productId, product);
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productRepository.delete(productId);
     }
 }

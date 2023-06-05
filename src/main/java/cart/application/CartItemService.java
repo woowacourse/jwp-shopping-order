@@ -4,11 +4,10 @@ import cart.domain.cartItem.CartItem;
 import cart.domain.cartItem.CartItemRepository;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
 import cart.dto.cartItem.CartItemResponse;
-import cart.exception.NoSuchProductException;
-import cart.persistence.dao.ProductDao;
 import cart.util.ModelSortHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +18,11 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductDao productDao, CartItemRepository cartItemRepository) {
-        this.productDao = productDao;
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+        this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
     }
 
@@ -35,7 +34,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.findProductById(cartItemRequest.getProductId()).orElseThrow(() -> new NoSuchProductException());
+        Product product = productRepository.findById(cartItemRequest.getProductId());
         return cartItemRepository.add(new CartItem(member, product));
     }
 
