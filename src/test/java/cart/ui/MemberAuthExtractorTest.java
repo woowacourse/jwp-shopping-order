@@ -32,12 +32,8 @@ class MemberAuthExtractorTest {
 
     @BeforeEach
     void setUp() {
-        databaseSetting.setUp();
-    }
-
-    @AfterEach
-    void clearUp() {
         databaseSetting.clearDatabase();
+        databaseSetting.setUp();
     }
 
     @Test

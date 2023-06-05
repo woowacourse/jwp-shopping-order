@@ -33,3 +33,6 @@ CREATE TABLE if not exists order_items (
     quantity INT NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
+
+insert into members(email, password) values('a@a.com', '1234');
+insert into members(email, password) values('b@b.com', '1234');
