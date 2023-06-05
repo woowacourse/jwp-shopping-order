@@ -1,10 +1,10 @@
 package cart.acceptance;
 
+import cart.controller.dto.CartItemQuantityUpdateRequest;
+import cart.controller.dto.CartItemRequest;
 import cart.controller.dto.CartItemResponse;
+import cart.controller.dto.ProductRequest;
 import cart.domain.member.Member;
-import cart.service.dto.CartItemQuantityUpdateRequest;
-import cart.service.dto.CartItemRequest;
-import cart.service.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

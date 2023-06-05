@@ -2,8 +2,9 @@ package cart.controller;
 
 import cart.auth.Authenticate;
 import cart.auth.Credentials;
+import cart.controller.dto.OrderRequest;
 import cart.controller.dto.OrderResponse;
-import cart.service.dto.OrderRequest;
+import cart.service.dto.OrderSaveDto;
 import cart.service.order.OrderProvider;
 import cart.service.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,8 +39,9 @@ public class OrderController {
             description = "주문 성공"
     )
     @PostMapping
-    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest orderItemRequest) {
-        final Long orderId = orderService.order(orderItemRequest);
+    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest orderRequest) {
+        final OrderSaveDto saveDto = OrderSaveDto.from(orderRequest);
+        final Long orderId = orderService.order(saveDto);
 
         final URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{orderId}")
@@ -56,7 +58,7 @@ public class OrderController {
     )
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getOrder(@Authenticate final Credentials credentials) {
-        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(credentials);
+        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(credentials.getId());
         return ResponseEntity.ok(orderResponses);
     }
 }

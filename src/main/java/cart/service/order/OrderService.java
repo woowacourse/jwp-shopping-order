@@ -8,7 +8,7 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.Price;
 import cart.exception.AlreadyUsedCouponException;
-import cart.service.dto.OrderRequest;
+import cart.service.dto.OrderSaveDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -29,17 +29,17 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public Long order(final OrderRequest request) {
-        final CartItems cartItems = cartItemRepository.findAllByCartItemIds(request.getCartItemIds());
-        if (cartItems.isNotSameSize(request.getCartItemIds().size())) {
+    public Long order(final OrderSaveDto saveDto) {
+        final CartItems cartItems = cartItemRepository.findAllByCartItemIds(saveDto.getCartItemIds());
+        if (cartItems.isNotSameSize(saveDto.getCartItemIds().size())) {
             throw new NoSuchElementException("존재하지 않는 상품이 포함되어 있습니다.");
         }
 
-        Coupon coupon = findCoupon(request.getCouponId());
+        Coupon coupon = findCoupon(saveDto.getCouponId());
 
-        cartItemRepository.deleteAllByIds(request.getCartItemIds());
+        cartItemRepository.deleteAllByIds(saveDto.getCartItemIds());
 
-        final Price price = Price.from(request.getPrice());
+        final Price price = Price.from(saveDto.getPrice());
         final Order order = Order.create(cartItems, coupon, price);
         return orderRepository.save(order);
     }

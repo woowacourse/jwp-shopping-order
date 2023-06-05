@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.dto.OrderRequest;
 import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItemRepository;
@@ -10,7 +11,7 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.exception.AlreadyUsedCouponException;
-import cart.service.dto.OrderRequest;
+import cart.service.dto.OrderSaveDto;
 import cart.service.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -68,7 +69,7 @@ class OrderServiceTest {
             given(couponRepository.findCouponById(anyLong())).willReturn(unusedCoupon);
 
             // when
-            orderService.order(request);
+            orderService.order(OrderSaveDto.from(request));
 
             // then
             assertAll(
@@ -87,7 +88,7 @@ class OrderServiceTest {
             given(orderRepository.save(any(Order.class))).willReturn(1L);
 
             // when
-            orderService.order(request);
+            orderService.order(OrderSaveDto.from(request));
 
             // then
             assertAll(
@@ -104,7 +105,7 @@ class OrderServiceTest {
             given(couponRepository.findCouponById(anyLong())).willReturn(usedCoupon);
 
             // when, then
-            assertThatThrownBy(() -> orderService.order(request))
+            assertThatThrownBy(() -> orderService.order(OrderSaveDto.from(request)))
                     .isInstanceOf(AlreadyUsedCouponException.class);
         }
 
@@ -118,7 +119,7 @@ class OrderServiceTest {
             given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);
 
             // when, then
-            assertThatThrownBy(() -> orderService.order(request))
+            assertThatThrownBy(() -> orderService.order(OrderSaveDto.from(request)))
                     .isInstanceOf(NoSuchElementException.class);
         }
     }

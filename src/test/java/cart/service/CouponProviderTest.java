@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.auth.Credentials;
 import cart.controller.dto.CouponResponse;
 import cart.controller.dto.CouponTypeResponse;
 import cart.domain.coupon.Coupon;
@@ -47,10 +46,8 @@ class CouponProviderTest {
         // given
         given(couponRepository.findCouponsByMemberId(anyLong())).willReturn(new Coupons(List.of(coupon1, coupon2, coupon3)));
 
-        final Credentials credentials = new Credentials(1L, "a@a.com", "1234");
-
         // when
-        final List<CouponResponse> coupons = couponProvider.findCouponByMember(credentials);
+        final List<CouponResponse> coupons = couponProvider.findCouponByMember(1L);
 
         // then
         assertAll(

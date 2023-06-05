@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.auth.Credentials;
 import cart.controller.dto.OrderResponse;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
@@ -47,10 +46,8 @@ public class OrderProviderTest {
         final Order order = new Order(new OrderItems(List.of(chickenOrderItem, desertOrderItem)), member, coupon, Price.from(chicken.getPrice() + dessert.getPrice()));
         given(orderRepository.findOrderByMemberId(anyLong())).willReturn(List.of(order));
 
-        final Credentials credentials = new Credentials(member.getId(), member.getEmail(), member.getPassword());
-
         // when
-        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(credentials);
+        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(member.getId());
 
         // then
         final OrderResponse result = orderResponses.get(0);

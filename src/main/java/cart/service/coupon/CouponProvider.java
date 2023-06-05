@@ -1,6 +1,5 @@
 package cart.service.coupon;
 
-import cart.auth.Credentials;
 import cart.controller.dto.CouponResponse;
 import cart.controller.dto.CouponTypeResponse;
 import cart.domain.coupon.CouponRepository;
@@ -24,8 +23,8 @@ public class CouponProvider {
         this.couponMapper = couponMapper;
     }
 
-    public List<CouponResponse> findCouponByMember(final Credentials credentials) {
-        final Coupons coupons = couponRepository.findCouponsByMemberId(credentials.getId());
+    public List<CouponResponse> findCouponByMember(final Long memberId) {
+        final Coupons coupons = couponRepository.findCouponsByMemberId(memberId);
         return coupons.getCoupons().stream()
                 .map(couponMapper::toCouponResponse)
                 .collect(toList());

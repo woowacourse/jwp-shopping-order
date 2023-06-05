@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.auth.Credentials;
+import cart.controller.dto.CouponReissueRequest;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
@@ -9,7 +9,8 @@ import cart.exception.CannotChangeCouponStatusException;
 import cart.exception.CannotDeleteCouponException;
 import cart.repository.MemberJdbcRepository;
 import cart.service.coupon.CouponService;
-import cart.service.dto.CouponReissueRequest;
+import cart.service.dto.CouponReissueDto;
+import cart.service.dto.CouponSaveDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,11 +57,11 @@ class CouponServiceTest {
     @Test
     void 쿠폰을_발급한다() {
         // given
-        final Credentials credentials = new Credentials(1L, "a@a.com", "1234");
         given(couponRepository.issue(any(Member.class), anyLong())).willReturn(1L);
+        final CouponSaveDto saveDto = new CouponSaveDto(1L, "a@a.com", "1234", 1L);
 
         // when
-        final Long saveId = couponService.issueCoupon(credentials, couponId);
+        final Long saveId = couponService.issueCoupon(saveDto);
 
         // then
         assertThat(saveId).isEqualTo(1L);
@@ -81,10 +82,12 @@ class CouponServiceTest {
         @Test
         void 성공한다() {
             // given
-            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(usedCoupon))));
+            final long memberId = 1L;
+            final Member member = new Member(memberId, "a@a.com", "1234", new Coupons(List.of(usedCoupon)));
+            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(member);
 
             // when
-            couponService.reissueCoupon(couponId, request);
+            couponService.reissueCoupon(new CouponReissueDto(couponId, memberId));
 
             // then
             then(couponRepository).should(only()).changeStatusTo(any(), any());
@@ -96,7 +99,7 @@ class CouponServiceTest {
             given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(unUsedCoupon))));
 
             // when, then
-            assertThatThrownBy(() -> couponService.reissueCoupon(couponId, request))
+            assertThatThrownBy(() -> couponService.reissueCoupon(new CouponReissueDto(couponId, request.getId())))
                     .isInstanceOf(CannotChangeCouponStatusException.class);
         }
     }

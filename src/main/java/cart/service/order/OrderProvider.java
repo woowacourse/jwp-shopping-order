@@ -1,6 +1,5 @@
 package cart.service.order;
 
-import cart.auth.Credentials;
 import cart.controller.dto.OrderResponse;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
@@ -23,8 +22,8 @@ public class OrderProvider {
         this.orderMapper = orderMapper;
     }
 
-    public List<OrderResponse> findOrderByMember(final Credentials credentials) {
-        final List<Order> orders = orderRepository.findOrderByMemberId(credentials.getId());
+    public List<OrderResponse> findOrderByMember(final Long memberId) {
+        final List<Order> orders = orderRepository.findOrderByMemberId(memberId);
         return orders.stream()
                 .map(orderMapper::createOrderResponse)
                 .collect(toList());

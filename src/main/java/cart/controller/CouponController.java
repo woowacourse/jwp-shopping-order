@@ -2,11 +2,13 @@ package cart.controller;
 
 import cart.auth.Authenticate;
 import cart.auth.Credentials;
+import cart.controller.dto.CouponReissueRequest;
 import cart.controller.dto.CouponResponse;
 import cart.controller.dto.CouponTypeResponse;
 import cart.service.coupon.CouponProvider;
 import cart.service.coupon.CouponService;
-import cart.service.dto.CouponReissueRequest;
+import cart.service.dto.CouponReissueDto;
+import cart.service.dto.CouponSaveDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -39,7 +41,7 @@ public class CouponController {
     )
     @PostMapping("/{couponId}")
     public ResponseEntity<Void> issueCoupon(@Authenticate final Credentials credentials, @PathVariable Long couponId) {
-        final Long memberCouponId = couponService.issueCoupon(credentials, couponId);
+        final Long memberCouponId = couponService.issueCoupon(CouponSaveDto.of(credentials, couponId));
 
         return ResponseEntity.created(URI.create(String.format("/coupons/%s", memberCouponId))).build();
     }
@@ -50,8 +52,12 @@ public class CouponController {
             description = "쿠폰 재발급 성공"
     )
     @PatchMapping("/{couponId}")
-    public ResponseEntity<Void> reissueCoupon(@PathVariable final Long couponId, @Valid @RequestBody final CouponReissueRequest request) {
-        couponService.reissueCoupon(couponId, request);
+    public ResponseEntity<Void> reissueCoupon(
+            @PathVariable final Long couponId,
+            @Valid @RequestBody final CouponReissueRequest request
+    ) {
+        final CouponReissueDto reissueDto = CouponReissueDto.of(couponId, request);
+        couponService.reissueCoupon(reissueDto);
         return ResponseEntity.ok().build();
     }
 
@@ -73,7 +79,7 @@ public class CouponController {
     )
     @GetMapping("/member")
     public ResponseEntity<List<CouponResponse>> getMemberCoupons(@Authenticate final Credentials credentials) {
-        final List<CouponResponse> couponResponses = couponProvider.findCouponByMember(credentials);
+        final List<CouponResponse> couponResponses = couponProvider.findCouponByMember(credentials.getId());
         return ResponseEntity.ok(couponResponses);
     }
 

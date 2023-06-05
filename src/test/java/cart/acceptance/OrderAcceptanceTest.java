@@ -1,6 +1,6 @@
 package cart.acceptance;
 
-import cart.service.dto.OrderRequest;
+import cart.controller.dto.OrderRequest;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

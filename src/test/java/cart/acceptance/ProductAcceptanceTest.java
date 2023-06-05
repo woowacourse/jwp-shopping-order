@@ -1,7 +1,7 @@
 package cart.acceptance;
 
+import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
-import cart.service.dto.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
