@@ -39,6 +39,8 @@
 ##### Request
 ``` json
 GET /products HTTP/1.1
+
+curl -X GET http://localhost:8080/products
 ```
 ##### Response
 ``` json
@@ -66,6 +68,8 @@ Content-Type: application/json
 ##### Request
 ``` json
 GET /products/{productId} HTTP/1.1
+
+curl -X GET http://localhost:8080/products/1
 ```
 ##### Response
 ``` json
@@ -90,8 +94,16 @@ Content-Type: application/json
 {
     "name": "부리또",
     "price": 30000,
-    "imageUrl": "http://example.com/burrito.jpg"
+    "imageUrl": "http://example.com/burrito.jpg",
+    "stock": 4
 }
+
+curl -X POST -H "Content-Type: application/json" -d '{
+    "name": "부리또",
+    "price": 30000,
+    "imageUrl": "http://example.com/burrito.jpg",
+    "stock": 4
+}' http://localhost:8080/products/
 ```
 ##### Response
 ``` json
@@ -109,8 +121,16 @@ Content-Type: application/json
 {
     "name": "부리또",
     "price": 30000,
-    "imageUrl": "http://example.com/burrito.jpg"
+    "imageUrl": "http://example.com/burrito.jpg",
+    "stock" : 4
 }
+
+curl -X PUT -H "Content-Type: application/json" -d '{
+    "name": "부리또",
+    "price": 30000,
+    "imageUrl": "http://example.com/burrito.jpg",
+    "stock": 4
+}' http://localhost:8080/products/1
 ```
 ##### Response
 ``` json
@@ -122,6 +142,8 @@ HTTP/1.1 200 OK
 ##### Request
 ``` json
 DELETE /products/{productId} HTTP/1.1
+
+curl -X DELETE http://localhost:8080/products/1
 ```
 ##### Response
 ``` json
@@ -137,6 +159,8 @@ HTTP/1.1 204 No Content
 ``` json
 GET /cart-items HTTP/1.1
 Authorization: Basic ${credentials}
+
+curl -X GET -u a@a.com:1234 http://localhost:8080/cart-items
 ```
 ##### Response
 ``` json
@@ -178,6 +202,10 @@ Content-Type: application/json
 {
     "productId": 1
 }
+
+curl -X POST -H "Content-Type: application/json" -u a@a.com:1234 -d '{
+    "productId": 1
+}' http://localhost:8080/cart-items/
 ```
 ##### Response
 ``` json
@@ -196,6 +224,10 @@ Content-Type: application/json
 {
     "quantity": 3
 }
+
+curl -X PATCH -H "Content-Type: application/json" -u a@a.com:1234 -d '{
+    "quantity": 3
+}' http://localhost:8080/cart-items/1
 ```
 ##### Response
 ``` json
@@ -208,6 +240,8 @@ HTTP/1.1 200 OK
 ``` json
 DELETE /cart-items/{cartItemId}
 Authorization: Basic ${credentials}
+
+curl -X DELETE -u a@a.com:1234  http://localhost:8080/cart-items/1
 ```
 ##### Response
 ``` json
@@ -230,6 +264,12 @@ Content-Type: application/json
 	"point": 1500, // 사용할 포인트
 	"totalPrice": 32000 // 총액
 }
+
+curl -X POST -H "Content-Type: application/json" -u a@a.com:1234 -d '{
+    "cartIds": [1, 2, 3],
+	"point": 1500,
+	"totalPrice": 32000
+}' http://localhost:8080/orders
 ```
 ##### Response
 ``` json
@@ -246,6 +286,7 @@ GET /orders HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
 
+curl -X GET -u a@a.com:1234 http://localhost:8080/orders
 ```
 ##### Response
 ``` json
@@ -309,6 +350,8 @@ Content-Type: application/json
 GET /orders/{id} HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
+
+curl -X GET -u a@a.com:1234 http://localhost:8080/orders/1
 ```
 ##### Response
 ``` json
