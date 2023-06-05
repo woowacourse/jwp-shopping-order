@@ -27,7 +27,7 @@ public class FixedDiscountCoupon extends Coupon {
         try {
             return Money.from(discountPrice);
         } catch (Exception e) {
-            throw new CannotApplyCouponException();
+            throw new CannotApplyCouponException("유효하지 않은 할인금액입니다. 할인금액은 0이상의 정수이어야 합니다.");
         }
     }
 

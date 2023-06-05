@@ -47,7 +47,7 @@ public class Order {
 
         Money calculated = totalPrice.minus(discountingPrice).plus(deliveryFee);
         if (!this.price.equals(calculated)) {
-            throw new InvalidOrderCalculationException();
+            throw new InvalidOrderCalculationException("요청한 결제금액과 실제 계산 금액이 다릅니다. 잘못된 주문요청입니다.");
         }
         return new Order(this.cartItems, this.member, this.price, OrderState.CONFIRMED);
     }

@@ -26,7 +26,7 @@ public class CouponDao {
         try {
             return jdbcTemplate.queryForObject(sql, new CouponRowMapper(), couponId);
         } catch (Exception e) {
-            throw new CouponNotFoundException();
+            throw new CouponNotFoundException("존재하지 않는 쿠폰 id 입니다");
         }
     }
 

@@ -26,7 +26,7 @@ public class Member {
         try {
             this.money = this.money.minus(payingOrder.getPrice());
         } catch (IllegalArgumentException e) {
-            throw new CannotPayException();
+            throw new CannotPayException("사용자 보유현금이 부족해 결제를 할 수 없습니다.");
         }
     }
 

@@ -14,8 +14,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    @ExceptionHandler(CartItemException.IllegalMemberException.class)
+    public ResponseEntity<Void> handleException(CartItemException.IllegalMemberException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
