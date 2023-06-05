@@ -24,6 +24,7 @@ jobs:
       - name: Checkout deploy branch
         uses: actions/checkout@v3
         with:
+          clean: 'false'
           ref: "deploy"
       - name: print gitignore
         run: cat .gitignore
