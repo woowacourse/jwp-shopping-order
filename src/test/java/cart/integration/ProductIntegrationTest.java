@@ -22,19 +22,16 @@ public class ProductIntegrationTest extends IntegrationTest {
     @Nested
     class 상품을_등록할_때 {
 
-
         @Test
         void 정상_등록한다() {
             var 응답 = 상품_등록_요청("치킨", 10000, "http://chicken.com");
 
             응답_코드_검증(응답, HttpStatus.CREATED);
         }
-
     }
 
     @Nested
     class 상품을_조회할_때 {
-
 
         @Test
         void 정상_조회한다() {
@@ -52,7 +49,6 @@ public class ProductIntegrationTest extends IntegrationTest {
 
             응답_코드_검증(응답, HttpStatus.NOT_FOUND);
         }
-
     }
 
     @Nested
@@ -73,7 +69,6 @@ public class ProductIntegrationTest extends IntegrationTest {
                     상품_응답(상품_피자_ID, "피자", 20000, "http://pizza.com")
             );
         }
-
     }
 
     @Nested

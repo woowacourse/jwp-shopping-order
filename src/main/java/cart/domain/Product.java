@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
+
     private final Long id;
     private String name;
     private Money price;

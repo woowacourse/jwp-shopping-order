@@ -35,4 +35,3 @@ public class WebMvcConfigTest {
                 .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_MAX_AGE));
     }
 }
-

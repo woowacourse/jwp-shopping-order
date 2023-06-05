@@ -41,7 +41,6 @@ public class MemberCouponIntegrationTest extends IntegrationTest {
 
 
     private Member 밀리;
-    private Member 박스터;
 
     private Coupon 쿠폰_10퍼센트;
     private Coupon 쿠폰_1000원;
@@ -52,7 +51,6 @@ public class MemberCouponIntegrationTest extends IntegrationTest {
     @BeforeEach
     void init() {
         밀리 = memberRepository.save(new Member("millie@email.com", "millie"));
-        박스터 = memberRepository.save(new Member("boxster@email.com", "boxster"));
 
         쿠폰_10퍼센트 = couponRepository.save(
                 new Coupon("10퍼센트 할인 쿠폰", CouponType.RATE, BigDecimal.valueOf(10), new Money(1000)));

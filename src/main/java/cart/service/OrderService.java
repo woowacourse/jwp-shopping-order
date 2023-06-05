@@ -1,6 +1,5 @@
 package cart.service;
 
-import static cart.exception.ExceptionType.NOT_FOUND_CART_ITEM;
 import static cart.exception.ExceptionType.NOT_FOUND_COUPON;
 import static cart.exception.ExceptionType.NOT_FOUND_MEMBER;
 import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
@@ -18,7 +17,6 @@ import cart.dto.AuthMember;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.exception.CartItemException;
 import cart.exception.CouponException;
 import cart.exception.MemberException;
 import cart.exception.OrderException;
@@ -95,11 +93,6 @@ public class OrderService {
         if (memberCoupon.isExists()) {
             memberCouponRepository.delete(memberCoupon);
         }
-    }
-
-    private CartItem findCartItem(Long cartItemId) {
-        return cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
     }
 
     public OrderDetailResponse findById(Long id, AuthMember authMember) {

@@ -233,7 +233,6 @@ class CartItemServiceTest {
     @Test
     void 담겨있지_않은_상품을_제거할_경우_예외가_발생한다() {
         // given
-        Member member = new Member(1L, "email@email.com", "password");
         AuthMember authMember = new AuthMember(1L, "email@email.com");
         given(cartItemRepository.findById(1L))
                 .willReturn(Optional.empty());

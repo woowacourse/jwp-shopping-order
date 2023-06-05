@@ -124,7 +124,8 @@ class OrderServiceTest {
         verify(cartItemRepository, never()).deleteAllByIds(any());
         verify(memberCouponRepository, never()).delete(any());
         assertThatThrownBy(
-                () -> orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(12000)), 밀리_인증_정보))
+                () -> orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(12000)), 밀리_인증_정보)
+        )
                 .isInstanceOf(OrderException.class);
     }
 

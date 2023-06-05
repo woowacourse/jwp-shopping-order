@@ -5,6 +5,7 @@ import cart.domain.Product;
 import java.math.BigDecimal;
 
 public class OrderProductResponse {
+
     private Long id;
     private BigDecimal price;
     private String name;
