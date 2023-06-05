@@ -131,7 +131,7 @@ public class CartItemDao {
         return count > 0;
     }
 
-    public int deleteByProductIdsAndMemberName(final List<Long> productIds, final String memberName) {
+    public int deleteByProductIdsAndMemberId(final List<Long> productIds, final Long memberId) {
         final String sql = "DELETE FROM cart_item AS c "
             + "WHERE c.id "
             + "IN ("
@@ -141,12 +141,12 @@ public class CartItemDao {
             + "        SELECT ci.id AS id FROM cart_item AS ci"
             + "        INNER JOIN member AS m ON ci.member_id = m.id"
             + "        INNER JOIN product AS c ON c.id = ci.product_id"
-            + "        AND c.id IN (:productIds) AND m.name = :memberName"
+            + "        AND c.id IN (:productIds) AND m.id = :memberId "
             + "    ) cart_item_temp"
             + ")";
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("productIds", productIds);
-        mapSqlParameterSource.addValue("memberName", memberName);
+        mapSqlParameterSource.addValue("memberId", memberId);
         return namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
 }

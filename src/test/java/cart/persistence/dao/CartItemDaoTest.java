@@ -202,8 +202,8 @@ class CartItemDaoTest extends DaoTestHelper {
         장바구니_피자_저장(저장된_져니_아이디, 저장된_피자_아이디);
 
         // when
-        final int deletedCount = cartItemDao.deleteByProductIdsAndMemberName(List.of(저장된_치킨_아이디, 저장된_피자_아이디),
-            "journey");
+        final int deletedCount = cartItemDao.deleteByProductIdsAndMemberId(List.of(저장된_치킨_아이디, 저장된_피자_아이디),
+            저장된_져니_아이디);
 
         // then
         assertThat(deletedCount)

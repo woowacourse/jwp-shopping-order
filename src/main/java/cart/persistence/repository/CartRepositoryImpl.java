@@ -84,8 +84,8 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void deleteByProductIdsAndMemberName(final List<Long> productIds, final String memberName) {
-        cartItemDao.deleteByProductIdsAndMemberName(productIds, memberName);
+    public void deleteByProductIdsAndMemberId(final List<Long> productIds, final Long memberId) {
+        cartItemDao.deleteByProductIdsAndMemberId(productIds, memberId);
     }
 
     private MemberEntity getMemberEntity(final String memberName) {
