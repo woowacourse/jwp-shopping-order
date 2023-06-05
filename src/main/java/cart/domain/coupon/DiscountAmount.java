@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class DiscountAmount {
 
+    private static final int MINIMUM_AMOUNT = 0;
+
     private final int discountAmount;
 
     private DiscountAmount(final int discountAmount) {
-        if (discountAmount <= 0) {
-            throw new IllegalStateException("할인 금액은 0보다 작을 수 없습니다.");
+        if (discountAmount <= MINIMUM_AMOUNT) {
+            throw new IllegalStateException(String.format("할인 금액은 %s보다 작을 수 없습니다.", MINIMUM_AMOUNT));
         }
 
         this.discountAmount = discountAmount;
