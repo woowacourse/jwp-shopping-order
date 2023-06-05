@@ -33,6 +33,10 @@ public class IssuableSearchCouponService {
                 .map(MemberCoupon::getCoupon)
                 .collect(Collectors.toList());
 
+        return getIssuableSearchCouponResponses(coupons, couponsOfMember);
+    }
+
+    private List<IssuableSearchCouponResponse> getIssuableSearchCouponResponses(List<Coupon> coupons, List<Coupon> couponsOfMember) {
         return coupons.stream()
                 .map(coupon -> {
                     boolean issuable = isIssuable(coupon, couponsOfMember);
