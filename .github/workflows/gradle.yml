@@ -21,6 +21,8 @@ jobs:
           ./gradlew bootJar
       - name: show build directory
         run: ls build/libs
+      - name: check git is already installed
+        run: git --version
       - name: Checkout deploy branch
         uses: actions/checkout@v3
         with:
