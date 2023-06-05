@@ -1,4 +1,4 @@
-package cart.application;
+package cart.application.service;
 
 import cart.application.repository.ProductRepository;
 import cart.application.domain.Product;
@@ -6,6 +6,7 @@ import cart.application.service.ProductService;
 import cart.presentation.dto.request.ProductRequest;
 import cart.presentation.dto.response.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProductServiceTest {
 
     @InjectMocks
@@ -40,39 +40,36 @@ class ProductServiceTest {
     }
 
     @Test
-    void 모든_상품을_찾을_수_있다() {
+    @DisplayName("모든 상품을 찾을 수 있다")
+    void getAllProducts() {
         // given
         when(productRepository.findAll()).thenReturn(List.of(pizza, chicken));
-
         // when
         List<ProductResponse> allProductResponses = productService.getAllProducts();
-
         // then
         assertThat(allProductResponses.get(0).getId()).isEqualTo(1L);
         assertThat(allProductResponses.get(1).getId()).isEqualTo(2L);
     }
 
     @Test
-    void 특정_상품을_찾을_수_있다() {
+    @DisplayName("특정 상품을 찾을 수 있다")
+    void getProductById() {
         // given
         when(productRepository.findById(any())).thenReturn(Optional.of(pizza));
-
         // when
         ProductResponse productResponse = productService.getProductById(1L);
-
         // then
         assertThat(productResponse.getId()).isEqualTo(1L);
     }
 
     @Test
-    void 상품을_생성할_수_있다() {
+    @DisplayName("상품을 생성할 수 있다")
+    void createProduct() {
         // given
         when(productRepository.insert(any())).thenReturn(new Product(3L, "오이", 2000, "https://oi.com", 0.0, false));
         ProductRequest request = new ProductRequest("오이", 2000L, "https://oi.com", 0.0, false);
-
         // when
         Long productId = productService.createProduct(request);
-
         // then
         assertThat(productId).isEqualTo(3L);
     }

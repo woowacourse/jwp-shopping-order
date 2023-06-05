@@ -23,7 +23,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(AuthInfo authInfo) {
-        List<CartItemResponse> cartItemResponses = cartItemService.findAllCartItems(authInfo);
+        List<CartItemResponse> cartItemResponses = cartItemService.getAllCartItems(authInfo);
         return ResponseEntity.ok(cartItemResponses);
     }
 
