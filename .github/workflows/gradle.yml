@@ -19,12 +19,14 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew bootJar
-      - name: ls
-        run: ls
+      - name: show build directory
+        run: ls build/libs
       - name: Checkout deploy branch
         uses: actions/checkout@v3
         with:
           ref: "deploy"
+      - name: print gitignore
+        run: cat .gitignore
       - name: Add & Commit
         uses: EndBug/add-and-commit@v4.4.0
         with:
