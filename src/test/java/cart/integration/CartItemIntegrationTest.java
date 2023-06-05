@@ -11,8 +11,8 @@ import static cart.integration.IntegrationTestFixture.응답_코드_검증;
 
 import cart.db.repository.JdbcMemberRepository;
 import cart.db.repository.JdbcProductRepository;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package cart.domain.coupon.repository;
 
-import cart.domain.Member;
 import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
 import java.util.List;
 import java.util.Optional;
 

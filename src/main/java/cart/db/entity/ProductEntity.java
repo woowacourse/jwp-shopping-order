@@ -1,6 +1,6 @@
 package cart.db.entity;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import java.math.BigDecimal;
 
 public class ProductEntity {

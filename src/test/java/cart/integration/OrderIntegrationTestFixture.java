@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
 import cart.domain.Item;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;

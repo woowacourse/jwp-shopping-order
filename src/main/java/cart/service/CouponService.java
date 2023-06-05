@@ -1,10 +1,10 @@
 package cart.service;
 
-import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.coupon.repository.MemberCouponRepository;
-import cart.domain.repository.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.repository.MemberRepository;
 import cart.dto.AuthMember;
 import cart.dto.MemberCouponsResponse;
 import cart.exception.ExceptionType;

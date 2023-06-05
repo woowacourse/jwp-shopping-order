@@ -29,6 +29,21 @@ public enum ExceptionType {
             HttpStatus.NOT_FOUND,
             "존재하지 않는 상품입니다."
     ),
+    INVALID_PRODUCT_NAME(
+            3002,
+            HttpStatus.BAD_REQUEST,
+            "상품 이름은 2글자 이상만 가능합니다."
+    ),
+    INVALID_PRODUCT_PRICE(
+            3003,
+            HttpStatus.BAD_REQUEST,
+            "상품 금액은 1000원이상만 가능합니다."
+    ),
+    INVALID_PRODUCT_IMAGE_URL(
+            3004,
+            HttpStatus.BAD_REQUEST,
+            "잘못된 url 입니다"
+    ),
     NOT_FOUND_COUPON(
             4001,
             HttpStatus.NOT_FOUND,
@@ -72,8 +87,7 @@ public enum ExceptionType {
     INVALID_VALUE(6001,
             HttpStatus.BAD_REQUEST,
             "금액은 양의 정수만 가능합니다."
-    ),
-    ;
+    );
 
     private final int errorCode;
     private final HttpStatus httpStatus;

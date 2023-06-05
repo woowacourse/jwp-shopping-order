@@ -22,8 +22,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import cart.domain.coupon.repository.MemberCouponRepository;
+import cart.domain.member.repository.MemberRepository;
 import cart.domain.repository.CartItemRepository;
-import cart.domain.repository.MemberRepository;
 import cart.domain.repository.OrderRepository;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;

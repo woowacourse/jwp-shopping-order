@@ -5,13 +5,13 @@ import static cart.exception.ExceptionType.NOT_FOUND_MEMBER;
 import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.coupon.repository.MemberCouponRepository;
+import cart.domain.member.Member;
+import cart.domain.member.repository.MemberRepository;
 import cart.domain.repository.CartItemRepository;
-import cart.domain.repository.MemberRepository;
 import cart.domain.repository.OrderRepository;
 import cart.dto.AuthMember;
 import cart.dto.OrderDetailResponse;

@@ -1,14 +1,17 @@
-package cart.domain;
+package cart.domain.product;
 
+import cart.domain.Money;
+import cart.exception.ExceptionType;
+import cart.exception.ProductException;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
 
     private final Long id;
-    private String name;
+    private ProductName name;
     private Money price;
-    private String imageUrl;
+    private ImageUrl imageUrl;
 
     public Product(String name, int price, String imageUrl) {
         this(name, BigDecimal.valueOf(price), imageUrl);
@@ -23,16 +26,27 @@ public class Product {
     }
 
     public Product(Long id, String name, Money price, String imageUrl) {
+        this(id, new ProductName(name), price, new ImageUrl(imageUrl));
+    }
+
+    public Product(Long id, ProductName name, Money price, ImageUrl imageUrl) {
+        validateMoney(price);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
+    private void validateMoney(Money price) {
+        if (price.isLessThan(BigDecimal.valueOf(1000))) {
+            throw new ProductException(ExceptionType.INVALID_PRODUCT_PRICE);
+        }
+    }
+
     public void update(String name, BigDecimal price, String imageUrl) {
-        this.name = name;
+        this.name = new ProductName(name);
         this.price = new Money(price);
-        this.imageUrl = imageUrl;
+        this.imageUrl = new ImageUrl(imageUrl);
     }
 
     public Long getId() {
@@ -40,7 +54,7 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public Money getPrice() {
@@ -48,7 +62,7 @@ public class Product {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getValue();
     }
 
     @Override

@@ -2,8 +2,8 @@ package cart.db.repository;
 
 import cart.db.dao.MemberDao;
 import cart.db.entity.MemberEntity;
-import cart.domain.Member;
-import cart.domain.repository.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.repository.MemberRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 

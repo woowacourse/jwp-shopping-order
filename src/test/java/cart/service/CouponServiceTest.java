@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 
 import cart.domain.Money;
 import cart.domain.coupon.repository.MemberCouponRepository;
-import cart.domain.repository.MemberRepository;
+import cart.domain.member.repository.MemberRepository;
 import cart.dto.MemberCouponsResponse;
 import java.util.List;
 import java.util.Optional;

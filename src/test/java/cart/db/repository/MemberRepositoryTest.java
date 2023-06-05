@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import cart.db.dao.MemberDao;
 import cart.db.entity.MemberEntity;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

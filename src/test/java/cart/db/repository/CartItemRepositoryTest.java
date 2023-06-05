@@ -12,8 +12,8 @@ import cart.db.entity.CartItemEntity;
 import cart.db.entity.MemberEntity;
 import cart.db.entity.ProductEntity;
 import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +66,7 @@ class CartItemRepositoryTest {
                         ),
                         new CartItemEntity(
                                 2L,
-                                new ProductEntity(2L, "박스터", BigDecimal.valueOf(100), "http://boxster.com"),
+                                new ProductEntity(2L, "박스터", BigDecimal.valueOf(1000), "http://boxster.com"),
                                 memberEntity,
                                 1
                         )

@@ -9,8 +9,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import cart.domain.Product;
-import cart.domain.repository.ProductRepository;
+import cart.domain.product.Product;
+import cart.domain.product.repository.ProductRepository;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductException;

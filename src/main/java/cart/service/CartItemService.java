@@ -1,11 +1,11 @@
 package cart.service;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.member.repository.MemberRepository;
+import cart.domain.product.Product;
+import cart.domain.product.repository.ProductRepository;
 import cart.domain.repository.CartItemRepository;
-import cart.domain.repository.MemberRepository;
-import cart.domain.repository.ProductRepository;
 import cart.dto.AuthMember;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.product.Product;
+
 public class Item {
     private final Product product;
     private int quantity;

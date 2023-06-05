@@ -2,7 +2,7 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.MemberCouponsResponse;
 import cart.dto.MemberCouponsResponse.FixedCouponResponse;
 import cart.dto.MemberCouponsResponse.RateCouponResponse;

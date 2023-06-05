@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
 import cart.exception.ExceptionType;
 import cart.exception.OrderException;
 import java.math.BigDecimal;

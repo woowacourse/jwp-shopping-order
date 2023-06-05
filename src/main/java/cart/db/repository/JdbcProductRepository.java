@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import cart.db.dao.ProductDao;
 import cart.db.entity.ProductEntity;
-import cart.domain.Product;
-import cart.domain.repository.ProductRepository;
+import cart.domain.product.Product;
+import cart.domain.product.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;

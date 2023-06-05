@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import java.time.LocalDate;

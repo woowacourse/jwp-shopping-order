@@ -10,11 +10,11 @@ import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_조회_
 import cart.db.repository.JdbcCouponRepository;
 import cart.db.repository.JdbcMemberCouponRepository;
 import cart.db.repository.JdbcMemberRepository;
-import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 
 import cart.db.dao.ProductDao;
 import cart.db.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +66,7 @@ class ProductRepositoryTest {
         // given
         given(productDao.findAll()).willReturn(List.of(
                 new ProductEntity(1L, "밀리", BigDecimal.valueOf(100000000), "http://millie.com"),
-                new ProductEntity(2L, "박스터", BigDecimal.valueOf(100), "http://boxster.com"),
+                new ProductEntity(2L, "박스터", BigDecimal.valueOf(1000), "http://boxster.com"),
                 new ProductEntity(3L, "햄스터", BigDecimal.valueOf(10000000), "http://hamster.com")
         ));
 

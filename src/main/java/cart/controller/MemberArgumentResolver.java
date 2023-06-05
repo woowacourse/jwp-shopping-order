@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.domain.Member;
-import cart.domain.repository.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.repository.MemberRepository;
 import cart.dto.AuthMember;
 import cart.exception.AuthenticationException;
 import cart.exception.ExceptionType;

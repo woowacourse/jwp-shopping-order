@@ -1,6 +1,6 @@
-package cart.domain.repository;
+package cart.domain.member.repository;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import java.util.Optional;
 
 public interface MemberRepository {
