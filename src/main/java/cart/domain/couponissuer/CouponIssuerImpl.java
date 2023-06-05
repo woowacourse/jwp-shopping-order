@@ -4,17 +4,18 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Orders;
 import cart.repository.CouponRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-public class Issuer extends CouponIssuer {
-    public Issuer(CouponRepository couponRepository) {
+@Component
+public class CouponIssuerImpl extends CouponIssuer {
+    public CouponIssuerImpl(CouponRepository couponRepository) {
         super(couponRepository);
     }
 
     @Override
-    public Optional<Coupon> issue(Member member, Orders orders) {
-        setNext();
+    public Optional<Coupon> issue(Member member, Orders orders) throws IllegalAccessException {
         return this.execute(member, orders);
     }
 
