@@ -36,14 +36,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
-    @ExceptionHandler(CartItemException.DuplicateProduct.class)
-    public ResponseEntity<String> handleCartItemExceptionDuplicateProduct(CartItemException e) {
-        logger.warn(e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+    @ExceptionHandler({CartItemException.DuplicateProduct.class, IllegalArgumentException.class, PagingException.class})
+    public ResponseEntity<String> handleCartItemExceptionDuplicateProduct(Exception e) {
         logger.warn(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
@@ -52,12 +46,6 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> handleCartItemException(CartItemException e) {
         logger.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
-    @ExceptionHandler(PagingException.class)
-    public ResponseEntity<String> handlePagingException(PagingException e) {
-        logger.warn(e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
