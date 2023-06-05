@@ -2,6 +2,7 @@ package com.woowahan.techcourse.member.ui;
 
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
 import com.woowahan.techcourse.member.application.MemberQueryService;
+import com.woowahan.techcourse.member.domain.Member;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (isPreflightRequest(request)) {
             return true;
         }
-        validateUserExist(request);
+        Member member = findMember(request);
+        request.setAttribute("member", member);
         return true;
     }
 
@@ -46,10 +48,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         return Objects.nonNull(request.getHeader("Origin"));
     }
 
-    private void validateUserExist(HttpServletRequest request) {
+    private Member findMember(HttpServletRequest request) {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         AuthCredentials credentials = BasicAuthExtractor.extractDecodedCredentials(authorization);
-        memberQueryService.findByEmailAndPassword(credentials.getEmail(), credentials.getPassword())
+        return memberQueryService.findByEmailAndPassword(credentials.getEmail(), credentials.getPassword())
                 .orElseThrow(AuthenticationException::new);
     }
 }
