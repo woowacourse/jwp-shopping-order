@@ -42,6 +42,7 @@ public class CouponCommandService {
 		final SerialNumber serialNumber = coupon.findUnissuedSerialNumber()
 			.orElseThrow(() -> new IllegalArgumentException("남은 시리얼 넘버가 없습니다."));
 
+		serialNumberRepository.issueCoupon(serialNumber.getId());
 		return memberCouponRepository.addCoupon(memberId, serialNumber.getId());
 	}
 

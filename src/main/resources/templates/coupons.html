@@ -17,14 +17,17 @@
         <tr>
             <th>아이디</th>
             <th>쿠폰명</th>
-            <th>할인액 (혹은 할인율)</th>
+            <th>할인액</th>
+            <th>잔여 / 총량</th>
         </tr>
         <tbody>
         <tr th:each="coupon : ${coupons}">
             <td th:text="${coupon.id}"></td>
             <td th:text="${coupon.name}"></td>
             <td th:text="${coupon.discount}"></td>
+            <td th:text="${coupon.leftOverCoupon} + '/' + ${coupon.couponCount}"></td>
             <td>
+                <button th:onclick="addCoupon([[${coupon.id}]])">발급</button>
                 <button th:onclick="showEditModal([[${coupon}]])">수정</button>
                 <button th:onclick="deleteCoupon([[${coupon.id}]])">삭제</button>
             </td>
@@ -40,11 +43,10 @@
 
                 <label for="couponType">쿠폰 타입</label><br>
                 <select id="couponType" name="couponType">
-                    <option value="PERCENTAGE">퍼센트 할인</option>
                     <option value="FIXED_AMOUNT">금액 할인</option>
                 </select><br>
 
-                <label for="discount">할인율</label><br>
+                <label for="discount">할인액</label><br>
                 <input type="number" id="discount" name="discount" required><br>
 
                 <label for="couponCount">쿠폰 갯수</label><br>

@@ -28,4 +28,10 @@ public class SerialNumberJdbcRepository implements SerialNumberRepository {
 		});
 	}
 
+	@Override
+	public void issueCoupon(final Long serialNumberId) {
+		final String sql = "UPDATE coupon_serial_number SET is_issued = true WHERE id = ?";
+		jdbcTemplate.update(sql, serialNumberId);
+	}
+
 }

@@ -76,3 +76,28 @@ const deleteCoupon = (id) => {
             console.error(error);
         });
 };
+
+const addCoupon = (id) => {
+    const credentials = localStorage.getItem('credentials');
+
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/coupons';
+        return;
+    }
+
+    axios.request({
+        url: '/coupons/' + id,
+        method: "POST",
+        headers: {
+            'Authorization': `Basic ${credentials}`,
+            "Content-Type": "application/json"
+        },
+    }).then((response) => {
+        window.location.reload();
+    })
+        .catch((error) => {
+            console.error(error);
+        });
+};
+
