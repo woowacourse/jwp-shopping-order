@@ -103,7 +103,7 @@ public class CartItemDao {
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("id");
-            int quantity = rs.getInt("cart_item.quantity");
+            int quantity = rs.getInt("quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
