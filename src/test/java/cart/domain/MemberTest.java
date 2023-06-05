@@ -1,7 +1,9 @@
 package cart.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import cart.exception.IllegalUsePointException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -43,5 +45,31 @@ class MemberTest {
 
         // then
         assertThat(newMember.getPointValue()).isEqualTo(50);
+    }
+
+    @Test
+    void 사용_포인트를_뺀다() {
+        // given
+        Point point = new Point(1000);
+        Member member = new Member(1L, "email", "password", point);
+        Point usePoint = new Point(1000);
+
+        // when
+        Member newMember = member.usePoint(usePoint);
+
+        // then
+        assertThat(newMember.getPointValue()).isEqualTo(0);
+    }
+
+    @Test
+    void 사용한_포인트가_보유_포인트보다_많으면_예외가_발생한다() {
+        // given
+        Point point = new Point(1000);
+        Member member = new Member(1L, "email", "password", point);
+        Point usePoint = new Point(10000);
+
+        // expect
+        assertThatThrownBy(() -> member.usePoint(usePoint))
+                .isInstanceOf(IllegalUsePointException.class);
     }
 }

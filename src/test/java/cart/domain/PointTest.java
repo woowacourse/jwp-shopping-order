@@ -78,4 +78,28 @@ class PointTest {
         // then
         assertThat(result.getValue()).isEqualTo(13000);
     }
+
+    @Test
+    void 포인트를_뺀다() {
+        // given
+        Point point = new Point(10000);
+        Point otherPoint = new Point(3000);
+
+        // when
+        Point result = point.subtract(otherPoint);
+
+        // then
+        assertThat(result.getValue()).isEqualTo(7000);
+    }
+
+    @Test
+    void 보유_포인트보다_사용_포인트가_많으면_예외를_발생한다() {
+        // given
+        Point point = new Point(1000);
+        Point usePoint = new Point(10000);
+
+        // expect
+        assertThatThrownBy(() -> point.validateUsePoint(usePoint))
+                .isInstanceOf(IllegalUsePointException.class);
+    }
 }

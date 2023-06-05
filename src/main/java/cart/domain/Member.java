@@ -40,6 +40,14 @@ public class Member {
         return new Member(id, email, password, point.add(newPoint));
     }
 
+    public Member usePoint(final Point usePoint) {
+        point.validateUsePoint(usePoint);
+
+        Point newPoint = point.subtract(usePoint);
+
+        return new Member(id, email, password, newPoint);
+    }
+
     public int getPointValue() {
         return point.getValue();
     }

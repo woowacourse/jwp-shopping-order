@@ -10,6 +10,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.OrderEntity;
 import cart.domain.OrderItemEntity;
+import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.request.CartItemInfoRequest;
 import cart.dto.response.OrderItemResponse;
@@ -47,7 +48,7 @@ public class OrderService {
         validateRequestTotalPrice(orderRequest);
 
         removeCartItem(cartItemInfos);
-        savePoint(member, orderRequest.getTotalProductPrice());
+        updatePoint(member, orderRequest.getTotalProductPrice(), orderRequest.getUsePoint());
         updateProductStock(cartItemInfos);
         return saveOrderData(member, orderRequest);
     }
@@ -92,10 +93,11 @@ public class OrderService {
         }
     }
 
-    private void savePoint(final Member member, final int totalProductPrice) {
+    private void updatePoint(final Member member, final int totalProductPrice, final int usePoint) {
         Member newMember = member.savePoint(totalProductPrice);
+        Member result = newMember.usePoint(new Point(usePoint));
 
-        memberRepository.update(newMember);
+        memberRepository.update(result);
     }
 
     private void updateProductStock(final List<CartItemInfoRequest> cartItemInfos) {

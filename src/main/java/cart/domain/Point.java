@@ -40,4 +40,14 @@ public class Point {
     public Point add(final Point other) {
         return new Point(this.value + other.value);
     }
+
+    public void validateUsePoint(final Point usePoint) {
+        if (value < usePoint.value) {
+            throw new IllegalUsePointException();
+        }
+    }
+
+    public Point subtract(final Point other) {
+        return new Point(this.value - other.value);
+    }
 }
