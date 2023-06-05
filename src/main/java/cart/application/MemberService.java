@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.application.dto.response.MemberResponse;
+import cart.application.dto.response.OrderDetailResponse;
 import cart.application.dto.response.OrderResponse;
 import cart.application.dto.response.PointResponse;
 import cart.domain.member.Member;
@@ -34,7 +35,11 @@ public class MemberService {
         );
     }
 
-    public OrderResponse findOrder(final Member member, final Long orderId) {
+    public OrderDetailResponse findOrder(final Member member, final Long orderId) {
         return memberRepository.findOrder(member, orderId);
+    }
+
+    public List<OrderResponse> findOrdersByMember(final Member member) {
+        return memberRepository.findOrdersByMember(member);
     }
 }

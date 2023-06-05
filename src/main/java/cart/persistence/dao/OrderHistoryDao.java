@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class OrderHistoryDao {
 
@@ -40,5 +42,10 @@ public class OrderHistoryDao {
     public OrderHistoryEntity findById(final Long id) {
         final String sql = "SELECT id, member_id, total_amount, used_point, saved_point FROM order_history WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, ORDER_HISTORY_ENTITY_ROW_MAPPER, id);
+    }
+
+    public List<OrderHistoryEntity> findAllByMemberId(final Long memberId) {
+        final String sql = "SELECT id, member_id, total_amount, used_point, saved_point FROM order_history WHERE member_id = ?";
+        return jdbcTemplate.query(sql, ORDER_HISTORY_ENTITY_ROW_MAPPER, memberId);
     }
 }

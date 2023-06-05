@@ -1,5 +1,6 @@
 package cart.persistence.repository;
 
+import cart.application.dto.response.OrderDetailResponse;
 import cart.application.dto.response.OrderItemResponse;
 import cart.application.dto.response.OrderResponse;
 import cart.domain.member.Member;
@@ -11,7 +12,9 @@ import cart.persistence.entity.OrderHistoryEntity;
 import cart.persistence.entity.OrderProductEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cart.persistence.repository.Mapper.memberMapper;
@@ -29,7 +32,7 @@ public class MemberRepository {
         this.orderProductDao = orderProductDao;
     }
 
-    public OrderResponse findOrder(final Member member, final Long orderId) {
+    public OrderDetailResponse findOrder(final Member member, final Long orderId) {
         final OrderHistoryEntity orderHistoryEntity = orderHistoryDao.findById(orderId);
         if (!orderHistoryEntity.getMemberId().equals(member.getId())) {
             throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
@@ -42,7 +45,7 @@ public class MemberRepository {
                         orderProductEntity.getQuantity(),
                         orderProductEntity.getPurchasedPrice())
                 ).collect(Collectors.toList());
-        return new OrderResponse(
+        return new OrderDetailResponse(
                 orderItemResponses,
                 orderHistoryEntity.getTotalAmount(),
                 orderHistoryEntity.getUsedPoint(),
@@ -60,5 +63,22 @@ public class MemberRepository {
     public Member findMemberById(final Long memberId) {
         final MemberEntity memberEntity = memberDao.findByMemberId(memberId);
         return memberMapper(memberEntity);
+    }
+
+    public List<OrderResponse> findOrdersByMember(final Member member) {
+        final List<OrderHistoryEntity> orderHistoryEntities = orderHistoryDao.findAllByMemberId(member.getId());
+        final List<Long> orderIds = orderHistoryEntities.stream()
+                .map(OrderHistoryEntity::getId)
+                .collect(Collectors.toList());
+        final Map<Long, List<OrderProductEntity>> orderProductEntitiesMap = orderIds.stream()
+                .map(orderProductDao::findAllByOrderId)
+                .flatMap(Collection::stream)
+                .collect(Collectors.groupingBy(OrderProductEntity::getOrderId));
+        return orderHistoryEntities.stream()
+                .map(orderHistoryEntity -> Mapper.orderResponse(
+                                orderHistoryEntity,
+                                orderProductEntitiesMap.get(orderHistoryEntity.getId())
+                        )
+                ).collect(Collectors.toList());
     }
 }

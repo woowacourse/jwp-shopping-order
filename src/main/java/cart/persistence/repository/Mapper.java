@@ -1,5 +1,6 @@
 package cart.persistence.repository;
 
+import cart.application.dto.response.OrderResponse;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -7,7 +8,11 @@ import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
 import cart.persistence.entity.*;
 
+import java.util.List;
+
 class Mapper {
+
+    private static final int DEFAULT_PRODUCT_ENTITY_INDEX = 0;
 
     public static Product productMapper(final ProductEntity entity) {
         return new Product(
@@ -82,6 +87,15 @@ class Mapper {
                 orderProduct.getProduct().getImageUrl(),
                 orderProduct.getPurchasedPrice(),
                 orderProduct.getQuantity()
+        );
+    }
+
+    public static OrderResponse orderResponse(final OrderHistoryEntity orderHistoryEntity, final List<OrderProductEntity> orderProductEntities) {
+        return new OrderResponse(
+                orderHistoryEntity.getId(),
+                orderHistoryEntity.getTotalAmount(),
+                orderHistoryEntity.getTotalAmount(),
+                orderProductEntities.get(DEFAULT_PRODUCT_ENTITY_INDEX).getName()
         );
     }
 }

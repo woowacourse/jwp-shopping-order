@@ -53,4 +53,11 @@ public class OrderProductDao {
         final SqlParameterSource source = new MapSqlParameterSource("order_id", orderId);
         return namedJdbcTemplate.query(sql, source, ORDER_PRODUCT_ENTITY_ROW_MAPPER);
     }
+
+    public List<OrderProductEntity> findAllByOrderIds(final List<Long> orderIds) {
+        final String sql = "SELECT id, order_id, product_id, name, image_url, purchased_price, quantity FROM order_product " +
+                "WHERE order_id IN (:order_id)";
+        final SqlParameterSource source = new MapSqlParameterSource("order_id", orderIds);
+        return namedJdbcTemplate.query(sql, source, ORDER_PRODUCT_ENTITY_ROW_MAPPER);
+    }
 }

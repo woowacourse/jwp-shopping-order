@@ -1,33 +1,32 @@
 package cart.application.dto.response;
 
-import java.util.List;
-
 public class OrderResponse {
-    private final List<OrderItemResponse> orderItems;
-    private final Integer totalPrice;
-    private final Integer usedPoints;
-    private final Integer orderPrice;
 
-    public OrderResponse(final List<OrderItemResponse> orderItems, final Integer totalPrice, final Integer usedPoints, final Integer orderPrice) {
-        this.orderItems = orderItems;
+    private final Long orderId;
+    private final Integer totalPrice;
+    private final Integer totalAmount;
+    private final String previewName;
+
+    public OrderResponse(final Long orderId, final Integer totalPrice, final Integer totalAmount, final String previewName) {
+        this.orderId = orderId;
         this.totalPrice = totalPrice;
-        this.usedPoints = usedPoints;
-        this.orderPrice = orderPrice;
+        this.totalAmount = totalAmount;
+        this.previewName = previewName;
     }
 
-    public List<OrderItemResponse> getOrderItems() {
-        return orderItems;
+    public Long getOrderId() {
+        return orderId;
     }
 
     public Integer getTotalPrice() {
         return totalPrice;
     }
 
-    public Integer getUsedPoints() {
-        return usedPoints;
+    public Integer getTotalAmount() {
+        return totalAmount;
     }
 
-    public Integer getOrderPrice() {
-        return orderPrice;
+    public String getPreviewName() {
+        return previewName;
     }
 }
