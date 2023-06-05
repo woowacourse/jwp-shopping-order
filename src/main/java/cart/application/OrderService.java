@@ -121,9 +121,10 @@ public class OrderService {
     }
 
     private void removeCartItemsFromCart(List<CartItem> cartItems) {
-        for (CartItem cartItem : cartItems) {
-            cartItemDao.deleteById(cartItem.getId());
-        }
+        List<Long> ids = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteAllIdIn(ids);
     }
 
     @Transactional(readOnly = true)

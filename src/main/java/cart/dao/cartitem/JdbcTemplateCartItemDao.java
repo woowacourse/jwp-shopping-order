@@ -4,15 +4,14 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class JdbcTemplateCartItemDao implements CartItemDao {
@@ -144,5 +143,13 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
+    }
+
+    @Override
+    public void deleteAllIdIn(List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        Map<String, List<Long>> paramMap = Collections.singletonMap("ids", ids);
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
+        namedParameterJdbcTemplate.update(sql, paramMap);
     }
 }

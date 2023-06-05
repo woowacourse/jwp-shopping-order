@@ -22,4 +22,6 @@ public interface CartItemDao {
     void deleteById(Long id);
 
     void delete(Long memberId, Long productId);
+
+    void deleteAllIdIn(List<Long> ids);
 }
