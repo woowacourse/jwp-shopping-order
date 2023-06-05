@@ -54,7 +54,7 @@ public class Point {
 
     public Integer getPointAmount() {
         LocalDateTime now = LocalDateTime.now();
-        if (expiredAt.isBefore(now)) {
+        if (expiredAt == null || expiredAt.isBefore(now)) {
             return 0;
         }
         return pointAmount;

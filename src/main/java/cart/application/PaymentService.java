@@ -185,8 +185,9 @@ public class PaymentService {
         purchaseOrderDao.findById(orderId)
                         .ifPresent(purchaseOrderInfo -> {
                                     purchaseOrderInfo.changeStatus(CANCELED);
+                                    purchaseOrderInfo.updatePayment(0);
+                                    purchaseOrderInfo.updateUsedPoint(0);
                                     purchaseOrderDao.updateStatus(purchaseOrderInfo);
-
                                 }
                         );
     }

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import static cart.TestFeatures.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 @JdbcTest
+@Sql({"/schema.sql", "/data.sql", "/member2_data.sql"})
 class PurchaseOrderServiceTest {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -92,6 +94,26 @@ class PurchaseOrderServiceTest {
         assertThat(purchaseOrderResponse).isEqualTo(
                 new PurchaseOrderResponse(1L, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
                         "Pending", 10_000, 1_000, 500, purchaseOrderItemResponses)
+        );
+    }
+
+    @DisplayName("취소된 주문 상세 정보를 조회할 수 있다")
+    @Test
+    void getPurchaseCanceledOrderByOrderId() {
+        // given
+        List<PurchaseOrderItemResponse> purchaseOrderItemResponses = List.of(
+                new PurchaseOrderItemResponse(3, ProductResponse.of(상품3_피자)),
+                new PurchaseOrderItemResponse(6, ProductResponse.of(상품2_샐러드))
+        );
+        Long orderId = 8L;
+
+        // when
+        PurchaseOrderResponse purchaseOrderResponse = purchaseOrderService.getPurchaseOrderByOrderId(orderId);
+
+        // then
+        assertThat(purchaseOrderResponse).isEqualTo(
+                new PurchaseOrderResponse(8L, LocalDateTime.parse("2023-06-01 17:11:12", formatter),
+                        "Canceled", 0, 0, 0, purchaseOrderItemResponses)
         );
     }
 }

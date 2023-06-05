@@ -10,8 +10,8 @@ public class PurchaseOrderInfo {
     private Long id;
     private final Member member;
     private final LocalDateTime orderAt;
-    private final Integer payment;
-    private final Integer usedPoint;
+    private Integer payment;
+    private Integer usedPoint;
     private OrderStatus status;
 
     public PurchaseOrderInfo(Member member, LocalDateTime orderAt, Integer payment, Integer usedPoint) {
@@ -51,6 +51,13 @@ public class PurchaseOrderInfo {
         this.status = status;
     }
 
+    public void updatePayment(int payment) {
+        this.payment = payment;
+    }
+    public void updateUsedPoint(int usedPoint) {
+        this.usedPoint = usedPoint;
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,10 +71,16 @@ public class PurchaseOrderInfo {
     }
 
     public Integer getPayment() {
+        if (status.equals(OrderStatus.CANCELED)) {
+            return 0;
+        }
         return payment;
     }
 
     public Integer getUsedPoint() {
+        if (status.equals(OrderStatus.CANCELED)) {
+            return 0;
+        }
         return usedPoint;
     }
 
