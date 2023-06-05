@@ -36,11 +36,11 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(NotEnoughPointException.class)
     public ResponseEntity<ErrorResponse> handleException(final NotEnoughPointException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(2, e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(2, "포인트가 부족합니다."));
     }
 
     @ExceptionHandler(NotEnoughStockException.class)
     public ResponseEntity<ErrorResponse> handleException(final NotEnoughStockException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(1, e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(1, "상품의 재고가 부족합니다."));
     }
 }

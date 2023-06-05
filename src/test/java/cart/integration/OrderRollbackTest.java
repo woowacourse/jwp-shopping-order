@@ -10,7 +10,6 @@ import cart.dao.PointDao;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.entity.PointEntity;
-import cart.exception.NotEnoughStockException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -49,7 +48,7 @@ class OrderRollbackTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value()),
                 () -> assertThat(result.getInt("errorCode")).isEqualTo(1),
-                () -> assertThat(result.getString("message")).isEqualTo(new NotEnoughStockException(10, 11).getMessage()),
+                () -> assertThat(result.getString("message")).isEqualTo("상품의 재고가 부족합니다."),
                 () -> assertThat(pointEntities).hasSize(1),
                 () -> assertThat(pointEntities.get(0).getEarnedPoint()).isEqualTo(400),
                 () -> assertThat(pointEntities.get(0).getLeftPoint()).isEqualTo(200)

@@ -18,8 +18,6 @@ import cart.entity.OrdersEntity;
 import cart.entity.PointEntity;
 import cart.entity.ProductEntity;
 import cart.exception.CartItemNotFoundException;
-import cart.exception.NotEnoughPointException;
-import cart.exception.NotEnoughStockException;
 import cart.exception.OrderNotFoundException;
 import cart.exception.PriceNotMatchException;
 import io.restassured.path.json.JsonPath;
@@ -169,7 +167,7 @@ class OrderIntegrationTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value()),
                 () -> assertThat(result.getInt("errorCode")).isEqualTo(2),
-                () -> assertThat(result.getString("message")).isEqualTo(new NotEnoughPointException(600, 601).getMessage())
+                () -> assertThat(result.getString("message")).isEqualTo("포인트가 부족합니다.")
         );
     }
 
@@ -183,7 +181,7 @@ class OrderIntegrationTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value()),
                 () -> assertThat(result.getInt("errorCode")).isEqualTo(1),
-                () -> assertThat(result.getString("message")).isEqualTo(new NotEnoughStockException(10, 11).getMessage())
+                () -> assertThat(result.getString("message")).isEqualTo("상품의 재고가 부족합니다.")
         );
     }
 
