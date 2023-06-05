@@ -6,6 +6,8 @@ import cart.domain.OrderItem;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,20 +32,17 @@ public class OrderDao {
 
     public Long save(Order order) {
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "insert into orders(member_id, price_after_discount) values(?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
 
-            ps.setLong(1, order.getOrderingMember().getId());
-            ps.setLong(2, order.getPriceAfterDiscount());
+        final MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("memberId", order.getOrderingMember().getId());
+        sqlParameterSource.addValue("priceAfterDiscount", order.getPriceAfterDiscount());
+        new NamedParameterJdbcTemplate(jdbcTemplate).update(
+                "insert into orders(member_id, price_after_discount) values(:memberId, :prictAfterDiscount)",
+                sqlParameterSource,
+                keyHolder
+        );
 
-            return ps;
-        }, keyHolder);
-
-
-        final long orderId = (long) Objects.requireNonNull(keyHolder.getKeys().get("id"));
+        final long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         final List<OrderItem> orderItems = order.getOrderItems();
 
         jdbcTemplate.batchUpdate("insert into order_items(order_id, name, product_price, quantity, image_url) values(?, ?, ?, ?, ?)", new BatchPreparedStatementSetter() {
