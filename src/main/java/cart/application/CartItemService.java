@@ -6,6 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
+import cart.dto.OrderProductRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.RemoveCartItemsRequest;
 import cart.exception.BusinessException;
@@ -32,7 +33,7 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         final Optional<CartItem> optionalCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
-            cartItemRequest.getId());
+            cartItemRequest.getProductId());
         if (optionalCartItem.isPresent()) {
             final CartItem cartItem = optionalCartItem.get();
             final CartItem updatedCartItem = cartItem.addQuantity(cartItemRequest.getQuantity());
@@ -41,7 +42,7 @@ public class CartItemService {
         }
 
         return cartItemDao.save(new CartItem(member,
-            productDao.getProductById(cartItemRequest.getId())
+            productDao.getProductById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다."))));
     }
 

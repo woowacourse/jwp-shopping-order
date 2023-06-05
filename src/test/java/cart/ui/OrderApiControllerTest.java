@@ -1,19 +1,16 @@
 package cart.ui;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.isEquals;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 import cart.application.CouponService;
 import cart.application.ProductService;
-import cart.dto.CartItemRequest;
+import cart.dto.OrderProductRequest;
 import cart.dto.OrderRequest;
 import cart.dto.ProductRequest;
 import cart.dto.SaveCouponRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.List;
-import javax.websocket.RemoteEndpoint.Basic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +43,8 @@ class OrderApiControllerTest {
     final Long pizzaId = productService.createProduct(new ProductRequest("피자", 20000, "pizza"));
 
     final OrderRequest orderRequest = new OrderRequest(
-        List.of(new CartItemRequest(chickenId, 2),
-            new CartItemRequest(pizzaId, 1)),
+        List.of(new OrderProductRequest(chickenId, 2),
+            new OrderProductRequest(pizzaId, 1)),
         50000, 3000, "address", couponId);
 
     RestAssured

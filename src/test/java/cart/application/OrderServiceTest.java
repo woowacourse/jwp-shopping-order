@@ -1,6 +1,5 @@
 package cart.application;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -10,7 +9,7 @@ import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.dao.ProductOrderDao;
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
+import cart.dto.OrderProductRequest;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -61,8 +60,8 @@ class OrderServiceTest {
     final Member member = new Member(1L, "email", "password");
     final long couponId = 1L;
     final OrderRequest orderRequest = new OrderRequest(
-        List.of(new CartItemRequest(chicken.getId(), chicken.getQuantity()),
-            new CartItemRequest(pizza.getId(), pizza.getQuantity())),
+        List.of(new OrderProductRequest(chicken.getId(), chicken.getQuantity()),
+            new OrderProductRequest(pizza.getId(), pizza.getQuantity())),
         totalProductAmount, deliveryAmount, address, couponId);
     given(productDao.getProductById(chicken.getId()))
         .willReturn(Optional.of(ProductFactory.createProduct(chicken.getId(), chicken.getName(), chicken.getPrice(),

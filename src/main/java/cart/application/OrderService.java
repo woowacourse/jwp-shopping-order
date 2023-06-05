@@ -13,7 +13,7 @@ import cart.domain.Product;
 import cart.domain.ProductOrder;
 import cart.domain.Products;
 import cart.dto.AllOrderResponse;
-import cart.dto.CartItemRequest;
+import cart.dto.OrderProductRequest;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -44,7 +44,7 @@ public class OrderService {
   }
 
   public OrderResponse order(final Member member, final OrderRequest orderRequest) {
-    final List<CartItemRequest> requestProducts = orderRequest.getProducts();
+    final List<OrderProductRequest> requestProducts = orderRequest.getProducts();
     final List<Product> products = findProducts(requestProducts);
     final Coupon coupon = findCoupon(orderRequest);
 
@@ -68,9 +68,9 @@ public class OrderService {
     }
   }
 
-  private List<Integer> saveProductOrder(List<CartItemRequest> requestProducts, List<Product> products, Long orderId) {
+  private List<Integer> saveProductOrder(List<OrderProductRequest> requestProducts, List<Product> products, Long orderId) {
     final List<Long> productIds = products.stream().map(Product::getId).collect(Collectors.toList());
-    final List<Integer> quantities = requestProducts.stream().map(CartItemRequest::getQuantity)
+    final List<Integer> quantities = requestProducts.stream().map(OrderProductRequest::getQuantity)
         .collect(Collectors.toList());
     for (int index = 0; index < productIds.size(); index++) {
       productOrderDao.createProductOrder(productIds.get(index), orderId, quantities.get(index));
@@ -83,7 +83,7 @@ public class OrderService {
         .orElse(Coupon.empty());
   }
 
-  private List<Product> findProducts(List<CartItemRequest> requestProducts) {
+  private List<Product> findProducts(List<OrderProductRequest> requestProducts) {
     final List<Product> products = requestProducts.stream()
         .map(product -> productDao.getProductById(product.getId())
             .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다.")))
