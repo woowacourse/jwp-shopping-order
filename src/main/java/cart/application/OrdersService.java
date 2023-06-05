@@ -2,8 +2,7 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.domain.OrdersTaker;
-import cart.domain.couponissuer.CouponIssuer;
-import cart.domain.couponissuer.Issuer;
+import cart.domain.couponissuer.CouponIssuerImpl;
 import cart.dto.CouponResponse;
 import cart.dto.OrdersRequest;
 import cart.dto.OrdersResponse;
@@ -13,28 +12,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-
 public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final OrdersTaker ordersTaker;
-    private final CouponRepository couponRepository;
+    private final CouponIssuerImpl couponIssuerImpl;
 
-    public OrdersService(OrdersRepository ordersRepository, OrdersTaker ordersTaker, CouponRepository couponRepository) {
+    public OrdersService(OrdersRepository ordersRepository, OrdersTaker ordersTaker, CouponIssuerImpl couponIssuerImpl) {
         this.ordersRepository = ordersRepository;
         this.ordersTaker = ordersTaker;
-        this.couponRepository = couponRepository;
+        this.couponIssuerImpl = couponIssuerImpl;
     }
 
     @Transactional
     public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
         final List<Long> cartIds = ordersRequest.getSelectCartIds();
-        if (ordersRequest.isNoCoupon()) {
-            return ordersTaker.takeOrder(member.getId(), cartIds, List.of());
-        }
-        final List<Long> coupons = List.of(ordersRequest.getCouponId());
-        return ordersTaker.takeOrder(member.getId(), cartIds, coupons);
+        return ordersTaker.takeOrder(member.getId(), cartIds, makeCouponsList(ordersRequest.getCouponId()));
+    }
+    private List<Long> makeCouponsList(final Optional<Long> coupons){
+        return coupons.map(List::of).orElseGet(List::of);
     }
 
     @Transactional(readOnly = true)
@@ -48,9 +46,8 @@ public class OrdersService {
     }
 
     @Transactional
-    public CouponResponse confirmOrders(Member member, long id) {
-        CouponIssuer couponIssuer = new Issuer(couponRepository);
-        return CouponResponse.of(couponIssuer.issue(member, ordersRepository.confirmOrders(id).get()));
+    public CouponResponse confirmOrders(Member member, long id) throws IllegalAccessException {
+        return CouponResponse.of(couponIssuerImpl.issue(member, ordersRepository.confirmOrders(id).get()));
     }
 
     @Transactional

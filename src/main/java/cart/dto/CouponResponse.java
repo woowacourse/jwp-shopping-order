@@ -37,17 +37,14 @@ public class CouponResponse {
 
     // TODO : null 값 고민해보기
     public static CouponResponse of(Optional<Coupon> coupon) {
-        if (coupon.isEmpty()) {
-            return new CouponResponse();
-        }
-        return new CouponResponse(
-                coupon.get().getId(),
-                coupon.get().getName(),
-                coupon.get().getCouponType().value(),
-                coupon.get().getDiscountRate(),
-                coupon.get().getDiscountAmount(),
-                coupon.get().getMinimumPrice()
-        );
+        return coupon.map(value -> new CouponResponse(
+                value.getId(),
+                value.getName(),
+                value.getCouponType().value(),
+                value.getDiscountRate(),
+                value.getDiscountAmount(),
+                value.getMinimumPrice()
+        )).orElseGet(CouponResponse::new);
     }
 
     public static CouponResponse issuableOf(Coupon coupon, boolean issuable) {

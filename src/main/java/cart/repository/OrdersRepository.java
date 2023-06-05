@@ -48,8 +48,10 @@ public class OrdersRepository {
     public List<CartItem> findCartItemByOrdersIds(final Member member, final long id) {
         return ordersCartItemDao.findAllByOrdersId(id).stream()
                 .map(entry -> new CartItem(
-                        member,
-                        productDao.findById(entry.getProductId())
+                        entry.getId(),
+                        entry.getQuantity(),
+                        productDao.findById(entry.getProductId()),
+                        member
                 ))
                 .collect(Collectors.toList());
     }

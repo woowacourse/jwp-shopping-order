@@ -24,16 +24,6 @@ public class OrdersResponse {
         return new OrdersResponse();
     }
 
-    private OrdersResponse(CouponResponse coupon) {
-        this.coupon = coupon;
-    }
-
-    private OrdersResponse(Long id, List<CartItemResponse> orderProducts, boolean confirmState) {
-        this.id = id;
-        this.orderProducts = orderProducts;
-        this.confirmState = confirmState;
-    }
-
     private OrdersResponse(Long id, List<CartItemResponse> orderProducts, int originalPrice, int discountPrice, boolean confirmState, CouponResponse coupon) {
         this.id = id;
         this.orderProducts = orderProducts;
@@ -68,12 +58,6 @@ public class OrdersResponse {
                 orders.getPrice(),
                 orders.isConfirmState(),
                 CouponResponse.of(Optional.of(coupons.get(0)))
-        );
-    }
-
-    public static OrdersResponse ofCoupon(Coupon coupon) {
-        return new OrdersResponse(
-                CouponResponse.of(Optional.ofNullable(coupon))
         );
     }
 
