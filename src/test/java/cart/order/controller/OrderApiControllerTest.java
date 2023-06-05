@@ -164,4 +164,21 @@ class OrderApiControllerTest extends IntegrationTestHelper {
         .log().all()
         .statusCode(HttpStatus.NO_CONTENT.value());
   }
+
+  @Test
+  @DisplayName("updateOrderStatus() : 주문 상태를 성공적으로 변경시키면 200 OK를 반환한다.")
+  void test_updateOrderStatus() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+    final long orderId = 3L;
+
+    //when & then
+    given().log().all()
+        .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        .when()
+        .patch("/orders/{orderId}", orderId)
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value());
+  }
 }

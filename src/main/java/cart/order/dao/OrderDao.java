@@ -95,7 +95,7 @@ public class OrderDao {
     jdbcTemplate.update(sql, orderId);
   }
 
-  public void updateOrderByOrderId(final Long orderId, final String orderStatus) {
+  public void updateByOrderId(final Long orderId, final String orderStatus) {
     final String sql = "UPDATE ORDERS O SET O.order_status = ? WHERE O.id = ?";
 
     jdbcTemplate.update(sql, orderStatus, orderId);

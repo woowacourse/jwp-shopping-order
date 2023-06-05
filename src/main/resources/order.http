@@ -26,7 +26,7 @@ GET http://localhost:8080/orders
 Authorization: Basic YUBhLmNvbToxMjM0
 
 ### 주문 상세 조회
-GET http://localhost:8080/orders/3
+GET http://localhost:8080/orders/2
 Authorization: Basic YUBhLmNvbToxMjM0
 
 ### 주문 삭제
@@ -34,6 +34,6 @@ DELETE http://localhost:8080/orders/4
 Authorization: Basic YUBhLmNvbToxMjM0
 
 ### 주문 상태 변경
-PATCH http://localhost:8080/orders/4
+PATCH http://localhost:8080/orders/2
 Authorization: Basic YUBhLmNvbToxMjM0
 

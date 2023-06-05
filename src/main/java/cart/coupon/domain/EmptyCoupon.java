@@ -4,9 +4,6 @@ import cart.value_object.Money;
 
 public class EmptyCoupon extends Coupon {
 
-  private static final String NOT_USE_COUPON_NAME = "쿠폰 미사용";
-  private static final Long NOT_USE_ID = 0L;
-
   public EmptyCoupon() {
     super(null, null);
   }

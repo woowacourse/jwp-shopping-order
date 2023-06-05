@@ -65,18 +65,11 @@ public class OrderCommandService {
 
     cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
 
-    if (hasCouponWith(registerOrderRequest)) {
-      memberCouponCommandService.updateUsedCoupon(
-          registerOrderRequest.getCouponId(),
-          member.getId()
-      );
+    if (order.hasCoupon()) {
+      memberCouponCommandService.updateUsedCoupon(order.getCoupon(), member);
     }
 
     return savedOrderId;
-  }
-
-  private boolean hasCouponWith(final RegisterOrderRequest registerOrderRequest) {
-    return registerOrderRequest.getCouponId() != null;
   }
 
   private void validateCouponExceedTotalPrice(final OrderedItems orderedItems,
@@ -107,15 +100,13 @@ public class OrderCommandService {
     }
   }
 
-  public void updateOrder(final Member member, final Long orderId) {
-    //주문 취소로 변경
-    orderDao.updateOrderByOrderId(orderId, OrderStatus.CANCEL.getValue());
+  public void updateToOrderCancel(final Member member, final Long orderId) {
+    orderDao.updateByOrderId(orderId, OrderStatus.CANCEL.getValue());
 
-    //쿠폰 다시 그대로 변경
     final Order order = orderDao.findByOrderId(orderId);
 
-    final Coupon usedCoupon = order.getCoupon();
-
-    memberCouponCommandService.updateUsedCoupon(usedCoupon.getId(), member.getId());
+    if (order.hasCoupon()) {
+      memberCouponCommandService.updateUsedCoupon(order.getCoupon(), member);
+    }
   }
 }

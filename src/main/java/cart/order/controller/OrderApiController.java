@@ -66,6 +66,6 @@ public class OrderApiController {
   @PatchMapping("/orders/{orderId}")
   @ResponseStatus(HttpStatus.OK)
   public void updateOrderStatus(final Member member, @PathVariable("orderId") final Long orderId) {
-    orderCommandService.updateOrder(member, orderId);
+    orderCommandService.updateToOrderCancel(member, orderId);
   }
 }

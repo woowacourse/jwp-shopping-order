@@ -53,6 +53,10 @@ public class Order {
     return coupon.discount(totalOrderPrice);
   }
 
+  public boolean hasCoupon() {
+    return coupon.isExisted();
+  }
+
   public Long getId() {
     return id;
   }
