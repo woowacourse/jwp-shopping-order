@@ -9,9 +9,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final List<String> MAPPING_URLS = List.of("/products/**", "/cart-items/**", "/orders/**",
+    private static final List<String> MAPPING_URLS = List.of(
+            "/products/**",
+            "/cart-items/**",
+            "/orders/**",
             "/coupons/**");
-    private static final String[] ALLOWED_ORIGINS = {"https://feb-dain.github.io", "http://localhost:3000"};
+    private static final String[] ALLOWED_ORIGINS = {
+            "https://feb-dain.github.io",
+            "https://cruelladevil.github.io",
+            "http://localhost:3000"};
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
