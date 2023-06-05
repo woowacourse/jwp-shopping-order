@@ -28,7 +28,7 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
-                .usingColumns("name", "policy_type", "discount_price", "minimum_price")
+                .usingColumns("name", "policy_type", "discount_value", "minimum_price")
                 .usingGeneratedKeyColumns("id");
     }
 

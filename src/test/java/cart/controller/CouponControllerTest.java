@@ -95,7 +95,7 @@ class CouponControllerTest {
             long id = rs.getLong("id");
             String name = rs.getString("name");
             String policyType = rs.getString("policy_type");
-            long discountValue = rs.getLong("discount_price");
+            long discountValue = rs.getLong("discount_value");
             long minimumPrice = rs.getLong("minimum_price");
             return new CouponEntity(id, name, policyType, discountValue, minimumPrice);
         }, savedCouponId);
