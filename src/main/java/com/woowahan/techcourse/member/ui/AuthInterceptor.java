@@ -49,10 +49,6 @@ public class AuthInterceptor implements HandlerInterceptor {
     private void validateUserExist(HttpServletRequest request) {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         AuthCredentials credentials = BasicAuthExtractor.extractDecodedCredentials(authorization);
-        validateCredentialUserExist(credentials);
-    }
-
-    private void validateCredentialUserExist(AuthCredentials credentials) {
         memberQueryService.findByEmailAndPassword(credentials.getEmail(), credentials.getPassword())
                 .orElseThrow(AuthenticationException::new);
     }
