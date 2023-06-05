@@ -42,6 +42,10 @@ public class Point {
         return Point.of(id, value - other.value, comment, createAt, expiredAt);
     }
 
+    public boolean isSoonExpireDate(LocalDate base) {
+        return expiredAt.getYear() == base.getYear() && expiredAt.getMonth() == base.getMonth();
+    }
+
     public boolean isEmpty() {
         return value == 0;
     }

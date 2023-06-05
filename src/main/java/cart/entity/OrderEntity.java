@@ -1,15 +1,14 @@
 package cart.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 public class OrderEntity {
 
     private Long id;
-    private Long memberId;
-    private int orderStatusId;
-    private LocalDate createAt;
+    private final Long memberId;
+    private final int orderStatusId;
+    private final LocalDate createAt;
 
     public OrderEntity(Long id, Long memberId, int orderStatusId, LocalDate createAt) {
         this.id = id;

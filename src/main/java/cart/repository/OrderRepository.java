@@ -64,7 +64,7 @@ public class OrderRepository {
         return order.getUsedPoints()
                 .stream()
                 .map(point -> new PointEntity(point.getId(), point.getValue(), point.getComment(),
-                                point.getCreateAt(), point.getExpiredAt()))
+                        point.getCreateAt(), point.getExpiredAt()))
                 .collect(Collectors.toList());
     }
 

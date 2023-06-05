@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class DetailOrderResponse {
 
-    private Long orderId;
-    private LocalDate orderAt;
-    private int payAmount;
-    private int usedPoint;
-    private int savedPoint;
-    private List<ProductOrderResponse> products;
+    private final Long orderId;
+    private final LocalDate orderAt;
+    private final int payAmount;
+    private final int usedPoint;
+    private final int savedPoint;
+    private final List<ProductOrderResponse> products;
 
     public DetailOrderResponse(Long orderId, LocalDate orderAt, int payAmount, int usedPoint, int savedPoint, List<ProductOrderResponse> products) {
         this.orderId = orderId;

@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class PointResponse {
 
-    private int currentPoint;
-    private int toBeExpiredPoint;
+    private final int currentPoint;
+    private final int toBeExpiredPoint;
 
     public PointResponse(int currentPoint, int toBeExpiredPoint) {
         this.currentPoint = currentPoint;

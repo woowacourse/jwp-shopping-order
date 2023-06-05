@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Repository
 public class CartItemDao {
@@ -31,6 +30,7 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
+
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
             Long productId = rs.getLong("product.id");
@@ -70,6 +70,7 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
+
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");

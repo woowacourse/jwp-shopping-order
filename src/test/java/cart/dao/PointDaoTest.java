@@ -22,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ActiveProfiles("test")
 class PointDaoTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private PointDao pointDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final PointDao pointDao;
 
     @Autowired
     public PointDaoTest(JdbcTemplate jdbcTemplate, PointDao pointDao) {

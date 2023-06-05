@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class OrderResponse {
 
-    private Long orderId;
-    private int payAmount;
-    private LocalDate orderAt;
-    private String orderStatus;
-    private String productName;
-    private String productImageUrl;
-    private int totalProductCount;
+    private final Long orderId;
+    private final int payAmount;
+    private final LocalDate orderAt;
+    private final String orderStatus;
+    private final String productName;
+    private final String productImageUrl;
+    private final int totalProductCount;
 
     public OrderResponse(Long orderId, int payAmount, LocalDate orderAt, String orderStatus, String productName, String productImageUrl, int totalProductCount) {
         this.orderId = orderId;

@@ -34,6 +34,10 @@ public class OrderItem {
         return totalPrice;
     }
 
+    public Long getProductId() {
+        return product.getId();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

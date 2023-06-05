@@ -1,7 +1,5 @@
 package cart.entity;
 
-import cart.domain.Point;
-
 import java.time.LocalDate;
 import java.util.Objects;
 

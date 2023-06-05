@@ -26,18 +26,18 @@ import java.util.List;
 import static cart.ProductFixture.product1;
 import static cart.ProductFixture.product2;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
 @ActiveProfiles("test")
 class OrderRepositoryTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private OrderRepository orderRepository;
-    private OrderDao orderDao;
-    private OrderItemDao orderItemDao;
-    private PointHistoryDao pointHistoryDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final OrderRepository orderRepository;
+    private final OrderDao orderDao;
+    private final OrderItemDao orderItemDao;
+    private final PointHistoryDao pointHistoryDao;
 
     private Member member;
     private Points points;

@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,15 +19,14 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
 @ActiveProfiles("test")
 class PointHistoryDaoTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private PointHistoryDao pointHistoryDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final PointHistoryDao pointHistoryDao;
 
     @Autowired
     public PointHistoryDaoTest(JdbcTemplate jdbcTemplate, PointHistoryDao pointHistoryDao) {

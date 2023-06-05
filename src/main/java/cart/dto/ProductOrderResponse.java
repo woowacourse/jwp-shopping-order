@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class ProductOrderResponse {
 
-    private int quantity;
-    private ProductResponse productResponse;
+    private final int quantity;
+    private final ProductResponse productResponse;
 
     public ProductOrderResponse(int quantity, ProductResponse productResponse) {
         this.quantity = quantity;

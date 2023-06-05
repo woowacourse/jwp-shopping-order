@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class OrderPageResponse {
 
-    private int totalPages;
-    private int currentPage;
-    private List<OrderResponse> contents;
+    private final int totalPages;
+    private final int currentPage;
+    private final List<OrderResponse> contents;
 
     public OrderPageResponse(int totalPages, int currentPage, List<OrderResponse> contents) {
         this.totalPages = totalPages;

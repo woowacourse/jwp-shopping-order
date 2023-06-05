@@ -1,16 +1,20 @@
 package cart.domain;
 
+import cart.exception.OrderException;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
 public class Order {
 
-    private Long id;
+    private static final String INVALID_NO_ORDER_ITEM = "주문한 상품이 없습니다.";
+
     private final OrderStatus orderStatus;
     private final Points usedPoint;
     private final List<OrderItem> orderItems;
     private final LocalDate orderAt;
+    private Long id;
 
     public Order(Points usedPoints, List<OrderItem> orderItems) {
         this.orderStatus = OrderStatus.PENDING;
@@ -45,7 +49,7 @@ public class Order {
         try {
             return orderItems.get(0).getProductName();
         } catch (IndexOutOfBoundsException exception) {
-            throw new IllegalArgumentException();
+            throw new OrderException(INVALID_NO_ORDER_ITEM);
         }
     }
 
@@ -53,13 +57,14 @@ public class Order {
         try {
             return orderItems.get(0).getProductImageUrl();
         } catch (IndexOutOfBoundsException exception) {
-            throw new IllegalArgumentException();
+            throw new OrderException(INVALID_NO_ORDER_ITEM);
         }
     }
 
     public int getItemSize() {
         return orderItems.size();
     }
+
     public Long getId() {
         return id;
     }

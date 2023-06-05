@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Point;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

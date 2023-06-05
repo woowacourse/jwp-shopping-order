@@ -7,9 +7,9 @@ import java.util.Objects;
 public class OrderItemEntity {
 
     private Long orderId;
-    private Product product;
-    private int quantity;
-    private int totalPrice;
+    private final Product product;
+    private final int quantity;
+    private final int totalPrice;
 
     public OrderItemEntity(Long orderId, Product product, int quantity, int totalPrice) {
         this.orderId = orderId;

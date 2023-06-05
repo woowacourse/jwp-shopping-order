@@ -22,25 +22,20 @@ class PointServiceTest {
     @Mock
     private PointRepository pointRepository;
 
-    @Mock
-    private PointExpirePolicy pointExpirePolicy;
-
     private PointService pointService;
 
     @BeforeEach
     void setUp() {
-        pointService = new PointService(pointRepository, pointExpirePolicy);
+        pointService = new PointService(pointRepository);
     }
 
     @DisplayName("임박한 포인트를 구할 수 있다.")
     @Test
     void findByMemberId() {
-        Point point1 = Point.of(1L, 1000, "테스트", LocalDate.of(2023, 3, 5), LocalDate.of(2023, 6, 30));
-        Point point2 = Point.of(2L, 2000, "테스트", LocalDate.of(2023, 5, 5), LocalDate.of(2023, 8, 31));
+        Point point1 = Point.of(1L, 1000, "테스트", LocalDate.of(2023, 3, 5), LocalDate.of(2023, LocalDate.now().getMonth().getValue(), 20));
+        Point point2 = Point.of(2L, 2000, "테스트", LocalDate.of(2023, 5, 5), LocalDate.of(2099, 8, 31));
 
         when(pointRepository.findUsablePointsByMemberId(1L)).thenReturn(new Points(List.of(point1, point2)));
-        when(pointExpirePolicy.isSoonExpireDate(LocalDate.now(), LocalDate.of(2023, 6, 30))).thenReturn(true);
-        when(pointExpirePolicy.isSoonExpireDate(LocalDate.now(), LocalDate.of(2023, 8, 31))).thenReturn(false);
 
         PointResponse expected = new PointResponse(3000, 1000);
 

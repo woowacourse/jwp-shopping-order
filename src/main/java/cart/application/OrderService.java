@@ -25,8 +25,8 @@ public class OrderService {
     private final OrderPage orderPage;
     private final PointAccumulationPolicy pointAccumulationPolicy;
 
-    public OrderService(ProductDao productDao, CartItemDao cartItemDao, OrderRepository orderRepository, PointRepository pointRepository,
-                        OrderPage orderPage, PointAccumulationPolicy pointAccumulationPolicy) {
+    public OrderService(ProductDao productDao, CartItemDao cartItemDao, OrderRepository orderRepository,
+                        PointRepository pointRepository, OrderPage orderPage, PointAccumulationPolicy pointAccumulationPolicy) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
         this.orderRepository = orderRepository;
@@ -61,14 +61,13 @@ public class OrderService {
     private List<ProductOrderResponse> getProductOrderResponses(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(orderItem -> new ProductOrderResponse(orderItem.getQuantity(),
-                                ProductResponse.of(orderItem.getProduct())))
+                        ProductResponse.of(orderItem.getProduct())))
                 .collect(Collectors.toList());
     }
 
     public void saveOrder(Member member, OrderRequest orderRequest) {
         Points usablePoints = pointRepository.findUsablePointsByMemberId(member.getId());
         Points usePoints = usablePoints.getUsePoints(Point.from(orderRequest.getUsedPoint()));
-
         List<ProductOrderRequest> orderRequestProducts = orderRequest.getProducts();
         Map<Long, Product> productsById = getProducts(orderRequestProducts);
 
@@ -77,17 +76,11 @@ public class OrderService {
 
         Long orderId = orderRepository.save(member.getId(), order);
         pointRepository.save(member.getId(), orderId, order.calculateSavedPoint(pointAccumulationPolicy)); // 주문 취소 문제 때문에 포인트 적립 시기를 늦출 수 있으나 백/프론트 일관성 유지를 위해 주문 시 적립되는 것으로 유지
-
-        List<Long> productIds = getProductIds(orderItems);
-        for (Long productId : productIds) {
-            cartItemDao.delete(member.getId(), productId);
-        }
+        deleteCartItem(member, orderItems);
     }
 
     private Map<Long, Product> getProducts(List<ProductOrderRequest> productOrderRequests) {
-        List<Long> productIds = productOrderRequests.stream()
-                .map(ProductOrderRequest::getProductId)
-                .collect(Collectors.toList());
+        List<Long> productIds = getProductIdsByProductOrderRequest(productOrderRequests);
 
         List<Product> products = productDao.findAllByIds(productIds);
 
@@ -96,6 +89,12 @@ public class OrderService {
             productsById.put(product.getId(), product);
         }
         return productsById;
+    }
+
+    private List<Long> getProductIdsByProductOrderRequest(List<ProductOrderRequest> productOrderRequests) {
+        return productOrderRequests.stream()
+                .map(ProductOrderRequest::getProductId)
+                .collect(Collectors.toList());
     }
 
     private List<OrderItem> getOrderItems(List<ProductOrderRequest> orderRequestProducts, Map<Long, Product> productsById) {
@@ -111,10 +110,17 @@ public class OrderService {
         return orderItems;
     }
 
-    private List<Long> getProductIds(List<OrderItem> orderItems) {
+    private List<Long> getProductIdsByOrderItems(List<OrderItem> orderItems) {
         return orderItems.stream()
-                .map(orderItem -> orderItem.getProduct().getId())
+                .map(OrderItem::getProductId)
                 .collect(Collectors.toList());
+    }
+
+    private void deleteCartItem(Member member, List<OrderItem> orderItems) {
+        List<Long> productIds = getProductIdsByOrderItems(orderItems);
+        for (Long productId : productIds) {
+            cartItemDao.delete(member.getId(), productId);
+        }
     }
 
     public void deleteOrder(Member member, Long orderId) {

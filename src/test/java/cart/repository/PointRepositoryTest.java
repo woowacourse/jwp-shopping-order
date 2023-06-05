@@ -2,10 +2,11 @@ package cart.repository;
 
 import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
-import cart.domain.*;
+import cart.domain.Member;
+import cart.domain.Point;
+import cart.domain.Points;
 import cart.exception.OrderException;
 import cart.exception.OrderServerException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,22 +19,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import static cart.ProductFixture.product1;
-import static cart.ProductFixture.product2;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
 @ActiveProfiles("test")
 class PointRepositoryTest {
 
-    private PointRepository pointRepository;
-    private PointDao pointDao;
-    private PointHistoryDao pointHistoryDao;
-    private JdbcTemplate jdbcTemplate;
+    private final PointRepository pointRepository;
+    private final PointDao pointDao;
+    private final PointHistoryDao pointHistoryDao;
+    private final JdbcTemplate jdbcTemplate;
 
     private Member member;
 

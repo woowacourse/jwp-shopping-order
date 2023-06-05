@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.OrderItem;
 import cart.domain.Product;
 import cart.entity.OrderItemEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;

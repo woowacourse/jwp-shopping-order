@@ -13,7 +13,7 @@ public class OrderPointAccumulationPolicy implements PointAccumulationPolicy {
     }
 
     @Override
-    public Point calculateAccumulationPoint(int totalCost) { // 상수화보단 가독성 있어보임 -> 질문
+    public Point calculateAccumulationPoint(int totalCost) {
         if (totalCost < 50000) {
             return Point.of((int) Math.round(totalCost * 0.05), ORDER_POINT_COMMENT, pointExpirePolicy.calculateExpireDate(LocalDate.now()));
         }

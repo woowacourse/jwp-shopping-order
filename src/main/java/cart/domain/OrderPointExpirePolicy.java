@@ -1,18 +1,14 @@
 package cart.domain;
 
 import java.time.LocalDate;
-import java.time.Month;
 
 public class OrderPointExpirePolicy implements PointExpirePolicy {
 
-    @Override
-    public LocalDate calculateExpireDate(LocalDate createAt) {
-        LocalDate createAtPlusThreeMonth = createAt.plusMonths(3);
-        return createAtPlusThreeMonth.withDayOfMonth(createAtPlusThreeMonth.lengthOfMonth());
-    }
+    private static final int MONTHS_TO_ADD = 3;
 
     @Override
-    public boolean isSoonExpireDate(LocalDate base, LocalDate other) { // TODO 다른 코드로 책임 분리
-        return other.getYear() == base.getYear() && other.getMonth() == base.getMonth();
+    public LocalDate calculateExpireDate(LocalDate createAt) {
+        LocalDate createAtPlusThreeMonth = createAt.plusMonths(MONTHS_TO_ADD);
+        return createAtPlusThreeMonth.withDayOfMonth(createAtPlusThreeMonth.lengthOfMonth());
     }
 }

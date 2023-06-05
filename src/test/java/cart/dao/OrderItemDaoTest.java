@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.OrderItem;
 import cart.entity.OrderItemEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(value = {"classpath:test_init.sql"})
 class OrderItemDaoTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private OrderItemDao orderItemDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final OrderItemDao orderItemDao;
 
     @Autowired
     public OrderItemDaoTest(JdbcTemplate jdbcTemplate) {
