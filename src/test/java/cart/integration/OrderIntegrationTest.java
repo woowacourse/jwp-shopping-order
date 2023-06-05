@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.*;
 
 class OrderIntegrationTest extends IntegrationTest {
 
-    private static final Member testMember = new Member("a@a.com", "1234", 10000L);
+    private static final Member testMember = new Member("b@b.com", "1234", 1000L);
 
     @DisplayName("상품들을 주문한다")
     @Test

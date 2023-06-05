@@ -74,11 +74,11 @@ class OrderApiControllerTest {
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].orderId").exists())
-                .andExpect(jsonPath("$[*].orderInfo[*].productId").exists())
-                .andExpect(jsonPath("$[*].orderInfo[*].price").exists())
-                .andExpect(jsonPath("$[*].orderInfo[*].name").exists())
-                .andExpect(jsonPath("$[*].orderInfo[*].imageUrl").exists())
-                .andExpect(jsonPath("$[*].orderInfo[*].quantity").exists());
+                .andExpect(jsonPath("$[*].orderInfos[*].productId").exists())
+                .andExpect(jsonPath("$[*].orderInfos[*].price").exists())
+                .andExpect(jsonPath("$[*].orderInfos[*].name").exists())
+                .andExpect(jsonPath("$[*].orderInfos[*].imageUrl").exists())
+                .andExpect(jsonPath("$[*].orderInfos[*].quantity").exists());
     }
 
     @DisplayName("특정 주문의 상세 정보를 확인한다")
@@ -95,10 +95,10 @@ class OrderApiControllerTest {
                 .andExpect(jsonPath("$.originalPrice").exists())
                 .andExpect(jsonPath("$.usedPoint").exists())
                 .andExpect(jsonPath("$.pointToAdd").exists())
-                .andExpect(jsonPath("$.orderInfo[*].productId").exists())
-                .andExpect(jsonPath("$.orderInfo[*].price").exists())
-                .andExpect(jsonPath("$.orderInfo[*].name").exists())
-                .andExpect(jsonPath("$.orderInfo[*].imageUrl").exists())
-                .andExpect(jsonPath("$.orderInfo[*].quantity").exists());
+                .andExpect(jsonPath("$.orderInfos[*].productId").exists())
+                .andExpect(jsonPath("$.orderInfos[*].price").exists())
+                .andExpect(jsonPath("$.orderInfos[*].name").exists())
+                .andExpect(jsonPath("$.orderInfos[*].imageUrl").exists())
+                .andExpect(jsonPath("$.orderInfos[*].quantity").exists());
     }
 }
