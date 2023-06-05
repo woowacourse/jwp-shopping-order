@@ -28,7 +28,7 @@ public class OrderReadService {
     }
 
     public OrderDto findByOrderId(final MemberAuth memberAuth, final Long orderId) {
-        return OrderDto.of(orderRepository.findById(orderId));
+        return OrderDto.of(orderRepository.findById(memberAuth.getId(), orderId));
     }
 
 }

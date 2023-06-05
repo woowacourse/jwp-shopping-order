@@ -80,9 +80,9 @@ public class OrderJdbcRepository implements OrderRepository {
     }
 
     @Override
-    public Order findById(final Long id) {
-        final String sql = "SELECT * FROM orders WHERE orders.id = ?";
-        OrderInfoDto orderInfoDto = jdbcTemplate.queryForObject(sql, orderInfoDtoRowMapper, id);
+    public Order findById(final Long memberId, final Long id) {
+        final String sql = "SELECT * FROM orders WHERE orders.member_id = ? and orders.id = ? ";
+        OrderInfoDto orderInfoDto = jdbcTemplate.queryForObject(sql, orderInfoDtoRowMapper, memberId, id);
         Member member = getMember(orderInfoDto.getMemberId());
         return new Order(orderInfoDto.getId(),
                 member,

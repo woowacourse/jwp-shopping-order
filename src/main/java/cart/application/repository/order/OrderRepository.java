@@ -10,6 +10,6 @@ public interface OrderRepository {
 
     List<Order> findAllByMemberId(Long memberId);
 
-    Order findById(Long id);
+    Order findById(Long memberid, Long id);
 
 }
