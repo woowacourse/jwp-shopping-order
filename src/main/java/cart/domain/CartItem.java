@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 import cart.exception.CartItemException;
 
 public class CartItem {
@@ -59,5 +61,22 @@ public class CartItem {
 
     public Long getProductId() {
         return this.product.getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
