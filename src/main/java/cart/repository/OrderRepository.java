@@ -59,6 +59,20 @@ public class OrderRepository {
                 orderEntity.getUpdatedAt());
     }
 
+    public Order findByIdAndMember(Long orderId, Member member) {
+        OrderEntity orderEntity = orderDao.findByIdAndMemberId(orderId, member.getId())
+                .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
+
+        OrderProducts orderProducts = orderProductRepository.findByOrderId(orderId);
+
+        return new Order(orderId,
+                orderProducts,
+                member,
+                orderEntity.getUsedPoint(),
+                orderEntity.getCreatedAt(),
+                orderEntity.getUpdatedAt());
+    }
+
     public List<Order> findOrdersByMember(Member member) {
         List<OrderWithOrderProductEntities> orderEntities = orderDao.findOrdersByMemberId(member.getId());
 

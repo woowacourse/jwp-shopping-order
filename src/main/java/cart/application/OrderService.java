@@ -35,12 +35,6 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    private static void validateMemberIsOwnerOfOrder(final Member member, final Order order) {
-        if (!order.isOwner(member)) {
-            throw new OrderException(ErrorMessage.INVALID_CART_ITEM_OWNER);
-        }
-    }
-
     @Transactional
     public Long save(Member member, @Valid OrderRequest orderRequest) {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
@@ -108,8 +102,7 @@ public class OrderService {
     }
 
     public OrderResponse findById(Member member, Long orderId) {
-        Order order = orderRepository.findById(orderId, member);
-        validateMemberIsOwnerOfOrder(member, order);
+        Order order = orderRepository.findByIdAndMember(orderId, member);
 
         return toResponse(order);
     }
