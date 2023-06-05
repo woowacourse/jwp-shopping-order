@@ -49,14 +49,14 @@ CREATE TABLE coupon (
     id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name          VARCHAR(255) NOT NULL,
     type          VARCHAR(255) NOT NULL,
-    figure        INT          NOT NULL,
+    amount        INT          NOT NULL,
     created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE member_coupon (
     id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    coupon_id     BIGINT       NOT NULL,
     member_id     BIGINT       NOT NULL,
+    coupon_id     BIGINT       NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );

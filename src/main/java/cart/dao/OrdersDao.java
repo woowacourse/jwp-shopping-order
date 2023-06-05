@@ -36,7 +36,12 @@ public class OrdersDao {
     }
 
     public List<Order> findByMemberId(long memberId) {
-        String sql = "SELECT id, member_id, actual_price, original_price, delivery_fee FROM orders WHERE id = ?";
+        String sql = "SELECT id, member_id, actual_price, original_price, delivery_fee FROM orders WHERE member_id = ?";
         return this.jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public Order findById(Long orderId) {
+        String sql = "SELECT id, member_id, actual_price, original_price, delivery_fee FROM orders WHERE id = ?";
+        return this.jdbcTemplate.queryForObject(sql, rowMapper, orderId);
     }
 }

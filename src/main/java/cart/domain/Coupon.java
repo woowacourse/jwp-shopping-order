@@ -4,13 +4,13 @@ public class Coupon {
     private final Long id;
     private final String name;
     private final CouponType type;
-    private final int figure;
+    private final int amount;
 
-    public Coupon(Long id, String name, CouponType type, int figure) {
+    public Coupon(Long id, String name, CouponType type, int amount) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.figure = figure;
+        this.amount = amount;
     }
 
     public Long getId() {
@@ -25,14 +25,14 @@ public class Coupon {
         return type;
     }
 
-    public int getFigure() {
-        return figure;
+    public int getAmount() {
+        return amount;
     }
 
     public int calculateActualPrice(int originalPrice) {
-        if (type.equals(CouponType.AMOUNT)) {
-            return originalPrice - figure;
+        if (type.equals(CouponType.FIGURE)) {
+            return originalPrice - amount;
         }
-        return originalPrice * (100 - figure) / 100;
+        return originalPrice * (100 - amount) / 100;
     }
 }

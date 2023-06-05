@@ -68,6 +68,10 @@ public class OrderService {
         );
     }
 
+    public OrderResponse findById(Member member, Long orderId) {
+        return mapOrderToResponse(member, ordersDao.findById(orderId));
+    }
+
     private OrderResponse mapOrderToResponse(Member member, Order order) {
         List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
         return new OrderResponse(
@@ -93,5 +97,4 @@ public class OrderService {
                 member)
         );
     }
-
 }

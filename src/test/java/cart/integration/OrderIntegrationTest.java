@@ -10,7 +10,6 @@ import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderRequest;
-import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -96,18 +95,49 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.body().jsonPath().getString(".")).contains("originalPrice", "10000");
     }
 
-    private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
+    @DisplayName("특정 주문을 조회한다.")
+    @Test
+    void shouldReturnOrderByIdWhenRequest() {
+        OrderRequest orderRequest = new OrderRequest(
+                List.of(CartItemDto.of(new CartItem(1L, 1, product1, member1))),
+                List.of(1L),
+                3_000
+        );
+        given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .body(orderRequest)
                 .when()
-                .post("/products")
+                .post("/orders")
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .log().all()
                 .extract();
 
-        return getIdFromCreatedResponse(response);
+        ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .when()
+                .get("/orders/1")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getString(".")).contains("originalPrice", "10000");
     }
+
+//    private Long createProduct(ProductRequest productRequest) {
+//        ExtractableResponse<Response> response = given()
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .body(productRequest)
+//                .when()
+//                .post("/products")
+//                .then()
+//                .statusCode(HttpStatus.CREATED.value())
+//                .extract();
+//
+//        return getIdFromCreatedResponse(response);
+//    }
 
     private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
         return Long.parseLong(response.header("Location").split("/")[2]);

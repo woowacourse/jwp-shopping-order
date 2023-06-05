@@ -3,7 +3,7 @@ package cart.domain;
 import java.util.Arrays;
 
 public enum CouponType {
-    AMOUNT("amount"),
+    FIGURE("figure"),
     PERCENT("percent");
 
     private final String text;
