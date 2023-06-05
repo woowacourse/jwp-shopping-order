@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(implementation = CartItemDto.class)
 public class CartItemDto {
+
     private Long id;
     private int quantity;
     private ProductDto product;

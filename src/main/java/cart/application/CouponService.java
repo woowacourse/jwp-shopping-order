@@ -4,6 +4,9 @@ import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.dto.CouponResponse;
+import cart.dto.CouponResponses;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,5 +26,12 @@ public class CouponService {
 
     public void issueCouponByIdToMember(long couponId, Member member) {
         memberCouponDao.save(member.getId(), couponId);
+    }
+
+    public CouponResponses findAll() {
+        return new CouponResponses(couponDao.findAll().stream()
+                .map(CouponResponse::from)
+                .collect(Collectors.toList())
+        );
     }
 }

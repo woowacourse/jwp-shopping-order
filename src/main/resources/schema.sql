@@ -1,16 +1,22 @@
+DROP TABLE IF EXISTS member_coupon;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS coupon;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    image_url VARCHAR(255) NOT NULL,
-    created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    image_url VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE member (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL,
-     created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE cart_item (
@@ -18,7 +24,6 @@ CREATE TABLE cart_item (
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
@@ -29,7 +34,6 @@ CREATE TABLE orders (
     actual_price   INT       NOT NULL,
     original_price INT       NOT NULL,
     delivery_fee   INT       NOT NULL,
-    created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
@@ -41,7 +45,6 @@ CREATE TABLE order_item (
     product_image_url VARCHAR(255) NOT NULL,
     product_price INT          NOT NULL,
     quantity      INT          NOT NULL,
-    created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
@@ -49,8 +52,7 @@ CREATE TABLE coupon (
     id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name          VARCHAR(255) NOT NULL,
     type          VARCHAR(255) NOT NULL,
-    amount        INT          NOT NULL,
-    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    amount        INT          NOT NULL
 );
 
 CREATE TABLE member_coupon (

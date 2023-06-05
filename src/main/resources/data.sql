@@ -10,4 +10,4 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 
 INSERT INTO coupon (name, type, amount) VALUES ('퍼센트 할인 쿠폰', 'percent', 10);
-INSERT INTO coupon (name, type, amount) VALUES ('가격 쿠폰', 'amount', 1000);
+INSERT INTO coupon (name, type, amount) VALUES ('가격 쿠폰', 'figure', 1000);

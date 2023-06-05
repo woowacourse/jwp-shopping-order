@@ -19,4 +19,8 @@ public enum CouponType {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public String getText() {
+        return text;
+    }
 }

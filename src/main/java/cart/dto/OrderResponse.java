@@ -3,6 +3,7 @@ package cart.dto;
 import java.util.List;
 
 public class OrderResponse {
+
     private final long id;
     private final int originalPrice;
     private final int actualPrice;

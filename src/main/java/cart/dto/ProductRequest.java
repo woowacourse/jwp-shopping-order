@@ -3,6 +3,7 @@ package cart.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ProductRequest {
+
     @Schema(description = "상품 ID")
     private String name;
     @Schema(description = "상품 가격")

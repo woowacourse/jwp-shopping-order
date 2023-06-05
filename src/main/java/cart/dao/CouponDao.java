@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Coupon;
 import cart.domain.CouponType;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ public class CouponDao {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             CouponType.from(resultSet.getString("type")),
-            resultSet.getInt("figure")
+            resultSet.getInt("amount")
     );
 
     public CouponDao(JdbcTemplate jdbcTemplate) {
@@ -22,7 +23,12 @@ public class CouponDao {
     }
 
     public Coupon findById(long couponId) {
-        String sql = "SELECT id, name, type, figure FROM coupon WHERE id = ?";
+        String sql = "SELECT id, name, type, amount FROM coupon WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{couponId}, rowMapper);
+    }
+
+    public List<Coupon> findAll() {
+        String sql = "SELECT id, name, type, amount FROM coupon";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

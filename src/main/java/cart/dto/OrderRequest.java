@@ -3,6 +3,7 @@ package cart.dto;
 import java.util.List;
 
 public class OrderRequest {
+
     private final List<CartItemDto> cartItems;
     private final List<Long> couponIds;
     private final int deliveryFee;

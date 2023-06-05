@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(implementation = ProductDto.class)
 public class ProductDto {
+
     private Long id;
     private String name;
     private int price;
