@@ -1,9 +1,7 @@
 package cart.ui;
 
-import cart.application.MemberService;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -14,10 +12,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberService memberService;
+    private final MemberAuthenticator basicAuthenticator;
 
-    public MemberArgumentResolver(final MemberService memberService) {
-        this.memberService = memberService;
+    public MemberArgumentResolver(final MemberAuthenticator basicAuthenticator) {
+        this.basicAuthenticator = basicAuthenticator;
     }
 
     @Override
@@ -28,24 +26,18 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                   final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+        final String authorization = extractAuthorizationValue(webRequest);
+
+        return basicAuthenticator.findAuthenticatedMember(authorization);
+    }
+
+    private String extractAuthorizationValue(final NativeWebRequest webRequest) {
         final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            throw new AuthenticationException("인증에 사용되는 헤더 값이 존재하지 않습니다.");
+
+        if (authorization != null) {
+            return authorization;
         }
 
-        final String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException("유효하지 않은 인증 스킴입니다.");
-        }
-
-        final byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        final String decodedString = new String(decodedBytes);
-
-        final String[] credentials = decodedString.split(":");
-        final String email = credentials[0];
-        final String password = credentials[1];
-
-        // 본인 여부 확인
-        return memberService.findAuthorizedMember(email, password);
+        throw new AuthenticationException("인증에 사용되는 헤더 값이 존재하지 않습니다.");
     }
 }
