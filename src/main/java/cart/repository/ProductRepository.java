@@ -36,12 +36,8 @@ public class ProductRepository {
         return productDao.findAll();
     }
 
-    public void deleteProduct(final Product product) {
-        cartItemDao.deleteByProductId(product.getId());
-        productDao.deleteById(product.getId());
-    }
-
     public void deleteById(final Long id) {
+        cartItemDao.deleteByProductId(id);
         productDao.deleteById(id);
     }
 }

@@ -110,7 +110,7 @@ public class ProductDaoTest {
         final Product product = productDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
         // when
-        productRepository.deleteProduct(product);
+        productRepository.deleteById(product.getId());
 
         // then
         assertThat(productDao.findById(product.getId()).isEmpty());

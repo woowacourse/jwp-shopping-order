@@ -240,7 +240,7 @@ public class OrderServiceTest {
 
         @DisplayName("사용자의 모든 주문을 삭제한다")
         @Test
-        void asdf() {
+        void deleteAll() {
             // given
             final OrderRequest orderRequest1 = new OrderRequest(List.of(1L), 0);
             final OrderRequest orderRequest2 = new OrderRequest(List.of(2L), 0);

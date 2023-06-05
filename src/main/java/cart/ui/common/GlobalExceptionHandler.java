@@ -76,8 +76,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
         log.warn("Exception from handleMissingServletRequestParameterException = ", e);
         final ErrorResponse errorResponse = new ErrorResponse(
-                "잘못된 요청입니다. 입력한 쿼리 파라미터 타입: " + e.getParameterName() +
-                        "올바른 쿼리 파라미터 타입: " + e.getParameterType()
+                "잘못된 요청입니다. 누락된 쿼리 파라미터 타입: " + e.getParameterName() +
+                        "예상되는 쿼리 파라미터 타입: " + e.getParameterType()
         );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
