@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -35,7 +36,6 @@ public class OrderService {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    @Transactional
     public Long addOrder(final Member member, final OrderRequest request) {
         final Cart cart = cartRepository.findByIds(request.getCartItemIds());
 
@@ -70,6 +70,7 @@ public class OrderService {
         applicationEventPublisher.publishEvent(new UpdateMemberPointEvent(member, request, orderId));
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findByOrderId(final Member member, final Long orderId) {
         final Order order = orderRepository.findByOrderId(orderId);
 
@@ -78,6 +79,7 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findMemberOrders(final Member member) {
         final Orders orders = orderRepository.findByMember(member);
 

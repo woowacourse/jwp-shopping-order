@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
+@Transactional
 public class PointService {
 
     private final PointRepository pointRepository;
@@ -25,7 +26,6 @@ public class PointService {
     }
 
     @TransactionalEventListener
-    @Transactional
     public void updateMemberPoint(final UpdateMemberPointEvent updateRequest) {
         final Member member = updateRequest.getMember();
         final Order order = orderRepository.findByOrderId(updateRequest.getOrderId());
@@ -46,11 +46,13 @@ public class PointService {
         pointRepository.updatePointHistory(order, usePoint, earnPoint);
     }
 
+    @Transactional(readOnly = true)
     public PointResponse findPointByMember(final Member member) {
         final Point pointByMember = pointRepository.findPointByMember(member);
         return new PointResponse(pointByMember.getPoint());
     }
 
+    @Transactional(readOnly = true)
     public PointHistoryResponse findPointHistory(final Long orderId) {
         final Point savedPointByOrder = pointRepository.findPointSavedHistory(orderId);
 

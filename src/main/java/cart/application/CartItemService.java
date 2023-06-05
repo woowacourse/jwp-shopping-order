@@ -12,8 +12,10 @@ import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
@@ -23,6 +25,7 @@ public class CartItemService {
         this.cartRepository = cartRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         Cart cart = cartRepository.findByMember(member);
         return cart.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList());

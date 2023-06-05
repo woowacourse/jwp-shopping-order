@@ -7,6 +7,7 @@ import cart.exception.PointException;
 import cart.repository.PointRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentService {
@@ -18,6 +19,7 @@ public class PaymentService {
     }
 
     @EventListener
+    @Transactional(readOnly = true)
     public void pay(final RequestPaymentEvent requestPaymentEvent) {
         validateOverPointThanHave(requestPaymentEvent);
         validateOverPointThanPrice(requestPaymentEvent);
