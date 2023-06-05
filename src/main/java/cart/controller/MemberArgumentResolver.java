@@ -24,7 +24,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         this.memberRepository = memberRepository;
     }
 
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthPrincipal.class) &&
@@ -49,8 +48,17 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         return new AuthMember(member.getId(), member.getEmail());
     }
 
+    private void validateAuthorizationHeader(String authorization) {
+        if (authorization == null) {
+            throw new AuthenticationException("Authorization 헤더가 없습니다.");
+        }
+        if (!authorization.startsWith(BASIC_AUTH_PREFIX)) {
+            throw new AuthenticationException("잘못된 인증 방식입니다.");
+        }
+    }
+
     private String[] decode(String authorization) {
-        String token = authorization.replace(BASIC_AUTH_PREFIX, "");
+        String token = authorization.substring(BASIC_AUTH_PREFIX.length());
         String decodeToken = decodeToken(token);
         return decodeToken.split(":");
     }
@@ -59,16 +67,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         try {
             return new String(Base64.decodeBase64(token));
         } catch (IllegalStateException e) {
-            throw new AuthenticationException("잘못된 토큰입니다.");
-        }
-    }
-
-    private void validateAuthorizationHeader(String authorization) {
-        if (authorization == null) {
-            throw new AuthenticationException("Authorization 헤더가 없습니다.");
-        }
-        if (!authorization.startsWith(BASIC_AUTH_PREFIX)) {
-            throw new AuthenticationException("잘못된 토큰입니다.");
+            throw new AuthenticationException("토큰을 복호화 할 수 없습니다.");
         }
     }
 }
