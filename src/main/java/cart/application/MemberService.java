@@ -3,7 +3,7 @@ package cart.application;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
-import cart.exception.NoSuchDataExistException;
+import cart.exception.MemberNotExistException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class MemberService {
 
     public Member findAuthorizedMember(final String email, final String password) {
         final Member member = memberDao.findMemberByEmail(email)
-                .orElseThrow(NoSuchDataExistException::new);
+                .orElseThrow(() -> new MemberNotExistException(email));
         if (member.checkPassword(password)) {
             return member;
         }
@@ -33,6 +33,6 @@ public class MemberService {
 
     public Member findMemberById(final long memberId) {
         return memberDao.findMemberById(memberId)
-                .orElseThrow(NoSuchDataExistException::new);
+                .orElseThrow(() -> new MemberNotExistException(memberId));
     }
 }

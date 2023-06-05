@@ -12,7 +12,7 @@ import cart.dto.request.OrderPostRequest;
 import cart.dto.response.OrderPreviewResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductInOrderResponse;
-import cart.exception.NoSuchDataExistException;
+import cart.exception.OrderNotExistException;
 import cart.exception.PaymentPriceUnmatchedException;
 import cart.exception.UnauthorizedAccessException;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class OrderService {
 
     public OrderResponse findOrderById(final Member member, final Long orderId) {
         final Order order = orderDao.findById(orderId)
-                .orElseThrow(NoSuchDataExistException::new);
+                .orElseThrow(() -> new OrderNotExistException(orderId));
         if (!order.getMember().matchMemberByInfo(member)) {
             throw new UnauthorizedAccessException(member.getEmail(), orderId);
         }
@@ -131,7 +131,7 @@ public class OrderService {
         final int finalPrice = discountPolicy.discountAmountByPrice(totalPrice);
         final Long savedOrderId = orderDao.saveOrder(new Order(member, totalPrice, finalPrice));
         return orderDao.findById(savedOrderId)
-                .orElseThrow(NoSuchDataExistException::new);
+                .orElseThrow(() -> new OrderNotExistException(savedOrderId));
     }
 
     private void validateFinalPrice(final int finalPrice, final int requestPrice) {

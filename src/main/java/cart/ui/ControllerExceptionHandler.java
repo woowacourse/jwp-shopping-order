@@ -27,9 +27,10 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchDataExistException.class)
-    public ResponseEntity<ExceptionResponse> handleNoSuchDataExistException() {
+    public ResponseEntity<ExceptionResponse> handleNoSuchDataExistException(final NoSuchDataExistException e) {
+        
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ExceptionResponse(HttpStatus.FORBIDDEN.value(), "존재하지 않는 자원 접근입니다."));
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 자원 접근입니다."));
     }
 
     @ExceptionHandler(InvalidRequestValueException.class)

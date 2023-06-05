@@ -5,7 +5,7 @@ import cart.domain.Product;
 import cart.dto.request.ProductCreateRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
-import cart.exception.NoSuchDataExistException;
+import cart.exception.ProductNotExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ProductService {
 
     public ProductResponse findProductById(final Long productId) {
         final Product product = productDao.findProductById(productId)
-                .orElseThrow(NoSuchDataExistException::new);
+                .orElseThrow(() -> new ProductNotExistException(productId));
 
         return ProductResponse.of(product);
     }
