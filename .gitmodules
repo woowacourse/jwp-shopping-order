@@ -1,0 +1,4 @@
+[submodule "src/main/resources/properties"]
+	path = src/main/resources/properties
+	url = https://github.com/apptie/jwp-shopping-order-sub
+	branch = main

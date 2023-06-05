@@ -1,44 +1,63 @@
 package cart.application;
 
 import cart.domain.Product;
-import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
+import cart.exception.ProductException;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    @Transactional
+    public Long save(ProductRequest productRequest) {
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
+                productRequest.getImageUrl());
+
+        return productRepository.save(product);
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+    public List<ProductResponse> findAll() {
+        List<Product> products = productRepository.findAll();
+
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public ProductResponse findById(Long productId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException.NotFound(productId));
+
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+    @Transactional
+    public void update(Long productId, ProductRequest productRequest) {
+        Product product = new Product(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
+        );
+
+        productRepository.update(productId, product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
-    }
-
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    @Transactional
+    public void deleteById(Long productId) {
+        productRepository.deleteById(productId);
     }
 }
