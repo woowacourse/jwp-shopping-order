@@ -40,8 +40,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Base64Utils;
 
-@WebMvcTest(CartItemApiController.class)
-class CartItemApiControllerTest {
+@WebMvcTest(CartItemController.class)
+class CartItemControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

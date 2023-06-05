@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cart-items")
 @Tag(name = "장바구니 관련 API", description = "장바구니의 아이템을 관리하는 API 입니다.")
 @SecurityRequirement(name = "basic")
-public class CartItemApiController {
+public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
