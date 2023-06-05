@@ -12,7 +12,7 @@ public class OrderResponse {
     private List<CouponResponse> usedCoupons;
     private int usedPoint;
     private int paymentPrice;
-    private String createAt;
+    private String createdAt;
 
     public OrderResponse() {
     }
@@ -30,7 +30,7 @@ public class OrderResponse {
         this.usedCoupons = usedCoupons;
         this.usedPoint = usedPoint;
         this.paymentPrice = paymentPrice;
-        this.createAt = createAt;
+        this.createdAt = createAt;
     }
 
     public static OrderResponse from(final OrderResultDto orderResultDto) {
@@ -64,7 +64,7 @@ public class OrderResponse {
         return paymentPrice;
     }
 
-    public String getCreateAt() {
-        return createAt;
+    public String getCreatedAt() {
+        return createdAt;
     }
 }
