@@ -3,6 +3,13 @@ package cart.db.dao;
 import cart.db.entity.CartItemEntity;
 import cart.db.entity.MemberEntity;
 import cart.db.entity.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -10,12 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartItemDao {
@@ -43,7 +44,7 @@ public class CartItemDao {
         String sql =
                 "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
                         "cart_item.member_id as member_id, member.email as member_email, " +
-                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
@@ -75,7 +76,7 @@ public class CartItemDao {
         String sql =
                 "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
                         "cart_item.member_id as member_id, member.email as member_email, " +
-                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
@@ -108,7 +109,7 @@ public class CartItemDao {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
                 "cart_item.member_id as member_id, member.email as member_email, " +
-                "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url "
                 +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
