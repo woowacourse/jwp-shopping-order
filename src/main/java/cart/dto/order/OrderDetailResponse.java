@@ -1,5 +1,6 @@
 package cart.dto.order;
 
+import cart.domain.order.Order;
 import cart.dto.CouponResponse;
 
 import java.util.List;
@@ -19,6 +20,17 @@ public class OrderDetailResponse {
         this.discountPrice = discountPrice;
         this.confirmState = confirmState;
         this.coupon = coupon;
+    }
+
+    public static OrderDetailResponse of(Order order, List<OrderProductResponse> orderProducts, CouponResponse coupon) {
+        return new OrderDetailResponse(
+                order.getId(),
+                orderProducts,
+                order.getOriginalPrice(),
+                order.getDiscountPrice(),
+                order.getConfirmState(),
+                coupon
+        );
     }
 
     public Long getId() {

@@ -26,6 +26,10 @@ public class OrderProduct implements Model {
         this(null, name, price, imageUrl, quantity, product);
     }
 
+    public static OrderProduct of(Product product, int quantity) {
+        return new OrderProduct(product.getName(), product.getPrice(), product.getImageUrl(), quantity, product);
+    }
+
     public Long getId() {
         return id;
     }
