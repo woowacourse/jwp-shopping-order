@@ -29,7 +29,7 @@ class PointDaoTest {
     void 멤버_ID_와_포인트를_받아_해당_멤버의_포인트를_수정한다() {
         // given
         final Long memberId = 1L;
-        final int point = 2000;
+        final Long point = 2000L;
 
         // when
         pointDao.update(memberId, point);

@@ -21,7 +21,7 @@ public class PointDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void update(final Long memberId, final int point) {
+    public void update(final Long memberId, final Long point) {
         String sql = "UPDATE point SET point = ? WHERE member_id = ?";
 
         final int affectedRow = jdbcTemplate.update(sql, point, memberId);
