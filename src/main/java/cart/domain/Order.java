@@ -7,6 +7,10 @@ import java.util.Objects;
 
 public class Order {
 
+    public static final int DISCOUNT_STANDARD_PRICE = 100000;
+    public static final double DISCOUNT_RATIO = 0.1;
+    public static final int FREE_DELIVERY_STANDARD_PRICE = 50000;
+    public static final long FREE_DELIVERY_FEE = 0L;
     private Long id;
     private Member member;
     private OrderItems orderItems;
@@ -39,15 +43,15 @@ public class Order {
     }
 
     private Long calculateDiscountedPrice() {
-        if (productPrice >= 100000) {
-            return (long) (productPrice * 0.9);
+        if (productPrice >= DISCOUNT_STANDARD_PRICE) {
+            return (long) (productPrice * (1 - DISCOUNT_RATIO));
         }
         return productPrice;
     }
 
     private Long calculateDeliveryFee(Long deliveryFee) {
-        if (productPrice >= 50000) {
-            return 0L;
+        if (productPrice >= FREE_DELIVERY_STANDARD_PRICE) {
+            return FREE_DELIVERY_FEE;
         }
         return deliveryFee;
     }
