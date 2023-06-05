@@ -50,7 +50,7 @@ public class CartItemRepository {
             return Optional.empty();
         }
         CartItemEntity cartItemEntity = nullableCartItemEntity.get();
-        Product product = productDao.findById(cartItemEntity.getId())
+        Product product = productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(ProductNotFound::new)
                 .toDomain();
         return Optional.of(new CartItem(
