@@ -25,7 +25,7 @@ jobs:
         run: |
           git --version
           mv build/libs/jwp-shopping-order.jar .
-          git add .
+          git add jwp-shopping-order.jar
           git stash push
 
       - name: Checkout deploy branch
