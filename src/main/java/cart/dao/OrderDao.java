@@ -7,6 +7,7 @@ import cart.domain.Order;
 import cart.domain.Product;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,13 @@ import static java.util.stream.Collectors.*;
 @Component
 public class OrderDao {
 
+    private static final RowMapper<OrderEntity> ORDER_ROW_MAPPER = (rs, rowNum) -> {
+        final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
+        final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
+        final CartItem item = new CartItem(null, rs.getInt("quantity"), product, member);
+
+        return new OrderEntity(rs.getLong("order_id"), rs.getInt("total_price"), item);
+    };
     private final JdbcTemplate jdbcTemplate;
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
@@ -66,31 +74,8 @@ public class OrderDao {
     }
 
     public Order findById(final Long orderId) {
-        final String sql = "SELECT " +
-                "o.id AS order_id, " +
-                "o.price AS total_price, " +
-                "m.id AS member_id, " +
-                "m.email, " +
-                "m.password, " +
-                "m.grade, " +
-                "op.quantity, " +
-                "p.id AS product_id, " +
-                "p.name, " +
-                "p.price, " +
-                "p.image_url " +
-                "FROM `order` o " +
-                "JOIN member m on o.member_id = m.id " +
-                "JOIN ordered_product op on o.id = op.order_id " +
-                "JOIN product p on op.product_id = p.id " +
-                "WHERE o.id = ?;";
-
-        final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
-            final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
-            final CartItem item = new CartItem(null, rs.getInt("quantity"), product, member);
-
-            return new OrderEntity(rs.getLong("order_id"), rs.getInt("total_price"), item);
-        }, orderId);
+        final String sql = makeOrderQuery("WHERE o.id = ?;");
+        final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, ORDER_ROW_MAPPER, orderId);
 
         if (orderEntities.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 주문 정보입니다.");
@@ -98,8 +83,9 @@ public class OrderDao {
         return toOrder(orderEntities);
     }
 
-    public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT " +
+    private String makeOrderQuery(final String whereClause) {
+
+        return "SELECT " +
                 "o.id AS order_id, " +
                 "o.price AS total_price, " +
                 "m.id AS member_id, " +
@@ -115,15 +101,14 @@ public class OrderDao {
                 "JOIN member m on o.member_id = m.id " +
                 "JOIN ordered_product op on o.id = op.order_id " +
                 "JOIN product p on op.product_id = p.id " +
-                "WHERE o.member_id = ?;";
+                whereClause;
+    }
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-                    final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
-                    final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
-                    final CartItem item = new CartItem(null, rs.getInt("quantity"), product, member);
+    public List<Order> findAllByMemberId(final Long memberId) {
+        final String sql = makeOrderQuery("WHERE o.member_id = ?;");
+        final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, ORDER_ROW_MAPPER, memberId);
 
-                    return new OrderEntity(rs.getLong("order_id"), rs.getInt("total_price"), item);
-                }, memberId).stream()
+        return orderEntities.stream()
                 .collect(collectingAndThen(
                         groupingBy(orderEntity -> orderEntity.id),
                         ordersMap -> ordersMap.values().stream()
