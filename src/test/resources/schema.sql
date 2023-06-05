@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS orders_cart_item(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    price int NOT NULL,
     quantity int NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE

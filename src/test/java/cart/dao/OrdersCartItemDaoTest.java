@@ -19,7 +19,7 @@ class OrdersCartItemDaoTest {
     @Test
     @DisplayName("주문내역에 상품을 등록한다.")
     void createOrdersIdCartItemId() {
-        ordersCartItemDao.createOrdersIdCartItemId(1L, 2L, 3);
+        ordersCartItemDao.createOrdersIdCartItemId(1L, 2L, 3000,3);
         Assertions.assertThat(ordersCartItemDao.findAllByOrdersId(1L)).hasSize(2);
     }
 

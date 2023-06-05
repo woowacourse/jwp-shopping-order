@@ -34,16 +34,16 @@ INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_pri
 INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_price) VALUES ('200원 할인', 'deduction',0,200,1000);
 INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_price) VALUES ('10원 할인', 'deduction',0,10,1000);
 INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_price) VALUES ('1원 할인', 'deduction',0,1,1000);
-
 INSERT INTO orders (member_id,price,confirm_state) VALUES (1,9000,false);
+
 INSERT INTO orders (member_id,price,confirm_state) VALUES (1,4000,true);
 
 INSERT INTO orders_coupon (orders_id,coupon_id) VALUES (1,1);
 INSERT INTO orders_coupon (orders_id,coupon_id) VALUES (2,2);
 
-INSERT INTO orders_cart_item (orders_id,product_id,quantity) VALUES (1,4,1);
-INSERT INTO orders_cart_item (orders_id,product_id,quantity) VALUES (2,1,1);
-INSERT INTO orders_cart_item (orders_id,product_id,quantity) VALUES (2,2,2);
+INSERT INTO orders_cart_item (orders_id,product_id,price,quantity) VALUES (1,4,10000,1);
+INSERT INTO orders_cart_item (orders_id,product_id,price,quantity) VALUES (2,1,1000,1);
+INSERT INTO orders_cart_item (orders_id,product_id,price,quantity) VALUES (2,2,2000,2);
 
 INSERT INTO member_coupon (member_id, coupon_id) VALUES (1,1);
 INSERT INTO member_coupon (member_id, coupon_id) VALUES (1,2);

@@ -31,7 +31,7 @@ public class OrdersRepository {
     }
     public void createOrdersCartItems(final long orders, final List<ProductQuantity> productQuantities){
         for(ProductQuantity productQuantity: productQuantities){
-            ordersCartItemDao.createOrdersIdCartItemId(orders,productQuantity.getProductId(),productQuantity.getQuantity());
+            ordersCartItemDao.createOrdersIdCartItemId(orders,productQuantity.getProductId(),productQuantity.getPrice(),productQuantity.getQuantity());
         }
     }
 
@@ -50,7 +50,7 @@ public class OrdersRepository {
                 .map(entry -> new CartItem(
                         entry.getId(),
                         entry.getQuantity(),
-                        productDao.findById(entry.getProductId()),
+                        productDao.findById(entry.getProductId()).changePrice(entry.getPrice()),
                         member
                 ))
                 .collect(Collectors.toList());
