@@ -48,7 +48,7 @@ public class CouponService {
         return memberCoupon;
     }
 
-    public Long giveCouponTo(Member member, Long couponId) {
+    public Long issueCouponTo(Member member, Long couponId) {
         Coupon coupon = getCouponBy(couponId);
         MemberCoupon memberCoupon = new MemberCoupon(member, coupon);
 

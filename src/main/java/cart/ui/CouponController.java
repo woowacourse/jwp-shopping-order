@@ -22,13 +22,6 @@ public class CouponController {
         this.couponService = couponService;
     }
 
-    // @GetMapping("/coupons")
-    // public ResponseEntity<List<CouponResponse>> showCoupons() {
-    //     List<Coupon> coupons = couponService.getCoupons();
-    //
-    //     return ResponseEntity.ok(CouponResponse.of(coupons));
-    // }
-
     @GetMapping("/coupons")
     public ResponseEntity<List<MemberCouponResponse>> showMemberCoupons(Member member) {
         List<MemberCoupon> memberCoupons = couponService.getMemberCouponsOf(member);
@@ -37,8 +30,8 @@ public class CouponController {
     }
 
     @PostMapping("/member/coupons/{couponId}")
-    public ResponseEntity<Void> giveCouponTo(Member member, @PathVariable Long couponId) {
-        couponService.giveCouponTo(member, couponId);
+    public ResponseEntity<Void> issueCouponTo(Member member, @PathVariable Long couponId) {
+        couponService.issueCouponTo(member, couponId);
 
         return ResponseEntity.noContent().build();
     }
