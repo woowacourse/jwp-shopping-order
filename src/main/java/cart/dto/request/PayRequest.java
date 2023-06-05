@@ -1,6 +1,8 @@
 package cart.dto.request;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 public class PayRequest {
@@ -8,9 +10,11 @@ public class PayRequest {
     private final List<Long> cartItemIds;
 
     @NotNull(message = "선택한 아이템의 정가를 입력해 주세요. 입력값 : ${validatedValue}")
+    @Positive(message = "선택한 아이템의 정가는 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
     private final Integer originalPrice;
 
-    @NotNull(message = "사용할 포인트를 입력해 주세요. 입력값 : ${validatedValue}")
+    @NotNull(message = "사용할 포인트 입력해 주세요. 입력값 : ${validatedValue}")
+    @PositiveOrZero(message = "사용할 포인트는 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
     private final int points;
 
     public PayRequest(final List<Long> cartItemIds, final int originalPrice, final Integer points) {
