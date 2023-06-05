@@ -5,6 +5,8 @@ import cart.step2.order.domain.OrderItemEntity;
 import java.util.List;
 
 public interface OrderItemRepository {
-    void createAllOrderItems(final List<OrderItemEntity> orderItemEntities);
+    void batchInsert(final List<OrderItemEntity> orderItemEntities);
+
+    List<OrderItemEntity> findByOrderId(final Long orderId);
 
 }

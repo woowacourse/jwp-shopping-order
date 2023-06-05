@@ -1,6 +1,7 @@
 package cart.step2.order.persist;
 
 import cart.step2.order.domain.OrderItemEntity;
+import cart.step2.order.domain.repository.OrderItemRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class OrderItemDao {
+public class OrderItemDao implements OrderItemRepository {
 
     private RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) ->
             OrderItemEntity.of(
@@ -37,11 +38,11 @@ public class OrderItemDao {
         jdbcTemplate.batchUpdate(sql, batchItems);
     }
 
-    public List<OrderItemEntity> findAll(final Long orderId) {
-        final String sql = "SELECT * FROM order_item " +
-                "WHERE order_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, orderId);
-    }
+//    public List<OrderItemEntity> findAll(final Long orderId) {
+//        final String sql = "SELECT * FROM order_item " +
+//                "WHERE order_id = ?";
+//        return jdbcTemplate.query(sql, rowMapper, orderId);
+//    }
 
     public List<OrderItemEntity> findByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM order_item " +

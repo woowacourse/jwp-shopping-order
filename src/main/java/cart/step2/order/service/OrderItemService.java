@@ -3,7 +3,7 @@ package cart.step2.order.service;
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
 import cart.step2.order.domain.OrderItemEntity;
-import cart.step2.order.domain.repository.OrderItemRepository;
+import cart.step2.order.persist.OrderItemDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +15,11 @@ import java.util.List;
 public class OrderItemService {
 
     private final CartItemDao cartItemDao;
-    private final OrderItemRepository orderItemRepository;
+    private final OrderItemDao orderItemDao;
 
-    public OrderItemService(final CartItemDao cartItemDao, final OrderItemRepository orderItemRepository) {
+    public OrderItemService(final CartItemDao cartItemDao, final OrderItemDao orderItemDao) {
         this.cartItemDao = cartItemDao;
-        this.orderItemRepository = orderItemRepository;
+        this.orderItemDao = orderItemDao;
     }
 
     @Transactional
@@ -34,7 +34,7 @@ public class OrderItemService {
         }
 
         cartItemDao.batchDelete(memberId, removalCartItems);
-        orderItemRepository.createAllOrderItems(orderItemEntities);
+        orderItemDao.batchInsert(orderItemEntities);
     }
 
 }

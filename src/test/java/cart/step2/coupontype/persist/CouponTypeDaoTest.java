@@ -31,7 +31,7 @@ class CouponTypeDaoTest {
     @Test
     void findAll() {
         // when
-        List<CouponTypeEntity> couponTypeEntities = couponTypeDao.findAll();
+        List<CouponTypeEntity> couponTypeEntities = couponTypeDao.findAllOrderByDiscountAmount();
 
         // then
         assertAll(

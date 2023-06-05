@@ -69,7 +69,7 @@ class CouponTypeRepositoryMapperTest {
                 new CouponTypeEntity(4L, "할인쿠폰4", "10000원 할인 쿠폰", 10000)
         );
 
-        doReturn(couponTypeEntities).when(couponTypeDao).findAll();
+        doReturn(couponTypeEntities).when(couponTypeDao).findAllOrderByDiscountAmount();
 
         // when
         List<CouponType> couponTypes = couponTypeRepositoryMapper.findAll();
