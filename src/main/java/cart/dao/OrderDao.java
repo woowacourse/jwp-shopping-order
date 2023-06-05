@@ -1,6 +1,10 @@
 package cart.dao;
 
-import cart.domain.*;
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.MemberGrade;
+import cart.domain.Order;
+import cart.domain.Product;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,7 +28,7 @@ public class OrderDao {
     }
 
     public Order save(final Order order) {
-        final Order persisted = savePrice(order);
+        final Order persisted = saveOrder(order);
 
         final List<CartItem> cartItems = persisted.getCartItems();
         final String sql = "INSERT INTO ordered_product(order_id, product_id, quantity) VALUES (?, ?, ?)";
@@ -45,7 +49,7 @@ public class OrderDao {
         return persisted;
     }
 
-    private Order savePrice(final Order order) {
+    private Order saveOrder(final Order order) {
         final String sql = "INSERT INTO `order`(price, member_id) VALUES (?, ?)";
 
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -83,7 +87,7 @@ public class OrderDao {
         final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, (rs, rowNum) -> {
             final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
             final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
-            final CartItem item = new CartItem(member, product);
+            final CartItem item = new CartItem(null, rs.getInt("quantity"), product, member);
 
             return new OrderEntity(rs.getLong("order_id"), rs.getInt("total_price"), item);
         }, orderId);
@@ -116,7 +120,7 @@ public class OrderDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
                     final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
                     final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
-                    final CartItem item = new CartItem(member, product);
+                    final CartItem item = new CartItem(null, rs.getInt("quantity"), product, member);
 
                     return new OrderEntity(rs.getLong("order_id"), rs.getInt("total_price"), item);
                 }, memberId).stream()
