@@ -77,4 +77,11 @@ class CouponDaoTest {
 
         assertThat(result).hasSize(1);
     }
+
+    @Test
+    void 아무것도_들어오지_않으면_빈_리스트가_반환된다() {
+        List<Coupon> result = couponDao.findAllByIds(List.of());
+
+        assertThat(result).isEmpty();
+    }
 }

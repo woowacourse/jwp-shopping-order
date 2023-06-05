@@ -1,12 +1,13 @@
 package com.woowahan.techcourse.coupon.db.dao;
 
 import com.woowahan.techcourse.coupon.domain.Coupon;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -33,9 +34,11 @@ public class CouponDao {
             BASE_FIND_ALL_SQL + "WHERE c.id=?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public Optional<Coupon> findById(Long id) {
@@ -55,8 +58,20 @@ public class CouponDao {
     }
 
     public List<Coupon> findAllByIds(@NotNull List<Long> couponIds) {
-        String inSql = String.join(",", Collections.nCopies(couponIds.size(), "?"));
-        String sql = String.format(BASE_FIND_ALL_SQL + " WHERE c.id IN (%s)", inSql);
-        return jdbcTemplate.query(sql, rowMapper, couponIds.toArray());
+        if (isEmpty(couponIds)) {
+            return List.of();
+        }
+        return executeFindAllByIds(couponIds);
+    }
+
+    private boolean isEmpty(List<Long> couponIds) {
+        return couponIds == null || couponIds.isEmpty();
+    }
+
+    private List<Coupon> executeFindAllByIds(List<Long> couponIds) {
+        String sql = BASE_FIND_ALL_SQL + " WHERE c.id IN (:couponIds)";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("couponIds", couponIds);
+        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
     }
 }
