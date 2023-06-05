@@ -15,8 +15,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -60,16 +60,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.warn("Exception from handleMethodArgumentNotValidException = ", e);
-        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        final String errorMessage = fieldErrors.stream()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-        final ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+                .body(errors);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
