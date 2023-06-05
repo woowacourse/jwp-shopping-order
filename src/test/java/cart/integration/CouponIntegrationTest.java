@@ -30,7 +30,7 @@ class CouponIntegrationTest extends IntegrationTest {
         final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(memberCoupon);
 
         final MvcResult result = mockMvc
-                .perform(get("/coupons")
+                .perform(get("/coupons/user")
                         .header("Authorization", MEMBER_1_AUTH_HEADER))
                 .andExpect(status().isOk())
                 .andReturn();

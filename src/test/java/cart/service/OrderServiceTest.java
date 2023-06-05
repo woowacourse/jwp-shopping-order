@@ -45,7 +45,7 @@ class OrderServiceTest {
         final OrderRequestDto orderRequestDto =
                 new OrderRequestDto(List.of(savedCartItem1.getId(), savedCartItem2.getId()), null);
         //when
-        final Long orderId = orderService.order(MEMBER_3, orderRequestDto);
+        final Long orderId = orderService.order(MEMBER_3, orderRequestDto).getId();
 
         //then
         //장바구니에 주문한 아이템들 삭제했는지 검증
