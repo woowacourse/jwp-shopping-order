@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS product
 (
-    id        BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name      VARCHAR(255) NOT NULL,
-    price     INT          NOT NULL,
-    image_url VARCHAR(255) NOT NULL
+    id        BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(255)  NOT NULL,
+    price     INT           NOT NULL,
+    image_url VARCHAR(3200) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS member
