@@ -7,6 +7,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.repository.*;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.*;
+import cart.exception.CouponException;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,16 +34,21 @@ public class OrderService {
         validationSave(orderRequest);
 
         List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectedCartIds());
-
-        Order order = new Order(member, cartItems,
-                couponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId()));
-
+        Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId());
+        validateCoupon(coupon);
+        Order order = new Order(member, cartItems,coupon);
         return orderRepository.save(order);
     }
 
     private static void validationSave(OrderRequest orderRequest) {
         if (orderRequest.getSelectedCartIds().isEmpty()) {
             throw new OrderException("주문 상품이 비어있습니다.");
+        }
+    }
+
+    private void validateCoupon(Coupon coupon) {
+        if(coupon == null){
+            throw new CouponException("유효하지 않은 쿠폰입니다.");
         }
     }
 
