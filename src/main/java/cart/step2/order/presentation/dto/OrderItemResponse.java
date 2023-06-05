@@ -7,9 +7,9 @@ public class OrderItemResponse {
 
     private final Long id;
     private final ProductResponse product;
-    private final int quantity;
+    private final Integer quantity;
 
-    private OrderItemResponse(final Long id, final ProductResponse productResponse, final int quantity) {
+    private OrderItemResponse(final Long id, final ProductResponse productResponse, final Integer quantity) {
         this.id = id;
         this.product = productResponse;
         this.quantity = quantity;
@@ -28,7 +28,7 @@ public class OrderItemResponse {
         return product;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

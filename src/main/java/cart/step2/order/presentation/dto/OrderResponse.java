@@ -11,7 +11,7 @@ public class OrderResponse {
     private Long id;
     private List<OrderItemResponse> orderItems;
     private LocalDateTime date;
-    private int price;
+    private Integer price;
 
     public OrderResponse(final Long id, final List<OrderItem> orderItems, final LocalDateTime date, final int price) {
         this.id = id;
@@ -34,7 +34,7 @@ public class OrderResponse {
         return date;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

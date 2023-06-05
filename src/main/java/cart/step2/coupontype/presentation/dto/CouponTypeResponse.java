@@ -6,7 +6,7 @@ public class CouponTypeResponse {
 
     private final Long id;
     private final String name;
-    private final int discountAmount;
+    private final Integer discountAmount;
     private final String description;
 
     public CouponTypeResponse(final CouponType couponType) {
@@ -24,7 +24,7 @@ public class CouponTypeResponse {
         return name;
     }
 
-    public int getDiscountAmount() {
+    public Integer getDiscountAmount() {
         return discountAmount;
     }
 

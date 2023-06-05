@@ -7,7 +7,7 @@ public class CouponResponse {
 
     private final Long id;
     private final String name;
-    private final int discountAmount;
+    private final Integer discountAmount;
     private final String description;
     private final boolean isUsed;
 
