@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 class BasicAuthorizationParserTest {
 
-    private final BasicAuthorizationParser basicAuthorizationParser = new BasicAuthorizationParser();
-
     @CsvSource({
             "AnotherValue, pizza@pizza.com:password",
             "Basic, pizza@pizza.com.password"
@@ -30,7 +28,7 @@ class BasicAuthorizationParserTest {
         final String header = startWith + " " + encodedCredential;
 
         // expect
-        assertThatThrownBy(() -> basicAuthorizationParser.parse(header))
+        assertThatThrownBy(() -> BasicAuthorizationParser.parse(header))
                 .isInstanceOf(InvalidBasicCredentialException.class)
                 .hasMessage("올바른 Basic 형식의 인증정보가 아닙니다. 입력값: " + header);
     }
@@ -43,7 +41,7 @@ class BasicAuthorizationParserTest {
         final String header = "Basic " + encodedCredential;
 
         // when
-        final Credential result = basicAuthorizationParser.parse(header);
+        final Credential result = BasicAuthorizationParser.parse(header);
 
         // then
         assertAll(

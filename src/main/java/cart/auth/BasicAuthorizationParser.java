@@ -1,11 +1,9 @@
 package cart.auth;
 
 import cart.exception.auth.InvalidBasicCredentialException;
-import org.springframework.stereotype.Component;
 
 import java.util.Base64;
 
-@Component
 public class BasicAuthorizationParser {
 
     private static final String KEYWORD = "Basic ";
@@ -15,7 +13,7 @@ public class BasicAuthorizationParser {
     private static final int PASSWORD_INDEX = 1;
     private static final String EMPTY = "";
 
-    public Credential parse(final String authorizationHeader) {
+    public static Credential parse(final String authorizationHeader) {
         if (authorizationHeader == null || authorizationHeader.isBlank()) {
             throw new InvalidBasicCredentialException(authorizationHeader);
         }
@@ -26,12 +24,12 @@ public class BasicAuthorizationParser {
         return new Credential(credential[EMAIL_INDEX], credential[PASSWORD_INDEX]);
     }
 
-    private String[] parseCredential(final String authorizationHeader) {
+    private static String[] parseCredential(final String authorizationHeader) {
         final String credential = authorizationHeader.replace(KEYWORD, EMPTY);
         return decodeBase64(credential).split(DELIMITER);
     }
 
-    private String decodeBase64(final String credential) {
+    private static String decodeBase64(final String credential) {
         try {
             return new String(Base64.getDecoder().decode(credential));
         } catch (final IllegalArgumentException e) {
@@ -39,7 +37,7 @@ public class BasicAuthorizationParser {
         }
     }
 
-    private boolean isInvalidBasicCredential(final String authorizationHeader) {
+    private static boolean isInvalidBasicCredential(final String authorizationHeader) {
         return !authorizationHeader.startsWith(KEYWORD) ||
                 parseCredential(authorizationHeader).length != VALID_CREDENTIAL_SIZE;
     }

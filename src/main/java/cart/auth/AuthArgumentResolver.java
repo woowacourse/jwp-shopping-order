@@ -10,15 +10,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-
-    private final CredentialDao credentialDao;
-    private final BasicAuthorizationParser basicAuthorizationParser;
-
-    public AuthArgumentResolver(final CredentialDao credentialDao, final BasicAuthorizationParser basicAuthorizationParser) {
-        this.credentialDao = credentialDao;
-        this.basicAuthorizationParser = basicAuthorizationParser;
-    }
-
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         final boolean hasParameterAnnotation = parameter.hasParameterAnnotation(Auth.class);
@@ -33,10 +24,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        final String authorizationHeader = webRequest.getHeader("Authorization");
-        final Credential credential = basicAuthorizationParser.parse(authorizationHeader);
-        return credentialDao.findByEmail(credential.getEmail())
-                .orElseThrow(() -> new AuthenticationException("올바르지 않은 이메일입니다. 입력값: " + credential.getEmail()));
-
+        return webRequest.getAttribute("credential", NativeWebRequest.SCOPE_REQUEST);
     }
 }

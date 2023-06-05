@@ -15,21 +15,17 @@ import java.util.List;
 public class WebConfiguration implements WebMvcConfigurer {
 
     private final CredentialDao credentialDao;
-    private final BasicAuthorizationParser basicAuthorizationParser;
 
     public WebConfiguration(
-            final CredentialDao credentialDao,
-            final BasicAuthorizationParser basicAuthorizationParser
+            final CredentialDao credentialDao
     ) {
         this.credentialDao = credentialDao;
-        this.basicAuthorizationParser = basicAuthorizationParser;
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         final AuthInterceptor authInterceptor = new AuthInterceptor(
-                credentialDao,
-                basicAuthorizationParser
+                credentialDao
         );
         registry.addInterceptor(authInterceptor).addPathPatterns("/cart-items/**");
         registry.addInterceptor(authInterceptor).addPathPatterns("/orders/**");
@@ -38,6 +34,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthArgumentResolver(credentialDao, basicAuthorizationParser));
+        resolvers.add(new AuthArgumentResolver());
     }
 }

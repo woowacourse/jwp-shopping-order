@@ -12,14 +12,11 @@ public class AuthInterceptor implements HandlerInterceptor {
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
 
     private final CredentialDao credentialDao;
-    private final BasicAuthorizationParser basicAuthorizationParser;
 
     public AuthInterceptor(
-            final CredentialDao credentialDao,
-            final BasicAuthorizationParser basicAuthorizationParser
+            final CredentialDao credentialDao
     ) {
         this.credentialDao = credentialDao;
-        this.basicAuthorizationParser = basicAuthorizationParser;
     }
 
     @Override
@@ -30,13 +27,15 @@ public class AuthInterceptor implements HandlerInterceptor {
     ) {
         final String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER_NAME);
 
-        final Credential credential = basicAuthorizationParser.parse(authorizationHeader);
+        final Credential credential = BasicAuthorizationParser.parse(authorizationHeader);
         final Credential savedCredential = credentialDao.findByEmail(credential.getEmail())
                 .orElseThrow(() -> new AuthenticationException("올바르지 않은 이메일입니다. 입력값: " + credential.getEmail()));
 
         if (credential.isNotSamePassword(savedCredential)) {
             throw new AuthenticationException();
         }
+
+        request.setAttribute("credential", savedCredential);
 
         return true;
     }
