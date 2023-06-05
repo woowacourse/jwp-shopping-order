@@ -6,9 +6,9 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final Integer grade;
+    private final int grade;
 
-    public Member(Long id, String email, String password, Integer grade) {
+    public Member(Long id, String email, String password, int grade) {
         this.id = id;
         this.email = email;
         this.password = password;

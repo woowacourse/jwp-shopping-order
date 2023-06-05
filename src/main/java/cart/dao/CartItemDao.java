@@ -28,7 +28,8 @@ public class CartItemDao {
         String imageUrl = rs.getString("image_url");
         Long cartItemId = rs.getLong("cart_item.id");
         int quantity = rs.getInt("cart_item.quantity");
-        Member member = new Member(memberId, email, null, null);
+        int grade = rs.getInt("grade.grade");
+        Member member = new Member(memberId, email, null, grade);
         Product product = new Product(productId, name, price, imageUrl);
         return new CartItem(cartItemId, quantity, product, member);
     };
@@ -39,11 +40,12 @@ public class CartItemDao {
 
     public List<CartItem> findAllByMemberId(Long memberId) {
         String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity, grade.grade "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "INNER JOIN grade ON member.grade_id = grade.id " +
                         "WHERE cart_item.member_id = ?";
         return jdbcTemplate.query(sql, memberProductCartItemRowMapper, memberId);
     }
@@ -69,11 +71,12 @@ public class CartItemDao {
 
     public CartItem findById(Long id) {
         String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity, grade.grade "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "INNER JOIN grade ON member.grade_id = grade.id " +
                         "WHERE cart_item.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, memberProductCartItemRowMapper, id);
         return cartItems.isEmpty() ? null : cartItems.get(0);
@@ -99,12 +102,11 @@ public class CartItemDao {
     public List<CartItem> findAllByIds(List<Long> ids) {
         String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
         final String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity, grade.grade "
                         + "FROM cart_item "
-                        + "INNER JOIN member "
-                        + "ON cart_item.member_id = member.id "
-                        + "INNER JOIN product "
-                        + "ON cart_item.product_id = product.id "
+                        + "INNER JOIN member ON cart_item.member_id = member.id "
+                        + "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "INNER JOIN grade ON grade.id = member.grade_id "
                         + "WHERE cart_item.id IN (" + inClause + ")";
         return jdbcTemplate.query(sql, memberProductCartItemRowMapper, ids.toArray());
     }
