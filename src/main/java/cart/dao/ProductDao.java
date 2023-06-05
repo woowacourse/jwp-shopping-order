@@ -4,8 +4,6 @@ import cart.entity.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -44,11 +42,8 @@ public class ProductDao {
 
     public ProductEntity findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, MAPPER, id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchElementException();
-        }
+        final List<ProductEntity> productEntities = jdbcTemplate.query(sql, MAPPER, id);
+        return productEntities.isEmpty() ? null : productEntities.get(0);
     }
 
     public long createProduct(final ProductEntity productEntity) {
