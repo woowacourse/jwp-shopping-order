@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public enum OrderStatus {
 
-  COMPLETE("결제 완료"),
-  CANCEL("결제 취소");
+  COMPLETE("결제완료"),
+  CANCEL("결제취소");
 
   private final String value;
 

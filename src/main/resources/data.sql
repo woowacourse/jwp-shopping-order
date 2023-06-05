@@ -61,14 +61,14 @@ INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 6, 2);
 
 INSERT INTO orders (member_id, delivery_fee, coupon_id, order_status, created_at)
-VALUES (1, 3000, 3, '결제 취소', now());
+VALUES (1, 3000, 3, '결제취소', now());
 INSERT INTO orders (member_id, delivery_fee, coupon_id, order_status, created_at)
-VALUES (1, 5000, 2, '결제 완료', now());
+VALUES (1, 5000, 2, '결제완료', now());
 INSERT INTO orders (member_id, delivery_fee, coupon_id, order_status, created_at)
-VALUES (1, 5000, null, '결제 완료', now());
+VALUES (1, 5000, null, '결제완료', now());
 
 INSERT INTO orders (member_id, delivery_fee, coupon_id, order_status, created_at)
-VALUES (2, 4000, 1, '결제 완료', now());
+VALUES (2, 4000, 1, '결제완료', now());
 
 -- 1번 주문
 
@@ -125,7 +125,7 @@ INSERT INTO coupon (name, discount_price)
 VALUES ('5000원 할인', 5000);
 
 INSERT INTO coupon (name, discount_price)
-VALUES ('백만원 할인', 1000000);
+VALUES ('10000원 할인', 10000);
 
 INSERT INTO member_coupon (member_id, coupon_id)
 VALUES (1, 1);
