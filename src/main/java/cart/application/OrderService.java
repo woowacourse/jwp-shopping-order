@@ -59,11 +59,13 @@ public class OrderService {
         return (!orderRequest.isCouponNull()) && (!orderRequest.getCouponId().equals(0L));
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findOrder(Member member, Long orderId) {
         OrderDto order = orderDao.findById(orderId);
         return OrderResponse.of(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderItemDto> findOrderByMember(Member member) {
         List<OrderDto> orders = orderDao.findByMemberId(member.getId());
         return orders.stream().map(orderDto -> OrderItemDto.of(orderDto.getId(), orderDto.getCartItems()))

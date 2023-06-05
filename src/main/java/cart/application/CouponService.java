@@ -29,11 +29,13 @@ public class CouponService {
         return discounting;
     }
 
+    @Transactional(readOnly = true)
     public List<CouponResponse> findByMember(Member member) {
         List<Coupon> coupons = couponDao.findByMemberId(member.getId());
         return coupons.stream().map(CouponResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public void addCouponDependsOnPay(Member member, Order order) {
         if (!order.isBiggerPrice(Money.from(COUPON_ADD_PRICE))) {
             return;

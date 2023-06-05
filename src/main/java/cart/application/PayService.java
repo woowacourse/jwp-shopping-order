@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PayService {
@@ -15,6 +16,7 @@ public class PayService {
         this.memberDao = memberDao;
     }
 
+    @Transactional
     public Order pay(Order order, Money deliveryFee, Money discounting, Long id) {
         Order confirmed = order.confirmOrder(deliveryFee, discounting);
         Member member = memberDao.getMemberById(id);
