@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
-import cart.order.exception.CanNotDeleteNotMyOrderException;
+import cart.order.exception.CanNotChangeNotMyOrderException;
 import cart.order.exception.CanNotOrderNotInCartException;
 import cart.order.exception.NotSameTotalPriceException;
 import java.math.BigDecimal;
@@ -135,6 +135,6 @@ class OrderCommandServiceTest {
 
     //when & then
     assertThatThrownBy(() -> orderCommandService.deleteOrder(member, 다른_사용자의_주문_아이디))
-        .isInstanceOf(CanNotDeleteNotMyOrderException.class);
+        .isInstanceOf(CanNotChangeNotMyOrderException.class);
   }
 }

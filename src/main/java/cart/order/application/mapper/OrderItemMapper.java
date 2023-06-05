@@ -65,7 +65,7 @@ public class OrderItemMapper {
             orderItem.getName(),
             orderItem.getImageUrl(),
             orderItem.getQuantity(),
-            orderItem.getPrice().multiply(orderItem.getQuantity()).getValue()))
+            orderItem.calculatePrice().getValue()))
         .collect(Collectors.toList());
   }
 }

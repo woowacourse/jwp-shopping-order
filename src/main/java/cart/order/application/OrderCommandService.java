@@ -17,7 +17,7 @@ import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
 import cart.order.domain.OrderedItems;
-import cart.order.exception.CanNotDeleteNotMyOrderException;
+import cart.order.exception.CanNotChangeNotMyOrderException;
 import cart.order.exception.CanNotDiscountPriceMoreThanTotalPriceException;
 import cart.order.exception.CanNotOrderNotInCartException;
 import cart.order.exception.NotSameTotalPriceException;
@@ -101,8 +101,10 @@ public class OrderCommandService {
     }
   }
 
-  private void validateCouponExceedTotalPrice(final OrderedItems orderedItems,
-      final Coupon coupon) {
+  private void validateCouponExceedTotalPrice(
+      final OrderedItems orderedItems,
+      final Coupon coupon
+  ) {
     if (coupon.isExceedDiscountFrom(orderedItems.calculateAllItemPrice())) {
       throw new CanNotDiscountPriceMoreThanTotalPriceException("쿠폰 가격이 전체 가격보다 높으면 사용할 수 있습니다.");
     }
@@ -116,7 +118,6 @@ public class OrderCommandService {
 
   public void deleteOrder(final Member member, final Long orderId) {
     final Order order = orderDao.findByOrderId(orderId);
-
     validateOrderOwner(order, member);
 
     final List<Long> deletedOrderItemIds = orderItemDao.findByOrderId(orderId)
@@ -130,7 +131,7 @@ public class OrderCommandService {
 
   private void validateOrderOwner(final Order order, final Member member) {
     if (order.isNotMyOrder(member)) {
-      throw new CanNotDeleteNotMyOrderException("사용자의 주문 목록 이외는 삭제할 수 없습니다.");
+      throw new CanNotChangeNotMyOrderException("사용자의 주문 목록 이외는 수정할 수 없습니다.");
     }
   }
 
@@ -138,6 +139,7 @@ public class OrderCommandService {
     orderDao.updateByOrderId(orderId, OrderStatus.CANCEL.getValue());
 
     final Order order = orderDao.findByOrderId(orderId);
+    validateOrderOwner(order, member);
 
     if (order.hasCoupon()) {
       memberCouponCommandService.updateUsedCoupon(order.getCoupon(), member);
