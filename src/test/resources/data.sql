@@ -28,11 +28,20 @@ INSERT INTO member (email, password, nickname) VALUES ('b@b.com', '1234', '엽�
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 6);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 5, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 7, 7);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 8, 9);
 
 INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('10프로 할인', 1000, 10000, 'FIXED_PERCENTAGE', null, 0.1);
 INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('5000원 할인', 5000, null, 'FIXED_AMOUNT', 5000, null);
+INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('20프로 할인', 1000, 10000, 'FIXED_PERCENTAGE', null, 0.2);
+INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('10000원 할인', 10000, null, 'FIXED_AMOUNT', 10000, null);
 
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 1L, '2020-02-02 00:00:00');
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 2L, '2020-02-02 00:00:00');
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 3L, '2020-02-02 00:00:00');
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 4L, '2020-02-02 00:00:00');
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (2L, 1L, '2020-02-02 00:00:00');
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (2L, 2L, '2020-02-02 00:00:00');

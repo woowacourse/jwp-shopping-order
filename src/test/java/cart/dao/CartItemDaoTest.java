@@ -43,13 +43,13 @@ public class CartItemDaoTest {
         List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
 
         assertThat(cartItems).isNotEmpty();
-        assertThat(cartItems.size()).isEqualTo(2);
+        assertThat(cartItems.size()).isEqualTo(4);
     }
 
     @Test
     public void save_ShouldAddCartItem() {
         Member member = new Member(1L, "a@a.com", "1234", "라잇");
-        Product product = new Product(4L, "해왕성", 10000,
+        Product product = new Product(8L, "해왕성", 10000,
             "https://cdn.pixabay.com/photo/2020/09/06/22/11/neptune-5550216__480.jpg");
         CartItem cartItem = new CartItem(null, 3, product, member);
 
@@ -67,7 +67,7 @@ public class CartItemDaoTest {
     @Test
     void findByMemberId_ShouldReturnCartItemsForGivenMemberId() {
         Long memberId = 1L;
-        List<Long> expectedCartItemIds = List.of(1L, 2L);
+        List<Long> expectedCartItemIds = List.of(1L, 2L, 3L, 4L);
 
         List<Long> actualCartItemIds = cartItemDao.findByMemberId(memberId)
             .stream()

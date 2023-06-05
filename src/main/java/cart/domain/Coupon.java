@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.exception.BadRequestException;
+import cart.exception.ExceptionType;
+
 public class Coupon {
     private final Long id;
     private final String name;
@@ -44,8 +47,7 @@ public class Coupon {
             return new Money((int)(money.value() * (1 - discountPercentage)));
         }
 
-        //// TODO: 2023/05/31 커스텀 익셉션 논의 후 설정
-        throw new IllegalArgumentException();
+        throw new BadRequestException(ExceptionType.COUPON_NO_EXIST);
     }
 
     public Long getId() {

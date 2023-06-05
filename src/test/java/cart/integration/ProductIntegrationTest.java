@@ -42,7 +42,6 @@ public class ProductIntegrationTest extends IntegrationTest {
     public void getCreatedProduct() {
         var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
-        // create product
         var location =
                 given()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +52,6 @@ public class ProductIntegrationTest extends IntegrationTest {
                         .statusCode(HttpStatus.CREATED.value())
                         .extract().header("Location");
 
-        // get product
         var responseProduct = given().log().all()
                 .when()
                 .get(location)
