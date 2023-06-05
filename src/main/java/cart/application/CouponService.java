@@ -25,7 +25,7 @@ public class CouponService {
     public Long save(Member member, CouponCreateRequest request) {
         validateExistCoupon(request);
         validateDuplicateCoupon(member, request);
-        Coupon coupon = couponRepository.save(member, request.getId());
+        Coupon coupon = couponRepository.save(member.getId(), request.getId());
         return coupon.getId();
     }
 
@@ -43,7 +43,7 @@ public class CouponService {
 
     @Transactional(readOnly = true)
     public List<CouponResponse> findByMemberId(Member member) {
-        return couponRepository.findByMemberId(member).stream()
+        return couponRepository.findByMemberId(member.getId()).stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
@@ -51,7 +51,7 @@ public class CouponService {
     @Transactional(readOnly = true)
     public List<CouponIssuableResponse> findAll(Member member) {
         List<Coupon> coupons = couponRepository.findAll();
-        List<Coupon> memberCoupons = couponRepository.findByMemberId(member);
+        List<Coupon> memberCoupons = couponRepository.findByMemberId(member.getId());
 
         return coupons.stream()
                 .map(it -> CouponIssuableResponse.of(it, !memberCoupons.contains(it)))

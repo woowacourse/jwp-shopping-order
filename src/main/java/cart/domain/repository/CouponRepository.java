@@ -1,6 +1,5 @@
 package cart.domain.repository;
 
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import org.springframework.stereotype.Component;
 
@@ -9,13 +8,13 @@ import java.util.List;
 @Component
 public interface CouponRepository {
 
-    Coupon save(Member member, Long couponId);
+    Coupon save(Long memberId, Long couponId);
 
-    List<Coupon> findByMemberId(Member member);
+    List<Coupon> findByMemberId(Long memberId);
 
     List<Coupon> findAll();
 
-    Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId);
+    Coupon findAvailableCouponByIdAndMemberId(Long couponId, Long memberId);
 
     boolean checkById(Long couponId);
 

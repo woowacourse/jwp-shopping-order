@@ -69,7 +69,7 @@ class OrderRepositoryTest {
         orderRepository.save(order1);
         orderRepository.save(order2);
 
-        List<Order> orders = orderRepository.findAllByMemberId(member);
+        List<Order> orders = orderRepository.findAllByMemberId(member.getId());
 
         assertAll(
                 () -> assertThat(orders.get(0).getMember()).usingRecursiveComparison().isEqualTo(member),
@@ -120,7 +120,7 @@ class OrderRepositoryTest {
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         orderRepository.save(requestOrder);
 
-        assertDoesNotThrow(()->orderRepository.deleteById(member,requestOrder.getId()));
+        assertDoesNotThrow(()->orderRepository.deleteById(member.getId(),requestOrder.getId()));
     }
 
     @Test
@@ -138,10 +138,10 @@ class OrderRepositoryTest {
         Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
         Order savedOrder = orderRepository.save(requestOrder);
 
-        orderRepository.confirmById(savedOrder.getId(),member);
+        orderRepository.confirmById(savedOrder.getId(),member.getId());
         assertAll(
-                ()->assertThat(orderRepository.findByIdAndMemberId(member,savedOrder.getId()).getMember().getEmail()).isEqualTo(member.getEmail()),
-                ()->assertThat(orderRepository.findByIdAndMemberId(member,savedOrder.getId()).calculatePrice()).isEqualTo(requestOrder.calculatePrice())
+                ()->assertThat(orderRepository.findByIdAndMemberId(member.getId(),savedOrder.getId()).getMember().getEmail()).isEqualTo(member.getEmail()),
+                ()->assertThat(orderRepository.findByIdAndMemberId(member.getId(),savedOrder.getId()).calculatePrice()).isEqualTo(requestOrder.calculatePrice())
 
         );
     }

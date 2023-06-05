@@ -2,7 +2,6 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponTypes;
 import cart.domain.coupon.DiscountType;
@@ -26,15 +25,15 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public Coupon save(Member member, Long couponId) {
-        Long savedId = memberCouponDao.save(new MemberCouponEntity(couponId, member.getId(), true));
+    public Coupon save(Long memberId, Long couponId) {
+        Long savedId = memberCouponDao.save(new MemberCouponEntity(couponId, memberId, true));
         CouponEntity couponEntity = memberCouponDao.findById(savedId).orElseThrow(() -> new CouponException("잘못된 쿠폰입니다."));
         return toDomain(couponEntity);
     }
 
     @Override
-    public List<Coupon> findByMemberId(Member member) {
-        return memberCouponDao.findAllByMemberId(member.getId()).stream()
+    public List<Coupon> findByMemberId(Long memberId) {
+        return memberCouponDao.findAllByMemberId(memberId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
@@ -46,9 +45,9 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public Coupon findAvailableCouponByIdAndMemberId(Member member, Long couponId) {
-        if (memberCouponDao.checkByCouponIdAndMemberId(couponId, member.getId()) || couponId == null) {
-            return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(member.getId(), couponId).orElse(CouponEntity.EMPTY));
+    public Coupon findAvailableCouponByIdAndMemberId(Long couponId, Long memberId) {
+        if (memberCouponDao.checkByCouponIdAndMemberId(couponId, memberId) || couponId == null) {
+            return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(memberId, couponId).orElse(CouponEntity.EMPTY));
         }
         return null;
     }

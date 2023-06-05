@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.response.OrderResponse;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.CouponConfirmResponse;
+import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +41,13 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(Member member, @PathVariable("id") Long id) {
-        orderService.deleteById(member, id);
+        orderService.deleteById(id, member);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/confirm")
     public ResponseEntity<CouponConfirmResponse> confirmById(Member member, @PathVariable("id") Long id) {
-        CouponConfirmResponse response = orderService.confirmById(member, id);
+        CouponConfirmResponse response = orderService.confirmById(id, member.getId());
         return ResponseEntity.ok(response);
     }
 }

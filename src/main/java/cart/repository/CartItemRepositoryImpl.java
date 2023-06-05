@@ -57,8 +57,8 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     }
 
     @Override
-    public List<CartItem> findAllByIdsAndMemberId(Member member, List<Long> cartProductIds) {
-        return cartItemDao.findAllByIdsAndMemberId(member.getId(), cartProductIds).stream()
+    public List<CartItem> findAllByIdsAndMemberId(List<Long> cartProductIds, Long memberId) {
+        return cartItemDao.findAllByIdsAndMemberId(memberId, cartProductIds).stream()
                 .map(this::toDomain).collect(Collectors.toList());
     }
 

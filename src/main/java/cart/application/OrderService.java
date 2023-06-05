@@ -33,8 +33,8 @@ public class OrderService {
     public Long save(Member member, OrderRequest orderRequest) {
         validationSave(orderRequest);
 
-        List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(member, orderRequest.getSelectedCartIds());
-        Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId());
+        List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(orderRequest.getSelectedCartIds(), member.getId());
+        Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(orderRequest.getCouponId(),member.getId());
         validateCoupon(coupon);
         Order order = new Order(member, cartItems,coupon);
         Order savedOrder = orderRepository.save(order);
@@ -55,21 +55,21 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrdersResponse> findAllByMemberId(Member member) {
-        return orderRepository.findAllByMemberId(member).stream()
+        return orderRepository.findAllByMemberId(member.getId()).stream()
                 .sorted(Comparator.comparing(Order::getId).reversed())
                 .map(OrdersResponse::from)
                 .collect(Collectors.toList());
     }
 
     public OrderResponse findByIdAndMemberId(Member member, Long orderId) {
-        Order order = orderRepository.findByIdAndMemberId(member, orderId);
+        Order order = orderRepository.findByIdAndMemberId(orderId,member.getId());
 
         return OrderResponse.of(order);
     }
 
-    public void deleteById(Member member, Long orderId) {
+    public void deleteById(Long orderId, Member member) {
         validationDelete(orderId);
-        orderRepository.deleteById(member, orderId);
+        orderRepository.deleteById(orderId, member.getId());
     }
 
     private void validationDelete(Long orderId) {
@@ -78,8 +78,8 @@ public class OrderService {
         }
     }
 
-    public CouponConfirmResponse confirmById(Member member, Long orderId) {
-        Coupon coupon = orderRepository.confirmById(orderId, member);
+    public CouponConfirmResponse confirmById(Long orderId, Long memberId) {
+        Coupon coupon = orderRepository.confirmById(orderId, memberId);
 
         return CouponConfirmResponse.from(CouponResponse.from(coupon));
     }

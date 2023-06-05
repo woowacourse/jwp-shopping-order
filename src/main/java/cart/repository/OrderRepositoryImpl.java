@@ -63,18 +63,18 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAllByMemberId(Member member) {
-        return orderDao.findAllByMemberId(member.getId()).stream()
+    public List<Order> findAllByMemberId(Long memberId) {
+        return orderDao.findAllByMemberId(memberId).stream()
                 .map(this::toDomain).collect(Collectors.toList());
     }
 
     @Override
-    public Order findByIdAndMemberId(Member member, Long orderId) {
-        return toDomain(orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
+    public Order findByIdAndMemberId(Long memberId, Long orderId) {
+        return toDomain(orderDao.findByIdAndMemberId(memberId, orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
     }
 
     @Override
-    public void deleteById(Member member, Long orderId) {
+    public void deleteById(Long orderId, Long memberId) {
         if (orderCouponDao.checkByOrderId(orderId)) {
             Long memberCouponId = orderCouponDao.findIdByOrderId(orderId);
             orderCouponDao.deleteByOrderId(orderId);
@@ -85,15 +85,15 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Coupon confirmById(Long orderId, Member member) {
-        OrderEntity orderEntity = orderDao.findByIdAndMemberId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
-        orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), member.getId());
+    public Coupon confirmById(Long orderId, Long memberId) {
+        OrderEntity orderEntity = orderDao.findByIdAndMemberId(memberId, orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
+        orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), memberId);
 
         CouponEntity bonusCoupon = new CouponEntity(Coupon.BONUS_COUPON.getName(), Coupon.BONUS_COUPON.getCouponTypes().getCouponTypeName(),
                 Coupon.BONUS_COUPON.getMinimumPrice(), Coupon.BONUS_COUPON.getDiscountPrice(), Coupon.BONUS_COUPON.getDiscountRate());
 
         CouponEntity coupon = couponDao.findByName(bonusCoupon).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
-        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), member.getId(), true));
+        Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), memberId, true));
 
         return new Coupon(userCouponId, coupon.getName(),
                 DiscountType.from(coupon.getDiscountType()),

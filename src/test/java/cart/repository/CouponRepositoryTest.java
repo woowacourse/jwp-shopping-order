@@ -28,15 +28,15 @@ class CouponRepositoryTest {
     void publishCoupon() {
         Member member = memberDao.findById(1L);
 
-        assertDoesNotThrow(() -> couponRepository.save(member, 1L));
+        assertDoesNotThrow(() -> couponRepository.save(member.getId(), 1L));
     }
 
     @Test
     @DisplayName("사용자 쿠폰을 조회한다")
     void getCoupon() {
         Member member = memberDao.findById(1L);
-        couponRepository.save(member, 1L);
-        List<Coupon> memberCoupons = couponRepository.findByMemberId(member);
+        couponRepository.save(member.getId(), 1L);
+        List<Coupon> memberCoupons = couponRepository.findByMemberId(member.getId());
         assertThat(memberCoupons.get(0).getName()).isEqualTo("5000원 할인 쿠폰");
     }
 

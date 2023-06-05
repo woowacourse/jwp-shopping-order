@@ -1,7 +1,6 @@
 package cart.domain.repository;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +18,6 @@ public interface CartItemRepository {
 
     void updateQuantity(CartItem cartItem);
 
-    List<CartItem> findAllByIdsAndMemberId(Member member, List<Long> cartProductIds);
+    List<CartItem> findAllByIdsAndMemberId(List<Long> cartProductIds, Long member);
 
 }
