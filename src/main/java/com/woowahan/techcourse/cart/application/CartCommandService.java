@@ -30,8 +30,8 @@ public class CartCommandService {
     public void updateQuantity(long memberId, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findByIdAndMemberId(id, memberId)
                 .orElseThrow(CartItemNotFoundException::new);
-        cartItem.changeQuantity(request.getQuantity());
-        updateOrDeleteCartItem(cartItem);
+        CartItem updatedItem = cartItem.changeQuantity(request.getQuantity());
+        updateOrDeleteCartItem(updatedItem);
     }
 
     private void updateOrDeleteCartItem(CartItem cartItem) {

@@ -7,7 +7,7 @@ public class CartItem {
     private final Long id;
     private final long productId;
     private final long memberId;
-    private int quantity;
+    private final int quantity;
 
     public CartItem(Long id, int quantity, long productId, long memberId) {
         this.id = id;
@@ -36,7 +36,7 @@ public class CartItem {
         return quantity;
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    public CartItem changeQuantity(int quantity) {
+        return new CartItem(id, quantity, productId, memberId);
     }
 }
