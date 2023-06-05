@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
 public class OrderRepository {
 
     private static final String INVALID_DELETE_MESSAGE = "이미 해당 주문을 취소했습니다.";
-    private static final String INVALID_SAVE_MESSAGE = "해당 주문 정보를 데이터베이스에 저장할 수 없습니다.";
-    private static final String INVALID_FIND_MESSAGE = "해당 주문을 찾을 수 없습니다.";
+    private static final String INVALID_FIND_MESSAGE = "주문 정보를 올바르게 입력해주세요.";
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
@@ -50,7 +49,7 @@ public class OrderRepository {
             pointHistoryDao.saveAll(orderId, pointEntities);
             return orderId;
         } catch (DataAccessException exception) {
-            throw new OrderException(INVALID_SAVE_MESSAGE);
+            throw new OrderException(INVALID_FIND_MESSAGE);
         }
     }
 

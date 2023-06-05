@@ -108,8 +108,8 @@ class OrderRepositoryTest {
         Order order = new Order(points, orderItems);
 
         assertThatThrownBy(() -> orderRepository.save(100L, order))
-                .isInstanceOf(OrderServerException.class)
-                .hasMessageContaining("해당 주문 정보를 데이터베이스에 저장할 수 없습니다.");
+                .isInstanceOf(OrderException.class)
+                .hasMessageContaining("주문 정보를 올바르게 입력해주세요.");
     }
 
     @DisplayName("사용자에 대한 주문 정보를 반환할 수 있다.")
@@ -147,7 +147,7 @@ class OrderRepositoryTest {
     void find_fail(Long memberId, Long orderId) {
         assertThatThrownBy(() -> orderRepository.findOrder(memberId, orderId))
                 .isInstanceOf(OrderException.class)
-                .hasMessageContaining("해당 주문을 찾을 수 없습니다.");
+                .hasMessageContaining("주문 정보를 올바르게 입력해주세요.");
     }
 
     @DisplayName("주문을 취소할 수 있다.")
@@ -163,6 +163,6 @@ class OrderRepositoryTest {
     void delete_fail(Long memberId, Long orderId) {
         assertThatThrownBy(() -> orderRepository.delete(memberId, orderId))
                 .isInstanceOf(OrderException.class)
-                .hasMessageContaining("해당 주문을 찾을 수 없습니다.");
+                .hasMessageContaining("주문 정보를 올바르게 입력해주세요.");
     }
 }
