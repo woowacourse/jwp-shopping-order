@@ -1,5 +1,7 @@
 package cart.persistence.entity;
 
+import java.util.Objects;
+
 public class CouponEntity {
     private final Long id;
     private final String name;
@@ -39,5 +41,18 @@ public class CouponEntity {
 
     public Integer getMinimumPrice() {
         return minimumPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CouponEntity that = (CouponEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

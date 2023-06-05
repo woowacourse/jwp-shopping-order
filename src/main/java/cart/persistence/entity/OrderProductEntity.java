@@ -1,5 +1,7 @@
 package cart.persistence.entity;
 
+import java.util.Objects;
+
 public class OrderProductEntity {
     private final Long id;
     private final String name;
@@ -45,5 +47,18 @@ public class OrderProductEntity {
 
     public Long getProductId() {
         return productId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderProductEntity that = (OrderProductEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
