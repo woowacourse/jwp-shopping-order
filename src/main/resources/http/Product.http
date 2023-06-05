@@ -1,5 +1,5 @@
 ### 상품 목록 조회
-GET http://localhost:8080/products?page=1&size=2
+GET http://localhost:8080/products?page=1&size=3
 
 ### 상품 조회
 GET http://localhost:8080/products/1

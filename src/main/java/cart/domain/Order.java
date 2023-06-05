@@ -31,8 +31,6 @@ public class Order {
                 .mapToInt(orderDetail -> (int) (orderDetail.getProduct().getPrice() * orderDetail.getQuantity()))
                 .sum();
         final BigDecimal requestPayment = payment.getPayment().add(point.getPoint());
-        System.out.println("totalPrice = " + totalPrice);
-        System.out.println("requestPayment = " + requestPayment);
         if (!BigDecimal.valueOf(totalPrice).equals(requestPayment)) {
             throw new IllegalArgumentException("결제금액과 총 가격이 일치하지 않습니다");
         }

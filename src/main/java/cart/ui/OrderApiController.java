@@ -4,11 +4,11 @@ import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.dto.OrderResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -27,8 +27,8 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> showOrders(Member member){
-        List<OrderResponse> orderResponses = orderService.showOrders(member);
+    public ResponseEntity<OrderResponses> showOrders(@RequestParam Integer page, @RequestParam Integer size, Member member) {
+        OrderResponses orderResponses = orderService.showOrders(member,page,size);
         return ResponseEntity.ok(orderResponses);
     }
 

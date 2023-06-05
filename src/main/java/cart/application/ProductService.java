@@ -27,12 +27,13 @@ public class ProductService {
 
     public ProductResponses findProductsByPage(final Integer page, final Integer size) {
         List<Product> products = productRepository.findAll();
-        final List<Product> partition = Lists.partition(products, size).get(page - 1);
+        final List<List<Product>> partitions = Lists.partition(products, size);
+        final List<Product> partition = partitions.get(page - 1);
         final List<ProductResponse> productResponses = partition.stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
-        final PageInfo pageInfo = new PageInfo(page, size, products.size(), productResponses.size());
-        return new ProductResponses(pageInfo,productResponses);
+        final PageInfo pageInfo = new PageInfo(page, size, products.size(), partitions.size());
+        return new ProductResponses(pageInfo, productResponses);
     }
 
     public ProductResponse getProductById(Long productId) {

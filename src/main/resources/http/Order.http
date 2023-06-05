@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ### 전체 주문 조회
-GET http://localhost:8080/orders
+GET http://localhost:8080/orders?page=1&size=2
 Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
 Content-Type: application/json
 
