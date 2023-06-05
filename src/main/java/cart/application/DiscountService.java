@@ -26,8 +26,8 @@ public class DiscountService {
                 gradeDiscount.getRate(),
                 gradeDiscount.calculateDiscountAmount(totalPrice));
         final DiscountResponse priceResponse = new DiscountResponse(priceDiscount.getName(),
-                gradeDiscount.getRate(),
-                gradeDiscount.calculateDiscountAmount(totalPrice));
+                priceDiscount.getRate(totalPrice),
+                priceDiscount.calculateDiscountAmount(totalPrice));
         return List.of(gradeResponse, priceResponse);
     }
 }
