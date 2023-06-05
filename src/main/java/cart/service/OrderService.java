@@ -2,22 +2,24 @@ package cart.service;
 
 import cart.dao.CartItemDao;
 import cart.domain.Member;
-import cart.domain.point.Point;
-import cart.domain.shipping.ShippingDiscountPolicy;
-import cart.domain.shipping.ShippingFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.point.Point;
 import cart.domain.point.PointPolicyStrategy;
+import cart.domain.shipping.ShippingDiscountPolicy;
+import cart.domain.shipping.ShippingFee;
 import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
+import cart.exception.order.OrderException;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -52,8 +54,15 @@ public class OrderService {
                 orderItemList,
                 shippingDiscountPolicy.getThreshold(),
                 new Point(orderRequest.getUsedPoint()));
+        if (!Objects.equals(newOrder.getTotalPrice(), orderRequest.getTotalProductsPrice())) {
+            throw new OrderException.NotSameTotalPrice();
+        }
+
         final Long orderId = orderRepository.saveOrder(member, newOrder);
         final Point memberPoint = pointRepository.findPointByMemberId(member.getId());
+        if (newOrder.getTotalPrice() + newOrder.getShippingFee() < orderRequest.getUsedPoint()) {
+            throw new OrderException.MinusOrderPrice();
+        }
 
         pointRepository.updatePoint(member.getId(), memberPoint.minus(orderRequest.getUsedPoint()));
         final Long earnedPoint = pointPolicyStrategy.caclulatePointWithPolicy(newOrder.getTotalPrice() - orderRequest.getUsedPoint());

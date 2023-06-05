@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.dao.ShippingDiscountPolicyDao;
 import cart.dao.ShippingFeeDao;
+import cart.exception.policy.PolicyException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,10 +17,12 @@ public class OrderPolicyRepository {
     }
 
     public Long findThreshold() {
-        return shippingDiscountPolicyDao.findShippingDiscountPolicy().get().getThreshold();
+        return shippingDiscountPolicyDao.findShippingDiscountPolicy()
+                .orElseThrow(PolicyException.NoShippingDiscountThreshold::new).getThreshold();
     }
 
     public Long findFee() {
-        return shippingFeeDao.findFee().get().getFee();
+        return shippingFeeDao.findFee()
+                .orElseThrow(PolicyException.NoShippingFee::new).getFee();
     }
 }

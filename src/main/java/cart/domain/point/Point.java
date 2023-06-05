@@ -1,11 +1,13 @@
 package cart.domain.point;
 
+import cart.exception.point.PointException;
+
 import java.util.Objects;
 
 public class Point {
 
     private static final double POINT_POLICY = 0.1;
-    private Long point;
+    private final Long point;
 
     public Point(Long point) {
         this.point = point;
@@ -13,7 +15,7 @@ public class Point {
 
     public Long minus(final Long requestPoint) {
         if (this.point < requestPoint) {
-            throw new IllegalStateException("회원의 포인트가 부족합니다.");
+            throw new PointException.OverThenMemberPoint();
         }
         return this.point - requestPoint;
     }

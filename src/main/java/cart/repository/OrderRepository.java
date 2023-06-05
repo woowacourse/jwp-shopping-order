@@ -1,19 +1,18 @@
 package cart.repository;
 
-import cart.dao.OrderDao;
-import cart.dao.OrderItemDao;
-import cart.dao.ShippingDiscountPolicyDao;
-import cart.dao.ShippingFeeDao;
+import cart.dao.*;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.dao.entity.ShippingDiscountPolicyEntity;
 import cart.dao.entity.ShippingFeeEntity;
 import cart.domain.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import cart.domain.point.Point;
 import cart.domain.shipping.ShippingDiscountPolicy;
 import cart.domain.shipping.ShippingFee;
-import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
+import cart.exception.order.OrderException;
+import cart.exception.policy.PolicyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,12 +28,14 @@ public class OrderRepository {
     private final OrderItemDao orderItemDao;
     private final ShippingFeeDao shippingFeeDao;
     private final ShippingDiscountPolicyDao shippingDiscountPolicyDao;
+    private final CartItemDao cartItemDao;
 
-    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, ShippingFeeDao shippingFeeDao, ShippingDiscountPolicyDao shippingDiscountPolicyDao) {
+    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, ShippingFeeDao shippingFeeDao, ShippingDiscountPolicyDao shippingDiscountPolicyDao, CartItemDao cartItemDao) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.shippingFeeDao = shippingFeeDao;
         this.shippingDiscountPolicyDao = shippingDiscountPolicyDao;
+        this.cartItemDao = cartItemDao;
     }
 
     public Long saveOrder(final Member member, final Order order) {
@@ -52,6 +53,7 @@ public class OrderRepository {
                 .collect(toList());
         saveOrderItems(orderItemEntityList);
 
+
         return orderId;
     }
 
@@ -62,8 +64,7 @@ public class OrderRepository {
     }
 
     public Order findOrderById(final Member member, final Long orderId) {
-        //TODO: optional 반환 예외처리
-        final OrderEntity orderEntity = orderDao.findById(orderId).get();
+        final OrderEntity orderEntity = orderDao.findById(orderId).orElseThrow(OrderException.NoOrder::new);
         final List<OrderItem> orderItemList = findOrderItemsByOrderId(orderId);
 
         return new Order(orderEntity.getId(),
@@ -117,13 +118,14 @@ public class OrderRepository {
     }
 
     public ShippingFee findShippingFee() {
-        // TODO: optional 에러처리
-        final ShippingFeeEntity shippingFeeEntity = shippingFeeDao.findFee().get();
+        final ShippingFeeEntity shippingFeeEntity = shippingFeeDao.findFee()
+                .orElseThrow(PolicyException.NoShippingFee::new);
         return ShippingFee.from(shippingFeeEntity);
     }
 
     public ShippingDiscountPolicy findShippingDiscountPolicy() {
-        final ShippingDiscountPolicyEntity shippingDiscountPolicyEntity = shippingDiscountPolicyDao.findShippingDiscountPolicy().get();
+        final ShippingDiscountPolicyEntity shippingDiscountPolicyEntity = shippingDiscountPolicyDao.findShippingDiscountPolicy()
+                .orElseThrow(PolicyException.NoShippingDiscountThreshold::new);
         return ShippingDiscountPolicy.from(shippingDiscountPolicyEntity);
     }
 

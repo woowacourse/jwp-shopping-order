@@ -1,10 +1,11 @@
 package cart.service;
 
-import cart.domain.Product;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.product.ProductCreateResponse;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
+import cart.exception.product.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,8 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId)
+                .orElseThrow(ProductException.NoProduct::new);
         return ProductResponse.of(product);
     }
 

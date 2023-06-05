@@ -8,6 +8,8 @@ import cart.dto.cart.CartItemCreateResponse;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
+import cart.exception.cart.CartItemException;
+import cart.exception.product.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +31,12 @@ public class CartItemService {
     }
 
     public CartItemCreateResponse add(Member member, CartItemRequest cartItemRequest) {
-        final Long cartItemId = cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        if (cartItemDao.exists(cartItemRequest.getProductId())) {
+            throw new CartItemException.DuplicateCartItem();
+        }
+        final Long cartItemId = cartItemDao.save(new CartItem(member,
+                productDao.getProductById(cartItemRequest.getProductId())
+                        .orElseThrow(ProductException.NoProduct::new)));
         return new CartItemCreateResponse(cartItemId);
     }
 

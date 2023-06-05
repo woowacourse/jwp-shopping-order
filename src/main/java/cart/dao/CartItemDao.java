@@ -97,5 +97,10 @@ public class CartItemDao {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
+
+    public boolean exists(Long productId) {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM cart_item WHERE product_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, productId);
+    }
 }
 

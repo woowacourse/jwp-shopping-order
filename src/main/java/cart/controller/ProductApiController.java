@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -32,13 +33,13 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductCreateResponse> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ProductCreateResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         ProductCreateResponse response = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + response.getProductId())).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
