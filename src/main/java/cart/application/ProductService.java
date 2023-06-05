@@ -19,7 +19,9 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productDao.getAllProducts().stream()
+                .filter(product -> !product.getDeleted())
+                .collect(Collectors.toList());
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 

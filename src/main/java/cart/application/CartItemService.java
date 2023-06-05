@@ -23,7 +23,9 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId()).stream()
+                .filter(cartItem -> !cartItem.getProduct().getDeleted())
+                .collect(Collectors.toList());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
