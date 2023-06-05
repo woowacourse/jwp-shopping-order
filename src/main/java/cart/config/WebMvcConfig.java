@@ -1,8 +1,7 @@
 package cart.config;
 
-import cart.dao.AuthDao;
+import cart.persistence.dao.AuthDao;
 import cart.auth.MemberArgumentResolver;
-import cart.config.LoggingInterceptorHandler;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

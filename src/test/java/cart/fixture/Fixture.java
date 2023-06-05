@@ -1,11 +1,10 @@
 package cart.fixture;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.Product;
+import cart.application.domain.CartItem;
+import cart.application.domain.Member;
+import cart.application.domain.Order;
+import cart.application.domain.Product;
 import java.util.List;
-import org.mockito.internal.matchers.Or;
 
 public class Fixture {
 

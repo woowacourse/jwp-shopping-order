@@ -4,10 +4,10 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.request.OrderRequest;
-import cart.entity.MemberEntity;
+import cart.persistence.dao.MemberDao;
+import cart.application.domain.Member;
+import cart.ui.dto.request.OrderRequest;
+import cart.persistence.entity.MemberEntity;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;

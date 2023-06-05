@@ -1,7 +1,7 @@
 package cart.ui.api;
 
-import cart.application.DiscountService;
-import cart.dto.response.DiscountResponse;
+import cart.application.service.DiscountService;
+import cart.ui.dto.response.DiscountResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

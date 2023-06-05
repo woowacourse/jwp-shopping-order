@@ -1,7 +1,7 @@
 package cart.ui.api;
 
-import cart.application.MemberService;
-import cart.dto.response.MemberResponse;
+import cart.application.service.MemberService;
+import cart.ui.dto.response.MemberResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

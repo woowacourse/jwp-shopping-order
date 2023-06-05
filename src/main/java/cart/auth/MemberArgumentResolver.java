@@ -1,8 +1,8 @@
 package cart.auth;
 
-import cart.dao.AuthDao;
-import cart.domain.Member;
-import cart.entity.MemberEntity;
+import cart.persistence.dao.AuthDao;
+import cart.application.domain.Member;
+import cart.persistence.entity.MemberEntity;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
