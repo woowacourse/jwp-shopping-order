@@ -5,15 +5,15 @@ import cart.domain.MemberCoupon;
 
 public class MemberCouponResponse {
 
-    private Long id;
+    private Long couponId;
     private String name;
     private DiscountResponse discount;
 
     public MemberCouponResponse() {
     }
 
-    public MemberCouponResponse(Long id, String name, DiscountResponse discount) {
-        this.id = id;
+    public MemberCouponResponse(Long couponId, String name, DiscountResponse discount) {
+        this.couponId = couponId;
         this.name = name;
         this.discount = discount;
     }
@@ -24,8 +24,8 @@ public class MemberCouponResponse {
                 new DiscountResponse(coupon.getType().name(), coupon.getDiscountAmount()));
     }
 
-    public Long getId() {
-        return id;
+    public Long getCouponId() {
+        return couponId;
     }
 
     public String getName() {

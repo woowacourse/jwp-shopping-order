@@ -30,7 +30,6 @@ public class OrderService {
     private final CouponRepository couponRepository;
     private final CartItemRepository cartItemRepository;
 
-
     public OrderService(OrderRepository orderRepository, CouponRepository couponRepository,
                         CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;

@@ -46,9 +46,9 @@ class CouponServiceTest {
 
     private void assertCoupon(MemberCouponResponse actual, Coupon expected) {
         assertAll(
-                () -> assertThat(actual.getId()).isEqualTo(expected.getId()),
+                () -> assertThat(actual.getCouponId()).isEqualTo(expected.getId()),
                 () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-                () -> assertThat(actual.getDiscount().getType()).isEqualTo(expected.getType().name()),
+                () -> assertThat(actual.getDiscount().getType()).isEqualToIgnoringCase(expected.getType().name()),
                 () -> assertThat(actual.getDiscount().getAmount()).isEqualTo(expected.getDiscountAmount())
         );
     }

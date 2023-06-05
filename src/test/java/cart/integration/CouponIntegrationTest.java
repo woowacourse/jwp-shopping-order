@@ -69,9 +69,9 @@ public class CouponIntegrationTest extends IntegrationTest {
 
     private void 쿠폰을_검증한다(MemberCouponResponse 결과, Coupon 쿠폰) {
         assertAll(
-                () -> assertThat(결과.getId()).isEqualTo(쿠폰.getId()),
+                () -> assertThat(결과.getCouponId()).isEqualTo(쿠폰.getId()),
                 () -> assertThat(결과.getName()).isEqualTo(쿠폰.getName()),
-                () -> assertThat(결과.getDiscount().getType()).isEqualTo(쿠폰.getType().name()),
+                () -> assertThat(결과.getDiscount().getType()).isEqualToIgnoringCase(쿠폰.getType().name()),
                 () -> assertThat(결과.getDiscount().getAmount()).isEqualTo(쿠폰.getDiscountAmount())
         );
     }

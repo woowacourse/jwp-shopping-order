@@ -9,7 +9,7 @@ public class DiscountResponse {
     }
 
     public DiscountResponse(String type, Integer amount) {
-        this.type = type;
+        this.type = type.toLowerCase();
         this.amount = amount;
     }
 
