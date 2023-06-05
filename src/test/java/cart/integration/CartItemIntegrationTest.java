@@ -2,10 +2,10 @@ package cart.integration;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import cart.dto.cartItem.CartItemQuantityUpdateRequest;
+import cart.dto.cartItem.CartItemRequest;
+import cart.dto.cartItem.CartItemResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
