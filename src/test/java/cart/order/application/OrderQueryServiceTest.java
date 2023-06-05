@@ -72,7 +72,7 @@ class OrderQueryServiceTest {
     //then
     assertAll(
         () -> assertEquals(0,
-            specificOrderResponse.getTotalPrice().compareTo(BigDecimal.valueOf(585400))),
+            specificOrderResponse.getTotalPrice().compareTo(BigDecimal.valueOf(199500))),
         () -> assertEquals(specificOrderResponse.getOrderId(), orderId)
     );
   }

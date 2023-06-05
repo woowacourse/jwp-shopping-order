@@ -1,7 +1,6 @@
 package cart.order.application;
 
-import cart.coupon.application.dto.CouponResponse;
-import cart.coupon.domain.Coupon;
+import cart.coupon.application.mapper.CouponMapper;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
@@ -43,11 +42,14 @@ public class OrderQueryService {
 
       final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
       final OrderedItems orderedItems = new OrderedItems(orderItems);
-      final Money totalPayments = calculateTotalPayments(order, orderedItems);
+
+      final Money totalPayments = order.calculateTotalPayments(
+          orderedItems.calculateAllItemPrice()
+      );
 
       final OrderResponse orderResponse = OrderMapper.mapToOrderResponse(
           order,
-          orderItems,
+          OrderItemMapper.mapToOrderItemResponse(orderItems),
           totalPayments
       );
 
@@ -57,48 +59,21 @@ public class OrderQueryService {
     return orderResponses;
   }
 
-  private Money calculateTotalPayments(
-      final Order order,
-      final OrderedItems orderedItems
-  ) {
-    final Money totalOrderPrice = orderedItems.calculateAllItemPrice()
-        .add(order.getDeliveryFee());
-
-    final Coupon coupon = order.getCoupon();
-
-    return coupon.discount(totalOrderPrice);
-  }
-
   public SpecificOrderResponse searchOrder(final Member member, final Long orderId) {
     Order order = orderDao.findByOrderId(orderId);
-
     validateOrderOwner(order, member);
 
     final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
     final OrderedItems orderedItems = new OrderedItems(orderItems);
-    final Money totalPrice = orderedItems.calculateAllItemPrice();
-    final Money totalItemPrice = totalPrice.add(order.getDeliveryFee());
+    final Money totalItemPrice = orderedItems.calculateAllItemPrice();
 
-    final Coupon coupon = order.getCoupon();
-    final Money totalPayments = coupon.discount(totalItemPrice);
+    final Money totalPayments = order.calculateTotalPayments(totalItemPrice);
     final Money deliveryFee = order.getDeliveryFee();
 
-    final Money priceDiscount = totalPayments.minus(deliveryFee)
-        .minus(totalPrice);
-
-    final CouponResponse couponResponse = new CouponResponse(
-        coupon.getId(),
-        coupon.getName(),
-        priceDiscount.getValue()
-    );
-
-    return new SpecificOrderResponse(
-        order.getId(),
-        OrderItemMapper.mapToOrderItemResponse(orderItems),
-        totalPrice.getValue(),
-        deliveryFee.getValue(),
-        totalPayments.getValue(),
-        couponResponse
+    return OrderMapper.mapToSpecificOrderResponse(
+        order, OrderItemMapper.mapToOrderItemResponse(orderItems),
+        totalItemPrice, deliveryFee,
+        totalPayments, CouponMapper.mapToCouponResponse(order.getCoupon())
     );
   }
 

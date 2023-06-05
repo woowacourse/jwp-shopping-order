@@ -3,6 +3,8 @@ package cart.order.application.dto;
 import cart.coupon.application.dto.CouponResponse;
 import cart.order_item.application.dto.OrderItemResponse;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SpecificOrderResponse {
@@ -13,6 +15,8 @@ public class SpecificOrderResponse {
   private BigDecimal deliveryFee;
   private BigDecimal totalPayments;
   private CouponResponse couponResponse;
+  private String createdAt;
+  private String orderStatus;
 
   private SpecificOrderResponse() {
   }
@@ -20,7 +24,8 @@ public class SpecificOrderResponse {
   public SpecificOrderResponse(
       final Long orderId, final List<OrderItemResponse> products,
       final BigDecimal totalPrice, final BigDecimal deliveryFee,
-      final BigDecimal totalPayments, final CouponResponse couponResponse
+      final BigDecimal totalPayments, final CouponResponse couponResponse,
+      final ZonedDateTime createdAt, final String orderStatus
   ) {
     this.orderId = orderId;
     this.products = products;
@@ -28,6 +33,8 @@ public class SpecificOrderResponse {
     this.deliveryFee = deliveryFee;
     this.totalPayments = totalPayments;
     this.couponResponse = couponResponse;
+    this.createdAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    this.orderStatus = orderStatus;
   }
 
   public Long getOrderId() {
@@ -52,5 +59,13 @@ public class SpecificOrderResponse {
 
   public CouponResponse getCouponResponse() {
     return couponResponse;
+  }
+
+  public String getCreatedAt() {
+    return createdAt;
+  }
+
+  public String getOrderStatus() {
+    return orderStatus;
   }
 }

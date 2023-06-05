@@ -9,14 +9,15 @@ public class Order {
 
   private Long id;
 
-  private Member member;
+  private final Member member;
 
-  private Money deliveryFee;
+  private final Money deliveryFee;
 
-  private Coupon coupon;
+  private final Coupon coupon;
 
-  private OrderStatus orderStatus;
-  private ZonedDateTime createdAt;
+  private final OrderStatus orderStatus;
+
+  private final ZonedDateTime createdAt;
 
   public Order(
       final Long id, final Member member,
@@ -47,6 +48,11 @@ public class Order {
     return !this.member.isMe(member);
   }
 
+  public Money calculateTotalPayments(final Money totalItemPrice) {
+    final Money totalOrderPrice = totalItemPrice.add(deliveryFee);
+    return coupon.discount(totalOrderPrice);
+  }
+
   public Long getId() {
     return id;
   }
@@ -59,11 +65,11 @@ public class Order {
     return coupon;
   }
 
-  public OrderStatus getOrderStatus() {
-    return orderStatus;
-  }
-
   public ZonedDateTime getCreatedAt() {
     return createdAt;
+  }
+
+  public OrderStatus getOrderStatus() {
+    return orderStatus;
   }
 }

@@ -4,6 +4,9 @@ import cart.value_object.Money;
 
 public class EmptyCoupon extends Coupon {
 
+  private static final String NOT_USE_COUPON_NAME = "쿠폰 미사용";
+  private static final Long NOT_USE_ID = 0L;
+
   public EmptyCoupon() {
     super(null, null);
   }
@@ -20,11 +23,11 @@ public class EmptyCoupon extends Coupon {
 
   @Override
   public String getName() {
-    throw new UnsupportedOperationException();
+    return NOT_USE_COUPON_NAME;
   }
 
   @Override
   public Long getId() {
-    throw new UnsupportedOperationException();
+    return NOT_USE_ID;
   }
 }

@@ -42,6 +42,10 @@ public class OrderItem {
     this.quantity = quantity;
   }
 
+  public Money calculatePrice() {
+    return price.multiply(quantity);
+  }
+
   public Long getId() {
     return id;
   }
