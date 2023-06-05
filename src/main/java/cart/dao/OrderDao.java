@@ -86,8 +86,8 @@ public class OrderDao {
                 "where o.id = ?";
         try {
             final Order order = jdbcTemplate.queryForObject(orderQuery, (rs, rowNum) -> {
-                final long memberId = rs.getLong("members.id");
-                final String email = rs.getString("members.email");
+                final long memberId = rs.getLong("m.id");
+                final String email = rs.getString("m.email");
                 final Member member = new Member(memberId, email, null);
 
                 final Timestamp orderTime = rs.getTimestamp("order_date");
