@@ -135,7 +135,7 @@ public class ProductApiDocumentTest {
                                 fieldWithPath("products.[].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
                                 fieldWithPath("products.[].cartItem.id").type(JsonFieldType.NUMBER).description("장바구니 아이디"),
                                 fieldWithPath("products.[].cartItem.quantity").type(JsonFieldType.NUMBER).description("장바구니 수량"),
-                                fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("가져온 상품 목록에 마지막 상품이 들어있는지 여부")
+                                fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("가져온 상품 목록에 마지막 상품이 들어있는지 여부")
                         )
                 ));
     }

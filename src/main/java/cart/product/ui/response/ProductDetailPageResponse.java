@@ -5,11 +5,11 @@ import java.util.List;
 public class ProductDetailPageResponse {
 
     private final List<ProductDetailResponse> products;
-    private final boolean isLast;
+    private final boolean last;
 
-    public ProductDetailPageResponse(final List<ProductDetailResponse> products, final boolean isLast) {
+    public ProductDetailPageResponse(final List<ProductDetailResponse> products, final boolean last) {
         this.products = products;
-        this.isLast = isLast;
+        this.last = last;
     }
 
     public static ProductDetailPageResponse of(final List<ProductDetailResponse> products, final boolean isLast) {
@@ -20,7 +20,7 @@ public class ProductDetailPageResponse {
         return products;
     }
 
-    public boolean getIsLast() {
-        return isLast;
+    public boolean isLast() {
+        return last;
     }
 }
