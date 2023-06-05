@@ -65,6 +65,37 @@ public class OrderIntegrationTest extends IntegrationTest {
         );
     }
 
+    @DisplayName("사용자의 모든 주문을 조회한다.")
+    @Test
+    void shouldReturnAllOrdersWhenRequestByMember() {
+        OrderRequest orderRequest = new OrderRequest(
+                List.of(CartItemDto.of(new CartItem(1L, 1, product1, member1))),
+                List.of(1L),
+                3_000
+        );
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .when()
+                .get("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getString(".")).contains("originalPrice", "10000");
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

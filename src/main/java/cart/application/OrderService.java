@@ -2,13 +2,19 @@ package cart.application;
 
 import cart.dao.OrderItemDao;
 import cart.dao.OrdersDao;
+import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderCreateResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
+import cart.dto.OrderResponses;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,4 +59,39 @@ public class OrderService {
             orderItemDao.save(orderItemToAdd);
         }
     }
+
+    public OrderResponses findAll(Member member) {
+        List<Order> orders = ordersDao.findByMemberId(member.getId());
+        return new OrderResponses(orders.stream()
+                .map(order -> mapOrderToResponse(member, order))
+                .collect(Collectors.toList())
+        );
+    }
+
+    private OrderResponse mapOrderToResponse(Member member, Order order) {
+        List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
+        return new OrderResponse(
+                order.getId(),
+                order.getOriginalPrice(),
+                order.getActualPrice(),
+                order.getDeliveryFee(),
+                orderItems.stream()
+                        .map(orderItem -> mapOrderItemToCartItemDto(member, orderItem))
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private CartItemDto mapOrderItemToCartItemDto(Member member, OrderItem orderItem) {
+        return CartItemDto.of(new CartItem(
+                orderItem.getId(),
+                orderItem.getQuantity(),
+                new Product(
+                        orderItem.getProductId(),
+                        orderItem.getProductName(),
+                        orderItem.getProductPrice(),
+                        orderItem.getProductImageUrl()),
+                member)
+        );
+    }
+
 }
