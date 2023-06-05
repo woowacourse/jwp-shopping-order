@@ -20,6 +20,7 @@ import cart.dto.request.OrderPostRequest;
 import cart.dto.response.OrderPreviewResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductInOrderResponse;
+import cart.exception.PaymentPriceUnmatchedException;
 import cart.exception.UnauthorizedAccessException;
 import java.util.Collections;
 import java.util.List;
@@ -136,7 +137,7 @@ class OrderServiceTest {
 
         //when, then
         assertThatThrownBy(() -> orderService.addOrder(member, request))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(PaymentPriceUnmatchedException.class);
     }
 
     @Test

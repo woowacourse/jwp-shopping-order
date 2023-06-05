@@ -22,7 +22,7 @@ public class CartItem {
 
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new UnauthorizedAccessException();
+            throw new UnauthorizedAccessException(member.getEmail(), this.id);
         }
     }
 

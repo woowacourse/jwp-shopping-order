@@ -12,8 +12,8 @@ import cart.dto.request.OrderPostRequest;
 import cart.dto.response.OrderPreviewResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductInOrderResponse;
-import cart.exception.AuthenticationException;
 import cart.exception.NoSuchDataExistException;
+import cart.exception.PaymentPriceUnmatchedException;
 import cart.exception.UnauthorizedAccessException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class OrderService {
         final Order order = orderDao.findById(orderId)
                 .orElseThrow(NoSuchDataExistException::new);
         if (!order.getMember().matchMemberByInfo(member)) {
-            throw new AuthenticationException("해당 주문에 접근 할 권한이 없습니다.");
+            throw new UnauthorizedAccessException(member.getEmail(), orderId);
         }
 
         final List<OrderProduct> orderProducts = orderProductDao.findByOrderId(orderId);
@@ -104,7 +104,7 @@ public class OrderService {
         final List<CartItem> cartItemsByIds = cartItemDao.findByIds(request.getCartItems());
         validateIsMemberCartItems(member, cartItemsByIds);
         final Order order = createOrder(member, cartItemsByIds);
-        validateFinalPrice(order.getFinalPrice(), request.getFinalPrice());
+        validateFinalPrice(order.getFinalPrice(), request.getPaymentPrice());
 
         final List<OrderProduct> orderProducts = createOrderProducts(cartItemsByIds, order);
         orderProductDao.saveOrderProducts(orderProducts);
@@ -119,7 +119,7 @@ public class OrderService {
                 .allMatch(member::matchMemberByInfo);
 
         if (!isMembersCartItem) {
-            throw new UnauthorizedAccessException();
+            throw new UnauthorizedAccessException(member.getEmail(), cartItems);
         }
     }
 
@@ -136,7 +136,7 @@ public class OrderService {
 
     private void validateFinalPrice(final int finalPrice, final int requestPrice) {
         if (finalPrice != requestPrice) {
-            throw new IllegalStateException("주문 최종 금액과 해당 금액이 일치하지 않습니다.");
+            throw new PaymentPriceUnmatchedException();
         }
     }
 

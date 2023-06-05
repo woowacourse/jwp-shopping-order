@@ -1,8 +1,10 @@
 package cart.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import javax.validation.constraints.NotNull;
 
 public class CartItemAddRequest {
+    @NotNull
     private final Long productId;
 
     @JsonCreator
