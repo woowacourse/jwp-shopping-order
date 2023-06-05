@@ -27,4 +27,12 @@ public class Point {
     public long getValue() {
         return value;
     }
+
+    public Point plusPointByPolicy(long useMoney) {
+        return new Point(this.value + pointPolicy(useMoney));
+    }
+
+    private long pointPolicy(long useMoney) {
+        return (useMoney / 100) * 10;
+    }
 }

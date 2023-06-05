@@ -70,15 +70,12 @@ public class Member {
         return this.password.equals(password);
     }
 
-    public void addPoint(int point) {
-        this.point = this.point.addPoint(point);
-    }
-
-    public void usePoint(int usePoint) {
+    public void usePoint(long usePoint) {
         this.point = this.point.minusPoint(usePoint);
     }
 
     public void useMoney(long useMoney) {
         this.money = this.money.minusMoney(useMoney);
+        this.point = this.point.plusPointByPolicy(useMoney);
     }
 }

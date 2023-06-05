@@ -5,7 +5,6 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.repository.CartItemRepository;
-import cart.domain.repository.MemberRepository;
 import cart.domain.repository.OrderRepository;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderResponse;
@@ -22,13 +21,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderService {
 
+    private final PaymentService paymentService;
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
 
-    public OrderService(OrderRepository orderRepository, MemberRepository memberRepository, CartItemRepository cartItemRepository) {
+    public OrderService(PaymentService paymentService, OrderRepository orderRepository, CartItemRepository cartItemRepository) {
+        this.paymentService = paymentService;
         this.orderRepository = orderRepository;
-        this.memberRepository = memberRepository;
         this.cartItemRepository = cartItemRepository;
     }
 
@@ -52,25 +51,21 @@ public class OrderService {
     public Long order(Member member, OrderRequest request) {
         List<CartItem> cartItems = getCartItems(request);
         Long orderId = orderRepository.create(member, request.getPoint(), cartItems);
-        for (CartItem cartItem : cartItems) {
-            cartItemRepository.deleteById(cartItem.getId());
-        }
+
+        deleteCartItems(cartItems);
 
         int totalPrice = cartItems.stream().map(CartItem::getProduct).mapToInt(Product::getPrice).sum();
-        calculateMemberCredit(member, request, totalPrice);
+        paymentService.payByMember(member, request.getPoint(), totalPrice);
+
         return orderId;
     }
 
-    private void calculateMemberCredit(Member member, OrderRequest request, Integer totalPrice) {
-        int payMoney = totalPrice - request.getPoint();
-        member.usePoint(request.getPoint());
-        member.useMoney(payMoney);
-
-        // 10%
-        member.addPoint((payMoney / 100) * 10);
-        memberRepository.update(member);
+    private void deleteCartItems(List<CartItem> cartItems) {
+        cartItems.stream()
+                .map(CartItem::getId)
+                .forEach(cartItemRepository::deleteById);
     }
-    
+
     private List<CartItem> getCartItems(OrderRequest request) {
         List<CartItem> cartItems = new ArrayList<>();
 
