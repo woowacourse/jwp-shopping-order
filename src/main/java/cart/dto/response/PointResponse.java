@@ -4,17 +4,17 @@ import cart.domain.Member;
 
 public class PointResponse {
 
-    private Integer point;
+    private Integer points;
 
-    public PointResponse(final Integer point) {
-        this.point = point;
+    public PointResponse(final Integer points) {
+        this.points = points;
     }
 
     public static PointResponse of(Member member) {
         return new PointResponse(member.getPointAsInt());
     }
 
-    public Integer getPoint() {
-        return point;
+    public Integer getPoints() {
+        return points;
     }
 }
