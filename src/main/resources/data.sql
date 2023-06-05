@@ -37,16 +37,22 @@ INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 3, 5);
 
 INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage)
-VALUES ('테스트쿠폰1', 10000, 3000, 'FIXED_PERCENTAGE', null, 0.3);
+VALUES ('10% 쿠폰', 10000, 3000, 'FIXED_PERCENTAGE', null, 0.1);
 INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage)
-VALUES ('테스트쿠폰2', 15000, null, 'FIXED_AMOUNT', 2000, null);
+VALUES ('20% 쿠폰', 20000, 4000, 'FIXED_PERCENTAGE', null, 0.2);
+INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage)
+VALUES ('2000원 쿠폰', 15000, null, 'FIXED_AMOUNT', 2000, null);
+INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage)
+VALUES ('5000원 쿠폰', 10000, null, 'FIXED_AMOUNT', 5000, null);
 
 INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at)
 VALUES (1, 1, false, '2023-06-30');
 INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at)
 VALUES (1, 2, false, '2023-06-30');
 INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at)
-VALUES (1, 2, true, '2023-06-30');
+VALUES (1, 3, true, '2023-06-30');
+INSERT INTO member_coupon (member_id, coupon_id, is_used, expired_at)
+VALUES (1, 4, true, '2023-06-30');
 
 INSERT INTO `order` (member_id, member_coupon_id, shipping_fee, total_price)
 VALUES (1, 1, 3000, 802000);
