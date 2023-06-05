@@ -3,7 +3,7 @@ package cart.domain;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeliveryPolicyImpl implements DeliveryPolicy {
+public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     private static final int DEFAULT_DELIVERY_FEE = 3000;
 

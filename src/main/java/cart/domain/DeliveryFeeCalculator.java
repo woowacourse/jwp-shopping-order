@@ -1,5 +1,5 @@
 package cart.domain;
 
-public interface DeliveryPolicy {
+public interface DeliveryFeeCalculator {
     Money calculate(Order order);
 }

@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    private final DeliveryPolicy deliveryPolicy;
+    private final DeliveryFeeCalculator deliveryFeeCalculator;
     private final CartItemDao cartItemDao;
     private final OrderDao orderDao;
     private final CouponService couponService;
     private final PayService payService;
 
-    public OrderService(DeliveryPolicy deliveryPolicy, CartItemDao cartItemDao, OrderDao orderDao, CouponService couponService, PayService payService) {
-        this.deliveryPolicy = deliveryPolicy;
+    public OrderService(DeliveryFeeCalculator deliveryFeeCalculator, CartItemDao cartItemDao, OrderDao orderDao, CouponService couponService, PayService payService) {
+        this.deliveryFeeCalculator = deliveryFeeCalculator;
         this.cartItemDao = cartItemDao;
         this.orderDao = orderDao;
         this.couponService = couponService;
@@ -35,7 +35,7 @@ public class OrderService {
         List<CartItem> cartItems = cartItemDao.findItemsByIds(orderRequest.getCartItemIds());
         Order order = Order.of(cartItems, member, orderRequest.getTotalPrice());
 
-        Money deliveryFee = deliveryPolicy.calculate(order);
+        Money deliveryFee = deliveryFeeCalculator.calculate(order);
 
         Money discountedMoney = applyDiscounting(orderRequest, order);
 
