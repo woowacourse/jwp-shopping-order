@@ -14,6 +14,7 @@ import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
 import cart.dto.order.OrderReqeust;
+import cart.exception.DuplicateDiscountException;
 import cart.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -149,7 +150,7 @@ public class CartItemService {
             return new Order(orderCartItems, singleCoupons.get(0));
         }
 
-        throw new IllegalArgumentException("중복할인이 불가능합니다. (모든항목)");
+        throw new DuplicateDiscountException("중복할인이 불가능합니다. (모든상품할인)");
     }
 
     private List<OrderCartItem> applyProductCoupon(List<CartItem> cartItems, List<Coupon> productCoupons) {
@@ -161,7 +162,7 @@ public class CartItemService {
             return applyCoupon(cartItems, productCoupons.get(0));
         }
 
-        throw new IllegalArgumentException("중복할인이 불가능합니다.(상품할인)");
+        throw new DuplicateDiscountException("중복할인이 불가능합니다.(단순상품할인)");
     }
 
 }

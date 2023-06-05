@@ -6,6 +6,7 @@ import cart.entity.OrderEntity;
 import cart.dto.order.OrderDetailHistoryResponse;
 import cart.dto.order.OrderHistoryResponse;
 import cart.dto.order.OrderItemHistoryResponse;
+import cart.exception.NotFoundException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class OrderHistoryService {
         OrderEntity orderEntity = orderRepository.findAllOrder(member).stream()
                 .filter(s -> s.getId().equals(orderId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원에게 해당 주문내역이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 회원에게 해당 주문내역이 존재하지 않습니다."));
 
         List<OrderCartItemEntity> cartItemEntities = orderRepository.findOrderItemsByOrderId(orderId);
         return new OrderDetailHistoryResponse(
