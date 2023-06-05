@@ -5,13 +5,13 @@ public class ProductEntity {
     private final Long id;
     private final String name;
     private final String image;
-    private final int price;
+    private final Long price;
 
     public ProductEntity(
             final Long id,
             final String name,
             final String image,
-            final int price
+            final long price
     ) {
         this.id = id;
         this.name = name;
@@ -31,7 +31,7 @@ public class ProductEntity {
         return image;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 }

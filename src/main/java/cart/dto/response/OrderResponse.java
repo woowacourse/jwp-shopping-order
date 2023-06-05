@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 public class OrderResponse {
 
     private final Long id;
-    private final int price;
+    private final long price;
     private final Timestamp orderDate;
     private final List<OrderItemResponse> orders;
 
     public OrderResponse(
             final Long id,
-            final int price,
+            final long price,
             final Timestamp orderDate,
             final List<OrderItemResponse> orders
     ) {
@@ -40,7 +40,7 @@ public class OrderResponse {
         return id;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 

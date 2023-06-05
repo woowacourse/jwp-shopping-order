@@ -6,14 +6,14 @@ public class OrderItemResponse {
 
     private final Long id;
     private final int quantity;
-    private final int price;
+    private final Long price;
     private final String name;
     private final String imageUrl;
 
     public OrderItemResponse(
             final Long id,
             final int quantity,
-            final int price,
+            final Long price,
             final String name,
             final String imageUrl
     ) {
@@ -42,7 +42,7 @@ public class OrderItemResponse {
         return quantity;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 

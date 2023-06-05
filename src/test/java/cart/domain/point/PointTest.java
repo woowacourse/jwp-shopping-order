@@ -14,7 +14,7 @@ class PointTest {
     @Test
     void 포인트는_음수이면_예외를_발생한다() {
         // given
-        int point = -1;
+        Long point = -1L;
 
         // expect
         assertThatThrownBy(() -> new Point(point))
@@ -25,22 +25,22 @@ class PointTest {
     @Test
     void 포인트는_다른_포인트를_받아_더할_수_있다() {
         // given
-        final Point point = new Point(10);
+        final Point point = new Point(10L);
 
         // when
-        final Point result = point.add(new Point(30));
+        final Point result = point.add(new Point(30L));
 
         // then
-        assertThat(result.getPoint()).isEqualTo(40);
+        assertThat(result.getPoint()).isEqualTo(40L);
     }
 
     @Test
     void 포인트는_다른_포인트를_받아_뺄_수_있다() {
         // given
-        final Point point = new Point(30);
+        final Point point = new Point(30L);
 
         // when
-        final Point result = point.subtract(new Point(10));
+        final Point result = point.subtract(new Point(10L));
 
         // then
         assertThat(result.getPoint()).isEqualTo(20);
@@ -49,10 +49,10 @@ class PointTest {
     @Test
     void 포인트는_다른_포인트보다_더_큰지_검사할_수_있다() {
         // given
-        final Point point = new Point(30);
+        final Point point = new Point(30L);
 
         // when
-        final boolean result = point.isMoreThan(new Point(10));
+        final boolean result = point.isMoreThan(new Point(10L));
 
         // then
         assertThat(result).isTrue();

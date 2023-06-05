@@ -5,14 +5,14 @@ public class OrderItemEntity {
     private final Long id;
     private final Long orderId;
     private final Long productId;
-    private final int priceAtOrder;
+    private final Long priceAtOrder;
     private final int quantity;
 
     public OrderItemEntity(
             final Long id,
             final Long orderId,
             final Long productId,
-            final int priceAtOrder,
+            final Long priceAtOrder,
             final int quantity
     ) {
         this.id = id;
@@ -34,7 +34,7 @@ public class OrderItemEntity {
         return productId;
     }
 
-    public int getPriceAtOrder() {
+    public Long getPriceAtOrder() {
         return priceAtOrder;
     }
 

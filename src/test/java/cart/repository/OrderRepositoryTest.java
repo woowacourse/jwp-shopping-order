@@ -73,7 +73,7 @@ class OrderRepositoryTest {
         // given
         Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
         final OrderItem orderItem = new OrderItem(new Quantity(5),
-                new Product(1L, new Name("상품명"), new ImageUrl("img.com"), new Price(1000)));
+                new Product(1L, new Name("상품명"), new ImageUrl("img.com"), new Price(1000L)));
         given(orderDao.save(any(OrderEntity.class))).willReturn(1L);
         willDoNothing().given(orderItemDao).batchInsert(anyList());
 
@@ -91,8 +91,8 @@ class OrderRepositoryTest {
         // given
         final OrderEntity orderEntity = new OrderEntity(1L, 1L,
                 Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)));
-        final List<OrderItemEntity> orderItemEntities = List.of(new OrderItemEntity(1L, 1L, 1L, 2000, 5));
-        final ProductEntity productEntity = new ProductEntity(1L, "상품", "image.com", 1000);
+        final List<OrderItemEntity> orderItemEntities = List.of(new OrderItemEntity(1L, 1L, 1L, 2000L, 5));
+        final ProductEntity productEntity = new ProductEntity(1L, "상품", "image.com", 1000L);
         final Map<Long, ProductEntity> productGroupById = Map.of(1L, productEntity);
         final MemberEntity memberEntity = new MemberEntity(1L, "a@a.com", "1234");
 
@@ -109,7 +109,7 @@ class OrderRepositoryTest {
                 new Order(1L, new Member(1L, new Email("a@a.com"), new Password("1234")),
                         Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)),
                         List.of(new OrderItem(1L, new Quantity(5),
-                                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(2000))))));
+                                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(2000L))))));
     }
 
     @Test
@@ -129,9 +129,9 @@ class OrderRepositoryTest {
         final MemberEntity memberEntity = new MemberEntity(1L, "a@a.com", "1234");
         final OrderEntity orderEntity = new OrderEntity(1L, 1L,
                 Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)));
-        final List<OrderItemEntity> orderItemEntities = List.of(new OrderItemEntity(1L, 1L, 1L, 2000, 5));
+        final List<OrderItemEntity> orderItemEntities = List.of(new OrderItemEntity(1L, 1L, 1L, 2000L, 5));
         final Map<Long, List<OrderItemEntity>> orderItemGroupByOrderId = Map.of(1L, orderItemEntities);
-        final ProductEntity productEntity = new ProductEntity(1L, "상품", "image.com", 1000);
+        final ProductEntity productEntity = new ProductEntity(1L, "상품", "image.com", 1000L);
         final Map<Long, ProductEntity> productGroupById = Map.of(1L, productEntity);
 
         given(memberDao.getMemberById(1L)).willReturn(Optional.of(memberEntity));
@@ -147,7 +147,7 @@ class OrderRepositoryTest {
                 List.of(new Order(1L, new Member(1L, new Email("a@a.com"), new Password("1234")),
                         Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)),
                         List.of(new OrderItem(1L, new Quantity(5),
-                                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(2000))))))));
+                                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(2000L))))))));
     }
 
     @Test

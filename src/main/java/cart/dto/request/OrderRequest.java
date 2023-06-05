@@ -7,12 +7,12 @@ public class OrderRequest {
 
     @Size(min = 1)
     private List<Long> cartItemIds;
-    private int usePoint;
+    private Long usePoint;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(final List<Long> cartItemIds, final int usePoint) {
+    public OrderRequest(final List<Long> cartItemIds, final Long usePoint) {
         this.cartItemIds = cartItemIds;
         this.usePoint = usePoint;
     }
@@ -21,7 +21,7 @@ public class OrderRequest {
         return cartItemIds;
     }
 
-    public int getUsePoint() {
+    public Long getUsePoint() {
         return usePoint;
     }
 }

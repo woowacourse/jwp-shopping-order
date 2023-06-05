@@ -2,16 +2,17 @@ package cart.domain.point;
 
 public class Point {
 
-    private static final int MIN_POINT = 0;
+    private static final Long MIN_POINT = 0L;
+    private static final double EARN_POINT_RATE = 2.5 / 100;
 
-    private final int point;
+    private final Long point;
 
-    public Point(final int point) {
+    public Point(final Long point) {
         validatePositive(point);
         this.point = point;
     }
 
-    private void validatePositive(final int point) {
+    private void validatePositive(final Long point) {
         if (MIN_POINT > point) {
             throw new IllegalArgumentException("포인트는 최소 " + MIN_POINT + " 포인트 이상이어야합니다.");
         }
@@ -29,7 +30,7 @@ public class Point {
         return this.point > other.point;
     }
 
-    public int getPoint() {
+    public Long getPoint() {
         return point;
     }
 }

@@ -4,12 +4,12 @@ public class PointEntity {
 
     private final Long id;
     private final Long memberId;
-    private final int point;
+    private final Long point;
 
     public PointEntity(
             final Long id,
             final Long memberId,
-            final int point
+            final Long point
     ) {
         this.id = id;
         this.memberId = memberId;
@@ -24,7 +24,7 @@ public class PointEntity {
         return memberId;
     }
 
-    public int getPoint() {
+    public Long getPoint() {
         return point;
     }
 }

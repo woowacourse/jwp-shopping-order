@@ -25,7 +25,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void 상품을_생성한다() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        var product = new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg");
 
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void 생성된_상품을_가져온다() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        var product = new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg");
 
         // create product
         var location =
@@ -80,7 +80,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void 없는_상품을_수정하면_404_에러가_반환된다() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        var product = new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg");
 
         var responseProduct = given().log().all()
                 .when()

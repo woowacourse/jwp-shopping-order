@@ -24,7 +24,7 @@ public class OrderItemDao {
             rs.getLong("id"),
             rs.getLong("order_id"),
             rs.getLong("product_id"),
-            rs.getInt("price_at_order"),
+            rs.getLong("price_at_order"),
             rs.getInt("quantity")
     );
 

@@ -14,7 +14,7 @@ public class PointDao {
     private final RowMapper<PointEntity> rowMapper = (rs, rowNum) -> new PointEntity(
             rs.getLong("id"),
             rs.getLong("member_id"),
-            rs.getInt("point")
+            rs.getLong("point")
     );
 
     public PointDao(final JdbcTemplate jdbcTemplate) {

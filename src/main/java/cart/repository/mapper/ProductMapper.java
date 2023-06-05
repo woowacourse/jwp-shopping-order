@@ -28,7 +28,7 @@ public class ProductMapper {
         );
     }
 
-    public static Product toProductWithPrice(final ProductEntity entity, final int price) {
+    public static Product toProductWithPrice(final ProductEntity entity, final Long price) {
         return new Product(
                 entity.getId(),
                 new Name(entity.getName()),

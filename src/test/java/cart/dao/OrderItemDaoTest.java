@@ -37,8 +37,8 @@ class OrderItemDaoTest {
         // given
         final OrderEntity orderEntity = new OrderEntity(null, 1L, null);
         final Long orderId = orderDao.save(orderEntity);
-        final OrderItemEntity orderItem1 = new OrderItemEntity(null, orderId, 1L, 2000, 5);
-        final OrderItemEntity orderItem2 = new OrderItemEntity(null, orderId, 2L, 3000, 4);
+        final OrderItemEntity orderItem1 = new OrderItemEntity(null, orderId, 1L, 2000L, 5);
+        final OrderItemEntity orderItem2 = new OrderItemEntity(null, orderId, 2L, 3000L, 4);
 
         // expect
         assertDoesNotThrow(() -> orderItemDao.batchInsert(List.of(orderItem1, orderItem2)));
@@ -49,8 +49,8 @@ class OrderItemDaoTest {
         // given
         final OrderEntity orderEntity = new OrderEntity(null, 1L, null);
         final Long orderId = orderDao.save(orderEntity);
-        final OrderItemEntity orderItem1 = new OrderItemEntity(null, orderId, 1L, 2000, 5);
-        final OrderItemEntity orderItem2 = new OrderItemEntity(null, orderId, 2L, 3000, 4);
+        final OrderItemEntity orderItem1 = new OrderItemEntity(null, orderId, 1L, 2000L, 5);
+        final OrderItemEntity orderItem2 = new OrderItemEntity(null, orderId, 2L, 3000L, 4);
 
         // when
         orderItemDao.batchInsert(List.of(orderItem1, orderItem2));
@@ -70,8 +70,8 @@ class OrderItemDaoTest {
         final OrderEntity orderEntity2 = new OrderEntity(null, 1L, null);
         final Long orderId1 = orderDao.save(orderEntity1);
         final Long orderId2 = orderDao.save(orderEntity2);
-        final OrderItemEntity orderItem1 = new OrderItemEntity(null, orderId1, 1L, 2000, 5);
-        final OrderItemEntity orderItem2 = new OrderItemEntity(null, orderId2, 2L, 3000, 4);
+        final OrderItemEntity orderItem1 = new OrderItemEntity(null, orderId1, 1L, 2000L, 5);
+        final OrderItemEntity orderItem2 = new OrderItemEntity(null, orderId2, 2L, 3000L, 4);
 
         // when
         orderItemDao.batchInsert(List.of(orderItem1, orderItem2));
