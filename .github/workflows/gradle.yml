@@ -16,12 +16,24 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew build
+        run: ./gradlew bootJar
 
+      - name: Checkout deploy branch
+        uses: actions/checkout@v3
+        with:
+          clean: false
+          ref: "deploy"
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v4.4.0
+        with:
+          add: 'build/libs'
+          ref: "deploy"
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       - name: Push commit
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
-          directory: "build"
           branch: "deploy"
+          directory: "build/libs"
           force: true
