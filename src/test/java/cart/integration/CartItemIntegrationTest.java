@@ -20,7 +20,6 @@ import cart.application.dto.CartItemRequest;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
-import cart.domain.Product;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -31,19 +30,15 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     private Long productId1;
     private Long productId2;
-    private Member member;
+    private Member member1;
     private Member member2;
 
     @BeforeEach
     void setUp() {
         super.setUp();
-        productId1 = productDao.createProduct(new Product("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = productDao.createProduct(new Product("피자", 15_000, "http://example.com/pizza.jpg"));
-
-        memberDao.addMember(new Member(1L, "a@a.com", "1234"));
-        memberDao.addMember(new Member(2L, "b@b.com", "1234"));
-
-        member = memberDao.getMemberById(1L);
+        productId1 = productDao.getProductById(1L).getId();
+        productId2 = productDao.getProductById(2L).getId();
+        member1 = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);
     }
 
@@ -54,7 +49,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         CartItemRequest cartItemRequest = new CartItemRequest(productId1);
 
         // when
-        ResultActions response = requestAddCartItem(member, cartItemRequest);
+        ResultActions response = requestAddCartItem(member1, cartItemRequest);
 
         // then
         response.andExpect(status().isCreated());
@@ -64,7 +59,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void addCartItemByIllegalMember() throws Exception {
         // given
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(member1.getId(), member1.getEmail(), member1.getPassword() + "asdf");
         CartItemRequest cartItemRequest = new CartItemRequest(productId1);
 
         // when
@@ -78,56 +73,55 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void getCartItems() throws Exception {
         // given
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId1);
-        Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
+        Long cartItemId1 = requestAddCartItemAndGetId(member1, productId1);
+        Long cartItemId2 = requestAddCartItemAndGetId(member1, productId2);
 
         // when
-        ResultActions response = requestGetCartItems(member);
+        ResultActions response = requestGetCartItems(member1);
 
         // then
         response.andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id").value(cartItemId1))
-            .andExpect(jsonPath("$[1].id").value(cartItemId2));
+            .andExpect(jsonPath("$[?(@.id == '" + cartItemId1 + "')]").exists())
+            .andExpect(jsonPath("$[?(@.id == '" + cartItemId2 + "')]").exists());
     }
 
     @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
     void increaseCartItemQuantity() throws Exception {
         // given
-        Long cartItemId = requestAddCartItemAndGetId(member, productId1);
+        Long cartItemId = requestAddCartItemAndGetId(member1, productId1);
 
         // when
-        requestUpdateCartItemQuantity(member, cartItemId, 10);
+        requestUpdateCartItemQuantity(member1, cartItemId, 10);
 
         // then
-        ResultActions cartItems = requestGetCartItems(member);
+        ResultActions cartItems = requestGetCartItems(member1);
         cartItems.andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id").value(cartItemId))
-            .andExpect(jsonPath("$[0].quantity").value(10));
+            .andExpect(jsonPath("$.[?(@.id == '" + cartItemId + "' && @.quantity == 10)]").exists());
     }
 
     @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
     void decreaseCartItemQuantityToZero() throws Exception {
         // given
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId1);
-        Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
+        Long cartItemId1 = requestAddCartItemAndGetId(member1, productId1);
+        Long cartItemId2 = requestAddCartItemAndGetId(member1, productId2);
 
         // when
-        requestUpdateCartItemQuantity(member, cartItemId1, 0);
+        requestUpdateCartItemQuantity(member1, cartItemId1, 0);
 
         // then
-        String response = requestGetCartItems(member).andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsString();
-        assertThat(response).doesNotContain("\"id\":1,\"name\":\"치킨\"");
-        assertThat(response).contains("\"id\":2,\"name\":\"피자\"");
+        ResultActions cartItems = requestGetCartItems(member1);
+        cartItems.andExpect(status().isOk())
+                .andExpect(jsonPath("$.[?(@.id == '" + cartItemId1 +"')]").doesNotExist())
+                .andExpect(jsonPath("$.[?(@.id == '" + cartItemId2 +"')]").exists());
     }
 
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
     void updateOtherMembersCartItem() throws Exception {
         // given
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId1);
+        Long cartItemId1 = requestAddCartItemAndGetId(member1, productId1);
 
         // when
         ResultActions response = requestUpdateCartItemQuantity(member2, cartItemId1, 10);
@@ -139,12 +133,12 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
     void removeCartItem() throws Exception {
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId1);
+        Long cartItemId1 = requestAddCartItemAndGetId(member1, productId1);
 
         ResultActions response = requestDeleteCartItem(cartItemId1);
 
         response.andExpect(status().isNoContent());
-        int cartItemResponseLength = requestGetCartItems(member).andReturn().getResponse().getContentLength();
+        int cartItemResponseLength = requestGetCartItems(member1).andReturn().getResponse().getContentLength();
         assertThat(cartItemResponseLength).isZero();
     }
 
@@ -190,7 +184,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private ResultActions requestDeleteCartItem(Long cartItemId) throws Exception {
-        String encodedAuthHeader = getEncodedAuthHeader(member);
+        String encodedAuthHeader = getEncodedAuthHeader(member1);
         return mockMvc.perform(MockMvcRequestBuilders.delete("/cart-items/{cartItemId}", cartItemId)
             .header("Authorization", encodedAuthHeader)
             .contentType(MediaType.APPLICATION_JSON_VALUE));

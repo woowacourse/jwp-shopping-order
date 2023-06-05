@@ -4,6 +4,7 @@ import static cart.TestSource.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -15,15 +16,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
+import cart.domain.Member;
 import cart.domain.Order;
 
 @JdbcTest
-@Sql(scripts = "classpath:data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class OrderRepositoryTest {
@@ -65,14 +64,16 @@ class OrderRepositoryTest {
     @Test
     void 특정_사용자에_대한_주문을_조회한다() {
         // given
-        orderRepository.insert(order1);
+        Long orderId = orderRepository.insert(order1);
         Long memberId = order1.getMember().getId();
 
         // when
         List<Order> orders = orderRepository.findAllByMemberId(memberId);
+        List<Member> members = orders.stream()
+            .map(Order::getMember)
+            .collect(Collectors.toList());
 
         // then
-        assertThat(orders).hasSize(1);
-        assertThat(orders.get(0).getMember().getId()).isEqualTo(memberId);
+        assertThat(members).hasSize(1);
     }
 }

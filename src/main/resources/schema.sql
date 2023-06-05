@@ -60,5 +60,4 @@ CREATE TABLE IF NOT EXISTS point_usage
 );
 
 CREATE INDEX IF NOT EXISTS idx_member_id_point_addition ON point_addition (member_id);
-CREATE INDEX IF NOT EXISTS idx_member_created_at_point_addition ON point_addition (member_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_member_id_point_usage ON point_usage (member_id);

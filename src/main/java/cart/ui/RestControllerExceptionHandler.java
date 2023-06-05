@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,7 +20,7 @@ public class RestControllerExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleDataBindException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorResponse> handleDataBindException(BindException exception) {
         final List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         final String errorMessage = fieldErrors.stream()
             .map(FieldError::getDefaultMessage)
