@@ -1,9 +1,15 @@
 package cart.db.repository;
 
 import static cart.fixture.TestFixture.밀리;
+import static cart.fixture.TestFixture.밀리_엔티티;
 import static cart.fixture.TestFixture.밀리_쿠폰_10퍼센트;
 import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
 import static cart.fixture.TestFixture.장바구니_밀리_피자_1개;
+import static cart.fixture.TestFixture.주문_밀리_치킨_피자_3000원;
+import static cart.fixture.TestFixture.주문_밀리_치킨_피자_3000원_엔티티;
+import static cart.fixture.TestFixture.주문_치킨_10개_엔티티;
+import static cart.fixture.TestFixture.주문_피자_1개_엔티티;
+import static cart.fixture.TestFixture.쿠폰_10퍼센트_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -72,22 +78,24 @@ class OrderRepositoryTest {
     @Test
     void 주문을_id로_조회한다() {
         given(orderDao.findById(any()))
-                .willReturn(Optional.of(new OrderEntity(1L, 1L, 1L, "20230616052900331", 3000,
-                        LocalDateTime.of(2023, 6, 16, 5, 29, 0, 33))));
+                .willReturn(Optional.of(주문_밀리_치킨_피자_3000원_엔티티));
         given(orderProductDao.findByOrderId(anyLong()))
                 .willReturn(List.of(
-                        new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000), "http://pizza.com"),
-                        new OrderProductEntity(1L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000), "http://chicken.com")
+                        주문_치킨_10개_엔티티,
+                        주문_피자_1개_엔티티
                 ));
         given(memberDao.findById(any()))
-                .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
+                .willReturn(Optional.of(밀리_엔티티));
         given(couponDao.findById(any()))
-                .willReturn(Optional.of(new CouponEntity(1L, "쿠폰", "RATE", BigDecimal.valueOf(10), BigDecimal.ZERO)));
+                .willReturn(Optional.of(쿠폰_10퍼센트_엔티티));
 
         Optional<Order> savedOrder = orderRepository.findById(1L);
 
         assertThat(savedOrder).isPresent();
         assertThat(savedOrder.get().getId()).isEqualTo(1L);
+        assertThat(savedOrder.get()).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(주문_밀리_치킨_피자_3000원);
     }
 
     @Test

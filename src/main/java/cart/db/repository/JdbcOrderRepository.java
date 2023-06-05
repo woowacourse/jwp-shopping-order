@@ -140,7 +140,8 @@ public class JdbcOrderRepository implements OrderRepository {
                         orderProduct.getProductName(),
                         orderProduct.getProductPrice(),
                         orderProduct.getProductImageUrl()
-                )
+                ),
+                orderProduct.getQuantity()
         );
     }
 }
