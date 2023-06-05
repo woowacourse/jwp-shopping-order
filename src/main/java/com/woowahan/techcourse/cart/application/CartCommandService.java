@@ -50,7 +50,7 @@ public class CartCommandService {
         cartItemDao.deleteByIdAndMemberId(id, memberId);
     }
 
-    public void removeAllByCartIds(Long memberId, List<Long> cartItemIds) {
-        cartItemDao.deleteAll(memberId, cartItemIds);
+    public void removeAllByProductIds(Long memberId, List<Long> productIds) {
+        cartItemDao.deleteAll(memberId, productIds);
     }
 }

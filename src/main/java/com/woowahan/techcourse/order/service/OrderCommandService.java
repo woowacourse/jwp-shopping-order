@@ -2,6 +2,7 @@ package com.woowahan.techcourse.order.service;
 
 import com.woowahan.techcourse.order.db.OrderDao;
 import com.woowahan.techcourse.order.domain.ActualPriceCalculator;
+import com.woowahan.techcourse.order.domain.CartItemRemover;
 import com.woowahan.techcourse.order.domain.CouponExpire;
 import com.woowahan.techcourse.order.domain.Order;
 import com.woowahan.techcourse.order.domain.OrderCoupon;
@@ -19,18 +20,21 @@ public class OrderCommandService {
 
     private final OrderDao orderDao;
     private final ActualPriceCalculator actualPriceCalculator;
+    private final CartItemRemover cartItemRemover;
     private final CouponExpire couponExpire;
 
     public OrderCommandService(OrderDao orderDao, ActualPriceCalculator actualPriceCalculator,
-            CouponExpire couponExpire) {
+            CartItemRemover cartItemRemover, CouponExpire couponExpire) {
         this.orderDao = orderDao;
         this.actualPriceCalculator = actualPriceCalculator;
+        this.cartItemRemover = cartItemRemover;
         this.couponExpire = couponExpire;
     }
 
     public Long createOrder(long memberId, CreateOrderRequest requestDto) {
         Order order = toOrder(memberId, requestDto);
         couponExpire.makeExpired(order);
+        cartItemRemover.removeCartItem(order);
         return orderDao.insert(order);
     }
 

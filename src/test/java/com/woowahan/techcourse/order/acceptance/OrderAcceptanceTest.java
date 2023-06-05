@@ -10,11 +10,20 @@ import static com.woowahan.techcourse.order.acceptance.OrderStep.주문_생성_�
 import static com.woowahan.techcourse.order.acceptance.OrderStep.주문_전체_조회_결과_추출;
 import static com.woowahan.techcourse.order.acceptance.OrderStep.주문_전체_조회_요청;
 import static com.woowahan.techcourse.order.acceptance.OrderStep.주문_조회_ID로_요청;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowahan.techcourse.cart.dto.CartItemResponse;
 import com.woowahan.techcourse.common.acceptance.IntegrationTest;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -68,5 +77,33 @@ class OrderAcceptanceTest extends IntegrationTest {
 
         var 없는_응답 = 주문_조회_ID로_요청(주문_id + 1, 사용자_email, 사용자_password);
         요청_결과의_상태를_검증한다(없는_응답, 비정상_요청_요청한_리소스_찾을_수_없음);
+    }
+
+    @Test
+    void 주문을_하면_카트에서_제거된다() {
+        var 사용자_email = "a@a.com";
+        var 사용자_password = "1234";
+
+        var 주문_생성_결과 = 주문_생성_요청1(사용자_email, 사용자_password);
+
+        var response = requestGetCartItems(사용자_email, 사용자_password);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+                .map(CartItemResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultCartItemIds).isEmpty();
+    }
+
+    private ExtractableResponse<Response> requestGetCartItems(String email, String password) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
+                .when()
+                .get("/cart-items")
+                .then()
+                .log().all()
+                .extract();
     }
 }

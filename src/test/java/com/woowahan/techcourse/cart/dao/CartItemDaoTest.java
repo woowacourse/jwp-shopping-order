@@ -92,7 +92,8 @@ class CartItemDaoTest {
             long cartItemId3 = cartItemDao.save(CART_ITEM3);
 
             // when
-            cartItemDao.deleteAll(CART_ITEM1.getMemberId(), List.of(cartItemId, cartItemId2, cartItemId3));
+            cartItemDao.deleteAll(CART_ITEM1.getMemberId(),
+                    List.of(CART_ITEM1.getProductId(), CART_ITEM2.getProductId(), CART_ITEM3.getProductId()));
 
             // then
             assertThat(cartItemDao.findById(cartItemId)).isEmpty();

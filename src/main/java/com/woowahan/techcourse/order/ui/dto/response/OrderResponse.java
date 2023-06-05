@@ -11,6 +11,7 @@ public class OrderResponse {
     private final long id;
     private final BigDecimal originalPrice;
     private final BigDecimal actualPrice;
+    private final long deliveryFee;
     private final List<OrderItemResponse> cartItems;
 
     public OrderResponse(long id, BigDecimal originalPrice, BigDecimal actualPrice, List<OrderItemResponse> cartItems) {
@@ -18,6 +19,7 @@ public class OrderResponse {
         this.originalPrice = originalPrice;
         this.actualPrice = actualPrice;
         this.cartItems = cartItems;
+        deliveryFee = 3000;
     }
 
     public static OrderResponse from(Order orderResult) {

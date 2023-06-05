@@ -70,11 +70,11 @@ public class CartItemDao {
                 cartItem.getId());
     }
 
-    public void deleteAll(Long memberId, List<Long> cartItemIds) {
-        String sql = "DELETE FROM cart_item WHERE member_id = (:memberId) AND id IN (:ids)";
+    public void deleteAll(Long memberId, List<Long> productIds) {
+        String sql = "DELETE FROM cart_item WHERE member_id = (:memberId) AND product_id IN (:productIds)";
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("memberId", memberId)
-                .addValue("ids", cartItemIds);
+                .addValue("productIds", productIds);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 

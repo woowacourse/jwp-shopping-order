@@ -47,6 +47,12 @@ public class Order {
         return orderItems;
     }
 
+    public List<Long> getProductIds() {
+        return orderItems.stream()
+                .map(OrderItem::getProductId)
+                .collect(Collectors.toList());
+    }
+
     public List<Long> getCouponIds() {
         return orderCoupons.stream()
                 .map(OrderCoupon::getId)

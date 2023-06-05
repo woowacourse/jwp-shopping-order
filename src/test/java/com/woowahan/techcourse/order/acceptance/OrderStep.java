@@ -32,6 +32,23 @@ public class OrderStep {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 주문_생성_요청2(String email, String password) {
+        var request = new CreateOrderRequest(List.of(
+                new CreateOrderCartItemRequest(7L, 5,
+                        new CreateOrderProductRequest(1L, 10000, "치킨", "http://example.com/chicken.jpg")),
+                new CreateOrderCartItemRequest(8L, 2,
+                        new CreateOrderProductRequest(2L, 24000, "피자", "http://example.com/pizza.jpg"))
+        ), List.of(1L));
+        return RestAssured.given()
+                .body(request)
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(email, password)
+                .when()
+                .post("/orders")
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 주문_전체_조회_요청(String email, String password) {
         return RestAssured.given()
                 .auth().preemptive().basic(email, password)
