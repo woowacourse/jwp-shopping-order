@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.application.Event.RequestPaymentEvent;
+import cart.application.Event.UpdateMemberPointEvent;
 import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -33,6 +35,7 @@ public class OrderService {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
+    @Transactional
     public Long addOrder(final Member member, final OrderRequest request) {
         final Cart cart = cartRepository.findByIds(request.getCartItemIds());
 
@@ -44,6 +47,8 @@ public class OrderService {
         final Long orderId = orderRepository.save(order);
 
         cartRepository.deleteCart(cart);
+
+        requestPointUpdate(member, request, orderId);
 
         return orderId;
     }
@@ -59,6 +64,10 @@ public class OrderService {
                 .map(it -> new OrderItem(it.getQuantity(), it.getProduct()))
                 .collect(Collectors.toUnmodifiableList())
         );
+    }
+
+    private void requestPointUpdate(final Member member, final OrderRequest request, final Long orderId) {
+        applicationEventPublisher.publishEvent(new UpdateMemberPointEvent(member, request, orderId));
     }
 
     public OrderResponse findByOrderId(final Member member, final Long orderId) {

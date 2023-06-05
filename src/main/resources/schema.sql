@@ -49,3 +49,15 @@ CREATE TABLE point
     point     INT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
+
+
+CREATE TABLE point_history
+(
+    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT NOT NULL,
+    points_used  INT    NOT NULL,
+    points_saved INT    NOT NULL,
+    order_id     BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id)
+);

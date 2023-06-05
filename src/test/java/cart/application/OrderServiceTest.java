@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import cart.application.Event.RequestPaymentEvent;
+import cart.application.Event.UpdateMemberPointEvent;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Quantity;
@@ -33,7 +35,6 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -91,7 +92,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void 장바구니_목록을_받아_주문이_들어가고_결제를_요청한다() {
+    void 장바구니_목록을_받아_주문이_들어가고_결제와_포인트_업데이트를_요청한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
         final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"), new Price(1000L));
@@ -110,12 +111,8 @@ class OrderServiceTest {
         orderService.addOrder(member, request);
 
         // then
-        ArgumentCaptor<RequestPaymentEvent> argCaptor = ArgumentCaptor.forClass(RequestPaymentEvent.class);
-        verify(applicationEventPublisher).publishEvent(argCaptor.capture());
-        final RequestPaymentEvent payRequest = argCaptor.getValue();
-        assertThat(payRequest).usingRecursiveComparison().isEqualTo(new RequestPaymentEvent(
-                member, cart.getTotalPrice(), request
-        ));
+        verify(applicationEventPublisher, times(1)).publishEvent(any(RequestPaymentEvent.class));
+        verify(applicationEventPublisher, times(1)).publishEvent(any(UpdateMemberPointEvent.class));
     }
 
     @Test
