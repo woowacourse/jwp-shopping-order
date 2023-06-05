@@ -27,7 +27,7 @@ public class CouponTypeRepositoryMapper implements CouponTypeRepository {
 
     @Override
     public List<CouponType> findAll() {
-        return couponTypeDao.findAll().stream()
+        return couponTypeDao.findAllOrderByDiscountAmount().stream()
                 .map(CouponTypeEntity::toDomain)
                 .collect(Collectors.toList());
     }

@@ -25,7 +25,7 @@ public class OrderItemService {
     @Transactional
     public void create(final Long memberId, final List<Long> cartItemIds, final Long orderId) {
         List<OrderItemEntity> orderItemEntities = new ArrayList<>();
-        List<CartItem> removalCartItems= new ArrayList<>();
+        List<CartItem> removalCartItems = new ArrayList<>();
 
         for (Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemDao.findById(cartItemId);
