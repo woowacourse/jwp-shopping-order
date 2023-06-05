@@ -1,6 +1,6 @@
 package cart.step2.order.service;
 
-import cart.dao.CartItemDao;
+import cart.dao.CartItemRepository;
 import cart.domain.CartItem;
 import cart.step2.order.domain.OrderItemEntity;
 import cart.step2.order.persist.OrderItemDao;
@@ -14,26 +14,23 @@ import java.util.List;
 @Service
 public class OrderItemService {
 
-    private final CartItemDao cartItemDao;
+    private final CartItemRepository cartItemRepository;
     private final OrderItemDao orderItemDao;
 
-    public OrderItemService(final CartItemDao cartItemDao, final OrderItemDao orderItemDao) {
-        this.cartItemDao = cartItemDao;
+    public OrderItemService(final CartItemRepository cartItemRepository, final OrderItemDao orderItemDao) {
+        this.cartItemRepository = cartItemRepository;
         this.orderItemDao = orderItemDao;
     }
 
     @Transactional
     public void create(final Long memberId, final List<Long> cartItemIds, final Long orderId) {
         List<OrderItemEntity> orderItemEntities = new ArrayList<>();
-        List<CartItem> removalCartItems = new ArrayList<>();
-
-        for (Long cartItemId : cartItemIds) {
-            CartItem cartItem = cartItemDao.findById(cartItemId);
+        List<CartItem> cartItems = cartItemRepository.findByIds(cartItemIds);
+        for (CartItem cartItem : cartItems) {
             orderItemEntities.add(OrderItemEntity.createNonePkOrderItemEntity(cartItem.getProduct().getId(), orderId, cartItem.getQuantity()));
-            removalCartItems.add(cartItem);
         }
 
-        cartItemDao.batchDelete(memberId, removalCartItems);
+        cartItemRepository.batchDelete(memberId, cartItems);
         orderItemDao.batchInsert(orderItemEntities);
     }
 

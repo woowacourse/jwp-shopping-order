@@ -38,12 +38,6 @@ public class OrderItemDao implements OrderItemRepository {
         jdbcTemplate.batchUpdate(sql, batchItems);
     }
 
-//    public List<OrderItemEntity> findAll(final Long orderId) {
-//        final String sql = "SELECT * FROM order_item " +
-//                "WHERE order_id = ?";
-//        return jdbcTemplate.query(sql, rowMapper, orderId);
-//    }
-
     public List<OrderItemEntity> findByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM order_item " +
                 "WHERE order_id = ?";

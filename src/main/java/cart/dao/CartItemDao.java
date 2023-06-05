@@ -1,10 +1,12 @@
 package cart.dao;
 
 import cart.domain.CartItem;
+import cart.domain.CartItemEntity;
 import cart.domain.Member;
 import cart.domain.Product;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,15 @@ import java.util.Objects;
 
 @Repository
 public class CartItemDao {
+
+    private RowMapper<CartItemEntity> rowMapper = (rs, rowNum) ->
+            new CartItemEntity(
+                    rs.getLong("id"),
+                    rs.getLong("member_id"),
+                    rs.getLong("product_id"),
+                    rs.getInt("quantity")
+            );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
@@ -86,12 +97,6 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
@@ -118,5 +123,11 @@ public class CartItemDao {
             }
         });
     }
+
+    public List<CartItemEntity> findByIds(final List<Long> ids) {
+        String sql = "SELECT value FROM table_name WHERE id IN (:ids)";
+        return jdbcTemplate.query(sql, rowMapper, ids);
+    }
+
 }
 
