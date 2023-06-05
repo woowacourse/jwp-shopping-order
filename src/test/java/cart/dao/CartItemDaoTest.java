@@ -54,7 +54,7 @@ class CartItemDaoTest {
     @Test
     void 장바구니_상품_정보를_저장한다() {
         //given
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = CartItem.from(product, member);
 
         //when
         final Long id = cartItemDao.save(cartItem);
@@ -70,7 +70,7 @@ class CartItemDaoTest {
     @Test
     void id로_장바구니_상품_정보를_찾는다() {
         //given
-        final Long id = cartItemDao.save(new CartItem(member, product));
+        final Long id = cartItemDao.save(CartItem.from(product, member));
 
         //when
         final CartItem cartItem = cartItemDao.findById(id);
@@ -99,7 +99,7 @@ class CartItemDaoTest {
     @Test
     void 회원_id로_장바구니_상품_정보를_찾는다() {
         //given
-        cartItemDao.save(new CartItem(member, product));
+        cartItemDao.save(CartItem.from(product, member));
 
         //when
         final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
@@ -117,7 +117,7 @@ class CartItemDaoTest {
     @Test
     void 회원_id와_상품_id로_장바구니_상품_정보를_삭제한다() {
         //given
-        final Long id = cartItemDao.save(new CartItem(member, product));
+        final Long id = cartItemDao.save(CartItem.from(product, member));
 
         //when
         final int affectedRows = cartItemDao.delete(member.getId(), product.getId());
@@ -134,7 +134,7 @@ class CartItemDaoTest {
     @Test
     void id로_장바구니_상품_정보를_삭제한다() {
         //given
-        final Long id = cartItemDao.save(new CartItem(member, product));
+        final Long id = cartItemDao.save(CartItem.from(product, member));
 
         //when
         final int affectedRows = cartItemDao.deleteById(id);
@@ -151,7 +151,7 @@ class CartItemDaoTest {
     @Test
     void 장바구니_상품의_수량을_수정한다() {
         //given
-        final Long id = cartItemDao.save(new CartItem(member, product));
+        final Long id = cartItemDao.save(CartItem.from(product, member));
         final CartItem cartItem = new CartItem(id, 2, product, member);
 
         //when

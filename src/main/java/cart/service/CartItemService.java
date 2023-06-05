@@ -37,7 +37,7 @@ public class CartItemService {
 
         cartItems.forEach(item -> item.checkProductDuplication(productId));
 
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(productId)));
+        return cartItemDao.save(CartItem.from(productDao.getProductById(productId), member));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
