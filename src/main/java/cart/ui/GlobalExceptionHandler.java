@@ -26,7 +26,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(CartItemException.IllegalMember e) {
-        final ErrorResponse errorResponse = toResponse(FORBIDDEN, e);
+        logger.info("잘못된 요청 : {}", e.getMessage());
+        
+        final ErrorResponse errorResponse = new ErrorResponse(FORBIDDEN.value(), "잘못된 회원 정보입니다.");
         return ResponseEntity.status(FORBIDDEN).body(errorResponse);
     }
 
