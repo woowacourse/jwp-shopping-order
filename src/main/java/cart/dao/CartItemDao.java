@@ -23,7 +23,7 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity " +
+        String sql = "SELECT c.id, c.member_id, m.email, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_items AS c " +
                 "INNER JOIN members AS m ON c.member_id = m.id " +
                 "INNER JOIN products AS p ON c.product_id = p.id " +
@@ -31,13 +31,13 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
             Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("products.id");
+            Long productId = rs.getLong("product_id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("cart_items.id");
-            int quantity = rs.getInt("cart_items.quantity");
+            Long cartItemId = rs.getLong("id");
+            int quantity = rs.getInt("quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
     }
@@ -62,7 +62,7 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity " +
+        String sql = "SELECT c.id, c.member_id, m.email, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_items AS c " +
                 "INNER JOIN members AS m ON c.member_id = m.id " +
                 "INNER JOIN products AS p ON c.product_id = p.id " +
@@ -71,13 +71,13 @@ public class CartItemDao {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("products.id");
+            Long productId = rs.getLong("product_id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("cart_items.id");
-            int quantity = rs.getInt("cart_items.quantity");
+            Long cartItemId = rs.getLong("id");
+            int quantity = rs.getInt("quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
@@ -86,7 +86,7 @@ public class CartItemDao {
     public List<CartItem> findByIds(List<Long> ids) {
         String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
 
-        String sql = "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity " +
+        String sql = "SELECT c.id, c.member_id, m.email, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_items AS c " +
                 "INNER JOIN members AS m ON c.member_id = m.id " +
                 "INNER JOIN products AS p ON c.product_id = p.id " +
@@ -95,13 +95,13 @@ public class CartItemDao {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("products.id");
+            Long productId = rs.getLong("product_id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("cart_items.id");
-            int quantity = rs.getInt("cart_items.quantity");
+            Long cartItemId = rs.getLong("id");
+            int quantity = rs.getInt("quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
     }
