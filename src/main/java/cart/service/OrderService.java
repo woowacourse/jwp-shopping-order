@@ -35,10 +35,11 @@ public class OrderService {
     public long save(final Member member, final OrderRequest request) {
         final List<CartItem> cartItems = cartItemRepository.findByIds(request.getCartItems());
         validateCartItemsOwner(member, cartItems);
-        cartItemRepository.deleteAll(request.getCartItems());
         final Order order = createOrder(member, cartItems);
         validatePaymentAmount(order, request.getPaymentAmount());
-        return orderRepository.save(order);
+        final long orderId = orderRepository.save(order);
+        cartItemRepository.deleteAll(request.getCartItems());
+        return orderId;
     }
 
     private void validateCartItemsOwner(final Member member, final List<CartItem> cartItems) {
