@@ -38,11 +38,11 @@ public class CartItemService {
     }
 
     public void updateQuantity(final Member member, final long id, final CartItemQuantityUpdateRequest request) {
-        checkOwner(member, id);
-        cartItemRepository.updateQuantity(id, request.getQuantity());
         if (request.getQuantity() == CART_ITEM_REMOVABLE_QUANTITY) {
-            cartItemRepository.delete(id);
+            remove(member, id);
+            return;
         }
+        cartItemRepository.updateQuantity(id, request.getQuantity());
     }
 
     public void remove(Member member, long id) {
