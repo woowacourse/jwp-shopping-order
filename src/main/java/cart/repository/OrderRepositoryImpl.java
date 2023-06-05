@@ -42,7 +42,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Long save(Order order) {
+    public Order save(Order order) {
         Long savedOrderId = orderDao.save(toEntity(order));
 
         List<OrderProductEntity> orderProducts = order.getCartProducts().stream()
@@ -59,7 +59,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (!DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
             orderCouponDao.save(savedOrderId, order.getCoupon().getId());
         }
-        return savedOrderId;
+        return new Order(savedOrderId, order.getMember(),order.getCartProducts(),order.getConfirmState(),order.getCoupon());
     }
 
     @Override

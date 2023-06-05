@@ -11,7 +11,7 @@ public interface CartItemRepository {
 
     List<CartItem> findByMemberId(Long id);
 
-    Long save(CartItem cartItem);
+    CartItem save(CartItem cartItem);
 
     CartItem findById(Long id);
 

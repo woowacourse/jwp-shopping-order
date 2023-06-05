@@ -37,7 +37,8 @@ public class OrderService {
         Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(member, orderRequest.getCouponId());
         validateCoupon(coupon);
         Order order = new Order(member, cartItems,coupon);
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        return savedOrder.getId();
     }
 
     private static void validationSave(OrderRequest orderRequest) {

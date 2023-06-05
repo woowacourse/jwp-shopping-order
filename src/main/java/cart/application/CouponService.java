@@ -25,8 +25,8 @@ public class CouponService {
     public Long save(Member member, CouponCreateRequest request) {
         validateExistCoupon(request);
         validateDuplicateCoupon(member, request);
-
-        return couponRepository.save(member, request.getId());
+        Coupon coupon = couponRepository.save(member, request.getId());
+        return coupon.getId();
     }
 
     private void validateDuplicateCoupon(Member member, CouponCreateRequest request) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 public interface OrderRepository {
-    Long save(Order order);
+    Order save(Order order);
 
     List<Order> findAllByMemberId(Member member);
 

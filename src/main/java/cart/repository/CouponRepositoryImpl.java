@@ -9,6 +9,7 @@ import cart.domain.coupon.DiscountType;
 import cart.domain.repository.CouponRepository;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
+import cart.exception.CouponException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,8 +26,10 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public Long save(Member member, Long couponId) {
-        return memberCouponDao.save(new MemberCouponEntity(couponId, member.getId(), true));
+    public Coupon save(Member member, Long couponId) {
+        Long savedId = memberCouponDao.save(new MemberCouponEntity(couponId, member.getId(), true));
+        CouponEntity couponEntity = memberCouponDao.findById(savedId).orElseThrow(() -> new CouponException("잘못된 쿠폰입니다."));
+        return toDomain(couponEntity);
     }
 
     @Override

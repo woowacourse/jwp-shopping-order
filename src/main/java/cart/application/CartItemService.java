@@ -28,7 +28,8 @@ public class CartItemService {
     }
 
     public Long save(Member member, CartItemRequest cartItemRequest) {
-        return cartItemRepository.save(new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
+        CartItem savedCartItem = cartItemRepository.save(new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
+        return savedCartItem.getId();
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

@@ -35,8 +35,9 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     }
 
     @Override
-    public Long save(CartItem cartItem) {
-        return cartItemDao.save(toEntity(cartItem));
+    public CartItem save(CartItem cartItem) {
+        Long savedId = cartItemDao.save(toEntity(cartItem));
+        return new CartItem(savedId, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
     @Override

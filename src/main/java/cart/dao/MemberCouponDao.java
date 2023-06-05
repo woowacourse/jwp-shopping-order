@@ -79,4 +79,17 @@ public class MemberCouponDao {
         String sql = "UPDATE member_coupon SET available = ? WHERE id = ?";
         jdbcTemplate.update(sql, true, memberCouponId);
     }
+
+    public Optional<CouponEntity> findById(Long savedId) {
+        try {
+            String sql = "SELECT * " +
+                    "FROM member_coupon " +
+                    "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
+                    " where member_coupon.id = ?";
+
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, savedId));
+        } catch (DataAccessException e){
+            return Optional.empty();
+        }
+    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public interface CouponRepository {
 
-    Long save(Member member, Long couponId);
+    Coupon save(Member member, Long couponId);
 
     List<Coupon> findByMemberId(Member member);
 
