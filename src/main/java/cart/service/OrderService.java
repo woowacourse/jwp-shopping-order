@@ -4,7 +4,7 @@ import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.response.OrderResponse;
 import cart.controller.dto.response.OrderThumbnailResponse;
 import cart.domain.CartItem;
-import cart.domain.DiscountPriceCalculator;
+import cart.domain.discount_strategy.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -14,6 +14,8 @@ import cart.exception.PaymentAmountNotEqualException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.dto.OrderAndMainProductDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
+    private final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
 
@@ -49,6 +52,7 @@ public class OrderService {
         if (isIdEquals) {
             return;
         }
+        logger.debug("유저꺼 아님");
         throw new NotOwnerException();
     }
 
