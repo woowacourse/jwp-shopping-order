@@ -11,7 +11,7 @@ public class ProductResponse {
     private final Double pointRatio;
     private final Boolean pointAvailable;
 
-    private ProductResponse(Long id, String name, Long price, String imageUrl,
+    public ProductResponse(Long id, String name, Long price, String imageUrl,
                             double pointRatio, boolean pointAvailable) {
         this.id = id;
         this.name = name;
