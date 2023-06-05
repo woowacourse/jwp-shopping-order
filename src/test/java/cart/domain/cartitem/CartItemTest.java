@@ -90,9 +90,9 @@ class CartItemTest {
             Member member = new Member(1L, "a@a.com", "password1", 10);
             CartItem cartItem = new CartItem(member, new Product("치킨", 10000, "http://chicken.com"));
 
-            CartItem updateCartItem = cartItem.changeQuantity(100);
+            cartItem.changeQuantity(100);
 
-            assertThat(updateCartItem.getQuantity()).isEqualTo(100);
+            assertThat(cartItem.getQuantity()).isEqualTo(100);
         }
     }
 }

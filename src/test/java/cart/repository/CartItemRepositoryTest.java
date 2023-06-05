@@ -99,12 +99,12 @@ class CartItemRepositoryTest {
     @Test
     @DisplayName("updateQuantity 메서드는 장바구니 상품 수량을 수정한다.")
     void updateQuantity() {
-        CartItem updateCartItem = cartItem.changeQuantity(5);
+        cartItem.changeQuantity(5);
 
-        cartItemRepository.updateQuantity(updateCartItem);
+        cartItemRepository.updateQuantity(cartItem);
 
         CartItem result = cartItemRepository.findById(cartItem.getId());
-        assertThat(result).usingRecursiveComparison().isEqualTo(updateCartItem);
+        assertThat(result).usingRecursiveComparison().isEqualTo(cartItem);
     }
 
     @Test

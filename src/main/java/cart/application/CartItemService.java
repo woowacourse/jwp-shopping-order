@@ -49,9 +49,9 @@ public class CartItemService {
 
         if (searchCart.isPresent()) {
             CartItem cartItem = searchCart.get();
-            CartItem updateCartItem = cartItem.changeQuantity(cartItem.getQuantity() + 1);
-            cartItemRepository.updateQuantity(updateCartItem);
-            return updateCartItem.getId();
+            cartItem.changeQuantity(cartItem.getQuantity() + 1);
+            cartItemRepository.updateQuantity(cartItem);
+            return cartItem.getId();
         }
         CartItem newCartItem = new CartItem(member, product);
         return cartItemRepository.save(newCartItem);
@@ -66,8 +66,8 @@ public class CartItemService {
             cartItemRepository.deleteById(id);
             return;
         }
-        CartItem updateCartItem = cartItem.changeQuantity(request.getQuantity());
-        cartItemRepository.updateQuantity(updateCartItem);
+        cartItem.changeQuantity(request.getQuantity());
+        cartItemRepository.updateQuantity(cartItem);
     }
 
     @Transactional

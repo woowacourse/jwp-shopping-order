@@ -30,8 +30,18 @@ public class CartItem {
         this.product = product;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartItemOwnerException();
+        }
+    }
+
     public void assignId(Long id) {
         this.id = id;
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = new Quantity(quantity);
     }
 
     public int getTotalPrice() {
@@ -52,15 +62,5 @@ public class CartItem {
 
     public Product getProduct() {
         return product;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemOwnerException();
-        }
-    }
-
-    public CartItem changeQuantity(int quantity) {
-        return new CartItem(id, quantity, member, product);
     }
 }
