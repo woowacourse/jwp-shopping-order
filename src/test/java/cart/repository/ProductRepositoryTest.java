@@ -84,10 +84,10 @@ class ProductRepositoryTest {
         Product updateProduct = new Product(1L, "밀리", BigDecimal.valueOf(10000), "http://millie.com");
 
         // when
-        productRepository.updateProduct(updateProduct);
+        productRepository.update(updateProduct);
 
         // then
-        verify(productDao, times(1)).updateProduct(any());
+        verify(productDao, times(1)).update(any());
     }
 
     @Test
@@ -96,7 +96,7 @@ class ProductRepositoryTest {
         Product product = new Product(1L, "밀리", BigDecimal.valueOf(100000000), "http://millie.com");
 
         // when
-        productRepository.deleteProduct(product.getId());
+        productRepository.delete(product.getId());
 
         // then
         verify(productDao, times(1)).deleteById(eq(product.getId()));

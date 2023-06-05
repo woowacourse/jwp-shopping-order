@@ -29,7 +29,7 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(@AuthPrincipal Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.findAllByMember(member));
     }
 
     @PostMapping
@@ -43,7 +43,7 @@ public class CartItemApiController {
     public ResponseEntity<Void> updateCartItemQuantity(@AuthPrincipal Member member,
                                                        @PathVariable Long id,
                                                        @RequestBody CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+        cartItemService.modifyQuantity(member, id, request);
         return ResponseEntity.ok().build();
     }
 

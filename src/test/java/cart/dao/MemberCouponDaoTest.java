@@ -91,7 +91,7 @@ class MemberCouponDaoTest {
         memberCouponDao.save(memberCoupon2);
 
         // when
-        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(memberId);
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllByMemberId(memberId);
 
         // then
         assertThat(memberCouponEntities).usingRecursiveComparison()
@@ -110,7 +110,7 @@ class MemberCouponDaoTest {
         memberCouponDao.saveAll(memberCouponEntities);
 
         // then
-        List<MemberCouponEntity> findMemberCouponEntities = memberCouponDao.findByMemberId(memberId);
+        List<MemberCouponEntity> findMemberCouponEntities = memberCouponDao.findAllByMemberId(memberId);
 
         assertThat(findMemberCouponEntities).hasSize(2);
         assertThat(findMemberCouponEntities).usingRecursiveComparison()

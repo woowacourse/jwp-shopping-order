@@ -71,7 +71,7 @@ public class MemberCouponDao {
         }
     }
 
-    public List<MemberCouponEntity> findByMemberId(Long memberId) {
+    public List<MemberCouponEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }

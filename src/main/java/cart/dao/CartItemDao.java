@@ -75,7 +75,7 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItemEntity> findByMemberId(Long memberId) {
+    public List<CartItemEntity> findAllByMemberId(Long memberId) {
         String sql =
                 "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
                         "cart_item.member_id as member_id, member.email as member_email, " +

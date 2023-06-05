@@ -74,7 +74,7 @@ class OrderRepositoryTest {
         given(orderDao.findById(any()))
                 .willReturn(Optional.of(new OrderEntity(1L, 1L, 1L, "20230616052900331", 3000,
                         LocalDateTime.of(2023, 6, 16, 5, 29, 0, 33))));
-        given(orderProductDao.findByOrderId(anyLong()))
+        given(orderProductDao.findAllByOrderId(anyLong()))
                 .willReturn(List.of(
                         new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000), "http://pizza.com"),
                         new OrderProductEntity(1L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000), "http://chicken.com")
@@ -95,7 +95,7 @@ class OrderRepositoryTest {
         given(orderDao.findById(any()))
                 .willReturn(Optional.of(new OrderEntity(1L, 1L, 0L, "20230616052900331", 3000,
                         LocalDateTime.of(2023, 6, 16, 5, 29, 0, 33))));
-        given(orderProductDao.findByOrderId(anyLong()))
+        given(orderProductDao.findAllByOrderId(anyLong()))
                 .willReturn(List.of(
                         new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000), "http://pizza.com"),
                         new OrderProductEntity(1L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000), "http://chicken.com")
@@ -121,7 +121,7 @@ class OrderRepositoryTest {
                                         LocalDateTime.of(2023, 6, 17, 5, 29, 0, 33))
                         )
                 );
-        given(orderProductDao.findByOrderId(anyLong()))
+        given(orderProductDao.findAllByOrderId(anyLong()))
                 .willReturn(
                         List.of(
                                 new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000),

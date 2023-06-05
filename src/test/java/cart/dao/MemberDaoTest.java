@@ -74,7 +74,7 @@ class MemberDaoTest {
         memberDao.save(new MemberEntity("email2@email.com", "password"));
 
         // when
-        List<MemberEntity> allMembers = memberDao.getAllMembers();
+        List<MemberEntity> allMembers = memberDao.findAll();
 
         // then
         assertThat(allMembers).hasSize(2);

@@ -46,7 +46,7 @@ public class OrderProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public List<OrderProductEntity> findByOrderId(Long orderId) {
+    public List<OrderProductEntity> findAllByOrderId(Long orderId) {
         String sql = "SELECT * FROM orders_product WHERE orders_id = ?";
         return jdbcTemplate.query(sql, rowMapper, orderId);
     }

@@ -116,7 +116,7 @@ public class OrderRepository {
     }
 
     private Order toOrder(OrderEntity orderEntity, Member member) {
-        List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderEntity.getId());
+        List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(orderEntity.getId());
         List<Item> items = toItems(orderProductEntities);
         Coupon coupon = toCoupon(orderEntity.getCouponId());
         return new Order(

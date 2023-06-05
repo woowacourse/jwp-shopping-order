@@ -85,7 +85,7 @@ class ProductServiceTest {
                 .willReturn(new Product(1L, "밀리", valueOf(10000000), "http://millie.com"));
 
         // when
-        Long id = productService.registerProduct(new ProductRequest("밀리", valueOf(10000000), "http://millie.com"));
+        Long id = productService.register(new ProductRequest("밀리", valueOf(10000000), "http://millie.com"));
 
         // then
         assertThat(id).isEqualTo(1L);
@@ -98,7 +98,7 @@ class ProductServiceTest {
                 .willReturn(Optional.empty());
 
         // expect
-        assertThatThrownBy(() -> productService.updateProduct(
+        assertThatThrownBy(() -> productService.modify(
                 1L,
                 new ProductRequest("밀리", valueOf(10000000), "http://millie.com")
         )).isInstanceOf(ProductException.class);
@@ -112,10 +112,10 @@ class ProductServiceTest {
                 .willReturn(Optional.of(product));
 
         // when
-        productService.updateProduct(1L, new ProductRequest("박스터", valueOf(10), "http://boxster.com"));
+        productService.modify(1L, new ProductRequest("박스터", valueOf(10), "http://boxster.com"));
 
         // then
-        verify(productRepository, times(1)).updateProduct(any());
+        verify(productRepository, times(1)).update(any());
         assertAll(
                 () -> assertThat(product.getPrice().getValue()).isEqualTo(valueOf(10)),
                 () -> assertThat(product.getName()).isEqualTo("박스터"),
@@ -129,9 +129,9 @@ class ProductServiceTest {
         Product product = new Product(1L, "밀리", valueOf(10000000), "http://millie.com");
 
         // when
-        productService.deleteProduct(product.getId());
+        productService.remove(product.getId());
 
         // then
-        verify(productRepository, times(1)).deleteProduct(product.getId());
+        verify(productRepository, times(1)).delete(product.getId());
     }
 }

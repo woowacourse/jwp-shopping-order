@@ -58,7 +58,7 @@ class CartItemDaoTest {
         Long cartItemId = cartItemDao.save(cartItemEntity);
 
         // when
-        List<CartItemEntity> cartItems = cartItemDao.findByMemberId(member.getId());
+        List<CartItemEntity> cartItems = cartItemDao.findAllByMemberId(member.getId());
 
         // then
         assertThat(cartItems).hasSize(1);
@@ -74,7 +74,7 @@ class CartItemDaoTest {
         productDao.deleteById(product.getId());
 
         // when
-        List<CartItemEntity> cartItems = cartItemDao.findByMemberId(member.getId());
+        List<CartItemEntity> cartItems = cartItemDao.findAllByMemberId(member.getId());
 
         // then
         assertThat(cartItems).hasSize(0);

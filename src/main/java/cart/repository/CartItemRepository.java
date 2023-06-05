@@ -22,13 +22,6 @@ public class CartItemRepository {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItem> findByMemberId(Long id) {
-        List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(id);
-        return cartItemEntities.stream()
-                .map(CartItemEntity::toDomain)
-                .collect(toList());
-    }
-
     public CartItem save(CartItem cartItem) {
         Long id = cartItemDao.save(
                 new CartItemEntity(
@@ -44,6 +37,13 @@ public class CartItemRepository {
     public Optional<CartItem> findById(Long id) {
         return cartItemDao.findById(id)
                 .map(CartItemEntity::toDomain);
+    }
+
+    public List<CartItem> findAllByMemberId(Long id) {
+        List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(id);
+        return cartItemEntities.stream()
+                .map(CartItemEntity::toDomain)
+                .collect(toList());
     }
 
     public void updateQuantity(CartItem cartItem) {

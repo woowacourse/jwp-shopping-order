@@ -65,7 +65,7 @@ public class MemberDao {
         }
     }
 
-    public List<MemberEntity> getAllMembers() {
+    public List<MemberEntity> findAll() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, rowMapper);
     }

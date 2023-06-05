@@ -109,7 +109,7 @@ class MemberCouponRepositoryTest {
 
     @Test
     void 만료기간이_지나지_않은_쿠폰을_멤버로_조회한다() {
-        given(memberCouponDao.findByMemberId(any()))
+        given(memberCouponDao.findAllByMemberId(any()))
                 .willReturn(List.of(
                         new MemberCouponEntity(1L, 1L, 1L, LocalDate.of(3000, 6, 16)),
                         new MemberCouponEntity(2L, 1L, 1L, LocalDate.of(1000, 6, 16)),

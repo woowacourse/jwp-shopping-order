@@ -56,7 +56,7 @@ class CartItemRepositoryTest {
     void 장바구니_상품을_사용자_id로_조회한다() {
         // given
         MemberEntity memberEntity = new MemberEntity(1L, "email@email.com", "password");
-        given(cartItemDao.findByMemberId(1L))
+        given(cartItemDao.findAllByMemberId(1L))
                 .willReturn(List.of(
                         new CartItemEntity(
                                 1L,
@@ -73,7 +73,7 @@ class CartItemRepositoryTest {
                 ));
 
         // when
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(memberEntity.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberEntity.getId());
 
         // then
         assertAll(

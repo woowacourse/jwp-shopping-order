@@ -63,7 +63,7 @@ class ProductDaoTest {
 
         // when
         ProductEntity newProduct = new ProductEntity(id, "박스터", BigDecimal.valueOf(10), "http://boxster.com");
-        productDao.updateProduct(newProduct);
+        productDao.update(newProduct);
 
         // then
         ProductEntity updatedProduct = productDao.findById(id).get();

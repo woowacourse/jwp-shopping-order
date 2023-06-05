@@ -35,12 +35,12 @@ public class ProductRepository {
                 .collect(toList());
     }
 
-    public void updateProduct(Product product) {
+    public void update(Product product) {
         ProductEntity productEntity = toEntity(product);
-        productDao.updateProduct(productEntity);
+        productDao.update(productEntity);
     }
 
-    public void deleteProduct(Long productId) {
+    public void delete(Long productId) {
         productDao.deleteById(productId);
     }
 

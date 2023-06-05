@@ -33,14 +33,14 @@ public class CartItemService {
         return cartItemRepository.save(cartItem).getId();
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+    public List<CartItemResponse> findAllByMember(Member member) {
+        List<CartItem> cartItems = cartItemRepository.findAllByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void modifyQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id)
                 .orElseThrow(() -> new CartItemException(ExceptionType.NOT_FOUND_CART_ITEM));
         cartItem.checkOwner(member);

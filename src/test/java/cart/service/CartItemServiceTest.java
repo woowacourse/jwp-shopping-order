@@ -88,7 +88,7 @@ class CartItemServiceTest {
     void 사용자의_장바구니를_조회한다() {
         // given
         Member member = new Member(1L, "email@email.com", "password");
-        given(cartItemRepository.findByMemberId(1L))
+        given(cartItemRepository.findAllByMemberId(1L))
                 .willReturn(List.of(
                         new CartItem(
                                 1L,
@@ -105,7 +105,7 @@ class CartItemServiceTest {
                 ));
 
         // when
-        List<CartItemResponse> responses = cartItemService.findByMember(member);
+        List<CartItemResponse> responses = cartItemService.findAllByMember(member);
 
         // then
         assertThat(responses).map(CartItemResponse::getId)
@@ -126,7 +126,7 @@ class CartItemServiceTest {
                 .willReturn(Optional.of(cartItem));
 
         // when
-        cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(10));
+        cartItemService.modifyQuantity(member, 1L, new CartItemQuantityUpdateRequest(10));
 
         // then
         verify(cartItemRepository, never()).deleteById(1L);
@@ -143,7 +143,7 @@ class CartItemServiceTest {
                 .willReturn(Optional.empty());
 
         // expect
-        assertThatThrownBy(() -> cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(10)))
+        assertThatThrownBy(() -> cartItemService.modifyQuantity(member, 1L, new CartItemQuantityUpdateRequest(10)))
                 .isInstanceOf(CartItemException.class);
     }
 
@@ -161,7 +161,7 @@ class CartItemServiceTest {
                 .willReturn(Optional.of(cartItem));
 
         // when
-        cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(0));
+        cartItemService.modifyQuantity(member, 1L, new CartItemQuantityUpdateRequest(0));
 
         // then
         verify(cartItemRepository, times(1)).deleteById(1L);
@@ -183,7 +183,7 @@ class CartItemServiceTest {
 
         // expect
         Member otherMember = new Member(2L, "email2@email.com", "password");
-        assertThatThrownBy(() -> cartItemService.updateQuantity(otherMember, 1L, new CartItemQuantityUpdateRequest(10)))
+        assertThatThrownBy(() -> cartItemService.modifyQuantity(otherMember, 1L, new CartItemQuantityUpdateRequest(10)))
                 .isInstanceOf(CartItemException.class);
     }
 
