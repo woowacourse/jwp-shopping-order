@@ -31,7 +31,6 @@ public class CartItem {
         if (!memberValidator.isOwner(memberId)) {
             throw new InvalidCartItemOwnerException();
         }
-        ;
     }
 
     @Override

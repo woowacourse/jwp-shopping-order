@@ -2,7 +2,6 @@ package cart.config;
 
 import cart.auth.AuthArgumentResolver;
 import cart.auth.AuthInterceptor;
-import cart.auth.BasicAuthorizationParser;
 import cart.dao.CredentialDao;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

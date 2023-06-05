@@ -1,6 +1,5 @@
 package cart.dto;
 
-import cart.domain.Money;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,12 +29,12 @@ public class OrderResponse {
         this.orderItems = orderItems;
     }
 
-    public static OrderResponse of(final Order order, final Money orderPrice, final Money discountedOrderPrice, final Money discountedDeliveryFee) {
+    public static OrderResponse from(final Order order) {
         return new OrderResponse(
                 order.getId(),
-                orderPrice.getValue(),
-                discountedOrderPrice.getValue(),
-                discountedDeliveryFee.getValue(),
+                order.getOrderPrice().getValue(),
+                order.discountOrderPrice().getValue(),
+                order.discountDeliveryFee().getValue(),
                 mapToOrderItemDtos(order.getOrderItems().getOrderItems())
         );
     }

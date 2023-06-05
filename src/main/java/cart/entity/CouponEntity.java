@@ -2,11 +2,7 @@ package cart.entity;
 
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.discountPolicy.DeliveryPolicy;
-import cart.domain.coupon.discountPolicy.DiscountPolicy;
-import cart.domain.coupon.discountPolicy.PercentPolicy;
-import cart.domain.coupon.discountPolicy.PolicyType;
-import cart.domain.coupon.discountPolicy.PricePolicy;
+import cart.domain.coupon.discountPolicy.*;
 
 import java.math.BigDecimal;
 
@@ -62,7 +58,7 @@ public class CouponEntity {
     }
 
     private DiscountPolicy getDiscountPolicy() {
-        final PolicyType type = PolicyType.from(policyType);
+        final PolicyType type = PolicyType.valueOf(policyType);
         if (type == PolicyType.PRICE) {
             return new PricePolicy();
         }

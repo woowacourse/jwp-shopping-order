@@ -1,10 +1,6 @@
 package cart.repository;
 
-import cart.dao.CouponDao;
-import cart.dao.MemberCouponDao;
-import cart.dao.MemberDao;
-import cart.dao.OrderDao;
-import cart.dao.OrderItemDao;
+import cart.dao.*;
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
@@ -12,11 +8,7 @@ import cart.domain.member.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
-import cart.entity.CouponEntity;
-import cart.entity.MemberCouponEntity;
-import cart.entity.MemberEntity;
-import cart.entity.OrderEntity;
-import cart.entity.OrderItemEntity;
+import cart.entity.*;
 import cart.exception.coupon.CouponNotFoundException;
 import cart.exception.member.MemberNotFoundException;
 import org.springframework.stereotype.Repository;

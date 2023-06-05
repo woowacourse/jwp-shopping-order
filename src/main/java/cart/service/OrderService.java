@@ -14,6 +14,7 @@ import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,17 +31,19 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public OrderService(
             final OrderRepository orderRepository,
             final MemberRepository memberRepository,
             final CartItemRepository cartItemRepository,
-            final MemberCouponRepository memberCouponRepository
-    ) {
+            final MemberCouponRepository memberCouponRepository,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
         this.cartItemRepository = cartItemRepository;
         this.memberCouponRepository = memberCouponRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public Order save(final Long memberId, final OrderRequest request) {
@@ -49,7 +52,7 @@ public class OrderService {
         final MemberCoupon usedCoupon = useCouponIfExist(request.getCouponId());
         final Order order = Order.createFromCartItems(cartItems, new Money(BigDecimal.valueOf(3000L)), usedCoupon, memberId);
 
-        cartItemRepository.deleteAll(cartItems);
+        applicationEventPublisher.publishEvent(order);
         return orderRepository.save(order);
     }
 

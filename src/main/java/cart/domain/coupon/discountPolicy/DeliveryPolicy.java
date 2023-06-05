@@ -13,6 +13,6 @@ public class DeliveryPolicy implements DiscountPolicy {
 
     @Override
     public String getName() {
-        return PolicyType.DELIVERY.getName();
+        return PolicyType.DELIVERY.name();
     }
 }

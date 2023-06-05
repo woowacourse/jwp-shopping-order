@@ -13,6 +13,6 @@ public class PricePolicy implements DiscountPolicy {
 
     @Override
     public String getName() {
-        return PolicyType.PRICE.getName();
+        return PolicyType.PRICE.name();
     }
 }

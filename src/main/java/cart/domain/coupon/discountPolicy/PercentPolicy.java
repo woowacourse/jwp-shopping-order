@@ -13,6 +13,6 @@ public class PercentPolicy implements DiscountPolicy {
 
     @Override
     public String getName() {
-        return PolicyType.PERCENT.getName();
+        return PolicyType.PERCENT.name();
     }
 }

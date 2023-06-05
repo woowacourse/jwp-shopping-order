@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `COUPON`
 (
     `id`             long PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `name`           varchar(255)     NOT NULL,
-    `policy_type`    varchar(255)     NOT NULL,
+    `policy_type`    ENUM('PRICE', 'PERCENT', 'DELIVERY')     NOT NULL,
     `discount_value` long             NOT NULL,
     `minimum_price`  long             NOT NULL,
     `created_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),

@@ -1,7 +1,5 @@
 package cart.auth;
 
-import cart.dao.CredentialDao;
-import cart.exception.auth.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

@@ -6,8 +6,6 @@ import cart.domain.member.MemberCoupon;
 import cart.dto.MemberCouponResponse;
 import cart.service.MemberCouponService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -32,16 +30,6 @@ public class MemberCouponController {
     }
 
     @Operation(summary = "사용자 쿠폰 조회", description = "사용자의 모든 쿠폰을 조회한다.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "사용자 쿠폰 조회 성공"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "사용자 쿠폰 조회 실패"
-            )
-    })
     @GetMapping
     public ResponseEntity<List<MemberCouponResponse>> findAll(@Auth final Credential credential) {
         final List<MemberCoupon> memberCoupons = memberCouponService.findAllByMemberId(credential.getMemberId());

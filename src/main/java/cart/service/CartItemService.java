@@ -59,6 +59,11 @@ public class CartItemService {
         cartItemRepository.delete(cartItem);
     }
 
+    public void deleteByMemberId(final Long memberId) {
+        List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberId);
+        cartItemRepository.deleteAll(cartItems);
+    }
+
     public CartItem updateQuantity(
             final Long memberId,
             final Long cartItemId,
