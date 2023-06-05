@@ -45,8 +45,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         member2 = memberDao.findById(2L);
     }
 
-    @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
+    @DisplayName("장바구니에 아이템을 추가한다.")
     void addCartItem() {
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 3, "치킨", 10_000, "http://example.com/chicken.jpg");
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
@@ -54,8 +54,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
+    @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     void addCartItemByIllegalMember() {
         Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf",
             member.getNickname());
@@ -65,8 +65,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
+    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     void getCartItems() {
         Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
         Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
@@ -81,8 +81,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     void increaseCartItemQuantity() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
@@ -101,8 +101,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     void decreaseCartItemQuantityToZero() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
@@ -120,8 +120,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
     }
 
-    @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
+    @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     void updateOtherMembersCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
@@ -130,8 +130,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
-    @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     void removeCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
