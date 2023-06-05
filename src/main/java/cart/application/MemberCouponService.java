@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cart.exception.ErrorCode.ALREADY_ISSUED_COUPON;
+import static cart.exception.ErrorCode.ALREADY_USED_COUPON;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,5 +41,15 @@ public class MemberCouponService {
         return memberCoupons.stream()
                 .map(MemberCouponResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public void useMemberCoupon(final Member member, final Long couponId) {
+        MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCouponId(member.getId(), couponId);
+        memberCoupon.checkOwner(member);
+        if (!memberCoupon.canUse()) {
+            throw new BadRequestException(ALREADY_USED_COUPON);
+        }
+        MemberCoupon updatedMemberCoupon = memberCoupon.markAsUsed();
+        memberCouponRepository.update(updatedMemberCoupon);
     }
 }

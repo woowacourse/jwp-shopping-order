@@ -1,8 +1,12 @@
 package cart.domain.coupon;
 
 import cart.domain.member.Member;
+import cart.exception.AuthorizationException;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+
+import static cart.exception.ErrorCode.NOT_AUTHORIZATION_MEMBER;
 
 public class MemberCoupon {
 
@@ -36,6 +40,20 @@ public class MemberCoupon {
             return memberCouponExpiredDate;
         }
         return coupon.getExpiredAt();
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new AuthorizationException(NOT_AUTHORIZATION_MEMBER);
+        }
+    }
+
+    public boolean canUse() {
+        return !isUsed;
+    }
+
+    public MemberCoupon markAsUsed() {
+        return new MemberCoupon(id, member, coupon, true, issuedAt, expiredAt);
     }
 
     public Long getId() {

@@ -47,7 +47,7 @@ public class MemberCouponEntity {
         return expiredAt;
     }
 
-    public Boolean isUsed() {
+    public Boolean getIsUsed() {
         return isUsed;
     }
 }

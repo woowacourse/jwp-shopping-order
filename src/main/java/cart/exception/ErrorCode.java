@@ -10,6 +10,7 @@ public enum ErrorCode {
     INVALID_CART_ID("유효하지 않은 카트 ID 입니다."),
     INVALID_COUPON_ID("유효하지 않은 쿠폰 ID 입니다."),
     INVALID_ORDER_ID("유효하지 않은 주문번호 ID 입니다."),
+    ALREADY_USED_COUPON("이미 사용한 쿠폰입니다."),
     ALREADY_ISSUED_COUPON("이미 발급받은 쿠폰입니다."),
     HTTP_REQUEST_EXCEPTION("HTTP 요청에 실패하였습니다."),
     INTERNAL_SERVER_ERROR("예상치 못한 서버 오류가 발생하였습니다.");

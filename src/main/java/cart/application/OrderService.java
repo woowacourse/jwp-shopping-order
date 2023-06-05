@@ -26,11 +26,18 @@ import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 @Transactional(readOnly = true)
 public class OrderService {
 
+    private final MemberCouponService memberCouponService;
     private final OrderRepository orderRepository;
     private final CouponRepository couponRepository;
     private final ProductRepository productRepository;
 
-    public OrderService(final OrderRepository orderRepository, final CouponRepository couponRepository, final ProductRepository productRepository) {
+    public OrderService(
+            final MemberCouponService memberCouponService,
+            final OrderRepository orderRepository,
+            final CouponRepository couponRepository,
+            final ProductRepository productRepository
+    ) {
+        this.memberCouponService = memberCouponService;
         this.orderRepository = orderRepository;
         this.couponRepository = couponRepository;
         this.productRepository = productRepository;
@@ -54,6 +61,7 @@ public class OrderService {
         Coupon coupon = null;
         if (orderRequest.getCouponId() != null) {
             coupon = couponRepository.findById(orderRequest.getCouponId());
+            memberCouponService.useMemberCoupon(member, coupon.getId());
         }
         Order order = new Order(member, items, coupon);
         return orderRepository.save(order);
