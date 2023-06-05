@@ -62,7 +62,7 @@ public class CartItemDao {
         String sql =
                 "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
                         "cart_item.member_id as member_id, member.email as member_email, " +
-                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
@@ -79,7 +79,7 @@ public class CartItemDao {
         String sql =
                 "SELECT cart_item.id as cart_item_id, cart_item.quantity as cart_item_quantity, " +
                         "cart_item.member_id as member_id, member.email as member_email, " +
-                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url, "
+                        "product.id as product_id, product.name as product_name, product.price as product_price, product.image_url as product_image_url "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
