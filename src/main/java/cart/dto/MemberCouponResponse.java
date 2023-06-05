@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.domain.memberCoupon.MemberCoupon;
+
 public class MemberCouponResponse {
     private final Long id;
     private final String name;
@@ -15,6 +17,17 @@ public class MemberCouponResponse {
         this.discountRate = discountRate;
         this.discountAmount = discountAmount;
         this.minimumPrice = minimumPrice;
+    }
+
+    public static MemberCouponResponse from(MemberCoupon memberCoupon) {
+        return new MemberCouponResponse(
+                memberCoupon.getId(),
+                memberCoupon.getCoupon().getName(),
+                memberCoupon.getCoupon().getDiscountType().getName(),
+                memberCoupon.getCoupon().getDiscountPercent(),
+                memberCoupon.getCoupon().getDiscountAmount(),
+                memberCoupon.getCoupon().getMinimumPrice()
+        );
     }
 
     public Long getId() {

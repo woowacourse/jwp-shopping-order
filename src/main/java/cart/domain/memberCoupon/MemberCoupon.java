@@ -1,9 +1,9 @@
 package cart.domain.memberCoupon;
 
-import cart.domain.member.Member;
 import cart.domain.Model;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DiscountAction;
+import cart.domain.member.Member;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ public class MemberCoupon implements Model, DiscountAction {
     private final Coupon coupon;
 
     public MemberCoupon(Long id, Member member, Coupon coupon) {
-        this.id = id; // TODO UseState, 유효기간 추가
+        this.id = id;
         this.member = member;
         this.coupon = coupon;
     }

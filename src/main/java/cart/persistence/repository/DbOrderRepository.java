@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class DbOrderRepository implements OrderRepository { // TODO dao 의존 ...이거맞음?
+public class DbOrderRepository implements OrderRepository {
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
     private final CouponDao couponDao;
@@ -71,7 +71,7 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
     }
 
     private OrderProduct mapToOrderProduct(OrderProductEntity orderProductEntity) {
-        Product product = productDao.getProductById(orderProductEntity.getProductId()).orElseThrow(() -> new NoSuchProductException());
+        Product product = productDao.findProductById(orderProductEntity.getProductId()).orElseThrow(() -> new NoSuchProductException());
         return new OrderProduct(
                 orderProductEntity.getId(),
                 orderProductEntity.getName(),

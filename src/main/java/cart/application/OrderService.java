@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.cartItem.CartItem;
+import cart.domain.cartItem.CartItemRepository;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.member.Member;
@@ -11,13 +12,8 @@ import cart.domain.order.OrderRepository;
 import cart.domain.orderProduct.OrderProduct;
 import cart.domain.product.Product;
 import cart.dto.CouponResponse;
-import cart.dto.OrderConfirmResponse;
 import cart.dto.ProductResponse;
-import cart.dto.order.OrderDetailResponse;
-import cart.dto.order.OrderProductResponse;
-import cart.dto.order.OrderRequest;
-import cart.dto.order.OrderResponse;
-import cart.persistence.dao.CartItemDao;
+import cart.dto.order.*;
 import cart.util.ModelSortHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,24 +25,20 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final CartItemDao cartItemDao; // TODO repository 생성
+    private final CartItemRepository cartItemRepository;
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
 
-    public OrderService(OrderRepository orderRepository, CartItemDao cartItemDao, CouponRepository couponRepository, MemberCouponRepository memberCouponRepository) {
+    public OrderService(OrderRepository orderRepository, CartItemRepository cartItemRepository, CouponRepository couponRepository, MemberCouponRepository memberCouponRepository) {
         this.orderRepository = orderRepository;
-        this.cartItemDao = cartItemDao;
+        this.cartItemRepository = cartItemRepository;
         this.couponRepository = couponRepository;
         this.memberCouponRepository = memberCouponRepository;
     }
 
     // 주문 신청
-    public Long addOrder(Member member, OrderRequest orderRequest) { // TODO usecase로 분리
-        // TODO selectCartId & couponId가 존재하지 않을 경우 예외 처리
-        // 주문한 장바구니 상품 리스트 조회
+    public Long addOrder(Member member, OrderRequest orderRequest) {
         List<OrderProduct> orderProducts = getOrderProducts(orderRequest.getSelectCartIds());
-
-        // 총가격, 할인가 계산
         int totalPrice = calculateTotalPriceOfProducts(orderProducts);
         int discountPrice = totalPrice;
         Coupon usedCoupon = null;
@@ -61,11 +53,9 @@ public class OrderService {
 
         // TODO order가 MemberCoupon을 가지게 변경
         Order order = new Order(totalPrice, discountPrice, orderProducts, usedCoupon, member);
-
         validateUsableCoupon(usedCoupon, order);
-
         orderRequest.getSelectCartIds().stream()
-                .forEach(cartItemDao::deleteById);
+                .forEach(cartItemRepository::deleteById);
         return orderRepository.add(order);
     }
 
@@ -86,7 +76,7 @@ public class OrderService {
     public List<OrderProduct> getOrderProducts(List<Long> cartItemIds) {
         return cartItemIds.stream()
                 .map(cartId -> {
-                    CartItem cartItem = cartItemDao.findById(cartId).orElseThrow(() -> new IllegalArgumentException("접근할 수 없는 장바구니 아이템입니다."));
+                    CartItem cartItem = cartItemRepository.findById(cartId);
                     Product product = cartItem.getProduct();
                     return new OrderProduct(
                             product.getName(),
@@ -152,14 +142,7 @@ public class OrderService {
 
         CouponResponse couponResponse = null;
         if (coupon != null) {
-            couponResponse = new CouponResponse(
-                    coupon.getId(),
-                    coupon.getName(),
-                    coupon.getDiscountType().getName(),
-                    coupon.getDiscountPercent(),
-                    coupon.getDiscountAmount(),
-                    coupon.getMinimumPrice()
-            );
+            couponResponse = CouponResponse.from(coupon);
         }
 
         return new OrderDetailResponse( // originalPrice, discountPrice, confirmState, couponResponse
@@ -202,7 +185,7 @@ public class OrderService {
         MemberCoupon bonusMemberCoupon = new MemberCoupon(member, bonusCoupon);
         memberCouponRepository.add(bonusMemberCoupon);
 
-        CouponResponse couponResponse = new CouponResponse(bonusCoupon.getId(), bonusCoupon.getName(), bonusCoupon.getDiscountType().getName(), bonusCoupon.getDiscountPercent(), bonusCoupon.getDiscountAmount(), bonusCoupon.getMinimumPrice());
+        CouponResponse couponResponse = CouponResponse.from(bonusCoupon);
         return new OrderConfirmResponse(couponResponse);
     }
 

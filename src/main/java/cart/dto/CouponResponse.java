@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.domain.coupon.Coupon;
+
 public class CouponResponse {
     private final Long id;
     private final String name;
@@ -15,6 +17,17 @@ public class CouponResponse {
         this.discountRate = discountRate;
         this.discountAmount = discountAmount;
         this.minimumPrice = minimumPrice;
+    }
+
+    public static CouponResponse from(Coupon coupon) {
+        return new CouponResponse(
+                coupon.getId(),
+                coupon.getName(),
+                coupon.getDiscountType().getName(),
+                coupon.getDiscountPercent(),
+                coupon.getDiscountAmount(),
+                coupon.getMinimumPrice()
+        );
     }
 
     public Long getId() {
@@ -41,11 +54,3 @@ public class CouponResponse {
         return minimumPrice;
     }
 }
-/*
-                                "id" : 1,
-                                            "name" : "5월의 달 20% 할인 쿠폰",
-                                            "discountType" : "percentage",
-                                            "discountRate" : 0.2,
-                                            "discountAmount" : 0,
-                                            "minimumPrice" : 50000
- */

@@ -1,8 +1,8 @@
 package cart.application;
 
-import cart.domain.member.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
+import cart.domain.member.Member;
 import cart.domain.memberCoupon.MemberCoupon;
 import cart.domain.memberCoupon.MemberCouponRepository;
 import cart.dto.MemberCouponRequest;
@@ -31,16 +31,9 @@ public class MemberCouponService {
     }
 
     @Transactional(readOnly = true)
-    public MemberCouponResponse findById(Long id) { // TODO model to dto 개선 필요
+    public MemberCouponResponse findById(Long id) {
         MemberCoupon memberCoupon = memberCouponRepository.findById(id);
-        return new MemberCouponResponse(
-                memberCoupon.getId(),
-                memberCoupon.getCoupon().getName(),
-                memberCoupon.getCoupon().getDiscountType().getName(),
-                memberCoupon.getCoupon().getDiscountPercent(),
-                memberCoupon.getCoupon().getDiscountAmount(),
-                memberCoupon.getCoupon().getMinimumPrice()
-        );
+        return MemberCouponResponse.from(memberCoupon);
     }
 
     @Transactional(readOnly = true)
@@ -48,15 +41,7 @@ public class MemberCouponService {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findMemberCouponsByMemberId(memberId);
         ModelSortHelper.sortByIdInDescending(memberCoupons);
         return memberCoupons.stream()
-                .map(memberCoupon -> new MemberCouponResponse(
-                                memberCoupon.getId(),
-                                memberCoupon.getCoupon().getName(),
-                                memberCoupon.getCoupon().getDiscountType().getName(),
-                                memberCoupon.getCoupon().getDiscountPercent(),
-                                memberCoupon.getCoupon().getDiscountAmount(),
-                                memberCoupon.getCoupon().getMinimumPrice()
-                        )
-                )
+                .map(MemberCouponResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -65,15 +50,7 @@ public class MemberCouponService {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
         ModelSortHelper.sortByIdInDescending(memberCoupons);
         return memberCoupons.stream()
-                .map(memberCoupon -> new MemberCouponResponse(
-                                memberCoupon.getId(),
-                                memberCoupon.getCoupon().getName(),
-                                memberCoupon.getCoupon().getDiscountType().getName(),
-                                memberCoupon.getCoupon().getDiscountPercent(),
-                                memberCoupon.getCoupon().getDiscountAmount(),
-                                memberCoupon.getCoupon().getMinimumPrice()
-                        )
-                )
+                .map(MemberCouponResponse::from)
                 .collect(Collectors.toList());
     }
 

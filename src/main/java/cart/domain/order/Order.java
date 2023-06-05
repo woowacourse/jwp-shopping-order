@@ -13,7 +13,7 @@ public class Order implements Model {
     private final Integer originalPrice;
     private final Integer discountPrice;
     private final List<OrderProduct> orderProducts;
-    private final Coupon usedCoupon; // TODO coupon vs memberCoupon
+    private final Coupon usedCoupon;
     private Boolean confirmState;
     private final Member member;
 
