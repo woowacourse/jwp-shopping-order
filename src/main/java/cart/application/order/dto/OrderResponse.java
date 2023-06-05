@@ -2,10 +2,9 @@ package cart.application.order.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
@@ -13,11 +12,12 @@ import cart.domain.order.OrderStatus;
 
 public class OrderResponse {
 
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 	private Long orderId;
 	private List<OrderItemResponse> products;
 	private BigDecimal totalPayments;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime createdAt;
+	private String createdAt;
 	private String orderStatus;
 
 	public OrderResponse() {
@@ -28,7 +28,7 @@ public class OrderResponse {
 		this.orderId = orderId;
 		this.products = products;
 		this.totalPayments = totalPayments;
-		this.createdAt = createdAt;
+		this.createdAt = createdAt.format(FORMATTER);
 		this.orderStatus = orderStatus.getStatus();
 	}
 
@@ -50,7 +50,7 @@ public class OrderResponse {
 		return totalPayments;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public String getCreatedAt() {
 		return createdAt;
 	}
 
