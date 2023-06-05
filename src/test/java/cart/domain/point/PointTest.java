@@ -68,6 +68,6 @@ class PointTest {
         final Point result = Point.calculateFromPrice(price);
 
         // then
-        assertThat(result.getPoint()).isEqualTo(205L);
+        assertThat(result.getPoint()).isEqualTo(250L);
     }
 }
