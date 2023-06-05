@@ -9,7 +9,7 @@ public class CartItemQuantityUpdateRequest {
     @Positive(message = "카트 아이템의 수량은 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
     private Integer quantity;
 
-    public CartItemQuantityUpdateRequest() {
+    private CartItemQuantityUpdateRequest() {
     }
 
     public CartItemQuantityUpdateRequest(int quantity) {
