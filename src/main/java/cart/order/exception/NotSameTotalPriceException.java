@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class NotSameTotalPriceException extends BusinessException {
 
   public NotSameTotalPriceException(final String message) {
-    super(message, HttpStatus.BAD_REQUEST);
+    super(message, HttpStatus.CONFLICT);
   }
 }

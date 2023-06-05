@@ -32,8 +32,10 @@ public class ControllerExceptionHandler {
   public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException exception) {
     infoLogging(exception);
 
-    return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()),
-        exception.getHttpStatus());
+    return new ResponseEntity<>(new ExceptionResponse(
+        exception.getMessage()),
+        exception.getHttpStatus()
+    );
   }
 
   @ExceptionHandler(Exception.class)
