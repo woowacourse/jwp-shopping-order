@@ -22,19 +22,19 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> orderCartItems(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Void> addOrder(Member member, @RequestBody OrderRequest orderRequest) {
         long saved = orderService.order(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + saved)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> findOrder(Member member, @PathVariable Long orderId) {
+    public ResponseEntity<OrderResponse> showOrderDetail(Member member, @PathVariable Long orderId) {
         OrderResponse orderResponse = orderService.findOrder(member, orderId);
         return ResponseEntity.ok().body(orderResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderItemDto>> showOrderByMember(Member member) {
+    public ResponseEntity<List<OrderItemDto>> showOrders(Member member) {
         List<OrderItemDto> orderByMember = orderService.findOrderByMember(member);
         return ResponseEntity.ok().body(orderByMember);
     }
