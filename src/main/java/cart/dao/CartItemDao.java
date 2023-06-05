@@ -123,7 +123,7 @@ public class CartItemDao {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", cartItemIds);
 
-        jdbcTemplate.update(sql, parameters);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     public void updateQuantity(CartItem cartItem) {

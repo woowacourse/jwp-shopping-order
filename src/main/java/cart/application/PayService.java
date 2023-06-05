@@ -115,8 +115,9 @@ public class PayService {
     }
 
     private void clearCart(final PaymentRequest paymentRequest) {
-        List<Long> cartItemIds = paymentRequest.getCartItemIds().stream().map(CartItemIdRequest::getCartItemId).collect(
-                Collectors.toList());
+        List<Long> cartItemIds = paymentRequest.getCartItemIds().stream()
+                .map(CartItemIdRequest::getCartItemId)
+                .collect(Collectors.toList());
         cartItemDao.deleteAll(cartItemIds);
     }
 }
