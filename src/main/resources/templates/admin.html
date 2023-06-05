@@ -93,7 +93,7 @@
             <td th:text="${coupon.discount.type}"></td>
             <td th:text="${coupon.discount.amount}"></td>
             <td>
-                <button type="submit" th:onclick="coupon([[${coupon.couponId}]])">발급받기</button>
+                <button type="submit" th:onclick="issueCoupon([[${coupon.couponId}]])">발급받기</button>
             </td>
         </tr>
         </tbody>
@@ -107,14 +107,14 @@
         return localStorage.getItem('credentials');
     }
 
-    const coupon = async (couponId) => {
+    const issueCoupon = async (couponId) => {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${getCredentials()}`
             }
         };
-        await axios.post(`/member/coupons/${couponId}`, null, config);
+        await axios.post(`/member/coupons`, {couponId}, config);
         refresh();
     }
     const refresh = () => {
