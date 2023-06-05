@@ -27,6 +27,8 @@ class CouponDaoTest {
     void setUp() {
         couponDao = new CouponDao(jdbcTemplate);
         memberDao = new MemberDao(jdbcTemplate);
+        jdbcTemplate.update("delete from coupon_box");
+        jdbcTemplate.update("delete from coupon");
     }
 
     @Test
