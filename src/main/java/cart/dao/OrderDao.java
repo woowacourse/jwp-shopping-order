@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,25 +25,22 @@ import java.util.stream.Collectors;
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("orders")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long save(Order order) {
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
         final MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        sqlParameterSource.addValue("memberId", order.getOrderingMember()
-                                                     .getId());
+        sqlParameterSource.addValue("memberId", order.getOrderingMember().getId());
         sqlParameterSource.addValue("priceAfterDiscount", order.getPriceAfterDiscount());
-        new NamedParameterJdbcTemplate(jdbcTemplate).update(
-                "insert into orders(member_id, price_after_discount) values(:memberId, :priceAfterDiscount)",
-                sqlParameterSource,
-                keyHolder
-        );
+        sqlParameterSource.addValue("orderDate", new Timestamp(System.currentTimeMillis()));
 
-        final long orderId = ((Number) Objects.requireNonNull(keyHolder.getKeys().get("ID"))).longValue();
+        final long orderId = (long) simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
 
         final List<OrderItem> orderItems = order.getOrderItems();
 
