@@ -48,7 +48,7 @@ public class OrderRepository {
         return orderId;
     }
 
-    public Order findByIdWithMember(Long orderId, Member member) {
+    public Order findOrderByIdAndMember(Long orderId, Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
         List<OrderedItemEntity> orderedItems = orderedItemDao.findByOrderId(orderId);

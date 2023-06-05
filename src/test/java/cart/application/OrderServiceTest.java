@@ -75,7 +75,7 @@ class OrderServiceTest {
         Long orderId = orderService.add(orderRequest, member);
 
         //when
-        final OrderResponse result = orderService.findById(orderId, member);
+        final OrderResponse result = orderService.findOrderByIdAndMember(orderId, member);
 
         //then
         Assertions.assertAll(

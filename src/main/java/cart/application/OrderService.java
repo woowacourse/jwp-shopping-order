@@ -48,8 +48,8 @@ public class OrderService {
         }
     }
 
-    public OrderResponse findById(Long orderId, Member member) {
-        final Order order = orderRepository.findByIdWithMember(orderId, member);
+    public OrderResponse findOrderByIdAndMember(Long orderId, Member member) {
+        final Order order = orderRepository.findOrderByIdAndMember(orderId, member);
         return OrderResponse.of(order);
     }
 
