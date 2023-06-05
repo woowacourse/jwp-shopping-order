@@ -1,5 +1,6 @@
 package cart.dto.order;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class OrderResponse {
@@ -11,13 +12,18 @@ public class OrderResponse {
     private Long usedPoint;
     private Long earnedPoint;
 
-    public OrderResponse(Long orderId, String createdAt, List<OrderItemResponse> orderItems, Long totalPrice, Long usedPoint, Long earnedPoint) {
+    public OrderResponse(Long orderId, Timestamp createdAt, List<OrderItemResponse> orderItems, Long totalPrice, Long usedPoint, Long earnedPoint) {
         this.orderId = orderId;
-        this.createdAt = createdAt;
+        this.createdAt = convertToStringTime(createdAt);
         this.orderItems = orderItems;
         this.totalPrice = totalPrice;
         this.usedPoint = usedPoint;
         this.earnedPoint = earnedPoint;
+    }
+
+    public String convertToStringTime(Timestamp createdAt) {
+        String[] time = createdAt.toString().split(" ");
+        return time[0] + "T" + time[1].substring(0, 8);
     }
 
     public Long getOrderId() {

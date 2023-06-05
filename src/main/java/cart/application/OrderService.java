@@ -145,7 +145,7 @@ public class OrderService {
 
         return new OrderResponse(
                 orderId,
-                order.getCreatedAt().toString().split(" ")[0],
+                order.getCreatedAt(),
                 orderItemResponses,
                 totalPrice,
                 order.getUsedPoint(),
@@ -169,7 +169,7 @@ public class OrderService {
             orderResponses.add(
                     new OrderResponse(
                             order.getId(),
-                            order.getCreatedAt().toString().split(" ")[0],
+                            order.getCreatedAt(),
                             orderItemResponses,
                             totalPrice,
                             order.getUsedPoint(),

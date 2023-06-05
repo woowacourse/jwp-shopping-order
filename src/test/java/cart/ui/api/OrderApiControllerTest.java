@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
@@ -169,7 +170,7 @@ public class OrderApiControllerTest {
     void 특정_주문_조회시_성공하면_상태코드가_OK_이다() throws Exception {
         // given
         given(orderService.getOrderById(하디_멤버, 10L))
-                .willReturn(new OrderResponse(10L, "111", Collections.emptyList(), 10L, 10L, 10L));
+                .willReturn(new OrderResponse(10L, new Timestamp(System.currentTimeMillis()), Collections.emptyList(), 10L, 10L, 10L));
 
         // when, then
         mockMvc.perform(get("/orders/" + 10L)

@@ -116,7 +116,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 상품_재고보다_많은_수량을_주문하면_상태코드가_BAD_REQUEST_이다() {
+    void 상품_재고보다_많은_수량을_주문하면_상태코드가_CONFLICT_이다() {
         // given
         장바구니_아이템_수량_변경(멤버_하디, 하디_장바구니_피자, 1000L);
         OrderRequest orderRequest = new OrderRequest(List.of(하디_장바구니_피자, 하디_장바구니_치킨), 0L, 상품_피자.getPrice() + 상품_치킨.getPrice());
@@ -125,7 +125,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 주문(멤버_하디, orderRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 주문시_상품들의_총_가격보다_사용_포인트가_많으면_상태코드가_BAD_REQUEST_이다() {
+    void 주문시_상품들의_총_가격보다_사용_포인트가_많으면_상태코드가_CONFLICT_이다() {
         // given
         OrderRequest orderRequest = new OrderRequest(List.of(하디_장바구니_피자, 하디_장바구니_치킨), 1000000L, 상품_피자.getPrice() + 상품_치킨.getPrice());
 
@@ -198,11 +198,11 @@ public class OrderIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 주문(멤버_하디, orderRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
     }
 
     @Test
-    void 주문시_사용_요청_포인트가_실제_보유_포인트보다_많으면_상태코드가_BAD_REQUEST_이다() {
+    void 주문시_사용_요청_포인트가_실제_보유_포인트보다_많으면_상태코드가_CONFLICT_이다() {
         // given
         OrderRequest orderRequest = new OrderRequest(List.of(하디_장바구니_피자, 하디_장바구니_치킨), 20000L, 상품_피자.getPrice() + 상품_치킨.getPrice());
 
@@ -210,7 +210,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 주문(멤버_하디, orderRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
     }
 
     private ExtractableResponse<Response> 주문(Member member, OrderRequest orderRequest) {
