@@ -168,28 +168,28 @@ public class OrderDao {
     }
 
     public Order findWithoutOrderItems(Long orderId) {
-        String query = "SELECT * FROM `order` " +
-            "JOIN member m ON m.id = member_id " +
-            "LEFT JOIN member_coupon mc ON mc.id = member_coupon_id " +
+        String query = "SELECT * FROM `order` o " +
+            "JOIN member m ON m.id = o.member_id " +
+            "LEFT JOIN member_coupon mc ON mc.id = o.member_coupon_id " +
             "LEFT JOIN coupon c ON mc.coupon_id = c.id " +
             "WHERE o.id = ?";
 
         return jdbcTemplate.queryForObject(query,
             (rs, rn) -> {
-                Long id = rs.getLong("m.id");
-                String email = rs.getString("m.email");
-                String password = rs.getString("m.password");
-                String nickname = rs.getString("m.nickname");
+                Long id = rs.getLong("member_id");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String nickname = rs.getString("nickname");
 
                 Member member = new Member(id, email, password, nickname);
 
-                Long memberCouponId = rs.getLong("mc.id");
-                String couponName = rs.getString("c.name");
-                int minOrderPrice = rs.getInt("c.min_order_price");
-                Integer maxDiscountPrice = rs.getInt("c.max_discount_price");
-                CouponType type = CouponType.valueOf(rs.getString("c.type"));
-                Integer discountAmount = rs.getInt("c.discount_amount");
-                Double discountPercentage = rs.getDouble("c.discount_percentage");
+                Long memberCouponId = rs.getLong("coupon_id");
+                String couponName = rs.getString("name");
+                int minOrderPrice = rs.getInt("min_order_price");
+                Integer maxDiscountPrice = rs.getInt("max_discount_price");
+                CouponType type = CouponType.valueOf(rs.getString("type"));
+                Integer discountAmount = rs.getInt("discount_amount");
+                Double discountPercentage = rs.getDouble("discount_percentage");
                 Coupon coupon = new Coupon(memberCouponId, couponName, minOrderPrice, type, discountAmount,
                     discountPercentage,
                     maxDiscountPrice);

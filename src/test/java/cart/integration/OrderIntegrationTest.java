@@ -18,11 +18,15 @@ import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
+import cart.dao.OrderDao;
+import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.domain.Order;
+import cart.domain.OrderItem;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderRequest;
 
@@ -36,19 +40,23 @@ public class OrderIntegrationTest extends IntegrationTest {
     private CouponDao couponDao;
     @Autowired
     private MemberCouponDao memberCouponDao;
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
 
-    private CartItem cartItem1;
-    private CartItem cartItem2;
-    private Long couponId;
-    private Long memberCouponId;
     private Member member;
+    private OrderRequest orderRequest;
+    private Long orderId;
 
     @BeforeEach
     void setUp() {
         super.setUp();
+
         member = memberDao.findById(1L);
-        cartItem1 = cartItemDao.findById(1L);
-        cartItem2 = cartItemDao.findById(2L);
+
+        CartItem cartItem1 = cartItemDao.findById(1L);
+        CartItem cartItem2 = cartItemDao.findById(2L);
         Coupon coupon = new Coupon(
             null,
             "할인쿠폰",
@@ -56,22 +64,30 @@ public class OrderIntegrationTest extends IntegrationTest {
             CouponType.FIXED_PERCENTAGE,
             null,
             0.1,
-            10000);
-        couponId = couponDao.save(coupon);
-        Coupon newCoupon = new Coupon(couponId, "할인쿠폰",
+            10000
+        );
+        Long couponId = couponDao.save(coupon);
+        Coupon newCoupon = new Coupon(
+            couponId,
+            "할인쿠폰",
             100,
             CouponType.FIXED_PERCENTAGE,
             null,
             0.1,
-            10000);
-        MemberCoupon memberCoupon = new MemberCoupon(null, member, newCoupon, Timestamp.valueOf(LocalDateTime.MAX));
-        memberCouponId = memberCouponDao.save(memberCoupon);
-    }
+            10000
+        );
 
-    @DisplayName("주문을 한다.")
-    @Test
-    void addOrder() {
-        OrderRequest orderRequest = new OrderRequest(List.of(
+        MemberCoupon memberCoupon = new MemberCoupon(null, member, newCoupon, Timestamp.valueOf(LocalDateTime.MAX));
+        Long memberCouponId = memberCouponDao.save(memberCoupon);
+        MemberCoupon newMemberCoupon = new MemberCoupon(memberCouponId, member, newCoupon,
+            Timestamp.valueOf(LocalDateTime.MAX));
+
+        List<OrderItem> orderItems = List.of(new OrderItem(null, null, 1L, "지구", 1000, "www.woowa-reo.store", 4));
+        Order order = new Order(member, orderItems, newMemberCoupon);
+        orderId = orderDao.save(order);
+        orderItemDao.saveAllOfOrder(orderId, order);
+
+        orderRequest = new OrderRequest(List.of(
             new CartItemRequest(
                 cartItem1.getId(),
                 cartItem1.getQuantity(),
@@ -87,7 +103,50 @@ public class OrderIntegrationTest extends IntegrationTest {
                 cartItem2.getProduct().getImageUrl()
             )
         ), memberCouponId);
+    }
 
+    @Test
+    @DisplayName("회원의 모든 주문 내역을 조회한다.")
+    void getOrders() {
+        var response = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/orders")
+            .then()
+            .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("특정 주문을 조회한다.")
+    void getOrderTest() {
+        var response = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .body(orderRequest)
+            .when()
+            .post("/orders")
+            .then()
+            .extract();
+
+        var response2 = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/orders/" + orderId)
+            .then()
+            .extract();
+
+        assertThat(response2.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        long id = response2.body().jsonPath().getLong("id");
+        assertThat(id).isEqualTo(1L);
+    }
+    @Test
+    @DisplayName("주문을 한다.")
+    void addOrder() {
         var response = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
@@ -98,5 +157,19 @@ public class OrderIntegrationTest extends IntegrationTest {
             .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("주문을 삭제한다.")
+    void deleteOrder() {
+        var response = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .delete("/orders/" + orderId)
+            .then()
+            .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
