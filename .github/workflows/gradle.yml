@@ -19,6 +19,8 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew bootJar
+      - name: ls
+        run: ls
       - name: Checkout deploy branch
         uses: actions/checkout@v3
         with:
@@ -30,6 +32,10 @@ jobs:
           ref: "deploy"
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: git status
+        run: |
+          ls
+          git status
       - name: Push commit
         uses: ad-m/github-push-action@master
         with:
