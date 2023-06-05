@@ -39,7 +39,7 @@ public class JdbcProductRepository implements ProductRepository {
 
     @Override
     public void update(final Long id, final Product product) {
-        productDao.update(id, product);
+        productDao.update(id, ProductEntity.from(product));
     }
 
     @Override

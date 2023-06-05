@@ -1,6 +1,5 @@
 package cart.infrastructure.dao;
 
-import cart.domain.Product;
 import cart.entity.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
@@ -55,9 +54,9 @@ public class ProductDao {
         }
     }
 
-    public void update(final Long id, final Product product) {
+    public void update(final Long id, final ProductEntity product) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getAmount().getValue(), product.getImageUrl(), id);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
     public void deleteById(final Long id) {
