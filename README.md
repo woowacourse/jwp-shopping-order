@@ -120,7 +120,7 @@
     ```json
     {
       "id" : 2,
-      "order_products" : [
+      "orderProducts" : [
         {
           "products" : {
               "id" : 1,
@@ -273,7 +273,7 @@
     		"minimumPrice" : 50000
     	},
     	{
-    		"coupon_id" : 2,
+    		"id" : 2,
     		"name" : "5월의 달 1000원 할인 쿠폰",
     		"discountType" : "deduction",
     		"discountRate" : 0.0,
