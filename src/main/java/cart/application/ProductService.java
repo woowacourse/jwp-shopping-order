@@ -31,7 +31,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findProductById(Long productId) {
-        Product product = productDao.getProductById(productId).orElseThrow(() -> new NoSuchProductException());
+        Product product = productDao.findProductById(productId).orElseThrow(() -> new NoSuchProductException());
         return ProductResponse.of(product);
     }
 

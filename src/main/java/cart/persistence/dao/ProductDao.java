@@ -33,7 +33,7 @@ public class ProductDao {
         });
     }
 
-    public Optional<Product> getProductById(Long productId) {
+    public Optional<Product> findProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
 
         try {
