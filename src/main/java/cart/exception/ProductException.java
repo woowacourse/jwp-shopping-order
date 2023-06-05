@@ -39,4 +39,12 @@ public class ProductException extends RuntimeException {
                     "name : " + name);
         }
     }
+
+    public static class ParseFail extends ProductException {
+
+        public ParseFail(Object product) {
+            super("Product 변환과정에서 문제가 발생했습니다. " +
+                    "product : " + product);
+        }
+    }
 }

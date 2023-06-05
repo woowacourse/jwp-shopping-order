@@ -13,4 +13,12 @@ public class OrderException extends RuntimeException {
                     "id : " + id);
         }
     }
+
+    public static class ParseFail extends OrderException {
+
+        public ParseFail(Object order) {
+            super("Order 변환과정에서 문제가 발생했습니다. " +
+                    "order : " + order);
+        }
+    }
 }
