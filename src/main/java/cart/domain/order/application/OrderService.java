@@ -2,6 +2,7 @@ package cart.domain.order.application;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cart.domain.cartitem.domain.CartItem;
 import cart.domain.cartitem.domain.CartItems;
@@ -54,16 +55,15 @@ public class OrderService {
     }
 
     private Order saveOrder(Member findMember, CartItems cartItemsToOrder, int totalPrice) {
-        for (Long cartItemIdToOrder : cartItemsToOrder.getCartItemIds()) {
-            cartItemDao.deleteById(cartItemIdToOrder);
-        }
+        cartItemDao.deleteByIds(cartItemsToOrder.getCartItemIds());
         Order insertedOrder = orderDao.insert(new Order(findMember, totalPrice, LocalDateTime.now()));
         List<CartItem> rawCartItemsOrder = cartItemsToOrder.getCartItems();
-        for (CartItem cartItem : rawCartItemsOrder) {
-            OrderItem orderItem = new OrderItem(insertedOrder, cartItem.getId(), cartItem.getProductName(),
-                    cartItem.getProductPrice(), cartItem.getProductImageUrl(), cartItem.getQuantity());
-            orderItemDao.insert(orderItem);
-        }
+        List<OrderItem> orderItems = rawCartItemsOrder.stream()
+                .map(cartItem ->
+                        new OrderItem(insertedOrder, cartItem.getId(), cartItem.getProductName(),
+                                cartItem.getProductPrice(), cartItem.getProductImageUrl(), cartItem.getQuantity())
+                ).collect(Collectors.toUnmodifiableList());
+        orderItemDao.insertAll(orderItems);
         return insertedOrder;
     }
 

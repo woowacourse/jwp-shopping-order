@@ -1,7 +1,10 @@
 package cart.domain.order.persistence;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cart.domain.member.domain.Member;
 import cart.domain.order.domain.Order;
@@ -63,6 +66,23 @@ public class OrderItemDao {
                 .addValue("quantity", orderItem.getQuantity());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public void insertAll(List<OrderItem> orderItems) {
+        List<Map<String, Object>> batchValues = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItems) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("cart_order_id", orderItem.getOrder().getId());
+            params.put("product_id", orderItem.getProductId());
+            params.put("name", orderItem.getName());
+            params.put("price", orderItem.getPrice());
+            params.put("image_url", orderItem.getImageUrl());
+            params.put("quantity", orderItem.getQuantity());
+            batchValues.add(params);
+        }
+
+        simpleJdbcInsert.executeBatch(batchValues.toArray(new Map[0]));
     }
 
     public List<OrderItem> selectAllByMemberId(Long memberId) {

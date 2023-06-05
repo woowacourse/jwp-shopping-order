@@ -12,6 +12,8 @@ import cart.domain.product.domain.Product;
 import cart.global.exception.CartItemNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -100,6 +102,14 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByIds(List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     public void updateQuantity(CartItem cartItem) {
