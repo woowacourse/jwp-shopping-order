@@ -21,12 +21,12 @@ class OrdersRepositoryTest extends RepositoryTest {
     @Test
     void takeOrders() {
         ordersRepository.takeOrders(1L, 2000);
-        Assertions.assertThat(ordersDao.findAllByMemberId(1L)).hasSize(3);
+        Assertions.assertThat(ordersDao.findAllByMemberId(1L)).hasSize(4);
     }
 
     @Test
     void findAllOrdersByMember() {
-        Assertions.assertThat(ordersRepository.findAllOrdersByMember(TEST_MEMBER)).hasSize(2);
+        Assertions.assertThat(ordersRepository.findAllOrdersByMember(TEST_MEMBER)).hasSize(3);
     }
 
     @Test

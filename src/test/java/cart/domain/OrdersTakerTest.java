@@ -28,12 +28,12 @@ class OrdersTakerTest {
     void takeOrder() {
         List<Long> cartIds = List.of(1L, 2L, 3L);
         List<Long> coupons = List.of(1L, 2L, 3L);
-        Assertions.assertThat(ordersTaker.takeOrder(1L, cartIds, coupons)).isEqualTo(3L);
+        Assertions.assertThat(ordersTaker.takeOrder(1L, cartIds, coupons)).isEqualTo(4L);
     }
 
     @Test
     void findOrdersWithOriginalPrice() {
-        Assertions.assertThat(ordersTaker.findOrdersWithMember(TEST_MEMBER)).hasSize(2);
+        Assertions.assertThat(ordersTaker.findOrdersWithMember(TEST_MEMBER)).hasSize(3);
     }
 
     @Test

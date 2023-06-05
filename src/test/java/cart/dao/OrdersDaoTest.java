@@ -26,7 +26,7 @@ class OrdersDaoTest {
     @Test
     @DisplayName("사용자의 모든 주문 내역을 찾는다")
     void findAllByMemberId() {
-        Assertions.assertThat(ordersDao.findAllByMemberId(1l)).hasSize(2);
+        Assertions.assertThat(ordersDao.findAllByMemberId(1l)).hasSize(3);
     }
 
     @Test

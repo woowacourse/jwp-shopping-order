@@ -1,7 +1,6 @@
 package cart.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,14 +8,9 @@ import java.util.List;
 @Repository
 public class MemberCouponDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public MemberCouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("member_coupon")
-                .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "coupon_id");
     }
 
     public boolean checkByMemberIdCouponId(final long memberId, final long couponId) {

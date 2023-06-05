@@ -5,7 +5,6 @@ import cart.domain.Coupon;
 import cart.domain.CouponType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
 @Repository
 public class CouponDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<CouponEntity> couponEntityRowMapper = (rs, rowNum) -> new CouponEntity(
             rs.getLong("id"),
             rs.getString("name"),
@@ -25,9 +23,6 @@ public class CouponDao {
 
     public CouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("coupon")
-                .usingGeneratedKeyColumns("id");
     }
 
     public Coupon findWithId(final long id) {

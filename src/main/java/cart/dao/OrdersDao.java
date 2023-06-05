@@ -4,7 +4,6 @@ import cart.dao.entity.OrdersEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,6 @@ import java.util.Optional;
 @Repository
 public class OrdersDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<OrdersEntity> ordersEntityRowMapper = (rs, rowNum) -> new OrdersEntity(
             rs.getLong("id"),
             rs.getLong("member_id"),
@@ -30,9 +28,6 @@ public class OrdersDao {
 
     public OrdersDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("orders")
-                .usingGeneratedKeyColumns("id");
     }
 
     public Long createOrders(final long memberId, final int discountPrice) {
