@@ -27,9 +27,9 @@ public class OrderService {
             cartItemService.remove(member, cartItemId);
         }
 
-        for (Long couponId : orderReqeust.getCouponIds()) {
-            couponBoxDao.delete(member.getId(), couponId);
-        }
+//        for (Long couponId : orderReqeust.getCouponIds()) {
+//            couponBoxDao.delete(member.getId(), couponId);
+//        }
 
         return id;
     }
