@@ -30,7 +30,7 @@ public class ControllerExceptionHandler {
         logger.warn(exception.getMessage(), exception);
         return ResponseEntity
                 .status(UNAUTHORIZED)
-                .body(ExceptionResponse.of("로그인 정보가 맞지 않습니다. 다시 시도해 주세요."));
+                .body(ExceptionResponse.of(exception.getMessage()));
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)

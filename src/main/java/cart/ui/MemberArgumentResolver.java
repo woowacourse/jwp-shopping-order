@@ -44,6 +44,9 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         // 본인 여부 확인
         Member member = memberRepository.getMemberByEmail(email);
+        if (member == null) {
+            throw new AuthenticationException("존재하지 않는 이메일입니다.");
+        }
         if (!member.checkPassword(password)) {
             throw new AuthenticationException("로그인 정보가 맞지 않습니다.");
         }
