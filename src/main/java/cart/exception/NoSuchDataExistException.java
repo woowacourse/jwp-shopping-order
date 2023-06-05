@@ -9,11 +9,11 @@ public class NoSuchDataExistException extends RuntimeException {
         this.dataId = dataId;
     }
 
-    @Override
-    public String toString() {
-        return "NoSuchDataExistException{" +
-                "data='" + data + '\'' +
-                ", dataId='" + dataId + '\'' +
-                '}';
+    public String getData() {
+        return data;
+    }
+
+    public String getDataId() {
+        return dataId;
     }
 }
