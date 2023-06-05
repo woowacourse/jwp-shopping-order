@@ -20,7 +20,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.getParameterType().equals(Member.class) && parameter.hasParameterAnnotation(Login.class);
     }
 
     @Override
@@ -28,6 +28,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         BasicAuthInfo authInfo = BasicAuthorizationExtractor.extract(header);
+        System.out.println("???");
+        System.out.println(authInfo.getEmail());
         return authService.login(authInfo.getEmail(), authInfo.getPassword());
     }
 }

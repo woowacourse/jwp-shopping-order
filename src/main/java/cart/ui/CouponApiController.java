@@ -6,6 +6,8 @@ import cart.application.dto.coupon.IssueCouponRequest;
 import cart.application.service.CouponService;
 import cart.application.service.MemberCouponService;
 import cart.domain.Member;
+import cart.ui.auth.Login;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +36,9 @@ public class CouponApiController {
         return ResponseEntity.created(URI.create("/coupons/" + id)).build();
     }
 
+    @SecurityRequirement(name = "basicAuth")
     @PostMapping("/{couponId}")
-    public ResponseEntity<Void> issueCoupon(Member member, @PathVariable Long couponId,
+    public ResponseEntity<Void> issueCoupon(@Login Member member, @PathVariable Long couponId,
             @RequestBody IssueCouponRequest request) {
         long id = memberCouponService.createMemberCoupon(member, couponId, request);
         return ResponseEntity.created(URI.create("/member-coupons/" + id)).build();
