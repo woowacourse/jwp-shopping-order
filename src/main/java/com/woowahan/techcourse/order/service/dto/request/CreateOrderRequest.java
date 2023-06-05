@@ -1,5 +1,6 @@
 package com.woowahan.techcourse.order.service.dto.request;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -11,8 +12,7 @@ public class CreateOrderRequest {
     @NotNull
     @NotEmpty
     private List<@NotNull CreateOrderCartItemRequest> cartItems;
-    @NotNull
-    private List<@NotNull Long> couponIds;
+    private List<@NotNull Long> couponIds = new ArrayList<>();
 
     private CreateOrderRequest() {
     }
