@@ -36,9 +36,17 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
-
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+        try {
+            final CartItemResponse cartItem = cartItemService.findByMemberAndProductId(member, cartItemRequest.getProductId());
+            cartItemService.updateQuantity(
+                    member
+                    , cartItem.getId()
+                    , new CartItemQuantityUpdateRequest(cartItem.getQuantity() + 1));
+            return ResponseEntity.created(URI.create("/cart-items/" + cartItem.getId())).build();
+        } catch (IllegalArgumentException e) {
+            Long cartItemId = cartItemService.add(member, cartItemRequest);
+            return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+        }
     }
 
     @PatchMapping("/{id}")
