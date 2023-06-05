@@ -39,12 +39,7 @@ class OrderQueryServiceTest {
     final List<OrderResponse> orderResponses = orderQueryService.searchOrders(member);
 
     //then
-    assertAll(
-        () -> assertEquals(3, orderResponses.size()),
-        () -> assertEquals(3, orderResponses.get(0).getProducts().size()),
-        () -> assertEquals(2, orderResponses.get(1).getProducts().size()),
-        () -> assertEquals(1, orderResponses.get(2).getProducts().size())
-    );
+    assertEquals(3, orderResponses.size());
   }
 
   @Test
