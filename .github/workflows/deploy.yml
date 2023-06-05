@@ -14,6 +14,10 @@ jobs:
 
       - name: gradle bootjar
         run: |
+          export MYSQL_URL=${{ secrets.MYSQL_URL }}
+          export MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+          export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+          env
           chmod +x ./gradlew
           ./gradlew bootjar
 
