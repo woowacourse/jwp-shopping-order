@@ -15,7 +15,6 @@ public class OrderItem {
         validateQuantity(this.quantity);
     }
     
-    //todo : 예외 커스텀만들기
     private void validateQuantity(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("주문할 상품의 수량은 1개 이상이어야 합니다.");

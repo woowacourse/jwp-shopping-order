@@ -3,16 +3,14 @@ package cart.domain;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BasicDeliveryFeeCalculator implements DeliveryFeeCalculator{
-    
-    public static int BASIC_FEE = 3000;
+public class BasicDiscountCalculator implements DiscountCalculator{
     
     @Override
     public int calculate(Member member, OrderItems itemsToOrder) {
         int totalPrice = itemsToOrder.getTotalPrice();
-        if(totalPrice > 50000) {
-            return 0;
+        if(totalPrice > 100000) {
+            return (int) (totalPrice * 0.1) ;
         }
-        return BASIC_FEE;
+        return 0;
     }
 }

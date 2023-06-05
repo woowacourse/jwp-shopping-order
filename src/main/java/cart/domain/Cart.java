@@ -12,9 +12,9 @@ public class Cart {
         this.cartItems = new ArrayList<>(cartItems);
     }
     
-    public List<OrderItem> createOrderItems(List<CartItem> itemsToOrder) {
-        List<CartItem> orderedItems = deleteCartItems(itemsToOrder);
-        return orderedItems.stream()
+    public OrderItems createOrderItems(List<CartItem> itemsToOrder) {
+        List<CartItem> orderedCartItems = deleteCartItems(itemsToOrder);
+        List<OrderItem> orderItems = orderedCartItems.stream()
                 .map(itemToOrder ->
                         new OrderItem(
                                 null,
@@ -22,6 +22,7 @@ public class Cart {
                                 itemToOrder.getQuantity()
                         ))
                 .collect(Collectors.toList());
+        return new OrderItems(orderItems);
     }
     
     private List<CartItem> deleteCartItems(List<CartItem> itemsToOrder) {

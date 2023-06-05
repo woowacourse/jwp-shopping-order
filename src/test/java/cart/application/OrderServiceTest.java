@@ -8,12 +8,13 @@ import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
 import cart.domain.BasicDeliveryFeeCalculator;
-import cart.domain.CouponDiscountCalculator;
+import cart.domain.BasicDiscountCalculator;
 import cart.domain.DeliveryFeeCalculator;
 import cart.domain.DiscountCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.OrderItems;
 import cart.domain.Product;
 import cart.dto.OrderAddRequest;
 import cart.dto.OrderItemRequest;
@@ -43,7 +44,7 @@ class OrderServiceTest {
     @BeforeEach
     void setup() {
         deliveryFeeCalculator = new BasicDeliveryFeeCalculator();
-        discountCalculator = new CouponDiscountCalculator();
+        discountCalculator = new BasicDiscountCalculator();
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         orderItemDao = new OrderItemDao(jdbcTemplate);
@@ -65,8 +66,8 @@ class OrderServiceTest {
                         new OrderItemRequest(2L, 5)));
         Order expected = new Order(1L,
                 member.getId(),
-                List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
-                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
+                new OrderItems(List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
+                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5))),
                 3000,
                 0,
                 createdAt
@@ -94,15 +95,15 @@ class OrderServiceTest {
         //expected
         Order firstOrder = new Order(1L,
                 member.getId(),
-                List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
-                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
+                new OrderItems(List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
+                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5))),
                 3000,
                 0,
                 createdAt
         );
         Order secondOrder = new Order(2L,
                 member.getId(),
-                List.of(new OrderItem(3L, new Product(3l, "3번 상품", 1000, "3번 상품url"), 3)),
+                new OrderItems(List.of(new OrderItem(3L, new Product(3l, "3번 상품", 1000, "3번 상품url"), 3))),
                 3000,
                 0,
                 createdAt
@@ -131,7 +132,7 @@ class OrderServiceTest {
     
         Order secondOrder = new Order(2L,
                 member.getId(),
-                List.of(new OrderItem(3L, new Product(3l, "3번 상품", 1000, "3번 상품url"), 3)),
+                new OrderItems(List.of(new OrderItem(3L, new Product(3l, "3번 상품", 1000, "3번 상품url"), 3))),
                 3000,
                 0,
                 createdAt
@@ -159,8 +160,8 @@ class OrderServiceTest {
         //expected
         Order removedOrder = new Order(1L,
                 member.getId(),
-                List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
-                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
+                new OrderItems(List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
+                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5))),
                 3000,
                 0,
                 createdAt

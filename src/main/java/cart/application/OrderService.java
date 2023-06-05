@@ -10,7 +10,7 @@ import cart.domain.DeliveryFeeCalculator;
 import cart.domain.DiscountCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.OrderItems;
 import cart.domain.Product;
 import cart.dto.OrderAddRequest;
 import cart.dto.OrderItemRequest;
@@ -40,7 +40,7 @@ public class OrderService {
     
     public Order addOrder(Member member, OrderAddRequest request) {
         Cart cart = new Cart(cartItemDao.findByMemberId(member.getId()));
-        List<OrderItem> itemsToOrder = cart.createOrderItems(findRequestCartItems(member, request.getOrderItems()));
+        OrderItems itemsToOrder = cart.createOrderItems(findRequestCartItems(member, request.getOrderItems()));
         Order order = new Order(null,
                 member.getId(),
                 itemsToOrder,
@@ -49,7 +49,7 @@ public class OrderService {
                 request.getOrderTime()
                 );
         Long orderId = orderDao.save(order);
-        orderItemDao.saveAll(orderId, order.getOrderItems());
+        orderItemDao.saveAll(orderId, itemsToOrder.getOrderItems());
         cartItemDao.deleteAll(member.getId(), cart.getCartItems());
         return new Order(orderId, order.getMemberId(), order.getOrderItems(), order.getDeliveryFee(), order.getDiscountPrice(),order.getCreatedAt());
     }
