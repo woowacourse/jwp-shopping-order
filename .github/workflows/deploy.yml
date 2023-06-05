@@ -12,17 +12,6 @@ jobs:
           sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order 
       - uses: actions/checkout@v3
 
-      - name: Load secrets
-        env:
-          MYSQL_URL: ${{ secrets.MYSQL_URL }}
-          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-
-        run: |
-          export MYSQL_URL=${MYSQL_URL}
-          export MYSQL_USERNAME=${MYSQL_USERNAME}
-          export MYSQL_PASSWORD=${MYSQL_PASSWORD}
-
       - name: gradle bootjar
         run: |
           chmod +x ./gradlew
