@@ -75,7 +75,7 @@ public class JdbcCouponRepository implements CouponRepository {
     private CouponEntity toEntity(Coupon coupon) {
         return new CouponEntity(
                 coupon.getName(),
-                coupon.getCouponType().name(),
+                coupon.getCouponType().getCouponTypeName(),
                 coupon.getDiscountValue(),
                 coupon.getMinOrderPrice().getValue()
         );

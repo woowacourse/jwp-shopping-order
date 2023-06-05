@@ -26,7 +26,7 @@ public class CouponEntity {
     }
 
     public Coupon toDomain() {
-        return new Coupon(id, name, CouponType.valueOf(type), discountValue, new Money(minOrderPrice));
+        return new Coupon(id, name, CouponType.from(type), discountValue, new Money(minOrderPrice));
     }
 
     public Long getId() {
