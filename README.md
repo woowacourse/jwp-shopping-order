@@ -58,7 +58,7 @@ classDiagram
         Long id
         Member member
         OrderItem[] orderItems
-        LocalDateTime orderTime     <! 고려중>
+        LocalDateTime orderTime
     }
     class Payment
     class PaymentRecord {

@@ -24,6 +24,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
+    implementation 'mysql:mysql-connector-java:8.0.28'
 
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
@@ -70,7 +71,7 @@ build {
 
 bootJar {
     dependsOn createDocument
-    from ("${asciidoctor.outputDir}/html5") {
+    from("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
 }
