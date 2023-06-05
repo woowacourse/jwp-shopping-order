@@ -31,13 +31,13 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
             Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("p.id");
+            Long productId = rs.getLong("products.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("c.id");
-            int quantity = rs.getInt("c.quantity");
+            Long cartItemId = rs.getLong("cart_items.id");
+            int quantity = rs.getInt("cart_items.quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
     }
@@ -71,13 +71,13 @@ public class CartItemDao {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("p.id");
+            Long productId = rs.getLong("products.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("c.id");
-            int quantity = rs.getInt("c.quantity");
+            Long cartItemId = rs.getLong("cart_items.id");
+            int quantity = rs.getInt("cart_items.quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
@@ -100,8 +100,8 @@ public class CartItemDao {
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("c.id");
-            int quantity = rs.getInt("c.quantity");
+            Long cartItemId = rs.getLong("cart_items.id");
+            int quantity = rs.getInt("cart_items.quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
     }
