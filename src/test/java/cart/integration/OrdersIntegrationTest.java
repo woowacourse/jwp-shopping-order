@@ -31,6 +31,7 @@ public class OrdersIntegrationTest extends IntegrationTest {
                 .header("location", is("/orders/3"));
     }
 
+
     @Test
     @DisplayName("주문 목록을 가져온다")
     void getOrderListTest() {
@@ -57,9 +58,10 @@ public class OrdersIntegrationTest extends IntegrationTest {
     void confirmOrderTest() {
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().patch("/orders/1/confirm")
+                .when().patch("/orders/2/confirm")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(2));
     }
 
     @Test

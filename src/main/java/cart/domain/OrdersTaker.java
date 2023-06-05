@@ -1,7 +1,7 @@
 package cart.domain;
 
 import cart.dto.OrdersResponse;
-import cart.exception.OrdersPriceNotMatchException;
+import cart.exception.OrdersException;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.OrdersRepository;
@@ -32,7 +32,7 @@ public class OrdersTaker {
         final int discountPrice = calculateDiscountPrice(memberId, originalPrice, coupons);
         final long orderId = ordersRepository.takeOrders(memberId, discountPrice);
         List<ProductQuantity> productIdQuantity = cartItemRepository.changeCartItemToOrdersItemAndGetProductQuantities(cartIds);
-        ordersRepository.createOrdersCartItems(orderId,productIdQuantity);
+        ordersRepository.createOrdersCartItems(orderId, productIdQuantity);
         couponRepository.addOrdersCoupon(orderId, coupons);
         return orderId;
     }
@@ -87,13 +87,13 @@ public class OrdersTaker {
 
     private void validateLimit(final int price, final int limit) {
         if (price < limit) {
-            throw new OrdersPriceNotMatchException(limit + "이상으로 구매하셔야 합니다. ( 현재금액 : " + price + ")");
+            throw new OrdersException(limit + "이상으로 구매하셔야 합니다. ( 현재금액 : " + price + ")");
         }
     }
 
     private void validateNegativePrice(final int price) {
         if (price < 0) {
-            throw new OrdersPriceNotMatchException("금액은 음수가 될 수 없습니다.");
+            throw new OrdersException("금액은 음수가 될 수 없습니다.");
         }
     }
 

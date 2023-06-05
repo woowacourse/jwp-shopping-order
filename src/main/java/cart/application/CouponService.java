@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CouponService {
     private final CouponRepository couponRepository;
 
@@ -19,7 +20,6 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    @Transactional
     public void issueCoupon(final Member member, final CouponRequest couponRequest) {
         couponRepository.issueCoupon(member.getId(), couponRequest.getId());
     }

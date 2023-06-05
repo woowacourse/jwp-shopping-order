@@ -35,7 +35,6 @@ public class CouponResponse {
         this.issuable = issuable;
     }
 
-    // TODO : null 값 고민해보기
     public static CouponResponse of(Optional<Coupon> coupon) {
         return coupon.map(value -> new CouponResponse(
                 value.getId(),

@@ -24,7 +24,6 @@ public class CouponIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    // TODO : coupons 변수명 확정하기
     @Test
     @DisplayName("모든 쿠폰 조회")
     void getAllCouponsTest() {

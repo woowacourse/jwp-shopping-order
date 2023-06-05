@@ -4,7 +4,6 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class OrdersRequest {
@@ -14,7 +13,6 @@ public class OrdersRequest {
     private Long couponId;
 
     private OrdersRequest() {
-
     }
 
     public OrdersRequest(List<Long> selectCartIds, Long couponId) {

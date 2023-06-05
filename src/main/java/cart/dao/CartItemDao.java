@@ -31,6 +31,7 @@ public class CartItemDao {
         Product product = new Product(productId, name, price, imageUrl);
         return new CartItem(cartItemId, quantity, product, member);
     };
+
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

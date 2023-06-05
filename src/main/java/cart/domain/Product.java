@@ -28,8 +28,8 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product changePrice(final int price){
-        return new Product(this.id,this.name,price,this.imageUrl,this.deleted);
+    public Product changePrice(final int price) {
+        return new Product(this.id, this.name, price, this.imageUrl, this.deleted);
     }
 
     public Long getId() {

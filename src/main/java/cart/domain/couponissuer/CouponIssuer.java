@@ -4,7 +4,6 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Orders;
 import cart.repository.CouponRepository;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 

@@ -29,9 +29,10 @@ public class OrdersRepository {
     public long takeOrders(final Long memberId, final int discountPrice) {
         return ordersDao.createOrders(memberId, discountPrice);
     }
-    public void createOrdersCartItems(final long orders, final List<ProductQuantity> productQuantities){
-        for(ProductQuantity productQuantity: productQuantities){
-            ordersCartItemDao.createOrdersIdCartItemId(orders,productQuantity.getProductId(),productQuantity.getPrice(),productQuantity.getQuantity());
+
+    public void createOrdersCartItems(final long orders, final List<ProductQuantity> productQuantities) {
+        for (ProductQuantity productQuantity : productQuantities) {
+            ordersCartItemDao.createOrdersIdCartItemId(orders, productQuantity.getProductId(), productQuantity.getPrice(), productQuantity.getQuantity());
         }
     }
 

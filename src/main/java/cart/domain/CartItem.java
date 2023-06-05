@@ -34,9 +34,11 @@ public class CartItem {
     public Product getProduct() {
         return product;
     }
-    public long getProductId(){
+
+    public long getProductId() {
         return product.getId();
     }
+
     public int getQuantity() {
         return quantity;
     }

@@ -1,12 +1,13 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.Orders;
 import cart.domain.OrdersTaker;
 import cart.domain.couponissuer.CouponIssuerImpl;
 import cart.dto.CouponResponse;
 import cart.dto.OrdersRequest;
 import cart.dto.OrdersResponse;
-import cart.repository.CouponRepository;
+import cart.exception.OrdersException;
 import cart.repository.OrdersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final OrdersTaker ordersTaker;
@@ -26,12 +28,12 @@ public class OrdersService {
         this.couponIssuerImpl = couponIssuerImpl;
     }
 
-    @Transactional
     public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
         final List<Long> cartIds = ordersRequest.getSelectCartIds();
         return ordersTaker.takeOrder(member.getId(), cartIds, makeCouponsList(ordersRequest.getCouponId()));
     }
-    private List<Long> makeCouponsList(final Optional<Long> coupons){
+
+    private List<Long> makeCouponsList(final Optional<Long> coupons) {
         return coupons.map(List::of).orElseGet(List::of);
     }
 
@@ -45,12 +47,11 @@ public class OrdersService {
         return ordersTaker.findOrdersWithId(member, id);
     }
 
-    @Transactional
     public CouponResponse confirmOrders(Member member, long id) throws IllegalAccessException {
-        return CouponResponse.of(couponIssuerImpl.issue(member, ordersRepository.confirmOrders(id).get()));
+        Orders orders = ordersRepository.confirmOrders(id).orElseThrow(() -> new OrdersException("해당 주문내역이 없습니다."));
+        return CouponResponse.of(couponIssuerImpl.issue(member, orders));
     }
 
-    @Transactional
     public void deleteOrders(final long id) {
         ordersRepository.deleteOrders(id);
     }

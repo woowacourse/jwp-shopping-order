@@ -7,24 +7,24 @@ import cart.repository.CouponRepository;
 
 import java.util.Optional;
 
-public class OverFiftyPriceCouponIssuer extends CouponIssuer {
-    private static final long COUPON_ID = 1L;
+public class OverTwentyPriceCouponIssuer extends CouponIssuer {
+    private static final long COUPON_ID = 2L;
 
-    public OverFiftyPriceCouponIssuer(CouponRepository couponRepository) {
+    public OverTwentyPriceCouponIssuer(CouponRepository couponRepository) {
         super(couponRepository);
     }
 
     @Override
     public Optional<Coupon> issue(Member member, Orders orders) throws IllegalAccessException {
-        if (orders.getPrice() > 5000) {
+        if (orders.getPrice() > 2000) {
             this.issueCoupon(member.getId(), COUPON_ID);
             return Optional.of(couponRepository.findById(COUPON_ID));
         }
-        return this.execute(member, orders);
+        return next.execute(member, orders);
     }
 
     @Override
     protected void setNext() {
-        this.next = new OverTwentyPriceCouponIssuer(couponRepository);
+        this.next = new NoCouponIssuer(couponRepository);
     }
 }

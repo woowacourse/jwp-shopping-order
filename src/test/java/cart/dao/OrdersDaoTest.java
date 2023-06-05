@@ -20,7 +20,7 @@ class OrdersDaoTest {
     @Test
     @DisplayName("주문을 받는다")
     void createOrder() {
-        Assertions.assertThatNoException().isThrownBy(()->ordersDao.createOrders(1L,1000));
+        Assertions.assertThatNoException().isThrownBy(() -> ordersDao.createOrders(1L, 1000));
     }
 
     @Test

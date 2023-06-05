@@ -14,7 +14,7 @@ public class CartItemRepository {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartItemRepository(CartItemDao cartItemDao,  ProductDao productDao) {
+    public CartItemRepository(CartItemDao cartItemDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
     }
@@ -24,7 +24,7 @@ public class CartItemRepository {
         List<ProductQuantity> productQuantities = new ArrayList<>();
         for (Long cartId : cartIds) {
             cartItem = cartItemDao.findCartItemEntitiesByCartId(cartId);
-            productQuantities.add(new ProductQuantity(cartItem.getProductId(),productDao.findPriceById(cartItem.getProductId()),cartItem.getQuantity()));
+            productQuantities.add(new ProductQuantity(cartItem.getProductId(), productDao.findPriceById(cartItem.getProductId()), cartItem.getQuantity()));
             cartItemDao.deleteById(cartId);
         }
         return productQuantities;

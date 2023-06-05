@@ -28,11 +28,11 @@ public class OrdersCartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void createOrdersIdCartItemId(final long ordersId, final long productId,final int price, final int quantity) {
+    public void createOrdersIdCartItemId(final long ordersId, final long productId, final int price, final int quantity) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("orders_id", ordersId)
                 .addValue("product_id", productId)
-                .addValue("price",price)
+                .addValue("price", price)
                 .addValue("quantity", quantity);
         simpleJdbcInsert.execute(parameterSource);
     }
