@@ -50,7 +50,6 @@ CREATE TABLE point
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-
 CREATE TABLE point_history
 (
     id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
