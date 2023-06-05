@@ -8,14 +8,14 @@ public class OrderEntity {
     private final int price;
     private final Long couponId;
     private final Long memberId;
-    private final LocalDateTime date;
+    private final LocalDateTime createdAt;
 
-    private OrderEntity(final Long id, final int price, final Long couponId, final Long memberId, final LocalDateTime date) {
+    private OrderEntity(final Long id, final int price, final Long couponId, final Long memberId, final LocalDateTime createdAt) {
         this.id = id;
         this.price = price;
         this.couponId = couponId;
         this.memberId = memberId;
-        this.date = date;
+        this.createdAt = createdAt;
     }
 
     public static OrderEntity createNonePkOrder(final int price, final Long couponId, final Long memberId) {
@@ -42,8 +42,8 @@ public class OrderEntity {
         return memberId;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
 }

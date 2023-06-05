@@ -28,7 +28,7 @@ public class OrderService {
 
     public List<OrderResponse> findAllByMemberId(final Long memberId) {
         return orderRepository.findAllByMemberId(memberId).stream()
-                .map(order -> new OrderResponse(order.getId(), order.getOrderItems(), order.getDate(), order.getPrice()))
+                .map(order -> new OrderResponse(order.getId(), order.getOrderItems(), order.getCreatedAt(), order.getPrice()))
                 .collect(Collectors.toList());
     }
 

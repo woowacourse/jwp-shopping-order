@@ -9,15 +9,15 @@ public class Order {
     private final int price;
     private final Long couponId;
     private final Long memberId;
-    private final LocalDateTime date;
+    private final LocalDateTime createdAt;
     private final List<OrderItem> orderItems;
 
-    private Order(final Long id, final int price, final Long couponId, final Long memberId, final LocalDateTime date, final List<OrderItem> orderItems) {
+    private Order(final Long id, final int price, final Long couponId, final Long memberId, final LocalDateTime createdAt, final List<OrderItem> orderItems) {
         this.id = id;
         this.price = price;
         this.couponId = couponId;
         this.memberId = memberId;
-        this.date = date;
+        this.createdAt = createdAt;
         this.orderItems = orderItems;
     }
 
@@ -45,8 +45,8 @@ public class Order {
         return memberId;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public List<OrderItem> getOrderItems() {

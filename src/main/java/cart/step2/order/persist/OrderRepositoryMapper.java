@@ -37,7 +37,7 @@ public class OrderRepositoryMapper implements OrderRepository {
         List<Order> orders = new ArrayList<>();
         for (final OrderEntity orderEntity : orderEntities) {
             List<OrderItem> orderItems = getOrderItems(orderEntity);
-            Order order = Order.of(orderEntity.getId(), orderEntity.getPrice(), orderEntity.getCouponId(), orderEntity.getMemberId(), orderEntity.getDate(), orderItems);
+            Order order = Order.of(orderEntity.getId(), orderEntity.getPrice(), orderEntity.getCouponId(), orderEntity.getMemberId(), orderEntity.getCreatedAt(), orderItems);
             orders.add(order);
         }
         return orders;

@@ -63,7 +63,7 @@ class OrderRepositoryMapperTest {
                 () -> assertThat(order.getPrice()).isEqualTo(orderEntity.getPrice()),
                 () -> assertThat(order.getCouponId()).isEqualTo(orderEntity.getCouponId()),
                 () -> assertThat(order.getMemberId()).isEqualTo(orderEntity.getMemberId()),
-                () -> assertThat(order.getDate()).isEqualTo(orderEntity.getDate())
+                () -> assertThat(order.getCreatedAt()).isEqualTo(orderEntity.getCreatedAt())
         );
 
         List<OrderItem> orderItems = order.getOrderItems();
