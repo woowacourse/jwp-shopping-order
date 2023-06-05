@@ -133,10 +133,6 @@ class OrderApiControllerTest extends IntegrationTest {
         //then
         final List<OrderProductResponse> products = List.of(
             new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
-            new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
-            new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
-            new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3),
-            new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3),
             new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3));
         final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(),
             request.getTotalProductAmount(), 72_000, request.getDeliveryAmount(), request.getAddress(),

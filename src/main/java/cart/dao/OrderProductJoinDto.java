@@ -1,5 +1,7 @@
 package cart.dao;
 
+import java.util.Objects;
+
 public class OrderProductJoinDto {
 
     private final Long id;
@@ -27,6 +29,30 @@ public class OrderProductJoinDto {
         this.productName = productName;
         this.productAmount = productAmount;
         this.productImageUrl = productImageUrl;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final OrderProductJoinDto that = (OrderProductJoinDto) o;
+        return getDiscountedAmount() == that.getDiscountedAmount() && getDeliveryAmount() == that.getDeliveryAmount()
+            && getTotalAmount() == that.getTotalAmount() && getProductAmount() == that.getProductAmount()
+            && Objects.equals(getId(), that.getId()) && Objects.equals(member_id, that.member_id)
+            && Objects.equals(getAddress(), that.getAddress()) && Objects.equals(getProductId(),
+            that.getProductId()) && Objects.equals(getProductName(), that.getProductName())
+            && Objects.equals(getProductImageUrl(), that.getProductImageUrl());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDiscountedAmount(), getDeliveryAmount(), getTotalAmount(), member_id,
+            getAddress(),
+            getProductId(), getProductName(), getProductAmount(), getProductImageUrl());
     }
 
     public Long getId() {
@@ -65,7 +91,7 @@ public class OrderProductJoinDto {
         return productImageUrl;
     }
 
-    public Long getMember_id() {
+    public Long getMemberId() {
         return member_id;
     }
 }

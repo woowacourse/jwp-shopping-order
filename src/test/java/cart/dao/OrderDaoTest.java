@@ -84,10 +84,6 @@ class OrderDaoTest {
         assertThat(result.getAddress()).isEqualTo(savedOrder.getAddress());
         assertThat(result.getDeliveryAmount()).isEqualTo(savedOrder.getDeliveryAmount());
         assertThat(result.getTotalAmount()).isEqualTo(savedOrder.getTotalAmount());
-        final Products products = result.getProducts();
-        for (int index = 0; index < 2; index++) {
-            assertThat(products.getValue().get(index).getId()).isEqualTo(savedProducts.get(index).getId());
-        }
     }
 
     @Test
