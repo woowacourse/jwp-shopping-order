@@ -28,8 +28,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         BasicAuthInfo authInfo = BasicAuthorizationExtractor.extract(header);
-        System.out.println("???");
-        System.out.println(authInfo.getEmail());
         return authService.login(authInfo.getEmail(), authInfo.getPassword());
     }
 }
