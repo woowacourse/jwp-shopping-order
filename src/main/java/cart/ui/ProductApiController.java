@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.application.ProductService;
+import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
@@ -31,13 +31,13 @@ public class ProductApiController {
 
     @Operation(summary = "모든 상품 조회")
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @Operation(summary = "ID로 상품 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 

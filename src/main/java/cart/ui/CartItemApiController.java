@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
+import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
@@ -32,7 +32,7 @@ public class CartItemApiController {
 
     @Operation(summary = "장바구니에 담긴 상품 조회")
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
+    public ResponseEntity<List<CartItemDto>> showCartItems(Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
