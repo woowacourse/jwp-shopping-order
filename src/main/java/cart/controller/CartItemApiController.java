@@ -4,7 +4,7 @@ import cart.application.CartItemService;
 import cart.domain.member.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
-import cart.dto.request.CartItemResponse;
+import cart.dto.response.CartItemResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

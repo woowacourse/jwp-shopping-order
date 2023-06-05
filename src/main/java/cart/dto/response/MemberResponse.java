@@ -1,4 +1,4 @@
-package cart.dto.request;
+package cart.dto.response;
 
 import cart.domain.member.Member;
 

@@ -6,7 +6,7 @@ import cart.domain.cart.Quantity;
 import cart.domain.member.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
-import cart.dto.request.CartItemResponse;
+import cart.dto.response.CartItemResponse;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
 import java.util.List;

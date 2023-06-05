@@ -1,12 +1,15 @@
 package cart.dto.request;
 
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class OrderRequest {
 
     @Size(min = 1)
     private List<Long> cartItemIds;
+
+    @NotNull
     private Long usePoint;
 
     public OrderRequest() {

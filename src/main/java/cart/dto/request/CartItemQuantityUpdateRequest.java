@@ -1,6 +1,10 @@
 package cart.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemQuantityUpdateRequest {
+
+    @NotNull
     private int quantity;
 
     public CartItemQuantityUpdateRequest() {

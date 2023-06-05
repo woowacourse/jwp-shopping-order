@@ -1,9 +1,9 @@
-package cart.dto.request;
+package cart.dto.response;
 
 import cart.domain.cart.CartItem;
-import cart.dto.response.ProductResponse;
 
 public class CartItemResponse {
+
     private Long id;
     private int quantity;
     private ProductResponse product;
