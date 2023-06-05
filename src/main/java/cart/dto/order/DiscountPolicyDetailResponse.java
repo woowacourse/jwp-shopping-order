@@ -2,7 +2,7 @@ package cart.dto.order;
 
 import cart.domain.Price;
 
-public class DiscountPolicyDetailResponse {
+public class DiscountPolicyDetailResponse implements Comparable<DiscountPolicyDetailResponse> {
     private final int minimumPrice;
     private final int discountPrice;
 
@@ -21,5 +21,10 @@ public class DiscountPolicyDetailResponse {
 
     public int getDiscountPrice() {
         return discountPrice;
+    }
+
+    @Override
+    public int compareTo(final DiscountPolicyDetailResponse o) {
+        return Integer.compare(this.minimumPrice, o.minimumPrice);
     }
 }

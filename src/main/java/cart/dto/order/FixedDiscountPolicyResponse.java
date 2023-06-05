@@ -15,6 +15,7 @@ public class FixedDiscountPolicyResponse implements DiscountPolicyResponse {
     public static FixedDiscountPolicyResponse from(Map<Price, Price> standards) {
         List<DiscountPolicyDetailResponse> fixedDiscountPolicy = standards.entrySet().stream()
                 .map(entry -> DiscountPolicyDetailResponse.of(entry.getKey(), entry.getValue()))
+                .sorted()
                 .collect(Collectors.toList());
 
         return new FixedDiscountPolicyResponse(fixedDiscountPolicy);
