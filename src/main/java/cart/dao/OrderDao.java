@@ -37,12 +37,12 @@ public class OrderDao {
         sqlParameterSource.addValue("memberId", order.getOrderingMember().getId());
         sqlParameterSource.addValue("priceAfterDiscount", order.getPriceAfterDiscount());
         new NamedParameterJdbcTemplate(jdbcTemplate).update(
-                "insert into orders(member_id, price_after_discount) values(:memberId, :prictAfterDiscount)",
+                "insert into orders(member_id, price_after_discount) values(:memberId, :priceAfterDiscount)",
                 sqlParameterSource,
                 keyHolder
         );
 
-        final long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final long orderId = (long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
         final List<OrderItem> orderItems = order.getOrderItems();
 
         jdbcTemplate.batchUpdate("insert into order_items(order_id, name, product_price, quantity, image_url) values(?, ?, ?, ?, ?)", new BatchPreparedStatementSetter() {
