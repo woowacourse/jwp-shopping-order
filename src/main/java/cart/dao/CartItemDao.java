@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,7 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<CartItem> cartItemRowMapper = (rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
@@ -40,6 +42,7 @@ public class CartItemDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -80,6 +83,13 @@ public class CartItemDao {
     public int deleteById(Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         return jdbcTemplate.update(sql, id);
+    }
+
+    public int deleteByIdIn(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("ids", ids);
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
     public int updateQuantity(CartItem cartItem) {

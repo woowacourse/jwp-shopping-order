@@ -42,7 +42,8 @@ public class OrderService {
         final List<CartItem> cartItems = getCartItems(orderRequest.getOrderItems());
 
         final Order order = generateOrder(member, cartItems, orderRequest.getPayment());
-        cartItems.forEach(cartItem -> cartItemDao.deleteById(cartItem.getId()));
+
+        cartItemDao.deleteByIdIn(getCartItemIds(cartItems));
 
         final Point savePoint = pointPolicy.save(order.getPayment());
         final Member newMember = order.calculateMemberPoint(savePoint);
@@ -54,6 +55,12 @@ public class OrderService {
     private List<CartItem> getCartItems(final List<OrderItemDto> orderItemDtos) {
         return orderItemDtos.stream()
                 .map(orderItemDto -> cartItemDao.findById(orderItemDto.getCartItemId()))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<Long> getCartItemIds(final List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(CartItem::getId)
                 .collect(Collectors.toUnmodifiableList());
     }
 

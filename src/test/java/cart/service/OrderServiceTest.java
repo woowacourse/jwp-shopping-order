@@ -85,7 +85,7 @@ class OrderServiceTest {
         verify(memberRepository, times(1))
                 .updateMemberPoint(new Member(1L, EMAIL, PASSWORD, 1900));
         verify(cartItemDao, times(1))
-                .deleteById(cartItem.getId());
+                .deleteByIdIn(List.of(cartItem.getId()));
     }
 
     @Test

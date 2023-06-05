@@ -170,4 +170,28 @@ class CartItemDaoTest {
                     );
         });
     }
+
+    @Test
+    void 장바구니_상품을_여러_개_삭제한다() {
+        //given
+        final Product chicken = new Product(1L, "chicken", 20000, "chicken.jpeg");
+        final Product pizza = new Product(1L, "pizza", 15000, "pizza.jpeg");
+
+        final Long firstId = cartItemDao.save(CartItem.from(chicken, member));
+        final Long secondId = cartItemDao.save(CartItem.from(pizza, member));
+
+        //when
+        final int affectedRows = cartItemDao.deleteByIdIn(List.of(firstId, secondId));
+
+        //then
+        assertSoftly(softly -> {
+            softly.assertThat(affectedRows).isEqualTo(2);
+            softly.assertThatThrownBy(() -> cartItemDao.findById(firstId))
+                    .isInstanceOf(CartItemException.IllegalId.class)
+                    .hasMessage("회원의 장바구니에 해당 id의 상품이 존재하지 않습니다; id=1");
+            softly.assertThatThrownBy(() -> cartItemDao.findById(secondId))
+                    .isInstanceOf(CartItemException.IllegalId.class)
+                    .hasMessage("회원의 장바구니에 해당 id의 상품이 존재하지 않습니다; id=2");
+        });
+    }
 }
