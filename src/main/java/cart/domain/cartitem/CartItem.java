@@ -28,13 +28,6 @@ public class CartItem {
         this.member = member;
     }
 
-    public boolean isCorrectQuantity(final Long productId, final Integer quantity) {
-        if (this.quantity == quantity && product.isEqualId(productId)) {
-            return true;
-        }
-        throw new IllegalArgumentException("상품의 수량이 일치하지 않습니다.");
-    }
-
     public boolean isNotOwnedByMember(final Member member) {
         return !this.member.equals(member);
     }
