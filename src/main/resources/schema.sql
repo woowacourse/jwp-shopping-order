@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS order_detail
     id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id        BIGINT NOT NULL,
     product_id       BIGINT NOT NULL,
-    product_name     TEXT   NULL,
-    product_image    TEXT   NULL,
-    product_quantity INT    NULL,
-    product_price    INT    NULL
+    product_name     TEXT   NOT NULL,
+    product_image    TEXT   NOT NULL,
+    product_quantity INT    NOT NULL,
+    product_price    INT    NOT NULL
 );
