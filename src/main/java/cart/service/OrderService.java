@@ -4,6 +4,7 @@ import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.response.OrderResponse;
 import cart.controller.dto.response.OrderThumbnailResponse;
 import cart.domain.CartItem;
+import cart.domain.discount_strategy.DiscountCalculator;
 import cart.domain.discount_strategy.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -28,10 +29,13 @@ public class OrderService {
     private final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
+    private final DiscountCalculator discountCalculator;
 
-    public OrderService(final OrderRepository orderRepository, final CartItemRepository cartItemRepository) {
+    public OrderService(final OrderRepository orderRepository, final CartItemRepository cartItemRepository,
+                        final DiscountCalculator discountCalculator) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
+        this.discountCalculator = discountCalculator;
     }
 
     @Transactional
@@ -59,7 +63,7 @@ public class OrderService {
     private Order createOrder(final Member member, final List<CartItem> cartItems) {
         return new Order(
                 member.getId(),
-                new OrderItems(convertCartItemsToOrderItems(cartItems), new DiscountPriceCalculator())
+                new OrderItems(convertCartItemsToOrderItems(cartItems), discountCalculator)
         );
     }
 

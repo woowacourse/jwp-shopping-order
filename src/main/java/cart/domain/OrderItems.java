@@ -1,15 +1,18 @@
 package cart.domain;
 
+import cart.domain.discount_strategy.DiscountCalculator;
+import cart.domain.discount_strategy.DiscountPriceCalculator;
+
 import java.util.List;
 
 public class OrderItems {
 
     private final List<OrderItem> orderItems;
-    private final DiscountPriceCalculator discountPriceCalculator;
+    private final DiscountCalculator discountCalculator;
 
-    public OrderItems(final List<OrderItem> orderItems, final DiscountPriceCalculator discountPriceCalculator) {
+    public OrderItems(final List<OrderItem> orderItems, final DiscountCalculator discountCalculator) {
         this.orderItems = orderItems;
-        this.discountPriceCalculator = discountPriceCalculator;
+        this.discountCalculator = discountCalculator;
     }
 
     public Price calculateOriginalPrice() {
@@ -21,7 +24,7 @@ public class OrderItems {
 
     public Price calculateDiscountPrice() {
         final Price originalPrice = calculateOriginalPrice();
-        return discountPriceCalculator.calculate(originalPrice);
+        return discountCalculator.calculate(originalPrice);
     }
 
     public Price calculatePaymentAmount() {

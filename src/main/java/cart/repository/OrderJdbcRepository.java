@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.domain.DiscountPriceCalculator;
+import cart.domain.discount_strategy.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
