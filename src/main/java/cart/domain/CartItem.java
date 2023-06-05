@@ -5,8 +5,8 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
+    private final Long id;
+    private final int quantity;
     private final Product product;
     private final Member member;
 
@@ -39,6 +39,21 @@ public class CartItem {
         this.product.checkValue(other.product);
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartItemException.IllegalMember("접근 권한 없습니다");
+        }
+    }
+
+    public CartItem changeQuantity(int changedQuantity) {
+        return new CartItem(
+                id,
+                changedQuantity,
+                product,
+                member
+        );
+    }
+
     public Long getId() {
         return id;
     }
@@ -53,16 +68,6 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember("접근 권한 없습니다");
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     @Override

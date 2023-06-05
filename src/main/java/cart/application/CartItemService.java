@@ -47,8 +47,8 @@ public class CartItemService {
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemRepository.update(cartItem);
+        CartItem changedCartItem = cartItem.changeQuantity(request.getQuantity());
+        cartItemRepository.update(changedCartItem);
     }
 
     @Transactional

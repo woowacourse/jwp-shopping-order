@@ -7,14 +7,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderResponse {
-    private Long orderId;
+    private Long id;
     private List<OrderItemResponse> products;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(final Long orderId, final List<OrderItemResponse> products) {
-        this.orderId = orderId;
+    public OrderResponse(final Long id, final List<OrderItemResponse> products) {
+        this.id = id;
         this.products = products;
     }
 
@@ -29,8 +29,8 @@ public class OrderResponse {
         );
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getId() {
+        return id;
     }
 
     public List<OrderItemResponse> getProducts() {
@@ -42,18 +42,18 @@ public class OrderResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final OrderResponse that = (OrderResponse) o;
-        return Objects.equals(orderId, that.orderId) && Objects.equals(products, that.products);
+        return Objects.equals(id, that.id) && Objects.equals(products, that.products);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, products);
+        return Objects.hash(id, products);
     }
 
     @Override
     public String toString() {
         return "OrderResponse{" +
-                "orderId=" + orderId +
+                "orderId=" + id +
                 ", products=" + products +
                 '}';
     }
