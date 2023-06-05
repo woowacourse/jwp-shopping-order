@@ -4,6 +4,8 @@ import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -117,5 +119,28 @@ public class ProductIntegrationTest extends IntegrationTest {
             () -> assertThat(responseProduct.getPrice()).isEqualTo(10000),
             () -> assertThat(responseProduct.getImageUrl()).isEqualTo("http://example.com/chicken.jpg")
         );
+    }
+
+    @Test
+    @DisplayName("상품을 삭제한다.")
+    public void deleteProductTest() {
+        var response = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .delete("/products/1")
+            .then()
+            .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        var result = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/products")
+            .then()
+            .extract();
+
+        List<ProductResponse> productResponses = result.body().jsonPath().getList(".", ProductResponse.class);
+        assertThat(productResponses.stream().noneMatch(productResponse -> productResponse.getId() == 1L)).isTrue();
     }
 }

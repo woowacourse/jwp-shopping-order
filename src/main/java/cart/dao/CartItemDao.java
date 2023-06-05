@@ -165,4 +165,10 @@ public class CartItemDao {
             }
         });
     }
+
+    public void deleteByProductId(Long productId) {
+        String query = "DELETE from cart_item WHERE product_id = ?";
+
+        jdbcTemplate.update(query, productId);
+    }
 }

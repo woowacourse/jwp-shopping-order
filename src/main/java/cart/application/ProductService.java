@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
@@ -18,9 +19,11 @@ import cart.exception.ExceptionType;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final CartItemDao cartItemDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductDao productDao, CartItemDao cartItemDao) {
         this.productDao = productDao;
+        this.cartItemDao = cartItemDao;
     }
 
     public List<ProductResponse> findAll() {
@@ -62,6 +65,7 @@ public class ProductService {
     public void remove(Long productId) {
         Product product = productDao.findById(productId);
         checkExistence(product);
+        cartItemDao.deleteByProductId(productId);
         productDao.delete(productId);
     }
 }
