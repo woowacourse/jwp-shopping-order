@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.PointDao;
+import cart.dao.PointHistoryDao;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
 import cart.domain.member.Password;
@@ -20,11 +21,14 @@ class PointRepositoryTest {
     @Mock
     private PointDao pointDao;
 
+    @Mock
+    private PointHistoryDao pointHistoryDao;
+
     private PointRepository pointRepository;
 
     @BeforeEach
     void setUp() {
-        pointRepository = new PointRepository(pointDao);
+        pointRepository = new PointRepository(pointDao, pointHistoryDao);
     }
 
     @Test
