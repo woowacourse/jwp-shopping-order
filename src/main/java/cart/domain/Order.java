@@ -11,6 +11,7 @@ public class Order {
     public static final double DISCOUNT_RATIO = 0.1;
     public static final int FREE_DELIVERY_STANDARD_PRICE = 50000;
     public static final long FREE_DELIVERY_FEE = 0L;
+
     private Long id;
     private Member member;
     private OrderItems orderItems;
@@ -19,7 +20,6 @@ public class Order {
     private Long deliveryFee;
     private Long totalPrice;
     private Timestamp orderTime;
-
 
     public Order(Member member, OrderItems orderItems, Long deliveryFee, Timestamp orderTime) {
         this.member = member;

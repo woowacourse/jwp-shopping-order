@@ -11,6 +11,7 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
     private final MemberDao memberDao;
 
     public WebMvcConfig(MemberDao memberDao) {

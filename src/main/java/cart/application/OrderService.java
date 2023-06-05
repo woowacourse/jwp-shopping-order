@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderDao orderDao;
-
     private final ProductDao productDao;
 
     public OrderService(OrderDao orderDao, ProductDao productDao) {

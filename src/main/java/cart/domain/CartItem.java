@@ -5,6 +5,7 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
+
     private Long id;
     private Integer quantity;
     private final Product product;
