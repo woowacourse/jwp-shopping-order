@@ -52,7 +52,7 @@ public class CartItemDao {
         final List<CartItemEntity> cartItemEntities = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             long cartItemId = rs.getLong("id");
             long memberId = rs.getLong("member_id");
-            long productId = rs.getLong("id");
+            long productId = rs.getLong("product_id");
             int quantity = rs.getInt("quantity");
             return new CartItemEntity(cartItemId, memberId, productId, quantity);
         });
