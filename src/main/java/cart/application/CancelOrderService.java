@@ -1,9 +1,10 @@
-package cart.application.event;
+package cart.application;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.application.event.PointRetrieveEvent;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderStatus;

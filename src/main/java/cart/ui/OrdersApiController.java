@@ -19,7 +19,7 @@ import cart.application.dto.GetDetailedOrderResponse;
 import cart.application.dto.GetOrdersRequest;
 import cart.application.dto.GetOrdersResponse;
 import cart.application.dto.PostOrderRequest;
-import cart.application.event.CancelOrderService;
+import cart.application.CancelOrderService;
 import cart.domain.Member;
 
 @RestController
