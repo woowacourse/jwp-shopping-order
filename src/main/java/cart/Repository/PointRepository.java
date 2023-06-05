@@ -6,6 +6,7 @@ import cart.domain.Order.Order;
 import cart.domain.Point;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
+import cart.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 import static cart.Repository.mapper.PointMapper.toPointEntity;
@@ -26,7 +27,7 @@ public class PointRepository {
 
     public Point getPointByMemberId(Long memberId) {
         PointEntity pointEntity = pointDao.findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 포인트 입니다."));
+                .orElseThrow(() -> new NotFoundException.MemberNotHavingPoint(memberId));
         return new Point(pointEntity.getPoint());
     }
 
@@ -37,7 +38,7 @@ public class PointRepository {
 
     public Point findSavedPointByOrderId(Long orderId) {
         PointHistoryEntity pointHistoryEntity = pointHistoryDao.findByOrderId(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("주문내역에 해당하는 포인트가 없습니다."));
+                .orElseThrow(() -> new NotFoundException.OrderNotHavingPointHistory(orderId));
         return new Point(pointHistoryEntity.getPointSaved());
     }
 

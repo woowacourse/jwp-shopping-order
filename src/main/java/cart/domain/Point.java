@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.domain.Product.Price;
+import cart.exception.InvalidRequestException;
 
 import java.util.Objects;
 
@@ -10,22 +11,17 @@ public class Point {
     private final int point;
 
     public Point(int point) {
-        this.point = point;
-    }
-
-    public static Point from(int point) {
         validatePoint(point);
-        return new Point(point);
+        this.point = point;
     }
 
     public static Point makePointFrom(Price price){
         return price.makePointFrom(POINT_RATE);
     }
 
-
-    private static void validatePoint(int point) {
+    private void validatePoint(int point) {
         if (point < 0) {
-            throw new IllegalArgumentException("포인트는 0보다 작을 수 없습니다.");
+            throw new InvalidRequestException.MinusInvalidRequest();
         }
     }
 

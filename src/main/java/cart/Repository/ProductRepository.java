@@ -1,11 +1,12 @@
 package cart.Repository;
 
-import cart.Repository.mapper.ProductMapper;
 import cart.dao.ProductDao;
 import cart.domain.Product.Product;
 import cart.entity.ProductEntity;
+import cart.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 import static cart.Repository.mapper.ProductMapper.*;
@@ -21,12 +22,15 @@ public class ProductRepository {
 
     public List<Product> getAllProducts() {
         List<ProductEntity> productEntities = productDao.getAllProducts();
+        if(productEntities.isEmpty()){
+            return Collections.emptyList();
+        }
         return toProducts(productEntities);
     }
 
     public Product getProductById(Long productId) {
         ProductEntity productEntity = productDao.getProductById(productId)
-                .orElseThrow(() -> new IllegalArgumentException(productId + "id 에 해당하는 상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException.Product(productId));
 
         return toProduct(productEntity);
     }
@@ -39,10 +43,19 @@ public class ProductRepository {
 
     public void updateProduct(Long productId, Product product) {
         ProductEntity productEntity = toProductEntity(product);
-        productDao.updateProduct(productId, productEntity);
+
+        try {
+            productDao.updateProduct(productId, productEntity);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException.Product(productId);
+        }
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        try {
+            productDao.deleteProduct(productId);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException.Product(productId);
+        }
     }
 }

@@ -26,6 +26,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         Cart cart = cartItemRepository.findByMemberId(member.getId());
+
         return cart.getCartItems()
                 .stream()
                 .map(CartItemResponse::of)
@@ -57,10 +58,16 @@ public class CartItemService {
     }
 
     public Cart findByCartItemIds(List<Long> cartItemIds) {
+        if(cartItemIds.isEmpty()){
+            throw new IllegalArgumentException();
+        }
         return cartItemRepository.findByIds(cartItemIds);
     }
 
     public void removeByIds(List<Long> cartItemIds) {
+        if(cartItemIds.isEmpty()){
+            return;
+        }
         cartItemRepository.deleteByIds(cartItemIds);
     }
 }

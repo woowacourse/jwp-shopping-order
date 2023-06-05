@@ -10,6 +10,7 @@ import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.ProductEntity;
+import cart.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -51,30 +52,36 @@ public class OrderRepository {
 
     public List<Order> findByMemberId(Long memberId) {
         List<OrderEntity> orders = orderDao.findOrderByMemberId(memberId);
+
+        if(orders.isEmpty()){
+            return Collections.emptyList();
+        }
+
         Map<Long, List<OrderItemEntity>> orderItemsByOrderId = orderItemDao.findOrderItemsByMemberId(memberId);
 
         Set<Long> productIds = new HashSet<>();
-
         orderItemsByOrderId.values()
                 .forEach(orderItems ->
                         orderItems.forEach(orderItemEntity ->
                                 productIds.add(orderItemEntity.getProductId())));
 
+        if(productIds.isEmpty()){
+            return Collections.emptyList();
+        }
+
         List<ProductEntity> productEntities = productDao.getProductByIds(new ArrayList<>(productIds));
 
         MemberEntity memberEntity = memberDao.getMemberById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundException.Member(memberId));
 
         return toOrders(orders, orderItemsByOrderId, productEntities, memberEntity);
     }
 
     public Order findById(Long orderId) {
-        OrderEntity orderEntity = orderDao.findOrderById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문 아이디 입니다."));
-
+        OrderEntity orderEntity = getOrderEntity(orderId);
 
         MemberEntity memberEntity = memberDao.getMemberById(orderEntity.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundException.Member(orderEntity.getMemberId()));
 
         List<OrderItemEntity> orderItems = orderItemDao.findOrderItemsByOrderId(orderEntity.getId());
 
@@ -85,5 +92,10 @@ public class OrderRepository {
         List<ProductEntity> productEntities = productDao.getProductByIds(new ArrayList<>(productIds));
 
         return toOrder(orderEntity, orderItems, productEntities, memberEntity);
+    }
+
+    private OrderEntity getOrderEntity(Long orderId) {
+        return orderDao.findOrderById(orderId)
+                .orElseThrow(() -> new NotFoundException.Order(orderId));
     }
 }

@@ -2,7 +2,7 @@ package cart.domain;
 
 import cart.domain.Member.Member;
 import cart.domain.Product.Product;
-import cart.exception.CartItemException;
+import cart.exception.ForbiddenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +28,6 @@ class CartTest {
 
         // when, then
         assertThatThrownBy(() -> cart.checkOwner(owner))
-                .isInstanceOf(CartItemException.class);
+                .isInstanceOf(ForbiddenException.class);
     }
 }

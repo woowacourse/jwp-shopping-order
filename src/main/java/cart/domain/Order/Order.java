@@ -2,6 +2,7 @@ package cart.domain.Order;
 
 import cart.domain.Member.Member;
 import cart.domain.Product.Price;
+import cart.exception.ForbiddenException;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -37,7 +38,7 @@ public class Order {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalArgumentException("로그인 한 회원의 주문내역이 아닙니다.");
+            throw new ForbiddenException.IllegalMemberOrder(this, member);
         }
     }
 

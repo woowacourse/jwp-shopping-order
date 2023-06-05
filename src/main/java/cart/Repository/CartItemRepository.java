@@ -8,8 +8,10 @@ import cart.domain.CartItem;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
+import cart.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +32,12 @@ public class CartItemRepository {
     public Cart findByMemberId(Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
 
+        if(cartItemEntities.size() ==0){
+            return new Cart(Collections.emptyList());
+        }
+
         MemberEntity memberEntity = memberDao.getMemberById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundException.Member(memberId));
 
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
@@ -50,6 +56,10 @@ public class CartItemRepository {
 
     public Cart findByIds(List<Long> cartItemIds) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
+
+        if(cartItemEntities.isEmpty()){
+            return new Cart(Collections.emptyList());
+        }
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
         //TODO: 멤버도 매핑해주기...
@@ -69,13 +79,13 @@ public class CartItemRepository {
 
     public CartItem findById(Long id) {
         CartItemEntity cartItemEntity = cartItemDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 장바구니가 없습니다."));
+                .orElseThrow(() -> new NotFoundException.CartItem(id));
 
         ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 상품이 없습니다."));
+                .orElseThrow(() -> new NotFoundException.Product(cartItemEntity.getProductId()));
 
         MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundException.Member(cartItemEntity.getMemberId()));
 
         return toCartItem(cartItemEntity, productEntity, memberEntity);
     }

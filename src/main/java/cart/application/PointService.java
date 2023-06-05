@@ -6,6 +6,7 @@ import cart.domain.Point;
 import cart.domain.Product.Price;
 import cart.dto.OrderPointResponse;
 import cart.dto.UserPointResponse;
+import cart.exception.InvalidRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,11 +29,11 @@ public class PointService {
 
     private void validateIsUsable(Point memberPoint, Point usePoint, Price totalPrice) {
         if(memberPoint.isSmallerThan(usePoint)){
-            throw new IllegalArgumentException("보유한 포인트보다 많은 포인트는 사용할 수 없습니다.");
+            throw new InvalidRequestException.ExceedHavingInvalidRequest();
         }
 
         if(memberPoint.isBiggerThan(totalPrice)){
-            throw new IllegalArgumentException("주문금액보다 높은 포인트는 사용할 수 없습니다.");
+            throw new InvalidRequestException.ExceedPrice();
         }
     }
 

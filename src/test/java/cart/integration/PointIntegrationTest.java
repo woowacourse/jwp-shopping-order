@@ -1,135 +1,110 @@
 package cart.integration;
 
 import cart.domain.Member.Member;
-import cart.domain.Point;
 import cart.dto.CartItemRequest;
-import cart.dto.OrderRequest;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
+import static cart.integration.apifixture.ApiFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class PointIntegrationTest extends IntegrationTest{
+public class PointIntegrationTest extends IntegrationTest {
 
 
     private final Member member1 = new Member(1L, "a@a.com", "1234");
 
     @Test
     @DisplayName("사용자의 장바구니의 상품을 주문하고 포인트를 조회한다.")
-    void orderCartItemAndCheckPoint(){
+    void orderCartItemAndCheckPoint() {
         // given
-        long productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        long productId2 = createProduct(new ProductRequest("피자", 20_000, "http://example.com/pizza.jpg"));
+        long productId = addProductAndGetId(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
+        long productId2 = addProductAndGetId(new ProductRequest("피자", 20_000, "http://example.com/pizza.jpg"));
 
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        CartItemRequest cartItemRequest2 = new CartItemRequest(productId2);
+        long cartId = addCartItemAndGetId(member1, new CartItemRequest(productId));
+        long cartId2 = addCartItemAndGetId(member1, new CartItemRequest(productId2));
 
-        long cartId = requestAddCartItem(member1, cartItemRequest);
-        long cartId2 = requestAddCartItem(member1, cartItemRequest2);
-
+        // when
         createOrder(List.of(cartId, cartId2), member1, 1000);
-
-        //
         ExtractableResponse<Response> response = showUserPoint(member1);
+
+        // then
         assertThat(response.body().jsonPath().getInt("points")).isEqualTo(9725);
     }
 
     @Test
     @DisplayName("사용자의 장바구니의 상품을 주문하고 주문에 대한 포인트를 조회한다.")
-    void orderCartItemAndCheckOrderPoint(){
+    void orderCartItemAndCheckOrderPoint() {
         // given
-        long productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        long productId2 = createProduct(new ProductRequest("피자", 20_000, "http://example.com/pizza.jpg"));
+        long productId = addProductAndGetId(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
+        long productId2 = addProductAndGetId(new ProductRequest("피자", 20_000, "http://example.com/pizza.jpg"));
 
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         CartItemRequest cartItemRequest2 = new CartItemRequest(productId2);
 
-        long cartId = requestAddCartItem(member1, cartItemRequest);
-        long cartId2 = requestAddCartItem(member1, cartItemRequest2);
+        long cartId = addCartItemAndGetId(member1, cartItemRequest);
+        long cartId2 = addCartItemAndGetId(member1, cartItemRequest2);
 
-        Long orderId = createOrder(List.of(cartId, cartId2), member1, 1000);
 
-        //
-
+        //when
+        long orderId = addOrderAndGetId(List.of(cartId, cartId2), member1, 1000);
         ExtractableResponse<Response> response = showOrderPoint(orderId, member1);
+
+        // then
         assertThat(response.body().jsonPath().getInt("points_saved")).isEqualTo(725);
     }
 
-    private ExtractableResponse<Response> showOrderPoint(long orderId, Member member) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
-                .when()
-                .get("/orders/" + orderId + "/points")
-                .then()
-                .log().all()
-                .extract();
+    @Test
+    @DisplayName("상품 구매 가격보다 더 많은 포인트를 사용할 때 오류가 난다.")
+    void shouldThrowExceptionWhenUsedPointIsBiggerThanTotalPrice() {
+        //given
+        long productId = addProductAndGetId(new ProductRequest("치킨", 8000, "http://example.com/chicken.jpg"));
+
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        long cartId = addCartItemAndGetId(member1, cartItemRequest);
+
+        // when
+        ExtractableResponse<Response> response = createOrder(List.of(cartId), member1, 9000);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when()
-                .post("/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
+    @Test
+    @DisplayName("보유한 포인트보다 많은 포인트를 사용할 때 오류가 난다")
+    void shouldThrowExceptionWhenUsedPointIsBiggerThanHavingPoint() {
+        //given
+        long productId = addProductAndGetId(new ProductRequest("치킨", 12000, "http://example.com/chicken.jpg"));
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
 
-        return getIdFromCreatedResponse(response);
+        long cartId = addCartItemAndGetId(member1, cartItemRequest);
+
+        // when
+        ExtractableResponse<Response> response = createOrder(List.of(cartId), member1, 12000);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
-        return Long.parseLong(response.header("Location").split("/")[2]);
+    @Test
+    @DisplayName("포인트를 마이너스로 사용하려 하면 오류가 난다.")
+    void shouldThrowExceptionWhenUsedMinusPoint() {
+        //given
+        long productId = addProductAndGetId(new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg"));
+
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        long cartId = addCartItemAndGetId(member1, cartItemRequest);
+
+        // when
+        ExtractableResponse<Response> response = createOrder(List.of(cartId), member1, -100);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    private Long requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
-        ExtractableResponse<Response> response = given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
-                .body(cartItemRequest)
-                .when()
-                .post("/cart-items")
-                .then()
-                .log().all()
-                .extract();
-
-        return getIdFromCreatedResponse(response);
-    }
-
-    private Long createOrder(List<Long> cartItemIds, Member member, int usedPoint) {
-        OrderRequest orderRequest = new OrderRequest(cartItemIds, usedPoint);
-
-        ExtractableResponse<Response> response = given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
-                .body(orderRequest)
-                .when()
-                .post("/orders")
-                .then()
-                .log().all()
-                .extract();
-
-        return getIdFromCreatedResponse(response);
-    }
-
-    private ExtractableResponse<Response> showUserPoint(Member member) {
-
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
-                .when()
-                .get("/points")
-                .then()
-                .log().all()
-                .extract();
-    }
 }
