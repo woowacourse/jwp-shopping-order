@@ -55,7 +55,7 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, product.stock, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "LEFT OUTER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE member.id = ? and product.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{memberId, productId}, (rs, rowNum) -> {
             Long findMemberId = rs.getLong("member_id");
@@ -83,7 +83,7 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, product.stock, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "LEFT OUTER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");

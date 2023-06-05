@@ -97,15 +97,13 @@ public class OrderService {
     }
 
     private List<CartItem> findCartItems(Member member, List<Long> cartIds) {
-        List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
-        if (!findCartIds.containsAll(cartIds)) {
-            throw new CartException(ErrorCode.CART_ITEM_NOT_FOUND);
-        }
-
         List<CartItem> cartItems = new ArrayList<>();
         for (Long cartId : cartIds) {
             CartItem cartItem = cartItemDao.findCartItemById(cartId)
-                    .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
+                    .orElseThrow(() -> new CartException(ErrorCode.CART_ITEM_NOT_FOUND));
+            if (cartItem.haveNoProduct()) {
+                throw new CartException(ErrorCode.PRODUCT_NOT_FOUND);
+            }
             cartItem.checkOwner(member);
             cartItem.checkQuantity();
             cartItems.add(cartItem);

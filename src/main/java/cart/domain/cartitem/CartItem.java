@@ -49,6 +49,10 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public boolean haveNoProduct() {
+        return product.getId() <= 0;
+    }
+
     public Long getId() {
         return id;
     }

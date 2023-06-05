@@ -163,7 +163,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 장바구니_아이템_수량_변경(멤버_하디, cartItemId, updateQuantity);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 장바구니_아이템_삭제(멤버_하디, cartItemId);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private ExtractableResponse<Response> 장바구니에_아이템_추가(Member member, CartItemRequest cartItemRequest) {

@@ -48,14 +48,12 @@ public class CartItemService {
 
     @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
-        if (!findCartIds.contains(id)) {
-            throw new CartException(ErrorCode.CART_ITEM_NOT_FOUND);
-        }
         CartItem cartItem = cartItemDao.findCartItemById(id)
-                .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CartException(ErrorCode.CART_ITEM_NOT_FOUND));
         cartItem.checkOwner(member);
-
+        if (cartItem.haveNoProduct()) {
+            throw new CartException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
             return;
@@ -66,12 +64,11 @@ public class CartItemService {
 
     @Transactional
     public void remove(Member member, Long id) {
-        List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
-        if (!findCartIds.contains(id)) {
-            throw new CartException(ErrorCode.CART_ITEM_NOT_FOUND);
-        }
         CartItem cartItem = cartItemDao.findCartItemById(id)
-                .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CartException(ErrorCode.CART_ITEM_NOT_FOUND));
+        if (cartItem.haveNoProduct()) {
+            throw new CartException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
         cartItem.checkOwner(member);
         cartItemDao.deleteById(id);
     }

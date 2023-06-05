@@ -132,7 +132,7 @@ public class OrderServiceTest {
 
     @Transactional
     @Test
-    void 주문요청에_포함된_장바구니_아이디가_주문한_멤버의_소유가_아니면_없는_장바구니라_처리해_예외를_던진다() {
+    void 주문요청에_포함된_장바구니_아이디가_주문한_멤버의_소유가_아니면_예외를_던진다() {
         // given
         Long totalPrice = 하디_피자_장바구니_아이템.getQuantity() * 하디_피자_장바구니_아이템.getProduct().getPrice() + 하디_샐러드_장바구니_아이템.getQuantity() * 하디_샐러드_장바구니_아이템.getProduct().getPrice();
         OrderRequest orderRequest = new OrderRequest(List.of(하디_피자_장바구니_아이템.getId(), 하디_샐러드_장바구니_아이템.getId()), 1000L, totalPrice);
@@ -142,7 +142,7 @@ public class OrderServiceTest {
                 .isInstanceOf(CartException.class)
                 .satisfies(exception -> {
                     CartException cartException = (CartException) exception;
-                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.CART_ITEM_NOT_FOUND);
+                    assertThat(cartException.getErrorCode()).isEqualTo(ErrorCode.ILLEGAL_MEMBER);
                 });
     }
 

@@ -82,7 +82,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 다른_사람의_장바구니_아이템을_주문하려하면_조회하지못해_상태코드가_BADREQUEST_이다() {
+    void 다른_사람의_장바구니_아이템을_주문하려하면_상태코드가_FORBIDDEN_이다() {
         // given
         OrderRequest orderRequest = new OrderRequest(List.of(하디_장바구니_피자, 하디_장바구니_치킨), 0L, 상품_피자.getPrice() + 상품_치킨.getPrice());
 
@@ -90,7 +90,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 주문(멤버_현구막, orderRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
