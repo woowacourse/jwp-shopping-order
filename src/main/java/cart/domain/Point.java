@@ -29,14 +29,12 @@ public class Point {
         }
     }
 
-    public void validateIsSameOrBiggerThan(Point other){
-        if(this.point < other.point){
-            throw new IllegalArgumentException("보유한 포인트보다 많은 포인트는 사용할 수 없습니다.");
-        }
+    public boolean isSmallerThan(Point other){
+        return this.point < other.point;
     }
 
-    public Point subtract(Point usePoint) {
-        return new Point(this.point - usePoint.point);
+    public boolean isBiggerThan(Price price) {
+        return this.point > price.price();
     }
 
     public Point getNewPoint(Point savePoint, Point usePoint) {

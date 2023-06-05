@@ -2,7 +2,6 @@ package cart.application;
 
 import cart.Repository.OrderRepository;
 import cart.domain.Cart;
-import cart.domain.CartItem;
 import cart.domain.Member.Member;
 import cart.domain.Order.Order;
 import cart.domain.Point;
@@ -10,7 +9,9 @@ import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,21 +32,19 @@ public class OrderService {
     }
 
     @Transactional
-    public Long add(Member member, OrderRequest orderRequest) {
+    public Long add(Member member, @RequestBody @Valid OrderRequest orderRequest) {
         Cart cart = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
         cart.checkOwner(member);
 
         Order order = new Order(toOrderItemsFrom(cart));
         Point usePoint = new Point(orderRequest.getUsePoint());
 
-        pointService.checkUsePointLessThanUserPoint(member, usePoint, order.getTotalPrice());
-
+        pointService.findPointByMember(member, usePoint, order.getTotalPrice());
         Long orderId = orderRepository.save(member, order);
-        Order savedOrder = orderRepository.findById(orderId);
 
-        pointService.savePoint(usePoint, savedOrder);
+        pointService.savePoint(usePoint, order.getTotalPrice(), orderId, member.getId());
         cartItemService.removeByIds(cart.getCartIds());
-        return savedOrder.getId();
+        return orderId;
     }
 
     public List<OrderResponse> findByMember(Member member) {

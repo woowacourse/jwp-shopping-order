@@ -7,19 +7,24 @@ import cart.entity.PointHistoryEntity;
 
 public class PointMapper {
 
-    public static PointEntity toPointEntity(Order order, Point updatePoint){
+    public static PointEntity toPointEntity(Long memberId, Point updatePoint){
         return new PointEntity(
-                order.getMember().getId(),
+                memberId,
                 updatePoint.point()
         );
     }
 
-    public static PointHistoryEntity toPointHistoryEntity(Order order, Point usePoint, Point savePoint){
+    public static PointHistoryEntity toPointHistoryEntity(
+            Point usePoint,
+            Point savePoint,
+            Long memberId,
+            Long orderId)
+    {
         return new PointHistoryEntity(
-                order.getMember().getId(),
+                memberId,
                 usePoint.point(),
                 savePoint.point(),
-                order.getId()
+                orderId
         );
     }
 

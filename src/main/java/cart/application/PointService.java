@@ -2,7 +2,6 @@ package cart.application;
 
 import cart.Repository.PointRepository;
 import cart.domain.Member.Member;
-import cart.domain.Order.Order;
 import cart.domain.Point;
 import cart.domain.Product.Price;
 import cart.dto.OrderPointResponse;
@@ -22,28 +21,31 @@ public class PointService {
         return UserPointResponse.of(point);
     }
 
-    public void checkUsePointLessThanUserPoint(Member member, Point usePoint, Price totalPrice) {
+    public void findPointByMember(Member member, Point usePoint, Price totalPrice) {
         Point memberPoint = pointRepository.getPointByMemberId(member.getId());
-        memberPoint.validateIsSameOrBiggerThan(usePoint);
+        validateIsUsable(memberPoint, usePoint, totalPrice);
+    }
 
-        if (usePoint.point() > totalPrice.price()) {
+    private void validateIsUsable(Point memberPoint, Point usePoint, Price totalPrice) {
+        if(memberPoint.isSmallerThan(usePoint)){
+            throw new IllegalArgumentException("보유한 포인트보다 많은 포인트는 사용할 수 없습니다.");
+        }
+
+        if(memberPoint.isBiggerThan(totalPrice)){
             throw new IllegalArgumentException("주문금액보다 높은 포인트는 사용할 수 없습니다.");
         }
     }
 
 
-    public void savePoint(Point usePoint, Order order) {
+    public void savePoint(Point usePoint, Price totalPrice, Long orderId, Long memberId) {
+        Price realPrice = totalPrice.subtract(usePoint);
 
-        Price realPrice = order.getTotalPrice()
-                .subtract(usePoint);
+        Point memberPoint = pointRepository.getPointByMemberId(memberId);
         Point savePoint = Point.makePointFrom(realPrice);
-
-        Point memberPoint = pointRepository.getPointByMemberId(order.getMember().getId());
-
         Point newPoint = memberPoint.getNewPoint(savePoint, usePoint);
 
-
-        pointRepository.update(usePoint, savePoint, order, newPoint);
+        pointRepository.updatePoint(memberId, newPoint);
+        pointRepository.savePointHistory(usePoint, savePoint, orderId, memberId);
     }
 
     public OrderPointResponse findSavedPointByOrderId(Long orderId) {

@@ -30,16 +30,18 @@ public class PointRepository {
         return new Point(pointEntity.getPoint());
     }
 
-    public void update(Point usePoint, Point savePoint, Order order, Point newPoint) {
-        Point updatePoint = savePoint.subtract(usePoint);
+    public void savePointHistory(Point usePoint, Point savePoint, Long orderId, Long memberId) {
 
-        pointDao.update(toPointEntity(order, newPoint));
-        pointHistoryDao.save(toPointHistoryEntity(order, usePoint, savePoint));
+        pointHistoryDao.save(toPointHistoryEntity(usePoint, savePoint, memberId, orderId));
     }
 
     public Point findSavedPointByOrderId(Long orderId) {
         PointHistoryEntity pointHistoryEntity = pointHistoryDao.findByOrderId(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문내역에 해당하는 포인트가 없습니다."));
         return new Point(pointHistoryEntity.getPointSaved());
+    }
+
+    public void updatePoint(Long memberId, Point newPoint) {
+        pointDao.update(toPointEntity(memberId, newPoint));
     }
 }
