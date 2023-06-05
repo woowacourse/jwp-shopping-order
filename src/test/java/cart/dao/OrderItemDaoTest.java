@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.OrderItemEntity;
 import cart.entity.OrderItemWithProductEntity;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -80,8 +81,8 @@ class OrderItemDaoTest {
     }
 
     @Nested
-    @DisplayName("order id 로 product join 된 order item 목록 조회")
-    class FindProductDetailByOrderId {
+    @DisplayName("order id 로 product 목록 조회")
+    class FindProductByOrderId {
 
         @Test
         @DisplayName("성공")
@@ -90,14 +91,14 @@ class OrderItemDaoTest {
             final long orderId = 1L;
 
             // when
-            final List<OrderItemWithProductEntity> entities = orderItemDao.findProductDetailByOrderId(orderId);
+            final List<ProductEntity> entities = orderItemDao.findProductByOrderId(orderId);
 
             // then
             assert entities != null;
             assertAll(
                     () -> assertThat(entities).hasSize(2),
-                    () -> assertThat(entities.get(0).getOrderId()).isEqualTo(orderId),
-                    () -> assertThat(entities.get(0).getProductId()).isEqualTo(1L)
+                    () -> assertThat(entities.get(0).getId()).isEqualTo(1L),
+                    () -> assertThat(entities.get(1).getId()).isEqualTo(3L)
             );
         }
     }

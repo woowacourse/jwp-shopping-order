@@ -2,8 +2,10 @@ package cart.dao;
 
 import cart.entity.OrderItemEntity;
 import cart.entity.OrderItemWithProductEntity;
+import cart.entity.ProductEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -18,7 +20,13 @@ import static cart.entity.RowMapperUtil.orderItemWithProductEntityRowMapper;
 @Repository
 public class OrderItemDao {
     
-    private static final int AFFECTED_ROW_COUNT_WHEN_INSERT = 1; 
+    private static final int AFFECTED_ROW_COUNT_WHEN_INSERT = 1;
+    private static final RowMapper<ProductEntity> productEntityRowMapper = (rs, rn) -> new ProductEntity(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getInt("price"),
+            rs.getString("image_url")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
@@ -49,6 +57,14 @@ public class OrderItemDao {
             return;
         }
         throw new RuntimeException("주문 상품 목록 등록 시 다른 데이터에도 영향이 갔습니다.");
+    }
+
+    public List<ProductEntity> findProductByOrderId(final long orderId) {
+        final String sql = "SELECT product.id, product.name, product.price, product.image_url " +
+                "FROM order_item " +
+                "INNER JOIN product ON product.id = order_item.product_id " +
+                "WHERE order_item.order_id = ?";
+        return jdbcTemplate.query(sql, productEntityRowMapper, orderId);
     }
 
     public List<OrderItemWithProductEntity> findProductDetailByOrderId(final long orderId) {
