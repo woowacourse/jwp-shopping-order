@@ -11,7 +11,6 @@ import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.dto.SpecificOrderResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

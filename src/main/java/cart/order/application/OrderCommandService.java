@@ -97,8 +97,8 @@ public class OrderCommandService {
 
     validateOrderOwner(order, member);
 
-    orderDao.deleteByOrderId(orderId);
     orderItemCommandService.deleteBatch(order);
+    orderDao.deleteByOrderId(orderId);
   }
 
   private void validateOrderOwner(final Order order, final Member member) {

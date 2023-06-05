@@ -1,6 +1,7 @@
 package cart.order.dao;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -118,10 +119,20 @@ class OrderDaoTest {
     final long orderId = 1L;
 
     //when
-    orderDao.deleteByOrderId(1L);
+    orderDao.deleteByOrderId(orderId);
 
     //then
     assertThatThrownBy(() -> orderDao.findByOrderId(orderId))
         .isInstanceOf(NotFoundOrderException.class);
+  }
+
+  @Test
+  @DisplayName("deleteByOrderId() : order Id를 통해 주문을 삭제할 때, 해당 주문이 존재하지 않으면 아무것도 삭제하지 않는다.")
+  void test_deleteByOrderId_notExistedOrder() throws Exception {
+    //given
+    final long orderId = 10L;
+
+    //when & then
+    assertDoesNotThrow(() -> orderDao.deleteByOrderId(orderId));
   }
 }

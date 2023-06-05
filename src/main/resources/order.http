@@ -29,6 +29,11 @@ Authorization: Basic YUBhLmNvbToxMjM0
 GET http://localhost:8080/orders/3
 Authorization: Basic YUBhLmNvbToxMjM0
 
+### 주문 삭제
+DELETE http://localhost:8080/orders/4
+Authorization: Basic YUBhLmNvbToxMjM0
+
 ### 주문 상태 변경
 PATCH http://localhost:8080/orders/4
 Authorization: Basic YUBhLmNvbToxMjM0
+
