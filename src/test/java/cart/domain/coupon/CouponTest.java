@@ -22,7 +22,7 @@ class CouponTest {
     @CsvSource(value = {"15,0", "0,14000"})
     @DisplayName("쿠폰 생성 시 정량, 정액 할인 중 하나만 0이면 정상수행")
     void validateTest(int percent, int amount) {
-        assertDoesNotThrow(() -> new Coupon("쿠폰", percent, amount, 4000));
+        assertDoesNotThrow(() -> new Coupon("쿠폰", percent, amount, 20000));
     }
 
 }
