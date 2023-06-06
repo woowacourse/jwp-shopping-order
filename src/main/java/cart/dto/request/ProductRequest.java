@@ -8,8 +8,10 @@ import org.hibernate.validator.constraints.URL;
 public class ProductRequest {
     @NotEmpty
     private String name;
+    @NotEmpty
     @PositiveOrZero
     private int price;
+    @NotEmpty
     @URL
     private String imageUrl;
 

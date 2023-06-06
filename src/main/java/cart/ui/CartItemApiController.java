@@ -3,6 +3,8 @@ package cart.ui;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,7 +73,7 @@ public class CartItemApiController {
         )
     })
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemAddRequest cartItemAddRequest) {
+    public ResponseEntity<Void> addCartItems(Member member, @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
         Long cartItemId = cartItemService.add(member, cartItemAddRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
@@ -101,7 +103,7 @@ public class CartItemApiController {
     })
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
-        @RequestBody CartItemQuantityUpdateRequest request) {
+        @Valid @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok().build();

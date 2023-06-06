@@ -2,8 +2,14 @@ package cart.dto.request;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
 public class OrderRequest {
+    @NotEmpty
     private List<CartItemRequest> products;
+    @NotEmpty
+    @Positive
     private Long couponId;
 
     public OrderRequest() {

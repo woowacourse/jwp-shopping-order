@@ -24,8 +24,8 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public void logIn(HttpServletRequest httpServletRequest) {
-        String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    public void logIn(String authorization) {
+
         Map.Entry<String, String> emailAndPassword = BasicAuthorizationDecoder.decode(authorization);
 
         Member memberByEmail = memberDao.findByEmail(emailAndPassword.getKey());

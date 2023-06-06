@@ -2,6 +2,7 @@ package cart.ui;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +41,8 @@ public class AuthApiController {
     })
     @PostMapping("/login")
     public ResponseEntity<Void> addCartItems(HttpServletRequest httpServletRequest) {
-        memberService.logIn(httpServletRequest);
+        String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        memberService.logIn(authorization);
         return ResponseEntity.ok().build();
     }
 }

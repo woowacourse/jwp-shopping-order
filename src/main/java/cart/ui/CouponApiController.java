@@ -2,6 +2,8 @@ package cart.ui;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +62,7 @@ public class CouponApiController {
     })
     @PostMapping("/{couponId}")
     public ResponseEntity<Void> addMemberCoupon(Member member, @PathVariable Long couponId,
-        @RequestBody MemberCouponAddRequest memberCouponAddRequest) {
+        @Valid @RequestBody MemberCouponAddRequest memberCouponAddRequest) {
         Long memberCouponId = couponService.addMemberCoupon(member, couponId, memberCouponAddRequest);
         return ResponseEntity.created(URI.create("/coupons/member/" + memberCouponId)).build();
     }

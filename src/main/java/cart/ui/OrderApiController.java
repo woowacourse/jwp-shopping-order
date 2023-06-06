@@ -3,6 +3,8 @@ package cart.ui;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,7 +110,7 @@ public class OrderApiController {
         )
     })
     @PostMapping
-    public ResponseEntity<Void> addOrder(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Void> addOrder(Member member, @Valid @RequestBody OrderRequest orderRequest) {
         Long orderId = orderService.add(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
@@ -136,7 +138,7 @@ public class OrderApiController {
         )
     })
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> deleteOrder(Member member, @PathVariable Long orderId) {
+    public ResponseEntity<Void> deleteOrder(Member member, @Valid @PathVariable Long orderId) {
         orderService.remove(member, orderId);
         return ResponseEntity.noContent().build();
     }
