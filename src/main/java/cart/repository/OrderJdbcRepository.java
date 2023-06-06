@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
+import cart.dao.dto.OrderProductDto;
 import cart.domain.discount_strategy.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -13,19 +14,20 @@ import cart.domain.Quantity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.OrderItemWithProductEntity;
+import cart.entity.ProductEntity;
 import cart.exception.OrderItemNoContentException;
 import cart.repository.dto.OrderAndMainProductDto;
 import cart.repository.dto.OrderInfoDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class OrderJdbcRepository implements OrderRepository {
 
     private static final int SIZE_OF_NO_CONTENT = 0;
-    private static final int MAIN_ENTITY_INDEX = 0;
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
@@ -43,28 +45,36 @@ public class OrderJdbcRepository implements OrderRepository {
     }
 
     @Override
-    public List<OrderAndMainProductDto> findByMember(final Member member) {
+    public List<OrderInfoDto> findByMember(final Member member) {
         final List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
         return orderEntities.stream()
-                .map(this::makeOrderAndMainProductDto)
+                .map(OrderInfoDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private OrderAndMainProductDto makeOrderAndMainProductDto(final OrderEntity orderEntity) {
-        final List<OrderItemWithProductEntity> orderItemWithProductEntities = orderItemDao.findProductDetailByOrderId(orderEntity.getId());
-        validateOrderItemsSize(orderItemWithProductEntities);
-        final OrderItemWithProductEntity mainOrderItemEntity = orderItemWithProductEntities.remove(MAIN_ENTITY_INDEX);
-        final Product mainProduct = new Product(mainOrderItemEntity.getProductId(), mainOrderItemEntity.getProductName(),
-                new Price(mainOrderItemEntity.getProductPrice()), mainOrderItemEntity.getProductImageUrl());
-        return new OrderAndMainProductDto(
-                OrderInfoDto.from(orderEntity),
-                mainProduct,
-                orderItemWithProductEntities.size()
-        );
+    @Override
+    public Map<Long, List<Product>> findProductsByIds(final List<Long> ids) {
+        final List<OrderProductDto> orderProducts = orderItemDao.findProductByOrderIds(ids);
+        return orderProducts.stream()
+                .collect(Collectors.groupingBy(OrderProductDto::getOrderId))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> toProducts(entry.getValue())
+                ));
     }
 
-    private void validateOrderItemsSize(final List<OrderItemWithProductEntity> entities) {
-        if (entities.size() == SIZE_OF_NO_CONTENT) {
+    private List<Product> toProducts(final List<OrderProductDto> orderProductDtos) {
+        validateOrderProductsSize(orderProductDtos);
+        return orderProductDtos.stream()
+                .map(orderProductDto -> new Product(
+                        orderProductDto.getProductId(), orderProductDto.getProductName(),
+                        new Price(orderProductDto.getPrice()), orderProductDto.getImageUrl()))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void validateOrderProductsSize(final List<OrderProductDto> orderProducts) {
+        if (orderProducts.size() == SIZE_OF_NO_CONTENT) {
             throw new OrderItemNoContentException();
         }
     }
