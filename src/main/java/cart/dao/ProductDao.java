@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,25 +21,32 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAllProducts() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+
+            return Product.of(productId, name, price, imageUrl);
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Product findProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        List<Product> products = jdbcTemplate.query(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+
+            return Product.of(productId, name, price, imageUrl);
+        }, productId);
+
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException(productId);
+        }
+        return products.get(0);
     }
 
     public Long createProduct(Product product) {
@@ -62,11 +70,24 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        final int affected = jdbcTemplate.update(
+                sql,
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                productId
+        );
+
+        if (affected == 0) {
+            throw new ProductNotFoundException(productId);
+        }
     }
 
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        final int affected = jdbcTemplate.update(sql, productId);
+        if (affected == 0) {
+            throw new ProductNotFoundException(productId);
+        }
     }
 }

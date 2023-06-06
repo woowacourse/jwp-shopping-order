@@ -1,22 +1,33 @@
 package cart.domain;
 
-public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+import java.util.Objects;
 
-    public Product(String name, int price, String imageUrl) {
+public class Product {
+
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+
+    public static Product of(Long id, String name, int price, String imageUrl) {
+        return new Product(id, name, price, imageUrl);
+    }
+
+    public static Product of(String name, int price, String imageUrl) {
+        return new Product(null, name, price, imageUrl);
+    }
+
+    private Product(Long id, String name, int price, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public boolean hasSameValues(Product other) {
+        return name.equals(other.name)
+                && price == other.price
+                && imageUrl.equals(other.imageUrl);
     }
 
     public Long getId() {
@@ -33,5 +44,21 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product other = (Product) o;
+        if (id == null || other.id == null) {
+            return false;
+        }
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

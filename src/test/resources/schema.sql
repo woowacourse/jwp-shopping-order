@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS product
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS member
 (
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS member
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     points   INT          NOT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS cart_item
 (
