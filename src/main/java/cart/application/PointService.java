@@ -23,7 +23,7 @@ public class PointService {
     }
 
     private void validatePoint(Member member, Point point) {
-        if (member.hasNotEnoughPoint(point)) {
+        if (member.hasNotEnoughPointToUse(point)) {
             throw new PointNotEnoughException("포인트가 부족합니다.");
         }
     }

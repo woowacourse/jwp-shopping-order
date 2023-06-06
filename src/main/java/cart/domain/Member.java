@@ -19,7 +19,7 @@ public class Member {
         return new Builder();
     }
 
-    public boolean hasNotEnoughPoint(Point point) {
+    public boolean hasNotEnoughPointToUse(Point point) {
         return this.point.getAmount() < point.getAmount();
     }
 
