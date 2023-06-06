@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -15,6 +16,21 @@ import java.util.*;
 
 @Repository
 public class CartItemDao {
+
+    private static final RowMapper<CartItem> cartItemRowMapper = (rs, rowNum) -> {
+        Long memberId = rs.getLong("member_id");
+        String email = rs.getString("email");
+        Member member = new Member(memberId, email, null);
+        Long productId = rs.getLong("product_id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        Product product = new Product(productId, name, price, imageUrl);
+        Long cartItemId = rs.getLong("id");
+        int quantity = rs.getInt("quantity");
+        return new CartItem(cartItemId, quantity, product, member);
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
@@ -27,18 +43,7 @@ public class CartItemDao {
                 "INNER JOIN members AS m ON c.member_id = m.id " +
                 "INNER JOIN products AS p ON c.product_id = p.id " +
                 "WHERE c.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("product_id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("id");
-            int quantity = rs.getInt("quantity");
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        return jdbcTemplate.query(sql, new Object[]{memberId}, cartItemRowMapper);
     }
 
     public Long save(CartItem cartItem) {
@@ -66,19 +71,7 @@ public class CartItemDao {
                 "INNER JOIN members AS m ON c.member_id = m.id " +
                 "INNER JOIN products AS p ON c.product_id = p.id " +
                 "WHERE c.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("product_id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("id");
-            int quantity = rs.getInt("quantity");
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, cartItemRowMapper);
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
@@ -94,19 +87,7 @@ public class CartItemDao {
                 "INNER JOIN members AS m ON c.member_id = m.id " +
                 "INNER JOIN products AS p ON c.product_id = p.id " +
                 "WHERE c.id IN (:ids)";
-        return new NamedParameterJdbcTemplate(jdbcTemplate).query(sql, params, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            Member member = new Member(memberId, email, null);
-            Long productId = rs.getLong("product_id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Product product = new Product(productId, name, price, imageUrl);
-            Long cartItemId = rs.getLong("id");
-            int quantity = rs.getInt("quantity");
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        return new NamedParameterJdbcTemplate(jdbcTemplate).query(sql, params, cartItemRowMapper);
     }
 
     public void deleteById(Long id) {
