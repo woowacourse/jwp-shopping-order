@@ -59,7 +59,7 @@ public class OrderRepository {
     private CartItems orderedItemsToCartItems(Member member, List<OrderedItemEntity> orderedItems) {
         final List<Long> productIds = collectIds(orderedItems);
         List<Product> products = productDao.findAllByIds(productIds);
-        final Map<Long, Product> idToProduct = createTable(products);
+        final Map<Long, Product> idToProduct = createProductMappingTable(products);
 
         final List<CartItem> cartItems = orderedItems.stream()
                 .map(orderedItemEntity -> new CartItem(
@@ -71,7 +71,7 @@ public class OrderRepository {
         return CartItems.of(cartItems, member);
     }
 
-    private Map<Long, Product> createTable(List<Product> products) {
+    private Map<Long, Product> createProductMappingTable(List<Product> products) {
         return products.stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
     }
