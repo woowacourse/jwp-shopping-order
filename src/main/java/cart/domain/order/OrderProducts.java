@@ -40,7 +40,7 @@ public class OrderProducts {
         return orderProducts.stream()
                 .map(OrderProduct::getTotalPrice)
                 .reduce(Integer::sum)
-                .orElseGet(() -> DEFAULT_PAYMENT);
+                .orElse(DEFAULT_PAYMENT);
     }
 
     public List<OrderProduct> getOrderProducts() {

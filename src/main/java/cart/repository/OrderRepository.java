@@ -5,6 +5,8 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.order.OrderProducts;
 import cart.domain.payment.Payment;
+import cart.exception.OrderException;
+import cart.exception.OrderProductException;
 import cart.repository.dao.OrderDao;
 import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderProductEntity;
@@ -61,15 +63,19 @@ public class OrderRepository {
 
     // 사용자별 주문 내역
     public List<Order> findOrderProductsByMemberId(Member member) {
-        List<Long> orderIds = orderDao.getOrderIdsByMemberId(member.getId());
+        List<Long> orderIds = orderDao.getOrderIdsByMemberId(member.getId())
+                .orElseThrow(OrderProductException.NotFound::new);
         return orderIds.stream()
                 .map(orderId -> findOrderById(member, orderId))
                 .collect(toList());
     }
 
     public Order findOrderById(Member member, long orderId) {
-        OrderEntity orderEntity = orderDao.getOrderById(orderId);
-        OrderProducts orderProducts = toOrderProducts(orderId, orderDao.getOrderItemsByOrderId(orderId));
+        OrderEntity orderEntity = orderDao.getOrderById(orderId)
+                .orElseThrow(OrderException.NotFound::new);
+        List<OrderProductEntity> orderProductEntities = orderDao.getOrderProductsByOrderId(orderId)
+                .orElseThrow(OrderProductException.NotFound::new);
+        OrderProducts orderProducts = toOrderProducts(orderId, orderProductEntities);
         Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
         return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }

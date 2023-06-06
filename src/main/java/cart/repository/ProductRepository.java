@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.domain.product.Product;
+import cart.exception.CartItemException;
 import cart.repository.dao.ProductDao;
 import cart.repository.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,8 @@ public class ProductRepository {
     }
 
     public Product getProductById(long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId);
+        ProductEntity productEntity = productDao.getProductById(productId)
+                .orElseThrow(CartItemException.NotFound::new);
         return new Product(
                 productEntity.getId(),
                 productEntity.getName(),

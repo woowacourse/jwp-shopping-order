@@ -3,6 +3,7 @@ package cart.repository;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.CartItemException;
 import cart.repository.dao.CartItemDao;
 import cart.repository.entity.CartItemEntity;
 import org.springframework.stereotype.Repository;
@@ -34,7 +35,8 @@ public class CartItemRepository {
     }
 
     public CartItem findCartItemById(long cartId) {
-        CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
+        CartItemEntity cartItemEntity = cartItemDao.findById(cartId)
+                .orElseThrow(CartItemException.CartItemNotExists::new);
         Product product = productRepository.getProductById(cartItemEntity.getProductId());
         Member member = memberRepository.getMemberById(cartItemEntity.getMemberId());
         return new CartItem(cartId, cartItemEntity.getQuantity(), product, member);

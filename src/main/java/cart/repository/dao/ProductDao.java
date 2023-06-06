@@ -1,6 +1,7 @@
 package cart.repository.dao;
 
 import cart.repository.entity.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -36,9 +38,13 @@ public class ProductDao {
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    public ProductEntity getProductById(long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId);
+    public Optional<ProductEntity> getProductById(long productId) {
+        try {
+            String sql = "SELECT * FROM product WHERE id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public long createProduct(ProductEntity productEntity) {
