@@ -37,6 +37,14 @@ public class OrderDetailResponse {
         OrderDto order = orderDetailDto.getOrder();
         CouponDto coupon = orderDetailDto.getCoupon();
 
+        if (coupon == null) {
+            return getOrderDetailResponseWithoutCoupon(order);
+        }
+
+        return getOrderDetailResponseWithCoupon(order, coupon);
+    }
+
+    private static OrderDetailResponse getOrderDetailResponseWithCoupon(OrderDto order, CouponDto coupon) {
         Long totalPrice = order.getOrderPrice().getTotalPrice();
         int discountRate = coupon.getDiscountRate();
         Long discountedTotalPrice = totalPrice * (100 - discountRate) / 100;
@@ -49,6 +57,23 @@ public class OrderDetailResponse {
                 OrderProductResponse.of(order.getOrderItems()),
                 totalPrice,
                 discountedTotalPrice,
+                discountPrice,
+                deliveryPrice,
+                order.getOrderedAt()
+        );
+    }
+
+    private static OrderDetailResponse getOrderDetailResponseWithoutCoupon(OrderDto order) {
+        Long totalPrice = order.getOrderPrice().getTotalPrice();
+        Long discountPrice = 0L;
+        Integer deliveryPrice = order.getOrderPrice().getDeliveryPrice();
+
+        return new OrderDetailResponse(
+                order.getId(),
+                null,
+                OrderProductResponse.of(order.getOrderItems()),
+                totalPrice,
+                totalPrice,
                 discountPrice,
                 deliveryPrice,
                 order.getOrderedAt()
