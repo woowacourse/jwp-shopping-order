@@ -14,6 +14,7 @@ import cart.domain.price.PriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException;
+import cart.exception.CartItemException.UnExistedCartItem;
 import cart.repository.OrderRepository;
 
 @Service
@@ -44,7 +45,7 @@ public class OrderService {
 
     private void validateExistentCartItems(List<Long> cartItemIds, List<CartItem> cartItems) {
         if (cartItemIds.size() != cartItems.size()) {
-            throw new CartItemException("존재하지 않는 cartItemId가 포함되어 있습니다.");
+            throw new UnExistedCartItem("존재하지 않는 cartItemId가 포함되어 있습니다.");
         }
     }
 

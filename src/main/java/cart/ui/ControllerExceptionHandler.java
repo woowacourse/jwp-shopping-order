@@ -26,8 +26,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @ExceptionHandler(CartItemException.class)
-    public ResponseEntity<ErrorResponse> handleCartItemException(CartItemException exception) {
+    @ExceptionHandler(CartItemException.UnExistedCartItem.class)
+    public ResponseEntity<ErrorResponse> handleCartItemException(CartItemException.UnExistedCartItem exception) {
         final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
