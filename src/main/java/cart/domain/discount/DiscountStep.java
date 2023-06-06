@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.discount;
+
+import cart.domain.Price;
 
 import java.util.Arrays;
 

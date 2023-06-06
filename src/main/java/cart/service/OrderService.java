@@ -11,7 +11,7 @@ import cart.domain.OrderItem;
 import cart.domain.OrderItems;
 import cart.domain.OrderProducts;
 import cart.domain.Product;
-import cart.domain.discount_strategy.DiscountCalculator;
+import cart.domain.discount.strategy.DiscountCalculator;
 import cart.exception.NotOwnerException;
 import cart.exception.PaymentAmountNotEqualException;
 import cart.repository.CartItemRepository;

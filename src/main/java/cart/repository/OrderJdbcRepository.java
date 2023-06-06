@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.dto.OrderProductDto;
-import cart.domain.discount_strategy.DiscountPriceCalculator;
+import cart.domain.discount.strategy.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;

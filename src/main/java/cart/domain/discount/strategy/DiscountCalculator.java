@@ -1,4 +1,4 @@
-package cart.domain.discount_strategy;
+package cart.domain.discount.strategy;
 
 import cart.domain.Price;
 

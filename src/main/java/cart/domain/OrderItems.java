@@ -1,7 +1,6 @@
 package cart.domain;
 
-import cart.domain.discount_strategy.DiscountCalculator;
-import cart.domain.discount_strategy.DiscountPriceCalculator;
+import cart.domain.discount.strategy.DiscountCalculator;
 
 import java.util.List;
 

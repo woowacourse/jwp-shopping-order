@@ -1,6 +1,6 @@
-package cart.domain.discount_strategy;
+package cart.domain.discount.strategy;
 
-import cart.domain.DiscountStep;
+import cart.domain.discount.DiscountStep;
 import cart.domain.Price;
 import org.springframework.stereotype.Component;
 
