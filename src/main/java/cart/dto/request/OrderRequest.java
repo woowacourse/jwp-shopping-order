@@ -8,8 +8,8 @@ import java.util.List;
 
 public class OrderRequest {
 
-    @NotNull(message = "carItems 필드가 있어야 합니다.")
-    private List<CartItemDto> carItems;
+    @NotNull(message = "cartItems 필드가 있어야 합니다.")
+    private List<CartItemDto> cartItems;
 
     @NotNull(message = "deliveryFee 필드가 있어야 합니다.")
     @PositiveOrZero(message = "배달요금은 음수일 수 없습니다.")
