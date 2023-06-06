@@ -11,23 +11,27 @@ public class MemberCouponDto {
     private String name;
     private Integer discountRate;
     private LocalDateTime expiredAt;
+    private Boolean isUsed;
 
     private MemberCouponDto() {
     }
 
-    private MemberCouponDto(Long id, String name, Integer discountRate, LocalDateTime expiredAt) {
+    private MemberCouponDto(Long id, String name, Integer discountRate,
+                            LocalDateTime expiredAt, Boolean isUsed) {
         this.id = id;
         this.name = name;
         this.discountRate = discountRate;
         this.expiredAt = expiredAt;
+        this.isUsed = isUsed;
     }
 
     public static MemberCouponDto of(MemberCoupon memberCoupon) {
         return new MemberCouponDto(
-                memberCoupon.getId(),
+                memberCoupon.getCouponId(),
                 memberCoupon.getCouponName(),
                 memberCoupon.getDiscountRate(),
-                memberCoupon.getMemberCouponExpiredAt()
+                memberCoupon.getMemberCouponExpiredAt(),
+                memberCoupon.isUsed()
         );
     }
 
@@ -51,5 +55,9 @@ public class MemberCouponDto {
 
     public LocalDateTime getExpiredAt() {
         return expiredAt;
+    }
+
+    public Boolean getIsUsed() {
+        return isUsed;
     }
 }
