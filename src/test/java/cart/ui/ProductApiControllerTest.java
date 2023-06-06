@@ -14,7 +14,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 class ProductApiControllerTest extends ControllerTestConfig {
 
     Long 상품_계란_등록() {
-        return productDao.createProduct(new Product("계란", 1000, "https://계란_이미지_주소.png"));
+        return productRepository.createProduct(new Product("계란", 1000, "https://계란_이미지_주소.png"));
     }
 
     @Test

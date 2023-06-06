@@ -15,29 +15,23 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
+    // TODO : 생성자 수정
     public CartItem(Member member, Product product) {
         this(0L, MINIMUM_QUANTITY, product, member);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
-        validate(id, quantity, member, product);
+        validate(quantity, member, product);
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
     }
 
-    private void validate(Long id, int quantity, Member member, Product product) {
-        validateId(id);
+    private void validate(int quantity, Member member, Product product) {
         validateQuantity(quantity);
         validateMember(member);
         validateProduct(product);
-    }
-
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new CartItemException.InvalidIdByNull();
-        }
     }
 
     private void validateQuantity(int quantity) {
@@ -46,15 +40,15 @@ public class CartItem {
         }
     }
 
-    private void validateProduct(Product product) {
-        if (Objects.isNull(product)) {
-            throw new CartItemException.InvalidProduct();
-        }
-    }
-
     private void validateMember(Member member) {
         if (Objects.isNull(member)) {
             throw new CartItemException.InvalidMember();
+        }
+    }
+
+    private void validateProduct(Product product) {
+        if (Objects.isNull(product)) {
+            throw new CartItemException.InvalidProduct();
         }
     }
 
@@ -65,6 +59,7 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
+        validateQuantity(quantity);
         this.quantity = quantity;
     }
 
@@ -76,16 +71,16 @@ public class CartItem {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public int getQuantity() {
+        return quantity;
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public Member getMember() {
+        return member;
     }
 
     @Override

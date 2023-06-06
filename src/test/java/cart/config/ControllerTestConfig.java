@@ -1,5 +1,8 @@
 package cart.config;
 
+import cart.repository.CartItemRepository;
+import cart.repository.MemberRepository;
+import cart.repository.ProductRepository;
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.MemberDao;
 import cart.repository.dao.OrderDao;
@@ -42,6 +45,9 @@ public abstract class ControllerTestConfig {
     protected ProductDao productDao;
     protected CartItemDao cartItemDao;
     protected OrderDao orderDao;
+    protected CartItemRepository cartItemRepository;
+    protected ProductRepository productRepository;
+    protected MemberRepository memberRepository;
     protected RequestSpecification spec;
 
     @BeforeEach
@@ -49,6 +55,9 @@ public abstract class ControllerTestConfig {
         memberDao = new MemberDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         cartItemDao = new CartItemDao(jdbcTemplate);
+        productRepository = new ProductRepository(productDao);
+        memberRepository = new MemberRepository(memberDao);
+        cartItemRepository = new CartItemRepository(cartItemDao, productRepository, memberRepository);
         orderDao = new OrderDao(jdbcTemplate);
 
         RestAssured.port = port;

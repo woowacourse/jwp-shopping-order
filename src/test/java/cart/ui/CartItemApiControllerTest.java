@@ -28,7 +28,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
     Product 상품_계란_등록() {
         final Product product = new Product("계란", 1000, "https://계란_이미지_주소.png");
-        final Long 상품_계란_식별자값 = productDao.createProduct(product);
+        final Long 상품_계란_식별자값 = productRepository.createProduct(product);
         return new Product(상품_계란_식별자값, product.getName(), product.getPrice(), product.getImageUrl());
     }
 

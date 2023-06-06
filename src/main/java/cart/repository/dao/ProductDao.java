@@ -1,7 +1,8 @@
 package cart.repository.dao;
 
-import cart.domain.product.Product;
+import cart.repository.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,14 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private RowMapper<ProductEntity> productEntityRowMapper = ((rs, rowNum) ->
+            new ProductEntity.Builder()
+                    .id(rs.getLong("id"))
+                    .name(rs.getString("name"))
+                    .price(rs.getInt("price"))
+                    .imageUrl(rs.getString("image_url"))
+                    .build()
+    );
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -22,39 +31,29 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductEntity> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    public Product getProductById(Long productId) {
+    public ProductEntity getProductById(long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId);
     }
 
-    public long createProduct(Product product) {
+    public long createProduct(ProductEntity productEntity) {
         Map<String, Object> params = new HashMap<>();
-        params.put("id", product.getId());
-        params.put("name", product.getName());
-        params.put("price", product.getPrice());
-        params.put("image_url", product.getImageUrl());
+        // TODO : id 없는 경우 autoIncrement 값으로 들어갈까?
+        params.put("id", productEntity.getId());
+        params.put("name", productEntity.getName());
+        params.put("price", productEntity.getPrice());
+        params.put("image_url", productEntity.getImageUrl());
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateProduct(ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getId());
     }
 
     public void deleteProduct(Long productId) {

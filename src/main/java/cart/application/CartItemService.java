@@ -7,8 +7,8 @@ import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
 import cart.exception.CartItemException;
-import cart.repository.dao.CartItemDao;
-import cart.repository.dao.ProductDao;
+import cart.repository.CartItemRepository;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,31 +18,35 @@ import java.util.stream.Collectors;
 @Service
 public class CartItemService {
 
-    private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+        this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
+    // TODO : dto 변환 로직 controller로 옮기기
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        List<CartItem> cartItems = cartItemRepository.findCartItemByMemberId(member.getId());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.getProductById(cartItemRequest.getProductId());
+    public long add(Member member, CartItemRequest cartItemRequest) {
+        Product product = productRepository.getProductById(cartItemRequest.getProductId());
 
         if (Objects.isNull(product)) {
             throw new CartItemException.NotFound();
         }
 
-        return cartItemDao.save(new CartItem(member, product));
+        // TODO : CartItems에 추가하는 로직 생성 -> 만약 이미 product, memebr가 같으면 -> 수량을 추가할 수 있도록 변경
+        return cartItemRepository.save(new CartItem(member, product));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+    public void updateQuantity(Member member, Long cartItemId, CartItemQuantityUpdateRequest request) {
+        CartItem cartItem = cartItemRepository.findCartItemById(cartItemId);
 
         if (Objects.isNull(cartItem)) {
             throw new CartItemException("존재하지 않는 장바구니 상품입니다.");
@@ -51,16 +55,16 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(cartItemId);
             return;
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+    public void remove(Member member, long cartItemId) {
+        CartItem cartItem = cartItemRepository.findCartItemById(cartItemId);
 
         if (Objects.isNull(cartItem)) {
             throw new CartItemException.CartItemNotExists();
@@ -68,6 +72,6 @@ public class CartItemService {
 
         cartItem.checkOwner(member);
 
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(cartItemId);
     }
 }

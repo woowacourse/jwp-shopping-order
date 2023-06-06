@@ -6,6 +6,7 @@ import cart.domain.product.Product;
 import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
+import cart.repository.CartItemRepository;
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.MemberDao;
 import io.restassured.response.ExtractableResponse;
@@ -38,7 +39,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private CartItemDao cartItemDao;
+    private CartItemRepository cartItemRepository;
 
     private static final int USED_POINT = 100;
 
@@ -55,8 +56,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         member = memberDao.getMemberById(1L);
 
-        cartItem1 = cartItemDao.findById(1L);
-        cartItem2 = cartItemDao.findById(2L);
+        cartItem1 = cartItemRepository.findCartItemById(1L);
+        cartItem2 = cartItemRepository.findCartItemById(2L);
 
         orderItems = List.of(1L, 2L);
     }
