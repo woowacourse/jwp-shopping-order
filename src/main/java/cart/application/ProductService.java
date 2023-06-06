@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -29,6 +28,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAllProducts() {
         final List<Product> products = productRepository.findAll();
         return products.stream()
@@ -36,6 +36,7 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long id) {
         final Product product = productRepository.findById(id);
         return ProductResponse.from(product);

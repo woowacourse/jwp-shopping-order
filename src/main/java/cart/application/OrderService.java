@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class OrderService {
 
     private final MemberDao memberDao;
@@ -77,12 +76,14 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailResponse findOrderDetailById(final Member member, final Long id) {
         final Order order = orderRepository.findById(id);
         order.checkOwner(member);
         return OrderDetailResponse.from(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailResponse> findOrdersByMember(final Member member) {
         final List<Order> orders = orderRepository.findByMember(member);
 

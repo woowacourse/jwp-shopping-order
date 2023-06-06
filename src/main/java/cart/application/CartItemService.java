@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
@@ -35,6 +34,7 @@ public class CartItemService {
         return cartItemRepository.save(cartItem);
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMemberId(final Long memberId) {
         final List<CartItem> cartItems = cartItemRepository.findByMemberId(memberId);
 
