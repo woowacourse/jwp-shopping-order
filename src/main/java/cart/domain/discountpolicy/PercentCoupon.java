@@ -1,6 +1,6 @@
 package cart.domain.discountpolicy;
 
-public class PercentCoupon implements CouponPolicy {
+public class PercentCoupon implements CouponType {
     private final int minAmount;
     private final int discountPercent;
 

@@ -1,6 +1,6 @@
 package cart.domain.discountpolicy;
 
-public interface CouponPolicy {
+public interface CouponType {
 
     int applyDiscount(int totalPrice);
 
