@@ -25,7 +25,11 @@ public class CouponDao {
 
     public Coupon findById(Long couponId) {
         String sql = "SELECT * FROM coupon WHERE id = ?";
-        return jdbcTemplate.query(sql, new Object[] {couponId}, rs -> {
+        return jdbcTemplate.query(con -> {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, couponId);
+            return ps;
+        }, rs -> {
             if (rs.next()) {
                 String name = rs.getString("name");
                 int minPrice = rs.getInt("min_order_price");
