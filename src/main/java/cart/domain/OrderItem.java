@@ -5,14 +5,14 @@ import java.math.BigDecimal;
 public class OrderItem {
 
     private Long id;
-    private final Product product;
+    private final OrderProduct product;
     private final Quantity quantity;
 
-    public OrderItem(Product product, Quantity quantity) {
+    public OrderItem(OrderProduct product, Quantity quantity) {
         this(null, product, quantity);
     }
 
-    public OrderItem(Long id, Product product, Quantity quantity) {
+    public OrderItem(Long id, OrderProduct product, Quantity quantity) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
@@ -26,7 +26,7 @@ public class OrderItem {
         return id;
     }
 
-    public Product getProduct() {
+    public OrderProduct getProduct() {
         return product;
     }
 

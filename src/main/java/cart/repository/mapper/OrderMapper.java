@@ -7,7 +7,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.OrderProduct;
 import cart.domain.Quantity;
 import java.util.Comparator;
 import java.util.List;
@@ -20,10 +20,10 @@ public class OrderMapper {
     }
 
     public static OrderItemEntity toOrderItemEntity(OrderItem orderItem, long orderId) {
-        Product product = orderItem.getProduct();
+        OrderProduct product = orderItem.getProduct();
         return new OrderItemEntity(
             orderId,
-            product.getId(),
+            product.getProductId(),
             orderItem.getQuantityCount(),
             product.getPriceIntValue()
         );
@@ -32,7 +32,7 @@ public class OrderMapper {
     public static OrderItem toOrderItem(OrderItemProductDto orderItemProductDto) {
         return new OrderItem(
             orderItemProductDto.getOrderItemId(),
-            new Product(
+            new OrderProduct(
                 orderItemProductDto.getProductId(),
                 orderItemProductDto.getProductName(),
                 Money.from(orderItemProductDto.getPrice()),

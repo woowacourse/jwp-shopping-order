@@ -30,8 +30,8 @@ class OrderTest {
     void calculateTotalOrderPrice() {
         // given
         List<OrderItem> orderItems = List.of(
-            new OrderItem(new Product("치킨", Money.from(10_000), "tmpImg"), Quantity.from(2)),
-            new OrderItem(new Product("피자", Money.from(15_000), "tmpImg"), Quantity.from(1))
+            new OrderItem(new OrderProduct("치킨", Money.from(10_000), "tmpImg"), Quantity.from(2)),
+            new OrderItem(new OrderProduct("피자", Money.from(15_000), "tmpImg"), Quantity.from(1))
         );
         Order order = new Order(orderItems, member);
 
@@ -48,8 +48,8 @@ class OrderTest {
     void exception_otherMember() {
         // given
         List<OrderItem> orderItems = List.of(
-            new OrderItem(new Product("치킨", Money.from(10_000), "tmpImg"), Quantity.from(2)),
-            new OrderItem(new Product("피자", Money.from(15_000), "tmpImg"), Quantity.from(1))
+            new OrderItem(new OrderProduct("치킨", Money.from(10_000), "tmpImg"), Quantity.from(2)),
+            new OrderItem(new OrderProduct("피자", Money.from(15_000), "tmpImg"), Quantity.from(1))
         );
         Order order = new Order(1L, orderItems, Timestamp.valueOf(LocalDateTime.now()), member);
 

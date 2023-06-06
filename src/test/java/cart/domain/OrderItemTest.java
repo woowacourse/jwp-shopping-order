@@ -11,7 +11,7 @@ class OrderItemTest {
     @DisplayName("수량에 따른 상품의 가격을 계산할 수 있다.")
     void calculatePrice() {
         // given
-        OrderItem orderItem = new OrderItem(new Product("치킨", Money.from(10_000), "tmpImg"),
+        OrderItem orderItem = new OrderItem(new OrderProduct("치킨", Money.from(10_000), "tmpImg"),
             Quantity.from(2));
 
         // when

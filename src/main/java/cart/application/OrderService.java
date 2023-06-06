@@ -5,6 +5,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.OrderProduct;
 import cart.dto.order.OrderRequest;
 import cart.repository.OrderRepository;
 import java.util.List;
@@ -50,7 +51,10 @@ public class OrderService {
     }
 
     private OrderItem cartItemToOrderItem(CartItem cartItem) {
-        return new OrderItem(cartItem.getProduct(), cartItem.getQuantity());
+        return new OrderItem(
+            OrderProduct.fromProduct(cartItem.getProduct()),
+            cartItem.getQuantity()
+        );
     }
 
     @Transactional(readOnly = true)

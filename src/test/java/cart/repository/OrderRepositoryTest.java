@@ -17,7 +17,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.OrderProduct;
 import cart.domain.Quantity;
 import cart.exception.notfoundexception.OrderNotFoundException;
 import java.sql.Timestamp;
@@ -60,7 +60,7 @@ class OrderRepositoryTest {
         // when
         orderRepository.save(new Order(List.of(
             new OrderItem(
-                new Product(1L, "상품명", Money.from(1000), "imgUrl"),
+                new OrderProduct(1L, "상품명", Money.from(1000), "imgUrl"),
                 Quantity.from(1))),
             Member.fromId(member.getId())));
 
@@ -91,9 +91,9 @@ class OrderRepositoryTest {
         assertThat(order).usingRecursiveComparison().isEqualTo(new Order(
             1L,
             List.of(
-                new OrderItem(1L, new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
+                new OrderItem(1L, new OrderProduct(1L, "치킨", Money.from(10_000), "chickenImg"),
                     Quantity.from(2)),
-                new OrderItem(2L, new Product(2L, "피자", Money.from(20_000), "pizzaImg"),
+                new OrderItem(2L, new OrderProduct(2L, "피자", Money.from(20_000), "pizzaImg"),
                     Quantity.from(1))),
             createdAt, Member.fromId(memberId)));
     }
@@ -137,14 +137,14 @@ class OrderRepositoryTest {
                     new Order(1L,
                         List.of(
                             new OrderItem(1L,
-                                new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
+                                new OrderProduct(1L, "치킨", Money.from(10_000), "chickenImg"),
                                 Quantity.from(2)),
-                            new OrderItem(2L, new Product(2L, "피자", Money.from(20_000), "pizzaImg"),
+                            new OrderItem(2L, new OrderProduct(2L, "피자", Money.from(20_000), "pizzaImg"),
                                 Quantity.from(1))), createdAt, Member.fromId(memberId)),
                     new Order(2L,
                         List.of(
                             new OrderItem(4L,
-                                new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
+                                new OrderProduct(1L, "치킨", Money.from(10_000), "chickenImg"),
                                 Quantity.from(4))), createdAt, Member.fromId(memberId))
                 ));
     }
