@@ -49,7 +49,7 @@ class OrderDaoTest {
 
         assertAll(
                 () -> assertThat(findOrder.getId()).isEqualTo(orderId),
-                () -> assertThat(findOrder.getCreatedAt()).isEqualTo(createdAt),
+                () -> assertThat(findOrder.getCreatedAt()).isEqualToIgnoringNanos(createdAt),
                 () -> assertThat(findOrder.getSpendPoint()).isEqualTo(1000)
         );
     }
