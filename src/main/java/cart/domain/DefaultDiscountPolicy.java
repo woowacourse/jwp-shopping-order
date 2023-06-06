@@ -1,25 +1,23 @@
 package cart.domain;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class DefaultDiscountPolicy implements DiscountPolicy {
     private final Long id;
     private final String name;
     private final Money threshold;
-    private final double discountRate;
+    private final BigDecimal discountRate;
 
-    public DefaultDiscountPolicy(final long id, final String name, final Money threshold, final double discountRate) {
+    public DefaultDiscountPolicy(final Long id, final String name, final Money threshold, final BigDecimal discountRate) {
         this.id = id;
         this.name = name;
         this.threshold = threshold;
         this.discountRate = discountRate;
     }
 
-    public DefaultDiscountPolicy(final String name, final Money threshold, final double discountRate) {
-        this.id = null;
-        this.name = name;
-        this.threshold = threshold;
-        this.discountRate = discountRate;
+    public DefaultDiscountPolicy(final String name, final Money threshold, final BigDecimal discountRate) {
+        this(null, name, threshold, discountRate);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class DefaultDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public double getDiscountRate() {
+    public BigDecimal getDiscountRate() {
         return this.discountRate;
     }
 }

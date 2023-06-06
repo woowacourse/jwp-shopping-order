@@ -16,7 +16,7 @@ public class DefaultDiscountPolicyResponse {
     }
 
     public static DefaultDiscountPolicyResponse from(final DiscountPolicy defaultDiscountPolicy) {
-        return new DefaultDiscountPolicyResponse(defaultDiscountPolicy.getId(), defaultDiscountPolicy.getName(), defaultDiscountPolicy.getDiscountRate(), defaultDiscountPolicy.getThreshold().getValue());
+        return new DefaultDiscountPolicyResponse(defaultDiscountPolicy.getId(), defaultDiscountPolicy.getName(), defaultDiscountPolicy.getDiscountRate().doubleValue(), defaultDiscountPolicy.getThreshold().getValue());
     }
 
     public String getName() {

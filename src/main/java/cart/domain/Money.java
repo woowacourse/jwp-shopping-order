@@ -1,66 +1,68 @@
 package cart.domain;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Money {
     private final int value;
 
-    public Money(int value) {
-        validate(value);
+    public Money(final int value) {
+        this.validate(value);
         this.value = value;
     }
 
-    public static Money from(int value) {
+    public static Money from(final int value) {
         return new Money(value);
     }
 
-    private void validate(int value) {
+    private void validate(final int value) {
         if (value < 0) {
             throw new IllegalArgumentException("");
         }
     }
 
-    public Money add(Money money) {
+    public Money add(final Money money) {
         return new Money(this.value + money.value);
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
-        Money money = (Money) o;
-        return value == money.value;
+        final Money money = (Money) o;
+        return this.value == money.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     public int getValue() {
-        return value;
+        return this.value;
     }
 
-    public Money multiply(double rate) {
-        return new Money((int) (this.value * rate));
+    public Money multiply(final BigDecimal rate) {
+        final BigDecimal multiply = BigDecimal.valueOf(this.value).multiply(rate);
+        return new Money(multiply.intValue());
     }
 
-    public Money subtract(Money subtractive) {
+    public Money subtract(final Money subtractive) {
         return new Money(this.value - subtractive.value);
     }
 
     @Override
     public String toString() {
         return "Money{" +
-                "value=" + value +
+                "value=" + this.value +
                 '}';
     }
 
-    public boolean isGreaterThanOrEqual(Money other) {
+    public boolean isGreaterThanOrEqual(final Money other) {
         return this.value >= other.value;
     }
 }

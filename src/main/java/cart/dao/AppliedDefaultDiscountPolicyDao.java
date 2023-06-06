@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class AppliedDefaultDiscountPolicyDao {
         long id = rs.getLong("id");
         String name = rs.getString("name");
         Money threshold = Money.from(rs.getInt("threshold"));
-        double discountRate = rs.getDouble("discount_rate");
+        BigDecimal discountRate = rs.getBigDecimal("discount_rate");
         return new DefaultDiscountPolicy(id, name, threshold, discountRate);
     };
 

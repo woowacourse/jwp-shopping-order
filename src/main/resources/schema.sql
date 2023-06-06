@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS default_discount_policy(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     threshold INT NOT NULL,
-    discount_rate FLOAT NOT NULL
+    discount_rate DECIMAL NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS default_delivery_policy(

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.math.BigDecimal;
+
 public interface DiscountPolicy {
 
     Money calculateDiscountAmount(Order order);
@@ -10,7 +12,7 @@ public interface DiscountPolicy {
 
     String getName();
 
-    double getDiscountRate();
+    BigDecimal getDiscountRate();
 
     Money getThreshold();
 
