@@ -23,12 +23,12 @@ public class CartItemReadService {
         this.memberRepository = memberRepository;
     }
 
-    public CartResultDto findByMember(final MemberAuth memberAuth) {
-        final Member member = memberRepository.findMemberById(memberAuth.getId())
+    public CartResultDto findByMember(MemberAuth memberAuth) {
+        Member member = memberRepository.findMemberById(memberAuth.getId())
                 .orElseThrow(() -> new NoSuchElementException("일치하는 사용자가 없습니다."));
 
-        final CartItems cartItems = cartItemRepository.findAllCartItemsByMemberId(member.getId());
-        final int totalPrice = cartItems.calculateTotalPrice();
+        CartItems cartItems = cartItemRepository.findAllCartItemsByMemberId(member.getId());
+        int totalPrice = cartItems.calculateTotalPrice();
 
         return CartResultDto.of(cartItems.getCartItems(), totalPrice);
     }

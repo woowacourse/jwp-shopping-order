@@ -56,6 +56,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
     @Override
     public Long createCartItem(CartItem cartItem) {
         SqlParameterSource parameter = new BeanPropertySqlParameterSource(cartItem);
+//        new MapSqlParameterSource()
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
