@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.ProductRepository;
 import cart.dto.request.CartItemQuantityUpdateRequest;
@@ -24,11 +25,15 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMemberId(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::from).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::from)
+                .collect(Collectors.toList());
     }
 
     public Long save(Member member, CartItemRequest cartItemRequest) {
-        CartItem savedCartItem = cartItemRepository.save(new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
+        Product product = productRepository.findById(cartItemRequest.getProductId());
+        CartItem cartItem = new CartItem(member, product);
+        CartItem savedCartItem = cartItemRepository.save(cartItem);
         return savedCartItem.getId();
     }
 

@@ -31,7 +31,8 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     @Override
     public List<CartItem> findByMemberId(Long id) {
         return cartItemDao.findByMemberId(id).stream()
-                .map(this::toDomain).collect(Collectors.toList());
+                .map(this::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,8 +43,7 @@ public class CartItemRepositoryImpl implements CartItemRepository {
 
     @Override
     public CartItem findById(Long id) {
-        return toDomain(cartItemDao.findById(id)
-                .orElseThrow(() -> new CartItemException("존재하지 않는 장바구니 상품입니다.")));
+        return toDomain(cartItemDao.findById(id).orElseThrow(() -> new CartItemException("존재하지 않는 장바구니 상품입니다.")));
     }
 
     @Override
@@ -59,7 +59,8 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     @Override
     public List<CartItem> findAllByIdsAndMemberId(List<Long> cartProductIds, Long memberId) {
         return cartItemDao.findAllByIdsAndMemberId(memberId, cartProductIds).stream()
-                .map(this::toDomain).collect(Collectors.toList());
+                .map(this::toDomain)
+                .collect(Collectors.toList());
     }
 
     private CartItemEntity toEntity(CartItem cartItem) {
