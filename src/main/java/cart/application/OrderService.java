@@ -8,9 +8,11 @@ import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class OrderService {
 
