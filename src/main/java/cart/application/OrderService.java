@@ -52,7 +52,9 @@ public class OrderService {
 
     public Long createOrderAndSave(final Member member, final List<Long> cartItemIds) {
         final Order draftOrder = this.createDraftOrder(member, cartItemIds);
-        return this.orderRepository.create(draftOrder);
+        final Long orderId = this.orderRepository.create(draftOrder);
+        cartItemIds.forEach(this.cartItemRepository::deleteById);
+        return orderId;
     }
 
     @Transactional(readOnly = true)

@@ -33,7 +33,6 @@ public class OrderController {
     public ResponseEntity<Void> postOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
         final Long orderId = this.orderService.createOrderAndSave(member, orderRequest.getCartItemIds());
         this.paymentService.createPaymentRecordAndSave(this.orderService.retrieveOrderById(orderId));
-        this.cartItemService.removeAfterOrder(orderRequest.getCartItemIds());
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 

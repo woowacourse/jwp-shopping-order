@@ -60,8 +60,4 @@ public class CartItemService {
         cartItem.checkOwner(member);
         this.cartItemRepository.deleteById(id);
     }
-
-    public void removeAfterOrder(final List<Long> cartItemIds) {
-        cartItemIds.forEach(this.cartItemRepository::deleteById);
-    }
 }
