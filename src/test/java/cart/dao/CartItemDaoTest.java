@@ -41,6 +41,29 @@ class CartItemDaoTest {
     }
 
     @Nested
+    @DisplayName("member 의 cart item 목록 조회")
+    class FindAllDetailByMemberId {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            // given
+            final long memberId = 1L;
+
+            // when
+            final List<CartItemWithProductDto> entities = cartItemDao.findAllDetailByMemberId(memberId);
+
+            // then
+            assert entities != null;
+            assertAll(
+                    () -> assertThat(entities).hasSize(2),
+                    () -> assertThat(entities.get(0).getId()).isEqualTo(1L),
+                    () -> assertThat(entities.get(1).getId()).isEqualTo(2L)
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("id 들로 product join 된 cart item 조회")
     class FindProductDetailByIds {
 

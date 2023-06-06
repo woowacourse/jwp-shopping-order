@@ -44,7 +44,7 @@ public class MemberDao {
     }
 
     public List<MemberEntity> findAll() {
-        final String sql = "SELECT * from member";
+        final String sql = "SELECT * from member ORDER BY id";
         return jdbcTemplate.query(sql, memberRowMapper);
     }
 }

@@ -41,7 +41,7 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findByMemberId(final long memberId) {
-        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+        final String sql = "SELECT * FROM orders WHERE member_id = ? ORDER BY id";
         return jdbcTemplate.query(sql, orderRowMapper, memberId);
     }
 

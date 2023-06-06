@@ -87,7 +87,8 @@ public class OrderItemDao {
                 "product.id, product.name, product.price, product.image_url, order_item.quantity " +
                 "FROM order_item " +
                 "INNER JOIN product ON product.id = order_item.product_id " +
-                "WHERE order_item.order_id = ?";
+                "WHERE order_item.order_id = ? " +
+                "ORDER BY order_item.id";
         return jdbcTemplate.query(sql, orderItemWithProductRowMapper, orderId);
     }
 }

@@ -39,7 +39,7 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findAll() {
-        final String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product ORDER BY id";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
