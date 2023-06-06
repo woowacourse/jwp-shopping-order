@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.*;
+import cart.dto.MemberDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.*;
 import cart.exception.CouponException;
@@ -30,13 +31,13 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Long save(Member member, OrderRequest orderRequest) {
+    public Long save(MemberDto member, OrderRequest orderRequest) {
         validationSave(orderRequest);
 
         List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(orderRequest.getSelectedCartIds(), member.getId());
         Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(orderRequest.getCouponId(),member.getId());
         validateCoupon(coupon);
-        Order order = new Order(member, cartItems,coupon);
+        Order order = new Order(new Member(member.getId(), member.getEmail(), null), cartItems,coupon);
         Order savedOrder = orderRepository.save(order);
         return savedOrder.getId();
     }
@@ -54,20 +55,20 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrdersResponse> findAllByMemberId(Member member) {
+    public List<OrdersResponse> findAllByMemberId(MemberDto member) {
         return orderRepository.findAllByMemberId(member.getId()).stream()
                 .sorted(Comparator.comparing(Order::getId).reversed())
                 .map(OrdersResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public OrderResponse findByIdAndMemberId(Member member, Long orderId) {
+    public OrderResponse findByIdAndMemberId(MemberDto member, Long orderId) {
         Order order = orderRepository.findByIdAndMemberId(orderId,member.getId());
 
         return OrderResponse.of(order);
     }
 
-    public void deleteById(Long orderId, Member member) {
+    public void deleteById(Long orderId, MemberDto member) {
         validationDelete(orderId);
         orderRepository.deleteById(orderId, member.getId());
     }
@@ -78,8 +79,8 @@ public class OrderService {
         }
     }
 
-    public CouponConfirmResponse confirmById(Long orderId, Long memberId) {
-        Coupon coupon = orderRepository.confirmById(orderId, memberId);
+    public CouponConfirmResponse confirmById(Long orderId, MemberDto member) {
+        Coupon coupon = orderRepository.confirmById(orderId, member.getId());
 
         return CouponConfirmResponse.from(CouponResponse.from(coupon));
     }
