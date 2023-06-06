@@ -40,14 +40,18 @@ public class Coupon {
         }
 
         if (type == CouponType.FIXED_PERCENTAGE) {
-            if ((int)(money.value() * discountPercentage) > maxDiscountPrice) {
-                return new Money(money.value() - maxDiscountPrice);
-            }
-
-            return new Money((int)(money.value() * (1 - discountPercentage)));
+            return getDiscountedMoneyByPercentageCoupon(money);
         }
 
         throw new BadRequestException(ExceptionType.COUPON_NO_EXIST);
+    }
+
+    private Money getDiscountedMoneyByPercentageCoupon(Money money) {
+        if ((int)(money.value() * discountPercentage) > maxDiscountPrice) {
+            return new Money(money.value() - maxDiscountPrice);
+        }
+
+        return new Money((int)(money.value() * (1 - discountPercentage)));
     }
 
     public Long getId() {
