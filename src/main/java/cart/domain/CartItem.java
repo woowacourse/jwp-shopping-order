@@ -12,18 +12,16 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-    }
-
     public CartItem(Long id, int quantity, Product product, Member member) {
         checkPositive(quantity);
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public CartItem(Member member, Product product) {
+        this(null, 1, product, member);
     }
 
     private void checkPositive(int quantity) {
