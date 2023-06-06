@@ -10,6 +10,7 @@ import cart.db.entity.OrderProductEntity;
 import cart.domain.Item;
 import cart.domain.Money;
 import cart.domain.Order;
+import cart.domain.OrderNumber;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
@@ -17,10 +18,11 @@ import cart.domain.repository.OrderRepository;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import cart.exception.MemberException;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcOrderRepository implements OrderRepository {
@@ -47,7 +49,7 @@ public class JdbcOrderRepository implements OrderRepository {
         List<OrderProductEntity> orderProductEntities = toEntities(order, savedOrderId);
         orderProductDao.saveAll(orderProductEntities);
         return new Order(savedOrderId, member, order.getItems(), deliveryFee, order.getOrderDate(),
-                order.getOrderNumber(), order.getCoupon());
+                new OrderNumber(order.getOrderNumber()), order.getCoupon());
     }
 
     private OrderEntity toEntity(Order order) {
@@ -107,7 +109,7 @@ public class JdbcOrderRepository implements OrderRepository {
                 items,
                 new Money(orderEntity.getDeliveryFee()),
                 orderEntity.getCreatedAt(),
-                orderEntity.getOrderNumber(),
+                new OrderNumber(orderEntity.getOrderNumber()),
                 coupon
         );
     }

@@ -1,42 +1,34 @@
 package cart.domain;
 
-import static java.util.stream.Collectors.toList;
-
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.member.Member;
 import cart.exception.ExceptionType;
 import cart.exception.OrderException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-public class Order {
+import static java.util.stream.Collectors.toList;
 
-    private static final DateTimeFormatter ORDER_NUMBER_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+public class Order {
 
     private final Long id;
     private final Member member;
     private final List<Item> items;
     private final Money deliveryFee;
     private final LocalDateTime orderDate;
-    private final String orderNumber;
+    private final OrderNumber orderNumber;
     private final Coupon coupon;
 
-    public Order(Member member, List<Item> items, Money deliveryFee, Coupon coupon) {
-        this.id = null;
-        this.member = member;
-        this.items = items;
-        this.deliveryFee = deliveryFee;
-        this.orderDate = LocalDateTime.now();
-        this.orderNumber = createOrderNumber(member.getId());
-        this.coupon = coupon;
+    public Order(Member member, List<Item> items, Money deliveryFee, LocalDateTime orderDate, OrderNumber orderNumber, Coupon coupon) {
+        this(null, member, items, deliveryFee, orderDate, orderNumber, coupon);
     }
 
     public Order(Long id, Member member, List<Item> items, Money deliveryFee, LocalDateTime orderDate,
-                 String orderNumber, Coupon coupon) {
+                 OrderNumber orderNumber, Coupon coupon) {
         this.id = id;
         this.member = member;
         this.items = items;
@@ -52,17 +44,21 @@ public class Order {
         List<Item> items = cartItems.stream()
                 .map(CartItem::getItem)
                 .collect(toList());
-        return new Order(member, items, new Money(deliveryFee), memberCoupon.getCoupon());
+        LocalDateTime createdAt = LocalDateTime.now();
+        return new Order(
+                member,
+                items,
+                new Money(deliveryFee),
+                createdAt,
+                OrderNumber.create(createdAt, member.getId()),
+                memberCoupon.getCoupon()
+        );
     }
 
     private static void validateOwner(Member member, List<CartItem> cartItems) {
         for (CartItem cartItem : cartItems) {
             cartItem.validateOwner(member);
         }
-    }
-
-    private String createOrderNumber(Long memberId) {
-        return orderDate.format(ORDER_NUMBER_FORMAT) + memberId;
     }
 
     public Money calculateTotalPrice() {
@@ -120,7 +116,7 @@ public class Order {
     }
 
     public String getOrderNumber() {
-        return orderNumber;
+        return orderNumber.getValue();
     }
 
     public Coupon getCoupon() {
