@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.dto.OrderProductDto;
 import cart.entity.OrderItemEntity;
 import cart.entity.OrderItemWithProductEntity;
 import cart.entity.ProductEntity;
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -81,24 +83,26 @@ class OrderItemDaoTest {
     }
 
     @Nested
-    @DisplayName("order id 로 product 목록 조회")
+    @DisplayName("order id 목록으로 product 목록 조회")
     class FindProductByOrderId {
 
         @Test
         @DisplayName("성공")
         void success() {
             // given
-            final long orderId = 1L;
+            final List<Long> orderIds = List.of(1L, 2L, 3L);
 
             // when
-            final List<ProductEntity> entities = orderItemDao.findProductByOrderId(orderId);
+            final List<OrderProductDto> entities = orderItemDao.findProductByOrderIds(orderIds);
 
             // then
             assert entities != null;
             assertAll(
-                    () -> assertThat(entities).hasSize(2),
-                    () -> assertThat(entities.get(0).getId()).isEqualTo(1L),
-                    () -> assertThat(entities.get(1).getId()).isEqualTo(3L)
+                    () -> assertThat(entities).hasSize(6),
+                    () -> assertThat(entities.stream()
+                            .map(OrderProductDto::getOrderId)
+                            .collect(Collectors.toUnmodifiableList())
+                    ).containsAll(orderIds)
             );
         }
     }
