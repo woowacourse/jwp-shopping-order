@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class DefaultDiscountPolicy implements DiscountPolicy {
+    public static final String DISCOUNT_UNDER_ZERO_ERROR = "할인율은 0보다 작을 수 없습니다.";
+    public static final String DISCOUNT_OVER_ONE_ERROR = "할인율은 1보다 클 수 없습니다.";
     private final Long id;
     private final String name;
     private final Money threshold;
@@ -13,11 +15,23 @@ public class DefaultDiscountPolicy implements DiscountPolicy {
         this.id = id;
         this.name = name;
         this.threshold = threshold;
+        validateDiscountRate(discountRate);
+
         this.discountRate = discountRate;
     }
 
     public DefaultDiscountPolicy(final String name, final Money threshold, final BigDecimal discountRate) {
         this(null, name, threshold, discountRate);
+    }
+
+    private static void validateDiscountRate(final BigDecimal discountRate) {
+        if (discountRate.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(DISCOUNT_UNDER_ZERO_ERROR);
+        }
+
+        if (discountRate.compareTo(BigDecimal.ONE) > 0) {
+            throw new IllegalArgumentException(DISCOUNT_OVER_ONE_ERROR);
+        }
     }
 
     @Override

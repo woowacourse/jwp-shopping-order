@@ -26,6 +26,11 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiErrorResponse.from(e));
     }
 
+    @ExceptionHandler({DiscountPolicyException.InvalidPolicy.class})
+    public ResponseEntity<ApiErrorResponse> handleInvalidPolicyException(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiErrorResponse.from(e));
+    }
+
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<ApiErrorResponse> handleRuntimeException(final RuntimeException e) {
         e.printStackTrace();

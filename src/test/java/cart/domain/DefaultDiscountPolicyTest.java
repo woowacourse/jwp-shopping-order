@@ -1,13 +1,15 @@
 package cart.domain;
 
-import static cart.domain.fixture.DiscountPolicyFixture.defaultDiscountPolicy;
-import static cart.domain.fixture.OrderFixture.orderUnderDiscountThreshold;
-import static cart.domain.fixture.OrderFixture.orderWithoutId;
-
-import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static cart.domain.fixture.DiscountPolicyFixture.defaultDiscountPolicy;
+import static cart.domain.fixture.OrderFixture.orderUnderDiscountThreshold;
+import static cart.domain.fixture.OrderFixture.orderWithoutId;
 
 
 class DefaultDiscountPolicyTest {
@@ -17,12 +19,12 @@ class DefaultDiscountPolicyTest {
     void calculateDiscountAmount() {
         //given
         //when
-        Order order = new Order(null, List.of(
+        final Order order = new Order(null, List.of(
                 new OrderItem("치킨", 1, "http://example.com/chicken.jpg", new Money(10_000)),
                 new OrderItem("피자", 2, "http://example.com/pizza.jpg", new Money(30_000)),
                 new OrderItem("보쌈", 1, "http://example.com/pizza.jpg", new Money(15_000))
         ));
-        Money money = defaultDiscountPolicy.calculateDiscountAmount(order);
+        final Money money = defaultDiscountPolicy.calculateDiscountAmount(order);
 
         //then
         Assertions.assertThat(money).isEqualTo(new Money(5_500));
@@ -33,7 +35,7 @@ class DefaultDiscountPolicyTest {
     void canApply_true() {
         //given
         //when
-        boolean actual = defaultDiscountPolicy.canApply(orderWithoutId);
+        final boolean actual = defaultDiscountPolicy.canApply(orderWithoutId);
         //then
         Assertions.assertThat(actual).isTrue();
     }
@@ -43,9 +45,30 @@ class DefaultDiscountPolicyTest {
     void canApply_false() {
         //given
         //when
-        boolean actual = defaultDiscountPolicy.canApply(orderUnderDiscountThreshold);
+        final boolean actual = defaultDiscountPolicy.canApply(orderUnderDiscountThreshold);
         //then
         Assertions.assertThat(actual).isFalse();
     }
 
+    @Test
+    @DisplayName("할인율이 0보다 작으면 예외가 발생한다.")
+    void constructor() {
+        //given
+        //when
+        //then
+        Assertions.assertThatThrownBy(() -> new DefaultDiscountPolicy("5만원 이상 구매 시 10% 할인",
+                        Money.from(50_000), BigDecimal.valueOf(-0.1)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("할인율이 1보다 크면 예외가 발생한다.")
+    void constructor2() {
+        //given
+        //when
+        //then
+        Assertions.assertThatThrownBy(() -> new DefaultDiscountPolicy("5만원 이상 구매 시 10% 할인",
+                        Money.from(50_000), BigDecimal.valueOf(1.1)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

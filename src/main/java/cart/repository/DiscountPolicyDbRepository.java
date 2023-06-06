@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.dao.DefaultDiscountPolicyDao;
 import cart.domain.DiscountPolicy;
+import cart.exception.DiscountPolicyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public class DiscountPolicyDbRepository implements DiscountPolicyRepository {
 
     @Override
     public List<DiscountPolicy> findDefault() {
-        return this.defaultDiscountPolicyDao.findDefault();
+        try {
+            return this.defaultDiscountPolicyDao.findDefault();
+        } catch (final IllegalArgumentException e) {
+            throw new DiscountPolicyException.InvalidPolicy(e.getMessage());
+        }
     }
 }
