@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/pay")
 @RestController
-public class PayController {
+public class PayApiController {
 
     private final PayService payService;
 
-    public PayController(final PayService payService) {
+    public PayApiController(final PayService payService) {
         this.payService = payService;
     }
 

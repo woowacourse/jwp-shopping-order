@@ -4,7 +4,6 @@ import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.request.MemberCreateRequest;
 import cart.dto.response.OrderDetailResponse;
-import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderItemsResponse;
 import cart.dto.response.PointResponse;
 import java.net.URI;
