@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class CouponPeriod {
 
-    private static final int PERIOD_MIN_RANGE = 1, PERIOD_MAX_RANGE = 365;
+    private static final int PERIOD_MIN_RANGE = 1;
+    private static final int PERIOD_MAX_RANGE = 365;
 
     private final int period;
 

@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class NaturalPassword implements MemberPassword {
 
-    private static final int PASSWORD_MIN_LENGTH = 4, PASSWORD_MAX_LENGTH = 10;
+    private static final int PASSWORD_MIN_LENGTH = 4;
+    private static final int PASSWORD_MAX_LENGTH = 10;
 
     private final String password;
 

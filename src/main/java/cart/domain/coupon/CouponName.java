@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class CouponName {
 
-    private static final int NAME_MIN_LENGTH = 1, NAME_MAX_LENGTH = 50;
+    private static final int NAME_MIN_LENGTH = 1;
+    private static final int NAME_MAX_LENGTH = 50;
 
     private final String name;
 

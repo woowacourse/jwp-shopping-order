@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class CouponDiscountRate {
 
-    private static final int DISCOUNT_RATE_MIN_VALUE = 5, DISCOUNT_RATE_MAX_VALUE = 90;
+    private static final int DISCOUNT_RATE_MIN_VALUE = 5;
+    private static final int DISCOUNT_RATE_MAX_VALUE = 90;
 
     private final int discountRate;
 

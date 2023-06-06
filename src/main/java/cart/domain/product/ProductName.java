@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class ProductName {
 
-    private static final int NAME_MIN_LENGTH = 1, NAME_MAX_LENGTH = 20;
+    private static final int NAME_MIN_LENGTH = 1;
+    private static final int NAME_MAX_LENGTH = 20;
 
     private final String name;
 

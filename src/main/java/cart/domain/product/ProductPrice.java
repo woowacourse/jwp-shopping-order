@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class ProductPrice {
 
-    private static final int DISCOUNT_RATE_MIN_VALUE = 1, DISCOUNT_RATE_MAX_VALUE = 10_000_000;
+    private static final int DISCOUNT_RATE_MIN_VALUE = 1;
+    private static final int DISCOUNT_RATE_MAX_VALUE = 10_000_000;
 
     private final int price;
 

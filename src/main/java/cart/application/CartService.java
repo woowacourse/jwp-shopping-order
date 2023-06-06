@@ -36,7 +36,7 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
-    public List<CartResponse> findByMember(final String memberName) {
+    public List<CartResponse> findByMemberName(final String memberName) {
         final Member member = memberRepository.findByName(memberName);
         final Cart cart = cartRepository.findByMemberName(member.name());
         return cart.getCartItems().stream()
