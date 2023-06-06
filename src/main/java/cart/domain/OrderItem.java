@@ -23,10 +23,6 @@ public class OrderItem {
         return id;
     }
 
-    public Long getOrderId() {
-        return orderId;
-    }
-
     public Long getProductId() {
         return productId;
     }
