@@ -1,12 +1,12 @@
 package cart.persistence.mapper;
 
-import static cart.persistence.mapper.ProductMapper.convertProductWithId;
+import static cart.persistence.mapper.ProductMapper.convertProduct;
 
 import cart.application.dto.order.OrderProductRequest;
 import cart.domain.cartitem.Cart;
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
-import cart.domain.product.ProductWithId;
+import cart.domain.product.Product;
 import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.MemberEntity;
@@ -17,37 +17,36 @@ public class CartMapper {
 
     public static Cart convertCart(final CartItemDto cartItemDto) {
         final Member member = MemberMapper.convertMember(cartItemDto);
-        final CartItemWithId cartItemWithId = convertCartItemWithId(cartItemDto);
-        return new Cart(member, List.of(cartItemWithId));
+        final CartItem cartItem = convertCartItem(cartItemDto);
+        return new Cart(member, List.of(cartItem));
     }
 
     public static Cart convertCart(final List<CartItemDto> carItems, final MemberEntity memberEntity) {
         final Member member = MemberMapper.convertMember(memberEntity);
-        final List<CartItemWithId> cartItemWithIds = carItems.stream()
-            .map(CartMapper::convertCartItemWithId)
+        final List<CartItem> cartItems = carItems.stream()
+            .map(CartMapper::convertCartItem)
             .collect(Collectors.toUnmodifiableList());
-        return new Cart(member, cartItemWithIds);
+        return new Cart(member, cartItems);
     }
 
-    public static List<CartItemWithId> convertCartItems(final List<OrderDto> orderDtos) {
+    public static List<CartItem> convertCartItems(final List<OrderDto> orderDtos) {
         return orderDtos.stream()
-            .map(CartMapper::convertCartItemWithId)
+            .map(CartMapper::convertCartItem)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static CartItemWithId convertCartItemWithId(final CartItemWithId cartItemWithId,
-                                                       final OrderProductRequest orderProductRequest) {
-        return new CartItemWithId(cartItemWithId.getCartId(),
-            orderProductRequest.getQuantity(), cartItemWithId.getProduct());
+    public static CartItem convertCartItem(final CartItem cartItem, final OrderProductRequest orderProductRequest) {
+        return new CartItem(cartItem.getCartId(),
+            orderProductRequest.getQuantity(), cartItem.getProduct());
     }
 
-    private static CartItemWithId convertCartItemWithId(final CartItemDto cartItemDto) {
-        return new CartItemWithId(cartItemDto.getCartId(), cartItemDto.getProductQuantity(),
-            convertProductWithId(cartItemDto));
+    private static CartItem convertCartItem(final CartItemDto cartItemDto) {
+        return new CartItem(cartItemDto.getCartId(), cartItemDto.getProductQuantity(),
+            convertProduct(cartItemDto));
     }
 
-    private static CartItemWithId convertCartItemWithId(final OrderDto orderDto) {
-        final ProductWithId productWithId = convertProductWithId(orderDto);
-        return new CartItemWithId(orderDto.getOrderQuantity(), productWithId);
+    private static CartItem convertCartItem(final OrderDto orderDto) {
+        final Product Product = convertProduct(orderDto);
+        return new CartItem(orderDto.getOrderQuantity(), Product);
     }
 }

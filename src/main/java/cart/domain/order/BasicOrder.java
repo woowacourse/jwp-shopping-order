@@ -1,8 +1,8 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.CartItemWithId;
-import cart.domain.coupon.CouponWithId;
-import cart.domain.member.MemberWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,16 +10,23 @@ import java.util.Optional;
 
 public class BasicOrder implements Order {
 
-    private final MemberWithId member;
+    private final Long orderId;
+    private final Member member;
     private final BigDecimal totalPrice;
     private final BigDecimal discountedTotalPrice;
     private final Integer deliveryPrice;
     private final LocalDateTime orderedAt;
-    private final List<CartItemWithId> cartItems;
+    private final List<CartItem> cartItems;
     private final Boolean isValid;
 
-    public BasicOrder(final MemberWithId member, final Integer deliveryPrice,
-                      final LocalDateTime orderedAt, final List<CartItemWithId> cartItems, final Boolean isValid) {
+    public BasicOrder(final Member member, final Integer deliveryPrice, final LocalDateTime orderedAt,
+                      final List<CartItem> cartItems, final Boolean isValid) {
+        this(null, member, deliveryPrice, orderedAt, cartItems, isValid);
+    }
+
+    public BasicOrder(final Long orderId, final Member member, final Integer deliveryPrice,
+                      final LocalDateTime orderedAt, final List<CartItem> cartItems, final Boolean isValid) {
+        this.orderId = orderId;
         this.member = member;
         this.orderedAt = orderedAt;
         this.cartItems = cartItems;
@@ -34,17 +41,22 @@ public class BasicOrder implements Order {
     }
 
     @Override
-    public MemberWithId getMember() {
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    @Override
+    public Member getMember() {
         return member;
     }
 
     @Override
-    public Optional<CouponWithId> getCoupon() {
+    public Optional<Coupon> getCoupon() {
         return Optional.empty();
     }
 
     @Override
-    public List<CartItemWithId> getCartItems() {
+    public List<CartItem> getCartItems() {
         return cartItems;
     }
 
@@ -74,8 +86,8 @@ public class BasicOrder implements Order {
     }
 
     @Override
-    public boolean isOwner(final String memberName) {
-        return member.isSameName(memberName);
+    public boolean isNotOwner(final String memberName) {
+        return !member.isSameName(memberName);
     }
 }
 

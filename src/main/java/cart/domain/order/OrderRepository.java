@@ -10,9 +10,9 @@ public interface OrderRepository {
 
     Long countByMemberId(final Long memberId);
 
-    OrderWithId getById(final Long id);
+    Order getById(final Long id);
 
-    List<OrderWithId> findByMemberName(final String memberName);
+    List<Order> findByMemberName(final String memberName);
 
     void updateNotValidById(final Long id);
 }

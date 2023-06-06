@@ -2,7 +2,7 @@ package cart.persistence.mapper;
 
 import static cart.persistence.mapper.CouponMapper.convertCoupon;
 
-import cart.domain.coupon.CouponWithId;
+import cart.domain.coupon.Coupon;
 import cart.domain.member.MemberCoupon;
 import cart.persistence.dao.dto.MemberCouponDto;
 import java.util.List;
@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 public class MemberCouponMapper {
 
     public static MemberCoupon convertMemberCoupon(final MemberCouponDto memberCouponDto) {
-        final CouponWithId coupon = new CouponWithId(memberCouponDto.getCouponId(),
-            convertCoupon(memberCouponDto));
+        final Coupon coupon = convertCoupon(memberCouponDto);
         return new MemberCoupon(coupon, memberCouponDto.getIssuedAt(), memberCouponDto.getExpiredAt(),
             memberCouponDto.isUsed());
     }

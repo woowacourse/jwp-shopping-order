@@ -9,7 +9,6 @@ import cart.application.dto.product.ProductResponse;
 import cart.application.mapper.ProductMapper;
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
-import cart.domain.product.ProductWithId;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        final List<ProductWithId> products = productRepository.getAllProducts();
+        final List<Product> products = productRepository.getAllProducts();
         return products.stream()
             .map(ProductMapper::convertProductResponse)
             .collect(Collectors.toList());
@@ -38,7 +37,7 @@ public class ProductService {
     }
 
     public ProductPageResponse getProductsByPage(final int page, final int size) {
-        final List<ProductWithId> products = productRepository.getProductsByPage(page, size);
+        final List<Product> products = productRepository.getProductsByPage(page, size);
         final List<ProductResponse> productResponses = products.stream()
             .map(ProductMapper::convertProductResponse)
             .collect(Collectors.toList());

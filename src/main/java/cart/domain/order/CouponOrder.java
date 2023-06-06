@@ -1,8 +1,8 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.CartItemWithId;
-import cart.domain.coupon.CouponWithId;
-import cart.domain.member.MemberWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -14,17 +14,24 @@ public class CouponOrder implements Order {
     private static final int PERCENTAGE = 100;
     private static final double DECIMAL_CONVERSION = 0.01;
 
-    private final MemberWithId member;
-    private final CouponWithId coupon;
+    private final Long orderId;
+    private final Member member;
+    private final Coupon coupon;
     private final BigDecimal totalPrice;
     private final BigDecimal discountedTotalPrice;
     private final Integer deliveryPrice;
     private final LocalDateTime orderedAt;
-    private final List<CartItemWithId> cartItems;
+    private final List<CartItem> cartItems;
     private final Boolean isValid;
 
-    public CouponOrder(final MemberWithId member, final CouponWithId coupon, final Integer deliveryPrice,
-                       final LocalDateTime orderedAt, final List<CartItemWithId> cartItems, final Boolean isValid) {
+    public CouponOrder(final Member member, final Coupon coupon, final Integer deliveryPrice,
+                       final LocalDateTime orderedAt, final List<CartItem> cartItems, final Boolean isValid) {
+        this(null, member, coupon, deliveryPrice, orderedAt, cartItems, isValid);
+    }
+
+    public CouponOrder(final Long orderId, final Member member, final Coupon coupon, final Integer deliveryPrice,
+                       final LocalDateTime orderedAt, final List<CartItem> cartItems, final Boolean isValid) {
+        this.orderId = orderId;
         this.member = member;
         this.coupon = coupon;
         this.orderedAt = orderedAt;
@@ -40,24 +47,29 @@ public class CouponOrder implements Order {
     }
 
     private BigDecimal calculateDiscountPrice() {
-        final int discountRate = coupon.getCoupon().discountRate();
+        final int discountRate = coupon.discountRate();
         final BigDecimal convertedDiscountRate = BigDecimalConverter.convert(
             (PERCENTAGE - discountRate) * DECIMAL_CONVERSION);
         return totalPrice.multiply(convertedDiscountRate).setScale(0, RoundingMode.DOWN);
     }
 
     @Override
-    public MemberWithId getMember() {
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    @Override
+    public Member getMember() {
         return member;
     }
 
     @Override
-    public Optional<CouponWithId> getCoupon() {
+    public Optional<Coupon> getCoupon() {
         return Optional.of(coupon);
     }
 
     @Override
-    public List<CartItemWithId> getCartItems() {
+    public List<CartItem> getCartItems() {
         return cartItems;
     }
 
@@ -87,8 +99,8 @@ public class CouponOrder implements Order {
     }
 
     @Override
-    public boolean isOwner(final String memberName) {
-        return member.isSameName(memberName);
+    public boolean isNotOwner(final String memberName) {
+        return !member.isSameName(memberName);
     }
 }
 

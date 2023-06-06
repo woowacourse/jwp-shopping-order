@@ -2,11 +2,9 @@ package cart.persistence.repository;
 
 import static cart.persistence.mapper.CouponMapper.convertCoupon;
 import static cart.persistence.mapper.CouponMapper.convertCouponEntity;
-import static cart.persistence.mapper.CouponMapper.convertCouponWithId;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
-import cart.domain.coupon.CouponWithId;
 import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
@@ -27,9 +25,9 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public List<CouponWithId> findAll() {
+    public List<Coupon> findAll() {
         return couponDao.getAllCoupons().stream()
-            .map(CouponMapper::convertCouponWithId)
+            .map(CouponMapper::convertCoupon)
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -61,11 +59,11 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public CouponWithId findByNameAndDiscountRate(final String name, final int discountRate) {
+    public Coupon findByNameAndDiscountRate(final String name, final int discountRate) {
         final CouponEntity couponEntity = couponDao.findByNameAndDiscountRate(name, discountRate)
             .orElseThrow(() -> {
                 throw new NotFoundException(ErrorCode.COUPON_NOT_FOUND);
             });
-        return convertCouponWithId(couponEntity);
+        return convertCoupon(couponEntity);
     }
 }

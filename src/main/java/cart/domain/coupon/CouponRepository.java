@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CouponRepository {
 
-    List<CouponWithId> findAll();
+    List<Coupon> findAll();
 
     Coupon findById(final Long id);
 
@@ -14,5 +14,5 @@ public interface CouponRepository {
 
     void deleteById(final Long couponId);
 
-    CouponWithId findByNameAndDiscountRate(final String name, final int discountRate);
+    Coupon findByNameAndDiscountRate(final String name, final int discountRate);
 }

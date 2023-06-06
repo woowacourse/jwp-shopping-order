@@ -3,11 +3,10 @@ package cart.application.mapper;
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberResponse;
-import cart.domain.coupon.CouponWithId;
+import cart.domain.coupon.Coupon;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
-import cart.domain.member.MemberWithId;
 import cart.domain.member.NaturalPassword;
 import cart.domain.security.SHA256Service;
 import java.time.LocalDateTime;
@@ -20,23 +19,18 @@ public class MemberMapper {
         return Member.create(memberJoinRequest.getName(), EncryptedPassword.create(encodedPassword));
     }
 
-    public static MemberResponse convertMemberResponse(final Member member) {
-        return new MemberResponse(member.name(), member.password());
-    }
-
-    public static MemberResponse convertMemberResponse(final MemberWithId memberWithId) {
-        return new MemberResponse(memberWithId.getMemberId(), memberWithId.getMember().name(),
-            memberWithId.getMember().password());
+    public static MemberResponse convertMemberResponse(final Member Member) {
+        return new MemberResponse(Member.memberId(), Member.name(), Member.password());
     }
 
     public static MemberCouponResponse convertMemberCouponResponse(final MemberCoupon memberCoupon) {
-        final CouponWithId coupon = memberCoupon.getCoupon();
+        final Coupon coupon = memberCoupon.getCoupon();
         return new MemberCouponResponse(
-            coupon.getCouponId(), coupon.getCoupon().name(), coupon.getCoupon().discountRate(),
-            coupon.getCoupon().expiredAt(), memberCoupon.isUsed());
+            coupon.couponId(), coupon.name(), coupon.discountRate(),
+            coupon.expiredAt(), memberCoupon.isUsed());
     }
 
-    public static MemberCoupon convertMemberCoupon(final CouponWithId coupon, final LocalDateTime issuedAt) {
-        return new MemberCoupon(coupon, issuedAt, issuedAt.plusDays(coupon.getCoupon().period()), false);
+    public static MemberCoupon convertMemberCoupon(final Coupon coupon, final LocalDateTime issuedAt) {
+        return new MemberCoupon(coupon, issuedAt, issuedAt.plusDays(coupon.period()), false);
     }
 }

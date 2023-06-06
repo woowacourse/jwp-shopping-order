@@ -2,17 +2,15 @@ package cart.application.mapper;
 
 import cart.application.dto.cartitem.CartResponse;
 import cart.application.dto.product.ProductResponse;
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.CartItem;
 import cart.domain.product.Product;
-import cart.domain.product.ProductWithId;
 
 public class CartMapper {
 
-    public static CartResponse convertCartItemResponse(final CartItemWithId cartItemWithId) {
-        final ProductWithId productWithId = cartItemWithId.getProduct();
-        final Product product = productWithId.getProduct();
-        return new CartResponse(cartItemWithId.getCartId(), cartItemWithId.getQuantity(),
-            new ProductResponse(productWithId.getProductId(), product.getName(), product.getPrice(),
+    public static CartResponse convertCartItemResponse(final CartItem cartItem) {
+        final Product product = cartItem.getProduct();
+        return new CartResponse(cartItem.getCartId(), cartItem.getQuantity(),
+            new ProductResponse(product.getProductId(), product.getName(), product.getPrice(),
                 product.getImageUrl()));
     }
 }

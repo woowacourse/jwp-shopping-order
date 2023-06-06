@@ -1,8 +1,8 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.CartItemWithId;
-import cart.domain.coupon.CouponWithId;
-import cart.domain.member.MemberWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,11 +10,13 @@ import java.util.Optional;
 
 public interface Order {
 
-    MemberWithId getMember();
+    Long getOrderId();
 
-    Optional<CouponWithId> getCoupon();
+    Member getMember();
 
-    List<CartItemWithId> getCartItems();
+    Optional<Coupon> getCoupon();
+
+    List<CartItem> getCartItems();
 
     Integer getDeliveryPrice();
 
@@ -26,5 +28,5 @@ public interface Order {
 
     Boolean isValid();
 
-    boolean isOwner(final String memberName);
+    boolean isNotOwner(final String memberName);
 }

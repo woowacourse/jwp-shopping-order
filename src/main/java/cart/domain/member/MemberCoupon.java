@@ -1,18 +1,18 @@
 package cart.domain.member;
 
-import cart.domain.coupon.CouponWithId;
+import cart.domain.coupon.Coupon;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import java.time.LocalDateTime;
 
 public class MemberCoupon {
 
-    private final CouponWithId coupon;
+    private final Coupon coupon;
     private final LocalDateTime issuedAt;
     private final LocalDateTime expiredAt;
     private final boolean isUsed;
 
-    public MemberCoupon(final CouponWithId coupon, final LocalDateTime issuedAt, final LocalDateTime expiredAt,
+    public MemberCoupon(final Coupon coupon, final LocalDateTime issuedAt, final LocalDateTime expiredAt,
                         final boolean isUsed) {
         this.coupon = coupon;
         this.issuedAt = issuedAt;
@@ -38,7 +38,7 @@ public class MemberCoupon {
         }
     }
 
-    public CouponWithId getCoupon() {
+    public Coupon getCoupon() {
         return coupon;
     }
 

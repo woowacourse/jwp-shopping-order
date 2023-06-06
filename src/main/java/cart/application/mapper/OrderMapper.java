@@ -6,13 +6,12 @@ import static cart.application.mapper.ProductMapper.convertProductResponse;
 import cart.application.dto.coupon.CouponResponse;
 import cart.application.dto.order.OrderProductResponse;
 import cart.application.dto.order.OrderResponse;
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
-import cart.domain.member.MemberWithId;
 import cart.domain.order.BasicOrder;
 import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
-import cart.domain.order.OrderWithId;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,30 +19,29 @@ import java.util.stream.Collectors;
 
 public class OrderMapper {
 
-    public static BasicOrder converBasicOrder(final List<CartItemWithId> productWithIds,
-                                              final int deliveryPrice, final MemberWithId memberWithId) {
-        return new BasicOrder(memberWithId, deliveryPrice, LocalDateTime.now(), productWithIds, true);
+    public static BasicOrder converBasicOrder(final List<CartItem> cartItems,
+                                              final int deliveryPrice, final Member Member) {
+        return new BasicOrder(Member, deliveryPrice, LocalDateTime.now(), cartItems, true);
     }
 
-    public static CouponOrder convertCouponOrder(final List<CartItemWithId> productWithIds,
-                                                 final int deliveryPrice, final MemberWithId memberWithId,
+    public static CouponOrder convertCouponOrder(final List<CartItem> cartItems,
+                                                 final int deliveryPrice, final Member Member,
                                                  final MemberCoupon memberCoupon) {
-        return new CouponOrder(memberWithId, memberCoupon.getCoupon(), deliveryPrice,
-            LocalDateTime.now(), productWithIds, true);
+        return new CouponOrder(Member, memberCoupon.getCoupon(), deliveryPrice,
+            LocalDateTime.now(), cartItems, true);
     }
 
     public static List<OrderProductResponse> convertOrderProductResponses(final Order order) {
         return order.getCartItems().stream()
-            .map(cartItemWithId -> new OrderProductResponse(cartItemWithId.getQuantity(),
-                convertProductResponse(cartItemWithId.getProduct())
+            .map(cartItem -> new OrderProductResponse(cartItem.getQuantity(),
+                convertProductResponse(cartItem.getProduct())
             )).collect(Collectors.toUnmodifiableList());
     }
 
-    public static OrderResponse convertOrderResponse(final OrderWithId orderWithId) {
-        final Order order = orderWithId.getOrder();
+    public static OrderResponse convertOrderResponse(final Order order) {
         final List<OrderProductResponse> orderProductResponses = convertOrderProductResponses(order);
 
-        final Long orderId = orderWithId.getOrderId();
+        final Long orderId = order.getOrderId();
         final BigDecimal orderPrice = order.getTotalPrice();
         final BigDecimal discountedTotalPrice = order.getDiscountedTotalPrice();
         final BigDecimal couponDiscountPrice = orderPrice.subtract(discountedTotalPrice);

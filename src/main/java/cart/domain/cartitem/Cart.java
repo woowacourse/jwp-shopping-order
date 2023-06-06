@@ -9,9 +9,9 @@ import java.util.Objects;
 public class Cart {
 
     private final Member member;
-    private final List<CartItemWithId> cartItems;
+    private final List<CartItem> cartItems;
 
-    public Cart(final Member member, final List<CartItemWithId> cartItems) {
+    public Cart(final Member member, final List<CartItem> cartItems) {
         this.member = member;
         this.cartItems = cartItems;
     }
@@ -26,7 +26,7 @@ public class Cart {
         return member;
     }
 
-    public List<CartItemWithId> getCartItems() {
+    public List<CartItem> getCartItems() {
         return cartItems;
     }
 }

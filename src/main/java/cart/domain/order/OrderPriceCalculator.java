@@ -1,21 +1,20 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.CartItemWithId;
-import cart.domain.product.ProductWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.product.Product;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderPriceCalculator {
 
-    static BigDecimal calculateTotalOrderPrice(final List<CartItemWithId> cartItems) {
+    static BigDecimal calculateTotalOrderPrice(final List<CartItem> cartItems) {
         return cartItems.stream()
-            .map(cartItemWithId -> {
-                final ProductWithId product = cartItemWithId.getProduct();
-                final int productPrice = product.getProduct().getPrice();
-                final int productQuantity = cartItemWithId.getQuantity();
+            .map(cartItem -> {
+                final Product product = cartItem.getProduct();
+                final int productPrice = product.getPrice();
+                final int productQuantity = cartItem.getQuantity();
                 return BigDecimalConverter.convert(productPrice)
                     .multiply(BigDecimalConverter.convert(productQuantity));
             }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
 }

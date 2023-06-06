@@ -12,7 +12,6 @@ import cart.domain.member.MemberRepository;
 import cart.domain.product.ProductRepository;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
-import cart.exception.ForbiddenException;
 import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;

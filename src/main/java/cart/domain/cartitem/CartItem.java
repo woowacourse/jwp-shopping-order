@@ -1,19 +1,19 @@
 package cart.domain.cartitem;
 
-import cart.domain.product.ProductWithId;
+import cart.domain.product.Product;
 import java.util.Objects;
 
-public class CartItemWithId {
+public class CartItem {
 
     private final Long cartId;
     private final int quantity;
-    private final ProductWithId product;
+    private final Product product;
 
-    public CartItemWithId(final int quantity, final ProductWithId product) {
+    public CartItem(final int quantity, final Product product) {
         this(null, quantity, product);
     }
 
-    public CartItemWithId(final Long cartId, final int quantity, final ProductWithId product) {
+    public CartItem(final Long cartId, final int quantity, final Product product) {
         this.cartId = cartId;
         this.quantity = quantity;
         this.product = product;
@@ -35,7 +35,7 @@ public class CartItemWithId {
         return quantity;
     }
 
-    public ProductWithId getProduct() {
+    public Product getProduct() {
         return product;
     }
 }

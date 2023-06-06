@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ProductRepository {
 
-    List<ProductWithId> getAllProducts();
+    List<Product> getAllProducts();
 
     Product getProductById(final Long id);
 
@@ -16,7 +16,7 @@ public interface ProductRepository {
 
     boolean existById(final Long id);
 
-    List<ProductWithId> getProductsByPage(final int page, final int size);
+    List<Product> getProductsByPage(final int page, final int size);
 
     long getAllProductCount();
 }

@@ -4,8 +4,8 @@ import static cart.application.mapper.MemberMapper.convertMemberCoupon;
 import static cart.domain.coupon.CouponType.FIRST_ORDER_COUPON;
 import static cart.domain.coupon.CouponType.JOIN_MEMBER_COUPON;
 
+import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
-import cart.domain.coupon.CouponWithId;
 import cart.domain.event.FirstOrderCouponEvent;
 import cart.domain.event.JoinMemberCouponEvent;
 import cart.domain.member.MemberCoupon;
@@ -39,11 +39,11 @@ public class MemberCouponService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveJoinMemberCoupon(final JoinMemberCouponEvent joinMemberCouponEvent) {
         final Long memberId = joinMemberCouponEvent.getMemberId();
-        final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(JOIN_MEMBER_COUPON.getName(),
+        final Coupon coupon = couponRepository.findByNameAndDiscountRate(JOIN_MEMBER_COUPON.getName(),
             JOIN_MEMBER_COUPON.getDiscountRate());
 
         final LocalDateTime issuedAt = LocalDateTime.now();
-        validateAlreadyIssued(memberId, coupon.getCouponId());
+        validateAlreadyIssued(memberId, coupon.couponId());
         final MemberCoupon memberCoupon = convertMemberCoupon(coupon, issuedAt);
         memberCouponRepository.save(memberId, memberCoupon);
     }
@@ -52,12 +52,12 @@ public class MemberCouponService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveFirstOrderCoupon(final FirstOrderCouponEvent firstOrderCouponEvent) {
         final Long memberId = firstOrderCouponEvent.getMemberId();
-        final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(FIRST_ORDER_COUPON.getName(),
+        final Coupon coupon = couponRepository.findByNameAndDiscountRate(FIRST_ORDER_COUPON.getName(),
             FIRST_ORDER_COUPON.getDiscountRate());
 
         validateFirstOrder(memberId);
         final LocalDateTime issuedAt = LocalDateTime.now();
-        validateAlreadyIssued(memberId, coupon.getCouponId());
+        validateAlreadyIssued(memberId, coupon.couponId());
         final MemberCoupon memberCoupon = convertMemberCoupon(coupon, issuedAt);
         memberCouponRepository.save(memberId, memberCoupon);
     }

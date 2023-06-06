@@ -24,8 +24,7 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     @Override
     public void save(final Long memberId, final MemberCoupon memberCoupon) {
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(memberId,
-            memberCoupon.getCoupon().getCouponId(),
-            memberCoupon.getIssuedAt(), memberCoupon.getExpiredAt(), false);
+            memberCoupon.getCoupon().couponId(), memberCoupon.getIssuedAt(), memberCoupon.getExpiredAt(), false);
         memberCouponDao.insert(memberCouponEntity);
     }
 

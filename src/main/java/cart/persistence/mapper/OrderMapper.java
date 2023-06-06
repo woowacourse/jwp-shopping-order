@@ -1,17 +1,16 @@
 package cart.persistence.mapper;
 
 import static cart.persistence.mapper.CartMapper.convertCartItems;
-import static cart.persistence.mapper.CouponMapper.convertCouponWithId;
-import static cart.persistence.mapper.MemberMapper.convertMemberWithId;
+import static cart.persistence.mapper.CouponMapper.convertCoupon;
+import static cart.persistence.mapper.MemberMapper.convertMember;
 
-import cart.domain.cartitem.CartItemWithId;
-import cart.domain.coupon.CouponWithId;
-import cart.domain.member.MemberWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import cart.domain.order.BasicOrder;
 import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
-import cart.domain.order.OrderWithId;
-import cart.domain.product.ProductWithId;
+import cart.domain.product.Product;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.OrderEntity;
 import cart.persistence.entity.OrderProductEntity;
@@ -20,38 +19,36 @@ import java.util.stream.Collectors;
 
 public class OrderMapper {
 
-    public static OrderEntity convertOrderEntity(final Order order, final MemberWithId member) {
-        return new OrderEntity(member.getMemberId(), order.getTotalPrice(), order.getDiscountedTotalPrice(),
+    public static OrderEntity convertOrderEntity(final Order order, final Member member) {
+        return new OrderEntity(member.memberId(), order.getTotalPrice(), order.getDiscountedTotalPrice(),
             order.getDeliveryPrice(), order.getOrderedAt());
     }
 
-    public static List<OrderProductEntity> convertOrderProductEntities(final List<CartItemWithId> cartItems,
+    public static List<OrderProductEntity> convertOrderProductEntities(final List<CartItem> cartItems,
                                                                        final Long orderId) {
         return cartItems.stream()
-            .map(cartItemWithId -> convertOrderProductEntity(orderId, cartItemWithId))
+            .map(cartItem -> convertOrderProductEntity(orderId, cartItem))
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static OrderWithId convertOrderWithId(final List<OrderDto> orderDto) {
+    public static Order convertOrder(final List<OrderDto> orderDto) {
         final OrderDto order = orderDto.get(0);
-        final MemberWithId member = convertMemberWithId(order);
-        final List<CartItemWithId> cartItems = convertCartItems(orderDto);
+        final Member member = convertMember(order);
+        final List<CartItem> cartItems = convertCartItems(orderDto);
 
         if (order.getCouponId() == 0) {
-            final Order basicOrder = new BasicOrder(member, order.getDeliveryPrice(), order.getOrderedAt(), cartItems,
-                order.getIsValid());
-            return new OrderWithId(order.getOrderId(), basicOrder);
+            return new BasicOrder(order.getOrderId(), member, order.getDeliveryPrice(),
+                order.getOrderedAt(), cartItems, order.getIsValid());
         }
-        final CouponWithId coupon = convertCouponWithId(order);
-        final Order couponOrder = new CouponOrder(member, coupon, order.getDeliveryPrice(),
+        final Coupon coupon = convertCoupon(order);
+        return new CouponOrder(order.getOrderId(), member, coupon, order.getDeliveryPrice(),
             order.getOrderedAt(), cartItems, order.getIsValid());
-        return new OrderWithId(order.getOrderId(), couponOrder);
     }
 
     private static OrderProductEntity convertOrderProductEntity(final Long orderId,
-                                                                final CartItemWithId cartItemWithId) {
-        final ProductWithId productWithId = cartItemWithId.getProduct();
-        return new OrderProductEntity(orderId, productWithId.getProductId(),
-            productWithId.getProduct().getPrice(), cartItemWithId.getQuantity());
+                                                                final CartItem cartItem) {
+        final Product product = cartItem.getProduct();
+        return new OrderProductEntity(orderId, product.getProductId(),
+            product.getPrice(), cartItem.getQuantity());
     }
 }

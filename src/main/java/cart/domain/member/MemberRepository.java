@@ -6,13 +6,11 @@ public interface MemberRepository {
 
     long insert(final Member member);
 
-    MemberWithId findById(final Long id);
+    Member findById(final Long id);
 
     Member findByName(final String name);
 
-    MemberWithId findWithIdByName(final String name);
-
-    List<MemberWithId> findAll();
+    List<Member> findAll();
 
     boolean existByName(final String memberName);
 

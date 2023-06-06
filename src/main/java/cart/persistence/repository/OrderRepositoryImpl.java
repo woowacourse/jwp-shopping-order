@@ -1,15 +1,14 @@
 package cart.persistence.repository;
 
+import static cart.persistence.mapper.OrderMapper.convertOrder;
 import static cart.persistence.mapper.OrderMapper.convertOrderEntity;
 import static cart.persistence.mapper.OrderMapper.convertOrderProductEntities;
-import static cart.persistence.mapper.OrderMapper.convertOrderWithId;
 
-import cart.domain.cartitem.CartItemWithId;
-import cart.domain.coupon.CouponWithId;
-import cart.domain.member.MemberWithId;
+import cart.domain.cartitem.CartItem;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
-import cart.domain.order.OrderWithId;
 import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
@@ -43,7 +42,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Long save(final Order order) {
         final Long orderId = saveOrder(order);
-        final List<CartItemWithId> cartItems = order.getCartItems();
+        final List<CartItem> cartItems = order.getCartItems();
         saveOrderProducts(cartItems, orderId);
         return orderId;
     }
@@ -51,7 +50,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Long saveWithCoupon(final Order order) {
         final Long orderId = saveOrder(order);
-        final List<CartItemWithId> cartItems = order.getCartItems();
+        final List<CartItem> cartItems = order.getCartItems();
         saveOrderProducts(cartItems, orderId);
         saveCoupon(order, orderId);
         return orderId;
@@ -63,26 +62,26 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public OrderWithId getById(final Long id) {
+    public Order getById(final Long id) {
         final List<OrderDto> orderDto = orderDao.findById(id);
         if (orderDto.size() == 0) {
             throw new NotFoundException(ErrorCode.ORDER_NOT_FOUND);
         }
-        return convertOrderWithId(orderDto);
+        return convertOrder(orderDto);
     }
 
     @Override
-    public List<OrderWithId> findByMemberName(final String memberName) {
+    public List<Order> findByMemberName(final String memberName) {
         final List<OrderDto> orderDto = orderDao.findByMemberName(memberName);
         final Map<Long, List<OrderDto>> ordersById = orderDto.stream()
             .collect(Collectors.groupingBy(OrderDto::getOrderId));
 
-        final List<OrderWithId> orderWithIds = new ArrayList<>();
+        final List<Order> Orders = new ArrayList<>();
         for (final Long orderId : ordersById.keySet()) {
             final List<OrderDto> detailOrder = ordersById.get(orderId);
-            orderWithIds.add(convertOrderWithId(detailOrder));
+            Orders.add(convertOrder(detailOrder));
         }
-        return orderWithIds;
+        return Orders;
     }
 
     @Override
@@ -94,20 +93,20 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private Long saveOrder(final Order order) {
-        final MemberWithId member = order.getMember();
+        final Member member = order.getMember();
         final OrderEntity orderEntity = convertOrderEntity(order, member);
         return orderDao.insert(orderEntity);
     }
 
-    private void saveOrderProducts(final List<CartItemWithId> cartItems, final Long orderId) {
+    private void saveOrderProducts(final List<CartItem> cartItems, final Long orderId) {
         final List<OrderProductEntity> orderProductEntities = convertOrderProductEntities(cartItems, orderId);
         orderProductDao.saveAll(orderProductEntities);
     }
 
     private void saveCoupon(final Order order, final Long orderId) {
-        final CouponWithId coupon = order.getCoupon()
+        final Coupon coupon = order.getCoupon()
             .orElseThrow(() -> new NotFoundException(ErrorCode.COUPON_NOT_FOUND));
-        final OrderCouponEntity orderCouponEntity = new OrderCouponEntity(orderId, coupon.getCouponId());
+        final OrderCouponEntity orderCouponEntity = new OrderCouponEntity(orderId, coupon.couponId());
         orderCouponDao.insert(orderCouponEntity);
     }
 }
