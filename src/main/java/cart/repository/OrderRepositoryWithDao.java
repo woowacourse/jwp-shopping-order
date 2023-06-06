@@ -1,11 +1,13 @@
 package cart.repository;
 
+import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
+import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.exception.ResourceNotFoundException;
@@ -18,10 +20,12 @@ public class OrderRepositoryWithDao implements OrderRepository {
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
+    private final MemberDao memberDao;
 
-    public OrderRepositoryWithDao(final OrderDao orderDao, final OrderItemDao orderItemDao) {
+    public OrderRepositoryWithDao(final OrderDao orderDao, final OrderItemDao orderItemDao, final MemberDao memberDao) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
+        this.memberDao = memberDao;
     }
 
     public Long save(final Order order) {
@@ -31,10 +35,20 @@ public class OrderRepositoryWithDao implements OrderRepository {
         return orderId;
     }
 
-    public Order findById(final Long id, final Member member) {
+    public Order findById(final Long id) {
         final OrderEntity orderEntity = orderDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("해당하는 주문 정보가 없습니다."));
-        return toDomain(orderEntity, member);
+        final MemberEntity member = memberDao.findById(orderEntity.getMemberId())
+                .orElseThrow(() -> new ResourceNotFoundException("주문 정보의 사용자 정보가 올바르지 않습니다."));
+        return toDomain(
+                orderEntity,
+                new Member(
+                        member.getId(),
+                        member.getEmail(),
+                        member.getPassword(),
+                        member.getPoint()
+                )
+        );
     }
 
     public List<Order> findByMember(final Member member) {
@@ -52,7 +66,7 @@ public class OrderRepositoryWithDao implements OrderRepository {
                 orderEntity.getUsedPoint(),
                 orderEntity.getSavedPoint(),
                 orderEntity.getOrderedAt()
-                );
+        );
     }
 
     private OrderEntity toEntity(final Order order) {

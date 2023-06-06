@@ -8,7 +8,7 @@ public interface OrderRepository {
 
     Long save(final Order order);
 
-    Order findById(final Long id, final Member member);
+    Order findById(final Long id);
 
     List<Order> findByMember(final Member member);
 }

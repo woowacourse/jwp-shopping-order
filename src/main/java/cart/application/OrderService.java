@@ -10,6 +10,7 @@ import cart.domain.Point;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderDetailResponse;
 import cart.entity.MemberEntity;
+import cart.exception.IllegalMemberException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
@@ -78,8 +79,11 @@ public class OrderService {
     }
 
     public OrderDetailResponse findOrderDetailById(final Member member, final Long id) {
-        final Order order = orderRepository.findById(id, member);
-        return OrderDetailResponse.from(order);
+        final Order order = orderRepository.findById(id);
+        if (order.isOwner(member)) {
+            return OrderDetailResponse.from(order);
+        }
+        throw new IllegalMemberException("다른 사용자의 주문 정보를 조회할 수 없습니다");
     }
 
     public List<OrderDetailResponse> findOrdersByMember(final Member member) {

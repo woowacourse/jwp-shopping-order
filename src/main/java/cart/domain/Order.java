@@ -49,6 +49,10 @@ public class Order {
         this.orderedAt = orderedAt;
     }
 
+    public boolean isOwner(final Member member) {
+        return this.member.equals(member);
+    }
+
     public Long getId() {
         return id;
     }
