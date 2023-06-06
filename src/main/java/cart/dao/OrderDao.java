@@ -32,16 +32,23 @@ public class OrderDao {
     }
 
     public Long save(Order order) {
+        final long orderId = saveOrderInfo(order);
+        saveItems(order, orderId);
+
+        return orderId;
+    }
+
+    private long saveOrderInfo(Order order) {
         final MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        sqlParameterSource.addValue("memberId", order.getOrderingMember()
-                                                     .getId());
+        sqlParameterSource.addValue("memberId", order.getOrderingMember().getId());
         sqlParameterSource.addValue("priceAfterDiscount", order.getPriceAfterDiscount());
         sqlParameterSource.addValue("orderDate", new Timestamp(System.currentTimeMillis()));
 
-        final long orderId = (long) simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
+        return (long) simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
+    }
 
+    private void saveItems(Order order, long orderId) {
         final List<OrderItem> orderItems = order.getOrderItems();
-
         jdbcTemplate.batchUpdate("insert into order_items(order_id, name, product_price, quantity, image_url) values(?, ?, ?, ?, ?)", new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -63,13 +70,24 @@ public class OrderDao {
                 return orderItems.size();
             }
         });
-
-        return orderId;
     }
 
     public Optional<Order> findById(long orderId) {
+        final List<OrderItem> orderItems = findItems(orderId);
+
+        try {
+            final Order order = findOrder(orderId, orderItems);
+
+            return Optional.of(Objects.requireNonNull(order));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private List<OrderItem> findItems(long orderId) {
         String orderItemQuery = "select * from order_items where order_id = ?";
-        final List<OrderItem> orderItems = jdbcTemplate.query(orderItemQuery, (rs, rowNum) -> {
+
+        return jdbcTemplate.query(orderItemQuery, (rs, rowNum) -> {
             Long id = rs.getLong("id");
             final String name = rs.getString("name");
             final int quantity = rs.getInt("quantity");
@@ -77,26 +95,23 @@ public class OrderDao {
             final String imageUrl = rs.getString("image_url");
             return new OrderItem(id, name, price, quantity, imageUrl);
         }, orderId);
+    }
 
+    private Order findOrder(long orderId, List<OrderItem> orderItems) {
         String orderQuery = "select o.order_date, o.price_after_discount, m.id, m.email from orders as o " +
                 "inner join members as m on o.member_id = m.id " +
                 "where o.id = ?";
-        try {
-            final Order order = jdbcTemplate.queryForObject(orderQuery, (rs, rowNum) -> {
-                final long memberId = rs.getLong("id");
-                final String email = rs.getString("email");
-                final Member member = new Member(memberId, email, null);
 
-                final Timestamp orderTime = rs.getTimestamp("order_date");
-                final long priceAfterDiscount = rs.getLong("price_after_discount");
+        return jdbcTemplate.queryForObject(orderQuery, (rs, rowNum) -> {
+            final long memberId = rs.getLong("id");
+            final String email = rs.getString("email");
+            final Member member = new Member(memberId, email, null);
 
-                return Order.of(orderId, orderItems, member, priceAfterDiscount, orderTime);
-            }, orderId);
+            final Timestamp orderTime = rs.getTimestamp("order_date");
+            final long priceAfterDiscount = rs.getLong("price_after_discount");
 
-            return Optional.of(Objects.requireNonNull(order));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+            return Order.of(orderId, orderItems, member, priceAfterDiscount, orderTime);
+        }, orderId);
     }
 
     public List<Order> findAllByMember(Member member) {
