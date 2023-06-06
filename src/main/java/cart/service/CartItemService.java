@@ -42,6 +42,7 @@ public class CartItemService {
             remove(member, id);
             return;
         }
+        checkOwner(member, id);
         cartItemRepository.updateQuantity(id, request.getQuantity());
     }
 
