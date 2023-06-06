@@ -12,7 +12,7 @@ public class OrderProducts {
     private static final int DEFAULT_PAYMENT = 0;
 
     private Long orderId;
-    private List<OrderProduct> orderProducts;
+    private final List<OrderProduct> orderProducts;
 
     public OrderProducts(List<OrderProduct> orderProducts) {
         this.orderProducts = orderProducts;

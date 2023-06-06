@@ -3,7 +3,7 @@ package cart.dto.product;
 import cart.domain.product.Product;
 
 public class ProductResponse {
-    private Long id;
+    private long id;
     private String name;
     private int price;
     private String imageUrl;
@@ -19,7 +19,7 @@ public class ProductResponse {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

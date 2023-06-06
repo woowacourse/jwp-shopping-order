@@ -13,9 +13,9 @@ public class Product {
     public static final int MINIMUM_PRICE = 1;
 
     private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     public Product(Long id, String name, int price, String imageUrl) {
         validate(id, name, price, imageUrl);

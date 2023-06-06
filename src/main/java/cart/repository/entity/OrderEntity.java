@@ -51,7 +51,7 @@ public class OrderEntity {
 
     public static class Builder {
 
-        private long id;
+        private Long id;
         private long memberId;
         private int totalPayment;
         private int usedPoint;

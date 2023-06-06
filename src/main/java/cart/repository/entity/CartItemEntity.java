@@ -33,8 +33,8 @@ public class CartItemEntity {
     public static class Builder {
 
         private Long id;
-        private Long memberId;
-        private Long productId;
+        private long memberId;
+        private long productId;
         private int quantity;
 
         public Builder id(long id) {
