@@ -1,0 +1,73 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew bootjar
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: presentsong/shopping-order
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: linux/arm64
+          tags: presentsong/shopping-order:latest
+          labels: ${{ steps.meta.outputs.labels }}
+  deploy:
+    runs-on: self-hosted
+    if: ${{ needs.test.result == 'success' }}
+    needs: [ test, docker-build ]
+    steps:
+      - name: docker stop
+        run: |
+          sudo docker stop shopping-order || true
+          sudo docker rm shopping-order || true
+
+      - name: docker pull
+        run: |
+          sudo docker pull presentsong/shopping-order:latest
+
+      - name: docker run
+        run: |
+          sudo docker run -d -p 80:8080 -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name shopping-order presentsong/shopping-order:latest
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          
+      - name: clean docker images
+        run: |
+          sudo docker image prune -f

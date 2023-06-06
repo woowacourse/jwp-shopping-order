@@ -1,0 +1,14 @@
+SELECT H2VERSION() FROM DUAL;
+SET foreign_key_checks = 0;
+TRUNCATE TABLE product;
+TRUNCATE TABLE member;
+TRUNCATE TABLE cart_item;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE order_item;
+TRUNCATE TABLE order_coupon;
+TRUNCATE TABLE discount_condition;
+TRUNCATE TABLE amount_discount;
+TRUNCATE TABLE discount_type;
+TRUNCATE TABLE coupon;
+TRUNCATE TABLE coupon_member;
+SET foreign_key_checks = 1;
