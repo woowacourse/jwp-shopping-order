@@ -58,12 +58,6 @@ public class OrderService {
         this.couponDao = couponDao;
     }
 
-    private static void checkExistence(Coupon coupon) {
-        if (coupon == null) {
-            throw new BadRequestException(ExceptionType.COUPON_NO_EXIST);
-        }
-    }
-
     @Transactional
     public Long add(Member member, OrderRequest orderRequest) {
         List<CartItemRequest> cartItemRequests = orderRequest.getProducts();
@@ -92,17 +86,17 @@ public class OrderService {
         }
     }
 
-    private void checkCartItemExist(List<CartItemRequest> cartItemRequests, List<CartItem> cartItems) {
-        if (cartItemRequests.size() != cartItems.size()) {
-            throw new BadRequestException(ExceptionType.CART_ITEM_NO_EXIST);
-        }
-    }
-
     private List<OrderItem> getOrderItems(List<CartItemRequest> cartItemRequests, List<Long> cartItemIds) {
         List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
         checkCartItemExist(cartItemRequests, cartItems);
 
         return addOrderItems(cartItemRequests, cartItems);
+    }
+
+    private void checkCartItemExist(List<CartItemRequest> cartItemRequests, List<CartItem> cartItems) {
+        if (cartItemRequests.size() != cartItems.size()) {
+            throw new BadRequestException(ExceptionType.CART_ITEM_NO_EXIST);
+        }
     }
 
     private List<OrderItem> addOrderItems(List<CartItemRequest> cartItemRequests, List<CartItem> cartItems) {
@@ -131,8 +125,6 @@ public class OrderService {
         MemberCoupon memberCoupon
     ) {
         Order order = new Order(member, orderItems, memberCoupon);
-        System.out.println(order);
-        System.out.println(order.getMember().getEmail());
         Long orderId = orderDao.save(order);
         orderItemDao.saveAllOfOrder(orderId, order);
         memberCouponDao.updateUsabilityById(memberCouponId);
@@ -196,5 +188,11 @@ public class OrderService {
         );
 
         return memberCouponDao.save(memberCoupon);
+    }
+
+    private void checkExistence(Coupon coupon) {
+        if (coupon == null) {
+            throw new BadRequestException(ExceptionType.COUPON_NO_EXIST);
+        }
     }
 }

@@ -1,6 +1,8 @@
 package cart.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -178,35 +181,48 @@ public class OrderDao {
             "LEFT JOIN coupon c ON mc.coupon_id = c.id " +
             "WHERE o.id = ?";
 
-        return jdbcTemplate.queryForObject(query,
-            (rs, rn) -> {
-                Long id = rs.getLong("member_id");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                String nickname = rs.getString("nickname");
+        return jdbcTemplate.queryForObject(query, getOrderRowMapper(orderId), orderId);
+    }
 
-                Member member = new Member(id, email, password, nickname);
+    private RowMapper<Order> getOrderRowMapper(Long orderId) {
+        return (rs, rn) -> {
+            Member member = getMember(rs);
 
-                MemberCoupon memberCoupon = null;
-                Long memberCouponId = rs.getLong("coupon_id");
-                if (memberCouponId != 0) {
-                    String couponName = rs.getString("name");
-                    int minOrderPrice = rs.getInt("min_order_price");
-                    Integer maxDiscountPrice = rs.getInt("max_discount_price");
-                    CouponType type = CouponType.valueOf(rs.getString("type"));
-                    Integer discountAmount = rs.getInt("discount_amount");
-                    Double discountPercentage = rs.getDouble("discount_percentage");
-                    Coupon coupon = new Coupon(memberCouponId, couponName, minOrderPrice, type, discountAmount,
-                        discountPercentage,
-                        maxDiscountPrice);
+            MemberCoupon memberCoupon = null;
+            Long memberCouponId = rs.getLong("coupon_id");
+            memberCoupon = getMemberCouponIfExist(rs, member, memberCoupon, memberCouponId);
 
-                    Timestamp expiredAt = rs.getTimestamp("expired_at");
-                    memberCoupon = new MemberCoupon(memberCouponId, member, coupon, expiredAt);
-                }
+            return new Order(orderId, member, new ArrayList<>(), memberCoupon);
+        };
+    }
 
-                return new Order(orderId, member, new ArrayList<>(), memberCoupon);
-            },
-            orderId);
+    private Member getMember(ResultSet rs) throws SQLException {
+        Long id = rs.getLong("member_id");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        String nickname = rs.getString("nickname");
+
+        Member member = new Member(id, email, password, nickname);
+        return member;
+    }
+
+    private MemberCoupon getMemberCouponIfExist(ResultSet rs, Member member, MemberCoupon memberCoupon,
+        Long memberCouponId) throws SQLException {
+        if (memberCouponId != 0) {
+            String couponName = rs.getString("name");
+            int minOrderPrice = rs.getInt("min_order_price");
+            Integer maxDiscountPrice = rs.getInt("max_discount_price");
+            CouponType type = CouponType.valueOf(rs.getString("type"));
+            Integer discountAmount = rs.getInt("discount_amount");
+            Double discountPercentage = rs.getDouble("discount_percentage");
+            Coupon coupon = new Coupon(memberCouponId, couponName, minOrderPrice, type, discountAmount,
+                discountPercentage,
+                maxDiscountPrice);
+
+            Timestamp expiredAt = rs.getTimestamp("expired_at");
+            memberCoupon = new MemberCoupon(memberCouponId, member, coupon, expiredAt);
+        }
+        return memberCoupon;
     }
 
     public void validate(Long memberId, Long orderId) {
