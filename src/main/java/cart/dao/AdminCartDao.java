@@ -29,7 +29,11 @@ public class AdminCartDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null, 0);
+            Member member = Member.builder()
+                    .id(memberId)
+                    .email(email)
+                    .point(0)
+                    .build();
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });

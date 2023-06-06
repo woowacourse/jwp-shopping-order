@@ -21,7 +21,12 @@ public class MemberDao {
         String email = rs.getString("email");
         String password = rs.getString("password");
         long point = rs.getLong("point");
-        return new Member(id, email, password, point);
+        return Member.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .point(point)
+                .build();
     };
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
