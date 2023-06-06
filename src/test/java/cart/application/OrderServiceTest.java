@@ -20,6 +20,7 @@ import cart.entity.MemberEntity;
 import cart.exception.IllegalMemberException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
+import cart.ui.pageable.Page;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,10 +153,10 @@ class OrderServiceTest {
                 3000,
                 LocalDateTime.of(2023, 06, 06, 04, 05, 00)
         );
-        given(orderRepository.findByMember(member)).willReturn(List.of(order));
+        given(orderRepository.findByMember(member, Page.DEFAULT)).willReturn(List.of(order));
 
         //when
-        final List<OrderDetailResponse> responses = orderService.findOrdersByMember(member);
+        final List<OrderDetailResponse> responses = orderService.findOrdersByMember(member, Page.DEFAULT);
 
         //then
         assertAll(

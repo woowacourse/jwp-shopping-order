@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.ui.pageable.Page;
 import java.util.List;
 
 public interface OrderRepository {
@@ -10,5 +11,5 @@ public interface OrderRepository {
 
     Order findById(final Long id);
 
-    List<Order> findByMember(final Member member);
+    List<Order> findByMember(Member member, Page page);
 }

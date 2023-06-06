@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import cart.ui.pageable.Page;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,19 @@ public class OrderDao {
         final String sql = "SELECT * FROM shopping_order WHERE member_id = ?";
         try {
             return jdbcTemplate.getJdbcTemplate().query(sql, orderEntityMapper(), memberId);
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<OrderEntity> findByMemberIdWithPaging(final Long memberId, final Page page) {
+        final String sql = "SELECT * FROM shopping_order WHERE member_id = ? "
+                + "ORDER BY ordered_at "
+                + "LIMIT ?, ?";
+        try {
+            return jdbcTemplate.getJdbcTemplate().query(sql, orderEntityMapper(), memberId,
+                    page.getOffset(),
+                    page.getLimit());
         } catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
         }

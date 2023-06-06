@@ -19,6 +19,7 @@ import cart.dto.OrderDetailResponse;
 import cart.dto.OrderItemResponse;
 import cart.dto.ProductResponse;
 import cart.entity.MemberEntity;
+import cart.ui.pageable.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -98,13 +99,14 @@ class OrderControllerTest {
                 List.of(orderItemResponse)
         );
 
-        given(orderService.findOrdersByMember(eq(
-                new Member(
+        given(orderService.findOrdersByMember(
+                eq(new Member(
                         member.getId(),
                         member.getEmail(),
                         member.getPassword()
-                )
-        ))).willReturn(List.of(expected));
+                )),
+                any(Page.class)
+        )).willReturn(List.of(expected));
 
         final MvcResult mvcResult = mockMvc.perform(get("/orders")
                         .header(HttpHeaders.AUTHORIZATION, basicAuthHeader))

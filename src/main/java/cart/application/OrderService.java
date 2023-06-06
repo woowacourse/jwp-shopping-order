@@ -12,6 +12,7 @@ import cart.dto.OrderDetailResponse;
 import cart.entity.MemberEntity;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
+import cart.ui.pageable.Page;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -84,8 +85,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderDetailResponse> findOrdersByMember(final Member member) {
-        final List<Order> orders = orderRepository.findByMember(member);
+    public List<OrderDetailResponse> findOrdersByMember(final Member member, final Page page) {
+        final List<Order> orders = orderRepository.findByMember(member, page);
 
         return orders.stream()
                 .map(OrderDetailResponse::from)

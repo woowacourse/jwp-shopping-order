@@ -11,6 +11,7 @@ import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.exception.ResourceNotFoundException;
+import cart.ui.pageable.Page;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -51,8 +52,15 @@ public class OrderRepositoryWithDao implements OrderRepository {
         );
     }
 
-    public List<Order> findByMember(final Member member) {
-        final List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+    public List<Order> findByMember(final Member member, final Page page) {
+        final List<OrderEntity> orderEntities = orderDao.findByMemberIdWithPaging(
+                member.getId(),
+                page
+        );
+        return toDomain(orderEntities, member);
+    }
+
+    private List<Order> toDomain(final List<OrderEntity> orderEntities, final Member member) {
         return orderEntities.stream()
                 .map(orderEntity -> toDomain(orderEntity, member))
                 .collect(Collectors.toUnmodifiableList());
