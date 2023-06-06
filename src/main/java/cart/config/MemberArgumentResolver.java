@@ -1,8 +1,9 @@
-package cart.ui;
+package cart.config;
 
 import cart.application.service.member.MemberReadService;
 import cart.application.service.member.dto.MemberResultDto;
 import cart.exception.AuthenticationException;
+import cart.ui.MemberAuth;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
