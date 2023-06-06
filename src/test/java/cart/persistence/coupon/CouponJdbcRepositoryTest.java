@@ -97,19 +97,19 @@ class CouponJdbcRepositoryTest {
     @Test
     @DisplayName("memberCouponId에 맞는 사용가능한 쿠폰이 있으면 coupon반환")
     void findCouponByMemberCouponIdTest() {
-        assertThat(couponJdbcRepository.findCouponByMemberCouponId(3L)).isNotEmpty();
+        assertThat(couponJdbcRepository.findUsableCouponByMemberCouponId(3L)).isNotEmpty();
     }
 
     @Test
     @DisplayName("memberCouponId의 status가 0이면 Optional empty반환")
     void findCouponByCannotUseMemberCouponIdTest() {
-        assertThat(couponJdbcRepository.findCouponByMemberCouponId(2L)).isEmpty();
+        assertThat(couponJdbcRepository.findUsableCouponByMemberCouponId(2L)).isEmpty();
     }
 
     @Test
     @DisplayName("memberCouponId의 status가 0이면 Optional empty반환")
     void findCouponByNotExistMemberCouponIdTest() {
-        assertThat(couponJdbcRepository.findCouponByMemberCouponId(10L)).isEmpty();
+        assertThat(couponJdbcRepository.findUsableCouponByMemberCouponId(10L)).isEmpty();
     }
 
 }

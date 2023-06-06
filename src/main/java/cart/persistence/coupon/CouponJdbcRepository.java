@@ -46,7 +46,7 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public Optional<Coupon> findCouponByMemberCouponId(Long memberCouponId) {
+    public Optional<Coupon> findUsableCouponByMemberCouponId(Long memberCouponId) {
         String sql = "SELECT coupon.id, coupon.name, coupon.min_amount, coupon.discount_percent, coupon.discount_amount " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +

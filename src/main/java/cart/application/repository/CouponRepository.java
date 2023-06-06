@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CouponRepository {
 
-    Optional<Coupon> findCouponByMemberCouponId(Long memberCouponId);
+    Optional<Coupon> findUsableCouponByMemberCouponId(Long memberCouponId);
 
     List<MemberCouponDto> findByMemberId(Long memberId);
 
