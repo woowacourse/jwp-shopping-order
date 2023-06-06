@@ -13,7 +13,7 @@ class MemberNameTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "1234567890123456789012345678901"})
     void validateExceptionTest(String memberName) {
-        assertThatThrownBy(() -> new MemberName(memberName))
+        assertThatThrownBy(() -> MemberName.from(memberName))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("멤버의 이름은 1 ~ 30글자 사이만 가능합니다.");
     }
@@ -22,6 +22,6 @@ class MemberNameTest {
     @ParameterizedTest
     @ValueSource(strings = {"1", "123456789012345678901234567890"})
     void validateTest(String memberName) {
-        assertDoesNotThrow(() -> new MemberName(memberName));
+        assertDoesNotThrow(() -> MemberName.from(memberName));
     }
 }
