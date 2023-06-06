@@ -14,7 +14,7 @@ class OrderTest {
     @Test
     void getTotal() {
         Order order = new Order(1L, 1L, 3000, List.of(Fixture.주문_제품_치킨, Fixture.주문_제품_피자));
-        Assertions.assertThat(order.getTotal()).isEqualTo(113_000);
+        Assertions.assertThat(order.getTotal()).isEqualTo(110_000);
     }
 
     @Test

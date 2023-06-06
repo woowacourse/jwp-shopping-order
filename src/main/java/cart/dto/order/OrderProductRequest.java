@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class OrderProductRequest {
 
-    private static final String URL_REGEX = "^https?://([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?$";
+    private static final String URL_REGEX = "^https?://(?:www\\.)?[\\w-]+(?:\\.[\\w-]+)+[\\w.,@?^=%&:/~+#-]*$";
 
     @NotNull(message = "ID는 필수 입력입니다. 반드시 입력해주세요.")
     @Positive(message = "유효한 ID를 입력해주세요.")

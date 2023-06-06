@@ -43,14 +43,14 @@ class OrderServiceTest {
     void OrderCartMismatchExceptionTest() {
         OrderItemRequest request = new OrderItemRequest(
                 1L
-                , new OrderProductRequest(1L, "치킨", 10000, "https://chicken"),
+                , new OrderProductRequest(1L, "치킨", 10000, "https://chicken.com"),
                 10,
                 Collections.emptyList()
         );
 
         OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
 
-        given(cartItemRepository.findByMemberId(anyLong())).willReturn(List.of(new CartItem(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
+        given(cartItemRepository.findByMemberId(anyLong())).willReturn(List.of(CartItem.createFromExisting(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
         given(cartItemRepository.findByIds(anyList())).willReturn(List.of());
         assertThatThrownBy(() -> orderService.createOrder(orderItemsRequests, new Member(1L, "a@a.com", "1234")))
                 .isInstanceOf(OrderCartMismatchException.class);
@@ -60,7 +60,7 @@ class OrderServiceTest {
     void MemberCouponNotFoundExceptionTest() {
         OrderItemRequest request = new OrderItemRequest(
                 3L,
-                new OrderProductRequest(1L, "치킨", 10000, "https://chicken"),
+                new OrderProductRequest(1L, "치킨", 10000, "https://chicken.com"),
                 10,
                 List.of(new MemberCouponRequest(2L, "쿠폰", new DiscountRequest("rate", 10)))
         );
@@ -68,8 +68,8 @@ class OrderServiceTest {
         OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
         given(memberCouponDao.findByIds(eq(List.of(2L)))).willReturn(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(7L, "쿠폰", new Discount("rate", 10)), false))));
         given(memberCouponDao.findByMemberId(eq(5L))).willReturn(new ArrayList<>());
-        given(cartItemRepository.findByIds(eq(List.of(3L)))).willReturn(List.of(new CartItem(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
-        given(cartItemRepository.findByMemberId(eq(5L))).willReturn(List.of(new CartItem(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
+        given(cartItemRepository.findByIds(eq(List.of(3L)))).willReturn(List.of(CartItem.createFromExisting(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
+        given(cartItemRepository.findByMemberId(eq(5L))).willReturn(List.of(CartItem.createFromExisting(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
 
         assertThatThrownBy(() -> orderService.createOrder(orderItemsRequests, new Member(5L, "a@a.com", "1234")))
                 .isInstanceOf(MemberCouponNotFoundException.class);
