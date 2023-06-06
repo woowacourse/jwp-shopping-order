@@ -7,6 +7,10 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
+import cart.entity.MemberEntity;
+import cart.entity.ProductEntity;
+import cart.exception.NoSuchMemberException;
+import cart.exception.NoSuchProductException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,10 +56,26 @@ public class CartItemRepository {
     public CartItem findById(final Long id) {
         final CartItemEntity entity = cartItemDao.findById(id);
 
-        final Member member = memberDao.getMemberById(entity.getMemberId()).toMember();
-        final Product product = productDao.getProductById(entity.getProductId()).toProduct();
+        final Member member = findMember(entity.getMemberId());
+        final Product product = findProduct(entity.getProductId());
 
         return new CartItem(id, entity.getQuantity(), product, member);
+    }
+
+    private Product findProduct(final Long productId) {
+        final ProductEntity productEntity = productDao.getProductById(productId);
+        if (productEntity == null) {
+            throw new NoSuchProductException("해당 상품을 찾을 수 없습니다");
+        }
+        return productEntity.toProduct();
+    }
+
+    private Member findMember(final Long memberId) {
+        final MemberEntity memberEntity = memberDao.getMemberById(memberId);
+        if (memberEntity == null) {
+            throw new NoSuchMemberException("해당 멤버를 찾을 수 없습니다");
+        }
+        return memberEntity.toMember();
     }
 
     public void deleteById(final Long id) {
