@@ -8,23 +8,22 @@ import cart.application.repository.order.OrderedItemRepository;
 import cart.domain.PointHistory;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
-import cart.domain.discountpolicy.CouponPolicy;
+import cart.domain.coupon.Coupon;
+import cart.domain.discountpolicy.CouponType;
 import cart.domain.discountpolicy.PointPolicy;
+import cart.domain.discountpolicy.ZlzonStoreDiscountPolicy;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import cart.exception.OverFullPointException;
 import cart.ui.MemberAuth;
 import cart.ui.order.dto.CreateOrderDto;
 import cart.ui.order.dto.CreateOrderItemDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,60 +36,63 @@ public class OrderWriteService {
     private final CouponRepository couponRepository;
     private final PointRepository pointRepository;
     private final PointPolicy pointPolicy;
+    private final ZlzonStoreDiscountPolicy discountPolicy;
 
-    public OrderWriteService(OrderRepository orderRepository, OrderedItemRepository orderedItemRepository, CartItemRepository cartItemRepository, CouponRepository couponRepository, PointRepository pointRepository, PointPolicy pointPolicy) {
+    public OrderWriteService(OrderRepository orderRepository, OrderedItemRepository orderedItemRepository, CartItemRepository cartItemRepository, CouponRepository couponRepository, PointRepository pointRepository, PointPolicy pointPolicy, ZlzonStoreDiscountPolicy discountPolicy) {
         this.orderRepository = orderRepository;
         this.orderedItemRepository = orderedItemRepository;
         this.cartItemRepository = cartItemRepository;
         this.couponRepository = couponRepository;
         this.pointRepository = pointRepository;
         this.pointPolicy = pointPolicy;
+        this.discountPolicy = discountPolicy;
     }
 
     public Long createOrder(MemberAuth memberAuth, CreateOrderDto createOrderDto) {
         Member member = new Member(memberAuth.getId(), memberAuth.getName(), memberAuth.getEmail(), memberAuth.getPassword());
-        List<CreateOrderItemDto> createOrderItemDtos = createOrderDto.getCreateOrderItemDtos();
-        CartItems cartItems = findCartItems(createOrderItemDtos);
-
+        CartItems cartItems = makeCartItems(createOrderDto);
         validateIsOwner(member, cartItems);
 
-        // 할인, 포인트 적용 후 경제 금액 계산
-        int totalPrice = cartItems.calculateTotalPrice();
+        // 쿠폰 생성
         List<Long> couponIds = createOrderDto.getCouponIds();
-        List<CouponPolicy> couponPolicies = makeCoupon(couponIds);
-        int usedPoint = createOrderDto.getPoint();
-        int paymentPrice = applyDiscount(totalPrice, couponPolicies, usedPoint);
+        List<CouponType> coupons = makeCoupon(couponIds);
 
-        // 주문, 주문 상품 저장
-        Long orderId = saveOrder(member, totalPrice, paymentPrice, usedPoint);
+        // 주문, 주문 아이템 저장
+        Order order = makeOrder(cartItems, createOrderDto, member, coupons);
+        Long orderId = orderRepository.createOrder(order);
         saveOrderedItems(cartItems, orderId);
-
-        // 멤버 쿠폰 status변경
-        convertCouponStatusToUse(couponIds);
-
-        // orderedCoupon 추가
-        if (couponPolicies.size() > 0) {
-            saveOrderCoupon(couponIds, orderId);
-        }
+        useCoupon(couponIds, coupons, orderId);
         // pointhistory추가
-        savePointHistory(member, paymentPrice, usedPoint, orderId);
+        savePointHistory(member, order.getPaymentPrice(), order.getPoint(), orderId);
         // cartitem삭제
         removeCartItems(cartItems);
         return orderId;
     }
 
-    private int applyDiscount(int totalPrice, List<CouponPolicy> couponPolicies, int usedPoint) {
-        int paymentPrice = calculateApplyCoupon(totalPrice, couponPolicies);
+    private Order makeOrder(CartItems cartItems, CreateOrderDto createOrderDto, Member member, List<CouponType> coupons) {
+        int totalPrice = cartItems.calculateTotalPrice();
+        int usedPoint = createOrderDto.getPoint();
+        int paymentPrice = discountPolicy.discount(totalPrice, coupons, usedPoint);
+        Order order = new Order(paymentPrice, totalPrice, usedPoint, member);
 
-        validatePointAmount(paymentPrice, usedPoint);
-        paymentPrice -= usedPoint;
-        return paymentPrice;
+        return order;
     }
 
-    private Long saveOrder(Member member, int totalPrice, int paymentPrice, int usedPoint) {
-        Order order = new Order(paymentPrice, totalPrice, usedPoint, member);
-        Long orderId = orderRepository.createOrder(order);
-        return orderId;
+    private CartItems makeCartItems(CreateOrderDto createOrderDto) {
+        List<CreateOrderItemDto> createOrderItemDtos = createOrderDto.getCreateOrderItemDtos();
+        if (createOrderItemDtos.isEmpty()) {
+            throw new IllegalArgumentException("주문하려는 상품이 0개입니다.");
+        }
+        CartItems cartItems = findCartItems(createOrderItemDtos);
+        return cartItems;
+    }
+
+    private void useCoupon(List<Long> couponIds, List<CouponType> coupons, Long orderId) {
+        convertCouponStatusToUse(couponIds);
+
+        if (coupons.size() > 0) {
+            saveOrderCoupon(couponIds, orderId);
+        }
     }
 
     private void saveOrderedItems(CartItems cartItems, Long orderId) {
@@ -123,19 +125,6 @@ public class OrderWriteService {
         }
     }
 
-    private void validatePointAmount(int paymentPrice, int usedPoint) {
-        if (usedPoint > paymentPrice) {
-            throw new OverFullPointException("사용하려는 포인트가 결제 예상 금액보다 큽니다.");
-        }
-    }
-
-    private int calculateApplyCoupon(int totalPrice, List<CouponPolicy> couponPolicies) {
-        int totalDiscountAmount = couponPolicies.stream()
-                .mapToInt(couponPolicy -> couponPolicy.applyDiscount(totalPrice))
-                .sum();
-        return totalPrice - totalDiscountAmount;
-    }
-
     private void validateIsOwner(Member member, CartItems cartItems) {
         if (cartItems.isNotOwnedMember(member)) {
             throw new IllegalArgumentException("장바구니 소유자가 올바르지 않습니다.");
@@ -151,30 +140,15 @@ public class OrderWriteService {
         return new CartItems(cartItems);
     }
 
-    private List<CouponPolicy> makeCoupon(List<Long> memberCouponIds) {
+    private List<CouponType> makeCoupon(List<Long> memberCouponIds) {
         if (memberCouponIds.isEmpty()) {
             return Collections.emptyList();
         }
-        List<CouponPolicy> couponPolicies = new ArrayList<>();
-
-        for (Long memberCouponId : memberCouponIds) {
-            Optional<CouponPolicy> percentCoupon = couponRepository.findPercentCouponById(memberCouponId);
-            percentCoupon.ifPresent(couponPolicies::add);
-        }
-
-        for (Long memberCouponId : memberCouponIds) {
-            Optional<CouponPolicy> amountCoupon = couponRepository.findAmountCouponById(memberCouponId);
-            amountCoupon.ifPresent(couponPolicies::add);
-        }
-
-        validateIsValidCoupon(memberCouponIds, couponPolicies);
-        return couponPolicies;
-    }
-
-    private static void validateIsValidCoupon(List<Long> memberCouponIds, List<CouponPolicy> couponPolicies) {
-        if (memberCouponIds.size() != couponPolicies.size()) {
-            throw new NoSuchElementException("존재하지않는 쿠폰입니다.");
-        }
+        return memberCouponIds.stream()
+                .map(couponRepository::findUsableCouponByMemberCouponId)
+                .map(coupon -> coupon.orElseThrow(() -> new NoSuchElementException("유효하지 않은 쿠폰입니다.")))
+                .map(Coupon::makeFitCouponType)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }
