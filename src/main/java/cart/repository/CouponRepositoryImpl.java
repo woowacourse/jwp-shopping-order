@@ -47,7 +47,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public Coupon findAvailableCouponByIdAndMemberId(Long couponId, Long memberId) {
         if (memberCouponDao.existsByCouponIdAndMemberId(couponId, memberId) || couponId == null) {
-            return toDomain(memberCouponDao.findAvailableCouponByIdAndMemberId(memberId, couponId).orElse(CouponEntity.EMPTY));
+            return toDomain(memberCouponDao.findByIdAndMemberIdAndAvailable(couponId, memberId, true).orElse(CouponEntity.EMPTY));
         }
         return null;
     }

@@ -46,7 +46,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         Long savedOrderId = orderDao.save(toEntity(order));
 
         List<OrderProductEntity> orderProducts = order.getCartProducts().stream()
-                .map(it -> toOrderProductEntity(it,savedOrderId))
+                .map(it -> toOrderProductEntity(it, savedOrderId))
                 .collect(Collectors.toList());
 
         List<Long> cartItemIds = order.getCartProducts().stream()
@@ -55,11 +55,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         cartItemDao.deleteByIdsAndMemberId(order.getMember().getId(), cartItemIds);
         orderProductDao.save(savedOrderId, orderProducts);
-        memberCouponDao.updateUnUsedCouponAvailabilityById(order.getCoupon().getId());
+        memberCouponDao.updateCouponAvailabilityByIdAndAvailable(order.getCoupon().getId(), false);
         if (!DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
             orderCouponDao.save(savedOrderId, order.getCoupon().getId());
         }
-        return new Order(savedOrderId, order.getMember(),order.getCartProducts(),order.getConfirmState(),order.getCoupon());
+        return new Order(savedOrderId, order.getMember(), order.getCartProducts(), order.getConfirmState(), order.getCoupon());
     }
 
     @Override
@@ -78,7 +78,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (orderCouponDao.existsByOrderId(orderId)) {
             Long memberCouponId = orderCouponDao.findIdByOrderId(orderId);
             orderCouponDao.deleteByOrderId(orderId);
-            memberCouponDao.updateUnUsedCouponAvailabilityById(memberCouponId);
+            memberCouponDao.updateCouponAvailabilityByIdAndAvailable(memberCouponId, false);
         }
 
         orderDao.deleteById(orderId);

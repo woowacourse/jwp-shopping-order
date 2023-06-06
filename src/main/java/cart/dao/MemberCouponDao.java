@@ -36,23 +36,23 @@ public class MemberCouponDao {
                     rs.getDouble("discount_rate")
             );
 
-    public Optional<CouponEntity> findAvailableCouponByIdAndMemberId(Long memberId, Long couponId) {
+    public Optional<CouponEntity> findByIdAndMemberIdAndAvailable(Long couponId, Long memberId, Boolean available) {
         try {
             String sql = "SELECT * " +
                     "FROM member_coupon " +
                     "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
                     "WHERE member_coupon.member_id = ? and member_coupon.id = ? and available = ?";
 
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId, true));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId, available));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public void updateUsedCouponAvailabilityById(Long memberCouponId) {
+    public void updateCouponAvailabilityByIdAndAvailable(Long memberCouponId, Boolean available) {
         String sql = "UPDATE member_coupon SET available = ? WHERE id = ? and available = ?";
 
-        jdbcTemplate.update(sql, false, memberCouponId, true);
+        jdbcTemplate.update(sql, !available, memberCouponId, available);
     }
 
     public boolean existsByCouponIdAndMemberId(Long couponId, Long memberId) {
@@ -75,10 +75,6 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, rowMapper, memberId, true);
     }
 
-    public void updateUnUsedCouponAvailabilityById(Long memberCouponId) {
-        String sql = "UPDATE member_coupon SET available = ? WHERE id = ?";
-        jdbcTemplate.update(sql, true, memberCouponId);
-    }
 
     public Optional<CouponEntity> findById(Long savedId) {
         try {
@@ -88,7 +84,7 @@ public class MemberCouponDao {
                     " where member_coupon.id = ?";
 
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, savedId));
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
