@@ -11,14 +11,14 @@ class CartItemTest {
 
     @Test
     void checkOwner() {
-        CartItem cartItem = new CartItem(1L, 10, Fixture.치킨, Fixture.유저);
+        CartItem cartItem = CartItem.createFromExisting(1L, 10, Fixture.치킨, Fixture.유저);
 
         assertThatThrownBy(() -> cartItem.checkOwner(Fixture.유저2)).isInstanceOf(CartItemException.IllegalMember.class);
     }
 
     @Test
     void changeQuantity() {
-        CartItem cartItem = new CartItem(1L, 10, Fixture.치킨, Fixture.유저);
+        CartItem cartItem = CartItem.createFromExisting(1L, 10, Fixture.치킨, Fixture.유저);
 
         CartItem updateCartItem = cartItem.changeQuantity(20);
 

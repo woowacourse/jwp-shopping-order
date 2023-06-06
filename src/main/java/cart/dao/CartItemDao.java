@@ -43,7 +43,7 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return CartItem.createFromExisting(cartItemId, quantity, product, member);
         });
     }
 
@@ -100,7 +100,7 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return CartItem.createFromExisting(cartItemId, quantity, product, member);
         };
     }
 

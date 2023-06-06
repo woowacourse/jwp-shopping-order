@@ -34,6 +34,6 @@ public class Fixture {
     public static final Member 유저2 = new Member(2L, "b@b.com", "1234");
     public static final OrderItem 주문_제품_피자 = new OrderItem(new OrderItemEntity(1L, 2L, 피자, 5), List.of());
     public static final OrderItem 주문_제품_치킨 = new OrderItem(new OrderItemEntity(2L, 2L, 치킨, 5), List.of(Fixture.멤버_쿠폰));
-    public static final CartItem 장바구니_치킨 = new CartItem(유저, 치킨);
-    public static final CartItem 장바구니_피자 = new CartItem(유저, 피자);
+    public static final CartItem 장바구니_치킨 = CartItem.createInitial(유저, 치킨);
+    public static final CartItem 장바구니_피자 = CartItem.createInitial(유저, 피자);
 }

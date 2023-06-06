@@ -39,11 +39,11 @@ public class OrderService {
     @Transactional
     public Long createOrder(OrderItemsRequests request, Member member) {
         clearCartItems(request.getOrderItemRequests(), member);
-        List<OrderItem> orderItems = requestToOrderItems(request.getOrderItemRequests(), member);
+        List<OrderItem> orderItems = createOrderItems(request.getOrderItemRequests(), member);
         return orderRepository.create(orderItems, new OrderEntity(member.getId(), request.getDeliveryFee()));
     }
 
-    private List<OrderItem> requestToOrderItems(final List<OrderItemRequest> orderItemRequests, final Member member) {
+    private List<OrderItem> createOrderItems(final List<OrderItemRequest> orderItemRequests, final Member member) {
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderItemRequest orderItemRequest : orderItemRequests) {
             MemberCoupons requestCoupons = usedCoupons(member, orderItemRequest);

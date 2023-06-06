@@ -13,15 +13,19 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    private CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
     }
 
-    public CartItem(Member member, Product product) {
-        this(null, 1, product, member);
+    public static CartItem createInitial(Member member, Product product) {
+        return new CartItem(null, 1, product, member);
+    }
+
+    public static CartItem createFromExisting(Long id, int quantity, Product product, Member member) {
+        return new CartItem(id, quantity, product, member);
     }
 
     public Long getId() {
