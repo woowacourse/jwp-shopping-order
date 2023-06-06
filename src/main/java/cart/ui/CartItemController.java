@@ -38,7 +38,7 @@ public class CartItemController {
     public ResponseEntity<List<CartItemResponse>> showCartItems(
             Member member
     ) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.findByMemberId(member.getId()));
     }
 
     @PostMapping

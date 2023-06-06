@@ -74,7 +74,7 @@ class CartItemControllerTest {
         final CartItemResponse pizzaResponse = new CartItemResponse(2L, 2, pizza);
         final List<CartItemResponse> expected = List.of(chickenResponse, pizzaResponse);
 
-        given(cartItemService.findByMember(any(Member.class))).willReturn(expected);
+        given(cartItemService.findByMemberId(eq(1L))).willReturn(expected);
 
         final MvcResult mvcResult = mockMvc.perform(get("/cart-items")
                         .header(HttpHeaders.AUTHORIZATION, basicAuthHeader))

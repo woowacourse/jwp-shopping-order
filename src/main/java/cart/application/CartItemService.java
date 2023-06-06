@@ -35,8 +35,8 @@ public class CartItemService {
         return cartItemRepository.save(cartItem);
     }
 
-    public List<CartItemResponse> findByMember(final Member member) {
-        final List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+    public List<CartItemResponse> findByMemberId(final Long memberId) {
+        final List<CartItem> cartItems = cartItemRepository.findByMemberId(memberId);
 
         return cartItems.stream()
                 .map(CartItemResponse::of)
