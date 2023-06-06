@@ -1,11 +1,11 @@
-package cart.ui;
+package cart.ui.controller;
 
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderDetailResponse;
-import cart.ui.pageable.Page;
-import cart.ui.pageable.Pageable;
+import cart.ui.paging.Page;
+import cart.ui.paging.Pageable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

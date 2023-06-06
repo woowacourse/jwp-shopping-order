@@ -11,7 +11,7 @@ import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.exception.ResourceNotFoundException;
-import cart.ui.pageable.Page;
+import cart.ui.paging.Page;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;

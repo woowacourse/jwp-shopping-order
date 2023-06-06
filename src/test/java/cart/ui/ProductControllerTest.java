@@ -21,6 +21,7 @@ import cart.dao.MemberDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ResourceNotFoundException;
+import cart.ui.controller.ProductController;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;

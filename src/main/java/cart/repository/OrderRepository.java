@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.ui.pageable.Page;
+import cart.ui.paging.Page;
 import java.util.List;
 
 public interface OrderRepository {

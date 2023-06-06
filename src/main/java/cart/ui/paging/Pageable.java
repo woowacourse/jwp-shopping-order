@@ -1,4 +1,4 @@
-package cart.ui.pageable;
+package cart.ui.paging;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

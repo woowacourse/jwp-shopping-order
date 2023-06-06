@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.controller;
 
 import cart.application.CartItemService;
 import cart.domain.Member;

@@ -1,4 +1,4 @@
-package cart.ui.pageable;
+package cart.ui.paging;
 
 import cart.exception.InvalidPageException;
 

@@ -20,7 +20,7 @@ import cart.entity.MemberEntity;
 import cart.exception.IllegalMemberException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import cart.ui.pageable.Page;
+import cart.ui.paging.Page;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

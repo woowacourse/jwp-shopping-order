@@ -1,7 +1,7 @@
-package cart.ui;
+package cart.ui.argument_resolver;
 
-import cart.ui.pageable.Page;
-import cart.ui.pageable.Pageable;
+import cart.ui.paging.Page;
+import cart.ui.paging.Pageable;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.BeanPropertyBindingResult;

@@ -12,7 +12,7 @@ import cart.dto.OrderDetailResponse;
 import cart.entity.MemberEntity;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import cart.ui.pageable.Page;
+import cart.ui.paging.Page;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
-import cart.ui.pageable.Page;
+import cart.ui.paging.Page;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
