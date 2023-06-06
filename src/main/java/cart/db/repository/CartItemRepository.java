@@ -55,6 +55,10 @@ public class CartItemRepository {
         cartItemDao.deleteByIds(ids);
     }
 
+    public void deleteByProductIds(final List<Long> productIds) {
+        cartItemDao.deleteByProductIds(productIds);
+    }
+
     public List<CartItem> findByMemberIdAndProductIds(final Long memberId, final List<Long> productIds) {
         List<CartItemDetailEntity> cartItemDetailEntities = cartItemDao.findByMemberIdAndProductIds(memberId, productIds);
         return toDomain(cartItemDetailEntities);

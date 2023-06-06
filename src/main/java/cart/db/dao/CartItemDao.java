@@ -63,6 +63,7 @@ public class CartItemDao {
     }
 
     public List<CartItemDetailEntity> findByMemberIdAndProductIds(final Long memberId, final List<Long> productIds) {
+        System.out.println(productIds);
         String sql = "SELECT cart_item.id, cart_item.quantity, " +
                 "member.id, member.name, member.password, " +
                 "product.id, product.name, product.price, product.image_url, product.is_deleted " +
@@ -119,6 +120,16 @@ public class CartItemDao {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("ids", ids);
         mapSqlParameterSource.addValue("memberId", memberId);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+    }
+
+    public void deleteByProductIds(final List<Long> productIds) {
+        String sql = "DELETE cart_item FROM cart_item " +
+                "INNER JOIN (SELECT id FROM cart_item WHERE cart_item.product_id IN (:productIds)) AS subquery " +
+                "ON cart_item.id = subquery.id";
+
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("productIds", productIds);
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
 

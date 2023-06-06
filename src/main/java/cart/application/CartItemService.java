@@ -82,6 +82,6 @@ public class CartItemService {
         if (cartItems.size() != productIds.size()) { // TODO: 사이즈만 같다고 유효하다고 볼 수 있을까?
             throw new BadRequestException(INVALID_PRODUCT_ID);
         }
-        cartItemRepository.deleteByIds(productIds);
+        cartItemRepository.deleteByProductIds(productIds);
     }
 }
