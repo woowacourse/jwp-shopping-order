@@ -109,11 +109,6 @@ public class CartItemDao {
         });
     }
 
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_items WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_items WHERE id = ?";
         jdbcTemplate.update(sql, id);

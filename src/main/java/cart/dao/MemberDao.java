@@ -36,16 +36,6 @@ public class MemberDao {
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE members SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
-
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM members WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public List<Member> getAllMembers() {
         String sql = "SELECT * from members";
         return jdbcTemplate.query(sql, new MemberRowMapper());
