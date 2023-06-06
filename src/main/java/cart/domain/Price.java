@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.exception.NumberRangeException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Price {
@@ -54,6 +55,6 @@ public class Price {
     }
 
     public long getAmount() {
-        return amount.longValue();
+        return amount.setScale(0, RoundingMode.DOWN).longValue();
     }
 }

@@ -1,7 +1,7 @@
 package cart.ui;
 
-import cart.dto.response.Response;
-import cart.dto.response.ResultResponse;
+import cart.dto.response.ShoppingOrderResponse;
+import cart.dto.response.ShoppingOrderResultResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.NumberRangeException;
@@ -32,45 +32,45 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             validation.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return ResponseEntity.badRequest()
-                .body(new ResultResponse<>(BAD_REQUEST_MESSAGE, validation));
+                .body(new ShoppingOrderResultResponse<>(BAD_REQUEST_MESSAGE, validation));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Response> handleException(Exception e) {
+    public ResponseEntity<ShoppingOrderResponse> handleException(Exception e) {
         logger.error(e.getMessage(), e);
         return ResponseEntity.internalServerError()
-                .body(new Response("서버에 알 수 없는 문제가 발생했습니다."));
+                .body(new ShoppingOrderResponse("서버에 알 수 없는 문제가 발생했습니다."));
     }
 
     @ExceptionHandler(ShoppingOrderException.class)
-    public ResponseEntity<Response> handleShoppingOrderException(ShoppingOrderException e) {
+    public ResponseEntity<ShoppingOrderResponse> handleShoppingOrderException(ShoppingOrderException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new Response(e.getMessage()));
+                .body(new ShoppingOrderResponse(e.getMessage()));
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Response> handlerAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<ShoppingOrderResponse> handlerAuthenticationException(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new Response("인증이 실패했습니다."));
+                .body(new ShoppingOrderResponse("인증이 실패했습니다."));
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<Response> handleUnauthorizedAccessException(UnauthorizedAccessException e) {
+    public ResponseEntity<ShoppingOrderResponse> handleUnauthorizedAccessException(UnauthorizedAccessException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new Response(e.getMessage()));
+                .body(new ShoppingOrderResponse(e.getMessage()));
     }
 
     @ExceptionHandler(CartItemNotFoundException.class)
-    public ResponseEntity<Response> handleCartItemNotFoundException(CartItemNotFoundException e) {
+    public ResponseEntity<ShoppingOrderResponse> handleCartItemNotFoundException(CartItemNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new Response(e.getMessage()));
+                .body(new ShoppingOrderResponse(e.getMessage()));
     }
 
     @ExceptionHandler(NumberRangeException.class)
-    public ResponseEntity<Response> handleNumberRangeException(NumberRangeException e) {
+    public ResponseEntity<ShoppingOrderResponse> handleNumberRangeException(NumberRangeException e) {
         Map<String, String> validation = new HashMap<>();
         validation.put(e.getField(), e.getMessage());
         return ResponseEntity.badRequest()
-                .body(new ResultResponse<>(BAD_REQUEST_MESSAGE, validation));
+                .body(new ShoppingOrderResultResponse<>(BAD_REQUEST_MESSAGE, validation));
     }
 }

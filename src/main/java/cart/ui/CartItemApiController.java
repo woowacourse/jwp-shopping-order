@@ -4,8 +4,8 @@ import cart.application.CartItemService;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemCreateRequest;
-import cart.dto.response.Response;
-import cart.dto.response.ResultResponse;
+import cart.dto.response.ShoppingOrderResponse;
+import cart.dto.response.ShoppingOrderResultResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -28,32 +28,32 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<Response> showCartItems(Member member) {
+    public ResponseEntity<ShoppingOrderResponse> showCartItems(Member member) {
         return ResponseEntity.ok()
-                .body(new ResultResponse<>("장바구니에 담긴 상품이 조회되었습니다.", cartItemService.findAllByMember(member)));
+                .body(new ShoppingOrderResultResponse<>("장바구니에 담긴 상품이 조회되었습니다.", cartItemService.findAllByMember(member)));
     }
 
     @PostMapping
-    public ResponseEntity<Response> addCartItems(Member member, @RequestBody @Valid CartItemCreateRequest cartItemCreateRequest) {
+    public ResponseEntity<ShoppingOrderResponse> addCartItems(Member member, @RequestBody @Valid CartItemCreateRequest cartItemCreateRequest) {
         Long cartItemId = cartItemService.add(member, cartItemCreateRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId))
-                .body(new Response("장바구니에 상품을 담았습니다."));
+                .body(new ShoppingOrderResponse("장바구니에 상품을 담았습니다."));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Response> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody @Valid CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<ShoppingOrderResponse> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody @Valid CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok()
-                .body(new Response("장바구니에 담긴 상품의 수량을 변경했습니다."));
+                .body(new ShoppingOrderResponse("장바구니에 담긴 상품의 수량을 변경했습니다."));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<ShoppingOrderResponse> removeCartItems(Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
 
         return ResponseEntity.ok()
-                .body(new Response("장바구니에 담긴 상품을 삭제했습니다."));
+                .body(new ShoppingOrderResponse("장바구니에 담긴 상품을 삭제했습니다."));
     }
 }

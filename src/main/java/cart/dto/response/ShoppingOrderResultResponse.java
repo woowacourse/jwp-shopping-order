@@ -1,9 +1,9 @@
 package cart.dto.response;
 
-public class ResultResponse<T> extends Response {
+public class ShoppingOrderResultResponse<T> extends ShoppingOrderResponse {
     private final T result;
 
-    public ResultResponse(String message, T result) {
+    public ShoppingOrderResultResponse(String message, T result) {
         super(message);
         this.result = result;
     }

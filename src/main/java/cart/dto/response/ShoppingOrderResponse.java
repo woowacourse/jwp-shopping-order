@@ -1,9 +1,9 @@
 package cart.dto.response;
 
-public class Response {
+public class ShoppingOrderResponse {
     private final String message;
 
-    public Response(String message) {
+    public ShoppingOrderResponse(String message) {
         this.message = message;
     }
 
