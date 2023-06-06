@@ -1,23 +1,5 @@
 package cart.db.repository;
 
-import static cart.fixture.TestFixture.밀리;
-import static cart.fixture.TestFixture.밀리_엔티티;
-import static cart.fixture.TestFixture.밀리_쿠폰_10퍼센트;
-import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
-import static cart.fixture.TestFixture.장바구니_밀리_피자_1개;
-import static cart.fixture.TestFixture.주문_밀리_치킨_피자_3000원;
-import static cart.fixture.TestFixture.주문_밀리_치킨_피자_3000원_엔티티;
-import static cart.fixture.TestFixture.주문_치킨_10개_엔티티;
-import static cart.fixture.TestFixture.주문_피자_1개_엔티티;
-import static cart.fixture.TestFixture.쿠폰_10퍼센트_엔티티;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import cart.db.dao.CouponDao;
 import cart.db.dao.MemberDao;
 import cart.db.dao.OrderDao;
@@ -28,10 +10,6 @@ import cart.db.entity.OrderEntity;
 import cart.db.entity.OrderProductEntity;
 import cart.domain.Order;
 import cart.domain.coupon.CouponType;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -39,6 +17,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static cart.fixture.TestFixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -79,7 +69,7 @@ class OrderRepositoryTest {
     void 주문을_id로_조회한다() {
         given(orderDao.findById(any()))
                 .willReturn(Optional.of(주문_밀리_치킨_피자_3000원_엔티티));
-        given(orderProductDao.findByOrderId(anyLong()))
+        given(orderProductDao.findAllByOrderId(anyLong()))
                 .willReturn(List.of(
                         주문_치킨_10개_엔티티,
                         주문_피자_1개_엔티티
@@ -103,7 +93,7 @@ class OrderRepositoryTest {
         given(orderDao.findById(any()))
                 .willReturn(Optional.of(new OrderEntity(1L, 1L, 0L, "20230616052900331", 3000,
                         LocalDateTime.of(2023, 6, 16, 5, 29, 0, 33))));
-        given(orderProductDao.findByOrderId(anyLong()))
+        given(orderProductDao.findAllByOrderId(anyLong()))
                 .willReturn(List.of(
                         new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000), "http://pizza.com"),
                         new OrderProductEntity(1L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000), "http://chicken.com")
@@ -129,7 +119,7 @@ class OrderRepositoryTest {
                                         LocalDateTime.of(2023, 6, 17, 5, 29, 0, 33))
                         )
                 );
-        given(orderProductDao.findByOrderId(anyLong()))
+        given(orderProductDao.findAllByOrderId(anyLong()))
                 .willReturn(
                         List.of(
                                 new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000),

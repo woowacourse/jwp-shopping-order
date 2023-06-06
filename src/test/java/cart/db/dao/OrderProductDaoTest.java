@@ -1,14 +1,9 @@
 package cart.db.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.db.entity.MemberEntity;
 import cart.db.entity.OrderEntity;
 import cart.db.entity.OrderProductEntity;
 import cart.db.entity.ProductEntity;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -16,6 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -67,5 +68,27 @@ class OrderProductDaoTest {
         assertThat(orderProductDao.findAll()).usingRecursiveComparison()
                 .ignoringExpectedNullFields()
                 .isEqualTo(orderProductEntities);
+    }
+
+    @Test
+    void 주문_ID로_조회한다() {
+        // given
+        List<OrderProductEntity> orderProductEntities = List.of(
+                new OrderProductEntity(orderId, pizzaId, 1, "피자", BigDecimal.valueOf(10000), "http://pizza.com"),
+                new OrderProductEntity(orderId, chickenId, 2, "치킨", BigDecimal.valueOf(20000),
+                        "http://chicken.com"),
+                new OrderProductEntity(orderId, hamburgerId, 3, "햄버거", BigDecimal.valueOf(30000),
+                        "http://hamburger.com")
+        );
+        orderProductDao.saveAll(orderProductEntities);
+
+
+        // when
+        List<OrderProductEntity> findOrderProductEntities = orderProductDao.findAllByOrderId(orderId);
+
+        // then
+        assertThat(orderProductEntities).usingRecursiveComparison()
+                .ignoringActualNullFields()
+                .isEqualTo(findOrderProductEntities);
     }
 }

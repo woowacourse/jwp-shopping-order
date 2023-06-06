@@ -39,7 +39,7 @@ public class Order {
     }
 
     public static Order of(Member member, List<CartItem> cartItems, int deliveryFee, MemberCoupon memberCoupon) {
-        memberCoupon.check(member);
+        memberCoupon.validate(member);
         validateOwner(member, cartItems);
         List<Item> items = cartItems.stream()
                 .map(CartItem::getItem)

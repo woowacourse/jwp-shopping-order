@@ -1,11 +1,12 @@
 package cart.db.dao;
 
 import cart.db.entity.OrderProductEntity;
-import java.math.BigDecimal;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public class OrderProductDao {
@@ -46,7 +47,7 @@ public class OrderProductDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public List<OrderProductEntity> findByOrderId(Long orderId) {
+    public List<OrderProductEntity> findAllByOrderId(Long orderId) {
         String sql = "SELECT * FROM orders_product WHERE orders_id = ?";
         return jdbcTemplate.query(sql, ROW_MAPPER, orderId);
     }

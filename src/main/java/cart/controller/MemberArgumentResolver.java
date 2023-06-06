@@ -6,7 +6,6 @@ import cart.dto.AuthMember;
 import cart.exception.AuthenticationException;
 import cart.exception.ExceptionType;
 import cart.exception.MemberException;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,12 +15,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String BASIC_AUTH_PREFIX = "Basic ";
-
     private final MemberRepository memberRepository;
+    private final BasicTokenExtractor basicTokenExtractor;
 
-    public MemberArgumentResolver(MemberRepository memberRepository) {
+    public MemberArgumentResolver(MemberRepository memberRepository, BasicTokenExtractor basicTokenExtractor) {
         this.memberRepository = memberRepository;
+        this.basicTokenExtractor = basicTokenExtractor;
     }
 
     @Override
@@ -35,8 +34,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         validateAuthorizationHeader(authorization);
-
-        String[] credentials = decode(authorization);
+        String[] credentials = basicTokenExtractor.decode(authorization);
         String email = credentials[0];
         String password = credentials[1];
 
@@ -51,23 +49,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     private void validateAuthorizationHeader(String authorization) {
         if (authorization == null) {
             throw new AuthenticationException("Authorization 헤더가 없습니다.");
-        }
-        if (!authorization.startsWith(BASIC_AUTH_PREFIX)) {
-            throw new AuthenticationException("잘못된 인증 방식입니다.");
-        }
-    }
-
-    private String[] decode(String authorization) {
-        String token = authorization.substring(BASIC_AUTH_PREFIX.length());
-        String decodeToken = decodeToken(token);
-        return decodeToken.split(":");
-    }
-
-    private String decodeToken(String token) {
-        try {
-            return new String(Base64.decodeBase64(token));
-        } catch (IllegalStateException e) {
-            throw new AuthenticationException("토큰을 복호화 할 수 없습니다.");
         }
     }
 }

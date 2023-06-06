@@ -3,6 +3,7 @@ package cart.domain.coupon;
 import cart.domain.member.Member;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -34,7 +35,7 @@ public class MemberCoupon {
         return LocalDate.now().plusDays(DEFAULT_DATE_PERIOD);
     }
 
-    public void check(Member member) {
+    public void validate(Member member) {
         if (coupon.isCoupon()) {
             checkExpiredDate();
             validateOwner(member);
