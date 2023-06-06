@@ -76,8 +76,8 @@ public class OrderRepository {
         List<OrderProductEntity> orderProductEntities = orderDao.getOrderProductsByOrderId(orderId)
                 .orElseThrow(OrderProductException.NotFound::new);
         OrderProducts orderProducts = toOrderProducts(orderId, orderProductEntities);
-        Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-        return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
+        Payment payment = Payment.of(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
+        return Order.orderProductsAndUpdatePayment(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }
 
     private static OrderProducts toOrderProducts(long orderId, List<OrderProductEntity> orderProductEntities) {

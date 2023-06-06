@@ -29,14 +29,14 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, List<CartItem> cartItems, int usedPoint, int deliveryFee) {
+    public static Order orderProductsAndUpdatePayment(Member member, List<CartItem> cartItems, int usedPoint, int deliveryFee) {
         OrderProducts orderProducts = OrderProducts.of(cartItems);
-        Payment payment = new Payment(orderProducts.calculateTotalPrice() + deliveryFee, usedPoint);
+        Payment payment = Payment.of(orderProducts.calculateTotalPrice(), deliveryFee, usedPoint);
         member.pay(payment);
         return new Order(member, orderProducts, payment);
     }
 
-    public static Order of(long id, Member member, OrderProducts orderProducts, Payment payment, LocalDateTime createdAt) {
+    public static Order orderProductsAndUpdatePayment(long id, Member member, OrderProducts orderProducts, Payment payment, LocalDateTime createdAt) {
         return new Order(id, member, orderProducts, payment, createdAt);
     }
 

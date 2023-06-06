@@ -6,10 +6,21 @@ public class Payment {
     private final int usedPoint;
     private final int userPayment;
 
-    public Payment(int totalPrice, int usedPoint) {
+    private Payment(int totalPrice, int userPayment, int usedPoint) {
         this.totalPrice = totalPrice;
         this.usedPoint = usedPoint;
-        this.userPayment = totalPrice - usedPoint;
+        this.userPayment = userPayment;
+    }
+
+    public static Payment of(int productTotalPrice, int deliveryFee, int usedPoint) {
+        int totalPrice = productTotalPrice + deliveryFee;
+        int userPayment = totalPrice - usedPoint;
+        return new Payment(totalPrice, userPayment, usedPoint);
+    }
+
+    public static Payment of(int userPayment, int usedPoint) {
+        int totalPrice = userPayment + usedPoint;
+        return new Payment(totalPrice, userPayment, usedPoint);
     }
 
     public int getTotalPrice() {
