@@ -23,7 +23,7 @@ public class MemberService {
     public List<MemberResponse> findAll() {
         final List<Member> members = memberRepository.findAll();
         return members.stream()
-                .map(MemberResponse::of)
+                .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

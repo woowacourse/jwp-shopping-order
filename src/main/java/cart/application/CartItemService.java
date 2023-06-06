@@ -30,7 +30,7 @@ public class CartItemService {
     public List<CartItemResponse> findByMember(Member member) {
         final CartItems cartItems = cartItemRepository.findAllByMember(member);
         return cartItems.getCartItems().stream()
-                .map(CartItemResponse::of)
+                .map(CartItemResponse::from)
                 .collect(Collectors.toList());
     }
 

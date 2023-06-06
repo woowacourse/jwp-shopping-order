@@ -23,7 +23,7 @@ public class CartItemRepository {
 
     public CartItems findAllByMember(Member member) {
         final List<CartItem> cartItems = cartItemDao.findAllByMemberId(member.getId());
-        return CartItems.from(cartItems, member);
+        return CartItems.of(cartItems, member);
     }
 
     public Long add(CartItem cartItem) {

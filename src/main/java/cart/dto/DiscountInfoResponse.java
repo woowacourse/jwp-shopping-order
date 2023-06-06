@@ -13,7 +13,7 @@ public class DiscountInfoResponse {
         this.discountPrice = discountPrice;
     }
 
-    public static DiscountInfoResponse of(DiscountInformation discountInformation) {
+    public static DiscountInfoResponse from(DiscountInformation discountInformation) {
         return new DiscountInfoResponse(
                 discountInformation.getPolicyName(),
                 discountInformation.getDiscountRate(),

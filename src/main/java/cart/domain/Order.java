@@ -22,8 +22,8 @@ public class Order {
         this(null, price, member, orderedItems);
     }
 
-    public static Order from(List<CartItem> cartItems, Member member, PriceCalculator priceCalculator) {
-        CartItems products = CartItems.from(cartItems, member);
+    public static Order of(List<CartItem> cartItems, Member member, PriceCalculator priceCalculator) {
+        CartItems products = CartItems.of(cartItems, member);
         final int totalPrice = products.calculatePriceSum();
         final int finalPrice = priceCalculator.calculateFinalPrice(totalPrice, member);
         return new Order(finalPrice, member, products);

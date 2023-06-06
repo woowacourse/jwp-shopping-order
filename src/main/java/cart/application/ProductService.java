@@ -23,12 +23,12 @@ public class ProductService {
 
     public List<ProductResponse> findAll() {
         final List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
     public ProductResponse findById(Long productId) {
         final Product product = productRepository.findById(productId);
-        return ProductResponse.of(product);
+        return ProductResponse.from(product);
     }
 
     @Transactional

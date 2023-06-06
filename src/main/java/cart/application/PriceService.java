@@ -21,6 +21,6 @@ public class PriceService {
         final Grade grade = Grade.findGradeByGradeName(gradeName);
         final List<DiscountInformation> discountPoliciesInformations = pricePolicy.getAllDiscountPoliciesInformation(
                 price, grade);
-        return TotalDiscountInfoResponse.of(discountPoliciesInformations);
+        return TotalDiscountInfoResponse.from(discountPoliciesInformations);
     }
 }

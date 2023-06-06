@@ -16,6 +16,11 @@ public class MemberResponse {
         this.grade = grade;
     }
 
+    public static MemberResponse from(Member member) {
+        final String grade = Grade.findGradeByGradeValue(member.getGrade()).name();
+        return new MemberResponse(member.getId(), member.getEmail(), member.getPassword(), grade);
+    }
+
     public Long getId() {
         return id;
     }
@@ -32,8 +37,4 @@ public class MemberResponse {
         return grade;
     }
 
-    public static MemberResponse of(Member member) {
-        final String grade = Grade.findGradeByGradeValue(member.getGrade()).name();
-        return new MemberResponse(member.getId(), member.getEmail(), member.getPassword(), grade);
-    }
 }

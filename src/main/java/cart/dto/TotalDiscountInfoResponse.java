@@ -15,9 +15,9 @@ public class TotalDiscountInfoResponse {
         this.discountInformation = discountInformation;
     }
 
-    public static TotalDiscountInfoResponse of(List<DiscountInformation> discountInformations) {
+    public static TotalDiscountInfoResponse from(List<DiscountInformation> discountInformations) {
         final List<DiscountInfoResponse> discountInfoResponses = discountInformations.stream()
-                .map(DiscountInfoResponse::of)
+                .map(DiscountInfoResponse::from)
                 .collect(Collectors.toUnmodifiableList());
         return new TotalDiscountInfoResponse(discountInfoResponses);
     }

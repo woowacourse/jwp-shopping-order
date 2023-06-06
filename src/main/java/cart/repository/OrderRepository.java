@@ -68,7 +68,7 @@ public class OrderRepository {
                         member
                 ))
                 .collect(Collectors.toUnmodifiableList());
-        return CartItems.from(cartItems, member);
+        return CartItems.of(cartItems, member);
     }
 
     private Map<Long, Product> createTable(List<Product> products) {

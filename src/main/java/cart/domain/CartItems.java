@@ -3,7 +3,6 @@ package cart.domain;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.exception.CartItemException;
 import cart.exception.DuplicatedProductCartItemException;
 
 public class CartItems {
@@ -13,7 +12,7 @@ public class CartItems {
         this.cartItems = cartItems;
     }
 
-    public static CartItems from(List<CartItem> cartItems, Member member) {
+    public static CartItems of(List<CartItem> cartItems, Member member) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
         return new CartItems(cartItems);
     }

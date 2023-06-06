@@ -16,10 +16,10 @@ public class OrderResponse {
         this.cartItems = cartItems;
     }
 
-    public static OrderResponse of(Order order) {
+    public static OrderResponse from(Order order) {
         final List<CartItemResponse> cartItemResponses = order.getOrderedItems()
                 .stream()
-                .map(CartItemResponse::of)
+                .map(CartItemResponse::from)
                 .collect(Collectors.toUnmodifiableList());
         return new OrderResponse(order.getId(), order.getPrice(), cartItemResponses);
     }
