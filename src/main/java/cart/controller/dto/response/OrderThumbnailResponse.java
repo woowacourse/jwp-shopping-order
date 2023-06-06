@@ -1,10 +1,12 @@
 package cart.controller.dto.response;
 
-import cart.repository.dto.OrderAndMainProductDto;
+import cart.domain.OrderProduct;
 
 import java.time.LocalDateTime;
 
 public class OrderThumbnailResponse {
+
+    private static final int MAIN_PRODUCT_COUNT = 1;
 
     private final long id;
     private final String mainProductName;
@@ -23,14 +25,15 @@ public class OrderThumbnailResponse {
         this.price = price;
     }
 
-    public static OrderThumbnailResponse from(final OrderAndMainProductDto dto) {
+    public static OrderThumbnailResponse from(final OrderProduct orderProduct) {
         return new OrderThumbnailResponse(
-                dto.getOrderInfoDto().getId(),
-                dto.getMainProduct().getName(),
-                dto.getMainProduct().getImageUrl(),
-                dto.getExtraProductCount(),
-                dto.getOrderInfoDto().getCreatedAt(),
-                dto.getOrderInfoDto().getOriginalPrice() - dto.getOrderInfoDto().getDiscountPrice());
+                orderProduct.getOrderInfo().getId(),
+                orderProduct.getMainProduct().getName(),
+                orderProduct.getMainProduct().getImageUrl(),
+                orderProduct.getProductCount() - MAIN_PRODUCT_COUNT,
+                orderProduct.getOrderInfo().getCreatedAt(),
+                orderProduct.getOrderInfo().getPaymentAmount()
+        );
     }
 
     public long getId() {

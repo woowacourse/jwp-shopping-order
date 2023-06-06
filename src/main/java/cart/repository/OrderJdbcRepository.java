@@ -14,10 +14,8 @@ import cart.domain.Quantity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.OrderItemWithProductEntity;
-import cart.entity.ProductEntity;
 import cart.exception.OrderItemNoContentException;
-import cart.repository.dto.OrderAndMainProductDto;
-import cart.repository.dto.OrderInfoDto;
+import cart.domain.OrderInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,10 +43,12 @@ public class OrderJdbcRepository implements OrderRepository {
     }
 
     @Override
-    public List<OrderInfoDto> findByMember(final Member member) {
+    public List<OrderInfo> findByMember(final Member member) {
         final List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
         return orderEntities.stream()
-                .map(OrderInfoDto::from)
+                .map(orderEntity -> new OrderInfo(
+                        orderEntity.getId(), orderEntity.getOriginalPrice(),
+                        orderEntity.getDiscountPrice(), orderEntity.getCreatedAt()))
                 .collect(Collectors.toUnmodifiableList());
     }
 

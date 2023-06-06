@@ -4,8 +4,9 @@ import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.response.OrderResponse;
 import cart.controller.dto.response.OrderThumbnailResponse;
 import cart.domain.CartItem;
+import cart.domain.OrderProducts;
+import cart.domain.Product;
 import cart.domain.discount_strategy.DiscountCalculator;
-import cart.domain.discount_strategy.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -14,13 +15,15 @@ import cart.exception.NotOwnerException;
 import cart.exception.PaymentAmountNotEqualException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import cart.repository.dto.OrderAndMainProductDto;
+import cart.domain.OrderInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,9 +84,20 @@ public class OrderService {
     }
 
     public List<OrderThumbnailResponse> findByMember(final Member member) {
-        final List<OrderAndMainProductDto> dtos = orderRepository.findByMember(member);
-        return dtos.stream()
+        final List<OrderInfo> orderInfos = orderRepository.findByMember(member);
+        if (orderInfos.isEmpty()) {
+            return Collections.emptyList();
+        }
+        final Map<Long, List<Product>> orderProductsInOrderId = orderRepository.findProductsByIds(getIdsInOrderInfos(orderInfos));
+        final OrderProducts orderProducts = OrderProducts.of(orderInfos, orderProductsInOrderId);
+        return orderProducts.getOrderProducts().stream()
                 .map(OrderThumbnailResponse::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<Long> getIdsInOrderInfos(final List<OrderInfo> orderInfos) {
+        return orderInfos.stream()
+                .map(OrderInfo::getId)
                 .collect(Collectors.toUnmodifiableList());
     }
 
