@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -25,20 +27,24 @@ public class ProductDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         });
     }
 
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+    public Optional<Product> getProductById(Long productId) {
+        try {
+            String sql = "SELECT * FROM product WHERE id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+                String name = rs.getString("name");
+                long price = rs.getLong("price");
+                String imageUrl = rs.getString("image_url");
+                return new Product(productId, name, price, imageUrl);
+            }));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public Long createProduct(Product product) {
@@ -51,7 +57,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setLong(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
 
             return ps;
@@ -60,13 +66,20 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public int updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public int deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        return jdbcTemplate.update(sql, productId);
+    }
+
+    public int countByProduct(final Product product) {
+        String sql = "SELECT COUNT(*) AS count " +
+                "FROM product " +
+                "WHERE name = ? AND price = ? AND image_url = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, product.getName(), product.getPrice(), product.getImageUrl());
     }
 }

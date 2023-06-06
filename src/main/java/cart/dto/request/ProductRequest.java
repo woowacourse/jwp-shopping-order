@@ -1,14 +1,20 @@
-package cart.dto;
+package cart.dto.request;
+
+import javax.validation.constraints.NotNull;
 
 public class ProductRequest {
+
+    @NotNull
     private String name;
-    private int price;
+    @NotNull
+    private Long price;
+    @NotNull
     private String imageUrl;
 
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, String imageUrl) {
+    public ProductRequest(String name, Long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -18,7 +24,7 @@ public class ProductRequest {
         return name;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 

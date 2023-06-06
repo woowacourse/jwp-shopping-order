@@ -6,17 +6,17 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private Long quantity;
     private final Product product;
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
+        this.quantity = 1L;
         this.member = member;
         this.product = product;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, Long quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -35,17 +35,21 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException.IllegalMember();
         }
     }
 
-    public void changeQuantity(int quantity) {
+    public void changeQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean checkMember(final Member member) {
+        return this.member.equals(member);
     }
 }
