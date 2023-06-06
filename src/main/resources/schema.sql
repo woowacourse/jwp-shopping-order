@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS member
     cash     BIGINT       NOT NULL DEFAULT 5000
     );
 
+CREATE INDEX IF NOT EXISTS idx_member_id ON member (id);
+
 CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -13,6 +15,8 @@ CREATE TABLE IF NOT EXISTS product
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL
     );
+
+CREATE INDEX IF NOT EXISTS idx_product_id ON product (id);
 
 CREATE TABLE IF NOT EXISTS cart_item
 (
