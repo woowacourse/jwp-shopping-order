@@ -44,4 +44,4 @@ INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 2L, '20
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 3L, '2020-02-02 00:00:00');
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 4L, '2020-02-02 00:00:00');
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (2L, 1L, '2020-02-02 00:00:00');
-INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (2L, 2\L, '2020-02-02 00:00:00');
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (2L, 2L, '2020-02-02 00:00:00');
