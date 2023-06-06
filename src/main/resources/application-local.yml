@@ -1,0 +1,11 @@
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:13306/cart
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: cart
+    password: password
+  sql:
+    init:
+      mode: always

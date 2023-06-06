@@ -1,0 +1,21 @@
+### POST /orders a@a.com:1234
+POST http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "cartIds": [
+    1,
+    2
+  ],
+  "point": 100,
+  "totalPrice": 100000
+}
+
+### GET /orders a@a.com:1234
+GET http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### GET /orders/{id} a@a.com:1234
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0

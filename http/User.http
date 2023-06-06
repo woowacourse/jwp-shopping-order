@@ -1,0 +1,7 @@
+### GET /users a@a.com:1234
+GET http://localhost:8080/users
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### GET /users b@b.com:1234
+GET http://localhost:8080/users
+Authorization: Basic YkBiLmNvbToxMjM0
