@@ -1,6 +1,7 @@
 package cart.ui.api;
 
 import cart.application.ProductService;
+import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -31,12 +33,24 @@ public class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        List<Product> allProducts = productService.getAllProducts();
+        return ResponseEntity.ok(toProductResponses(allProducts));
+    }
+
+    private List<ProductResponse> toProductResponses(List<Product> products) {
+        return products.stream()
+                .map(this::toProductResponse)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable @NotNull Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        Product product = productService.getProductById(id);
+        return ResponseEntity.ok(toProductResponse(product));
+    }
+
+    private ProductResponse toProductResponse(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @PostMapping

@@ -1,6 +1,5 @@
 package cart.dto.cart;
 
-import cart.domain.carts.CartItem;
 import cart.dto.product.ProductResponse;
 
 public class CartItemResponse {
@@ -8,18 +7,10 @@ public class CartItemResponse {
     private int quantity;
     private ProductResponse product;
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
+    public CartItemResponse(Long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
-    }
-
-    public static CartItemResponse of(CartItem cartItem) {
-        return new CartItemResponse(
-                cartItem.getId(),
-                cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
-        );
     }
 
     public Long getId() {

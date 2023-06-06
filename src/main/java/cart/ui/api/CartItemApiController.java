@@ -1,10 +1,13 @@
 package cart.ui.api;
 
 import cart.application.CartItemService;
+import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
+import cart.dto.product.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
@@ -32,7 +36,21 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        List<CartItem> cartItems = cartItemService.findByMember(member);
+        return ResponseEntity.ok(toCartItemResponses(cartItems));
+    }
+
+    private List<CartItemResponse> toCartItemResponses(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(cartItem -> new CartItemResponse(
+                        cartItem.getId(),
+                        cartItem.getQuantity(),
+                        toProductResponse(cartItem.getProduct())
+                )).collect(Collectors.toList());
+    }
+
+    private ProductResponse toProductResponse(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @PostMapping

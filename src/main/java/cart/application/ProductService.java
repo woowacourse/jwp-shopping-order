@@ -2,12 +2,10 @@ package cart.application;
 
 import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
-import cart.dto.product.ProductResponse;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -18,16 +16,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.getAllProducts();
-        return products.stream()
-                .map(ProductResponse::of)
-                .collect(Collectors.toList());
+    public List<Product> getAllProducts() {
+        return productRepository.getAllProducts();
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.getProductById(productId);
-        return ProductResponse.of(product);
+    public Product getProductById(Long productId) {
+        return productRepository.getProductById(productId);
     }
 
     public Long createProduct(ProductRequest productRequest) {

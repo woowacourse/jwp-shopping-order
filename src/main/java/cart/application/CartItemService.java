@@ -5,13 +5,11 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
-import cart.dto.cart.CartItemResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
@@ -24,12 +22,8 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    // TODO : dto 변환 로직 controller로 옮기기
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findCartItemByMemberId(member.getId());
-        return cartItems.stream()
-                .map(CartItemResponse::of)
-                .collect(Collectors.toList());
+    public List<CartItem> findByMember(Member member) {
+        return cartItemRepository.findCartItemByMemberId(member.getId());
     }
 
     public long add(Member member, CartItemRequest cartItemRequest) {
