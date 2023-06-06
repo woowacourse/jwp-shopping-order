@@ -25,7 +25,7 @@ class OrderManagerTest {
 
     @BeforeEach
     void setup() {
-        orderManager = new OrderManager(cartItems);
+        orderManager = new OrderManager(cartItems, cartItems.size());
     }
 
     @DisplayName("요청된 주문의 originalPrice와 실제 주문된 Product의 값의 합이 다르면 예외를 반환한다")

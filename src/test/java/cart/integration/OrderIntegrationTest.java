@@ -103,8 +103,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .body(request1)
                 .when().post("/orders")
                 .then().log().all()
-                .statusCode(404)
-                .extract();
+                .statusCode(404);
     }
 
     @DisplayName("사용자의 이전 주문 목록을 조회한다")

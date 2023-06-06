@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class CartItemDao {
@@ -35,6 +33,22 @@ public class CartItemDao {
                 "WHERE cart_item.id = ?";
 
         return jdbcTemplate.queryForObject(sql, new CartItemRowMapper(), id);
+    }
+
+    public List<CartItem> findByIds(List<Long> ids) {
+        StringBuilder sql = new StringBuilder("SELECT * " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id IN (");
+
+        StringJoiner placeholders = new StringJoiner(", ");
+        for (int i = 0; i < ids.size(); i++) {
+            placeholders.add("?");
+        }
+        sql.append(placeholders).append(")");
+
+        return jdbcTemplate.query(sql.toString(), new CartItemRowMapper(), ids.toArray());
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -75,6 +89,18 @@ public class CartItemDao {
     public int deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         return jdbcTemplate.update(sql, id);
+    }
+
+    public int deleteByIds(List<Long> ids) {
+        StringBuilder sql = new StringBuilder("DELETE FROM cart_item WHERE id In (");
+
+        StringJoiner placeholders = new StringJoiner(", ");
+        for (int i = 0; i < ids.size(); i++) {
+            placeholders.add("?");
+        }
+        sql.append(placeholders).append(")");
+
+        return jdbcTemplate.update(sql.toString(), ids.toArray());
     }
 
     private static class CartItemRowMapper implements RowMapper<CartItem> {

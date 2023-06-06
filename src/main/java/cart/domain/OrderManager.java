@@ -1,16 +1,25 @@
 package cart.domain;
 
+import cart.exception.NotContainedCartItemException;
 import cart.exception.PointException;
 import cart.exception.PriceInconsistencyException;
 
 import java.util.List;
+import java.util.Objects;
 
 public class OrderManager {
 
     private final List<CartItem> cartItems;
 
-    public OrderManager(List<CartItem> cartItems) {
+    public OrderManager(List<CartItem> cartItems, int orderedItemSize) {
+        validateItemSize(cartItems.size(), orderedItemSize);
         this.cartItems = cartItems;
+    }
+
+    private void validateItemSize(int size, int orderedItemSize) {
+        if (!Objects.equals(size, orderedItemSize)) {
+            throw new NotContainedCartItemException("장바구니에 포함된 상품을 주문할 수 없습니다");
+        }
     }
 
     public void validateOrder(Order order) {

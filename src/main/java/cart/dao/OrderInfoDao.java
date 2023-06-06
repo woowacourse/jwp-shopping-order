@@ -4,11 +4,13 @@ import cart.domain.OrderInfo;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,22 @@ public class OrderInfoDao {
     }
 
     public Long save(OrderInfo orderInfo) {
+        Map<String, Object> parameters = getTableParameters(orderInfo);
+
+        return insertOrderInfos.executeAndReturnKey(parameters).longValue();
+    }
+
+    public void saveOrderInfos(List<OrderInfo> orderInfos) {
+        List<Map<String, Object>> entries = new ArrayList<>();
+        for(OrderInfo orderInfo : orderInfos) {
+            Map<String, Object> parameters = getTableParameters(orderInfo);
+            entries.add(parameters);
+        }
+
+        insertOrderInfos.executeBatch(SqlParameterSourceUtils.createBatch(entries));
+    }
+
+    private Map<String, Object> getTableParameters(OrderInfo orderInfo) {
         Map<String, Object> parameters = new HashMap<>();
         Product product = orderInfo.getProduct();
         parameters.put("order_id", orderInfo.getOrderId());
@@ -46,11 +64,11 @@ public class OrderInfoDao {
         parameters.put("price", product.getPrice());
         parameters.put("image_url", product.getImageUrl());
         parameters.put("quantity", orderInfo.getQuantity());
-
-        return insertOrderInfos.executeAndReturnKey(parameters).longValue();
+        return parameters;
     }
 
     private static class OrderInfoRowMapper implements RowMapper<OrderInfo> {
+
         @Override
         public OrderInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
             Long productId = rs.getLong("product_id");

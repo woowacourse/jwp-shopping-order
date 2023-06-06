@@ -30,6 +30,11 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    @ExceptionHandler(NotContainedCartItemException.class)
+    public ResponseEntity<String> handlerNotContainedCartItemException(NotContainedCartItemException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> emptyResultDataAccessException(EmptyResultDataAccessException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

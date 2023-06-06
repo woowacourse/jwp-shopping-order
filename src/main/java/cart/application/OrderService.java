@@ -4,7 +4,10 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderInfoDao;
-import cart.domain.*;
+import cart.domain.Member;
+import cart.domain.Order;
+import cart.domain.OrderInfo;
+import cart.domain.OrderManager;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
@@ -30,10 +33,8 @@ public class OrderService {
 
     @Transactional
     public Long order(Long memberId, OrderRequest orderRequest) {
-        OrderManager orderManager = new OrderManager(orderRequest.getCartItemIds()
-                .stream()
-                .map(cartItemDao::findById)
-                .collect(Collectors.toList()));
+        OrderManager orderManager = new OrderManager(cartItemDao.findByIds(orderRequest.getCartItemIds()),
+                orderRequest.getCartItemIds().size());
 
         Order order = new Order(memberDao.getMemberById(memberId),
                 orderRequest.getOriginalPrice(),
@@ -47,14 +48,13 @@ public class OrderService {
 
     public Long persistOrderData(OrderRequest orderRequest, OrderManager orderManager, Order order) {
         Long orderId = orderDao.save(order);
-        for (CartItem cartItem : orderManager.getCartItems()) {
-            OrderInfo orderInfo = new OrderInfo(orderId, cartItem.getProduct(), cartItem.getQuantity());
-            orderInfoDao.save(orderInfo);
-        }
 
-        for (Long cartItemId : orderRequest.getCartItemIds()) {
-            cartItemDao.deleteById(cartItemId);
-        }
+        orderInfoDao.saveOrderInfos(orderManager.getCartItems()
+                .stream()
+                .map(cartItem -> new OrderInfo(orderId, cartItem.getProduct(), cartItem.getQuantity()))
+                .collect(Collectors.toList()));
+
+        cartItemDao.deleteByIds(orderRequest.getCartItemIds());
         memberDao.updateMember(order.getMember());
 
         return orderId;

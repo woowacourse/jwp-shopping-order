@@ -48,6 +48,16 @@ class CartItemDaoTest {
         });
     }
 
+    @DisplayName("findByMemberIds 테스트")
+    @Test
+    void findByMemberIdsTest() {
+        // data.sql 파일에서 cart_item에 3개의 item을 사전에 추가
+        Long cartItemId = cartItemDao.save(ADDED_CART_ITEM);
+        List<CartItem> cartItems = cartItemDao.findByIds(List.of(1L, 2L, 3L, cartItemId));
+
+        assertThat(cartItems).hasSize(4);
+    }
+
     @DisplayName("findByMemberId 테스트")
     @Test
     void findByMemberIdTest() {
