@@ -1,12 +1,5 @@
 package cart.db.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import cart.db.dao.CartItemDao;
 import cart.db.entity.CartItemEntity;
 import cart.db.entity.MemberEntity;
@@ -14,9 +7,6 @@ import cart.db.entity.ProductEntity;
 import cart.domain.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -24,6 +14,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -56,7 +57,7 @@ class CartItemRepositoryTest {
     void 장바구니_상품을_사용자_id로_조회한다() {
         // given
         MemberEntity memberEntity = new MemberEntity(1L, "email@email.com", "password");
-        given(cartItemDao.findByMemberId(1L))
+        given(cartItemDao.findByMemberId(memberEntity.getId()))
                 .willReturn(List.of(
                         new CartItemEntity(
                                 1L,

@@ -1,13 +1,8 @@
 package cart.db.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.db.entity.CartItemEntity;
 import cart.db.entity.MemberEntity;
 import cart.db.entity.ProductEntity;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -15,6 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -55,7 +56,7 @@ class CartItemDaoTest {
         ProductEntity product = getProductEntity();
         MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
-        Long cartItemId = cartItemDao.save(cartItemEntity);
+        cartItemDao.save(cartItemEntity);
 
         // when
         List<CartItemEntity> cartItems = cartItemDao.findByMemberId(member.getId());
@@ -70,7 +71,7 @@ class CartItemDaoTest {
         ProductEntity product = getProductEntity();
         MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
-        Long cartItemId = cartItemDao.save(cartItemEntity);
+        cartItemDao.save(cartItemEntity);
         productDao.deleteById(product.getId());
 
         // when
@@ -122,8 +123,9 @@ class CartItemDaoTest {
         cartItemDao.updateQuantity(new CartItemEntity(cartItemId, product, member, 100));
 
         // then
-        CartItemEntity savedCartItem = cartItemDao.findById(cartItemId).get();
-        assertThat(savedCartItem.getQuantity()).isEqualTo(100);
+        Optional<CartItemEntity> savedCartItem = cartItemDao.findById(cartItemId);
+        assertThat(savedCartItem).isPresent();
+        assertThat(savedCartItem.get().getQuantity()).isEqualTo(100);
     }
 
     private MemberEntity getMemberEntity() {
