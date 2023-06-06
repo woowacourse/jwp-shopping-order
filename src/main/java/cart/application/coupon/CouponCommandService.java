@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.application.coupon.dto.CouponRequest;
+import cart.application.coupon.dto.SerialNumberRequest;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.MemberCouponRepository;
@@ -52,7 +53,7 @@ public class CouponCommandService {
 		couponRepository.updateCouponInfo(couponInfo);
 	}
 
-	public void generateExtraCoupons(final Long couponId, final CouponRequest request) {
+	public void generateExtraCoupons(final Long couponId, final SerialNumberRequest request) {
 		final List<SerialNumber> serialNumbers = SerialNumber.generateSerialNumbers(request.getCouponCount());
 		serialNumberRepository.generateCouponSerialNumber(couponId, serialNumbers);
 	}

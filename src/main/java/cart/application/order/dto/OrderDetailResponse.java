@@ -25,17 +25,16 @@ public class OrderDetailResponse {
 	public OrderDetailResponse() {
 	}
 
-	public static OrderDetailResponse from(final Order order) {
-		final List<OrderItemResponse> products = convertToOrderItemResponses(order.getOrderItems());
-		return new OrderDetailResponse(order.getId(), products, order.calculateTotalPrice(),
-			order.calculateTotalPayments(), order.getDeliveryFee(),
-			new CouponResponse(order.getCouponInfo()), order.getCreatedAt().format(formatter),
-			order.getOrderStatus().getStatus());
-	}
-
-	public OrderDetailResponse(final Long orderId, final List<OrderItemResponse> products, final BigDecimal totalPrice,
-		final BigDecimal totalPayments, final BigDecimal deliveryFee, final CouponResponse coupon,
-		final String createdAt, final String orderStatus) {
+	public OrderDetailResponse(
+		final Long orderId,
+		final List<OrderItemResponse> products,
+		final BigDecimal totalPrice,
+		final BigDecimal totalPayments,
+		final BigDecimal deliveryFee,
+		final CouponResponse coupon,
+		final String createdAt,
+		final String orderStatus
+	) {
 		this.orderId = orderId;
 		this.products = products;
 		this.totalPrice = totalPrice;
@@ -44,6 +43,25 @@ public class OrderDetailResponse {
 		this.coupon = coupon;
 		this.createdAt = createdAt;
 		this.orderStatus = orderStatus;
+	}
+
+	public static OrderDetailResponse from(final Order order) {
+		return new OrderDetailResponse(
+			order.getId(),
+			convertToOrderItemResponses(order.getOrderItems()),
+			order.calculateTotalPrice(),
+			order.calculateTotalPayments(),
+			order.getDeliveryFee(),
+			new CouponResponse(order.getCouponInfo()),
+			order.getCreatedAt().format(formatter),
+			order.getOrderStatus().getStatus()
+		);
+	}
+
+	private static List<OrderItemResponse> convertToOrderItemResponses(final List<OrderItem> orderItems) {
+		return orderItems.stream()
+			.map(OrderItemResponse::from)
+			.collect(Collectors.toList());
 	}
 
 	public Long getOrderId() {
@@ -76,11 +94,5 @@ public class OrderDetailResponse {
 
 	public String getOrderStatus() {
 		return orderStatus;
-	}
-
-	private static List<OrderItemResponse> convertToOrderItemResponses(final List<OrderItem> orderItems) {
-		return orderItems.stream()
-			.map(OrderItemResponse::from)
-			.collect(Collectors.toList());
 	}
 }

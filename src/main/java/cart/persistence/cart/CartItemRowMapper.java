@@ -1,6 +1,5 @@
 package cart.persistence.cart;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,16 +17,19 @@ public class CartItemRowMapper implements RowMapper<CartItem> {
 	}
 
 	private Product mapProduct(ResultSet rs) throws SQLException {
-		Long productId = rs.getLong("product.id");
-		String name = rs.getString("name");
-		BigDecimal price = rs.getBigDecimal("price");
-		String imageUrl = rs.getString("image_url");
-		return new Product(productId, name, price, imageUrl);
+		return new Product(
+			rs.getLong("product.id"),
+			rs.getString("name"),
+			rs.getBigDecimal("price"),
+			rs.getString("image_url")
+		);
 	}
 
 	private CartItem mapCartItem(ResultSet rs, Product product) throws SQLException {
-		Long cartItemId = rs.getLong("cart_item.id");
-		int quantity = rs.getInt("cart_item.quantity");
-		return new CartItem(cartItemId, product, quantity);
+		return new CartItem(
+			rs.getLong("cart_item.id"),
+			product,
+			rs.getInt("cart_item.quantity")
+		);
 	}
 }

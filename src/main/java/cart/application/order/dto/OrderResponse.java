@@ -23,8 +23,13 @@ public class OrderResponse {
 	public OrderResponse() {
 	}
 
-	public OrderResponse(final Long orderId, final List<OrderItemResponse> products, final BigDecimal totalPayments,
-		final LocalDateTime createdAt, final OrderStatus orderStatus) {
+	public OrderResponse(
+		final Long orderId,
+		final List<OrderItemResponse> products,
+		final BigDecimal totalPayments,
+		final LocalDateTime createdAt,
+		final OrderStatus orderStatus
+	) {
 		this.orderId = orderId;
 		this.products = products;
 		this.totalPayments = totalPayments;
@@ -33,9 +38,19 @@ public class OrderResponse {
 	}
 
 	public static OrderResponse from(final Order order) {
-		final List<OrderItemResponse> products = convertToOrderItemResponses(order.getOrderItems());
-		return new OrderResponse(order.getId(), products, order.calculateTotalPayments(), order.getCreatedAt(),
-			order.getOrderStatus());
+		return new OrderResponse(
+			order.getId(),
+			convertToOrderItemResponses(order.getOrderItems()),
+			order.calculateTotalPayments(),
+			order.getCreatedAt(),
+			order.getOrderStatus()
+		);
+	}
+
+	private static List<OrderItemResponse> convertToOrderItemResponses(final List<OrderItem> orderItems) {
+		return orderItems.stream()
+			.map(OrderItemResponse::from)
+			.collect(Collectors.toList());
 	}
 
 	public Long getOrderId() {
@@ -56,11 +71,5 @@ public class OrderResponse {
 
 	public String getOrderStatus() {
 		return orderStatus;
-	}
-
-	private static List<OrderItemResponse> convertToOrderItemResponses(final List<OrderItem> orderItems) {
-		return orderItems.stream()
-			.map(OrderItemResponse::from)
-			.collect(Collectors.toList());
 	}
 }

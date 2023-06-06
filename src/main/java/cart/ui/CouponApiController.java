@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +22,7 @@ import cart.application.coupon.CouponCommandService;
 import cart.application.coupon.CouponQueryService;
 import cart.application.coupon.dto.CouponRequest;
 import cart.application.coupon.dto.CouponResponse;
+import cart.application.coupon.dto.SerialNumberRequest;
 import cart.config.auth.LoginMember;
 import cart.config.auth.dto.AuthMember;
 
@@ -67,8 +67,9 @@ public class CouponApiController {
 		return ResponseEntity.ok().build();
 	}
 
-	@PatchMapping("/{id}")
-	public ResponseEntity<Void> generateExtraCoupons(@PathVariable Long id, @Valid @RequestBody CouponRequest request) {
+	@PostMapping("/{id}")
+	public ResponseEntity<Void> generateExtraCoupons(@PathVariable Long id,
+		@Valid @RequestBody SerialNumberRequest request) {
 		couponCommandService.generateExtraCoupons(id, request);
 		return ResponseEntity.ok().build();
 	}

@@ -52,6 +52,41 @@ public class OrderCommandService {
 		return savedId;
 	}
 
+	private Order createOrder(final Long memberId, final OrderRequest request) {
+		final Cart cart = cartRepository.findByMemberId(memberId);
+		final List<OrderItem> orderItems = createOrderItems(request.getCartItemIds(), cart);
+		final DeliveryFee deliveryFee = new DeliveryFee(request.getDeliveryFee());
+
+		if (request.getCouponId() != null) {
+			final CouponInfo coupon = findCoupon(memberId, request);
+			return new Order(orderItems, coupon, deliveryFee, OrderStatus.PAID);
+		}
+
+		return new Order(orderItems, new NotUsed(), deliveryFee, OrderStatus.PAID);
+	}
+
+	private List<OrderItem> createOrderItems(final List<Long> cartItemIds, final Cart cart) {
+		return cartItemIds.stream()
+			.map(cart::getCartItem)
+			.map(optionalCartItem -> optionalCartItem.orElseThrow(BadRequestException.Cart::new))
+			.map(OrderItem::new)
+			.collect(Collectors.toList());
+	}
+
+	private CouponInfo findCoupon(final Long memberId, final OrderRequest request) {
+		final MemberCoupon memberCoupon = memberCouponRepository.findByMemberId(memberId);
+		final CouponInfo couponInfo = memberCoupon.getCouponInfo(request.getCouponId())
+			.orElseThrow(BadRequestException.Coupon::new);
+		memberCouponRepository.deleteByMemberIdAndCouponId(memberId, couponInfo.getId());
+		return couponInfo;
+	}
+
+	private void validateTotalPriceOfOrder(final OrderRequest request, final Order order) {
+		if (order.isDifferentTotalPrice(request.getTotalPrice())) {
+			throw new ConflictException.Monetary();
+		}
+	}
+
 	public void cancelOrder(final Long memberId, final Long orderId) {
 		final Orders orders = new Orders(memberId, orderRepository.findByMemberId(memberId));
 		final Order order = orders.getOrder(orderId)
@@ -64,6 +99,12 @@ public class OrderCommandService {
 
 	}
 
+	private void validateOrderStatus(final Order order) {
+		if (order.getOrderStatus() != OrderStatus.PAID) {
+			throw new BadRequestException.OrderStatusUpdate();
+		}
+	}
+
 	public void remove(final Long memberId, final Long orderId) {
 		final Orders orders = new Orders(memberId, orderRepository.findByMemberId(memberId));
 		if (orders.contain(orderId)) {
@@ -71,45 +112,5 @@ public class OrderCommandService {
 			return;
 		}
 		throw new ForbiddenException.Order();
-	}
-
-	private void validateTotalPriceOfOrder(final OrderRequest request, final Order order) {
-		if (order.isDifferentTotalPrice(request.getTotalPrice())) {
-			throw new ConflictException.Monetary();
-		}
-	}
-
-	private Order createOrder(final Long memberId, final OrderRequest request) {
-		final Cart cart = cartRepository.findByMemberId(memberId);
-		final List<OrderItem> orderItems = createOrderItems(request.getCartItemIds(), cart);
-		if (request.getCouponId() != null) {
-			return new Order(null, orderItems, findCoupon(memberId, request), new DeliveryFee(request.getDeliveryFee()),
-				OrderStatus.PAID, null);
-		}
-		return new Order(null, orderItems, new NotUsed(), new DeliveryFee(request.getDeliveryFee()), OrderStatus.PAID,
-			null);
-	}
-
-	private CouponInfo findCoupon(final Long memberId, final OrderRequest request) {
-		final MemberCoupon memberCoupon = memberCouponRepository.findByMemberId(memberId);
-		final CouponInfo couponInfo = memberCoupon.getCouponInfo(request.getCouponId())
-			.orElseThrow(BadRequestException.Coupon::new);
-		memberCouponRepository.deleteByMemberIdAndCouponId(memberId, couponInfo.getId());
-		return couponInfo;
-	}
-
-	private List<OrderItem> createOrderItems(final List<Long> cartItemIds, final Cart cart) {
-		return cartItemIds.stream()
-			.map(cart::getCartItem)
-			.map(optionalCartItem -> optionalCartItem.orElseThrow(
-				() -> new IllegalArgumentException("카트에 해당 물품이 존재하지 않습니다.")))
-			.map(OrderItem::new)
-			.collect(Collectors.toList());
-	}
-
-	private void validateOrderStatus(final Order order) {
-		if (order.getOrderStatus() != OrderStatus.PAID) {
-			throw new BadRequestException.OrderStatusUpdate();
-		}
 	}
 }

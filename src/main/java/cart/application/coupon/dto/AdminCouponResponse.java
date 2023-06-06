@@ -20,8 +20,14 @@ public class AdminCouponResponse {
 	public AdminCouponResponse() {
 	}
 
-	public AdminCouponResponse(final Long id, final String name, final String couponType, final BigDecimal discount,
-		final Integer leftOverCoupon, final Integer couponCount) {
+	public AdminCouponResponse(
+		final Long id,
+		final String name,
+		final String couponType,
+		final BigDecimal discount,
+		final Integer leftOverCoupon,
+		final Integer couponCount
+	) {
 		this.id = id;
 		this.name = name;
 		this.couponType = couponType;
@@ -33,9 +39,20 @@ public class AdminCouponResponse {
 	public static AdminCouponResponse from(final Coupon coupon) {
 		final CouponInfo couponInfo = coupon.getCouponInfo();
 		final List<SerialNumber> serialNumbers = coupon.getSerialNumbers();
-		final int leftOverCoupon = getLeftOverCoupon(serialNumbers);
-		return new AdminCouponResponse(couponInfo.getId(), couponInfo.getName(), couponInfo.getCouponType().name(),
-			couponInfo.getDiscount(), leftOverCoupon, serialNumbers.size());
+
+		return new AdminCouponResponse(
+			couponInfo.getId(),
+			couponInfo.getName(),
+			couponInfo.getCouponType().name(),
+			couponInfo.getDiscount(),
+			getLeftOverCoupon(serialNumbers),
+			serialNumbers.size());
+	}
+
+	private static int getLeftOverCoupon(final List<SerialNumber> serialNumbers) {
+		return (int)serialNumbers.stream()
+			.filter(Predicate.not(SerialNumber::isIssued))
+			.count();
 	}
 
 	public Long getId() {
@@ -60,11 +77,5 @@ public class AdminCouponResponse {
 
 	public Integer getLeftOverCoupon() {
 		return leftOverCoupon;
-	}
-
-	private static int getLeftOverCoupon(final List<SerialNumber> serialNumbers) {
-		return (int)serialNumbers.stream()
-			.filter(Predicate.not(SerialNumber::isIssued))
-			.count();
 	}
 }

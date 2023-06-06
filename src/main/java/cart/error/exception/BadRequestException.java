@@ -42,4 +42,9 @@ public class BadRequestException extends RuntimeException {
 		}
 	}
 
+	public static class Cart extends BadRequestException {
+		public Cart() {
+			super("카트에 해당 물품이 존재하지 않습니다.");
+		}
+	}
 }

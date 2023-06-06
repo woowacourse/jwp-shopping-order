@@ -16,8 +16,19 @@ public class Order {
 	private final List<OrderItem> orderItems;
 	private final LocalDateTime createdAt;
 
-	public Order(final Long id, final List<OrderItem> orderItems, final CouponInfo couponInfo,
-		final DeliveryFee deliveryFee, final OrderStatus orderStatus, final LocalDateTime createdAt) {
+	public Order(final List<OrderItem> orderItems, final CouponInfo couponInfo, final DeliveryFee deliveryFee,
+		final OrderStatus orderStatus) {
+		this(null, orderItems, couponInfo, deliveryFee, orderStatus, null);
+	}
+
+	public Order(
+		final Long id,
+		final List<OrderItem> orderItems,
+		final CouponInfo couponInfo,
+		final DeliveryFee deliveryFee,
+		final OrderStatus orderStatus,
+		final LocalDateTime createdAt
+	) {
 		this.id = id;
 		this.orderItems = orderItems;
 		this.couponInfo = couponInfo;
@@ -41,7 +52,13 @@ public class Order {
 	}
 
 	public BigDecimal calculateTotalPayments() {
-		return couponInfo.calculatePayments(calculateTotalPrice()).add(deliveryFee.getAmount());
+		final BigDecimal totalPayments = couponInfo.calculatePayments(calculateTotalPrice())
+			.add(deliveryFee.getAmount());
+		final int compareToZero = totalPayments.compareTo(BigDecimal.ZERO);
+		if (compareToZero < 0) {
+			return BigDecimal.ZERO;
+		}
+		return totalPayments;
 	}
 
 	public Long getId() {

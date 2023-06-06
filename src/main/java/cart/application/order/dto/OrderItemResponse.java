@@ -16,8 +16,13 @@ public class OrderItemResponse {
 	public OrderItemResponse() {
 	}
 
-	public OrderItemResponse(final Long id, final String name, final String imageUrl, final Integer quantity,
-		final BigDecimal totalPrice) {
+	public OrderItemResponse(
+		final Long id,
+		final String name,
+		final String imageUrl,
+		final Integer quantity,
+		final BigDecimal totalPrice
+	) {
 		this.id = id;
 		this.name = name;
 		this.imageUrl = imageUrl;
@@ -27,8 +32,14 @@ public class OrderItemResponse {
 
 	public static OrderItemResponse from(final OrderItem orderItem) {
 		final Product product = orderItem.getProduct();
-		return new OrderItemResponse(orderItem.getId(), product.getName(), product.getImageUrl(),
-			orderItem.getQuantity(), orderItem.calculatePrice());
+
+		return new OrderItemResponse(
+			orderItem.getId(),
+			product.getName(),
+			product.getImageUrl(),
+			orderItem.getQuantity(),
+			orderItem.calculatePrice()
+		);
 	}
 
 	public Long getId() {

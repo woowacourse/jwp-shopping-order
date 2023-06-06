@@ -33,8 +33,18 @@ public class CouponDetailResponse {
 		final CouponInfo couponInfo = coupon.getCouponInfo();
 		final List<SerialNumber> serialNumbers = coupon.getSerialNumbers();
 
-		return new CouponDetailResponse(couponInfo.getId(), couponInfo.getName(), couponInfo.getCouponType().getType(),
-			couponInfo.getDiscount(), convertToSerialNumberResponse(serialNumbers));
+		return new CouponDetailResponse(
+			couponInfo.getId(),
+			couponInfo.getName(),
+			couponInfo.getCouponType().getType(),
+			couponInfo.getDiscount(),
+			convertToSerialNumberResponse(serialNumbers));
+	}
+
+	private static List<SerialNumberResponse> convertToSerialNumberResponse(final List<SerialNumber> serialNumbers) {
+		return serialNumbers.stream()
+			.map(SerialNumberResponse::new)
+			.collect(Collectors.toList());
 	}
 
 	public Long getId() {
@@ -55,11 +65,5 @@ public class CouponDetailResponse {
 
 	public List<SerialNumberResponse> getSerialNumbers() {
 		return serialNumbers;
-	}
-
-	private static List<SerialNumberResponse> convertToSerialNumberResponse(final List<SerialNumber> serialNumbers) {
-		return serialNumbers.stream()
-			.map(SerialNumberResponse::new)
-			.collect(Collectors.toList());
 	}
 }
