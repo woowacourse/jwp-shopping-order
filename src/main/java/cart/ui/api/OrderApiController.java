@@ -49,7 +49,7 @@ public class OrderApiController {
     private OrderResponse toOrderResponse(Order order) {
         return new OrderResponse(
                 order.getId(),
-                toOrderProductResponse(order.getOrderProducts().getOrderProducts()),
+                toOrderProductResponse(order.getOrderProducts()),
                 order.getPayment().getUserPayment(),
                 order.getPayment().getUsedPoint(),
                 order.getCreatedAt()

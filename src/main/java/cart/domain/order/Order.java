@@ -48,8 +48,8 @@ public class Order {
         return member;
     }
 
-    public OrderProducts getOrderProducts() {
-        return orderProducts;
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts.getOrderProducts();
     }
 
     public Payment getPayment() {

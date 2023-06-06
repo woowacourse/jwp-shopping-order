@@ -27,7 +27,7 @@ public class OrderRepository {
     }
 
     public long createOrder(Order order) {
-        OrderProducts orderProducts = order.getOrderProducts();
+        OrderProducts orderProducts = new OrderProducts(order.getOrderProducts());
         OrderEntity orderEntity = toOrderEntity(order);
         long orderId = orderDao.insertOrder(orderEntity);
         saveOrderItems(orderProducts, orderId);
