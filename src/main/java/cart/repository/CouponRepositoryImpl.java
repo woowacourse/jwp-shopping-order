@@ -27,7 +27,8 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public Coupon save(Long memberId, Long couponId) {
         Long savedId = memberCouponDao.save(new MemberCouponEntity(couponId, memberId, true));
-        CouponEntity couponEntity = memberCouponDao.findById(savedId).orElseThrow(() -> new CouponException("잘못된 쿠폰입니다."));
+        CouponEntity couponEntity = memberCouponDao.findById(savedId)
+                .orElseThrow(() -> new CouponException("잘못된 쿠폰입니다."));
         return toDomain(couponEntity);
     }
 
@@ -41,13 +42,15 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public List<Coupon> findAll() {
         return couponDao.findAll().stream()
-                .map(this::toDomain).collect(Collectors.toList());
+                .map(this::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Coupon findAvailableCouponByIdAndMemberId(Long couponId, Long memberId) {
         if (memberCouponDao.existsByCouponIdAndMemberId(couponId, memberId) || couponId == null) {
-            return toDomain(memberCouponDao.findByIdAndMemberIdAndAvailable(couponId, memberId, true).orElse(CouponEntity.EMPTY));
+            return toDomain(memberCouponDao.findByIdAndMemberIdAndAvailable(couponId, memberId, true)
+                    .orElse(CouponEntity.EMPTY));
         }
         return null;
     }

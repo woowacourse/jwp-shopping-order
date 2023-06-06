@@ -23,7 +23,7 @@ public class CouponIssuableResponse {
 
     public static CouponIssuableResponse of(Coupon it, boolean isIssuable) {
         return new CouponIssuableResponse(it.getId(), it.getName(),
-                it.getCouponTypes().getCouponTypeName(),
+                it.getCouponTypesName(),
                 it.getMinimumPrice(), it.getDiscountRate(), it.getDiscountPrice(),
                 isIssuable);
     }

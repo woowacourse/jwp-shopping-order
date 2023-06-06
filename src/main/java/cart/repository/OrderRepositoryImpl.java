@@ -1,10 +1,7 @@
 package cart.repository;
 
 import cart.dao.*;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.Product;
+import cart.domain.*;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DiscountType;
 import cart.domain.repository.OrderRepository;
@@ -56,10 +53,10 @@ public class OrderRepositoryImpl implements OrderRepository {
         cartItemDao.deleteByIdsAndMemberId(order.getMember().getId(), cartItemIds);
         orderProductDao.save(savedOrderId, orderProducts);
         memberCouponDao.updateCouponAvailabilityByIdAndAvailable(order.getCoupon().getId(), false);
-        if (!DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypes().getCouponTypeName())) {
+        if (!DiscountType.EMPTY_DISCOUNT.getTypeName().equals(order.getCoupon().getCouponTypesName())) {
             orderCouponDao.save(savedOrderId, order.getCoupon().getId());
         }
-        return new Order(savedOrderId, order.getMember(), order.getCartProducts(), order.getConfirmState(), order.getCoupon());
+        return new Order(savedOrderId, order.getMember(), new CartItems(order.getCartProducts()), order.getConfirmState(), order.getCoupon());
     }
 
     @Override
@@ -89,10 +86,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         OrderEntity orderEntity = orderDao.findByIdAndMemberId(memberId, orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
         orderDao.confirmByOrderIdAndMemberId(orderEntity.getId(), memberId);
 
-        CouponEntity bonusCoupon = new CouponEntity(Coupon.BONUS_COUPON.getName(), Coupon.BONUS_COUPON.getCouponTypes().getCouponTypeName(),
+        CouponEntity bonusCoupon = new CouponEntity(Coupon.BONUS_COUPON.getName(), Coupon.BONUS_COUPON.getCouponTypesName(),
                 Coupon.BONUS_COUPON.getMinimumPrice(), Coupon.BONUS_COUPON.getDiscountPrice(), Coupon.BONUS_COUPON.getDiscountRate());
 
-        CouponEntity coupon = couponDao.findByName(bonusCoupon).orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
+        CouponEntity coupon = couponDao.findByName(bonusCoupon)
+                .orElseThrow(() -> new CouponException("보너스 쿠폰이 없습니다."));
         Long userCouponId = memberCouponDao.save(new MemberCouponEntity(coupon.getId(), memberId, true));
 
         return new Coupon(userCouponId, coupon.getName(),
@@ -120,11 +118,12 @@ public class OrderRepositoryImpl implements OrderRepository {
                         new Product(it.getId(), it.getName(), it.getPrice(), it.getImage_url()), member))
                 .collect(Collectors.toList());
 
-        CouponEntity couponEntity = orderCouponDao.findByOrderId(orderEntity.getId()).orElse(CouponEntity.EMPTY);
+        CouponEntity couponEntity = orderCouponDao.findByOrderId(orderEntity.getId())
+                .orElse(CouponEntity.EMPTY);
         Coupon coupon = new Coupon(couponEntity.getId(), couponEntity.getName(), DiscountType.from(couponEntity.getDiscountType()),
                 couponEntity.getMinimumPrice(), couponEntity.getDiscountPrice(), couponEntity.getDiscountRate());
 
-        return new Order(orderEntity.getId(), member, products, orderEntity.getConfirmState(), coupon);
+        return new Order(orderEntity.getId(), member, new CartItems(products), orderEntity.getConfirmState(), coupon);
     }
 
     public static OrderProductEntity toOrderProductEntity(CartItem cartItem, Long orderId) {

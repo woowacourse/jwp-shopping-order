@@ -41,8 +41,8 @@ public class Coupon {
         return name;
     }
 
-    public CouponTypes getCouponTypes() {
-        return couponTypes;
+    public String getCouponTypesName() {
+        return couponTypes.getCouponTypeName();
     }
 
     public int getMinimumPrice() {

@@ -1,10 +1,7 @@
 package cart.repository;
 
 import cart.dao.MemberDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.Product;
+import cart.domain.*;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.OrderRepository;
@@ -42,7 +39,7 @@ class OrderRepositoryTest {
         CartItem 카트_바다 = cartItemRepository.save(new CartItem(member, productRepository.findById(바다)));
         List<CartItem> cartItems = List.of(cartItemRepository.findById(카트_오션.getId()), cartItemRepository.findById(카트_바다.getId()));
 
-        assertDoesNotThrow(() -> orderRepository.save(new Order(member, cartItems, Coupon.EMPTY)));
+        assertDoesNotThrow(() -> orderRepository.save(new Order(member, new CartItems(cartItems), Coupon.EMPTY)));
     }
 
     @Test
@@ -64,8 +61,8 @@ class OrderRepositoryTest {
         CartItem 카트_동해 = cartItemRepository.save(cartItem3);
         CartItem 카트_서해 = cartItemRepository.save(cartItem4);
         List<CartItem> cartItems2 = List.of(cartItemRepository.findById(카트_동해.getId()), cartItemRepository.findById(카트_서해.getId()));
-        Order order1 = new Order(member, cartItems1, Coupon.EMPTY);
-        Order order2 = new Order(member, cartItems2, Coupon.EMPTY);
+        Order order1 = new Order(member, new CartItems(cartItems1), Coupon.EMPTY);
+        Order order2 = new Order(member, new CartItems(cartItems2), Coupon.EMPTY);
         orderRepository.save(order1);
         orderRepository.save(order2);
 
@@ -95,7 +92,7 @@ class OrderRepositoryTest {
         CartItem 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션.getId()), cartItemRepository.findById(카트_바다.getId()));
 
-        Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
+        Order requestOrder = new Order(member, new CartItems(cartItems1), Coupon.EMPTY);
         Order order = orderRepository.save(requestOrder);
 
         assertAll(
@@ -117,7 +114,7 @@ class OrderRepositoryTest {
         CartItem 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션.getId()), cartItemRepository.findById(카트_바다.getId()));
 
-        Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
+        Order requestOrder = new Order(member, new CartItems(cartItems1), Coupon.EMPTY);
         orderRepository.save(requestOrder);
 
         assertDoesNotThrow(()->orderRepository.deleteById(member.getId(),requestOrder.getId()));
@@ -135,7 +132,7 @@ class OrderRepositoryTest {
         CartItem 카트_바다 = cartItemRepository.save(cartItem2);
         List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션.getId()), cartItemRepository.findById(카트_바다.getId()));
 
-        Order requestOrder = new Order(member, cartItems1, Coupon.EMPTY);
+        Order requestOrder = new Order(member, new CartItems(cartItems1), Coupon.EMPTY);
         Order savedOrder = orderRepository.save(requestOrder);
 
         orderRepository.confirmById(savedOrder.getId(),member.getId());

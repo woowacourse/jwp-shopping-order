@@ -24,7 +24,7 @@ public class CouponResponse {
             return null;
         }
         return new CouponResponse(
-                coupon.getId(), coupon.getName(), coupon.getCouponTypes().getCouponTypeName(),
+                coupon.getId(), coupon.getName(), coupon.getCouponTypesName(),
                 coupon.getMinimumPrice(), coupon.getDiscountRate(), coupon.getDiscountPrice());
     }
 

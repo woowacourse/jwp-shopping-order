@@ -1,23 +1,21 @@
 package cart.domain;
 
 import cart.domain.coupon.Coupon;
-import cart.exception.OrderException;
 
 import java.util.List;
 
 public class Order {
     private final Long id;
     private final Member member;
-    private final List<CartItem> cartProducts;
+    private final CartItems cartProducts;
     private final boolean confirmState;
     private final Coupon coupon;
 
-    public Order(Member member, List<CartItem> cartProducts, Coupon coupon) {
+    public Order(Member member, CartItems cartProducts, Coupon coupon) {
         this(null, member, cartProducts, false, coupon);
     }
 
-    public Order(Long id, Member member, List<CartItem> cartProducts, boolean confirmState, Coupon coupon) {
-        validate(cartProducts);
+    public Order(Long id, Member member, CartItems cartProducts, boolean confirmState, Coupon coupon) {
         this.id = id;
         this.member = member;
         this.cartProducts = cartProducts;
@@ -25,20 +23,12 @@ public class Order {
         this.coupon = coupon;
     }
 
-    private void validate(List<CartItem> cartProducts) {
-        if (cartProducts.isEmpty()) {
-            throw new OrderException("주문 상품이 비어있습니다.");
-        }
-    }
-
     public int calculatePrice() {
-        return cartProducts.stream()
-                .mapToInt(it -> it.getProduct().getPrice() * it.getQuantity()).sum();
+        return cartProducts.calculatePrice();
     }
 
     public int calculateDiscountPrice() {
-        int totalPrice = cartProducts.stream()
-                .mapToInt(it -> it.getProduct().getPrice() * it.getQuantity()).sum();
+        int totalPrice = cartProducts.calculatePrice();
         return coupon.applyCouponPrice(totalPrice);
     }
 
@@ -51,7 +41,7 @@ public class Order {
     }
 
     public List<CartItem> getCartProducts() {
-        return cartProducts;
+        return cartProducts.getCartProducts();
     }
 
     public Boolean getConfirmState() {

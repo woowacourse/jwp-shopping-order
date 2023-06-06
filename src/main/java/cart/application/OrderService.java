@@ -1,13 +1,18 @@
 package cart.application;
 
-import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
-import cart.domain.repository.*;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.CouponRepository;
+import cart.domain.repository.OrderRepository;
 import cart.dto.MemberDto;
 import cart.dto.request.OrderRequest;
-import cart.dto.response.*;
+import cart.dto.response.CouponConfirmResponse;
+import cart.dto.response.CouponResponse;
+import cart.dto.response.OrderResponse;
+import cart.dto.response.OrdersResponse;
 import cart.exception.CouponException;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
@@ -34,10 +39,10 @@ public class OrderService {
     public Long save(MemberDto member, OrderRequest orderRequest) {
         validationSave(orderRequest);
 
-        List<CartItem> cartItems = cartItemRepository.findAllByIdsAndMemberId(orderRequest.getSelectedCartIds(), member.getId());
-        Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(orderRequest.getCouponId(),member.getId());
+        CartItems cartItems = new CartItems(cartItemRepository.findAllByIdsAndMemberId(orderRequest.getSelectedCartIds(), member.getId()));
+        Coupon coupon = couponRepository.findAvailableCouponByIdAndMemberId(orderRequest.getCouponId(), member.getId());
         validateCoupon(coupon);
-        Order order = new Order(new Member(member.getId(), member.getEmail(), null), cartItems,coupon);
+        Order order = new Order(new Member(member.getId(), member.getEmail(), null), cartItems, coupon);
         Order savedOrder = orderRepository.save(order);
         return savedOrder.getId();
     }
@@ -49,7 +54,7 @@ public class OrderService {
     }
 
     private void validateCoupon(Coupon coupon) {
-        if(coupon == null){
+        if (coupon == null) {
             throw new CouponException("유효하지 않은 쿠폰입니다.");
         }
     }
@@ -63,7 +68,7 @@ public class OrderService {
     }
 
     public OrderResponse findByIdAndMemberId(MemberDto member, Long orderId) {
-        Order order = orderRepository.findByIdAndMemberId(orderId,member.getId());
+        Order order = orderRepository.findByIdAndMemberId(orderId, member.getId());
 
         return OrderResponse.of(order);
     }

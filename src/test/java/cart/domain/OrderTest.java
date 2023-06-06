@@ -19,7 +19,7 @@ class OrderTest {
         Product product = new Product("오션", 10000, "ocean");
         CartItem cartItem = new CartItem(member, product);
 
-        assertDoesNotThrow(() -> new Order(member, List.of(cartItem), null));
+        assertDoesNotThrow(() -> new Order(member, new CartItems(List.of(cartItem)), null));
     }
 
     @Test
@@ -27,7 +27,7 @@ class OrderTest {
     void createOrderException() {
         Member member = new Member(1L, "ocean@ocean", "1234");
 
-        assertThatThrownBy(() -> new Order(member, List.of(), null))
+        assertThatThrownBy(() -> new Order(member, new CartItems(List.of()), null))
                 .hasMessage("주문 상품이 비어있습니다.");
     }
 
@@ -37,7 +37,7 @@ class OrderTest {
         Member member = new Member(1L, "ocean@ocena", "1234");
         Product product = new Product("오션", 10000, "ocean");
         CartItem cartItem = new CartItem(member, product);
-        Order order = new Order(member, List.of(cartItem), null);
+        Order order = new Order(member, new CartItems(List.of(cartItem)), null);
         assertThat(order.calculatePrice()).isEqualTo(10000);
     }
 
@@ -48,7 +48,7 @@ class OrderTest {
         Product product = new Product("오션", 10000, "ocean");
         CartItem cartItem = new CartItem(member, product);
         Coupon coupon = new Coupon("50%할인쿠폰", DiscountType.PERCENT_DISCOUNT.getType(), 0, 0, 0.5);
-        Order order = new Order(member, List.of(cartItem), coupon);
+        Order order = new Order(member, new CartItems(List.of(cartItem)), coupon);
         assertThat(order.calculateDiscountPrice()).isEqualTo(5000);
     }
 }
