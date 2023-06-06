@@ -2,7 +2,6 @@ package cart.domain.refund;
 
 import static cart.domain.refund.RefundLimitDate.HALF_REFUND;
 
-import cart.domain.order.BigDecimalConverter;
 import cart.domain.order.Order;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -23,7 +22,7 @@ public class HalfRefundPolicy implements RefundPolicy {
 
     @Override
     public BigDecimal calculatePrice(final BigDecimal price) {
-        final BigDecimal refundRate = BigDecimalConverter.convert((PERCENTAGE - HALF_REFUND_RATE) * DECIMAL_CONVERSION);
+        final BigDecimal refundRate = BigDecimal.valueOf((PERCENTAGE - HALF_REFUND_RATE) * DECIMAL_CONVERSION);
         return price.multiply(refundRate).setScale(0, RoundingMode.DOWN);
     }
 }

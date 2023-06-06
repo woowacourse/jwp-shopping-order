@@ -6,7 +6,6 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.order.BasicOrder;
-import cart.domain.order.BigDecimalConverter;
 import cart.domain.product.Product;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -51,10 +50,10 @@ class HalfRefundPolicyTest {
     @DisplayName("할인 금액을 전체 금액의 절반으로 계산한다.")
     void calculatePrice() {
         // when
-        final BigDecimal result = halfRefundPolicy.calculatePrice(BigDecimalConverter.convert(10000));
+        final BigDecimal result = halfRefundPolicy.calculatePrice(BigDecimal.valueOf(10000));
 
         // then
         assertThat(result)
-            .isEqualTo(BigDecimalConverter.convert(5000));
+            .isEqualTo(BigDecimal.valueOf(5000));
     }
 }

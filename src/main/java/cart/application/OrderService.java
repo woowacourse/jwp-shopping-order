@@ -20,7 +20,6 @@ import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberCouponRepository;
 import cart.domain.member.MemberRepository;
 import cart.domain.order.BasicOrder;
-import cart.domain.order.BigDecimalConverter;
 import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
@@ -110,7 +109,7 @@ public class OrderService {
 
         final BigDecimal paymentPrice = changeCouponUnUsedIfExist(order);
         final BigDecimal refundPrice = refundPolicy.calculatePrice(paymentPrice).add(
-            BigDecimalConverter.convert(order.getDeliveryPrice()));
+            BigDecimal.valueOf(order.getDeliveryPrice()));
         return new OrderRefundResponse(refundPrice);
     }
 

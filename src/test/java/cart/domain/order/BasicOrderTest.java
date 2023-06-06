@@ -29,7 +29,7 @@ class BasicOrderTest {
 
         // then
         assertThat(총_금액)
-            .isEqualTo(BigDecimalConverter.convert(350_000));
+            .isEqualTo(BigDecimal.valueOf(350_000));
     }
 
     @Test
@@ -49,6 +49,6 @@ class BasicOrderTest {
 
         // then
         assertThat(할인된_금액)
-            .isEqualTo(BigDecimalConverter.convert(350_000));
+            .isEqualTo(BigDecimal.valueOf(350_000));
     }
 }

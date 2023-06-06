@@ -6,7 +6,6 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 import cart.domain.event.FirstOrderCouponEvent;
 import cart.domain.event.JoinMemberCouponEvent;
-import cart.domain.order.BigDecimalConverter;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import cart.persistence.dao.MemberCouponDao;
@@ -15,6 +14,7 @@ import cart.persistence.dao.OrderDao;
 import cart.persistence.dao.dto.MemberCouponDto;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -158,8 +158,8 @@ class MemberCouponServiceTest {
 
     private void 상품을_주문한다(final Long 저장된_져니_아이디) {
         final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(10000),
-            BigDecimalConverter.convert(9000), 3000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimal.valueOf(10000),
+            BigDecimal.valueOf(9000), 3000, 주문_시간);
         orderDao.insert(주문_엔티티);
     }
 }

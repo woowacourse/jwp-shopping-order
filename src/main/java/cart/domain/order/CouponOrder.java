@@ -48,7 +48,7 @@ public class CouponOrder implements Order {
 
     private BigDecimal calculateDiscountPrice() {
         final int discountRate = coupon.discountRate();
-        final BigDecimal convertedDiscountRate = BigDecimalConverter.convert(
+        final BigDecimal convertedDiscountRate = BigDecimal.valueOf(
             (PERCENTAGE - discountRate) * DECIMAL_CONVERSION);
         return totalPrice.multiply(convertedDiscountRate).setScale(0, RoundingMode.DOWN);
     }

@@ -33,7 +33,7 @@ class CouponOrderTest {
 
         // then
         assertThat(총_금액)
-            .isEqualTo(BigDecimalConverter.convert(350_000));
+            .isEqualTo(BigDecimal.valueOf(350_000));
     }
 
     @Test
