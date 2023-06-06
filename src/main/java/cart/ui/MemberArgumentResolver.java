@@ -1,52 +1,43 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
-import cart.dao.MemberDao;
 import cart.domain.Member;
-import org.apache.tomcat.util.codec.binary.Base64;
+import cart.exception.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Component
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberDao memberDao;
+    private final MemberAuthenticator basicAuthenticator;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(final MemberAuthenticator basicAuthenticator) {
+        this.basicAuthenticator = basicAuthenticator;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return null;
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+        final String authorization = extractAuthorizationValue(webRequest);
+
+        return basicAuthenticator.findAuthenticatedMember(authorization);
+    }
+
+    private String extractAuthorizationValue(final NativeWebRequest webRequest) {
+        final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (authorization != null) {
+            return authorization;
         }
 
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
-
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
-        }
-        return member;
+        throw new AuthenticationException("인증에 사용되는 헤더 값이 존재하지 않습니다.");
     }
 }

@@ -1,23 +1,37 @@
 package cart;
 
-import cart.dao.MemberDao;
+import cart.ui.IdsConverter;
 import cart.ui.MemberArgumentResolver;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.util.List;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final MemberDao memberDao;
+    private final MemberArgumentResolver memberArgumentResolver;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(final MemberArgumentResolver memberArgumentResolver) {
+        this.memberArgumentResolver = memberArgumentResolver;
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(memberArgumentResolver);
+    }
+
+    @Override
+    public void addCorsMappings(final CorsRegistry registry) {
+        registry
+                .addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*");
+    }
+
+    @Override
+    public void addFormatters(final FormatterRegistry registry) {
+        registry.addConverter(new IdsConverter());
     }
 }
