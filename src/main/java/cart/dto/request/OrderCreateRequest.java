@@ -5,23 +5,23 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
-public class OrderRequest {
+public class OrderCreateRequest {
     @Valid
-    private List<OrderItemRequest> orderItems;
+    private List<OrderItemCreateRequest> orderItems;
 
     @NotNull(message = "사용할 포인트는 반드시 포함되어야 합니다.")
     @PositiveOrZero(message = "사용할 포인트는 음수가 될 수 없습니다.")
     private Long spendPoint;
 
-    private OrderRequest() {
+    private OrderCreateRequest() {
     }
 
-    public OrderRequest(List<OrderItemRequest> orderItems, Long spendPoint) {
+    public OrderCreateRequest(List<OrderItemCreateRequest> orderItems, Long spendPoint) {
         this.orderItems = orderItems;
         this.spendPoint = spendPoint;
     }
 
-    public List<OrderItemRequest> getOrderItems() {
+    public List<OrderItemCreateRequest> getOrderItems() {
         return orderItems;
     }
 

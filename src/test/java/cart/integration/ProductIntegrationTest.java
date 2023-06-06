@@ -1,6 +1,6 @@
 package cart.integration;
 
-import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.response.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg");
+        var product = new ProductCreateRequest("치킨", 10_000L, "http://example.com/chicken.jpg");
 
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg");
+        var product = new ProductCreateRequest("피자", 15_000L, "http://example.com/pizza.jpg");
 
         // create product
         var location =

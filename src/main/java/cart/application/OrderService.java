@@ -8,9 +8,9 @@ import cart.domain.OrderItem;
 import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.response.OrderDetailResponse;
-import cart.dto.request.OrderItemRequest;
+import cart.dto.request.OrderItemCreateRequest;
 import cart.dto.response.OrderItemResponse;
-import cart.dto.request.OrderRequest;
+import cart.dto.request.OrderCreateRequest;
 import cart.dto.response.OrderResponse;
 import cart.exception.ProductNotFoundException;
 import cart.repository.OrderRepository;
@@ -37,9 +37,9 @@ public class OrderService {
     }
 
     @Transactional
-    public Long createOrder(OrderRequest orderRequest, Member member) {
-        List<OrderItem> orderItems = createOrderItems(orderRequest);
-        Point spendPoint = new Point(orderRequest.getSpendPoint());
+    public Long createOrder(OrderCreateRequest orderCreateRequest, Member member) {
+        List<OrderItem> orderItems = createOrderItems(orderCreateRequest);
+        Point spendPoint = new Point(orderCreateRequest.getSpendPoint());
         Order order = Order.builder()
                 .member(member)
                 .orderItems(orderItems)
@@ -53,11 +53,11 @@ public class OrderService {
         return saveOrder.getId();
     }
 
-    private List<OrderItem> createOrderItems(OrderRequest orderRequest) {
+    private List<OrderItem> createOrderItems(OrderCreateRequest orderCreateRequest) {
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItems()) {
-            Long productId = orderItemRequest.getProductId();
-            int quantity = orderItemRequest.getQuantity();
+        for (OrderItemCreateRequest orderItemCreateRequest : orderCreateRequest.getOrderItems()) {
+            Long productId = orderItemCreateRequest.getProductId();
+            int quantity = orderItemCreateRequest.getQuantity();
             Product product = findProduct(productId);
             OrderItem orderItem = OrderItem.builder()
                     .product(product)

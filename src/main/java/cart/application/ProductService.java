@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.domain.Product;
 import cart.dao.ProductDao;
-import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,20 +29,20 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    public Long createProduct(ProductCreateRequest productCreateRequest) {
         Product product = Product.builder()
-                .name(productRequest.getName())
-                .price(productRequest.getPrice())
-                .imageUrl(productRequest.getImageUrl())
+                .name(productCreateRequest.getName())
+                .price(productCreateRequest.getPrice())
+                .imageUrl(productCreateRequest.getImageUrl())
                 .build();
         return productDao.save(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
+    public void updateProduct(Long productId, ProductCreateRequest productCreateRequest) {
         Product product = Product.builder()
-                .name(productRequest.getName())
-                .price(productRequest.getPrice())
-                .imageUrl(productRequest.getImageUrl())
+                .name(productCreateRequest.getName())
+                .price(productCreateRequest.getPrice())
+                .imageUrl(productCreateRequest.getImageUrl())
                 .build();
         productDao.updateProduct(productId, product);
     }

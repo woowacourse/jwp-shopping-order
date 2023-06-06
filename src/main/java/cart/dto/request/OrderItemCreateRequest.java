@@ -3,7 +3,7 @@ package cart.dto.request;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class OrderItemRequest {
+public class OrderItemCreateRequest {
     @NotNull(message = "상품 ID는 반드시 포함되어야 합니다.")
     @Positive(message = "상품 ID는 0 또는 음수가 될 수 없습니다.")
     private Long productId;
@@ -12,10 +12,10 @@ public class OrderItemRequest {
     @Positive(message = "수량은 0 또는 음수가 될 수 없습니다.")
     private Integer quantity;
 
-    private OrderItemRequest() {
+    private OrderItemCreateRequest() {
     }
 
-    public OrderItemRequest(Long productId, Integer quantity) {
+    public OrderItemCreateRequest(Long productId, Integer quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

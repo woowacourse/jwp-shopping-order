@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.CartItemService;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
+import cart.dto.request.CartItemCreateRequest;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
 import java.net.URI;
@@ -34,8 +34,8 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> addCartItems(Member member, @RequestBody @Valid CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<Response> addCartItems(Member member, @RequestBody @Valid CartItemCreateRequest cartItemCreateRequest) {
+        Long cartItemId = cartItemService.add(member, cartItemCreateRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId))
                 .body(new Response("장바구니에 상품을 담았습니다."));

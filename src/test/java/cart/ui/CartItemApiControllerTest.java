@@ -20,7 +20,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
+import cart.dto.request.CartItemCreateRequest;
 import cart.dto.response.CartItemResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -76,13 +76,13 @@ class CartItemApiControllerTest {
 
     @Test
     void 회원의_장바구니에_품목을_등록한다() throws Exception {
-        CartItemRequest cartItemRequest = new CartItemRequest(1L);
-        given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
+        CartItemCreateRequest cartItemCreateRequest = new CartItemCreateRequest(1L);
+        given(cartItemService.add(any(Member.class), any(CartItemCreateRequest.class))).willReturn(1L);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
-                        .content(objectMapper.writeValueAsString(cartItemRequest))
+                        .content(objectMapper.writeValueAsString(cartItemCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(prettyDocument(
@@ -93,12 +93,12 @@ class CartItemApiControllerTest {
 
     @Test
     void 장바구니에_품목을_등록할때_품목의_ID가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
-        CartItemRequest cartItemRequest = new CartItemRequest(null);
+        CartItemCreateRequest cartItemCreateRequest = new CartItemCreateRequest(null);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
-                        .content(objectMapper.writeValueAsString(cartItemRequest))
+                        .content(objectMapper.writeValueAsString(cartItemCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.result.productId").value("상품 ID는 반드시 포함되어야 합니다."));
@@ -107,12 +107,12 @@ class CartItemApiControllerTest {
     @ParameterizedTest
     @ValueSource(longs = {-1, 0})
     void 장바구니에_품목을_등록할때_품목의_ID가_0_또는_음수이면_400_상태코드가_반환된다(Long productId) throws Exception {
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        CartItemCreateRequest cartItemCreateRequest = new CartItemCreateRequest(productId);
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
-                        .content(objectMapper.writeValueAsString(cartItemRequest))
+                        .content(objectMapper.writeValueAsString(cartItemCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.result.productId").value("상품 ID는 0 또는 음수가 될 수 없습니다."));

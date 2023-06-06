@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.response.OrderDetailResponse;
-import cart.dto.request.OrderRequest;
+import cart.dto.request.OrderCreateRequest;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
@@ -29,10 +29,10 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Response> createOrder(
-            @RequestBody @Valid OrderRequest orderRequest,
+            @RequestBody @Valid OrderCreateRequest orderCreateRequest,
             Member member
     ) {
-        Long orderId = orderService.createOrder(orderRequest, member);
+        Long orderId = orderService.createOrder(orderCreateRequest, member);
         return ResponseEntity.created(URI.create("/orders/" + orderId))
                 .body(new Response("주문이 정상적으로 처리되었습니다."));
     }

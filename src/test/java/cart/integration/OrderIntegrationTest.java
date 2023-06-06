@@ -10,8 +10,8 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.request.OrderItemRequest;
-import cart.dto.request.OrderRequest;
+import cart.dto.request.OrderItemCreateRequest;
+import cart.dto.request.OrderCreateRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -51,15 +51,15 @@ public class OrderIntegrationTest extends IntegrationTest {
         Product product = productDao.findById(productId).get();
         Long cartItemId = cartItemDao.save(new CartItem(null, 5, product, member));
 
-        OrderRequest orderRequest = new OrderRequest(List.of(
-                new OrderItemRequest(productId, 5)
+        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(List.of(
+                new OrderItemCreateRequest(productId, 5)
         ), 0L);
 
         ExtractableResponse<Response> response = given()
                 .log().all()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequest)
+                .body(orderCreateRequest)
                 .when()
                 .post("/orders")
                 .then()

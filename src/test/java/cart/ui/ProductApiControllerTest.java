@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.application.ProductService;
 import cart.dao.MemberDao;
 import cart.domain.Product;
-import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.response.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -106,9 +106,9 @@ class ProductApiControllerTest {
     @Test
     void 상품을_생성한다() throws Exception {
         // given
-        given(productService.createProduct(any(ProductRequest.class)))
+        given(productService.createProduct(any(ProductCreateRequest.class)))
                 .willReturn(1L);
-        ProductRequest request = new ProductRequest("치킨", 10_000L, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest("치킨", 10_000L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -127,7 +127,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_생성할때_상품의_이름이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest(null, 10_000L, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest(null, 10_000L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -140,7 +140,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_생성할때_상품의_가격이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("사과", null, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest("사과", null, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -153,7 +153,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_생성할때_상품의_가격이_음수이면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("사과", -1L, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest("사과", -1L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -166,7 +166,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_생성할때_상품의_이미지가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("사과", 10_000L, null);
+        ProductCreateRequest request = new ProductCreateRequest("사과", 10_000L, null);
 
         // expect
         mockMvc.perform(post("/products")
@@ -179,7 +179,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("치킨", 10_000L, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest("치킨", 10_000L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(put("/products/{id}", 1L)
@@ -196,7 +196,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_수정할때_상품의_이름이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest(null, 10_000L, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest(null, 10_000L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(put("/products/1")
@@ -209,7 +209,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_수정할때_상품의_가격이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("사과", null, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest("사과", null, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(put("/products/1")
@@ -222,7 +222,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_수정할때_상품의_가격이_음수이면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("사과", -1L, "http://image.com/image.png");
+        ProductCreateRequest request = new ProductCreateRequest("사과", -1L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(put("/products/1")
@@ -235,7 +235,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_수정할때_상품의_이미지가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("사과", 10_000L, null);
+        ProductCreateRequest request = new ProductCreateRequest("사과", 10_000L, null);
 
         // expect
         mockMvc.perform(put("/products/1")

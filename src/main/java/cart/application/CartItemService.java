@@ -6,7 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
+import cart.dto.request.CartItemCreateRequest;
 import cart.dto.response.CartItemResponse;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
@@ -30,8 +30,8 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.findById(cartItemRequest.getProductId())
+    public Long add(Member member, CartItemCreateRequest cartItemCreateRequest) {
+        Product product = productDao.findById(cartItemCreateRequest.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException("해당 상품을 찾을 수 없습니다."));
         CartItem cartItem = CartItem.builder()
                 .member(member)
