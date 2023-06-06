@@ -137,9 +137,9 @@ class CartDaoTest extends DaoTest {
                 .isInstanceOf(DatabaseException.IllegalDataException.class);
     }
 
-    static class Data {
-        static MemberEntity member = new MemberEntity("쥬니", "1234");
-        static ProductEntity pizza = new ProductEntity("피자", 20000, "피자.com");
-        static ProductEntity chicken = new ProductEntity("치킨", 30000, "치킨.com");
+    private static class Data {
+        static final MemberEntity member = new MemberEntity("쥬니", "1234");
+        static final ProductEntity pizza = new ProductEntity("피자", 20000, "피자.com");
+        static final ProductEntity chicken = new ProductEntity("치킨", 30000, "치킨.com");
     }
 }
