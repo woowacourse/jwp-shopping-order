@@ -1,6 +1,6 @@
-package cart.entity;
+package cart.dao.dto;
 
-public class CartItemWithProductEntity {
+public class CartItemWithProductDto {
 
     private final long id;
     private final long memberId;
@@ -10,9 +10,9 @@ public class CartItemWithProductEntity {
     private final String productImageUrl;
     private final int quantity;
 
-    public CartItemWithProductEntity(final long id, final long memberId, final long productId,
-                                     final String productName, final int productPrice, final String productImageUrl,
-                                     final int quantity) {
+    public CartItemWithProductDto(final long id, final long memberId, final long productId,
+                                  final String productName, final int productPrice, final String productImageUrl,
+                                  final int quantity) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;

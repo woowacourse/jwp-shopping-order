@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.CartItemWithProductEntity;
+import cart.dao.dto.CartItemWithProductDto;
 import cart.exception.CartItemNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,14 +51,14 @@ class CartItemDaoTest {
             final List<Long> ids = List.of(1L, 2L);
 
             // when
-            final List<CartItemWithProductEntity> entities = cartItemDao.findProductDetailByIds(ids);
+            final List<CartItemWithProductDto> entities = cartItemDao.findProductDetailByIds(ids);
 
             // then
             assert entities != null;
             assertAll(
                     () -> assertThat(entities).hasSize(ids.size()),
                     () -> assertThat(entities.stream()
-                            .map(CartItemWithProductEntity::getProductId)
+                            .map(CartItemWithProductDto::getProductId)
                             .collect(Collectors.toUnmodifiableList())).containsAll(ids)
             );
         }

@@ -13,7 +13,7 @@ import cart.domain.Product;
 import cart.domain.Quantity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
-import cart.entity.OrderItemWithProductEntity;
+import cart.dao.dto.OrderItemWithProductDto;
 import cart.exception.OrderItemNoContentException;
 import cart.domain.OrderInfo;
 import org.springframework.stereotype.Repository;
@@ -82,7 +82,7 @@ public class OrderJdbcRepository implements OrderRepository {
     @Override
     public Order findById(final long id) {
         final OrderEntity orderEntity = orderDao.findById(id);
-        final List<OrderItemWithProductEntity> orderItemWithProductEntities = orderItemDao.findProductDetailByOrderId(id);
+        final List<OrderItemWithProductDto> orderItemWithProductEntities = orderItemDao.findProductDetailByOrderId(id);
         return toOrderDomain(orderEntity, orderItemWithProductEntities);
     }
 
@@ -100,7 +100,7 @@ public class OrderJdbcRepository implements OrderRepository {
         return new OrderItemEntity(orderId, orderItem.getProduct().getId(), orderItem.getQuantity().getValue());
     }
 
-    private Order toOrderDomain(final OrderEntity orderEntity, final List<OrderItemWithProductEntity> orderItemWithProductEntities) {
+    private Order toOrderDomain(final OrderEntity orderEntity, final List<OrderItemWithProductDto> orderItemWithProductEntities) {
         return new Order(
                 orderEntity.getId(), orderEntity.getMemberId(),
                 new OrderItems(mapToOrderItems(orderItemWithProductEntities), new DiscountPriceCalculator()),
@@ -108,7 +108,7 @@ public class OrderJdbcRepository implements OrderRepository {
         );
     }
 
-    private List<OrderItem> mapToOrderItems(final List<OrderItemWithProductEntity> orderItemWithProductEntities) {
+    private List<OrderItem> mapToOrderItems(final List<OrderItemWithProductDto> orderItemWithProductEntities) {
         return orderItemWithProductEntities.stream()
                 .map(entity -> new OrderItem(
                         entity.getId(),

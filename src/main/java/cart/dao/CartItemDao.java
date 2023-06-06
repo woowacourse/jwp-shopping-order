@@ -1,10 +1,11 @@
 package cart.dao;
 
+import cart.dao.dto.CartItemWithProductDto;
 import cart.entity.CartItemEntity;
-import cart.entity.CartItemWithProductEntity;
 import cart.exception.CartItemNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,12 +16,20 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
-import static cart.entity.RowMapperUtil.cartItemWithProductEntityRowMapper;
-
 @Repository
 public class CartItemDao {
 
     private static final int SINGLE_AFFECTED_ROW_NUMBER = 1;
+    private static final RowMapper<CartItemWithProductDto> cartItemWithProductRowMapper = (rs, rn) ->
+            new CartItemWithProductDto(
+                    rs.getLong("cart_item.id"),
+                    rs.getLong("cart_item.member_id"),
+                    rs.getLong("product.id"),
+                    rs.getString("product.name"),
+                    rs.getInt("product.price"),
+                    rs.getString("product.image_url"),
+                    rs.getInt("cart_item.quantity")
+            );
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -34,14 +43,14 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<CartItemWithProductEntity> findProductDetailByIds(final List<Long> ids) {
+    public List<CartItemWithProductDto> findProductDetailByIds(final List<Long> ids) {
         final String sql = "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id IN (:ids)";
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
-        final List<CartItemWithProductEntity> results = namedParameterJdbcTemplate.query(sql, params, cartItemWithProductEntityRowMapper);
+        final List<CartItemWithProductDto> results = namedParameterJdbcTemplate.query(sql, params, cartItemWithProductRowMapper);
         validateResultSize(ids.size(), results.size());
         return results;
     }
@@ -53,13 +62,13 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItemWithProductEntity> findAllDetailByMemberId(final long memberId) {
+    public List<CartItemWithProductDto> findAllDetailByMemberId(final long memberId) {
         final String sql = "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, cartItemWithProductEntityRowMapper, memberId);
+        return jdbcTemplate.query(sql, cartItemWithProductRowMapper, memberId);
     }
 
     public long save(final CartItemEntity source) {

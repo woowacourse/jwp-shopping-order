@@ -7,7 +7,7 @@ import cart.domain.Price;
 import cart.domain.Product;
 import cart.domain.Quantity;
 import cart.entity.CartItemEntity;
-import cart.entity.CartItemWithProductEntity;
+import cart.dao.dto.CartItemWithProductDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public List<CartItem> findByIds(final List<Long> ids) {
-        final List<CartItemWithProductEntity> entities = cartItemDao.findProductDetailByIds(ids);
+        final List<CartItemWithProductDto> entities = cartItemDao.findProductDetailByIds(ids);
         return entities.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toUnmodifiableList());
@@ -32,7 +32,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public List<CartItem> findByMember(final Member member) {
-        final List<CartItemWithProductEntity> entities = cartItemDao.findAllDetailByMemberId(member.getId());
+        final List<CartItemWithProductDto> entities = cartItemDao.findAllDetailByMemberId(member.getId());
         return mapToDomains(entities);
     }
 
@@ -62,13 +62,13 @@ public class CartItemJdbcRepository implements CartItemRepository {
         cartItemDao.deleteAllByIds(ids);
     }
 
-    private List<CartItem> mapToDomains(final List<CartItemWithProductEntity> entities) {
+    private List<CartItem> mapToDomains(final List<CartItemWithProductDto> entities) {
         return entities.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private CartItem toDomain(final CartItemWithProductEntity entity) {
+    private CartItem toDomain(final CartItemWithProductDto entity) {
         return new CartItem(
                 entity.getId(),
                 entity.getMemberId(),

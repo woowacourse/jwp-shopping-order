@@ -1,8 +1,8 @@
 package cart.dao;
 
+import cart.dao.dto.OrderItemWithProductDto;
 import cart.dao.dto.OrderProductDto;
 import cart.entity.OrderItemEntity;
-import cart.entity.OrderItemWithProductEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,8 +17,6 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static cart.entity.RowMapperUtil.orderItemWithProductEntityRowMapper;
-
 @Repository
 public class OrderItemDao {
     
@@ -30,6 +28,16 @@ public class OrderItemDao {
             rs.getInt("price"),
             rs.getString("image_url")
     );
+    private static final RowMapper<OrderItemWithProductDto> orderItemWithProductRowMapper = (rs, rn) ->
+            new OrderItemWithProductDto(
+                    rs.getLong("order_item.id"),
+                    rs.getLong("order_item.order_id"),
+                    rs.getLong("product.id"),
+                    rs.getString("product.name"),
+                    rs.getInt("product.price"),
+                    rs.getString("product.image_url"),
+                    rs.getInt("order_item.quantity")
+            );
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -74,12 +82,12 @@ public class OrderItemDao {
         return namedParameterJdbcTemplate.query(sql, params, orderProductRowMapper);
     }
 
-    public List<OrderItemWithProductEntity> findProductDetailByOrderId(final long orderId) {
+    public List<OrderItemWithProductDto> findProductDetailByOrderId(final long orderId) {
         final String sql = "SELECT order_item.id, order_item.order_id, " +
                 "product.id, product.name, product.price, product.image_url, order_item.quantity " +
                 "FROM order_item " +
                 "INNER JOIN product ON product.id = order_item.product_id " +
                 "WHERE order_item.order_id = ?";
-        return jdbcTemplate.query(sql, orderItemWithProductEntityRowMapper, orderId);
+        return jdbcTemplate.query(sql, orderItemWithProductRowMapper, orderId);
     }
 }

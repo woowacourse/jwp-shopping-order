@@ -4,6 +4,7 @@ import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,12 +15,16 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
-import static cart.entity.RowMapperUtil.productEntityRowMapper;
-
 @Repository
 public class ProductDao {
 
     private static final int SINGLE_AFFECTED_ROW_NUMBER = 1;
+    private static final RowMapper<ProductEntity> productRowMapper = (rs, rn) -> new ProductEntity(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getInt("price"),
+            rs.getString("image_url")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -35,13 +40,13 @@ public class ProductDao {
 
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, productEntityRowMapper);
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public ProductEntity findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
+            return jdbcTemplate.queryForObject(sql, productRowMapper, id);
         } catch (EmptyResultDataAccessException e) {
             throw new ProductNotFoundException();
         }
@@ -51,7 +56,7 @@ public class ProductDao {
         final String sql = "SELECT * FROM product WHERE id IN (:ids)";
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
-        final List<ProductEntity> results = namedParameterJdbcTemplate.query(sql, params, productEntityRowMapper);
+        final List<ProductEntity> results = namedParameterJdbcTemplate.query(sql, params, productRowMapper);
         validateResultSize(ids.size(), results.size());
         return results;
     }
