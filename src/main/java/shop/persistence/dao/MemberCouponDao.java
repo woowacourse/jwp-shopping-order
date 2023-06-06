@@ -1,6 +1,6 @@
 package shop.persistence.dao;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -56,7 +56,7 @@ public class MemberCouponDao {
 
         try {
             return jdbcTemplate.queryForObject(sql, detailRowMapper, memberId, couponId);
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new DatabaseException.IllegalDataException("사용자(Id : " + memberId + ")에게 " +
                     "존재하지 않는 쿠폰(Id : " + couponId + " 입니다.");
         }

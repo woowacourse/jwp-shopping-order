@@ -1,6 +1,6 @@
 package shop.persistence.dao;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -47,7 +47,7 @@ public class OrderDao {
 
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
-        } catch (DataIntegrityViolationException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new DatabaseException.IllegalDataException(id + "를 갖는 주문 정보를 찾을 수 없습니다.");
         }
     }

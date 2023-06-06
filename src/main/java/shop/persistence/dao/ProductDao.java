@@ -1,6 +1,6 @@
 package shop.persistence.dao;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -48,7 +48,7 @@ public class ProductDao {
         String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new DatabaseException.IllegalDataException(id + "에 해당하는 상품이 없습니다.");
         }
     }
