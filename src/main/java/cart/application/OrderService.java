@@ -49,13 +49,13 @@ public class OrderService {
         }
     }
 
-    public OrderResponse findOrderByIdAndMember(Long orderId, Member member) {
+    public OrderResponse findByIdAndMember(Long orderId, Member member) {
         final Order order = orderRepository.findOrderByIdAndMember(orderId, member)
                 .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
         return OrderResponse.from(order);
     }
 
-    public List<OrderResponse> findByMember(Member member) {
+    public List<OrderResponse> findAllByMember(Member member) {
         final List<Order> orders = orderRepository.findAllByMember(member);
         return orders.stream()
                 .map(OrderResponse::from)

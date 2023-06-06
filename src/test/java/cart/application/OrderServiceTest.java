@@ -77,7 +77,7 @@ class OrderServiceTest {
         Long orderId = orderService.add(orderRequest, member);
 
         //when
-        final OrderResponse result = orderService.findOrderByIdAndMember(orderId, member);
+        final OrderResponse result = orderService.findByIdAndMember(orderId, member);
 
         //then
         Assertions.assertAll(
@@ -92,7 +92,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("orderId와 member를 통해 해당하는 order의 orderResponse를 반환한다.")
     void findOrderByIdFailByUnExistedOrderId() {
-        assertThatThrownBy(() -> orderService.findOrderByIdAndMember(30000L, GOLD_MEMBER))
+        assertThatThrownBy(() -> orderService.findByIdAndMember(30000L, GOLD_MEMBER))
                 .isInstanceOf(InvalidOrderException.class)
                 .hasMessageContaining("OrderId is not existed;");
     }
@@ -111,7 +111,7 @@ class OrderServiceTest {
                 member);
 
         //when
-        final List<OrderResponse> result = orderService.findByMember(member);
+        final List<OrderResponse> result = orderService.findAllByMember(member);
         final List<Long> idCollection = result.stream()
                 .map(OrderResponse::getId)
                 .collect(Collectors.toUnmodifiableList());
