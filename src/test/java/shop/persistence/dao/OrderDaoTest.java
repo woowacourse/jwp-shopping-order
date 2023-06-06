@@ -5,9 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import shop.persistence.entity.MemberEntity;
 import shop.persistence.entity.OrderEntity;
-import shop.persistence.entity.ProductEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,9 +28,9 @@ class OrderDaoTest extends DaoTest {
 
     @BeforeEach
     void setUp() {
-        memberId = memberDao.insertMember(Data.member);
-        productDao.insert(Data.chicken);
-        productDao.insert(Data.pizza);
+        memberId = memberDao.insertMember(DaoTestFixture.member);
+        productDao.insert(DaoTestFixture.chicken);
+        productDao.insert(DaoTestFixture.pizza);
     }
 
     @DisplayName("주문을 할 수 있다.")
@@ -79,11 +77,5 @@ class OrderDaoTest extends DaoTest {
                 .containsExactlyInAnyOrder(memberId, memberId);
         assertThat(allOrders).extractingResultOf("getDiscountedTotalPrice")
                 .containsExactlyInAnyOrder(0L, 10000L);
-    }
-
-    private static class Data {
-        static final MemberEntity member = new MemberEntity("쥬니", "1234");
-        static final ProductEntity pizza = new ProductEntity("피자", 20000, "피자.com");
-        static final ProductEntity chicken = new ProductEntity("치킨", 30000, "치킨.com");
     }
 }

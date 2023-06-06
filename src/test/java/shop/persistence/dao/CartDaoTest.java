@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import shop.exception.DatabaseException;
 import shop.persistence.entity.CartEntity;
-import shop.persistence.entity.MemberEntity;
-import shop.persistence.entity.ProductEntity;
 import shop.persistence.entity.detail.CartItemDetail;
 
 import java.util.List;
@@ -35,9 +33,9 @@ class CartDaoTest extends DaoTest {
 
     @BeforeEach
     void setUp() {
-        memberId = memberDao.insertMember(Data.member);
-        chickenId = productDao.insert(Data.chicken);
-        pizzaId = productDao.insert(Data.pizza);
+        memberId = memberDao.insertMember(DaoTestFixture.member);
+        chickenId = productDao.insert(DaoTestFixture.chicken);
+        pizzaId = productDao.insert(DaoTestFixture.pizza);
     }
 
     @DisplayName("장바구니에 상품을 담을 수 있다.")
@@ -52,9 +50,9 @@ class CartDaoTest extends DaoTest {
         //then
         CartItemDetail cartItemDetail = cartDao.findById(cartId);
 
-        assertThat(cartItemDetail.getMemberName()).isEqualTo(Data.member.getName());
-        assertThat(cartItemDetail.getProductName()).isEqualTo(Data.chicken.getName());
-        assertThat(cartItemDetail.getPrice()).isEqualTo(Data.chicken.getPrice());
+        assertThat(cartItemDetail.getMemberName()).isEqualTo(DaoTestFixture.member.getName());
+        assertThat(cartItemDetail.getProductName()).isEqualTo(DaoTestFixture.chicken.getName());
+        assertThat(cartItemDetail.getPrice()).isEqualTo(DaoTestFixture.chicken.getPrice());
         assertThat(cartItemDetail.getQuantity()).isEqualTo(5);
     }
 
@@ -74,9 +72,9 @@ class CartDaoTest extends DaoTest {
 
         assertThat(allCartItems.size()).isEqualTo(2);
         assertThat(allCartItems).extractingResultOf("getMemberName")
-                .containsExactlyInAnyOrder(Data.member.getName(), Data.member.getName());
+                .containsExactlyInAnyOrder(DaoTestFixture.member.getName(), DaoTestFixture.member.getName());
         assertThat(allCartItems).extractingResultOf("getProductName")
-                .containsExactlyInAnyOrder(Data.pizza.getName(), Data.chicken.getName());
+                .containsExactlyInAnyOrder(DaoTestFixture.pizza.getName(), DaoTestFixture.chicken.getName());
         assertThat(allCartItems).extractingResultOf("getQuantity")
                 .containsExactlyInAnyOrder(1, 5);
     }
@@ -135,11 +133,5 @@ class CartDaoTest extends DaoTest {
                 .isInstanceOf(DatabaseException.IllegalDataException.class);
         assertThatThrownBy(() -> cartDao.findById(cartIdOfPizza))
                 .isInstanceOf(DatabaseException.IllegalDataException.class);
-    }
-
-    private static class Data {
-        static final MemberEntity member = new MemberEntity("쥬니", "1234");
-        static final ProductEntity pizza = new ProductEntity("피자", 20000, "피자.com");
-        static final ProductEntity chicken = new ProductEntity("치킨", 30000, "치킨.com");
     }
 }

@@ -5,10 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import shop.persistence.entity.MemberEntity;
 import shop.persistence.entity.OrderEntity;
 import shop.persistence.entity.OrderProductEntity;
-import shop.persistence.entity.ProductEntity;
 import shop.persistence.entity.detail.OrderProductDetail;
 
 import java.time.LocalDateTime;
@@ -18,12 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Import({OrderProductDao.class, OrderDao.class, MemberDao.class, ProductDao.class})
 class OrderProductDaoTest extends DaoTest {
-    private static Long memberId;
     private static Long chickenId;
     private static Long pizzaId;
     private static Long orderId1;
     private static Long orderId2;
-    private static OrderEntity orderEntity;
 
     @Autowired
     private OrderProductDao orderProductDao;
@@ -39,11 +35,11 @@ class OrderProductDaoTest extends DaoTest {
 
     @BeforeEach
     void setUp() {
-        memberId = memberDao.insertMember(Data.member);
-        chickenId = productDao.insert(Data.chicken);
-        pizzaId = productDao.insert(Data.pizza);
+        Long memberId = memberDao.insertMember(DaoTestFixture.member);
+        chickenId = productDao.insert(DaoTestFixture.chicken);
+        pizzaId = productDao.insert(DaoTestFixture.pizza);
 
-        orderEntity = new OrderEntity(memberId, 10000L,
+        OrderEntity orderEntity = new OrderEntity(memberId, 10000L,
                 0L, 3000, LocalDateTime.now());
         orderId1 = orderDao.insert(orderEntity);
         orderId2 = orderDao.insert(orderEntity);
@@ -65,7 +61,7 @@ class OrderProductDaoTest extends DaoTest {
 
         assertThat(orderProducts.size()).isEqualTo(1);
         assertThat(orderProducts).extractingResultOf("getProductName")
-                .containsExactly(Data.chicken.getName());
+                .containsExactly(DaoTestFixture.chicken.getName());
         assertThat(orderProducts).extractingResultOf("getOrderedProductPrice")
                 .containsExactly(20000);
         assertThat(orderProducts).extractingResultOf("getQuantity")
@@ -92,7 +88,7 @@ class OrderProductDaoTest extends DaoTest {
 
         assertThat(orderProductsOfOrderId.size()).isEqualTo(2);
         assertThat(orderProductsOfOrderId).extractingResultOf("getProductName")
-                .containsExactlyInAnyOrder(Data.pizza.getName(), Data.chicken.getName());
+                .containsExactlyInAnyOrder(DaoTestFixture.pizza.getName(), DaoTestFixture.chicken.getName());
         assertThat(orderProductsOfOrderId).extractingResultOf("getOrderedProductPrice")
                 .containsExactlyInAnyOrder(20000, 30000);
         assertThat(orderProductsOfOrderId).extractingResultOf("getQuantity")
@@ -118,18 +114,12 @@ class OrderProductDaoTest extends DaoTest {
 
         assertThat(orderProducts.size()).isEqualTo(2);
         assertThat(orderProducts).extractingResultOf("getProductName")
-                .containsExactlyInAnyOrder(Data.pizza.getName(), Data.chicken.getName());
+                .containsExactlyInAnyOrder(DaoTestFixture.pizza.getName(), DaoTestFixture.chicken.getName());
         assertThat(orderProducts).extractingResultOf("getOrderedProductPrice")
                 .containsExactlyInAnyOrder(20000, 30000);
         assertThat(orderProducts).extractingResultOf("getQuantity")
                 .containsExactlyInAnyOrder(10, 10);
         assertThat(orderProducts).extractingResultOf("getOrderId")
                 .containsExactlyInAnyOrder(orderId1, orderId2);
-    }
-
-    private static class Data {
-        static final MemberEntity member = new MemberEntity("쥬니", "1234");
-        static final ProductEntity pizza = new ProductEntity("피자", 20000, "피자.com");
-        static final ProductEntity chicken = new ProductEntity("치킨", 30000, "치킨.com");
     }
 }

@@ -5,8 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import shop.persistence.entity.CouponEntity;
-import shop.persistence.entity.MemberEntity;
 import shop.persistence.entity.OrderCouponEntity;
 import shop.persistence.entity.OrderEntity;
 import shop.persistence.entity.detail.OrderCouponDetail;
@@ -34,8 +32,8 @@ class OrderCouponDaoTest extends DaoTest {
 
     @BeforeEach
     void setUp() {
-        couponId = couponDao.insert(Data.coupon);
-        Long memberId = memberDao.insertMember(Data.member);
+        couponId = couponDao.insert(DaoTestFixture.freeCoupon);
+        Long memberId = memberDao.insertMember(DaoTestFixture.member);
 
         OrderEntity orderEntity = new OrderEntity(memberId, 10000L,
                 0L, 3000, LocalDateTime.now());
@@ -54,14 +52,7 @@ class OrderCouponDaoTest extends DaoTest {
         //then
         OrderCouponDetail orderCouponDetail = orderCouponDao.findCouponByOrderId(orderId).get();
 
-        assertThat(orderCouponDetail.getName()).isEqualTo(Data.coupon.getName());
-        assertThat(orderCouponDetail.getDiscountRate()).isEqualTo(Data.coupon.getDiscountRate());
+        assertThat(orderCouponDetail.getName()).isEqualTo(DaoTestFixture.freeCoupon.getName());
+        assertThat(orderCouponDetail.getDiscountRate()).isEqualTo(DaoTestFixture.freeCoupon.getDiscountRate());
     }
-
-    private static class Data {
-        static final MemberEntity member = new MemberEntity("쥬니", "1234");
-        static final CouponEntity coupon = new CouponEntity("테스트용 쿠폰", 80,
-                365, LocalDateTime.now().plusDays(1));
-    }
-
 }
