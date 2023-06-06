@@ -12,6 +12,7 @@ import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,9 @@ public class OrderService {
     }
 
     public List<Order> retrieveMemberOrders(final Member member) {
-        return this.orderRepository.findByMember(member);
+        final List<Order> memberOrder = this.orderRepository.findByMember(member);
+        return memberOrder.stream()
+                .sorted(Comparator.comparing(Order::getOrderTime).reversed())
+                .collect(Collectors.toList());
     }
 }
