@@ -12,6 +12,7 @@ import shop.persistence.entity.OrderProductEntity;
 import shop.persistence.entity.detail.OrderProductDetail;
 
 import java.sql.PreparedStatement;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -68,6 +69,10 @@ public class OrderProductDao {
     }
 
     public List<OrderProductDetail> findAllByOrderIds(List<Long> orderIds) {
+        if (orderIds.size() == 0) {
+            return Collections.emptyList();
+        }
+
         String sql = "SELECT * FROM order_product " +
                 "INNER JOIN product ON order_product.product_id = product.id " +
                 "WHERE order_product.order_id in (:ids)";

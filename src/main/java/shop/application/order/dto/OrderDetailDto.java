@@ -13,6 +13,10 @@ public class OrderDetailDto {
     }
 
     public static OrderDetailDto of(OrderDetail orderDetail) {
+        if (orderDetail.getCoupon() == null) {
+            return new OrderDetailDto(OrderDto.of(orderDetail.getOrder()), null);
+        }
+
         return new OrderDetailDto(
                 OrderDto.of(orderDetail.getOrder()),
                 CouponDto.of(orderDetail.getCoupon())
