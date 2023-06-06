@@ -28,26 +28,27 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(CartItemException.UnExistedCartItem.class)
     public ResponseEntity<ErrorResponse> handleCartItemException(CartItemException.UnExistedCartItem exception) {
-        final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
+        return badRequestHandling(exception);
     }
 
     @ExceptionHandler(InvalidGradeException.class)
     public ResponseEntity<ErrorResponse> handleInvalidGradeException(InvalidGradeException exception) {
-        final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
+        return badRequestHandling(exception);
     }
 
     @ExceptionHandler(InvalidOrderException.class)
     public ResponseEntity<ErrorResponse> handleInvalidOrderException(InvalidOrderException exception) {
-        final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
+        return badRequestHandling(exception);
     }
 
     @ExceptionHandler(DuplicatedProductCartItemException.class)
     public ResponseEntity<ErrorResponse> DuplicatedProductCartItemException(
             DuplicatedProductCartItemException exception
     ) {
+        return badRequestHandling(exception);
+    }
+
+    private ResponseEntity<ErrorResponse> badRequestHandling(RuntimeException exception) {
         final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
