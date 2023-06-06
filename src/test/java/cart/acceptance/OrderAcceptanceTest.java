@@ -1,11 +1,13 @@
 package cart.acceptance;
 
+import cart.dao.OrderProductDao;
 import cart.domain.Member;
 import cart.dto.request.CartItemCreateRequest;
 import cart.dto.request.PayRequest;
+import cart.dto.response.OrderProductResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
-import cart.repository.ProductRepository;
+import cart.repository.OrderRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -33,10 +35,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private CartItemRepository cartItemRepository;
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderProductDao orderProductDao;
 
     @Test
     void 멤버의_주문_목록을_조회할_수_있다() {
@@ -99,24 +104,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(OK.value()),
-                () -> assertThat(
-                        response.jsonPath().getList("name")
-                                .containsAll(
-                                        List.of(
-                                                productRepository.getProductById(product1Id).getName(),
-                                                productRepository.getProductById(product2Id).getName()
-                                        )
-                                )
-                ).isTrue(),
-                () -> assertThat(
-                        response.jsonPath().getList("quantity")
-                                .containsAll(
-                                        List.of(
-                                                cartItemRepository.findById(cartItem1Id).getQuantity(),
-                                                cartItemRepository.findById(cartItem2Id).getQuantity()
-                                        )
-                                )
-                ).isTrue()
+                () -> assertThat(response.jsonPath().getList(".", OrderProductResponse.class))
+                        .usingRecursiveComparison()
+                        .isEqualTo(orderProductDao.findByOrderId(orderHistoryId))
         );
     }
 }
