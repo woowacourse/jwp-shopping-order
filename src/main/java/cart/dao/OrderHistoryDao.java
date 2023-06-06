@@ -3,6 +3,8 @@ package cart.dao;
 import cart.domain.Member;
 import cart.domain.OrderHistory;
 import cart.domain.OrderItem;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,23 +62,9 @@ public class OrderHistoryDao {
             Map<Long, OrderHistory> orderHistoryMap = new HashMap<>();
             while (rs.next()) {
                 Long orderHistoryId = rs.getLong("order_history_id");
-                OrderHistory orderHistory;
-                if (!orderHistoryMap.containsKey(orderHistoryId)) {
-                    int originalPrice = rs.getInt("original_price");
-                    int usedPoint = rs.getInt("used_point");
-                    int orderPrice = rs.getInt("order_price");
 
-                    Long findMemberId = rs.getLong("member_id");
-                    String email = rs.getString("email");
-                    String password = rs.getString("password");
-                    int point = rs.getInt("point");
-                    Member member = new Member(findMemberId, email, password, point);
-
-                    orderHistory = new OrderHistory(orderHistoryId, originalPrice, usedPoint, orderPrice, member);
-                    orderHistoryMap.put(orderHistoryId, orderHistory);
-                } else {
-                    orderHistory = orderHistoryMap.get(orderHistoryId);
-                }
+                orderHistoryMap.putIfAbsent(orderHistoryId, assembleOrderHistoryFrom(rs, orderHistoryId));
+                OrderHistory orderHistory = orderHistoryMap.get(orderHistoryId);
 
                 Long orderItemId = rs.getLong("order_item_id");
                 Long productId = rs.getLong("product_id");
@@ -91,6 +79,20 @@ public class OrderHistoryDao {
             }
             return new ArrayList<>(orderHistoryMap.values());
         });
+    }
+
+    private OrderHistory assembleOrderHistoryFrom(final ResultSet rs, final Long orderHistoryId) throws SQLException {
+        int originalPrice = rs.getInt("original_price");
+        int usedPoint = rs.getInt("used_point");
+        int orderPrice = rs.getInt("order_price");
+
+        Long findMemberId = rs.getLong("member_id");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        int point = rs.getInt("point");
+        Member member = new Member(findMemberId, email, password, point);
+
+        return new OrderHistory(orderHistoryId, originalPrice, usedPoint, orderPrice, member);
     }
 
     public OrderHistory findById(Long orderId) {
@@ -110,8 +112,7 @@ public class OrderHistoryDao {
 
         if (!orderHistories.isEmpty()) {
             return orderHistories.get(0);
-        } else {
-            return null;
         }
+        return null;
     }
 }
