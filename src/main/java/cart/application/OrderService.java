@@ -58,7 +58,7 @@ public class OrderService {
     }
 
     private List<CartItem> getCartItemsToOrder(OrderRequest orderRequest, Member member) {
-        List<CartItemDto> orderItemRequests = orderRequest.getCarItems();
+        List<CartItemDto> orderItemRequests = orderRequest.getCartItems();
         List<CartItem> cartItemsToOrder = orderItemRequests.stream()
                 .map(CartItemDto::getId)
                 .map(cartItemRepository::findById)

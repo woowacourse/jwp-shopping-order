@@ -8,7 +8,7 @@ import java.util.List;
 
 public class OrderRequest {
 
-    @NotNull(message = "cartItems 필드가 있어야 합니다.")
+    @NotNull(message = "carItems 필드가 있어야 합니다.")
     private List<CartItemDto> cartItems;
 
     @NotNull(message = "deliveryFee 필드가 있어야 합니다.")
@@ -17,14 +17,14 @@ public class OrderRequest {
 
     private List<Long> couponIds;
 
-    public OrderRequest(List<CartItemDto> carItems, Integer deliveryFee, List<Long> couponIds) {
-        this.carItems = carItems;
+    public OrderRequest(List<CartItemDto> cartItems, Integer deliveryFee, List<Long> couponIds) {
+        this.cartItems = cartItems;
         this.deliveryFee = deliveryFee;
         this.couponIds = couponIds;
     }
 
-    public List<CartItemDto> getCarItems() {
-        return carItems;
+    public List<CartItemDto> getCartItems() {
+        return cartItems;
     }
 
     public Integer getDeliveryFee() {
