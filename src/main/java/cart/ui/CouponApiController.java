@@ -67,7 +67,7 @@ public class CouponApiController {
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("/{id}/serialNumber")
+	@PostMapping("/{id}/serial-number")
 	public ResponseEntity<Void> generateExtraCoupons(@PathVariable Long id,
 		@Valid @RequestBody SerialNumberRequest request) {
 		couponCommandService.generateExtraCoupons(id, request);
