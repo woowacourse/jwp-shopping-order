@@ -6,7 +6,6 @@ import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.exception.CartItemException;
 import cart.exception.OrderException;
-import cart.exception.OrderException.EmptyItemInput;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -30,7 +30,7 @@ public class OrderService {
 
     public Order createDraftOrder(final Member member, final List<Long> cartItemIds) {
         if (cartItemIds.isEmpty()) {
-            throw new EmptyItemInput();
+            throw new OrderException.EmptyItemInput();
         }
         final List<OrderItem> orderItems = cartItemIds.stream()
                 .map(cartItemId -> this.findCartItemOf(cartItemId, member))
@@ -50,16 +50,17 @@ public class OrderService {
         return cartItem;
     }
 
-    @Transactional
     public Long createOrderAndSave(final Member member, final List<Long> cartItemIds) {
         final Order draftOrder = this.createDraftOrder(member, cartItemIds);
         return this.orderRepository.create(draftOrder);
     }
 
+    @Transactional(readOnly = true)
     public Order retrieveOrderById(final Long orderId) {
         return this.orderRepository.findById(orderId).orElseThrow(() -> new OrderException.NotFound(orderId));
     }
 
+    @Transactional(readOnly = true)
     public List<Order> retrieveMemberOrders(final Member member) {
         final List<Order> memberOrder = this.orderRepository.findByMember(member);
         return memberOrder.stream()

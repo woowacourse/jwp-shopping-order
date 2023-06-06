@@ -11,11 +11,13 @@ import cart.exception.ProductException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
@@ -25,6 +27,7 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
         final List<CartItem> cartItems = this.cartItemRepository.findByMember(member);
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());

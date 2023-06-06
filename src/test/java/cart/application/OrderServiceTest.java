@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.exception.CartItemException;
+import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
@@ -20,7 +21,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static cart.domain.fixture.MemberFixture.memberWithId;
-import static cart.exception.OrderException.EmptyItemInput;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -108,7 +108,7 @@ class OrderServiceTest {
         //when
         //then
         Assertions.assertThatThrownBy(() -> this.orderService.createDraftOrder(memberWithId, List.of()))
-                .isInstanceOf(EmptyItemInput.class);
+                .isInstanceOf(OrderException.EmptyItemInput.class);
     }
 
     @Test

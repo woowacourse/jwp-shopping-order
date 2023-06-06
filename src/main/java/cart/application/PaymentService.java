@@ -6,10 +6,12 @@ import cart.repository.DeliveryPolicyRepository;
 import cart.repository.DiscountPolicyRepository;
 import cart.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class PaymentService {
 
     private final DiscountPolicyRepository discountPolicyRepository;
@@ -23,6 +25,7 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
+    @Transactional(readOnly = true)
     public PaymentRecord createDraftPaymentRecord(final Order order) {
         final List<DiscountPolicy> discountPolicies = this.discountPolicyRepository.findDefault();
         final List<DeliveryPolicy> deliveryPolicies = this.deliveryPolicyRepository.findDefault();
@@ -36,6 +39,7 @@ public class PaymentService {
         return record;
     }
 
+    @Transactional(readOnly = true)
     public PaymentRecord findByOrder(final Order order) {
         return this.paymentRepository.findByOrder(order)
                 .orElseThrow(() -> new PaymentException.NotFound(order));
