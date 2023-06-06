@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>설정</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/policy.css}">
+</head>
+<body>
+<header class="gnb">
+    <nav>
+        <ul class="gnb-group">
+            <li><a href="/policy">정책</a></li>
+            <li><a href="/settings">설정</a></li>
+            <li class="nav-admin"><a href="/admin">관리자</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="container">
+    <h1>할인 정책 설정</h1>
+    <div class="policy-items">
+        <div class="policy-item" th:each="discountPolicy:${discountPolicies}">
+            <div class="policy-item-info">
+                <div class="policy-item-name" th:text="${discountPolicy.name}"></div>
+                <div class="policy-item-threshold" th:text="${discountPolicy.threshold}"></div>
+                <div class="policy-item-discountRate" th:text="${discountPolicy.discountRate}"></div>
+            </div>
+        </div>
+    </div>
+    <h1>배송 정책 설정</h1>
+    <div class="policy-items">
+        <div class="policy-item" th:each="deliveryPolicy:${deliveryPolicies}">
+            <div class="policy-item-info">
+                <div class="policy-item-name" th:text="${deliveryPolicy.name}"></div>
+                <div class="policy-item-fee" th:text="${deliveryPolicy.fee}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

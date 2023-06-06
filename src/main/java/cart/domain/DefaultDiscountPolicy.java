@@ -56,4 +56,14 @@ public class DefaultDiscountPolicy implements DiscountPolicy {
     public int hashCode() {
         return Objects.hash(this.id);
     }
+
+    @Override
+    public Money getThreshold() {
+        return this.threshold;
+    }
+
+    @Override
+    public double getDiscountRate() {
+        return this.discountRate;
+    }
 }

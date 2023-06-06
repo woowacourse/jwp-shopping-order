@@ -49,4 +49,9 @@ public class DefaultDeliveryPolicy implements DeliveryPolicy {
     public int hashCode() {
         return Objects.hash(this.id);
     }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
 }

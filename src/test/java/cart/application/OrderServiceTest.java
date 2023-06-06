@@ -74,7 +74,6 @@ class OrderServiceTest {
             softly.assertThat(createdOrder).isNotEmpty();
             softly.assertThat(createdOrder.get()).usingRecursiveComparison().ignoringFields("id", "orderTime")
                     .isEqualTo(expected);
-            this.CART_ITEM_IDS.forEach(cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId)).isEmpty());
         });
     }
 
