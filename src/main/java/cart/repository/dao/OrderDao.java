@@ -2,21 +2,23 @@ package cart.repository.dao;
 
 import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert ordersSimpleJdbcInsert;
+    private final SimpleJdbcInsert orderItemSimpleJdbcInsert;
 
     private final RowMapper<OrderProductEntity> orderProductEntityRowMapper = (resultSet, rowNum) ->
             new OrderProductEntity.Builder()
@@ -44,61 +46,62 @@ public class OrderDao {
 
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.ordersSimpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("orders")
+                .usingColumns("member_id", "total_payment", "used_point")
+                .usingGeneratedKeyColumns("id");
+        this.orderItemSimpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("order_item")
+                .usingGeneratedKeyColumns("id");
     }
 
     public long insertOrder(OrderEntity orderEntity) {
-        String query = "INSERT INTO orders (member_id, total_payment, used_point) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(
-                    query, new String[]{"ID"}
-            );
-            preparedStatement.setLong(1, orderEntity.getMemberId());
-            preparedStatement.setInt(2, orderEntity.getTotalPayment());
-            preparedStatement.setInt(3, orderEntity.getUsedPoint());
-            return preparedStatement;
-        }, keyHolder);
-
-        Map<String, Object> keys = keyHolder.getKeys();
-        return Objects.requireNonNull((long) keys.get("id"));
+        Map<String, Object> params = new HashMap<>();
+        params.put("member_id", orderEntity.getMemberId());
+        params.put("total_payment", orderEntity.getTotalPayment());
+        params.put("used_point", orderEntity.getUsedPoint());
+        return (long) ordersSimpleJdbcInsert.executeAndReturnKey(params);
     }
 
     public long insertOrderItems(OrderProductEntity orderProductEntity) {
-        String query = "INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(
-                    query, new String[]{"ID"}
-            );
-            preparedStatement.setLong(1, orderProductEntity.getOrderId());
-            preparedStatement.setLong(2, orderProductEntity.getProductId());
-            preparedStatement.setString(3, orderProductEntity.getProductName());
-            preparedStatement.setInt(4, orderProductEntity.getProductPrice());
-            preparedStatement.setString(5, orderProductEntity.getProductImageUrl());
-            preparedStatement.setInt(6, orderProductEntity.getQuantity());
-            preparedStatement.setInt(7, orderProductEntity.getTotalPrice());
-            return preparedStatement;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey().longValue());
+        Map<String, Object> params = new HashMap<>();
+        params.put("order_id", orderProductEntity.getOrderId());
+        params.put("product_id", orderProductEntity.getProductId());
+        params.put("product_name", orderProductEntity.getProductName());
+        params.put("product_price", orderProductEntity.getProductPrice());
+        params.put("product_image_url", orderProductEntity.getProductImageUrl());
+        params.put("quantity", orderProductEntity.getQuantity());
+        params.put("total_price", orderProductEntity.getTotalPrice());
+        return (long) orderItemSimpleJdbcInsert.executeAndReturnKey(params);
     }
 
-    public List<Long> getOrderIdsByMemberId(long memberId) {
-        String query = "SELECT DISTINCT orders.id " +
-                "FROM order_item " +
-                "JOIN orders ON orders.id = order_item.order_id " +
-                "WHERE orders.member_id = ?";
-        return jdbcTemplate.query(query, orderIdRowMapper, memberId);
+    public Optional<List<Long>> getOrderIdsByMemberId(long memberId) {
+        try {
+            String query = "SELECT DISTINCT orders.id " +
+                    "FROM order_item " +
+                    "JOIN orders ON orders.id = order_item.order_id " +
+                    "WHERE orders.member_id = ?";
+            return Optional.of(jdbcTemplate.query(query, orderIdRowMapper, memberId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
-    public OrderEntity getOrderById(long orderId) {
-        String query = "SELECT * FROM orders WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, orderEntityRowMapper, orderId);
+    public Optional<OrderEntity> getOrderById(long orderId) {
+        try {
+            String query = "SELECT * FROM orders WHERE id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(query, orderEntityRowMapper, orderId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
-    public List<OrderProductEntity> getOrderItemsByOrderId(long orderId) {
-        String query = "SELECT * FROM order_item WHERE order_id = ?";
-        return jdbcTemplate.query(query, orderProductEntityRowMapper, orderId);
+    public Optional<List<OrderProductEntity>> getOrderProductsByOrderId(long orderId) {
+        try {
+            String query = "SELECT * FROM order_item WHERE order_id = ?";
+            return Optional.of(jdbcTemplate.query(query, orderProductEntityRowMapper, orderId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }
