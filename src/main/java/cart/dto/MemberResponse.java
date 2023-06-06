@@ -17,7 +17,7 @@ public class MemberResponse {
     }
 
     public static MemberResponse from(Member member) {
-        final String grade = Grade.findGradeByGradeValue(member.getGrade()).name();
+        final String grade = Grade.findGradeByGradeValue(member.getGrade()).getGradeName();
         return new MemberResponse(member.getId(), member.getEmail(), member.getPassword(), grade);
     }
 
