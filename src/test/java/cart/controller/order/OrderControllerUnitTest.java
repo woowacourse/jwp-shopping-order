@@ -20,6 +20,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 
 import static cart.fixture.MemberFixture.createMember;
@@ -75,7 +77,7 @@ public class OrderControllerUnitTest {
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
                 List.of(new OrderedCouponHistory(1, "coupon")),
-                "2022-05-29"
+                Date.from(Instant.now())
         );
 
         OrdersResponse ordersResponse = OrdersResponse.from(List.of(orderHistory));
@@ -86,7 +88,6 @@ public class OrderControllerUnitTest {
                         .header("Authorization", "Basic YUBhLmNvbToxMjM0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orders[0].orderId").value(1))
-                .andExpect(jsonPath("$.orders[0].orderedTime").value("2022-05-29"))
                 .andExpect(jsonPath("$.orders[0].products[0].productId").value(1))
                 .andExpect(jsonPath("$.orders[0].products[0].productName").value("치킨"))
                 .andExpect(jsonPath("$.orders[0].products[0].imgUrl").value("img"))
@@ -124,7 +125,7 @@ public class OrderControllerUnitTest {
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
                 List.of(new OrderedCouponHistory(1, "coupon")),
-                "2022-05-29"
+                Date.from(Instant.now())
         );
 
         when(orderService.findOrder(any(Member.class), anyLong())).thenReturn(OrderResponse.from(orderHistory));
@@ -134,7 +135,6 @@ public class OrderControllerUnitTest {
                         .header("Authorization", "Basic YUBhLmNvbToxMjM0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId").value(1))
-                .andExpect(jsonPath("$.orderedTime").value("2022-05-29"))
                 .andExpect(jsonPath("$.products[0].productId").value(1))
                 .andExpect(jsonPath("$.products[0].productName").value("치킨"))
                 .andExpect(jsonPath("$.products[0].imgUrl").value("img"))

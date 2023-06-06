@@ -29,7 +29,7 @@ public class OrderDao {
             new OrderTableEntity(
                     rs.getLong("id"),
                     rs.getLong("member_id"),
-                    rs.getString("created_at"),
+                    rs.getDate("created_at"),
                     rs.getInt("delivery_fee")
             );
 

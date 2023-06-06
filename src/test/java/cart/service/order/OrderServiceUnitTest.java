@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 
 import static cart.fixture.MemberFixture.createMember;
@@ -40,7 +42,7 @@ public class OrderServiceUnitTest {
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
                 List.of(new OrderedCouponHistory(1L, "쿠폰")),
-                "2023"
+                Date.from(Instant.now())
         );
         List<OrderHistory> expected = List.of(orderHistory);
 
@@ -66,7 +68,7 @@ public class OrderServiceUnitTest {
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
                 List.of(new OrderedCouponHistory(1L, "쿠폰")),
-                "2023"
+                Date.from(Instant.now())
         );
         Long orderId = 1L;
 

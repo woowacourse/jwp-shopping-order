@@ -1,13 +1,15 @@
 package cart.entity.order;
 
+import java.util.Date;
+
 public class OrderTableEntity {
 
     private final Long id;
     private final Long memberId;
-    private final String createAt;
+    private final Date createAt;
     private final int deliveryFee;
 
-    public OrderTableEntity(final Long id, final Long memberId, final String createAt, final int deliveryFee) {
+    public OrderTableEntity(final Long id, final Long memberId, final Date createAt, final int deliveryFee) {
         this.id = id;
         this.memberId = memberId;
         this.createAt = createAt;
@@ -22,7 +24,7 @@ public class OrderTableEntity {
         return memberId;
     }
 
-    public String getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 

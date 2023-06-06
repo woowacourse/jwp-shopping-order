@@ -46,7 +46,7 @@ public class Order {
 
         int deliveryFee = cart.calculateDeliveryFeeUsingCoupons(coupons);
 
-        return new OrderResponse(timestamp.toString(), productsResponse, DeliveryFeeResponse.from(deliveryFee), couponsResponse);
+        return new OrderResponse(timestamp, productsResponse, DeliveryFeeResponse.from(deliveryFee), couponsResponse);
     }
 
     private void applyCoupon(List<OrderedProductHistory> productHistories, List<Coupon> coupons) {

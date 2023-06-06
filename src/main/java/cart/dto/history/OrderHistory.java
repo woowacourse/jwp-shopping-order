@@ -1,19 +1,23 @@
 package cart.dto.history;
 
 import cart.domain.cart.DeliveryFee;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class OrderHistory {
 
     private final Long id;
-    private final String orderTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private final Date orderTime;
     private final List<OrderedProductHistory> products;
     private final DeliveryFee deliveryFee;
     private final List<OrderedCouponHistory> coupons;
 
-    public OrderHistory(final Long id, final List<OrderedProductHistory> products, final int deliveryFee, final List<OrderedCouponHistory> coupons, final String orderTime) {
+    public OrderHistory(final Long id, final List<OrderedProductHistory> products, final int deliveryFee, final List<OrderedCouponHistory> coupons, final Date orderTime) {
         this.id = id;
         this.products = products;
         this.deliveryFee = DeliveryFee.from(deliveryFee);
@@ -37,7 +41,7 @@ public class OrderHistory {
         return coupons;
     }
 
-    public String getOrderTime() {
+    public Date getOrderTime() {
         return orderTime;
     }
 
