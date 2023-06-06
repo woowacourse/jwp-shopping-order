@@ -1,0 +1,56 @@
+package cart.repository;
+
+import cart.dao.OrderDao;
+import cart.dao.OrderProductDao;
+import cart.dao.entity.OrderEntity;
+import cart.dao.entity.OrderProductEntity;
+import cart.domain.order.Order;
+import cart.exception.notfound.OrderNotFoundException;
+import cart.repository.mapper.OrderMapper;
+import cart.repository.mapper.OrderProductMapper;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class OrderRepository {
+
+    private final OrderDao orderDao;
+    private final OrderProductDao orderProductDao;
+
+    public OrderRepository(OrderDao orderDao, OrderProductDao orderProductDao) {
+        this.orderDao = orderDao;
+        this.orderProductDao = orderProductDao;
+    }
+
+    public List<Order> findAllByMemberId(Long memberId) {
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+        return orderEntities.stream()
+                .map(orderEntity -> {
+                    List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(orderEntity.getId());
+                    return OrderMapper.toDomain(orderEntity, orderProductEntities);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public Order findById(Long id) {
+        OrderEntity orderEntity = orderDao.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(id);
+        return OrderMapper.toDomain(orderEntity, orderProductEntities);
+    }
+
+    public Long save(Order order) {
+        Long orderId = orderDao.save(OrderMapper.toEntity(order));
+        order.assignId(orderId);
+        orderProductDao.saveAll(extractOrderProductEntities(order));
+        return orderId;
+    }
+
+    private List<OrderProductEntity> extractOrderProductEntities(Order order) {
+        return order.getOrderProducts()
+                .stream()
+                .map(orderProduct -> OrderProductMapper.toEntity(order, orderProduct))
+                .collect(Collectors.toList());
+    }
+}

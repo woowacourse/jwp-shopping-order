@@ -1,53 +1,86 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
+import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
+import cart.domain.member.Member;
+import cart.domain.order.Fee;
+import cart.domain.product.Product;
+import cart.repository.CartItemRepository;
+import cart.repository.ProductRepository;
+import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.controller.dto.request.CartItemRemoveRequest;
+import cart.ui.controller.dto.request.CartItemRequest;
+import cart.ui.controller.dto.response.CartItemPriceResponse;
+import cart.ui.controller.dto.response.CartItemResponse;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+
+    public CartItemService(CartItemRepository cartItemRepository, ProductRepository productRepository) {
+        this.cartItemRepository = cartItemRepository;
+        this.productRepository = productRepository;
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        CartItems cartItems = cartItemRepository.findByMemberId(member.getId());
+        return CartItemResponse.listOf(cartItems);
     }
 
+    public CartItemPriceResponse getTotalPriceWithDeliveryFee(Member member, List<Long> cartItemIds) {
+        CartItems cartItems = cartItemRepository.findAllInIds(cartItemIds);
+        cartItems.checkOwner(member);
+        int totalPrice = cartItems.calculateTotalPrice();
+        Fee deliveryFee = Fee.from(totalPrice);
+        return new CartItemPriceResponse(totalPrice, deliveryFee.getValue());
+    }
+
+    @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productRepository.findById(cartItemRequest.getProductId());
+        Optional<CartItem> searchCart = cartItemRepository.findByMemberIdAndProductId(member.getId(), product.getId());
+
+        if (searchCart.isPresent()) {
+            CartItem cartItem = searchCart.get();
+            cartItem.changeQuantity(cartItem.getQuantity() + 1);
+            cartItemRepository.updateQuantity(cartItem);
+            return cartItem.getId();
+        }
+        CartItem newCartItem = new CartItem(member, product);
+        return cartItemRepository.save(newCartItem);
     }
 
+    @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(id);
             return;
         }
-
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+    @Transactional
+    public void removeCartItems(Member member, CartItemRemoveRequest request) {
+        CartItems cartItems = cartItemRepository.findAllInIds(request.getCartItemIds());
+        cartItems.checkOwner(member);
+        cartItemRepository.deleteAll(cartItems);
+    }
 
-        cartItemDao.deleteById(id);
+    @Transactional
+    public void remove(Member member, Long id) {
+        CartItem cartItem = cartItemRepository.findById(id);
+        cartItem.checkOwner(member);
+        cartItemRepository.deleteById(id);
     }
 }
