@@ -8,6 +8,7 @@ spring:
     resources:
       add-mappings: false
 server:
+  shutdown: graceful
   port: 443
   ssl:
     enabled: true

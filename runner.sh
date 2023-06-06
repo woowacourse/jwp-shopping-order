@@ -8,7 +8,7 @@ PROCESS_ID=$(sudo lsof -t -i:$PORT)
 
 if [ -n "$PROCESS_ID" ]; then
         echo "\n🐣 구동중인 애플리케이션을 종료했습니다. (pid : $PROCESS_ID)\n"
-        sudo kill  $PROCESS_ID
+        sudo kill -15 $PROCESS_ID
 fi
 
 echo "\n🐣 SpringBoot 프로젝트 빌드를 시작합니다.\n"
