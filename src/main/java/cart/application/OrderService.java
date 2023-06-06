@@ -40,7 +40,12 @@ public class OrderService {
     public Long createOrder(OrderRequest orderRequest, Member member) {
         List<OrderItem> orderItems = createOrderItems(orderRequest);
         Point spendPoint = new Point(orderRequest.getSpendPoint());
-        Order order = new Order(null, member, orderItems, spendPoint.getAmount(), LocalDateTime.now());
+        Order order = Order.builder()
+                .member(member)
+                .orderItems(orderItems)
+                .spendPoint(spendPoint.getAmount())
+                .createdAt(LocalDateTime.now())
+                .build();
         pointService.decreasePoint(member, spendPoint);
         Order saveOrder = orderRepository.save(order);
         pointService.increasePoint(member, saveOrder.calculateRewardPoint(10));
