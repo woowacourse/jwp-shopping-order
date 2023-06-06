@@ -29,10 +29,9 @@ public class OrderManager {
     }
 
     private void validateOriginalPrice(Long originalPrice) {
-        int price = 0;
-        for (CartItem item : cartItems) {
-            price += item.getProduct().getPrice() * item.getQuantity();
-        }
+        int price = cartItems.stream()
+                .mapToInt(CartItem::getTotalPrice)
+                .sum();
 
         if (originalPrice != price) {
             throw new PriceInconsistencyException("주문 총액에 문제가 있습니다");
@@ -44,12 +43,10 @@ public class OrderManager {
             throw new PointException.InvalidPointException("보유한 포인트보다 많은 포인트를 사용할 수 없습니다");
         }
 
-        int price = 0;
-        for (CartItem item : cartItems) {
-            if (item.getProduct().getPointAvailable()) {
-                price += item.getProduct().getPrice();
-            }
-        }
+        int price = cartItems.stream()
+                .filter(CartItem::isPointAvailable)
+                .mapToInt(CartItem::getTotalPrice)
+                .sum();
 
         if (price < usedPoint) {
             throw new PointException.InvalidPointException("사용 가능한 포인트보다 많은 포인트를 사용할 수 없습니다");

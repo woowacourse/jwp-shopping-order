@@ -52,4 +52,12 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = (long) quantity;
     }
+
+    public int getTotalPrice() {
+        return product.getPrice() * quantity.intValue();
+    }
+
+    public boolean isPointAvailable() {
+        return product.getPointAvailable();
+    }
 }
