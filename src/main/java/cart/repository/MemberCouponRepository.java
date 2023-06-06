@@ -79,6 +79,12 @@ public class MemberCouponRepository {
         return jdbcTemplate.queryForObject(sql, getMemberCouponRowMapper(), id);
     }
 
+    public List<MemberCoupon> findAllByIdForUpdate(List<Long> memberCouponIds) {
+        String sql = SELECT_MEMBER_COUPON_SQL + WHERE_IN_IDS + FOR_UPDATE;
+        SqlParameterSource sources = new MapSqlParameterSource("ids", memberCouponIds);
+        return namedParameterJdbcTemplate.query(sql, sources, getMemberCouponRowMapper());
+    }
+
     public void updateCouponStatus(MemberCoupon memberCoupon) {
         String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ? ";
         jdbcTemplate.update(sql, memberCoupon.isUsed(), memberCoupon.getId());

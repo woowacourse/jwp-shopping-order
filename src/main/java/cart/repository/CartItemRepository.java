@@ -6,6 +6,7 @@ import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,7 @@ public class CartItemRepository {
             "INNER JOIN product ON cart_item.product_id = product.id ";
     private static final String WHERE_MEMBER_ID = "WHERE cart_item.member_id = ?";
     private static final String WHERE_CART_ITEM_ID = "WHERE cart_item.id = ?";
+    private static final String WHERE_CART_ITEM_IDS = "WHERE cart_item.id IN (:ids) ";
 
     private static final RowMapper<CartItem> cartItemRowMapper = ((rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
@@ -38,12 +40,14 @@ public class CartItemRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -68,6 +72,12 @@ public class CartItemRepository {
         String sql = CART_ITEM_JOIN_MEMBER_SQL + WHERE_CART_ITEM_ID;
 
         return jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
+    }
+
+    public List<CartItem> findAllByIds(List<Long> ids) {
+        String sql = CART_ITEM_JOIN_MEMBER_SQL + WHERE_CART_ITEM_IDS;
+        SqlParameterSource sources = new MapSqlParameterSource("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, sources, cartItemRowMapper);
     }
 
 

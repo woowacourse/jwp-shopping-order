@@ -46,7 +46,7 @@ public class OrderService {
     @Transactional
     public OrderIdResponse makeOrder(Member member, OrderRequest orderRequest) {
         List<CartItem> cartItemsToOrder = getCartItemsToOrder(orderRequest, member);
-        List<MemberCoupon> couponsToUse = getCouponsToUse(orderRequest);
+        List<MemberCoupon> couponsToUse = memberCouponRepository.findAllByIdForUpdate(orderRequest.getCouponIds());
         Money deliveryFee = new Money(orderRequest.getDeliveryFee());
 
         Order order = Order.make(cartItemsToOrder, couponsToUse, deliveryFee, member, discountPolicyProvider);
@@ -59,10 +59,10 @@ public class OrderService {
 
     private List<CartItem> getCartItemsToOrder(OrderRequest orderRequest, Member member) {
         List<CartItemDto> orderItemRequests = orderRequest.getCartItems();
-        List<CartItem> cartItemsToOrder = orderItemRequests.stream()
+        List<Long> cartItemIds = orderItemRequests.stream()
                 .map(CartItemDto::getId)
-                .map(cartItemRepository::findById)
                 .collect(Collectors.toList());
+        List<CartItem> cartItemsToOrder = cartItemRepository.findAllByIds(cartItemIds);
 
         validateProductsRequestWithDatabase(orderItemRequests, cartItemsToOrder);
 
@@ -102,12 +102,6 @@ public class OrderService {
         if (requestCartItem.getQuantity() != actualCartItem.getQuantity()) {
             throw new OrderException.QuantityNotMatched(actualCartItem);
         }
-    }
-
-    private List<MemberCoupon> getCouponsToUse(OrderRequest orderRequest) {
-        return orderRequest.getCouponIds().stream()
-                .map(memberCouponRepository::findByIdForUpdate)
-                .collect(Collectors.toList());
     }
 
     @Transactional
