@@ -1,5 +1,9 @@
 package cart.domain.coupon;
 
+import cart.domain.discountpolicy.AmountCoupon;
+import cart.domain.discountpolicy.CouponType;
+import cart.domain.discountpolicy.PercentCoupon;
+
 public class Coupon {
 
     private final Long id;
@@ -18,6 +22,23 @@ public class Coupon {
         this.minAmount = MinAmount.from(minAmount);
     }
 
+    public Coupon(String couponName, int discountPercent, int discountAmount, int minAmount) {
+        this(null, couponName, discountPercent, discountAmount, minAmount);
+    }
+
+    public CouponType makeFitCouponType() {
+        if (this.discountAmount.getDiscountAmount() == 0) {
+            return new PercentCoupon(
+                    this.minAmount.getMinAmount(),
+                    this.discountPercent.getDiscountPercent()
+            );
+        }
+        return new AmountCoupon(
+                this.minAmount.getMinAmount(),
+                this.discountAmount.getDiscountAmount()
+        );
+    }
+
     private void validateIsAllPositive(Integer discountPercent, int discountAmount) {
         if (discountAmount != 0 && discountPercent != 0) {
             throw new IllegalArgumentException("쿠폰은 정량, 정액 할인 하나만 가능합니다.");
@@ -28,10 +49,6 @@ public class Coupon {
         if (discountAmount == 0 && discountPercent == 0) {
             throw new IllegalArgumentException("쿠폰은 정량, 정액 할인 하나만 가능합니다.");
         }
-    }
-
-    public Coupon(String couponName, int discountPercent, int discountAmount, int minAmount) {
-        this(null, couponName, discountPercent, discountAmount, minAmount);
     }
 
     public Long getId() {
