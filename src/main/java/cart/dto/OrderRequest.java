@@ -1,12 +1,19 @@
 package cart.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 public class OrderRequest {
 
+    @NotEmpty
     private final List<Long> cartItemIds;
+    @Positive
     private final Long originalPrice;
+    @PositiveOrZero
     private final Long usedPoint;
+    @PositiveOrZero
     private final Long pointToAdd;
 
     public OrderRequest(List<Long> cartItemIds, Long originalPrice, Long usedPoint, Long pointToAdd) {

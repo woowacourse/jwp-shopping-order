@@ -1,10 +1,20 @@
 package cart.dto;
 
+import jdk.jfr.BooleanFlag;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
 public class ProductRequest {
+    @NotEmpty
     private final String name;
+    @Positive
     private final int price;
     private final String imageUrl;
+    @PositiveOrZero
     private final Double pointRatio;
+    @BooleanFlag
     private final boolean pointAvailable;
 
     public ProductRequest(String name, int price, String imageUrl, Double pointRatio, boolean pointAvailable) {

@@ -7,6 +7,7 @@ import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class OrdersApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Void> order(Member member, @RequestBody @Valid OrderRequest orderRequest) {
         Long orderId = orderService.order(member.getId(), orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
