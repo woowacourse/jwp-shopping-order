@@ -54,10 +54,9 @@ public class OrderManager {
     }
 
     private void validatePointToAdd(Long pointToAdd) {
-        double point = 0.0;
-        for (CartItem item : cartItems) {
-            point += item.getProduct().getPrice() * item.getQuantity() * item.getProduct().getPointRatio() / 100;
-        }
+        double point = cartItems.stream()
+                .mapToDouble(CartItem::getAddedPoint)
+                .sum();
 
         if (pointToAdd != Math.round(point)) {
             throw new PointException.PointInconsistencyException("적립될 포인트에 문제가 있습니다");

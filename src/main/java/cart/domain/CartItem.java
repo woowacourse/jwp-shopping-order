@@ -57,6 +57,10 @@ public class CartItem {
         return product.getPrice() * quantity.intValue();
     }
 
+    public double getAddedPoint() {
+        return product.getPrice() * quantity * (product.getPointRatio() / 100);
+    }
+
     public boolean isPointAvailable() {
         return product.getPointAvailable();
     }
