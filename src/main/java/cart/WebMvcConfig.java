@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOriginPatterns("*")
+                .allowedOriginPatterns("http://eddy-web.s3-website.ap-northeast-2.amazonaws.com/","http://rulu-pg.s3-website.ap-northeast-2.amazonaws.com/")
                 .exposedHeaders("Location");
     }
 }
