@@ -1,4 +1,4 @@
-package cart.controller.ui;
+package cart.controller.exception;
 
 import cart.exception.BaseException;
 import org.slf4j.Logger;
