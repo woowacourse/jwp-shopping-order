@@ -1,14 +1,5 @@
 package cart.integration;
 
-import static cart.integration.CartItemIntegrationTestFixture.장바구니_삭제_요청;
-import static cart.integration.CartItemIntegrationTestFixture.장바구니_상품_수량_수정_요청;
-import static cart.integration.CartItemIntegrationTestFixture.장바구니_상품_전체_조회_요청;
-import static cart.integration.CartItemIntegrationTestFixture.장바구니_응답;
-import static cart.integration.CartItemIntegrationTestFixture.장바구니_전체_조회_응답_검증;
-import static cart.integration.CartItemIntegrationTestFixture.장바구니에_상품_등록_요청;
-import static cart.integration.IntegrationTestFixture.아이디를_반환한다;
-import static cart.integration.IntegrationTestFixture.응답_코드_검증;
-
 import cart.db.repository.JdbcMemberRepository;
 import cart.db.repository.JdbcProductRepository;
 import cart.domain.member.Member;
@@ -18,6 +9,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import static cart.integration.CartItemIntegrationTestFixture.*;
+import static cart.integration.IntegrationTestFixture.상태_코드를_검증한다;
+import static cart.integration.IntegrationTestFixture.아이디를_반환한다;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class CartItemIntegrationTest extends IntegrationTest {
@@ -49,16 +44,16 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         @Test
         void 정상_추가한다() {
-            var 응답 = 장바구니에_상품_등록_요청(밀리, 상품_치킨.getId());
+            var 응답 = 장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId());
 
-            응답_코드_검증(응답, HttpStatus.CREATED);
+            상태_코드를_검증한다(응답, HttpStatus.CREATED);
         }
 
         @Test
         void 잘못된_사용자_정보로_요청시_실패한다() {
-            var 응답 = 장바구니에_상품_등록_요청(잘못된_사용자, 상품_치킨.getId());
+            var 응답 = 장바구니에_상품_등록을_요청한다(잘못된_사용자, 상품_치킨.getId());
 
-            응답_코드_검증(응답, HttpStatus.UNAUTHORIZED);
+            상태_코드를_검증한다(응답, HttpStatus.UNAUTHORIZED);
         }
 
     }
@@ -68,13 +63,13 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         @Test
         void 정상_전체_조회한다() {
-            Long firstSaveID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_치킨.getId()));
-            Long secondSaveID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_피자.getId()));
+            Long firstSaveID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId()));
+            Long secondSaveID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_피자.getId()));
 
-            var 응답 = 장바구니_상품_전체_조회_요청(밀리);
+            var 응답 = 장바구니_상품_전체_조회를_요청한다(밀리);
 
-            응답_코드_검증(응답, HttpStatus.OK);
-            장바구니_전체_조회_응답_검증(응답, 장바구니_응답(firstSaveID, 상품_치킨, 1), 장바구니_응답(secondSaveID, 상품_피자, 1));
+            상태_코드를_검증한다(응답, HttpStatus.OK);
+            장바구니_전체_조회_응답을_검증한다(응답, 장바구니_응답_정보를_반환한다(firstSaveID, 상품_치킨, 1), 장바구니_응답_정보를_반환한다(secondSaveID, 상품_피자, 1));
         }
 
     }
@@ -84,31 +79,31 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         @Test
         void 정상_수정한다() {
-            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_치킨.getId()));
+            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId()));
 
-            var 응답 = 장바구니_상품_수량_수정_요청(밀리, 장바구니_ID, 10);
+            var 응답 = 장바구니_상품_수량을_수정_요청한다(밀리, 장바구니_ID, 10);
 
-            응답_코드_검증(응답, HttpStatus.OK);
-            장바구니_전체_조회_응답_검증(장바구니_상품_전체_조회_요청(밀리), 장바구니_응답(장바구니_ID, 상품_치킨, 10));
+            상태_코드를_검증한다(응답, HttpStatus.OK);
+            장바구니_전체_조회_응답을_검증한다(장바구니_상품_전체_조회를_요청한다(밀리), 장바구니_응답_정보를_반환한다(장바구니_ID, 상품_치킨, 10));
         }
 
         @Test
         void 다른_사용자의_장바구니의_수량을_수정_요청시_실패한다() {
-            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_치킨.getId()));
+            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId()));
 
-            var 응답 = 장바구니_상품_수량_수정_요청(박스터, 장바구니_ID, 10);
+            var 응답 = 장바구니_상품_수량을_수정_요청한다(박스터, 장바구니_ID, 10);
 
-            응답_코드_검증(응답, HttpStatus.FORBIDDEN);
+            상태_코드를_검증한다(응답, HttpStatus.FORBIDDEN);
         }
 
         @Test
         void 장바구니의_수량을_0으로_수정_요청시_장바구니를_삭제한다() {
-            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_치킨.getId()));
+            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId()));
 
-            var 응답 = 장바구니_상품_수량_수정_요청(밀리, 장바구니_ID, 0);
+            var 응답 = 장바구니_상품_수량을_수정_요청한다(밀리, 장바구니_ID, 0);
 
-            응답_코드_검증(응답, HttpStatus.OK);
-            장바구니_전체_조회_응답_검증(장바구니_상품_전체_조회_요청(밀리));
+            상태_코드를_검증한다(응답, HttpStatus.OK);
+            장바구니_전체_조회_응답을_검증한다(장바구니_상품_전체_조회를_요청한다(밀리));
         }
     }
 
@@ -117,21 +112,21 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         @Test
         void 정상_삭제한다() {
-            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_치킨.getId()));
+            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId()));
 
-            var 응답 = 장바구니_삭제_요청(밀리, 장바구니_ID);
+            var 응답 = 장바구니_삭제를_요청한다(밀리, 장바구니_ID);
 
-            응답_코드_검증(응답, HttpStatus.NO_CONTENT);
-            장바구니_전체_조회_응답_검증(장바구니_상품_전체_조회_요청(밀리));
+            상태_코드를_검증한다(응답, HttpStatus.NO_CONTENT);
+            장바구니_전체_조회_응답을_검증한다(장바구니_상품_전체_조회를_요청한다(밀리));
         }
 
         @Test
         void 다른_사용자의_장바구니_삭제_요청시_실패한다() {
-            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록_요청(밀리, 상품_치킨.getId()));
+            Long 장바구니_ID = 아이디를_반환한다(장바구니에_상품_등록을_요청한다(밀리, 상품_치킨.getId()));
 
-            var 응답 = 장바구니_삭제_요청(박스터, 장바구니_ID);
+            var 응답 = 장바구니_삭제를_요청한다(박스터, 장바구니_ID);
 
-            응답_코드_검증(응답, HttpStatus.FORBIDDEN);
+            상태_코드를_검증한다(응답, HttpStatus.FORBIDDEN);
         }
     }
 }

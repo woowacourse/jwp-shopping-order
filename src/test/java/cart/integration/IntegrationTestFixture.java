@@ -1,15 +1,15 @@
 package cart.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class IntegrationTestFixture {
 
-    public static void 응답_코드_검증(ExtractableResponse<Response> response, HttpStatus status) {
+    public static void 상태_코드를_검증한다(ExtractableResponse<Response> response, HttpStatus status) {
         assertThat(response.statusCode()).isEqualTo(status.value());
     }
 

@@ -1,12 +1,5 @@
 package cart.integration;
 
-import static cart.integration.IntegrationTestFixture.응답_코드_검증;
-import static cart.integration.MemberCouponIntegrationTestFixture.정률_쿠폰;
-import static cart.integration.MemberCouponIntegrationTestFixture.정액_쿠폰;
-import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_조회_응답;
-import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_전체_조회_응답_검증;
-import static cart.integration.MemberCouponIntegrationTestFixture.쿠폰_조회_요청;
-
 import cart.db.repository.JdbcCouponRepository;
 import cart.db.repository.JdbcMemberCouponRepository;
 import cart.db.repository.JdbcMemberRepository;
@@ -15,9 +8,6 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.member.Member;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -25,6 +15,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import static cart.integration.IntegrationTestFixture.상태_코드를_검증한다;
+import static cart.integration.MemberCouponIntegrationTestFixture.*;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -65,12 +62,12 @@ public class MemberCouponIntegrationTest extends IntegrationTest {
 
         @Test
         void 정상_조회한다() {
-            var 응답 = 쿠폰_조회_요청(밀리);
+            var 응답 = 쿠폰_조회를_요청한다(밀리);
 
-            응답_코드_검증(응답, HttpStatus.OK);
-            쿠폰_전체_조회_응답_검증(응답, 쿠폰_전체_조회_응답(
-                    List.of(정률_쿠폰(밀리_쿠폰_10퍼센트.getId(), "10퍼센트 할인 쿠폰", 10, LocalDate.of(3000, 6, 8), 1000)),
-                    List.of(정액_쿠폰(밀리_쿠폰_1000원.getId(), "1000원 할인 쿠폰", 1000, LocalDate.of(3000, 6, 8), 1000))
+            상태_코드를_검증한다(응답, HttpStatus.OK);
+            쿠폰_전체_조회_응답을_검증한다(응답, 쿠폰_전체_조회_정보를_반환한다(
+                    List.of(정률_쿠폰_정보를_반환한다(밀리_쿠폰_10퍼센트.getId(), "10퍼센트 할인 쿠폰", 10, LocalDate.of(3000, 6, 8), 1000)),
+                    List.of(정액_쿠폰_정보를_반환한다(밀리_쿠폰_1000원.getId(), "1000원 할인 쿠폰", 1000, LocalDate.of(3000, 6, 8), 1000))
             ));
         }
     }
