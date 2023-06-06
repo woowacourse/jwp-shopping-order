@@ -124,7 +124,7 @@ public class CouponIntegrationTest extends IntegrationTest {
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(couponRequest2)
 			.when()
-			.patch("/coupons/{id}", couponId)
+			.post("/coupons/{id}/serialNumber", couponId)
 			.then()
 			.log().all()
 			.statusCode(HttpStatus.OK.value());
