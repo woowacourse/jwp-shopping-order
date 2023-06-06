@@ -19,6 +19,7 @@ import static cart.fixture.MemberFixture.비버_ID포함;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
+@SuppressWarnings("NonAsciiCharacters")
 class OrderJdbcRepositoryTest {
 
     @Autowired
@@ -50,7 +51,7 @@ class OrderJdbcRepositoryTest {
     @DisplayName("주문 목록 조회")
     @Test
     void findOrdersTest() {
-        Member dino = new Member(dinoId, 디노_ID포함.getName(), 디노_ID포함.getEmail(), 디노_ID포함.getEmail());
+        Member dino = new Member(dinoId, 디노_ID포함.getName(), 디노_ID포함.getEmail(), 디노_ID포함.getPassword());
         Order order1 = new Order(11400, 15000, 2000, dino);
         Long order1Id = orderJdbcRepository.createOrder(order1);
 
@@ -73,7 +74,7 @@ class OrderJdbcRepositoryTest {
     @DisplayName("특정 주문 조회")
     @Test
     void findOrderTest() {
-        Member dino = new Member(dinoId, 디노_ID포함.getName(), 디노_ID포함.getEmail(), 디노_ID포함.getEmail());
+        Member dino = new Member(dinoId, 디노_ID포함.getName(), 디노_ID포함.getEmail(), 디노_ID포함.getPassword());
         Order order1 = new Order(11400, 15000, 2000, dino);
         Long order1Id = orderJdbcRepository.createOrder(order1);
 

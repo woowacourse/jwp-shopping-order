@@ -7,9 +7,9 @@ import java.util.Objects;
 public class Member {
 
     private final Long id;
-    private final String name;
-    private final String email;
-    private final String password;
+    private final MemberName name;
+    private final MemberEmail email;
+    private final MemberPassword password;
 
     public Member(String name, String email, String password) {
         this(null, name, email, password);
@@ -17,9 +17,9 @@ public class Member {
 
     public Member(Long id, String name, String email, String password) {
         this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        this.name = MemberName.from(name);
+        this.email = MemberEmail.from(email);
+        this.password = MemberPassword.from(password);
     }
 
     public Member(MemberRequest memberRequest) {
@@ -31,15 +31,15 @@ public class Member {
     }
 
     public String getName() {
-        return name;
+        return name.getMemberName();
     }
 
     public String getEmail() {
-        return email;
+        return email.getMemberEmail();
     }
 
     public String getPassword() {
-        return password;
+        return password.getPassword();
     }
 
     public boolean checkPassword(String password) {

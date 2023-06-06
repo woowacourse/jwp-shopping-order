@@ -18,4 +18,8 @@ public class MemberPassword {
             throw new IllegalArgumentException("잘못된 비밀번호 형식입니다.");
         }
     }
+
+    public String getPassword() {
+        return password;
+    }
 }

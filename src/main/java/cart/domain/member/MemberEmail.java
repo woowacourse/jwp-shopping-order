@@ -13,15 +13,15 @@ public class MemberEmail {
         this.memberEmail = memberEmail;
     }
 
+    public static MemberEmail from(String memberEmail) {
+        return new MemberEmail(memberEmail);
+    }
+
     private void validate(String memberEmail) {
         Matcher matcher = emailPattern.matcher(memberEmail);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
         }
-    }
-
-    public static MemberEmail from(String memberEmail) {
-        return new MemberEmail(memberEmail);
     }
 
     public String getMemberEmail() {
