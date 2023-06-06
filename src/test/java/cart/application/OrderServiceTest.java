@@ -1,5 +1,6 @@
 package cart.application;
 
+import static cart.fixture.Fixture.GOLD_MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -20,6 +21,7 @@ import cart.domain.price.DiscountPriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException;
+import cart.exception.InvalidOrderException;
 import cart.fixture.Fixture;
 
 @SpringBootTest
@@ -36,7 +38,7 @@ class OrderServiceTest {
     public void order() {
         // given
         List<Long> cartItemIds = Arrays.asList(1L, 2L);
-        Member member = Fixture.GOLD_MEMBER;
+        Member member = GOLD_MEMBER;
         OrderRequest orderRequest = new OrderRequest(cartItemIds);
 
         // when
@@ -51,7 +53,7 @@ class OrderServiceTest {
     public void orderFail() {
         // given
         List<Long> cartItemIds = Arrays.asList(1L, 2L, 3L);
-        Member member = Fixture.GOLD_MEMBER;
+        Member member = GOLD_MEMBER;
         OrderRequest orderRequest = new OrderRequest(cartItemIds);
 
         // then
@@ -64,7 +66,7 @@ class OrderServiceTest {
     @DisplayName("orderId와 member를 통해 해당하는 order의 orderResponse를 반환한다.")
     void findOrderById() {
         //given
-        Member member = Fixture.GOLD_MEMBER;
+        Member member = GOLD_MEMBER;
         final CartItem cartItem1 = Fixture.CART_ITEM1;
         final CartItem cartItem2 = Fixture.CART_ITEM2;
         final int price = cartItem1.calculateTotalPrice() + cartItem2.calculateTotalPrice();
@@ -88,10 +90,18 @@ class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("orderId와 member를 통해 해당하는 order의 orderResponse를 반환한다.")
+    void findOrderByIdFailByUnExistedOrderId() {
+        assertThatThrownBy(() -> orderService.findOrderByIdAndMember(30000L, GOLD_MEMBER))
+                .isInstanceOf(InvalidOrderException.class)
+                .hasMessageContaining("OrderId is not existed;");
+    }
+
+    @Test
     @DisplayName("member를 통해 해당 member의 orderResponse를 반환한다.")
     void findOrdersByMember() {
         //given
-        Member member = Fixture.GOLD_MEMBER;
+        Member member = GOLD_MEMBER;
         final Long id1 = addOrder(member, Fixture.CART_ITEM1);
         final Long id2 = addOrder(member, Fixture.CART_ITEM2);
 

@@ -13,8 +13,8 @@ import cart.domain.Order;
 import cart.domain.price.PriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.exception.CartItemException;
 import cart.exception.CartItemException.UnExistedCartItem;
+import cart.exception.InvalidOrderException;
 import cart.repository.OrderRepository;
 
 @Service
@@ -50,7 +50,8 @@ public class OrderService {
     }
 
     public OrderResponse findOrderByIdAndMember(Long orderId, Member member) {
-        final Order order = orderRepository.findOrderByIdAndMember(orderId, member);
+        final Order order = orderRepository.findOrderByIdAndMember(orderId, member)
+                .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
         return OrderResponse.from(order);
     }
 

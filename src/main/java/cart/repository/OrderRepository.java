@@ -3,6 +3,7 @@ package cart.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,6 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.entity.OrderEntity;
 import cart.entity.OrderedItemEntity;
-import cart.exception.InvalidOrderException;
 
 @Repository
 public class OrderRepository {
@@ -48,12 +48,15 @@ public class OrderRepository {
         return orderId;
     }
 
-    public Order findOrderByIdAndMember(Long orderId, Member member) {
-        final OrderEntity orderEntity = orderDao.findById(orderId)
-                .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
+    public Optional<Order> findOrderByIdAndMember(Long orderId, Member member) {
+        final Optional<OrderEntity> savedOrder = orderDao.findById(orderId);
+        if (savedOrder.isEmpty()) {
+            return Optional.empty();
+        }
+        final OrderEntity orderEntity = savedOrder.get();
         List<OrderedItemEntity> orderedItems = orderedItemDao.findAllByOrderId(orderId);
         final CartItems cartItems = orderedItemsToCartItems(member, orderedItems);
-        return new Order(orderEntity.getId(), orderEntity.getPrice(), member, cartItems);
+        return Optional.of(new Order(orderEntity.getId(), orderEntity.getPrice(), member, cartItems));
     }
 
     private CartItems orderedItemsToCartItems(Member member, List<OrderedItemEntity> orderedItems) {

@@ -2,9 +2,9 @@ package cart.repository;
 
 import static cart.fixture.Fixture.GOLD_MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +22,6 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.entity.OrderEntity;
-import cart.exception.InvalidOrderException;
 import cart.fixture.Fixture;
 
 @JdbcTest
@@ -53,7 +52,7 @@ class OrderRepositoryTest {
         orderedItemDao.saveAll(items, orderId);
 
         //when
-        final Order result = orderRepository.findOrderByIdAndMember(orderId, GOLD_MEMBER);
+        final Order result = orderRepository.findOrderByIdAndMember(orderId, GOLD_MEMBER).get();
 
         //then
         Assertions.assertAll(
@@ -66,11 +65,11 @@ class OrderRepositoryTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 orderId를 통해 조회를 하는 경우 예외를 던진다.")
+    @DisplayName("존재하지 않는 orderId를 통해 조회를 하는 경우 Optional.Empty()를 반환한다.")
     void findOrderByIdFailByUnExistedOrderId() {
-        assertThatThrownBy(() -> orderRepository.findOrderByIdAndMember(30000L, GOLD_MEMBER))
-                .isInstanceOf(InvalidOrderException.class)
-                .hasMessageContaining("OrderId is not existed;");
+        final Optional<Order> result = orderRepository.findOrderByIdAndMember(30000L, GOLD_MEMBER);
+
+        assertThat(result).isEqualTo(Optional.empty());
     }
 
     @Test
