@@ -125,7 +125,7 @@ public class CartItemDao {
     }
 
     public List<CartItemEntity> findByIds(final List<Long> ids) {
-        String sql = "SELECT value FROM table_name WHERE id IN (:ids)";
+        String sql = "SELECT * FROM cart_item WHERE id IN (:ids)";
         return jdbcTemplate.query(sql, rowMapper, ids);
     }
 

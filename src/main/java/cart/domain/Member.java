@@ -11,6 +11,10 @@ public class Member {
         this.password = password;
     }
 
+    public static Member from(final MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+    }
+
     public Long getId() {
         return id;
     }

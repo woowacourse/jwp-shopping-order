@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.domain.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,13 @@ import java.util.List;
 
 @Repository
 public class MemberDao {
+
+    private RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
+            new MemberEntity(
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password")
+            );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -48,6 +56,11 @@ public class MemberDao {
     public List<Member> getAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
+    }
+
+    public List<MemberEntity> findByIds(final List<Long> ids) {
+        String sql = "SELECT * FROM member WHERE id IN (:ids)";
+        return jdbcTemplate.query(sql, rowMapper, ids);
     }
 
     private static class MemberRowMapper implements RowMapper<Member> {
