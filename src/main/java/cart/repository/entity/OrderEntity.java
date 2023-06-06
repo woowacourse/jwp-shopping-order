@@ -1,6 +1,7 @@
 package cart.repository.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class OrderEntity {
 
@@ -36,6 +37,19 @@ public class OrderEntity {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderEntity that = (OrderEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
