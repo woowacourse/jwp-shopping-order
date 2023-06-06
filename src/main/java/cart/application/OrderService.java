@@ -46,6 +46,7 @@ public class OrderService {
         return order;
     }
 
+    @Transactional(readOnly = true)
     public List<Order> findAllByMember(Member member) {
         return orderDao.findAllByMember(member);
     }

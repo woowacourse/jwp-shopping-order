@@ -9,11 +9,13 @@ import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.NoSuchIdsException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
@@ -23,11 +25,13 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<CartItem> findByIds(List<Long> ids) {
         final List<CartItem> cartItems = cartItemDao.findByIds(ids);
         if (cartItems.size() != ids.size()) {
