@@ -2,9 +2,7 @@ package cart.persistence.coupon;
 
 import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
-import cart.domain.discountpolicy.CouponPolicy;
 import cart.domain.order.Order;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +11,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static cart.fixture.MemberFixture.비버_ID포함;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class CouponJdbcRepositoryTest {
@@ -53,39 +51,10 @@ class CouponJdbcRepositoryTest {
         List<MemberCouponDto> coupons = couponJdbcRepository.findByMemberId(2L);
         List<String> couponNames = coupons.stream().map(MemberCouponDto::getCouponName).collect(Collectors.toList());
 
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(coupons).hasSize(3),
                 () -> assertThat(couponNames).containsExactlyInAnyOrder("웰컴 쿠폰 - 10%할인", "웰컴 쿠폰 - 10%할인", "또 와요 쿠폰 - 3000원 할인")
         );
-    }
-
-    @Test
-    @DisplayName("memberCouponId가 정률 할인인 쿠폰을 조회한다.")
-    void findPercentCouponByIdTest() {
-        Optional<CouponPolicy> percentCoupon = couponJdbcRepository.findPercentCouponById(3L);
-        CouponPolicy coupon = percentCoupon.get();
-        assertThat(percentCoupon).isNotEmpty();
-    }
-
-    @Test
-    @DisplayName("memberCouponId가 정액 할인인 경우 Optional.empty()반환")
-    void findPercentCouponByIdEmptyTest() {
-        Optional<CouponPolicy> percentCoupon = couponJdbcRepository.findPercentCouponById(4L);
-        assertThat(percentCoupon).isEmpty();
-    }
-
-    @Test
-    @DisplayName("memberCouponId가 정액 할인인 쿠폰을 조회한다.")
-    void findAmountCouponByIdTest() {
-        Optional<CouponPolicy> amountCoupon = couponJdbcRepository.findAmountCouponById(4L);
-        assertThat(amountCoupon).isNotEmpty();
-    }
-
-    @Test
-    @DisplayName("memberCouponId가 정액 할인인 경우 Optional.empty()반환")
-    void findAmountCouponByIdEmptyTest() {
-        Optional<CouponPolicy> amountCoupon = couponJdbcRepository.findAmountCouponById(3L);
-        assertThat(amountCoupon).isEmpty();
     }
 
     @Test
@@ -109,7 +78,7 @@ class CouponJdbcRepositoryTest {
         couponJdbcRepository.createOrderedCoupon(1L, 1L);
         List<Coupon> usedCoupons = couponJdbcRepository.findUsedCouponByOrderId(1L);
         Coupon coupon = usedCoupons.get(0);
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(usedCoupons).hasSize(1),
                 () -> assertThat(coupon.getCouponName()).isEqualTo("웰컴 쿠폰 - 10%할인"),
                 () -> assertThat(coupon.getDiscountAmount()).isEqualTo(0),
@@ -124,4 +93,23 @@ class CouponJdbcRepositoryTest {
         List<Coupon> usedCoupons = couponJdbcRepository.findUsedCouponByOrderId(1L);
         assertThat(usedCoupons).isEmpty();
     }
+
+    @Test
+    @DisplayName("memberCouponId에 맞는 사용가능한 쿠폰이 있으면 coupon반환")
+    void findCouponByMemberCouponIdTest() {
+        assertThat(couponJdbcRepository.findCouponByMemberCouponId(3L)).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("memberCouponId의 status가 0이면 Optional empty반환")
+    void findCouponByCannotUseMemberCouponIdTest() {
+        assertThat(couponJdbcRepository.findCouponByMemberCouponId(2L)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("memberCouponId의 status가 0이면 Optional empty반환")
+    void findCouponByNotExistMemberCouponIdTest() {
+        assertThat(couponJdbcRepository.findCouponByMemberCouponId(10L)).isEmpty();
+    }
+
 }

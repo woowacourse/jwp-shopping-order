@@ -3,9 +3,6 @@ package cart.persistence.coupon;
 import cart.application.repository.CouponRepository;
 import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
-import cart.domain.discountpolicy.AmountCoupon;
-import cart.domain.discountpolicy.CouponPolicy;
-import cart.domain.discountpolicy.PercentCoupon;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,11 +22,11 @@ public class CouponJdbcRepository implements CouponRepository {
 
     private final RowMapper<Coupon> couponRowMapper = (rs, rowNum) ->
             new Coupon(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getInt("discount_percent"),
-                    rs.getInt("discount_amount"),
-                    rs.getInt("min_amount")
+                    rs.getLong("coupon.id"),
+                    rs.getString("coupon.name"),
+                    rs.getInt("coupon.discount_percent"),
+                    rs.getInt("coupon.discount_amount"),
+                    rs.getInt("coupon.min_amount")
             );
 
     private final RowMapper<MemberCouponDto> memberCouponDtoRowMapper = ((rs, rowNum) ->
@@ -41,18 +38,6 @@ public class CouponJdbcRepository implements CouponRepository {
                     rs.getInt("coupon.min_amount")
             ));
 
-    private final RowMapper<CouponPolicy> percentCouponRowMapper = (rs, rowMapper) ->
-            new PercentCoupon(
-                    rs.getInt("coupon.min_amount"),
-                    rs.getInt("coupon.discount_percent")
-            );
-
-    private final RowMapper<CouponPolicy> amountCouponRowMapper = (rs, rowMapper) ->
-            new AmountCoupon(
-                    rs.getInt("coupon.min_amount"),
-                    rs.getInt("coupon.discount_amount")
-            );
-
     public CouponJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleOrderedCouponInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -60,14 +45,19 @@ public class CouponJdbcRepository implements CouponRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-//    @Override
-//    public List<Coupon> findByMemberId(Long memberId) {
-//        String sql = "SELECT coupon.*, member_coupon.id " +
-//                "FROM coupon " +
-//                "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
-//                "WHERE member_coupon.member_id = ? AND member_coupon.status = " + USABLE;
-//        return jdbcTemplate.query(sql, couponRowMapper, memberId);
-//    }
+    @Override
+    public Optional<Coupon> findCouponByMemberCouponId(Long memberCouponId) {
+        String sql = "SELECT coupon.id, coupon.name, coupon.min_amount, coupon.discount_percent, coupon.discount_amount " +
+                "FROM coupon " +
+                "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
+                "WHERE member_coupon.id = ? AND member_coupon.status = 1";
+        try {
+            Coupon coupon = jdbcTemplate.queryForObject(sql, couponRowMapper, memberCouponId);
+            return Optional.of(coupon);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 
     @Override
     public List<MemberCouponDto> findByMemberId(Long memberId) {
@@ -76,36 +66,6 @@ public class CouponJdbcRepository implements CouponRepository {
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
                 "WHERE member_coupon.member_id = ? AND member_coupon.status = " + USABLE;
         return jdbcTemplate.query(sql, memberCouponDtoRowMapper, memberId);
-    }
-
-    @Override
-    public Optional<CouponPolicy> findPercentCouponById(Long memberCouponId) {
-        String sql = "SELECT coupon.min_amount, coupon.discount_percent " +
-                "FROM coupon " +
-                "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
-                "WHERE member_coupon.id = ? AND discount_amount = 0 AND member_coupon.status = 1";
-
-        try {
-            CouponPolicy percentCoupon = jdbcTemplate.queryForObject(sql, percentCouponRowMapper, memberCouponId);
-            return Optional.of(percentCoupon);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<CouponPolicy> findAmountCouponById(Long memberCouponId) {
-        String sql = "SELECT coupon.min_amount, coupon.discount_amount " +
-                "FROM coupon " +
-                "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
-                "WHERE member_coupon.id = ? AND discount_percent = 0 AND member_coupon.status = 1";
-
-        try {
-            CouponPolicy percentCoupon = jdbcTemplate.queryForObject(sql, amountCouponRowMapper, memberCouponId);
-            return Optional.of(percentCoupon);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
     }
 
     @Override
