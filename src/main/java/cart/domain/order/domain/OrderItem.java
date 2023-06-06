@@ -75,7 +75,7 @@ public class OrderItem {
     }
 
     public boolean isSameOrder(Long orderId) {
-        return order.getId().equals(orderId);
+        return order.isSameOrderById(orderId);
     }
 
     @Override

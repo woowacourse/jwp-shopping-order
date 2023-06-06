@@ -25,6 +25,10 @@ public class Order {
         this.createdAt = createdAt;
     }
 
+    public boolean isSameOrderById(Long id) {
+        return this.id.equals(id);
+    }
+
     public Long getId() {
         return id;
     }
