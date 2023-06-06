@@ -13,6 +13,14 @@ public class Money {
         return new Money(money1.value() - money2.value());
     }
 
+    public static Money multiply(Money money, double ratio) {
+        return new Money((int)(money.value() * ratio));
+    }
+
+    public static Money zero() {
+        return new Money(0);
+    }
+
     public int value() {
         return money;
     }

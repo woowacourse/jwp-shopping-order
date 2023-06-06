@@ -36,7 +36,7 @@ public class Coupon {
         }
 
         if (type == CouponType.FIXED_AMOUNT) {
-            return new Money(money.value() - discountAmount);
+            return Money.subtract(money, new Money(discountAmount));
         }
 
         if (type == CouponType.FIXED_PERCENTAGE) {
@@ -47,11 +47,10 @@ public class Coupon {
     }
 
     private Money getDiscountedMoneyByPercentageCoupon(Money money) {
-        if ((int)(money.value() * discountPercentage) > maxDiscountPrice) {
-            return new Money(money.value() - maxDiscountPrice);
+        if (Money.multiply(money, discountPercentage).value() > maxDiscountPrice) {
+            return Money.subtract(money, new Money(maxDiscountPrice));
         }
-
-        return new Money((int)(money.value() * (1 - discountPercentage)));
+        return Money.multiply(money, 1 - discountPercentage);
     }
 
     public Long getId() {
