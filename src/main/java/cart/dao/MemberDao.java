@@ -3,6 +3,7 @@ package cart.dao;
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -10,15 +11,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertMember;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.insertMember = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
                 .usingGeneratedKeyColumns("id");
@@ -30,10 +34,18 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public MemberEntity getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    public Optional<MemberEntity> getMemberByEmail(String email) {
+        String sql = "SELECT * FROM member WHERE email = :email";
+        final Map<String, String> parameter = Map.of("email", email);
+        final List<MemberEntity> members = namedParameterJdbcTemplate.query(sql, parameter, (resultSet, rowNum) -> new MemberEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("email"),
+                resultSet.getString("password")
+        ));
+        if (members.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(members.get(0));
     }
 
     public MemberEntity addMember(MemberEntity memberEntity) {

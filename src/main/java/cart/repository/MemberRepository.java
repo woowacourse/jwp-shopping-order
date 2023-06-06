@@ -5,9 +5,11 @@ import cart.dao.PointDao;
 import cart.domain.Member;
 import cart.entity.MemberEntity;
 import cart.entity.PointEntity;
+import cart.exception.NoSuchMemberException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -32,7 +34,11 @@ public class MemberRepository {
     }
 
     public Member getMemberByEmail(final String email) {
-        return memberDao.getMemberByEmail(email).toMember();
+        final Optional<MemberEntity> member = memberDao.getMemberByEmail(email);
+        if (member.isEmpty()) {
+            throw new NoSuchMemberException("존재하지 않는 이메일입니다.");
+        }
+        return member.get().toMember();
     }
 
     public void addPoint(final Member member, final int addedPoint) {
