@@ -13,6 +13,7 @@ import cart.auth.BasicAuthorizationDecoder;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.BadRequestException;
 import cart.exception.ExceptionType;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
@@ -29,10 +30,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new BadRequestException(ExceptionType.NO_HEADER);
         }
 
         Map.Entry<String, String> emailAndPassword = BasicAuthorizationDecoder.decode(authorization);
@@ -40,6 +41,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = emailAndPassword.getValue();
 
         Member member = memberDao.findByEmail(email);
+        
         if (!member.checkPassword(password)) {
             throw new AuthenticationException(ExceptionType.UNAUTHORIZED);
         }
