@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.domain.member.Member;
-import cart.domain.member.MemberRepository;
 import cart.application.order.dto.OrderDetailResponse;
 import cart.application.order.dto.OrderRequest;
 import cart.application.order.dto.OrderResponse;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 
 public class OrderIntegrationTest extends IntegrationTest {
 
@@ -49,7 +49,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 	}
 
 	@Test
-	@DisplayName("특정 주문의 상세 정보를 조회한다.")
+	@DisplayName("특정 주문의 상세 정보를 조회할 때, 정상적인 요청이면 상태코드 200을 반환한다.")
 	void getOrderDetailTest() {
 		//given
 		final Member member = memberRepository.findById(1L).get();
@@ -71,6 +71,38 @@ public class OrderIntegrationTest extends IntegrationTest {
 		assertThat(orderDetailResponse.getOrderId()).isEqualTo(orderId);
 		assertThat(orderDetailResponse.getProducts()).hasSize(3);
 		assertThat(orderDetailResponse.getTotalPrice()).isEqualTo(BigDecimal.valueOf(585400L));
+	}
+
+	@Test
+	@DisplayName("특정 주문의 상세 정보를 조회할 때, 계정정보가 없으면 401을 반환한다.")
+	void UnauthorizedExceptionTest() {
+		//given
+		final long orderId = 1L;
+
+		//when
+		given().log().all()
+			.when()
+			.get("/orders/{orderId}", orderId)
+			.then()
+			.log().all()
+			.statusCode(HttpStatus.UNAUTHORIZED.value());
+	}
+
+	@Test
+	@DisplayName("특정 주문의 상세 정보를 조회할 때, 주문 정보를 찾을 수 없으면 400을 반환한다.")
+	void BadRequestTest() {
+		//given
+		final Member member = memberRepository.findById(2L).get();
+		final long orderId = 1L;
+
+		//when
+		given().log().all()
+			.auth().preemptive().basic(member.getEmail(), member.getPassword())
+			.when()
+			.get("/orders/{orderId}", orderId)
+			.then()
+			.log().all()
+			.statusCode(HttpStatus.BAD_REQUEST.value());
 	}
 
 	@Test
@@ -100,15 +132,14 @@ public class OrderIntegrationTest extends IntegrationTest {
 		assertThat(location).isNotNull();
 	}
 
-
 	@Test
 	@DisplayName("주문을 취소한다.")
 	void cancelOrderTest() {
-	    //given
+		//given
 		final Member member = memberRepository.findById(1L).get();
 		final long orderId = 3L;
 
-	    //when
+		//when
 		given().log().all()
 			.auth().preemptive().basic(member.getEmail(), member.getPassword())
 			.when()

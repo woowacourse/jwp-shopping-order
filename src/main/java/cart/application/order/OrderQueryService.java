@@ -10,6 +10,7 @@ import cart.application.order.dto.OrderDetailResponse;
 import cart.application.order.dto.OrderResponse;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.Orders;
+import cart.error.exception.BadRequestException;
 
 @Transactional(readOnly = true)
 @Service
@@ -34,7 +35,7 @@ public class OrderQueryService {
 
 		return orders.getOrder(id)
 			.map(OrderDetailResponse::from)
-			.orElseThrow(() -> new IllegalArgumentException("해당 멤버의 주문이 아닙니다."));
+			.orElseThrow(BadRequestException.Order::new);
 	}
 
 }
