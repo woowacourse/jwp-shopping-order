@@ -1,6 +1,5 @@
 package cart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,21 +45,21 @@ public class OrderService {
     public void order(Member member, OrderRequest request) {
         Cart cart = cartService.getCartOf(member);
 
-        List<CartItem> itemsToOrder = new ArrayList<>();
+        Order order = new Order(member);
         for (OrderItemRequest orderItemRequest : request.getOrderItems()) {
             CartItem itemToOrder = cartItemService.getItemBy(orderItemRequest.getId());
-            List<MemberCoupon> memberCoupons = getMemberCouponsFrom(member, orderItemRequest);
-            cart.applyCouponsOn(itemToOrder, memberCoupons);
-            couponService.updateMemberCoupons(memberCoupons);
-            itemsToOrder.add(itemToOrder);
+            List<MemberCoupon> memberCouponsToUse = getMemberCouponsBy(member, orderItemRequest);
+
+            cart.applyCouponsOn(itemToOrder, memberCouponsToUse);
+            Order newOrder = cart.order(itemToOrder);
+            order = order.join(newOrder);
         }
-        Order order = cart.order(itemsToOrder);
 
         save(order);
         cartService.save(cart);
     }
 
-    private List<MemberCoupon> getMemberCouponsFrom(Member member, OrderItemRequest orderItemRequest) {
+    private List<MemberCoupon> getMemberCouponsBy(Member member, OrderItemRequest orderItemRequest) {
         return couponService.getMemberCouponsBy(
                 member,
                 orderItemRequest.getCoupons().stream()
@@ -87,6 +86,7 @@ public class OrderService {
     }
 
     private void save(Order order) {
+        couponService.updateMemberCoupons(order.getUsedMemberCoupons());
         Long orderId = orderDao.insert(OrderDto.of(order));
         orderItemDao.insertAll(orderId, order.getOrderItems());
     }

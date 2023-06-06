@@ -2,7 +2,6 @@ package cart.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import cart.exception.NotContainedItemException;
 
@@ -22,20 +21,10 @@ public class Cart {
         cartItems.get(index).apply(coupons);
     }
 
-    public Order order(List<CartItem> itemsToOrder) {
-        validateContains(itemsToOrder);
-        List<OrderItem> orderItems = cartItems.stream()
-                .filter(itemsToOrder::contains)
-                .map(OrderItem::new)
-                .collect(Collectors.toList());
-        cartItems.removeAll(itemsToOrder);
-        return new Order(owner, orderItems);
-    }
-
-    private void validateContains(List<CartItem> items) {
-        for (CartItem item : items) {
-            validateContains(item);
-        }
+    public Order order(CartItem itemToOrder) {
+        validateContains(itemToOrder);
+        cartItems.remove(itemToOrder);
+        return Order.of(owner, List.of(itemToOrder));
     }
 
     private void validateContains(CartItem item) {
