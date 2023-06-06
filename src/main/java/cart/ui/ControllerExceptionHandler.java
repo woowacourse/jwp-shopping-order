@@ -3,6 +3,7 @@ package cart.ui;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
 import cart.exception.AuthenticationException;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.NumberRangeException;
 import cart.exception.ShoppingOrderException;
 import cart.exception.UnauthorizedAccessException;
@@ -56,6 +57,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<Response> handleUnauthorizedAccessException(UnauthorizedAccessException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new Response(e.getMessage()));
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<Response> handleCartItemNotFoundException(CartItemNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new Response(e.getMessage()));
     }
 
