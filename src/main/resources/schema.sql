@@ -11,17 +11,7 @@ CREATE TABLE product
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    isOnSale  BOOLEAN      NOT NULL,
     salePrice int
-);
-
-CREATE TABLE product_sale
-(
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    product_id BIGINT NOT NULL,
-    policy_id  BIGINT NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
-    FOREIGN KEY (policy_id) REFERENCES policy (id) ON DELETE CASCADE
 );
 
 CREATE TABLE member
