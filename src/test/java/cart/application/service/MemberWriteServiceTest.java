@@ -1,6 +1,7 @@
 package cart.application.service;
 
 import cart.application.repository.MemberRepository;
+import cart.application.service.member.MemberMapper;
 import cart.application.service.member.MemberWriteService;
 import cart.ui.member.dto.MemberRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,9 @@ class MemberWriteServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private MemberMapper memberMapper;
 
     @InjectMocks
     private MemberWriteService memberWriteService;
