@@ -6,21 +6,19 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private QuantityVO quantityVo;
     private final Product product;
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
+        this(null, 1, product, member);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
-        this.quantity = quantity;
         this.product = product;
         this.member = member;
+        this.quantityVo = new QuantityVO(quantity);
     }
 
     public Long getId() {
@@ -36,7 +34,11 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantityVo.getQuantity();
+    }
+
+    public int getCartItemPrice() {
+        return product.getPrice() * quantityVo.getQuantity();
     }
 
     public void checkOwner(Member member) {
@@ -46,6 +48,19 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantityVo = new QuantityVO(quantity);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CartItem)) return false;
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

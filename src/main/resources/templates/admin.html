@@ -25,6 +25,7 @@
             <th>ID</th>
             <th>이름</th>
             <th>가격</th>
+            <th>재고</th>
             <th>이미지</th>
             <th>Actions</th>
         </tr>
@@ -33,6 +34,7 @@
                 <td th:text="${product.id}"></td>
                 <td th:text="${product.name}"></td>
                 <td th:text="${product.price}"></td>
+                <td th:text="${product.stock}"></td>
                 <td>
                     <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
                 </td>
@@ -56,6 +58,9 @@
 
                 <label for="image-url">이미지 URL</label><br>
                 <input type="text" id="image-url" name="imageUrl" required><br>
+
+                <label for="stock">재고</label><br>
+                <input type="text" id="stock" name="stock" required><br>
 
                 <button type="submit">Submit</button>
             </form>
