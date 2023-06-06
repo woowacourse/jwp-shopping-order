@@ -50,11 +50,16 @@ public class OrderService {
 
     private List<OrderItem> createOrderItems(OrderRequest orderRequest) {
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemRequest orderItem : orderRequest.getOrderItems()) {
-            Long productId = orderItem.getProductId();
-            int quantity = orderItem.getQuantity();
+        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItems()) {
+            Long productId = orderItemRequest.getProductId();
+            int quantity = orderItemRequest.getQuantity();
             Product product = findProduct(productId);
-            orderItems.add(new OrderItem(null, product, quantity, product.getPrice() * quantity));
+            OrderItem orderItem = OrderItem.builder()
+                    .product(product)
+                    .quantity(quantity)
+                    .price(product.getPrice() * quantity)
+                    .build();
+            orderItems.add(orderItem);
         }
         return orderItems;
     }

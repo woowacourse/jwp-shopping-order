@@ -23,7 +23,12 @@ public class OrderItemDao {
         long orderItemId = rs.getLong("oi_id");
         int orderItemQuantity = rs.getInt("quantity");
         long orderItemPrice = rs.getLong("oi_price");
-        return new OrderItem(orderItemId, product, orderItemQuantity, orderItemPrice);
+        return OrderItem.builder()
+                .id(orderItemId)
+                .product(product)
+                .quantity(orderItemQuantity)
+                .price(orderItemPrice)
+                .build();
     };
 
     public OrderItemDao(JdbcTemplate jdbcTemplate) {
