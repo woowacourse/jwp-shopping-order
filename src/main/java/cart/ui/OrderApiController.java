@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cart.application.CouponService;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.request.OrderRequest;
@@ -31,9 +32,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class OrderApiController {
 
     private final OrderService orderService;
+    private final CouponService couponService;
 
-    public OrderApiController(OrderService orderService) {
+    public OrderApiController(OrderService orderService, CouponService couponService) {
         this.orderService = orderService;
+        this.couponService = couponService;
     }
 
     @Operation(summary = "회원 모든 주문 내역 조회", description = "회원의 모든 주문 내역을 조회한다.")
@@ -163,7 +166,7 @@ public class OrderApiController {
     @GetMapping("/coupons")
     public ResponseEntity<MemberCouponsResponse> getMemberCouponsByItems(Member member,
         @RequestParam("cartItemId") List<Long> cartItemIds) {
-        MemberCouponsResponse memberCouponsResponse = orderService.findMemberCoupons(member, cartItemIds);
+        MemberCouponsResponse memberCouponsResponse = couponService.findMemberCoupons(member, cartItemIds);
         return ResponseEntity.ok().body(memberCouponsResponse);
     }
 }

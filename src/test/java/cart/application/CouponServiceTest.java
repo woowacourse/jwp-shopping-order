@@ -1,10 +1,20 @@
 package cart.application;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
-import cart.dao.OrderDao;
-import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
@@ -14,24 +24,8 @@ import cart.domain.Money;
 import cart.domain.Product;
 import cart.dto.response.MemberCouponResponse;
 import cart.dto.response.MemberCouponsResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
-public class OrderServiceTest {
-
-    @Mock
-    private OrderDao orderDao;
-    @Mock
-    private OrderItemDao orderItemDao;
+public class CouponServiceTest {
     @Mock
     private CartItemDao cartItemDao;
     @Mock
@@ -39,12 +33,12 @@ public class OrderServiceTest {
     @Mock
     private CouponDao couponDao;
 
-    private OrderService orderService;
+    private CouponService couponService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderService = new OrderService(orderDao, orderItemDao, cartItemDao, memberCouponDao, couponDao);
+        couponService = new CouponService(cartItemDao, couponDao, memberCouponDao);
     }
 
     @Test
@@ -76,7 +70,7 @@ public class OrderServiceTest {
             MemberCouponResponse.of(memberCoupons.get(1), price)
         ));
 
-        MemberCouponsResponse actualResponse = orderService.findMemberCoupons(member, cartItemIds);
+        MemberCouponsResponse actualResponse = couponService.findMemberCoupons(member, cartItemIds);
 
         assertEquals(expectedResponse.getCoupons().get(0).getId(), actualResponse.getCoupons().get(0).getId());
         assertEquals(expectedResponse.getCoupons().get(1).getId(), actualResponse.getCoupons().get(1).getId());

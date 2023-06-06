@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.application.OrderService;
+import cart.application.CouponService;
 import cart.domain.Member;
 import cart.dto.request.MemberCouponAddRequest;
 import cart.dto.response.CouponsResponse;
@@ -24,10 +24,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @Controller
 @RequestMapping("/coupons")
 public class CouponApiController {
-    private final OrderService orderService;
+    private final CouponService couponService;
 
-    public CouponApiController(OrderService orderService) {
-        this.orderService = orderService;
+    public CouponApiController(CouponService couponService) {
+        this.couponService = couponService;
     }
 
     @Operation(summary = "발급 가능한 쿠폰 조회", description = "발급 가능한 쿠폰 리스트를 조회한다.")
@@ -37,7 +37,7 @@ public class CouponApiController {
     )
     @GetMapping
     public ResponseEntity<CouponsResponse> getAllCoupons(Member member) {
-        CouponsResponse couponsResponse = orderService.findAllCoupons();
+        CouponsResponse couponsResponse = couponService.findAllCoupons();
         return ResponseEntity.ok().body(couponsResponse);
     }
 
@@ -61,7 +61,7 @@ public class CouponApiController {
     @PostMapping("/{couponId}")
     public ResponseEntity<Void> addMemberCoupon(Member member, @PathVariable Long couponId,
         @RequestBody MemberCouponAddRequest memberCouponAddRequest) {
-        Long memberCouponId = orderService.addMemberCoupon(member, couponId, memberCouponAddRequest);
+        Long memberCouponId = couponService.addMemberCoupon(member, couponId, memberCouponAddRequest);
         return ResponseEntity.created(URI.create("/coupons/member/" + memberCouponId)).build();
     }
 }
