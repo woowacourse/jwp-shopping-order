@@ -62,6 +62,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void remove(Long productId) {
         Product product = productDao.findById(productId);
         checkExistence(product);

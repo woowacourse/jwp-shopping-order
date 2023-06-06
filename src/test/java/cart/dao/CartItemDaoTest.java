@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -38,6 +39,7 @@ public class CartItemDaoTest {
     }
 
     @Test
+    @DisplayName("Member의 Id로 장바구니 물품들을 반환한다.")
     public void findByMemberId_ShouldReturnCartItems() {
         Long memberId = 1L;
         List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
@@ -47,6 +49,7 @@ public class CartItemDaoTest {
     }
 
     @Test
+    @DisplayName("장바구니에 물품을 추가한다.")
     public void save_ShouldAddCartItem() {
         Member member = new Member(1L, "a@a.com", "1234", "라잇");
         Product product = new Product(8L, "해왕성", 10000,
@@ -65,31 +68,7 @@ public class CartItemDaoTest {
     }
 
     @Test
-    void findByMemberId_ShouldReturnCartItemsForGivenMemberId() {
-        Long memberId = 1L;
-        List<Long> expectedCartItemIds = List.of(1L, 2L, 3L, 4L);
-
-        List<Long> actualCartItemIds = cartItemDao.findByMemberId(memberId)
-            .stream()
-            .map(CartItem::getId)
-            .collect(
-                Collectors.toList());
-
-        assertThat(actualCartItemIds).isEqualTo(expectedCartItemIds);
-    }
-
-    @Test
-    void save_ShouldSaveCartItemAndReturnGeneratedId() {
-        CartItem cartItem = new CartItem(1L, 2,
-            new Product(1L, "지구", 1000, "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg"),
-            new Member(1L, "a@a.com", null, "라잇"));
-
-        Long generatedId = cartItemDao.save(cartItem);
-
-        assertThat(generatedId).isNotNull();
-    }
-
-    @Test
+    @DisplayName("장바구니 물품 ID로 장바구니 물품을 조회한다.")
     void findById_ShouldReturnCartItemForGivenId() {
         Long cartItemId = 1L;
         CartItem expectedCartItem = new CartItem(1L, 2,
@@ -102,6 +81,7 @@ public class CartItemDaoTest {
     }
 
     @Test
+    @DisplayName("멤버 ID와, 물품 ID로 장바구니 물품을 삭제한다.")
     void delete_ShouldDeleteCartItemForGivenMemberIdAndProductId() {
         Long memberId = 1L;
         Long productId = 1L;

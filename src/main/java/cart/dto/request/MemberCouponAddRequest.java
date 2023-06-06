@@ -2,10 +2,10 @@ package cart.dto.request;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class MemberCouponAddRequest {
-    @NotEmpty
+    @NotNull
     private LocalDateTime expiredAt;
 
     public MemberCouponAddRequest() {

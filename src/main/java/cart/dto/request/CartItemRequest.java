@@ -1,21 +1,22 @@
 package cart.dto.request;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.validator.constraints.URL;
 
 public class CartItemRequest {
-    @NotEmpty
+    @NotNull
     @Positive
     private Long cartItemId;
-    @NotEmpty
+    @NotNull
     @Positive
     private int quantity;
     @NotEmpty
     private String name;
-    @NotEmpty
+    @NotNull
     @PositiveOrZero
     private int price;
     @NotEmpty

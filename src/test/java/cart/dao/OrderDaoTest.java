@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -41,6 +42,7 @@ public class OrderDaoTest {
     }
 
     @Test
+    @DisplayName("주문을 추가하고, 키값을 반환한다.")
     void addOrder_ShouldAddOrderAndReturnGeneratedId() {
         Member member = new Member(1L, "a@a.com", "1234", "라잇");
         Coupon coupon = new Coupon(1L, "10프로 할인", 1000, CouponType.FIXED_PERCENTAGE, null, 0.1, 1000);
