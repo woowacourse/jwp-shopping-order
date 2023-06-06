@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/orders")
 @RestController
-public class OrderController {
+public class OrderApiController {
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
+    public OrderApiController(OrderService orderService) {
         this.orderService = orderService;
     }
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/members")
 @RestController
-public class MemberController {
+public class MemberApiController {
 
     @GetMapping("/point")
     public ResponseEntity<Response> inquiryPoint(Member member) {
