@@ -73,9 +73,9 @@ INSERT INTO member_coupon (member_id, coupon_id, expired_date)
 VALUES (2, 6, '2024-06-8');
 
 INSERT INTO coupon_issue_condition (coupon_id, min_issue_price)
-VALUES (8, 5000000000);
+VALUES (9, 50000000);
 INSERT INTO coupon_issue_condition (coupon_id, min_issue_price)
-VALUES (9, 100000);
+VALUES (10, 100000);
 INSERT INTO coupon_issue_condition (coupon_id, min_issue_price)
-VALUES (10, 10000);
+VALUES (11, 10000);
 
