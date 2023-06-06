@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class CouponService {
 
     private static final int COUPON_ADD_PRICE = 100_000;
-    private static final int DEFAULT_DISCOUNT_MONEY = 1000;
+    private static final int DEFAULT_DISCOUNT_MONEY = 1_000;
 
     private final CouponDao couponDao;
 
