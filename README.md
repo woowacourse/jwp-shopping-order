@@ -53,21 +53,15 @@ http://localhost:8080/docs/index.html
 - CartItem(id, Product, quantity)
     - 수량이 양수인지 확인한다.
 
-- Product(id, name, price, imageUrl, isOnSale, Policy)
+- Product(id, name, price, imageUrl, salePrice)
     - 상품 이름이 공백 혹은 빈 값인지 확인한다.
     - 가격이 양수인지 확인한다.
     - 상품 할인은 정책상 %할인 밖에 안된다.
 
-- Coupons(id, List<Coupon>)
+- Coupons(List<Coupon>)
 
 - Coupon(id, name, Policy)
     - 쿠폰 이름이 공백 혹은 빈 값이 아닌지 확인한다.
-
-- Policy_interface
-    - PolicyDiscount
-        - 가격을 `일정 가격`만큼 감소시킨다.
-    - PolicyPercentage
-        - 가격을 '일정 %'만큼 감소시킨다.
 
 - Order (Member, Cart)
     - 장바구니와 멤버를 이어주며, 구매시 구매 내역을 반환한다.
