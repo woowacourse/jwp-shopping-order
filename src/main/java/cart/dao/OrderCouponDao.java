@@ -40,7 +40,7 @@ public class OrderCouponDao {
         return jdbcTemplate.queryForObject(sql, Long.class, orderId);
     }
 
-    public boolean checkByOrderId(Long orderId) {
+    public boolean existsByOrderId(Long orderId) {
         String sql = "select exists(select * from order_coupon where order_id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, orderId);

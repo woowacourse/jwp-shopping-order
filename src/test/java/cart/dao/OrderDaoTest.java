@@ -111,7 +111,7 @@ class OrderDaoTest {
         Long savedOrderId1 = createOrder(member);
         saveOrderProduct(savedOrderId1);
         orderDao.confirmByOrderIdAndMemberId(savedOrderId1, member.getId());
-        assertThat(orderDao.checkConfirmStateById(savedOrderId1)).isTrue();
+        assertThat(orderDao.existsConfirmStateById(savedOrderId1)).isTrue();
     }
 
     private void saveOrderProduct(Long savedOrderId) {

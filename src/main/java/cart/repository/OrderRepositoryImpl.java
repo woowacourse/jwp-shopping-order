@@ -75,7 +75,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void deleteById(Long orderId, Long memberId) {
-        if (orderCouponDao.checkByOrderId(orderId)) {
+        if (orderCouponDao.existsByOrderId(orderId)) {
             Long memberCouponId = orderCouponDao.findIdByOrderId(orderId);
             orderCouponDao.deleteByOrderId(orderId);
             memberCouponDao.updateUnUsedCouponAvailabilityById(memberCouponId);
@@ -101,8 +101,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public boolean checkConfirmStateById(Long orderId) {
-        return orderDao.checkConfirmStateById(orderId);
+    public boolean existsConfirmStateById(Long orderId) {
+        return orderDao.existsConfirmStateById(orderId);
     }
 
     private OrderEntity toEntity(Order order) {

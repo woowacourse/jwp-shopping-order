@@ -18,5 +18,5 @@ public interface OrderRepository {
 
     Coupon confirmById(Long orderId, Long memberId);
 
-    boolean checkConfirmStateById(Long orderId);
+    boolean existsConfirmStateById(Long orderId);
 }

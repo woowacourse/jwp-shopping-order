@@ -67,7 +67,7 @@ public class OrderDao {
         jdbcTemplate.update(sql, true, orderId, memberId);
     }
 
-    public boolean checkConfirmStateById(Long orderId) {
+    public boolean existsConfirmStateById(Long orderId) {
         String sql = "select exists(select * from orders where id = ? and confirm_state = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, orderId, true);

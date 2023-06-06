@@ -16,7 +16,7 @@ public interface CouponRepository {
 
     Coupon findAvailableCouponByIdAndMemberId(Long couponId, Long memberId);
 
-    boolean checkById(Long couponId);
+    boolean existsById(Long couponId);
 
-    boolean checkByCouponIdAndMemberId(Long couponId, Long memberId);
+    boolean existsByCouponIdAndMemberId(Long couponId, Long memberId);
 }

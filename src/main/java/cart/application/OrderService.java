@@ -74,7 +74,7 @@ public class OrderService {
     }
 
     private void validationDelete(Long orderId) {
-        if (orderRepository.checkConfirmStateById(orderId)) {
+        if (orderRepository.existsConfirmStateById(orderId)) {
             throw new OrderException("주문 확정 주문은 취소할 수 없습니다.");
         }
     }

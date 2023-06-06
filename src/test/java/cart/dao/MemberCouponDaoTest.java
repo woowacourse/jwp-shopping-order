@@ -47,7 +47,7 @@ class MemberCouponDaoTest {
         Long userCouponId = memberCouponDao.save(memberCoupon);
         memberCouponDao.updateUsedCouponAvailabilityById(userCouponId);
 
-        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, userCouponId)).isFalse();
+        assertThat(memberCouponDao.existsByCouponIdAndMemberId(1L, userCouponId)).isFalse();
     }
 
     @Test
@@ -55,7 +55,7 @@ class MemberCouponDaoTest {
     void checkMemberCouponById() {
         Long userCouponId = memberCouponDao.save(memberCoupon);
 
-        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, userCouponId)).isTrue();
+        assertThat(memberCouponDao.existsByCouponIdAndMemberId(1L, userCouponId)).isTrue();
     }
 
     @Test
@@ -88,8 +88,8 @@ class MemberCouponDaoTest {
     void changeUserUnUsedCouponAvailability() {
         Long userCouponId = memberCouponDao.save(memberCoupon);
         memberCouponDao.updateUsedCouponAvailabilityById(userCouponId);
-        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, 1L)).isFalse();
+        assertThat(memberCouponDao.existsByCouponIdAndMemberId(1L, 1L)).isFalse();
         memberCouponDao.updateUnUsedCouponAvailabilityById(userCouponId);
-        assertThat(memberCouponDao.checkByCouponIdAndMemberId(1L, 1L)).isTrue();
+        assertThat(memberCouponDao.existsByCouponIdAndMemberId(1L, 1L)).isTrue();
     }
 }

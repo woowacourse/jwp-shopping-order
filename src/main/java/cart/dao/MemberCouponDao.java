@@ -55,7 +55,7 @@ public class MemberCouponDao {
         jdbcTemplate.update(sql, false, memberCouponId, true);
     }
 
-    public boolean checkByCouponIdAndMemberId(Long couponId, Long memberId) {
+    public boolean existsByCouponIdAndMemberId(Long couponId, Long memberId) {
         String sql = "select exists(select * from member_coupon where coupon_id = ? and available = ? and member_id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, couponId, true, memberId);

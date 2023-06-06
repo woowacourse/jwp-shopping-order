@@ -29,7 +29,7 @@ public class CouponDao {
             );
 
 
-    public Boolean checkById(Long id) {
+    public Boolean existsById(Long id) {
         String sql = "select exists(select * from coupon where id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);

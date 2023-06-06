@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.CouponRepository;
 import cart.dto.MemberDto;
@@ -31,13 +30,13 @@ public class CouponService {
     }
 
     private void validateDuplicateCoupon(MemberDto member, CouponCreateRequest request) {
-        if (couponRepository.checkByCouponIdAndMemberId(request.getId(), member.getId())) {
+        if (couponRepository.existsByCouponIdAndMemberId(request.getId(), member.getId())) {
             throw new CouponException("이미 존재하는 쿠폰입니다.");
         }
     }
 
     private void validateExistCoupon(CouponCreateRequest request) {
-        if (!couponRepository.checkById(request.getId())) {
+        if (!couponRepository.existsById(request.getId())) {
             throw new CouponException("해당 쿠폰을 찾을 수 없습니다.");
         }
     }

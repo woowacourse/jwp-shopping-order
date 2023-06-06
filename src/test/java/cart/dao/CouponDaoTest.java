@@ -28,7 +28,7 @@ class CouponDaoTest {
     @Test
     @DisplayName("쿠폰을 확인한다.")
     void checkCouponById() {
-        assertThat(couponDao.checkById(1L)).isTrue();
+        assertThat(couponDao.existsById(1L)).isTrue();
     }
 
     @Test

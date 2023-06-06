@@ -36,7 +36,7 @@ class OrderCouponDaoTest {
 
         orderCouponDao.save(orderId, userCouponId);
 
-        assertThat(orderCouponDao.checkByOrderId(orderId)).isTrue();
+        assertThat(orderCouponDao.existsByOrderId(orderId)).isTrue();
     }
 
     @Test
@@ -48,7 +48,7 @@ class OrderCouponDaoTest {
 
         orderCouponDao.deleteByOrderId(orderId);
 
-        assertThat(orderCouponDao.checkByOrderId(orderId)).isFalse();
+        assertThat(orderCouponDao.existsByOrderId(orderId)).isFalse();
     }
 
     @Test
@@ -68,6 +68,6 @@ class OrderCouponDaoTest {
         Long orderId = orderDao.save(new OrderEntity(1L, 1000, 1000));
         orderCouponDao.save(orderId, userCouponId);
 
-        assertThat(orderCouponDao.checkByOrderId(orderId)).isTrue();
+        assertThat(orderCouponDao.existsByOrderId(orderId)).isTrue();
     }
 }
