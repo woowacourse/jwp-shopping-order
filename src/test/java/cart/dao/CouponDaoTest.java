@@ -32,7 +32,7 @@ class CouponDaoTest {
     }
 
     @Test
-    @DisplayName("쿠폰을 확인한다.")
+    @DisplayName("모든 쿠폰을 조회한다.")
     void findAllCoupons() {
         Coupon coupon = new Coupon("5000원 할인 쿠폰", DiscountType.from("deduction"), 10000, 5000, 0);
 
@@ -40,7 +40,7 @@ class CouponDaoTest {
     }
 
     @Test
-    @DisplayName("쿠폰을 확인한다.")
+    @DisplayName("쿠폰을 이름으로 조회한다.")
     void findCouponByName() {
         CouponEntity coupon = new CouponEntity("5000원 할인 쿠폰", "deduction", 10000, 5000, 0.0);
         assertThat(couponDao.findByName(coupon).get().getName()).isEqualTo(coupon.getName());

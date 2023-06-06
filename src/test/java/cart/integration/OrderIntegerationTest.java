@@ -49,7 +49,7 @@ public class OrderIntegerationTest extends IntegrationTest {
 
     @Test
     @DisplayName("카트에 담기지 않은 상품을 주문할 경우 예외가 발생한다.")
-    void saveOrder_exception() {
+    void saveOrderException() {
         saveProduct();
         given().log().uri()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -143,6 +143,21 @@ public class OrderIntegerationTest extends IntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("주문이 없으면 확정시 예외가 발생한다.")
+    void confirmOrderException() {
+        saveProduct();
+        saveCartItem();
+
+        given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + encoded)
+                .when().patch("/orders/{id}/confirm",1L)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 
     private void saveCartItem() {
         given().log().uri()
