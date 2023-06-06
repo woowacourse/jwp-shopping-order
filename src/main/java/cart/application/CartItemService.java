@@ -11,11 +11,13 @@ import cart.dto.response.CartItemResponse;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
@@ -25,6 +27,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
         final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());

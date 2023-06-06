@@ -6,11 +6,13 @@ import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
@@ -19,11 +21,13 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         final List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(final Long productId) {
         final Product product = productDao.getProductById(productId)
                 .orElseThrow(ProductNotFoundException::new);

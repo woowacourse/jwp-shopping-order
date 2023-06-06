@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderService {
     private final CartItemDao cartItemDao;
     private final CouponDao couponDao;
@@ -46,7 +47,6 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public OrderResponseDto order(final Member member, final OrderRequestDto orderRequestDto) {
         final List<CartItem> cartItems = findCartItem(member, orderRequestDto);
 
@@ -108,6 +108,7 @@ public class OrderService {
         return orderDao.save(member, order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderInfo> findOrderOf(final Member member) {
         final List<OrderEntity> orderByMemberId = orderDao.findOrderByMemberId(member.getId());
         final List<OrderItemEntity> orderProductByOrderByIds = orderDao.findOrderProductByIds(
@@ -145,6 +146,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public OrderDetail findOrderDetail(final Member member, final long orderId) {
         final OrderEntity orderEntity = orderDao.findById(orderId);
         orderEntity.checkOwner(member);

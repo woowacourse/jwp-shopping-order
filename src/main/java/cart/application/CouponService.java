@@ -7,11 +7,13 @@ import cart.domain.coupon.CouponIssuePolicy;
 import cart.domain.order.Order;
 import cart.dto.response.CouponResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CouponService {
     private final CouponDao couponDao;
 
@@ -19,6 +21,7 @@ public class CouponService {
         this.couponDao = couponDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CouponResponse> findMemberCoupon(final Member member) {
         final List<Coupon> couponById = couponDao.findCouponById(member.getId());
         return CouponResponse.of(couponById);
