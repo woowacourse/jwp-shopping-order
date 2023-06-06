@@ -95,7 +95,6 @@ class CartControllerUnitTest {
                                 fieldWithPath("[0].product.name").description("상품명"),
                                 fieldWithPath("[0].product.price").description("상품 가격 (숫자)"),
                                 fieldWithPath("[0].product.imageUrl").description("이미지 주소"),
-                                fieldWithPath("[0].product.isOnSale").description("세일 여부"),
                                 fieldWithPath("[0].product.salePrice").description("상품이 할인되는 가격")
                         )));
     }

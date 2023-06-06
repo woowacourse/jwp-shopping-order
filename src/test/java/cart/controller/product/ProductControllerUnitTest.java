@@ -57,7 +57,7 @@ class ProductControllerUnitTest {
     @Test
     void find_all_products() throws Exception {
         // given
-        List<ProductResponse> result = List.of(ProductResponse.from(new Product(1L, "치킨", 10000, "img", false, 0)));
+        List<ProductResponse> result = List.of(ProductResponse.from(new Product(1L, "치킨", 10000, "img", 0)));
         when(productService.findAllProducts()).thenReturn(result);
 
         // when & then
@@ -73,7 +73,6 @@ class ProductControllerUnitTest {
                                 fieldWithPath("[0].name").description("상품명"),
                                 fieldWithPath("[0].price").description("상품의 가격"),
                                 fieldWithPath("[0].imageUrl").description("상품의 이미지 주소"),
-                                fieldWithPath("[0].isOnSale").description("상품의 할인 여부"),
                                 fieldWithPath("[0].salePrice").description("세일이 적용되는 가격")
                         )
                 ));
@@ -84,7 +83,7 @@ class ProductControllerUnitTest {
     void find_product_by_id() throws Exception {
         // given
         Long id = 1L;
-        ProductResponse result = ProductResponse.from(new Product(1L, "치킨", 10000, "img", false, 0));
+        ProductResponse result = ProductResponse.from(new Product(1L, "치킨", 10000, "img", 0));
         when(productService.findProductById(id)).thenReturn(result);
 
         // when & then
@@ -103,7 +102,6 @@ class ProductControllerUnitTest {
                                 fieldWithPath("name").description("상품명"),
                                 fieldWithPath("price").description("상품의 가격"),
                                 fieldWithPath("imageUrl").description("상품의 이미지 주소"),
-                                fieldWithPath("isOnSale").description("상품의 세일 여부"),
                                 fieldWithPath("salePrice").description("세일되는 가격")
                         )
                 ));

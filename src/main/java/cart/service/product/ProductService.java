@@ -54,7 +54,7 @@ public class ProductService {
         Product product = productRepository.findProductById(productId);
         int salePrice = product.applySale(request.getAmount());
 
-        productRepository.applySale(productId, salePrice, request.getAmount());
+        productRepository.applySale(productId, salePrice);
         return productId;
     }
 

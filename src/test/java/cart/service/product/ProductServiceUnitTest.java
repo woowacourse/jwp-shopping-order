@@ -103,7 +103,7 @@ class ProductServiceUnitTest {
         productService.applySale(id, req);
 
         // then
-        assertThat(product.isOnSale()).isTrue();
+        assertThat(product.getSalePrice()).isEqualTo(2000);
     }
 
     @DisplayName("상품에 세일을 없앤다.")
@@ -118,6 +118,6 @@ class ProductServiceUnitTest {
         productService.unapplySale(id);
 
         // then
-        assertThat(product.isOnSale()).isFalse();
+        assertThat(product.getSalePrice()).isEqualTo(null);
     }
 }

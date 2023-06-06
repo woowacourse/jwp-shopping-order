@@ -98,8 +98,6 @@ class PaymentControllerUnitTest {
                 .andExpect(jsonPath("$.products[0].price").value(20000))
                 .andExpect(jsonPath("$.products[0].quantity").value(10))
                 .andExpect(jsonPath("$.products[0].imgUrl").value("img.img"))
-                .andExpect(jsonPath("$.products[0].isOnSale").value("false"))
-                .andExpect(jsonPath("$.products[0].salePrice").value(0))
                 .andDo(customDocument("find_payment_page",
                         requestHeaders(
                                 headerWithName("Authorization").description("Basic auth credentials")
@@ -110,7 +108,6 @@ class PaymentControllerUnitTest {
                                 fieldWithPath("products[0].price").description("상품의 가격"),
                                 fieldWithPath("products[0].quantity").description("상품 수량"),
                                 fieldWithPath("products[0].imgUrl").description("상품의 이미지 주소"),
-                                fieldWithPath("products[0].isOnSale").description("상품의 세일 여부"),
                                 fieldWithPath("products[0].salePrice").description("세일되는 가격"),
                                 fieldWithPath("coupons[0].couponId").description("쿠폰의 id"),
                                 fieldWithPath("coupons[0].couponName").description("쿠폰의 이름"),

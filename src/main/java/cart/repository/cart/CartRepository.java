@@ -41,7 +41,7 @@ public class CartRepository {
 
         ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
 
-        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
+        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getSalePrice());
         return new CartItem(cartItemId, product, cartItemEntity.getQuantity());
     }
 
@@ -80,12 +80,8 @@ public class CartRepository {
     public CartItem findCartItem(final Cart cart, final Long productId) {
         CartItemEntity cartItemEntity = cartDao.findCartItem(cart.getId(), productId);
         ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
-        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), 0);
+        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getSalePrice());
         return new CartItem(cartItemEntity.getId(), product, cartItemEntity.getQuantity());
-    }
-
-    public boolean hasCartItem(final Cart cart, final CartItem cartItem) {
-        return cartDao.hasCartItem(cart.getId(), cartItem.getId());
     }
 
     public Cart findCartByCartItemId(final Long cartItemId) {
@@ -104,7 +100,7 @@ public class CartRepository {
                     int quantity = cartItemEntity.getQuantity();
                     Long productId = cartItemEntity.getProductId();
                     ProductEntity productEntity = productDao.getProductById(productId);
-                    Product product = new Product(productId, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
+                    Product product = new Product(productId, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getSalePrice());
                     return new CartItem(cartItemEntity.getId(), product, quantity);
                 })
                 .collect(Collectors.toList());

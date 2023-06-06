@@ -25,8 +25,7 @@ class ProductTest {
         // then
         assertAll(
                 () -> assertThat(product.getAppliedDiscountOrOriginPrice()).isEqualTo(14000),
-                () -> assertThat(product.getSalePrice()).isEqualTo(6000),
-                () -> assertThat(product.isOnSale()).isEqualTo(true)
+                () -> assertThat(product.getSalePrice()).isEqualTo(6000)
         );
     }
 
@@ -41,7 +40,7 @@ class ProductTest {
         product.unApplySale();
 
         // then
-        assertThat(product.isOnSale()).isEqualTo(false);
+        assertThat(product.getSalePrice()).isEqualTo(0);
     }
 
     @DisplayName("상품의 세일 적용시 1~100% 까지 가능하다.")
@@ -69,16 +68,16 @@ class ProductTest {
         assertThat(result).isEqualTo(product.getPrice());
     }
 
-    @DisplayName("세일 중이 아니라면 세일되는 가격을 조회할 때 0원이 나온다.")
+    @DisplayName("세일 중이 아니라면 세일되는 가격을 조회할 때 null이 나온다.")
     @Test
     void returns_zero_won_when_get_price_of_un_applied_product() {
         // given
         Product product = createProduct();
 
         // when
-        int result = product.getSalePrice();
+        Integer result = product.getSalePrice();
 
         // then
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isEqualTo(null);
     }
 }

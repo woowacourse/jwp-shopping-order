@@ -1,7 +1,5 @@
 package cart.domain.product;
 
-import cart.domain.discount.Policy;
-import cart.domain.discount.PolicyPercentage;
 import cart.exception.SalePercentageInvalidRangeException;
 
 import java.util.Objects;
@@ -10,30 +8,27 @@ public class Product {
 
     private static final int MAXIMUM_SALE_PERCENT = 100;
     private static final int MINIMUM_SALE_PERCENT = 1;
-    private static final int UN_APPLIED_SALE_VALUE = 0;
+    private static final int DEFAULT_SALE_PRICE = 0;
 
     private Long id;
     private final String name;
     private final int price;
     private final String imageUrl;
-    private boolean isOnSale;
-    private final Policy policy;
+    private Integer salePrice;
 
     public Product(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isOnSale = false;
-        this.policy = new PolicyPercentage(0);
+        salePrice = 0;
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl, final boolean isOnSale, final int amount) {
+    public Product(final Long id, final String name, final int price, final String imageUrl, final Integer salePrice) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isOnSale = isOnSale;
-        this.policy = new PolicyPercentage(amount);
+        this.salePrice = salePrice;
     }
 
     public int applySale(int percentage) {
@@ -41,8 +36,8 @@ public class Product {
             throw new SalePercentageInvalidRangeException(percentage);
         }
 
-        this.isOnSale = true;
-        return policy.updateDiscountValue(percentage);
+        salePrice = (int) (price * percentage * 0.01);
+        return salePrice;
     }
 
     private boolean validateRangeOfSalePercentage(final int value) {
@@ -50,24 +45,19 @@ public class Product {
     }
 
     public void unApplySale() {
-        policy.updateDiscountValue(UN_APPLIED_SALE_VALUE);
-        this.isOnSale = false;
+        this.salePrice = DEFAULT_SALE_PRICE;
     }
 
     public int getAppliedDiscountOrOriginPrice() {
-        if (!isOnSale) {
+        if (salePrice == null) {
             return price;
         }
 
-        return policy.calculate(this.price);
+        return price - salePrice;
     }
 
-    public int getSalePrice() {
-        if (!isOnSale) {
-            return 0;
-        }
-
-        return price - policy.calculate(price);
+    public Integer getSalePrice() {
+        return salePrice;
     }
 
     public boolean isSame(final Long id) {
@@ -84,10 +74,6 @@ public class Product {
 
     public int getPrice() {
         return price;
-    }
-
-    public boolean isOnSale() {
-        return isOnSale;
     }
 
     public String getImageUrl() {

@@ -29,9 +29,23 @@ public class CartItems {
 
     public List<ProductPriceAppliedAllDiscountResponse> getProductPricesAppliedAllDiscount(final List<Coupon> usingCoupons) {
         List<Integer> originPrices = getOriginPrices();
-        List<Integer> afterPrices = calculateAfterPrices(originPrices, usingCoupons);
+        List<Integer> afterPrices = calculateAfterUsingCoupons(originPrices, usingCoupons);
 
         return generateProductResultPrices(originPrices, afterPrices);
+    }
+
+    private List<ProductPriceAppliedAllDiscountResponse> generateProductResultPrices(final List<Integer> originPrices, final List<Integer> afterPrices) {
+        List<ProductPriceAppliedAllDiscountResponse> result = new ArrayList<>();
+
+        for (int i = 0; i < cartItems.size(); i++) {
+            int originPrice = originPrices.get(i);
+            int afterPrice = afterPrices.get(i);
+            int discount = originPrice - afterPrice;
+
+            result.add(new ProductPriceAppliedAllDiscountResponse(cartItems.get(i).getId(), originPrice, discount));
+        }
+
+        return result;
     }
 
     private List<Integer> getOriginPrices() {
@@ -40,7 +54,7 @@ public class CartItems {
                 .collect(Collectors.toList());
     }
 
-    private List<Integer> calculateAfterPrices(final List<Integer> originPrices, final List<Coupon> usingCoupons) {
+    private List<Integer> calculateAfterUsingCoupons(final List<Integer> originPrices, final List<Coupon> usingCoupons) {
         List<Coupon> usableCoupons = getUsableCoupons(usingCoupons);
 
         return originPrices.stream()
@@ -62,20 +76,6 @@ public class CartItems {
         }
 
         return price;
-    }
-
-    private List<ProductPriceAppliedAllDiscountResponse> generateProductResultPrices(final List<Integer> originPrices, final List<Integer> afterPrices) {
-        List<ProductPriceAppliedAllDiscountResponse> result = new ArrayList<>();
-
-        for (int i = 0; i < cartItems.size(); i++) {
-            int originPrice = originPrices.get(i);
-            int afterPrice = afterPrices.get(i);
-            int discount = originPrice - afterPrice;
-
-            result.add(new ProductPriceAppliedAllDiscountResponse(cartItems.get(i).getId(), originPrice, discount));
-        }
-
-        return result;
     }
 
     public OrderedProductHistory buy(final Long productId, final int quantity) {

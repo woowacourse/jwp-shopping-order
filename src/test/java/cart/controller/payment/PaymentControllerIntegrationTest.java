@@ -64,7 +64,6 @@ public class PaymentControllerIntegrationTest {
                 .body("products[0].price", equalTo(10000))
                 .body("products[0].quantity", equalTo(9))
                 .body("products[0].imgUrl", equalTo("https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"))
-                .body("products[0].isOnSale", equalTo(false))
                 .body("products[0].salePrice", equalTo(0))
                 .body("coupons[0].couponId", equalTo(2))
                 .body("coupons[0].couponName", equalTo("전체 2000원 할인 쿠폰"));

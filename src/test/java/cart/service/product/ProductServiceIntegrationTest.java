@@ -109,7 +109,7 @@ class ProductServiceIntegrationTest {
         ProductResponse result = productService.findProductById(id);
 
         // then
-        assertThat(result.getIsOnSale()).isEqualTo(true);
+        assertThat(result.getSalePrice()).isEqualTo(1000);
     }
 
     @DisplayName("상품에 할인을 제거한다.")
@@ -125,6 +125,6 @@ class ProductServiceIntegrationTest {
         ProductResponse result = productService.findProductById(id);
 
         // then
-        assertThat(result.getIsOnSale()).isEqualTo(false);
+        assertThat(result.getSalePrice()).isEqualTo(0);
     }
 }

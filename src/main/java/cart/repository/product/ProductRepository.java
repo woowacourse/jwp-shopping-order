@@ -1,11 +1,8 @@
 package cart.repository.product;
 
-import cart.dao.policy.PolicyDao;
 import cart.dao.product.ProductDao;
-import cart.dao.product.ProductSaleDao;
 import cart.domain.product.Product;
 import cart.entity.product.ProductEntity;
-import cart.entity.product.ProductSaleEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,26 +12,26 @@ import java.util.stream.Collectors;
 public class ProductRepository {
 
     private final ProductDao productDao;
-    private final PolicyDao policyDao;
-    private final ProductSaleDao productSaleDao;
 
-    public ProductRepository(final ProductDao productDao, final PolicyDao policyDao, final ProductSaleDao productSaleDao) {
+    public ProductRepository(final ProductDao productDao) {
         this.productDao = productDao;
-        this.policyDao = policyDao;
-        this.productSaleDao = productSaleDao;
     }
 
     public Product findProductById(final long id) {
         ProductEntity productEntity = productDao.findById(id);
 
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
+        if (productEntity.getSalePrice() == null) {
+            return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), 0);
+        }
+
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getSalePrice());
     }
 
     public List<Product> findAllProducts() {
         List<ProductEntity> productEntities = productDao.getAllProducts();
 
         return productEntities.stream()
-                .map(entity -> new Product(entity.getId(), entity.getName(), entity.getPrice(), entity.getImageUrl(), entity.isOnSale(), entity.getSalePrice()))
+                .map(entity -> new Product(entity.getId(), entity.getName(), entity.getPrice(), entity.getImageUrl(), entity.getSalePrice()))
                 .collect(Collectors.toList());
     }
 
@@ -50,25 +47,11 @@ public class ProductRepository {
         productDao.deleteProduct(productId);
     }
 
-    public void applySale(final long productId, final int salePrice, final int amount) {
-        if (productSaleDao.isExistByProductId(productId)) {
-            ProductSaleEntity productSaleEntity = productSaleDao.findByProductId(productId);
-            policyDao.updateAmount(productSaleEntity.getPolicyId(), amount);
-            productDao.applySalePolicy(productId, true);
-            productDao.updateSaleAmount(productId, salePrice);
-            return;
-        }
-
-        long policyId = policyDao.createProductSalePolicy(amount);
-        productSaleDao.save(productId, policyId);
-        productDao.applySalePolicy(productId, true);
+    public void applySale(final long productId, final int salePrice) {
         productDao.updateSaleAmount(productId, salePrice);
     }
 
     public void unapplySale(final long productId) {
-        ProductSaleEntity productSaleEntity = productSaleDao.findByProductId(productId);
-
-        productDao.applySalePolicy(productId, false);
-        policyDao.deletePolicy(productSaleEntity.getPolicyId());
+        productDao.unApplySale(productId);
     }
 }

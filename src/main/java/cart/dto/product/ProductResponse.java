@@ -8,23 +8,21 @@ public class ProductResponse {
     private String name;
     private int price;
     private String imageUrl;
-    private Boolean isOnSale;
-    private int salePrice;
+    private Integer salePrice;
 
     public ProductResponse() {
     }
 
-    private ProductResponse(final long id, final String name, final int price, final String imageUrl, final Boolean isOnSale, final int salePrice) {
+    private ProductResponse(final long id, final String name, final int price, final String imageUrl, final Integer salePrice) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isOnSale = isOnSale;
         this.salePrice = salePrice;
     }
 
     public static ProductResponse from(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.isOnSale(), product.getSalePrice());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getSalePrice());
     }
 
     public Long getId() {
@@ -43,11 +41,7 @@ public class ProductResponse {
         return imageUrl;
     }
 
-    public Boolean getIsOnSale() {
-        return isOnSale;
-    }
-
-    public int getSalePrice() {
+    public Integer getSalePrice() {
         return salePrice;
     }
 }

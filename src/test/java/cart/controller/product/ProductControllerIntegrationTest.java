@@ -49,7 +49,6 @@ public class ProductControllerIntegrationTest {
                 .body("[0].name", equalTo("치킨"))
                 .body("[0].price", equalTo(10000))
                 .body("[0].imageUrl", equalTo("img"))
-                .body("[0].isOnSale", equalTo(false))
                 .body("[0].salePrice", equalTo(0));
     }
 
@@ -69,7 +68,6 @@ public class ProductControllerIntegrationTest {
                 .body("name", equalTo("치킨"))
                 .body("price", equalTo(10000))
                 .body("imageUrl", equalTo("img"))
-                .body("isOnSale", equalTo(false))
                 .body("salePrice", equalTo(0));
     }
 
