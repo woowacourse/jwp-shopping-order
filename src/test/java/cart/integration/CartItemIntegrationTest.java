@@ -1,7 +1,7 @@
 //package cart.integration;
 //
 //import cart.application.repository.MemberRepository;
-//import cart.domain.Member;
+//import cart.domain.member.Member;
 //import cart.ui.cartitem.dto.CartItemQuantityUpdateRequest;
 //import cart.ui.cartitem.dto.CartItemRequest;
 //import cart.ui.cartitem.dto.CartItemResponse;

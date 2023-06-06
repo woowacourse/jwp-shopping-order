@@ -1,7 +1,7 @@
 package cart.persistence.order;
 
 import cart.application.repository.MemberRepository;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.fixture.MemberFixture;
 import cart.persistence.member.MemberJdbcRepository;

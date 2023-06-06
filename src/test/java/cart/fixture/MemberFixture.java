@@ -1,6 +1,6 @@
 package cart.fixture;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberFixture {

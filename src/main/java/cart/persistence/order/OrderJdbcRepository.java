@@ -1,7 +1,7 @@
 package cart.persistence.order;
 
 import cart.application.repository.order.OrderRepository;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,7 +1,7 @@
 package cart.persistence.member;
 
 import cart.application.repository.MemberRepository;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixture.MemberFixture.*;
+import static cart.fixture.MemberFixture.디노;
+import static cart.fixture.MemberFixture.레오;
+import static cart.fixture.MemberFixture.비버;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 

@@ -16,7 +16,6 @@ public class Coupon {
         this.minAmount = minAmount;
     }
 
-
     public Long getId() {
         return id;
     }

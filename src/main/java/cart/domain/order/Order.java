@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

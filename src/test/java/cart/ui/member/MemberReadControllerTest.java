@@ -2,7 +2,7 @@ package cart.ui.member;
 
 import cart.application.repository.MemberRepository;
 import cart.config.WebMvcConfig;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.fixture.MemberFixture;
 import cart.ui.member.dto.MemberResponse;
 import io.restassured.RestAssured;
