@@ -41,7 +41,7 @@ public class OrderController {
             Member member,
             @RequestBody final OrderCreateRequest request
     ) {
-        Long orderId = orderService.create(member.getId(), request);
+        Long orderId = orderService.create(request.toDomain(member.getId()));
         orderItemService.create(member.getId(), request.getCartItemIds(), orderId);
 
         couponService.changeUsageStatus(member.getId(), request.getCouponId());

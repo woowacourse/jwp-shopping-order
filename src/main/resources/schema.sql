@@ -35,7 +35,7 @@ CREATE TABLE coupon_type
 (
     id              BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(255) NOT NULL UNIQUE,
-    description     VARCHAR(255) NOT NULL UNIQUE,
+    description     VARCHAR(255) NOT NULL,
     discount_amount INT          NOT NULL UNIQUE
 );
 

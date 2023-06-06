@@ -2,7 +2,6 @@ package cart.step2.order.service;
 
 import cart.step2.order.domain.Order;
 import cart.step2.order.domain.repository.OrderRepository;
-import cart.step2.order.presentation.dto.OrderCreateRequest;
 import cart.step2.order.presentation.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +20,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long create(final Long memberId, final OrderCreateRequest request) {
-        Order order = request.toDomain(memberId);
+    public Long create(final Order order) {
         return orderRepository.save(order);
     }
 
