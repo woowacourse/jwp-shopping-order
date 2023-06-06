@@ -1,22 +1,34 @@
 package cart.dto;
 
 import cart.domain.Product;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
+
+@Schema(description = "상품")
 public class ProductResponse {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl) {
+    @Schema(description = "상품 Id", example = "1")
+    private final Long id;
+
+    @Schema(description = "상품명", example = "치즈피자")
+    private final String name;
+
+    @Schema(description = "이미지", example = "치즈피자.png")
+    private final String imageUrl;
+
+    @Schema(description = "가격", example = "8900")
+    private final BigDecimal price;
+
+    public ProductResponse(final Long id, final String name, final String imageUrl, final BigDecimal price) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public static ProductResponse from(final Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice().getValue());
     }
 
     public Long getId() {
@@ -27,11 +39,11 @@ public class ProductResponse {
         return name;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 }
