@@ -4,8 +4,11 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponNotFoundException;
+import cart.exception.NotExitingCouponIssueException;
 import cart.exception.OrderAuthorizationException;
 import cart.exception.ProductNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handle(final AuthenticationException e) {
@@ -42,6 +47,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrderAuthorizationException.class)
     public ResponseEntity<String> handle(final OrderAuthorizationException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotExitingCouponIssueException.class)
+    public ResponseEntity<String> handle(final NotExitingCouponIssueException e) {
+        LOGGER.error(e.getMessage());
+        return ResponseEntity.internalServerError().build();
     }
 
 }

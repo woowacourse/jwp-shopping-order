@@ -9,9 +9,9 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProductIntegrationTest extends IntegrationTest {
+class ProductIntegrationTest extends IntegrationTest {
     @Test
-    public void getProducts() {
+    void getProducts() {
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -23,7 +23,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void createProduct() {
+    void createProduct() {
         final var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
         final var response = given()
@@ -38,7 +38,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void getCreatedProduct() {
+    void getCreatedProduct() {
         final var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product

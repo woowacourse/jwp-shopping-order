@@ -1,7 +1,9 @@
 package cart.dao;
 
-import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.exception.NotExitingCouponIssueException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -42,8 +44,18 @@ public class CouponDao {
         jdbcTemplate.update(sql, couponId, member.getId());
     }
 
-    public void issue(final long memberId, final int couponId) {
-        final String sql = "INSERT INTO user_coupon (member_Id, coupon_Id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, memberId, couponId);
+    public void issue(final Member memberId, final Coupon coupon) {
+        try {
+            final long id = findIdOf(coupon);
+            final String sql = "INSERT INTO user_coupon (member_Id, coupon_Id) VALUES (?, ?)";
+            jdbcTemplate.update(sql, memberId.getId(), id);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new NotExitingCouponIssueException("존재하지 않는 쿠폰을 발행했습니다.");
+        }
+    }
+
+    private long findIdOf(final Coupon coupon) {
+        final String sql = "SELECT id FROM coupon WHERE discount = ? AND name = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, coupon.calculateDiscount(), coupon.getCouponInfo());
     }
 }

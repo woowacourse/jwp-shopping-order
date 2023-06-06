@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.exception.CouponDiscountOverPriceException;
 
 import java.util.List;

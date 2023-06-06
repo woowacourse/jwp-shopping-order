@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
 import cart.exception.NegativeCouponException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,5 +30,5 @@ class CouponTest {
         //then
         assertThat(discountedPrice).isEqualTo(1000);
     }
-    
+
 }

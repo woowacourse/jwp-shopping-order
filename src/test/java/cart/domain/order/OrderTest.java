@@ -1,7 +1,7 @@
 package cart.domain.order;
 
-import cart.domain.Coupon;
 import cart.domain.Product;
+import cart.domain.coupon.Coupon;
 import cart.exception.CouponDiscountOverPriceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

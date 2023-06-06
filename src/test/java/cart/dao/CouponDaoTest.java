@@ -1,7 +1,8 @@
 package cart.dao;
 
-import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.exception.NotExitingCouponIssueException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class CouponDaoTest {
@@ -82,5 +84,17 @@ class CouponDaoTest {
 
         //then
         assertThat(userCoupons).isNotIn(deletingCoupon);
+    }
+
+    @DisplayName("")
+    @Test
+    void issue_invalid_notExiting() {
+        //given
+        final Member member = new Member(1L, "a@a.com", "1234");
+        final Coupon notExistingCoupon = new Coupon(1_000_000_000, "존재하면 안되는 쿠폰");
+
+        //when, then
+        assertThatThrownBy(() -> couponDao.issue(member, notExistingCoupon))
+                .isInstanceOf(NotExitingCouponIssueException.class);
     }
 }

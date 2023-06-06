@@ -1,20 +1,19 @@
 package cart.application;
 
 import cart.dao.CouponDao;
-import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponIssuePolicy;
 import cart.domain.order.Order;
 import cart.dto.response.CouponResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CouponService {
-
-    private static final int COUPON_ISSUE_PRICE = 100_000;
     private final CouponDao couponDao;
-    private final int couponId = 1;
 
     public CouponService(final CouponDao couponDao) {
         this.couponDao = couponDao;
@@ -26,8 +25,10 @@ public class CouponService {
     }
 
     public void issueCoupon(final Member member, final Order order) {
-        if (order.price() >= COUPON_ISSUE_PRICE) {
-            couponDao.issue(member.getId(), couponId);
+        final Optional<Coupon> coupon = CouponIssuePolicy.of(member)
+                .IssueCoupon(member, order);
+        if (coupon.isPresent()) {
+            couponDao.issue(member, coupon.get());
         }
     }
 }
