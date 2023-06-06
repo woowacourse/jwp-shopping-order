@@ -58,7 +58,8 @@ public class ProductDao {
 
     private void validateResultSize(final int sourceSize, final int resultSize) {
         if (sourceSize != resultSize) {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(
+                    String.format("존재하지 않는 product 가 %s개 있습니다.", sourceSize - resultSize));
         }
     }
 

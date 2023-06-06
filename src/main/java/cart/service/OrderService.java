@@ -56,7 +56,11 @@ public class OrderService {
         if (isIdEquals) {
             return;
         }
-        throw new NotOwnerException();
+        final String cartItemIds = cartItems.stream()
+                .map(CartItem::getId)
+                .toString();
+        throw new NotOwnerException(
+                String.format("유저의 장바구니 상품이 아닙니다. member id = %s, cartItem 목록 : %s", member.getId(), cartItemIds));
     }
 
     private Order createOrder(final Member member, final List<CartItem> cartItems) {
@@ -76,7 +80,8 @@ public class OrderService {
         if (order.isPaymentAmountEqual(requestPayment)) {
             return;
         }
-        throw new PaymentAmountNotEqualException();
+        throw new PaymentAmountNotEqualException(
+                String.format("지불 금액이 다릅니다. 실제 지불 금액 : %s, 요청 지불 금액 : %s", order.getPaymentAmount(), requestPayment));
     }
 
     public List<OrderThumbnailResponse> findByMember(final Member member) {
@@ -107,6 +112,7 @@ public class OrderService {
         if (member.isIdEquals(order.getMemberId())) {
             return;
         }
-        throw new NotOwnerException();
+        throw new NotOwnerException(
+                String.format("유저의 주문이 아닙니다. member id = %s, order id = %s", member.getId(), order.getId()));
     }
 }

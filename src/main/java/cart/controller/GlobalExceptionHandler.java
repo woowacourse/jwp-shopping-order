@@ -68,4 +68,10 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(" "));
         return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse handleRuntime() {
+        return new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류입니다.");
+    }
 }

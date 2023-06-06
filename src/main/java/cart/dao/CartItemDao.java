@@ -48,7 +48,8 @@ public class CartItemDao {
 
     private void validateResultSize(final int sourceSize, final int resultSize) {
         if (sourceSize != resultSize) {
-            throw new CartItemNotFoundException();
+            throw new CartItemNotFoundException(
+                    String.format("존재하지 않는 cartItem 이 %s개 있습니다. ", sourceSize - resultSize));
         }
     }
 
@@ -89,7 +90,8 @@ public class CartItemDao {
 
     private void validateAffectedRowNumber(final int affectedRowNumber, final int expectedNumber) {
         if (affectedRowNumber != expectedNumber) {
-            throw new CartItemNotFoundException();
+            throw new CartItemNotFoundException(
+                    String.format("존재하지 않는 cartItem 이 %s개 있습니다. ", expectedNumber - affectedRowNumber));
         }
     }
 

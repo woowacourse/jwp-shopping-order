@@ -56,6 +56,7 @@ public class CartItemService {
         if (member.isIdEquals(cartItemsMemberId)) {
             return;
         }
-        throw new NotOwnerException();
+        throw new NotOwnerException(
+                String.format("유저의 장바구니 상품이 아닙니다. member id = %s, cartItem id : %s", member.getId(), id));
     }
 }
