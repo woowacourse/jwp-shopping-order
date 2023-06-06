@@ -6,7 +6,7 @@ import cart.dao.entity.CartItemEntity;
 import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.exception.CartItemNotFoundException;
+import cart.exception.notfoundexception.CartItemNotFoundException;
 import cart.repository.mapper.CartItemMapper;
 import java.util.List;
 import java.util.stream.Collectors;

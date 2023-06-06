@@ -14,7 +14,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Product;
 import cart.domain.Quantity;
-import cart.exception.CartItemNotFoundException;
+import cart.exception.notfoundexception.CartItemNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

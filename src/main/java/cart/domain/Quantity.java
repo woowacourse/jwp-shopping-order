@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.IllegalQuantityException;
+import cart.exception.illegalexception.IllegalQuantityException;
 
 public class Quantity {
 

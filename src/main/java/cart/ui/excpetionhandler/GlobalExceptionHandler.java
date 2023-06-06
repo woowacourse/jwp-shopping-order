@@ -1,16 +1,10 @@
 package cart.ui.excpetionhandler;
 
 import cart.dto.ExceptionResponse;
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemNotFoundException;
-import cart.exception.CartUnauthorizedException;
-import cart.exception.IllegalMoneyException;
-import cart.exception.IllegalOrderException;
-import cart.exception.IllegalPointException;
-import cart.exception.IllegalQuantityException;
-import cart.exception.OrderNotFoundException;
-import cart.exception.OrderUnauthorizedException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.authexception.AuthenticationException;
+import cart.exception.authexception.UnauthorizedException;
+import cart.exception.illegalexception.IllegalException;
+import cart.exception.notfoundexception.NotFoundException;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,28 +22,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler({
-        CartUnauthorizedException.class,
-        OrderUnauthorizedException.class})
-    public ResponseEntity<ExceptionResponse> handleException(RuntimeException e) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(UnauthorizedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({
-        IllegalOrderException.class,
-        IllegalMoneyException.class,
-        IllegalPointException.class,
-        IllegalQuantityException.class})
-    public ResponseEntity<ExceptionResponse> handleIllegalException(RuntimeException exception) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
+    @ExceptionHandler(IllegalException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalException(IllegalException e) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({
-        ProductNotFoundException.class,
-        CartItemNotFoundException.class,
-        OrderNotFoundException.class})
-    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ExceptionResponse(e.getMessage()));
     }

@@ -7,7 +7,7 @@ import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.exception.OrderNotFoundException;
+import cart.exception.notfoundexception.OrderNotFoundException;
 import cart.repository.mapper.OrderMapper;
 import java.util.Collections;
 import java.util.List;

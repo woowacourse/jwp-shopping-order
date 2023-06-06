@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.IllegalPointException;
+import cart.exception.illegalexception.IllegalPointException;
 import java.util.Objects;
 
 public class Point {

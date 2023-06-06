@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
-import cart.exception.AuthenticationException;
+import cart.exception.authexception.AuthenticationException;
 import cart.repository.mapper.MemberMapper;
 import java.util.List;
 import java.util.stream.Collectors;

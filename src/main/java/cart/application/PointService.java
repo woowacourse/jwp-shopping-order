@@ -4,7 +4,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.Point;
-import cart.exception.IllegalPointException;
+import cart.exception.illegalexception.IllegalPointException;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

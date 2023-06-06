@@ -2,7 +2,7 @@ package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.IllegalQuantityException;
+import cart.exception.illegalexception.IllegalQuantityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.IllegalMoneyException;
+import cart.exception.illegalexception.IllegalMoneyException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;

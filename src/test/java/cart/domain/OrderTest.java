@@ -3,8 +3,8 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.IllegalOrderException;
-import cart.exception.OrderUnauthorizedException;
+import cart.exception.illegalexception.IllegalOrderException;
+import cart.exception.authexception.OrderUnauthorizedException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;

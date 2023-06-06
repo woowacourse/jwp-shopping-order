@@ -1,7 +1,7 @@
 package cart.domain;
 
-import cart.exception.IllegalOrderException;
-import cart.exception.OrderUnauthorizedException;
+import cart.exception.illegalexception.IllegalOrderException;
+import cart.exception.authexception.OrderUnauthorizedException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;

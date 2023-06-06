@@ -8,7 +8,7 @@ import cart.domain.Order;
 import cart.domain.Point;
 import cart.dto.cartitem.CartItemResponse;
 import cart.dto.order.OrderRequest;
-import cart.exception.IllegalPointException;
+import cart.exception.illegalexception.IllegalPointException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
