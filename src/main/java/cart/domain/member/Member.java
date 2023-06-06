@@ -1,7 +1,5 @@
 package cart.domain.member;
 
-import cart.ui.member.dto.MemberRequest;
-
 import java.util.Objects;
 
 public class Member {
@@ -20,10 +18,6 @@ public class Member {
         this.name = MemberName.from(name);
         this.email = MemberEmail.from(email);
         this.password = MemberPassword.from(password);
-    }
-
-    public Member(MemberRequest memberRequest) {
-        this(null, memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword());
     }
 
     public Long getId() {

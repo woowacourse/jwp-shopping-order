@@ -11,13 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberWriteService {
 
     private final MemberRepository memberRepository;
+    private final MemberMapper memberMapper;
 
-    public MemberWriteService(MemberRepository memberRepository) {
+    public MemberWriteService(MemberRepository memberRepository, MemberMapper memberMapper) {
         this.memberRepository = memberRepository;
+        this.memberMapper = memberMapper;
     }
 
     public Long createMember(MemberRequest memberRequest) {
-        Member member = new Member(memberRequest);
+        Member member = memberMapper.toMember(memberRequest);
         return memberRepository.createMember(member);
     }
 
