@@ -16,6 +16,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberArgumentResolver.class);
+
     private final MemberReadService memberReadService;
 
     public MemberArgumentResolver(MemberReadService memberReadService) {
