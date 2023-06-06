@@ -31,7 +31,7 @@ class OrderTest {
     void make_order_test() {
         // given
         List<CartItem> cartItems = List.of(new CartItem(MEMBER_A, PRODUCT_A), new CartItem(MEMBER_A, PRODUCT_B), new CartItem(MEMBER_A, PRODUCT_C));
-        List<MemberCoupon> coupons = List.of(new MemberCoupon(AMOUNT_1000_COUPON));
+        List<MemberCoupon> coupons = List.of(new MemberCoupon(MEMBER_A.getId(), AMOUNT_1000_COUPON));
         Money deliveryFee = new Money(3000);
 
         // when

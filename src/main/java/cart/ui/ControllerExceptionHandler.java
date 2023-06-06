@@ -21,6 +21,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = {
             ItemException.IllegalMember.class,
+            CouponException.IllegalMember.class,
             OrderException.IllegalMember.class
     })
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {

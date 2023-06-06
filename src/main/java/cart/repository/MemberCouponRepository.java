@@ -68,6 +68,7 @@ public class MemberCouponRepository {
             );
             return new MemberCoupon(
                     rs.getLong("member_coupon.id"),
+                    rs.getLong("member.id"),
                     coupon,
                     rs.getBoolean("is_used")
             );

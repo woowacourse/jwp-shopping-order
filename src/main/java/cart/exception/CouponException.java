@@ -1,5 +1,7 @@
 package cart.exception;
 
+import cart.domain.Member;
+
 public class CouponException extends RuntimeException {
 
     public CouponException(String message) {
@@ -21,6 +23,12 @@ public class CouponException extends RuntimeException {
     public static class AlreadHaveSameCouponException extends CouponException {
         public AlreadHaveSameCouponException() {
             super("이미 가지고 있는 쿠폰입니다.");
+        }
+    }
+
+    public static class IllegalMember extends CouponException {
+        public IllegalMember(Member member) {
+            super("쿠폰의 소유자 아닙니다. 접근한 사용자 : " + member.getEmail());
         }
     }
 }

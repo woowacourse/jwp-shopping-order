@@ -13,6 +13,7 @@ import java.util.List;
 
 import static cart.domain.fixture.CouponFixture.AMOUNT_1000_COUPON;
 import static cart.domain.fixture.CouponFixture.RATE_10_COUPON;
+import static cart.domain.fixture.MemberFixture.MEMBER_A;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -26,8 +27,8 @@ class MemberCouponsTest {
     @DisplayName("쿠폰들 등록시 쿠폰 적용 순서에 맞춰 정렬한다")
     void coupon_order_test() {
         // given
-        MemberCoupon amountCoupon = new MemberCoupon(AMOUNT_1000_COUPON);
-        MemberCoupon rateCoupon = new MemberCoupon(RATE_10_COUPON);
+        MemberCoupon amountCoupon = new MemberCoupon(MEMBER_A.getId(), AMOUNT_1000_COUPON);
+        MemberCoupon rateCoupon = new MemberCoupon(MEMBER_A.getId(), RATE_10_COUPON);
         List<MemberCoupon> couponList = List.of(amountCoupon, rateCoupon);
 
         // when
@@ -42,7 +43,7 @@ class MemberCouponsTest {
     @DisplayName("쿠폰들을 적용한다")
     void apply_coupons_test() {
         // given
-        List<MemberCoupon> couponList = List.of(new MemberCoupon(AMOUNT_1000_COUPON), new MemberCoupon(RATE_10_COUPON));
+        List<MemberCoupon> couponList = List.of(new MemberCoupon(MEMBER_A.getId(), AMOUNT_1000_COUPON), new MemberCoupon(MEMBER_A.getId(), RATE_10_COUPON));
         MemberCoupons coupons = MemberCoupons.of(couponList, discountPolicyProvider);
 
         // when

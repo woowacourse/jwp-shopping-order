@@ -65,6 +65,7 @@ public class Order {
             DiscountPolicyProvider discountPolicyProvider
     ) {
         validateCartItems(cartItems);
+        validateCouponOwners(coupons, member);
 
         Money totalPrice = calculateTotlaPrice(cartItems);
         MemberCoupons memberCoupons = MemberCoupons.of(coupons, discountPolicyProvider);
@@ -80,6 +81,10 @@ public class Order {
         if (cartItems.size() == 0) {
             throw new OrderException.NoCartItem();
         }
+    }
+
+    private static void validateCouponOwners(final List<MemberCoupon> coupons, final Member member) {
+        coupons.forEach(coupon -> coupon.checkOwner(member));
     }
 
     private static Money calculateTotlaPrice(final List<CartItem> cartItems) {
