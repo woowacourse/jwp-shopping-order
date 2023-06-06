@@ -9,8 +9,9 @@ import static org.mockito.BDDMockito.given;
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
-import cart.dao.ProductDao;
 import cart.dao.ProductOrderDao;
+import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -39,6 +40,8 @@ class OrderServiceTest {
     private final Member member = new Member(1L, "test@test.com", "password");
     private final Product product1 = new Product(1L, "product1", Amount.of(10_000), "imageUrl1");
     private final Product product2 = new Product(2L, "product2", Amount.of(20_000), "imageUrl2");
+    private final CartItem cartItem1 = new CartItem(1L, 5, product1, member);
+    private final CartItem cartItem2 = new CartItem(2L, 10, product2, member);
     private final Coupon coupon = new Coupon(1L, "name", Amount.of(1_000), Amount.of(10_000), false);
     private final List<OrderProductRequest> products = List.of(new OrderProductRequest(1L, 5),
         new OrderProductRequest(2L, 10));
@@ -48,8 +51,6 @@ class OrderServiceTest {
 
     @Mock
     private OrderDao orderDao;
-    @Mock
-    private ProductDao productDao;
     @Mock
     private CouponDao couponDao;
     @Mock
@@ -65,8 +66,8 @@ class OrderServiceTest {
         //given
         final OrderRequest request = new OrderRequest(products, 250_000, 3_000, "address", 1L);
 
-        given(productDao.getProductById(anyLong()))
-            .willReturn(Optional.of(product1), Optional.of(product2));
+        given(cartItemDao.findByMemberId(anyLong()))
+            .willReturn(new CartItems(List.of(cartItem1, cartItem2)));
         given(couponDao.findByCouponIdAndMemberId(anyLong(), anyLong()))
             .willReturn(Optional.of(coupon));
         given(orderDao.save(any(Order.class), anyLong()))
@@ -92,8 +93,8 @@ class OrderServiceTest {
     void testOrderWhenTotalProductAmountNotMatch() {
         //given
         final OrderRequest request = new OrderRequest(products, 25_000, 3_000, "address", 1L);
-        given(productDao.getProductById(anyLong()))
-            .willReturn(Optional.of(product1), Optional.of(product2));
+        given(cartItemDao.findByMemberId(anyLong()))
+            .willReturn(new CartItems(List.of(cartItem1, cartItem2)));
 
         //when
         //then
@@ -106,10 +107,8 @@ class OrderServiceTest {
     void testOrderWhenCouponNotExist() {
         //given
         final OrderRequest request = new OrderRequest(products, 250_000, 3_000, "address", 1L);
-        given(productDao.getProductById(anyLong()))
-            .willReturn(Optional.of(product1), Optional.of(product2));
-        given(couponDao.findByCouponIdAndMemberId(anyLong(), anyLong()))
-            .willReturn(Optional.empty());
+        given(cartItemDao.findByMemberId(anyLong()))
+            .willReturn(new CartItems(List.of(cartItem1, cartItem2)));
 
         //when
         //then
@@ -126,8 +125,8 @@ class OrderServiceTest {
             Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()),
             Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()),
             Amount.of(3_000), "address");
-        given(productDao.getProductById(anyLong()))
-            .willReturn(Optional.of(product1), Optional.of(product2));
+        given(cartItemDao.findByMemberId(anyLong()))
+            .willReturn(new CartItems(List.of(cartItem1, cartItem2)));
         given(orderDao.save(any(Order.class), anyLong()))
             .willReturn(order);
 

@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS product_order
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id BIGINT NOT NULL,
     order_id   BIGINT NOT NULL,
+    quantity   INT    NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (order_id) REFERENCES `order` (id)
 );

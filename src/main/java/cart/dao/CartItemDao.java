@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.vo.Amount;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -22,12 +24,26 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
+        final Long findMemberId = rs.getLong("member_id");
+        final String email = rs.getString("email");
+        final Long findProductId = rs.getLong("id");
+        final String name = rs.getString("name");
+        final int price = rs.getInt("price");
+        final String imageUrl = rs.getString("image_url");
+        final Long cartItemId = rs.getLong("cart_item.id");
+        final int quantity = rs.getInt("cart_item.quantity");
+        final Member member = new Member(findMemberId, email, null);
+        final Product product = new Product(findProductId, name, Amount.of(price), imageUrl);
+        return new CartItem(cartItemId, quantity, product, member);
+    };
+
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItem> findByMemberId(final Long memberId) {
+    public CartItems findByMemberId(final Long memberId) {
         final String sql =
             "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                 +
@@ -35,18 +51,7 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            final String email = rs.getString("email");
-            final Long productId = rs.getLong("product.id");
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
-            final Long cartItemId = rs.getLong("cart_item.id");
-            final int quantity = rs.getInt("cart_item.quantity");
-            final Member member = new Member(memberId, email, null);
-            final Product product = new Product(productId, name, Amount.of(price), imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        return new CartItems(jdbcTemplate.query(sql, rowMapper, memberId));
     }
 
     public Long save(final CartItem cartItem) {
@@ -76,26 +81,17 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        final List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            final Long memberId = rs.getLong("member_id");
-            final String email = rs.getString("email");
-            final Long productId = rs.getLong("id");
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
-            final Long cartItemId = rs.getLong("cart_item.id");
-            final int quantity = rs.getInt("cart_item.quantity");
-            final Member member = new Member(memberId, email, null);
-            final Product product = new Product(productId, name, Amount.of(price), imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        final List<CartItem> cartItems = jdbcTemplate.query(sql, rowMapper, id);
         return cartItems.stream().findAny();
     }
 
 
     public void delete(final Long memberId, final Long productId) {
         final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        final int updatedCount = jdbcTemplate.update(sql, memberId, productId);
+        if (updatedCount == 0) {
+            throw new BusinessException("해당 상품은 장바구니에 존재하지 않습니다.");
+        }
     }
 
     public void deleteById(final Long id) {
@@ -117,19 +113,7 @@ public class CartItemDao {
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ? AND cart_item.product_id = ?";
 
-        final List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{memberId, productId}, (rs, rowNum) -> {
-            final Long findMemberId = rs.getLong("member_id");
-            final String email = rs.getString("email");
-            final Long findProductId = rs.getLong("id");
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
-            final Long cartItemId = rs.getLong("cart_item.id");
-            final int quantity = rs.getInt("cart_item.quantity");
-            final Member member = new Member(findMemberId, email, null);
-            final Product product = new Product(findProductId, name, Amount.of(price), imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        final List<CartItem> cartItems = jdbcTemplate.query(sql, rowMapper, memberId, productId);
         return cartItems.stream().findAny();
     }
 
@@ -138,7 +122,7 @@ public class CartItemDao {
             .map(id -> this.findById(id).orElseThrow(() -> new BusinessException("카트에 존재하지 않는 상품입니다.")))
             .collect(Collectors.toList());
     }
-    
+
     public void deleteAll(final List<CartItem> cartItems) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -152,5 +136,9 @@ public class CartItemDao {
                 return cartItems.size();
             }
         });
+    }
+
+    public void deleteAll(final CartItems cartItems) {
+        deleteAll(cartItems.getValue());
     }
 }

@@ -29,7 +29,7 @@ public class ProductDao {
         rs.getString("image_url")
     );
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAll() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             final Long productId = rs.getLong("id");
@@ -40,13 +40,13 @@ public class ProductDao {
         });
     }
 
-    public Optional<Product> getProductById(final Long productId) {
+    public Optional<Product> findById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         final List<Product> result = jdbcTemplate.query(sql, rowMapper, productId);
         return result.stream().findAny();
     }
 
-    public Long createProduct(final Product product) {
+    public Long create(final Product product) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -65,12 +65,12 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(final Long productId, final Product product) {
+    public void update(final Long productId, final Product product) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getAmount().getValue(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(final Long productId) {
+    public void delete(final Long productId) {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }

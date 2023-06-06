@@ -34,7 +34,6 @@ public class IntegrationTest {
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract();
-
         return getIdFromCreatedResponse(response);
     }
 

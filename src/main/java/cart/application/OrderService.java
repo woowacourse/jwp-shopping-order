@@ -3,13 +3,12 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
-import cart.dao.ProductDao;
 import cart.dao.ProductOrderDao;
+import cart.domain.CartItems;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
-import cart.domain.Products;
 import cart.domain.vo.Amount;
 import cart.exception.BusinessException;
 import cart.ui.dto.request.OrderProductRequest;
@@ -28,15 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderDao orderDao;
-    private final ProductDao productDao;
     private final CouponDao couponDao;
     private final CartItemDao cartItemDao;
     private final ProductOrderDao productOrderDao;
 
-    public OrderService(final OrderDao orderDao, final ProductDao productDao, final CouponDao couponDao,
-        final CartItemDao cartItemDao, final ProductOrderDao productOrderDao) {
+    public OrderService(final OrderDao orderDao, final CouponDao couponDao, final CartItemDao cartItemDao,
+        final ProductOrderDao productOrderDao) {
         this.orderDao = orderDao;
-        this.productDao = productDao;
         this.couponDao = couponDao;
         this.cartItemDao = cartItemDao;
         this.productOrderDao = productOrderDao;
@@ -44,65 +41,44 @@ public class OrderService {
 
     @Transactional
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
-        final List<Product> products = findProducts(orderRequest);
-        final Order order = makeOrder(orderRequest, member, products);
-        deleteCartItem(orderRequest, member.getId());
-        final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
-            products);
+        final CartItems cartItems = cartItemDao.findByMemberId(member.getId());
+        if (cartItems.notContainsExactly(orderRequest.findProductIdAndQuantity())) {
+            throw new BusinessException("장바구니에 존재하지 않거나 수량이 일치하지 않습니다.");
+        }
+        if (cartItems.isTotalAmountNotEquals(Amount.of(orderRequest.getTotalProductAmount()))) {
+            throw new BusinessException("총 가격이 일치하지 않습니다.");
+        }
+        final Order order = makeOrder(orderRequest, member.getId(), cartItems);
+        cartItemDao.deleteAll(cartItems);
+        final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest, cartItems);
         return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
             order.getDiscountedAmount().getValue(), order.getDeliveryAmount().getValue(), order.getAddress(),
             orderProductResponses);
     }
 
-    private List<Product> findProducts(final OrderRequest orderRequest) {
-        final List<Product> products = new ArrayList<>();
-        final List<Amount> amounts = orderRequest.getProducts()
-            .stream()
-            .map(it -> {
-                final Product product = productDao.getProductById(it.getId())
-                    .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
-                addToProducts(products, it.getQuantity(), product);
-                return product.getAmount().multiply(it.getQuantity());
-            })
-            .collect(Collectors.toList());
-        checkTotalAmount(Amount.of(orderRequest.getTotalProductAmount()), amounts);
-        return products;
-    }
-
-    private Order makeOrder(final OrderRequest orderRequest, final Member member, final List<Product> products) {
+    private Order makeOrder(final OrderRequest orderRequest, final Long memberId, final CartItems cartItems) {
         if (orderRequest.getCouponId() == null) {
             return orderDao.save(
-                new Order(new Products(products), Amount.of(orderRequest.getTotalProductAmount()),
+                new Order(cartItems.makeProductsReflectQuantity(), Amount.of(orderRequest.getTotalProductAmount()),
                     Amount.of(orderRequest.getTotalProductAmount()), Amount.of(orderRequest.getDeliveryAmount()),
-                    orderRequest.getAddress()), member.getId());
+                    orderRequest.getAddress()), memberId);
         }
-        final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())
+        final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), memberId)
             .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
         final Coupon usedCoupon = coupon.use();
-        couponDao.update(usedCoupon, member.getId());
+        couponDao.update(usedCoupon, memberId);
         return orderDao.save(
-            new Order(new Products(products), Amount.of(orderRequest.getTotalProductAmount()),
+            new Order(cartItems.makeProductsReflectQuantity(), Amount.of(orderRequest.getTotalProductAmount()),
                 coupon.calculateProduct(Amount.of(orderRequest.getTotalProductAmount())),
-                Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
-    }
-
-    private void addToProducts(final List<Product> products, final int quantity, final Product product) {
-        for (int count = 0; count < quantity; count++) {
-            products.add(product);
-        }
-    }
-
-    private void checkTotalAmount(final Amount totalAmount, final List<Amount> amounts) {
-        final Amount sum = Amount.of(amounts);
-        if (!sum.equals(totalAmount)) {
-            throw new BusinessException("상품 금액이 변경되었습니다.");
-        }
+                Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), memberId);
     }
 
     private List<OrderProductResponse> makeOrderProductResponses(final OrderRequest orderRequest,
-        final List<Product> products) {
+        final CartItems cartItems) {
         final List<OrderProductResponse> orderProductResponses = new ArrayList<>();
-        final List<Product> deduplicatedProducts = products.stream()
+        final List<Product> deduplicatedProducts = cartItems.getProducts()
+            .getValue()
+            .stream()
             .distinct()
             .collect(Collectors.toUnmodifiableList());
         for (int index = 0; index < deduplicatedProducts.size(); index++) {
@@ -114,12 +90,6 @@ public class OrderService {
             orderProductResponses.add(orderProductResponse);
         }
         return orderProductResponses;
-    }
-
-    private void deleteCartItem(final OrderRequest orderRequest, final Long memberId) {
-        for (final OrderProductRequest product : orderRequest.getProducts()) {
-            cartItemDao.delete(memberId, product.getId());
-        }
     }
 
     public OrderResponse findOrder(final Long orderId) {

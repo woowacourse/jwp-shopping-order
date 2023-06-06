@@ -3,6 +3,7 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.exception.BusinessException;
@@ -29,8 +30,11 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(final Member member) {
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        final CartItems cartItems = cartItemDao.findByMemberId(member.getId());
+        return cartItems.getValue()
+            .stream()
+            .map(CartItemResponse::of)
+            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -43,7 +47,7 @@ public class CartItemService {
             cartItemDao.updateQuantity(updatedCartItem);
             return cartItem.getId();
         }
-        final Product product = productDao.getProductById(cartItemRequest.getProductId())
+        final Product product = productDao.findById(cartItemRequest.getProductId())
             .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
         return cartItemDao.save(
             new CartItem(cartItemRequest.getQuantity(), product, member));

@@ -1,6 +1,9 @@
 package cart.ui.dto.request;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OrderRequest {
 
@@ -21,6 +24,12 @@ public class OrderRequest {
         this.deliveryAmount = deliveryAmount;
         this.address = address;
         this.couponId = couponId;
+    }
+
+    public Map<Long, Integer> findProductIdAndQuantity() {
+        return products.stream()
+            .collect(Collectors
+                .toMap(OrderProductRequest::getId, OrderProductRequest::getQuantity, (a, b) -> b, HashMap::new));
     }
 
     public List<OrderProductRequest> getProducts() {

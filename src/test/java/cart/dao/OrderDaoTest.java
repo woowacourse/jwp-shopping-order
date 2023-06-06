@@ -42,8 +42,8 @@ class OrderDaoTest {
         final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
         final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
         final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");
-        final Long product1Id = productDao.createProduct(product1);
-        final Long product2Id = productDao.createProduct(product2);
+        final Long product1Id = productDao.create(product1);
+        final Long product2Id = productDao.create(product2);
         final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
         final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
         final Order order = new Order(new Products(List.of(savedProduct1, savedProduct2)),
@@ -65,8 +65,8 @@ class OrderDaoTest {
         final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
         final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
         final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");
-        final Long product1Id = productDao.createProduct(product1);
-        final Long product2Id = productDao.createProduct(product2);
+        final Long product1Id = productDao.create(product1);
+        final Long product2Id = productDao.create(product2);
         final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
         final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
         final List<Product> savedProducts = List.of(savedProduct1, savedProduct2);
@@ -94,8 +94,8 @@ class OrderDaoTest {
         final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
         final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
         final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");
-        final Long product1Id = productDao.createProduct(product1);
-        final Long product2Id = productDao.createProduct(product2);
+        final Long product1Id = productDao.create(product1);
+        final Long product2Id = productDao.create(product2);
         final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
         final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
         final List<Product> savedProducts = List.of(savedProduct1, savedProduct2);

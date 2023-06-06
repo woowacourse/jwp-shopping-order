@@ -22,12 +22,12 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        final List<Product> products = productDao.getAllProducts();
+        final List<Product> products = productDao.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(final Long productId) {
-        final Product product = productDao.getProductById(productId)
+        final Product product = productDao.findById(productId)
             .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
         return ProductResponse.of(product);
     }
@@ -36,18 +36,18 @@ public class ProductService {
     public Long createProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), Amount.of(productRequest.getPrice()),
             productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.create(product);
     }
 
     @Transactional
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), Amount.of(productRequest.getPrice()),
             productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        productDao.update(productId, product);
     }
 
     @Transactional
     public void deleteProduct(final Long productId) {
-        productDao.deleteProduct(productId);
+        productDao.delete(productId);
     }
 }
