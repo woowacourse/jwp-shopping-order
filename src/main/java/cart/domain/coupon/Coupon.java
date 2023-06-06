@@ -4,18 +4,18 @@ public class Coupon {
 
     private final Long id;
     private final String couponName;
-    private final int discountPercent;
-    private final int discountAmount;
-    private final int minAmount;
+    private final CouponPercent discountPercent;
+    private final CouponAmount discountAmount;
+    private final MinAmount minAmount;
 
     public Coupon(Long id, String couponName, Integer discountPercent, int discountAmount, Integer minAmount) {
         validateIsAllZero(discountPercent, discountAmount);
         validateIsAllPositive(discountPercent, discountAmount);
         this.id = id;
         this.couponName = couponName;
-        this.discountPercent = discountPercent;
-        this.discountAmount = discountAmount;
-        this.minAmount = minAmount;
+        this.discountPercent = CouponPercent.from(discountPercent);
+        this.discountAmount = CouponAmount.of(discountAmount, minAmount);
+        this.minAmount = MinAmount.from(minAmount);
     }
 
     private void validateIsAllPositive(Integer discountPercent, int discountAmount) {
@@ -43,15 +43,15 @@ public class Coupon {
     }
 
     public Integer getDiscountPercent() {
-        return discountPercent;
+        return discountPercent.getDiscountPercent();
     }
 
     public int getDiscountAmount() {
-        return discountAmount;
+        return discountAmount.getDiscountAmount();
     }
 
     public Integer getMinAmount() {
-        return minAmount;
+        return minAmount.getMinAmount();
     }
 
 }
