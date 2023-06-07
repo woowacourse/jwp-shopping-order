@@ -13,10 +13,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final int AUTH_TYPE_INDEX = 0;
     private static final int AUTH_VALUE_INDEX = 1;
     private static final int EMAIL_INDEX = 0;
     private static final int PASSWORD_INDEX = 1;
+
     private final MemberRepository memberRepository;
 
     public MemberArgumentResolver(final MemberRepository memberRepository) {
@@ -31,29 +31,16 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        validateNull(authorization);
-
         String[] authHeader = authorization.split(" ");
-        validateAuthType(authHeader[AUTH_TYPE_INDEX]);
 
         String[] credentials = encode(authHeader[AUTH_VALUE_INDEX]);
+        String email = credentials[EMAIL_INDEX];
+        String password = credentials[PASSWORD_INDEX];
 
-        Member member = memberRepository.findByEmail(credentials[EMAIL_INDEX]);
-        validatePassword(member, credentials[PASSWORD_INDEX]);
+        Member member = memberRepository.findByEmail(email);
+        validatePassword(member, password);
 
         return member;
-    }
-
-    private void validateNull(final String authorization) {
-        if (authorization == null) {
-            throw new AuthenticationException();
-        }
-    }
-
-    private void validateAuthType(final String authType) {
-        if (!authType.equalsIgnoreCase("basic")) {
-            throw new AuthenticationException();
-        }
     }
 
     private String[] encode(final String authValue) {

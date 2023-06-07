@@ -1,11 +1,13 @@
 package cart.config;
 
+import cart.presentation.AuthValidateInterceptor;
 import cart.presentation.MemberArgumentResolver;
 import cart.repository.MemberRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -20,7 +22,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthValidateInterceptor())
+                .addPathPatterns("/cart-items", "/points", "/orders");
+    }
+
+    @Override
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberRepository));
     }
 
