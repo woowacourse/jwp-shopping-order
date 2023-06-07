@@ -1,11 +1,11 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.member.domain.Member;
+import cart.cartitem.dto.CartItemQuantityUpdateRequest;
+import cart.cartitem.dto.CartItemRequest;
+import cart.cartitem.dto.CartItemResponse;
+import cart.product.dto.ProductRequest;
+import cart.member.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Long productId;
     private Long productId2;
@@ -37,11 +37,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg", 10.0, true));
+        productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg", 10.0, true));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.getMemberById(1L);
+        member2 = memberRepository.getMemberById(2L);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
@@ -56,7 +56,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf", member.getPoint());
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
@@ -84,7 +84,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void increaseCartItemQuantity() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10L);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
@@ -95,7 +95,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
+        assertThat(selectedCartItemResponse).isPresent();
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 
@@ -104,7 +104,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void decreaseCartItemQuantityToZero() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0L);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
@@ -123,8 +123,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void updateOtherMembersCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
-
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10L);
+        
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
@@ -188,12 +188,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get("/cart-items")
-                .then()
-                .log().all()
+                .then().log().all()
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, Long quantity) {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
