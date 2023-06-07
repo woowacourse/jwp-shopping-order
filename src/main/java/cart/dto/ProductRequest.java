@@ -1,8 +1,13 @@
 package cart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class ProductRequest {
+    @NotNull
     private String name;
+    @NotNull
     private int price;
+    @NotNull
     private String imageUrl;
 
     public ProductRequest() {
