@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -31,6 +32,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
+    @Transactional
     public Long order(final Member member, final OrderCreateRequest orderCreateRequest) {
         final List<CartItem> findCartItems = cartItemDao.findByIds(orderCreateRequest.getCartItemIds());
         final CartItems cartItems = new CartItems(findCartItems, member);
@@ -54,6 +56,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public OrderSelectResponse getOrder(final Member member, final Long orderId) {
         Order order = orderRepository.findById(member, orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 내역을 찾을 수 없습니다"));
@@ -61,6 +64,7 @@ public class OrderService {
         return OrderSelectResponse.from(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderSimpleInfoResponse> getAllOrders(final Member member) {
         List<Order> orders = orderRepository.findAll(member);
 

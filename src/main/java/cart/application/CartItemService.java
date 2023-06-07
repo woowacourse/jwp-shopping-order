@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartItemService {
@@ -25,11 +26,13 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::from).collect(Collectors.toList());
     }
 
+    @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
         final Long productId = cartItemRequest.getProductId();
         final Optional<CartItem> findCartItem = getCartItem(member, productId);
@@ -50,6 +53,7 @@ public class CartItemService {
                 .findFirst();
     }
 
+    @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -63,6 +67,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -70,6 +75,7 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public CartItemResponse findByCartItemId(final Member member, final Long cartItemId) {
         final CartItem findCartItem = cartItemDao.findById(cartItemId);
         findCartItem.checkOwner(member);
@@ -77,6 +83,7 @@ public class CartItemService {
         return CartItemResponse.from(findCartItem);
     }
 
+    @Transactional(readOnly = true)
     public PagedCartItemsResponse getPagedCartItems(final Member member, final int unitSize, final int page) {
         final List<CartItem> allCartItems = cartItemDao.findByMemberId(member.getId());
 
