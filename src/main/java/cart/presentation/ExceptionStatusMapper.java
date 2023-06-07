@@ -7,6 +7,7 @@ import cart.exception.application.IllegalMemberException;
 import cart.exception.application.PointInconsistentException;
 import cart.exception.presentation.NoProperStatusCodeException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,8 @@ public enum ExceptionStatusMapper {
     )),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, List.of(
             ExceedAvailablePointException.class,
-            ExceedOwnedPointException.class
+            ExceedOwnedPointException.class,
+            BindException.class
     )),
     ;
 

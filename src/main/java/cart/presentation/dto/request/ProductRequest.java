@@ -1,11 +1,23 @@
 package cart.presentation.dto.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
 public class ProductRequest {
 
+    @NotBlank
     private String name;
+    @Positive
+    @NotNull
     private Long price;
+    @NotBlank
     private String imageUrl;
+    @PositiveOrZero
+    @NotNull
     private Double pointRatio;
+    @NotNull
     private Boolean pointAvailable;
 
     public ProductRequest() {

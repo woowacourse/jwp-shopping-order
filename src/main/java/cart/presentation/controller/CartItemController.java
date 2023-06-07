@@ -8,6 +8,7 @@ import cart.presentation.dto.response.CartItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -28,14 +29,15 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(AuthInfo authInfo, @RequestBody CartItemRequest request) {
+    public ResponseEntity<Void> addCartItems(AuthInfo authInfo, @RequestBody @Valid CartItemRequest request) {
         Long cartItemId = cartItemService.createCartItem(authInfo, request);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(AuthInfo authInfo, @PathVariable Long id,
-                                                       @RequestBody CartItemQuantityRequest request) {
+                                                       @RequestBody @Valid CartItemQuantityRequest request) {
+        System.out.println(request.getQuantity());
         cartItemService.updateQuantity(authInfo, id, request);
         return ResponseEntity.ok().build();
     }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> issueOrder(AuthInfo authInfo, @RequestBody OrderRequest request) {
+    public ResponseEntity<Void> issueOrder(AuthInfo authInfo, @RequestBody @Valid OrderRequest request) {
         long id = orderService.issue(authInfo, request);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
