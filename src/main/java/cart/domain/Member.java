@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.PointNotEnoughException;
 import java.util.Objects;
 
 public class Member {
@@ -19,16 +20,19 @@ public class Member {
         return new Builder();
     }
 
-    public boolean hasNotEnoughPointToUse(Point point) {
-        return this.point.getAmount() < point.getAmount();
-    }
-
     public void increasePoint(Point point) {
         this.point = this.point.plus(point);
     }
 
     public void decreasePoint(Point point) {
+        if (hasNotEnoughPointToUse(point)) {
+            throw new PointNotEnoughException("포인트가 부족합니다.");
+        }
         this.point = this.point.minus(point);
+    }
+
+    private boolean hasNotEnoughPointToUse(Point point) {
+        return this.point.getAmount() < point.getAmount();
     }
 
     public boolean checkPassword(String password) {

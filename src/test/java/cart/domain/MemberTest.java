@@ -1,8 +1,10 @@
 package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.exception.PointNotEnoughException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -25,22 +27,6 @@ class MemberTest {
         );
     }
 
-    @ParameterizedTest
-    @ValueSource(longs = {1000, 500})
-    void 회원의_포인트가_일정_포인트_보다_부족하지_않은_경우_false를_반환한다(long amount) {
-        Member member = new Member(1L, "aaa@google.com", "asdf1234", 1000);
-
-        assertThat(member.hasNotEnoughPointToUse(new Point(amount))).isFalse();
-    }
-
-    @ParameterizedTest
-    @ValueSource(longs = {1001, 5000})
-    void 회원의_포인트가_일정_포인트_보다_부족한_경우_true를_반환한다(long amount) {
-        Member member = new Member(1L, "aaa@google.com", "asdf1234", 1000);
-
-        assertThat(member.hasNotEnoughPointToUse(new Point(amount))).isTrue();
-    }
-
     @Test
     void 회원의_포인트를_차감한다() {
         Member member = new Member(1L, "aaa@google.com", "asdf1234", 1000);
@@ -49,6 +35,16 @@ class MemberTest {
 
         assertThat(member.getPoint().getAmount())
                 .isEqualTo(500);
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1001, 5000})
+    void 포인트를_사용할때_잔여_포인트보다_큰_포인트를_사용하면_예외가_발생한다(long amount) {
+        Member member = new Member(1L, "aaa@google.com", "asdf1234", 1000);
+
+        assertThatThrownBy(() -> member.decreasePoint(new Point(amount)))
+                .isInstanceOf(PointNotEnoughException.class)
+                .hasMessage("포인트가 부족합니다.");
     }
 
     @Test
