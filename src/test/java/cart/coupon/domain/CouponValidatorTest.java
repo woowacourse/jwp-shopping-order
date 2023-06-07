@@ -28,7 +28,7 @@ class CouponValidatorTest {
         Coupon 말랑이_멋있어서_주는_쿠폰 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰",
                 new FixDiscountPolicy(99999999),
-                new GeneralCouponStrategy(),
+                new AllProductsCouponStrategy(),
                 1L);
         CouponValidator couponValidator = new CouponValidator();
 
@@ -48,12 +48,12 @@ class CouponValidatorTest {
         Coupon 말랑이_멋있어서_주는_쿠폰1 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰1",
                 new FixDiscountPolicy(99999999),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 1L);
         Coupon 말랑이_멋있어서_주는_쿠폰2 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰2",
                 new RateDiscountPolicy(50),
-                new GeneralCouponStrategy(),
+                new AllProductsCouponStrategy(),
                 1L);
         Product product1 = new Product(1L, "코코닭", 99, "닭집.com");
         Product product2 = new Product(2L, "코코오리", 19, "오리집.com");
@@ -79,12 +79,12 @@ class CouponValidatorTest {
         Coupon 말랑이_멋있어서_주는_쿠폰1 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰1",
                 new FixDiscountPolicy(99999999),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 1L);
         Coupon 말랑이_멋있어서_주는_쿠폰2 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰2",
                 new RateDiscountPolicy(50),
-                new SpecificCouponStrategy(3L),
+                new SpecificProductCouponStrategy(3L),
                 1L);
         Product product1 = new Product(1L, "코코닭", 99, "닭집.com");
         Product product2 = new Product(2L, "코코오리", 19, "오리집.com");
@@ -110,12 +110,12 @@ class CouponValidatorTest {
         Coupon 말랑이_멋있어서_주는_쿠폰1 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰1",
                 new FixDiscountPolicy(99999999),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 1L);
         Coupon 말랑이_멋있어서_주는_쿠폰2 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰2",
                 new RateDiscountPolicy(50),
-                new SpecificCouponStrategy(2L),
+                new SpecificProductCouponStrategy(2L),
                 1L);
         Product product1 = new Product(1L, "코코닭", 99, "닭집.com");
         Product product2 = new Product(2L, "코코오리", 19, "오리집.com");

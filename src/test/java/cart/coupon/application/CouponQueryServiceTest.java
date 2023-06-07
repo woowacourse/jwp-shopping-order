@@ -7,9 +7,9 @@ import cart.coupon.domain.Coupon;
 import cart.coupon.domain.CouponRepository;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.FixDiscountPolicy;
-import cart.coupon.domain.GeneralCouponStrategy;
+import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
-import cart.coupon.domain.SpecificCouponStrategy;
+import cart.coupon.domain.SpecificProductCouponStrategy;
 import cart.coupon.domain.TargetType;
 import cart.coupon.presentation.dto.AllCouponQueryResponse;
 import cart.coupon.presentation.dto.GeneralCouponResponse;
@@ -43,13 +43,13 @@ class CouponQueryServiceTest {
                         1L,
                         "말랑이 멋진쿠폰",
                         new RateDiscountPolicy(50),
-                        new GeneralCouponStrategy(),
+                        new AllProductsCouponStrategy(),
                         1L),
                 new Coupon(
                         2L,
                         "코코닥 멋진쿠폰",
                         new FixDiscountPolicy(5000000),
-                        new SpecificCouponStrategy(1L),
+                        new SpecificProductCouponStrategy(1L),
                         1L)
         );
         given(couponRepository.findAllByMemberId(1L))

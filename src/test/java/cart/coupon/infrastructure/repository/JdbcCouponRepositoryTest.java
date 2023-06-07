@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.FixDiscountPolicy;
-import cart.coupon.domain.GeneralCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
-import cart.coupon.domain.SpecificCouponStrategy;
+import cart.coupon.domain.SpecificProductCouponStrategy;
 import cart.coupon.domain.TargetType;
 import cart.coupon.infrastructure.dao.CouponDao;
 import cart.coupon.infrastructure.entity.CouponEntity;
@@ -44,7 +44,7 @@ class JdbcCouponRepositoryTest {
         Coupon 코코닥_불쌍해서_주는_쿠폰 = new Coupon(
                 "코코닥 불쌍해서 주는 쿠폰",
                 new FixDiscountPolicy(1000),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 2L);
 
         // when
@@ -76,7 +76,7 @@ class JdbcCouponRepositoryTest {
                 1L,
                 "말랑이 멋진쿠폰",
                 new RateDiscountPolicy(50),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 1L);
         assertThat(coupon).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -112,13 +112,13 @@ class JdbcCouponRepositoryTest {
                 1L,
                 "말랑이 멋진쿠폰",
                 new RateDiscountPolicy(50),
-                new GeneralCouponStrategy(),
+                new AllProductsCouponStrategy(),
                 1L);
         Coupon expected2 = new Coupon(
                 2L,
                 "코코닥 멋진쿠폰",
                 new FixDiscountPolicy(5000000),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 1L);
         List<Coupon> expected = List.of(expected1, expected2);
         assertThat(allByMemberId).usingRecursiveComparison()
@@ -155,13 +155,13 @@ class JdbcCouponRepositoryTest {
                 1L,
                 "말랑이 멋진쿠폰",
                 new RateDiscountPolicy(50),
-                new GeneralCouponStrategy(),
+                new AllProductsCouponStrategy(),
                 1L);
         Coupon expected2 = new Coupon(
                 2L,
                 "코코닥 멋진쿠폰",
                 new FixDiscountPolicy(5000000),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 1L);
         List<Coupon> expected = List.of(expected1, expected2);
         assertThat(actual).usingRecursiveComparison()

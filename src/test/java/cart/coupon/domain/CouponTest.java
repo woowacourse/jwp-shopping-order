@@ -18,7 +18,7 @@ class CouponTest {
         Coupon 말랑이_멋있어서_주는_쿠폰 = new Coupon(
                 "말랑이 멋있어서 주는 쿠폰",
                 new FixDiscountPolicy(99999999),
-                new GeneralCouponStrategy(),
+                new AllProductsCouponStrategy(),
                 1L);
 
         Long productId = 10L;
@@ -33,7 +33,7 @@ class CouponTest {
         Coupon 코코닥_불쌍해서_주는_쿠폰 = new Coupon(
                 "코코닥 불쌍해서 주는 쿠폰",
                 new FixDiscountPolicy(1000),
-                new SpecificCouponStrategy(1L),
+                new SpecificProductCouponStrategy(1L),
                 2L);
 
         // when & then

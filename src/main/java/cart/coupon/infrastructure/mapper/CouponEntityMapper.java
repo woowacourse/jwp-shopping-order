@@ -5,9 +5,9 @@ import cart.coupon.domain.CouponStrategy;
 import cart.coupon.domain.DiscountPolicy;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.FixDiscountPolicy;
-import cart.coupon.domain.GeneralCouponStrategy;
+import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
-import cart.coupon.domain.SpecificCouponStrategy;
+import cart.coupon.domain.SpecificProductCouponStrategy;
 import cart.coupon.domain.TargetType;
 import cart.coupon.infrastructure.entity.CouponEntity;
 
@@ -33,9 +33,9 @@ public class CouponEntityMapper {
     private static CouponStrategy getCouponType(CouponEntity coupon) {
         TargetType targetType = coupon.getTargetType();
         if (targetType == TargetType.ALL) {
-            return new GeneralCouponStrategy();
+            return new AllProductsCouponStrategy();
         }
-        return new SpecificCouponStrategy(coupon.getTargetProductId());
+        return new SpecificProductCouponStrategy(coupon.getTargetProductId());
     }
 
     public static CouponEntity toEntity(Coupon coupon) {
@@ -53,6 +53,6 @@ public class CouponEntityMapper {
         if (couponStrategy.getTargetType() == TargetType.ALL) {
             return null;
         }
-        return ((SpecificCouponStrategy) couponStrategy).getProductId();
+        return ((SpecificProductCouponStrategy) couponStrategy).getProductId();
     }
 }
