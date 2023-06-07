@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.auth;
 
 import cart.application.service.member.MemberReadService;
 import cart.application.service.member.dto.MemberResultDto;

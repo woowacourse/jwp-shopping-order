@@ -1,8 +1,8 @@
 package cart.persistence.cartitem;
 
 import cart.application.repository.CartItemRepository;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import org.springframework.dao.EmptyResultDataAccessException;

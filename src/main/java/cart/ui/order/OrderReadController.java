@@ -2,7 +2,7 @@ package cart.ui.order;
 
 import cart.application.service.order.dto.OrderDto;
 import cart.application.service.order.OrderReadService;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import cart.ui.order.dto.OrderResponse;
 import cart.ui.order.dto.OrdersResponse;
 import org.springframework.http.ResponseEntity;

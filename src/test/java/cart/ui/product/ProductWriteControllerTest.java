@@ -1,8 +1,7 @@
 package cart.ui.product;
 
-import cart.WebMvcConfig;
 import cart.application.repository.ProductRepository;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.ui.product.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;

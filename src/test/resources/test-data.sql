@@ -18,7 +18,7 @@ INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount) V
 INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount) VALUES (2L, '또 와요 쿠폰 - 3000원 할인', 15000, 0, 3000);
 
 
-INSERT INTO orders (id, member_id, total_price, payment_price, point, created_at)
+INSERT INTO shopping_order (id, member_id, total_price, payment_price, point, created_at)
 VALUES (100L, 5L, 30000, 3000, 0, '2023-06-03');
 
 

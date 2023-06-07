@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS cart_item
     quantity   INT    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orders
+CREATE TABLE IF NOT EXISTS shopping_order
 (
     id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id     BIGINT NOT NULL,

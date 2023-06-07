@@ -3,11 +3,10 @@ package cart.persistence.point;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.application.repository.PointRepository;
-import cart.domain.Point;
-import cart.domain.PointHistory;
+import cart.domain.point.Point;
+import cart.domain.point.PointHistory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,8 @@
 package cart.domain.order;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 import cart.domain.coupon.Coupon;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {

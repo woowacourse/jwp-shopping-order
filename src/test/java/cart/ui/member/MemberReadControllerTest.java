@@ -1,8 +1,7 @@
 package cart.ui.member;
 
-import cart.WebMvcConfig;
 import cart.application.repository.MemberRepository;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.fixture.MemberFixture;
 import cart.ui.member.dto.MemberResponse;
 import io.restassured.RestAssured;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;

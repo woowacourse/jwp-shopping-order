@@ -1,8 +1,7 @@
 package cart.persistence.product;
 
 import cart.application.repository.ProductRepository;
-import cart.domain.Product;
-import org.assertj.core.api.Assertions;
+import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

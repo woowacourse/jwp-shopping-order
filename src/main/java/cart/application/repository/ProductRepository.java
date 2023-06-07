@@ -1,6 +1,6 @@
 package cart.application.repository;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 import java.util.List;
 import java.util.Optional;

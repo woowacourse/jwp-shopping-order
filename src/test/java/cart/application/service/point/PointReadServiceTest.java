@@ -1,22 +1,18 @@
 package cart.application.service.point;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import cart.application.repository.PointRepository;
 import cart.application.service.point.dto.PointResultDto;
-import cart.domain.Point;
-import cart.domain.PointHistory;
-import cart.ui.MemberAuth;
+import cart.domain.point.Point;
+import cart.domain.point.PointHistory;
+import cart.auth.MemberAuth;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

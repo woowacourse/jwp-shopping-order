@@ -1,28 +1,22 @@
 package cart.ui.point;
 
-import static cart.fixture.MemberFixture.레오_ID포함;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.WebMvcConfig;
-import cart.application.repository.MemberRepository;
 import cart.application.repository.PointRepository;
 import cart.application.service.member.MemberReadService;
 import cart.application.service.member.dto.MemberResultDto;
-import cart.domain.PointHistory;
-import cart.fixture.MemberFixture;
+import cart.domain.point.PointHistory;
 import cart.ui.point.dto.PointResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;

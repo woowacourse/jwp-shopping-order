@@ -5,7 +5,7 @@ import cart.application.repository.MemberRepository;
 import cart.application.repository.order.OrderRepository;
 import cart.application.repository.order.OrderedItemRepository;
 import cart.application.service.order.dto.OrderInfoDto;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import java.time.LocalDateTime;

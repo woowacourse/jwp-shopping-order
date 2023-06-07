@@ -5,7 +5,7 @@ import cart.application.repository.MemberRepository;
 import cart.application.service.cartitem.dto.CartResultDto;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

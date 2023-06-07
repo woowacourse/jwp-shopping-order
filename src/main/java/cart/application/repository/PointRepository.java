@@ -1,7 +1,7 @@
 package cart.application.repository;
 
-import cart.domain.Point;
-import cart.domain.PointHistory;
+import cart.domain.point.Point;
+import cart.domain.point.PointHistory;
 
 public interface PointRepository {
 

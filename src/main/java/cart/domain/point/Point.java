@@ -1,6 +1,4 @@
-package cart.domain;
-
-import cart.exception.OverFullPointException;
+package cart.domain.point;
 
 import java.util.List;
 

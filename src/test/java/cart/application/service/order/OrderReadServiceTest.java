@@ -7,13 +7,13 @@ import static org.mockito.BDDMockito.given;
 
 import cart.application.repository.order.OrderRepository;
 import cart.application.service.order.dto.OrderDto;
-import cart.domain.Member;
-import cart.domain.Point;
-import cart.domain.PointHistory;
+import cart.domain.member.Member;
+import cart.domain.point.Point;
+import cart.domain.point.PointHistory;
 import cart.domain.coupon.Coupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ class OrderReadServiceTest {
                 "2023-06-03 16:34:58.703652"
         );
 
-        given(orderRepository.findById(anyLong()))
+        given(orderRepository.findById(anyLong(), anyLong()))
                 .willReturn(order);
 
         // when, then

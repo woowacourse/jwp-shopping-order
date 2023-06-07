@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.auth;
 
 public class MemberAuth {
 

@@ -3,9 +3,9 @@ package cart.application.service.cartitem;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.service.cartitem.dto.CartResultDto;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.cartitem.CartItems;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -3,7 +3,7 @@ package cart.ui.cartitem;
 import cart.application.service.cartitem.CartItemWriteService;
 import cart.application.service.cartitem.dto.CartItemCreateDto;
 import cart.application.service.cartitem.dto.CartItemUpdateDto;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import cart.ui.cartitem.dto.CartItemQuantityUpdateRequest;
 import cart.ui.cartitem.dto.CartItemRequest;
 import org.springframework.http.ResponseEntity;

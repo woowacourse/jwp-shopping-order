@@ -2,7 +2,7 @@ package cart.ui.cartitem;
 
 import cart.application.service.cartitem.CartItemReadService;
 import cart.application.service.cartitem.dto.CartResultDto;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import cart.ui.cartitem.dto.CartResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

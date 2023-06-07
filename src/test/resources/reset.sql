@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS cart_item;
-DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS shopping_order;
 DROP TABLE IF EXISTS ordered_item;
 DROP TABLE IF EXISTS coupon;
 DROP TABLE IF EXISTS member_coupon;
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS cart_item
     quantity   INT    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orders
+CREATE TABLE IF NOT EXISTS shopping_order
 (
     id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id     BIGINT NOT NULL,

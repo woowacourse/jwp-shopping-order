@@ -2,6 +2,8 @@ package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.point.Point;
+import cart.domain.point.PointHistory;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

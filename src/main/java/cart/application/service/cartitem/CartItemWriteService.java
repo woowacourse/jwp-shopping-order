@@ -5,10 +5,10 @@ import cart.application.repository.MemberRepository;
 import cart.application.repository.ProductRepository;
 import cart.application.service.cartitem.dto.CartItemCreateDto;
 import cart.application.service.cartitem.dto.CartItemUpdateDto;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.domain.cartitem.CartItem;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

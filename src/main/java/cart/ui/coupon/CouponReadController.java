@@ -2,7 +2,7 @@ package cart.ui.coupon;
 
 import cart.application.service.coupon.CouponReadService;
 import cart.application.service.coupon.dto.CouponResultDto;
-import cart.ui.MemberAuth;
+import cart.auth.MemberAuth;
 import cart.ui.coupon.dto.CouponResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
