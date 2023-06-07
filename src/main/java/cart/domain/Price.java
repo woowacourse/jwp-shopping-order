@@ -1,6 +1,8 @@
 package cart.domain;
 
 public class Price {
+    private static final String UNIT = "원";
+
     private Integer value;
 
     public Price() {

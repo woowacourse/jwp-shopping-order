@@ -3,6 +3,8 @@ package cart.domain;
 import java.util.Objects;
 
 public class Point {
+    private static final String UNIT = "원";
+
     private Long value;
 
     public Point() {
