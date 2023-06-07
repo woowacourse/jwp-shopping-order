@@ -44,7 +44,7 @@ class JdbcOrderRepositoryTest {
                 new OrderItem(10, 1L, "말랑", 1000, 1000, "image"),
                 new OrderItem(20, 2L, "코코닥", 2000, 1000, "image")
         );
-        given(orderDao.save(any()))
+        given(orderDao.insert(any()))
                 .willReturn(1L);
 
         // when
@@ -53,7 +53,7 @@ class JdbcOrderRepositoryTest {
         // then
         assertThat(id).isEqualTo(1L);
         then(orderItemDao).should(times(1))
-                .saveAll(any());
+                .insertAll(any());
     }
 
     @Test

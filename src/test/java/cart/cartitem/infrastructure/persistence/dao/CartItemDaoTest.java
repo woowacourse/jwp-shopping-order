@@ -38,7 +38,7 @@ class CartItemDaoTest {
     void 장바구니_상품을_저장한다() {
         // when
         CartItemEntity entity = new CartItemEntity(null, 10, 1L, "상품1", "image", 1000, memberId);
-        Long id = cartItemDao.save(entity);
+        Long id = cartItemDao.insert(entity);
 
         // then
         CartItemEntity saved = cartItemDao.findById(id).get();
@@ -51,7 +51,7 @@ class CartItemDaoTest {
     void 장바구니_상품의_수량을_변경한다() {
         // given
         CartItemEntity entity = new CartItemEntity(null, 10, 1L, "상품1", "image", 1000, memberId);
-        Long id = cartItemDao.save(entity);
+        Long id = cartItemDao.insert(entity);
         CartItemEntity forUpdate = new CartItemEntity(id, 20, 1L, "상품1", "image", 1000, memberId);
 
         // when
@@ -65,7 +65,7 @@ class CartItemDaoTest {
     void 장바구니_항목을_삭제한다() {
         // given
         CartItemEntity entity = new CartItemEntity(null, 10, 1L, "상품1", "image", 1000, memberId);
-        Long id = cartItemDao.save(entity);
+        Long id = cartItemDao.insert(entity);
 
         // when
         cartItemDao.delete(memberId, 1L);
@@ -78,7 +78,7 @@ class CartItemDaoTest {
     void 장바구니_항목을_ID로_삭제한다() {
         // given
         CartItemEntity entity = new CartItemEntity(null, 10, 1L, "상품1", "image", 1000, memberId);
-        Long id = cartItemDao.save(entity);
+        Long id = cartItemDao.insert(entity);
 
         // when
         cartItemDao.deleteById(id);
@@ -92,8 +92,8 @@ class CartItemDaoTest {
         // given
         CartItemEntity entity1 = new CartItemEntity(null, 10, 1L, "상품1", "image", 1000, memberId);
         CartItemEntity entity2 = new CartItemEntity(null, 20, 2L, "상품2", "image", 2000, memberId);
-        cartItemDao.save(entity1);
-        cartItemDao.save(entity2);
+        cartItemDao.insert(entity1);
+        cartItemDao.insert(entity2);
 
         // when
         List<CartItemEntity> byMemberId = cartItemDao.findByMemberId(memberId);

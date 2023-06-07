@@ -81,6 +81,6 @@ class OrderDaoTest {
 
     private Long 주문_저장(Long memberId) {
         OrderEntity orderEntity = new OrderEntity(null, memberId);
-        return orderDao.save(orderEntity);
+        return orderDao.insert(orderEntity);
     }
 }

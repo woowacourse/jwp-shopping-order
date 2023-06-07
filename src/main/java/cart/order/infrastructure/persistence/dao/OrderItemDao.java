@@ -27,7 +27,7 @@ public class OrderItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void saveAll(List<OrderItemEntity> orderItems) {
+    public void insertAll(List<OrderItemEntity> orderItems) {
         SqlParameterSource[] array = orderItems.stream()
                 .map(BeanPropertySqlParameterSource::new)
                 .collect(Collectors.toList())

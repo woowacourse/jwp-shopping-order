@@ -24,7 +24,7 @@ public class JdbcCouponRepository implements CouponRepository {
 
     @Override
     public Long save(Coupon coupon) {
-        return couponDao.save(CouponEntityMapper.toEntity(coupon));
+        return couponDao.insert(CouponEntityMapper.toEntity(coupon));
     }
 
     @Override

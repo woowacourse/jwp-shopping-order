@@ -35,7 +35,7 @@ class CouponDaoTest {
                 50);
 
         // when
-        Long id = couponDao.save(coupon);
+        Long id = couponDao.insert(coupon);
 
         // then
         assertThat(id).isNotNull();
@@ -52,7 +52,7 @@ class CouponDaoTest {
                 TargetType.ALL,
                 1L,
                 50);
-        Long id = couponDao.save(coupon);
+        Long id = couponDao.insert(coupon);
 
         // when
         CouponEntity find = couponDao.findById(id).get();
@@ -74,7 +74,7 @@ class CouponDaoTest {
                 TargetType.ALL,
                 1L,
                 50);
-        Long id1 = couponDao.save(coupon1);
+        Long id1 = couponDao.insert(coupon1);
         CouponEntity coupon2 = new CouponEntity(
                 null,
                 "말랑이 더 멋진쿠폰",
@@ -83,7 +83,7 @@ class CouponDaoTest {
                 TargetType.ALL,
                 1L,
                 70);
-        Long id2 = couponDao.save(coupon2);
+        Long id2 = couponDao.insert(coupon2);
 
         // when
         List<CouponEntity> allByMemberId = couponDao.findAllByMemberId(1L);
@@ -103,7 +103,7 @@ class CouponDaoTest {
                 TargetType.ALL,
                 1L,
                 50);
-        Long id1 = couponDao.save(coupon1);
+        Long id1 = couponDao.insert(coupon1);
         CouponEntity coupon2 = new CouponEntity(
                 null,
                 "말랑이 더 멋진쿠폰",
@@ -112,7 +112,7 @@ class CouponDaoTest {
                 TargetType.ALL,
                 1L,
                 70);
-        Long id2 = couponDao.save(coupon2);
+        Long id2 = couponDao.insert(coupon2);
 
         List<Long> ids = List.of(id1, id2);
 

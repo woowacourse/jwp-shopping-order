@@ -39,7 +39,7 @@ class JdbcProductRepositoryTest {
     void 상품을_저장한다() {
         // given
         Product product = new Product("말랑", 100, "image");
-        given(productDao.save(any()))
+        given(productDao.insert(any()))
                 .willReturn(1L);
 
         // when

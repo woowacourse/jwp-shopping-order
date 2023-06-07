@@ -27,7 +27,7 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(OrderEntity order) {
+    public Long insert(OrderEntity order) {
         SqlParameterSource source = new BeanPropertySqlParameterSource(order);
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }

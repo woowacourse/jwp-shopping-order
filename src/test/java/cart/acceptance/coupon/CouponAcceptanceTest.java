@@ -51,28 +51,28 @@ public class CouponAcceptanceTest extends AcceptanceTest {
         productId1 = 생성된_ID(상품_생성_요청("코코닥", 10000, "image1"));
         productId2 = 생성된_ID(상품_생성_요청("말랑", 20000, "image2"));
 
-        couponDao.save(new CouponEntity(1L,
+        couponDao.insert(new CouponEntity(1L,
                 "전체 비율 할인 쿠폰",
                 회원1.getId(),
                 DiscountType.RATE,
                 TargetType.ALL,
                 null,
                 50));
-        couponDao.save(new CouponEntity(2L,
+        couponDao.insert(new CouponEntity(2L,
                 "전체 고정 할인 쿠폰",
                 회원1.getId(),
                 DiscountType.FIX,
                 TargetType.ALL,
                 null,
                 1000));
-        couponDao.save(new CouponEntity(3L,
+        couponDao.insert(new CouponEntity(3L,
                 "특정 비율 할인 쿠폰",
                 회원1.getId(),
                 DiscountType.RATE,
                 TargetType.SPECIFIC,
                 productId1,
                 100));
-        couponDao.save(new CouponEntity(4L,
+        couponDao.insert(new CouponEntity(4L,
                 "특정 고정 할인 쿠폰",
                 회원1.getId(),
                 DiscountType.FIX,
@@ -80,7 +80,7 @@ public class CouponAcceptanceTest extends AcceptanceTest {
                 productId2,
                 2000));
 
-        couponDao.save(new CouponEntity(5L,
+        couponDao.insert(new CouponEntity(5L,
                 "다른 회원의 쿠폰",
                 회원2.getId(),
                 DiscountType.RATE,

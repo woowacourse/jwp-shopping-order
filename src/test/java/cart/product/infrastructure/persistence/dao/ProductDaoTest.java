@@ -26,7 +26,7 @@ class ProductDaoTest {
         ProductEntity productEntity = new ProductEntity(null, "말랑", 1000, "image");
 
         // when
-        Long id = productDao.save(productEntity);
+        Long id = productDao.insert(productEntity);
 
         // then
         ProductEntity found = productDao.findById(id).get();
@@ -39,7 +39,7 @@ class ProductDaoTest {
     void 상품을_수정한다() {
         // given
         ProductEntity productEntity = new ProductEntity(null, "말랑", 1000, "image");
-        Long id = productDao.save(productEntity);
+        Long id = productDao.insert(productEntity);
         ProductEntity updated = new ProductEntity(id, "코코닥", 3000, "image");
 
         // when
@@ -55,7 +55,7 @@ class ProductDaoTest {
     void 상품을_제거한다() {
         // given
         ProductEntity productEntity = new ProductEntity(null, "말랑", 1000, "image");
-        Long id = productDao.save(productEntity);
+        Long id = productDao.insert(productEntity);
 
         // when
         productDao.delete(id);
@@ -68,7 +68,7 @@ class ProductDaoTest {
     void 모든_상품을_조회한다() {
         // given
         ProductEntity productEntity = new ProductEntity(null, "말랑", 1000, "image");
-        Long id = productDao.save(productEntity);
+        Long id = productDao.insert(productEntity);
 
         // when
         List<ProductEntity> all = productDao.findAll();

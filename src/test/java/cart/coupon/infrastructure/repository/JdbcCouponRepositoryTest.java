@@ -39,7 +39,7 @@ class JdbcCouponRepositoryTest {
     @Test
     void 쿠폰을_저장한다() {
         // given
-        given(couponDao.save(any()))
+        given(couponDao.insert(any()))
                 .willReturn(1L);
         Coupon 코코닥_불쌍해서_주는_쿠폰 = new Coupon(
                 "코코닥 불쌍해서 주는 쿠폰",

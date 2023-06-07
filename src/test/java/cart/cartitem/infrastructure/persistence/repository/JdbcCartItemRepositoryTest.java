@@ -40,7 +40,7 @@ class JdbcCartItemRepositoryTest {
         Product product = new Product("말랑", 1000, "image");
         Member member = new Member(null, "email", "1234");
         CartItem cartItem = new CartItem(product, member);
-        given(cartItemDao.save(any()))
+        given(cartItemDao.insert(any()))
                 .willReturn(1L);
 
         // when
@@ -49,7 +49,7 @@ class JdbcCartItemRepositoryTest {
         // then
         assertThat(id).isEqualTo(1L);
         then(cartItemDao).should(times(1))
-                .save(any());
+                .insert(any());
     }
 
     @Test

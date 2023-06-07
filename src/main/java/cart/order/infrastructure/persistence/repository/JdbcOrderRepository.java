@@ -31,11 +31,11 @@ public class JdbcOrderRepository implements OrderRepository {
     @Override
     public Long save(Order order) {
         OrderEntity orderEntity = OrderEntityMapper.toEntity(order);
-        Long orderId = orderDao.save(orderEntity);
+        Long orderId = orderDao.insert(orderEntity);
         List<OrderItemEntity> orderItemEntities = OrderItemEntityMapper.toEntities(
                 order.getOrderItems(), orderId
         );
-        orderItemDao.saveAll(orderItemEntities);
+        orderItemDao.insertAll(orderItemEntities);
         return orderId;
     }
 

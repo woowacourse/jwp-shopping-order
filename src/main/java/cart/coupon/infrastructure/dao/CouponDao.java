@@ -32,7 +32,7 @@ public class CouponDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(CouponEntity coupon) {
+    public Long insert(CouponEntity coupon) {
         SqlParameterSource source = new BeanPropertySqlParameterSource(coupon);
         return simpleJdbcInsert.executeAndReturnKey(source)
                 .longValue();

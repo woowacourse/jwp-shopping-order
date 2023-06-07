@@ -21,7 +21,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Long save(Product product) {
         ProductEntity entity = ProductEntityMapper.toEntity(product);
-        return productDao.save(entity);
+        return productDao.insert(entity);
     }
 
     @Override

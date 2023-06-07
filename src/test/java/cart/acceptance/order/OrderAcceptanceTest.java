@@ -53,7 +53,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         super.setUp();
         memberDao.addMember(new Member(null, "email", "1234"));
         회원 = memberDao.getMemberById(1L);
-        couponDao.save(new CouponEntity(1L,
+        couponDao.insert(new CouponEntity(1L,
                 "전체 비율 할인 쿠폰",
                 회원.getId(),
                 DiscountType.RATE,

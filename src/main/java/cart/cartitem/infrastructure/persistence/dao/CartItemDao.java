@@ -28,7 +28,7 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(CartItemEntity cartItem) {
+    public Long insert(CartItemEntity cartItem) {
         SqlParameterSource source = new BeanPropertySqlParameterSource(cartItem);
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }

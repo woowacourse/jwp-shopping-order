@@ -24,7 +24,7 @@ public class JdbcCartItemRepository implements CartItemRepository {
     @Override
     public Long save(CartItem cartItem) {
         CartItemEntity entity = CartItemEntityMapper.toEntity(cartItem);
-        return cartItemDao.save(entity);
+        return cartItemDao.insert(entity);
     }
 
     @Override
