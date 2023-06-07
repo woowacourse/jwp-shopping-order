@@ -17,7 +17,7 @@ public class MemberDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<Member> rowMapper = (rs, rowNum) -> {
-        long id = rs.getLong("id");
+        Long id = rs.getLong("id");
         String email = rs.getString("email");
         String password = rs.getString("password");
         long point = rs.getLong("point");
@@ -45,7 +45,7 @@ public class MemberDao {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("email", member.getEmail());
         mapSqlParameterSource.addValue("password", member.getPassword());
-        long memberId = simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
+        Long memberId = simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
         String pointSql = "INSERT INTO member_point (member_id, point) VALUES (?, ?)";
         jdbcTemplate.update(pointSql, memberId, member.getPoint().getAmount());
         return memberId;

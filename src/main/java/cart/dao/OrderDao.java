@@ -15,8 +15,8 @@ public class OrderDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) -> {
-        long orderId = rs.getLong("id");
-        long memberId = rs.getLong("member_id");
+        Long orderId = rs.getLong("id");
+        Long memberId = rs.getLong("member_id");
         LocalDateTime orderCreatedAt = rs.getTimestamp("created_at").toLocalDateTime();
         long spendPoint = rs.getLong("spend_point");
         return new OrderEntity(orderId, memberId, orderCreatedAt, spendPoint);

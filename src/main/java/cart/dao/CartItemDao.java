@@ -22,7 +22,7 @@ public class CartItemDao {
         String imageUrl = rs.getString("image_url");
         Product product = new Product(productId, name, price, imageUrl);
 
-        long memberId = rs.getLong("member_id");
+        Long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
         long point = rs.getLong("point");
         Member member = new Member(memberId, email, null, point);

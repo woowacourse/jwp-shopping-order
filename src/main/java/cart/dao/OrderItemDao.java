@@ -14,13 +14,13 @@ public class OrderItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<OrderItem> rowMapper = (rs, rowNum) -> {
-        long productId = rs.getLong("p_id");
+        Long productId = rs.getLong("p_id");
         String productName = rs.getString("name");
         long productPrice = rs.getLong("p_price");
         String imageUrl = rs.getString("image_url");
         Product product = new Product(productId, productName, productPrice, imageUrl);
 
-        long orderItemId = rs.getLong("oi_id");
+        Long orderItemId = rs.getLong("oi_id");
         int orderItemQuantity = rs.getInt("quantity");
         long orderItemPrice = rs.getLong("oi_price");
         return new OrderItem(orderItemId, product, orderItemQuantity, orderItemPrice);

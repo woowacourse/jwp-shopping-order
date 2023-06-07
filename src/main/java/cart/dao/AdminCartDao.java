@@ -21,7 +21,7 @@ public class AdminCartDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            long memberId = rs.getLong("member_id");
+            Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
