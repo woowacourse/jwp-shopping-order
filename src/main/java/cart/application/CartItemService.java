@@ -30,7 +30,6 @@ public class CartItemService {
 
     public long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.getProductById(cartItemRequest.getProductId());
-        // TODO : CartItems에 추가하는 로직 생성 -> 만약 이미 product, memebr가 같으면 -> 수량을 추가할 수 있도록 변경
         return cartItemRepository.save(new CartItem(member, product));
     }
 

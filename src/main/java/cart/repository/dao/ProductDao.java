@@ -49,7 +49,6 @@ public class ProductDao {
 
     public long createProduct(ProductEntity productEntity) {
         Map<String, Object> params = new HashMap<>();
-        // TODO : id 없는 경우 autoIncrement 값으로 들어갈까?
         params.put("id", productEntity.getId());
         params.put("name", productEntity.getName());
         params.put("price", productEntity.getPrice());
