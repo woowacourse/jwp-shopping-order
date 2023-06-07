@@ -49,7 +49,7 @@ public class CartItem {
         return quantity;
     }
 
-    public void checkOwner(Member member) {
+    public void validateOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.IllegalMember(this, member);
         }
