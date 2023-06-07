@@ -4,9 +4,10 @@ import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.request.MemberCreateRequest;
 import cart.dto.response.OrderDetailResponse;
-import cart.dto.response.OrderItemsResponse;
+import cart.dto.response.OrderItemResponse;
 import cart.dto.response.PointResponse;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,8 @@ public class MemberApiController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<OrderItemsResponse> showOrders(Member member) {
-        OrderItemsResponse response = memberService.findOrders(member);
+    public ResponseEntity<List<OrderItemResponse>> showOrders(Member member) {
+        List<OrderItemResponse> response = memberService.findOrders(member);
         return ResponseEntity.ok(response);
     }
 

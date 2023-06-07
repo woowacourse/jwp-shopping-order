@@ -1,7 +1,6 @@
 package cart.dto.response;
 
 import cart.domain.OrderHistory;
-import cart.domain.OrderItem;
 
 public class OrderItemResponse {
 
@@ -22,9 +21,7 @@ public class OrderItemResponse {
     }
 
     public static OrderItemResponse of(OrderHistory orderHistory) {
-        int totalAmount = orderHistory.getOrderItems().stream()
-                .mapToInt(OrderItem::getQuantity)
-                .sum();
+        int totalAmount = orderHistory.getOrderItems().size();
         String previewName = orderHistory.getOrderItems().get(0).getName();
         return new OrderItemResponse(orderHistory.getId(), orderHistory.getOrderPrice(), totalAmount, previewName);
     }

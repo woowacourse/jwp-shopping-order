@@ -6,10 +6,9 @@ import cart.domain.Member;
 import cart.domain.OrderHistory;
 import cart.dto.request.MemberCreateRequest;
 import cart.dto.response.OrderDetailResponse;
-import cart.dto.response.OrderItemsResponse;
-import cart.exception.ErrorStatus;
-import cart.exception.ShoppingOrderException;
+import cart.dto.response.OrderItemResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +30,11 @@ public class MemberService {
         memberDao.insert(member);
     }
 
-    public OrderItemsResponse findOrders(Member member) {
+    public List<OrderItemResponse> findOrders(Member member) {
         List<OrderHistory> orderHistories = orderHistoryDao.findAllByMemberId(member.getId());
-        return OrderItemsResponse.of(orderHistories);
+        return orderHistories.stream()
+                .map(OrderItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     public OrderDetailResponse findOrder(final Member member, final Long orderId) {

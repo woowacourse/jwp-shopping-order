@@ -7,10 +7,14 @@ import cart.domain.Member;
 import cart.domain.OrderHistory;
 import cart.domain.OrderItem;
 import cart.dto.response.OrderDetailResponse;
-import cart.dto.response.OrderItemsResponse;
+import cart.dto.response.OrderItemResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -39,7 +43,7 @@ public class MemberIntegrationTest extends IntegrationTest {
 
     @DisplayName("회원의 전체 주문 내역을 조회한다.")
     @Test
-    void showOrders() {
+    void showOrders() throws JsonProcessingException {
         Member member = memberTestSupport.builder().build();
         OrderHistory orderHistory1 = orderHistoryTestSupport.builder().member(member).build();
         OrderItem orderItem1 = orderItemTestSupport.builder().orderHistory(orderHistory1).build();
@@ -55,17 +59,21 @@ public class MemberIntegrationTest extends IntegrationTest {
                 .then()
                 .extract();
 
-        OrderItemsResponse orderItemsResponse = response.as(OrderItemsResponse.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<OrderItemResponse> orderItemResponses = objectMapper.readValue(response.asString(),
+                new TypeReference<List<OrderItemResponse>>() {
+                });
+
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(orderItemsResponse.getOrderItems().size()).isEqualTo(2),
-                () -> assertThat(orderItemsResponse.getOrderItems().get(0).getOrderId()).isEqualTo(
+                () -> assertThat(orderItemResponses.size()).isEqualTo(2),
+                () -> assertThat(orderItemResponses.get(0).getOrderId()).isEqualTo(
                         orderHistory1.getId()),
-                () -> assertThat(orderItemsResponse.getOrderItems().get(0).getPreviewName()).isEqualTo(
+                () -> assertThat(orderItemResponses.get(0).getPreviewName()).isEqualTo(
                         orderItem1.getName()),
-                () -> assertThat(orderItemsResponse.getOrderItems().get(1).getOrderId()).isEqualTo(
+                () -> assertThat(orderItemResponses.get(1).getOrderId()).isEqualTo(
                         orderHistory2.getId()),
-                () -> assertThat(orderItemsResponse.getOrderItems().get(1).getPreviewName()).isEqualTo(
+                () -> assertThat(orderItemResponses.get(1).getPreviewName()).isEqualTo(
                         orderItem3.getName())
         );
     }
