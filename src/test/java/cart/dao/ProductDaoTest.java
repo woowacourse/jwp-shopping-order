@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ class ProductDaoTest {
 
     @Test
     void findAllByIds() {
-        List<Product> products = productDao.findAllByIds(List.of(1L, 2L));
+        List<ProductEntity> products = productDao.findAllByIds(List.of(1L, 2L));
 
         assertAll(
                 () -> assertThat(products.size()).isEqualTo(2),

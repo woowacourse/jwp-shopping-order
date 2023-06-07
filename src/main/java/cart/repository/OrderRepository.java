@@ -5,10 +5,7 @@ import cart.dao.OrderItemDao;
 import cart.dao.PointHistoryDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
-import cart.entity.OrderEntity;
-import cart.entity.OrderItemEntity;
-import cart.entity.PointEntity;
-import cart.entity.PointHistoryEntity;
+import cart.entity.*;
 import cart.exception.OrderException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -160,7 +157,9 @@ public class OrderRepository {
 
     private Product getProduct(OrderItemEntity orderItemEntity) {
         Long productId = orderItemEntity.getProductId();
-        return productDao.getProductById(productId);
+        ProductEntity productEntity = productDao.getProductById(productId);
+        return new Product(productEntity.getId(), productEntity.getName(),
+                productEntity.getPrice(), productEntity.getImageUrl());
     }
 
     private List<Long> getOrderIds(List<OrderEntity> orderEntities) {

@@ -1,12 +1,12 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.*;
 import cart.exception.OrderException;
+import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
+import cart.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,10 +30,10 @@ import static org.mockito.Mockito.when;
 class OrderServiceTest {
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Mock
-    private CartItemDao cartItemDao;
+    private CartItemRepository cartItemRepository;
 
     @Mock
     private OrderRepository orderRepository;
@@ -46,7 +46,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService(productDao, cartItemDao, orderRepository, pointRepository,
+        orderService = new OrderService(productRepository, cartItemRepository, orderRepository, pointRepository,
                 new OrderPage(10), new OrderPointAccumulationPolicy(new OrderPointExpirePolicy()));
         member = new Member(1L, "kong", "123");
     }
@@ -85,7 +85,7 @@ class OrderServiceTest {
 
         when(pointRepository.findUsablePointsByMemberId(1L)).thenReturn(
                 new Points(List.of(point1, point2, point3)));
-        when(productDao.findAllByIds(List.of(1L, 2L))).thenReturn(List.of(product1, product2));
+        when(productRepository.findAllByIds(List.of(1L, 2L))).thenReturn(List.of(product1, product2));
         when(orderRepository.save(1L, order)).thenReturn(1L);
 
         assertThatCode(() ->
@@ -109,7 +109,7 @@ class OrderServiceTest {
 
         when(pointRepository.findUsablePointsByMemberId(1L)).thenReturn(
                 new Points(List.of(point1, point2, point3)));
-        when(productDao.findAllByIds(List.of(1L, 2L))).thenReturn(List.of(product1, product2));
+        when(productRepository.findAllByIds(List.of(1L, 2L))).thenReturn(List.of(product1, product2));
         when(orderRepository.save(1L, order)).thenReturn(1L);
 
         assertThatCode(() ->

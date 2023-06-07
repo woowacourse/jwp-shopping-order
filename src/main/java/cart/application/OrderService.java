@@ -1,12 +1,13 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.*;
 import cart.exception.OrderException;
+import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,18 +21,18 @@ public class OrderService {
 
     private static final String INVALID_PRODUCT_ID_MESSAGE = "올바른 상품 번호를 입력해주세요.";
 
-    private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final PointRepository pointRepository;
 
     private final OrderPage orderPage;
     private final PointAccumulationPolicy pointAccumulationPolicy;
 
-    public OrderService(ProductDao productDao, CartItemDao cartItemDao, OrderRepository orderRepository,
+    public OrderService(ProductRepository productRepository, CartItemRepository cartItemRepository, OrderRepository orderRepository,
                         PointRepository pointRepository, OrderPage orderPage, PointAccumulationPolicy pointAccumulationPolicy) {
-        this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+        this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
         this.pointRepository = pointRepository;
         this.orderPage = orderPage;
@@ -85,7 +86,7 @@ public class OrderService {
     private Map<Long, Product> getProducts(List<ProductOrderRequest> productOrderRequests) {
         List<Long> productIds = getProductIdsByProductOrderRequest(productOrderRequests);
 
-        List<Product> products = productDao.findAllByIds(productIds);
+        List<Product> products = productRepository.findAllByIds(productIds);
 
         Map<Long, Product> productsById = new HashMap<>();
         for (Product product : products) {
@@ -129,7 +130,7 @@ public class OrderService {
     private void deleteCartItem(Member member, List<OrderItem> orderItems) {
         List<Long> productIds = getProductIdsByOrderItems(orderItems);
         for (Long productId : productIds) {
-            cartItemDao.delete(member.getId(), productId);
+            cartItemRepository.delete(member.getId(), productId);
         }
     }
 
