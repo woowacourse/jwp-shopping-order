@@ -1,14 +1,18 @@
 package cart.domain;
 
-public class Member {
-    private Long id;
-    private String email;
-    private String password;
+import java.util.Objects;
 
-    public Member(Long id, String email, String password) {
+public class Member {
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final int grade;
+
+    public Member(Long id, String email, String password, int grade) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.grade = grade;
     }
 
     public Long getId() {
@@ -23,7 +27,28 @@ public class Member {
         return password;
     }
 
+    public Integer getGrade() {
+        return grade;
+    }
+
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
