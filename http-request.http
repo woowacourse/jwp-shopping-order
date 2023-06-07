@@ -21,13 +21,13 @@ Content-Type: application/json
 GET http://localhost:8080/products/1
 Content-Type: application/json
 
-### 깃짱 수정 요청 (가격 수정)
+### 주노 수정 요청 (가격 수정)
 
-PUT http://localhost:8080/products/1
+PUT http://localhost:8080/products/6
 Content-Type: application/json
 
 {
-  "name": "깃짱코딩",
+  "name": "주노",
   "price": 150000,
   "imageUrl": "#"
 }
@@ -87,12 +87,6 @@ Content-Type: application/json
   "quantity": 3
 }
 
-### 장바구니 아이템 삭제
-
-DELETE http://localhost:8080/cart-items/1
-Authorization: Basic YUBhLmNvbToxMjM0
-
-
 ### 장바구니 내 아이템 구매
 
 POST http://localhost:8080/pay
@@ -108,7 +102,7 @@ Content-Type: application/json
       "cartItemId": 3
     }
   ],
-  "originalPrice": 26000,
+  "originalPrice": 52000,
   "points": 100
 }
 
