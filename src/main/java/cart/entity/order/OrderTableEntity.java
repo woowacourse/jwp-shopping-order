@@ -1,18 +1,19 @@
 package cart.entity.order;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class OrderTableEntity {
 
     private final Long id;
     private final Long memberId;
-    private final Date createAt;
+    private final LocalDateTime createAt;
     private final int deliveryFee;
 
-    public OrderTableEntity(final Long id, final Long memberId, final Date createAt, final int deliveryFee) {
+    public OrderTableEntity(final Long id, final Long memberId, final Timestamp createAt, final int deliveryFee) {
         this.id = id;
         this.memberId = memberId;
-        this.createAt = createAt;
+        this.createAt = createAt.toLocalDateTime();
         this.deliveryFee = deliveryFee;
     }
 
@@ -24,7 +25,7 @@ public class OrderTableEntity {
         return memberId;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 

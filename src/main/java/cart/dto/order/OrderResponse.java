@@ -5,19 +5,19 @@ import cart.dto.history.OrderHistory;
 import cart.dto.product.DeliveryFeeResponse;
 import cart.entity.order.ProductHistoryResponse;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderResponse {
 
     private Long orderId;
-    private final Date orderedTime;
+    private final LocalDateTime orderedTime;
     private final List<ProductHistoryResponse> products;
     private final DeliveryFeeResponse deliveryPrice;
     private final List<CouponResponse> coupons;
 
-    private OrderResponse(final long orderId, final Date orderedTime, final List<ProductHistoryResponse> products, final DeliveryFeeResponse deliveryPrice, final List<CouponResponse> coupons) {
+    private OrderResponse(final long orderId, final LocalDateTime orderedTime, final List<ProductHistoryResponse> products, final DeliveryFeeResponse deliveryPrice, final List<CouponResponse> coupons) {
         this.orderId = orderId;
         this.orderedTime = orderedTime;
         this.products = products;
@@ -25,7 +25,7 @@ public class OrderResponse {
         this.coupons = coupons;
     }
 
-    public OrderResponse(final Date orderedTime, final List<ProductHistoryResponse> products, final DeliveryFeeResponse deliveryPrice, final List<CouponResponse> coupons) {
+    public OrderResponse(final LocalDateTime orderedTime, final List<ProductHistoryResponse> products, final DeliveryFeeResponse deliveryPrice, final List<CouponResponse> coupons) {
         this.orderedTime = orderedTime;
         this.products = products;
         this.deliveryPrice = deliveryPrice;
@@ -48,7 +48,7 @@ public class OrderResponse {
         return orderId;
     }
 
-    public Date getOrderedTime() {
+    public LocalDateTime getOrderedTime() {
         return orderedTime;
     }
 

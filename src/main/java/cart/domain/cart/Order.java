@@ -8,19 +8,18 @@ import cart.dto.order.OrderResponse;
 import cart.dto.product.DeliveryFeeResponse;
 import cart.entity.order.ProductHistoryResponse;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Order {
 
-    private final Timestamp timestamp;
+    private final LocalDateTime localDateTime;
     private final MemberCoupons memberCoupons;
     private final Cart cart;
 
     public Order(final MemberCoupons memberCoupons, final Cart cart) {
-        this.timestamp = Timestamp.valueOf(LocalDateTime.now());
+        this.localDateTime = LocalDateTime.now();
         this.memberCoupons = memberCoupons;
         this.cart = cart;
     }
@@ -46,7 +45,7 @@ public class Order {
 
         int deliveryFee = cart.calculateDeliveryFeeUsingCoupons(coupons);
 
-        return new OrderResponse(timestamp, productsResponse, DeliveryFeeResponse.from(deliveryFee), couponsResponse);
+        return new OrderResponse(localDateTime, productsResponse, DeliveryFeeResponse.from(deliveryFee), couponsResponse);
     }
 
     private void applyCoupon(List<OrderedProductHistory> productHistories, List<Coupon> coupons) {

@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,7 @@ public class OrderDao {
             new OrderTableEntity(
                     rs.getLong("id"),
                     rs.getLong("member_id"),
-                    rs.getDate("created_at"),
+                    rs.getTimestamp("created_at"),
                     rs.getInt("delivery_fee")
             );
 
@@ -47,7 +46,7 @@ public class OrderDao {
         Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("member_id", memberId);
-        parameters.put("created_at", Timestamp.valueOf(LocalDateTime.now()));
+        parameters.put("created_at", LocalDateTime.now());
         parameters.put("delivery_fee", deliveryFee);
 
         Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
