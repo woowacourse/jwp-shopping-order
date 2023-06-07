@@ -4,6 +4,7 @@ import cart.cartitem.dao.CartItemDao;
 import cart.cartitem.domain.CartItem;
 import cart.init.DBInit;
 import cart.member.dao.MemberDao;
+import cart.productpoint.dao.ProductPointDao;
 import cart.product.dao.ProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,8 @@ class CartItemRepositoryTest extends DBInit {
         final CartItemDao cartItemDao = new CartItemDao(jdbcTemplate);
         final ProductDao productDao = new ProductDao(jdbcTemplate);
         final MemberDao memberDao = new MemberDao(jdbcTemplate);
-        cartItemRepository = new CartItemRepository(cartItemDao, productDao, memberDao);
+        final ProductPointDao productPointDao = new ProductPointDao(jdbcTemplate);
+        cartItemRepository = new CartItemRepository(cartItemDao, productDao, memberDao, productPointDao);
     }
 
     @Test

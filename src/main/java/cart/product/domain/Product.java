@@ -1,51 +1,50 @@
 package cart.product.domain;
 
+import cart.productpoint.domain.ProductPoint;
+import cart.productpoint.repository.ProductPointEntity;
 import cart.product.repository.ProductEntity;
 
 import java.util.Objects;
 
 public class Product {
     private Long id;
-    private String name;
-    private Long price;
-    private String imageUrl;
-    private Double pointRatio;
-    private boolean pointAvailable;
+    private final String name;
+    private final Long price;
+    private final String imageUrl;
+    private final ProductPoint productPoint;
     
     public Product(final String name, final Long price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.pointRatio = pointRatio;
-        this.pointAvailable = pointAvailable;
+        this(null, name, price, imageUrl, new ProductPoint(pointRatio, pointAvailable));
     }
     
     public Product(final Long id, final String name, final Long price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
+        this(id, name, price, imageUrl, new ProductPoint(pointRatio, pointAvailable));
+    }
+    
+    public Product(final Long id, final String name, final Long price, final String imageUrl, final ProductPoint productPoint) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.pointRatio = pointRatio;
-        this.pointAvailable = pointAvailable;
+        this.productPoint = productPoint;
     }
     
-    public static Product from(final ProductEntity productEntity) {
+    public static Product of(final ProductEntity productEntity, final ProductPointEntity productPointEntity) {
         return new Product(
                 productEntity.getId(),
                 productEntity.getName(),
                 productEntity.getPrice(),
                 productEntity.getImageUrl(),
-                productEntity.getPointRatio(),
-                productEntity.isPointAvailable()
+                new ProductPoint(productPointEntity.getId(), productPointEntity.getPointRatio(), productPointEntity.isPointAvailable())
         );
     }
     
     public Long calculatePointToAdd() {
-        return Math.round(price * (pointRatio / 100.0));
+        return productPoint.calculatePointToAdd(price);
     }
     
     public Long calculateAvailablePoint() {
-        if (pointAvailable) {
+        if (productPoint.isPointAvailable()) {
             return price;
         }
         
@@ -68,27 +67,23 @@ public class Product {
         return imageUrl;
     }
     
-    public Double getPointRatio() {
-        return pointRatio;
+    public ProductPoint getPoint() {
+        return productPoint;
     }
     
-    public boolean getPointAvailable() {
-        return pointAvailable;
-    }
-
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return pointAvailable == product.pointAvailable && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(pointRatio, product.pointRatio);
+        final Product product = (Product) o;
+        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(productPoint, product.productPoint);
     }
-
+    
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, imageUrl, pointRatio, pointAvailable);
+        return Objects.hash(id, name, price, imageUrl, productPoint);
     }
-
+    
     @Override
     public String toString() {
         return "Product{" +
@@ -96,8 +91,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", pointRatio=" + pointRatio +
-                ", pointAvailable=" + pointAvailable +
+                ", point=" + productPoint +
                 '}';
     }
 }

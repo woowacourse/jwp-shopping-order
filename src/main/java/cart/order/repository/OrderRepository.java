@@ -7,6 +7,8 @@ import cart.order.dao.OrderInfoDao;
 import cart.order.domain.Order;
 import cart.order.domain.OrderInfo;
 import cart.order.dto.OrderInfoEntity;
+import cart.productpoint.dao.ProductPointDao;
+import cart.productpoint.repository.ProductPointEntity;
 import cart.product.dao.ProductDao;
 import cart.member.domain.Member;
 import cart.product.domain.Product;
@@ -23,12 +25,14 @@ public class OrderRepository {
     private final OrderInfoDao orderInfoDao;
     private final MemberDao memberDao;
     private final ProductDao productDao;
+    private final ProductPointDao productPointDao;
     
-    public OrderRepository(final OrderDao orderDao, final OrderInfoDao orderInfoDao, final MemberDao memberDao, final ProductDao productDao) {
+    public OrderRepository(final OrderDao orderDao, final OrderInfoDao orderInfoDao, final MemberDao memberDao, final ProductDao productDao, final ProductPointDao productPointDao) {
         this.orderDao = orderDao;
         this.orderInfoDao = orderInfoDao;
         this.memberDao = memberDao;
         this.productDao = productDao;
+        this.productPointDao = productPointDao;
     }
     
     public Long save(final Long memberId, final Order order) {
@@ -69,9 +73,10 @@ public class OrderRepository {
     
     private OrderInfo toOrderInfo(final OrderInfoEntity orderInfoEntity) {
         final ProductEntity productById = productDao.getProductById(orderInfoEntity.getProductId());
+        final ProductPointEntity productPointEntity = productPointDao.getProductPointById(productById.getProductPointId());
         return OrderInfo.of(
                 orderInfoEntity,
-                Product.from(productById)
+                Product.of(productById, productPointEntity)
         );
     }
     
@@ -92,10 +97,14 @@ public class OrderRepository {
     
     private List<OrderInfo> getOrderInfos(final Long orderId) {
         return orderInfoDao.findByOrderId(orderId).stream()
-                .map(orderInfoEntity -> OrderInfo.of(
-                        orderInfoEntity,
-                        Product.from(productDao.getProductById(orderInfoEntity.getProductId()))
-                ))
+                .map(orderInfoEntity -> {
+                    final ProductEntity productEntity = productDao.getProductById(orderInfoEntity.getProductId());
+                    final ProductPointEntity productPointEntity = productPointDao.getProductPointById(productEntity.getProductPointId());
+                    return OrderInfo.of(
+                            orderInfoEntity,
+                            Product.of(productEntity, productPointEntity)
+                    );
+                })
                 .collect(Collectors.toUnmodifiableList());
     }
 }

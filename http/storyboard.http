@@ -87,14 +87,14 @@ Content-Type: application/json
 ###
 # @name getCurrentPoint
 # @description Retrieves the current points for a specific member
-GET http://localhost:8080/point
+GET http://localhost:8080/productPoint
 Content-Type: application/json
 Authorization: Basic YUBhLmNvbToxMjM0
 
 > Expected response:
 > Status: 200 Ok
 > {
->   "point": 30000
+>   "productPoint": 30000
 > }
 
 

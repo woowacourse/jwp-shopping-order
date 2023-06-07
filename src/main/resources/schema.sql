@@ -3,9 +3,14 @@ CREATE TABLE IF NOT EXISTS product (
     name VARCHAR(255) NOT NULL,
     price BIGINT NOT NULL,
     image_url VARCHAR(255) NOT NULL,
+    point_id BIGINT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS product_point (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     point_ratio DOUBLE NOT NULL,
     point_available BOOLEAN
-);
+    );
 
 CREATE TABLE IF NOT EXISTS member (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,

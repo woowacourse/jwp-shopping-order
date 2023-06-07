@@ -1,8 +1,7 @@
 package cart.product.dto;
 
+import cart.productpoint.domain.ProductPoint;
 import cart.product.domain.Product;
-
-import java.util.Objects;
 
 public class ProductResponse {
     private Long id;
@@ -22,7 +21,15 @@ public class ProductResponse {
     }
     
     public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getPointRatio(), product.getPointAvailable());
+        final ProductPoint productPoint = product.getPoint();
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                productPoint.getPointRatio(),
+                productPoint.isPointAvailable()
+        );
     }
     
     public Long getId() {

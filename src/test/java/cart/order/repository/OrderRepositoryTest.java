@@ -6,6 +6,7 @@ import cart.order.dao.OrderDao;
 import cart.order.dao.OrderInfoDao;
 import cart.order.domain.Order;
 import cart.order.domain.OrderInfo;
+import cart.productpoint.dao.ProductPointDao;
 import cart.product.dao.ProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,8 @@ class OrderRepositoryTest extends DBInit {
         final OrderInfoDao orderInfoDao = new OrderInfoDao(jdbcTemplate);
         final MemberDao memberDao = new MemberDao(jdbcTemplate);
         final ProductDao productDao = new ProductDao(jdbcTemplate);
-        orderRepository = new OrderRepository(orderDao, orderInfoDao, memberDao, productDao);
+        final ProductPointDao productPointDao = new ProductPointDao(jdbcTemplate);
+        orderRepository = new OrderRepository(orderDao, orderInfoDao, memberDao, productDao, productPointDao);
     }
 
     @Test

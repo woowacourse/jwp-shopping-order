@@ -5,6 +5,8 @@ import cart.cartitem.domain.CartItem;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member.repository.MemberEntity;
+import cart.productpoint.dao.ProductPointDao;
+import cart.productpoint.repository.ProductPointEntity;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.repository.ProductEntity;
@@ -18,11 +20,13 @@ public class CartItemRepository {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final MemberDao memberDao;
+    private final ProductPointDao productPointDao;
     
-    public CartItemRepository(final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao) {
+    public CartItemRepository(final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao, final ProductPointDao productPointDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
         this.memberDao = memberDao;
+        this.productPointDao = productPointDao;
     }
     
     public List<CartItem> findByMemberId(final Long memberId) {
@@ -36,10 +40,11 @@ public class CartItemRepository {
         final Long productId = cartItemEntity.getProductId();
         final ProductEntity productEntity = productDao.getProductById(productId);
         final MemberEntity memberEntity = memberDao.getMemberById(memberId);
+        final ProductPointEntity productPointEntity = productPointDao.getProductPointById(productEntity.getProductPointId());
         return new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
-                Product.from(productEntity),
+                Product.of(productEntity, productPointEntity),
                 Member.from(memberEntity)
         );
     }
@@ -57,10 +62,11 @@ public class CartItemRepository {
     private CartItem toCartItem(final CartItemEntity cartItemEntity) {
         final ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
         final MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId());
+        final ProductPointEntity productPointEntity = productPointDao.getProductPointById(productEntity.getProductPointId());
         return new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
-                Product.from(productEntity),
+                Product.of(productEntity, productPointEntity),
                 Member.from(memberEntity)
         );
     }
