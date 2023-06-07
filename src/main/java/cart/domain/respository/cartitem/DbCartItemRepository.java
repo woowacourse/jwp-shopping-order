@@ -17,7 +17,7 @@ public class DbCartItemRepository implements CartItemRepository {
 
     @Override
     public CartItem save(final CartItem cartItem) {
-        return cartItemDao.save(cartItem);
+        return cartItemDao.insert(cartItem);
     }
 
     @Override

@@ -105,6 +105,6 @@ class OrderDaoTest {
     }
 
     private void createCartItem(CartItem cartItem) {
-        cartItemDao.save(cartItem);
+        cartItemDao.insert(cartItem);
     }
 }
