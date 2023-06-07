@@ -20,6 +20,14 @@ public class CartItemEntity {
         this(null, memberId, productId, quantity);
     }
 
+    public CartItemEntity(final Member member, final Product product, final Quantity quantity) {
+        this(null, member.getId(), product.getId(), quantity.getValue());
+    }
+
+    public CartItemEntity(final Long id, final Member member, final Product product, final Quantity quantity) {
+        this(id, member.getId(), product.getId(), quantity.getValue());
+    }
+
     public Long getId() {
         return id;
     }

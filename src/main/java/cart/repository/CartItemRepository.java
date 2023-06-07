@@ -22,7 +22,11 @@ public class CartItemRepository {
     }
 
     public Long save(final CartItem cartItem) {
-        CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getMember().getId(), cartItem.getProduct().getId(), cartItem.getQuantityValue());
+        CartItemEntity cartItemEntity = new CartItemEntity(
+                cartItem.getMember(),
+                cartItem.getProduct(),
+                cartItem.getQuantity()
+        );
 
         return cartItemDao.insert(cartItemEntity);
     }
@@ -50,7 +54,12 @@ public class CartItemRepository {
     }
 
     public void update(final CartItem cartItem) {
-        CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(), cartItem.getProduct().getId(), cartItem.getQuantityValue());
+        CartItemEntity cartItemEntity = new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getMember(),
+                cartItem.getProduct(),
+                cartItem.getQuantity()
+        );
 
         cartItemDao.update(cartItemEntity);
     }
