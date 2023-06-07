@@ -8,11 +8,13 @@ import cart.dto.cartItem.CartItemResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;

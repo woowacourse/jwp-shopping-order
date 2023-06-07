@@ -12,6 +12,7 @@ import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
