@@ -7,7 +7,7 @@ import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
 import cart.repository.CartItemRepository;
-import cart.repository.dao.CartItemDao;
+import cart.repository.MemberRepository;
 import cart.repository.dao.MemberDao;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -41,6 +41,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Autowired
     private CartItemRepository cartItemRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     private static final int USED_POINT = 100;
 
     private Member member;
@@ -54,7 +57,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         memberDao = new MemberDao(jdbcTemplate);
 
-        member = memberDao.getMemberById(1L);
+        member = memberRepository.getMemberById(1L);
 
         cartItem1 = cartItemRepository.findCartItemById(1L);
         cartItem2 = cartItemRepository.findCartItemById(2L);
@@ -99,7 +102,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     void 주문_요청시_포인트가_사용자의_소유_포인트보다_많은_경우_실패한다() {
-        int illegalUsedPoint = member.getPoint() + 100;
+        int illegalUsedPoint = member.getAvailablePoint() + 100;
 
         ExtractableResponse<Response> response = requestPostOrderProducts(member, orderItems, illegalUsedPoint);
 
