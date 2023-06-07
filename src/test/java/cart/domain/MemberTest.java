@@ -1,12 +1,12 @@
 package cart.domain;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import cart.exception.IllegalUsePointException;
+import cart.exception.OrderException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class MemberTest {
 
@@ -70,6 +70,6 @@ class MemberTest {
 
         // expect
         assertThatThrownBy(() -> member.usePoint(usePoint))
-                .isInstanceOf(IllegalUsePointException.class);
+                .isInstanceOf(OrderException.IllegalUsePoint.class);
     }
 }

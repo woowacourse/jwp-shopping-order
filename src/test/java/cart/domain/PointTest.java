@@ -1,14 +1,11 @@
 package cart.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import cart.exception.IllegalUsePointException;
+import cart.exception.OrderException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import static org.assertj.core.api.Assertions.*;
 
 class PointTest {
 
@@ -40,16 +37,20 @@ class PointTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2999})
-    void 사용한_포인트가_사용할_수_없는_포인트이면_예외를_발생한다(final int usePoint) {
-        assertThatThrownBy(() -> Point.validateUsablePoint(usePoint))
-                .isInstanceOf(IllegalUsePointException.class);
+    void 사용한_포인트가_정책_상_사용할_수_없는_포인트이면_예외를_발생한다(final int usePoint) {
+        Point point = new Point(1000);
+
+        assertThatThrownBy(() -> point.validateUsablePoint(usePoint))
+                .isInstanceOf(OrderException.IllegalUsePoint.class);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {3000, 3001})
-    void 사용한_포인트가_사용할_수_있는_포인트면_예외를_발생하지_않는다(final int usePoint) {
+    void 사용한_포인트가_정책_상_사용할_수_있는_포인트면_예외를_발생하지_않는다(final int usePoint) {
+        Point point = new Point(6000);
+
         assertThatNoException().isThrownBy(
-                () -> Point.validateUsablePoint(usePoint)
+                () -> point.validateUsablePoint(usePoint)
         );
     }
 
@@ -100,6 +101,6 @@ class PointTest {
 
         // expect
         assertThatThrownBy(() -> point.validateUsePoint(usePoint))
-                .isInstanceOf(IllegalUsePointException.class);
+                .isInstanceOf(OrderException.IllegalUsePoint.class);
     }
 }

@@ -1,13 +1,14 @@
 package cart.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import cart.domain.Member;
 import cart.domain.Point;
-import cart.exception.MemberNotFoundException;
-import java.util.List;
+import cart.exception.DataNotFoundException;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MemberRepositoryTest extends RepositoryTest {
 
@@ -52,14 +53,14 @@ class MemberRepositoryTest extends RepositoryTest {
     void ID로_존재하지_않는_회원을_조회하면_예외가_발생한다() {
         // expect
         assertThatThrownBy(() -> memberRepository.findById(2143214L))
-                .isInstanceOf(MemberNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 
     @Test
     void 이메일로_존재하지_않는_회원을_조회하면_예외가_발생한다() {
         // expect
         assertThatThrownBy(() -> memberRepository.findByEmail("xxx@email.com"))
-                .isInstanceOf(MemberNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 
     @Test
@@ -101,6 +102,6 @@ class MemberRepositoryTest extends RepositoryTest {
 
         // then
         assertThatThrownBy(() -> memberRepository.findById(savedId))
-                .isInstanceOf(MemberNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 }

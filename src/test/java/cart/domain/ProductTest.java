@@ -1,10 +1,10 @@
 package cart.domain;
 
+import cart.exception.OrderException;
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import cart.exception.InsufficientStockException;
-import org.junit.jupiter.api.Test;
 
 class ProductTest {
 
@@ -41,6 +41,6 @@ class ProductTest {
 
         // expect
         assertThatThrownBy(() -> product.updateStock(quantity))
-                .isInstanceOf(InsufficientStockException.class);
+                .isInstanceOf(OrderException.InsufficientStock.class);
     }
 }

@@ -1,9 +1,5 @@
 package cart.integration;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.dto.request.ProductAddRequest;
 import cart.dto.response.ProductResponse;
 import io.restassured.http.ContentType;
@@ -12,7 +8,12 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import java.util.List;
+
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
@@ -129,6 +130,6 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .then()
                 .extract();
 
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

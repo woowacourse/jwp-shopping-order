@@ -1,9 +1,5 @@
 package cart.integration;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -14,10 +10,15 @@ import cart.dto.request.ProductInfoRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderIntegrationTest extends IntegrationTest {
 

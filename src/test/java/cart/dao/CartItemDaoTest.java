@@ -1,15 +1,16 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import cart.domain.CartItemEntity;
 import cart.domain.MemberEntity;
 import cart.domain.Product;
-import cart.exception.CartItemNotFoundException;
-import java.util.List;
+import cart.exception.DataNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CartItemDaoTest extends DaoTest {
 
@@ -84,7 +85,7 @@ class CartItemDaoTest extends DaoTest {
     void 존재하지_않는_데이터를_조회하면_예외가_발생한다() {
         // expect
         assertThatThrownBy(() -> cartItemDao.findById(213213L))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 
     @Test
@@ -112,6 +113,6 @@ class CartItemDaoTest extends DaoTest {
 
         // then
         assertThatThrownBy(() -> cartItemDao.findById(savedId))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 }

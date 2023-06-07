@@ -1,14 +1,15 @@
 package cart.dao;
 
+import cart.domain.MemberEntity;
+import cart.exception.DataNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
-import cart.domain.MemberEntity;
-import cart.exception.MemberNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import java.util.List;
 
 public class MemberDaoTest extends DaoTest {
 
@@ -57,7 +58,7 @@ public class MemberDaoTest extends DaoTest {
 
         // expect
         assertThatThrownBy(() -> memberDao.findById(id))
-                .isInstanceOf(MemberNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class MemberDaoTest extends DaoTest {
 
         // expect
         assertThatThrownBy(() -> memberDao.findByEmail(email))
-                .isInstanceOf(MemberNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 
     @Test

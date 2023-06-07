@@ -1,13 +1,14 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import cart.domain.Product;
-import cart.exception.ProductNotFoundException;
+import cart.exception.DataNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ProductDaoTest extends DaoTest {
 
@@ -48,7 +49,7 @@ public class ProductDaoTest extends DaoTest {
 
         // expect
         assertThatThrownBy(() -> productDao.findById(id))
-                .isInstanceOf(ProductNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 
     @Test
@@ -103,6 +104,6 @@ public class ProductDaoTest extends DaoTest {
 
         // then
         assertThatThrownBy(() -> productDao.findById(savedId))
-                .isInstanceOf(ProductNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 }

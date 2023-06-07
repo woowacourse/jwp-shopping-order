@@ -1,13 +1,14 @@
 package cart.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import cart.domain.CartItem;
 import cart.domain.Quantity;
-import cart.exception.CartItemNotFoundException;
-import java.util.List;
+import cart.exception.DataNotFoundException;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CartItemRepositoryTest extends RepositoryTest {
 
@@ -80,6 +81,6 @@ class CartItemRepositoryTest extends RepositoryTest {
 
         // then
         assertThatThrownBy(() -> cartItemRepository.findById(savedId))
-                .isInstanceOf(CartItemNotFoundException.class);
+                .isInstanceOf(DataNotFoundException.class);
     }
 }
