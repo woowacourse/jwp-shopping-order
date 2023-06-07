@@ -7,6 +7,8 @@ public interface CartItemRepository {
 
     CartItem findById(final long id);
 
+    List<CartItem> findAllByIds(final List<Long> ids);
+
     List<CartItem> findByMemberId(final long id);
 
     CartItem save(final CartItem cartItem);

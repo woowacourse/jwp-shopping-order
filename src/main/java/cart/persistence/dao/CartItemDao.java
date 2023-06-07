@@ -4,12 +4,20 @@ import cart.persistence.entity.CartItemEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartItemDao {
+    private static final RowMapper<CartItemEntity> MAPPER = (resultSet, rowNum) -> new CartItemEntity(
+            resultSet.getLong("id"),
+            resultSet.getLong("member_id"),
+            resultSet.getLong("product_id"),
+            resultSet.getInt("quantity")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
@@ -59,6 +67,18 @@ public class CartItemDao {
         return cartItemEntities.isEmpty() ? null : cartItemEntities.get(0);
     }
 
+    public List<CartItemEntity> findAllByIds(final List<Long> ids) {
+        final String inQuery = ids.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(", "));
+        final String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.product_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        + "FROM cart_item "
+                        + "INNER JOIN member ON cart_item.member_id = member.id "
+                        + "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "WHERE cart_item.id IN (" + inQuery + ")";
+        return jdbcTemplate.query(sql, MAPPER, ids.toArray());
+    }
+
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
@@ -75,6 +95,4 @@ public class CartItemDao {
             ps.setLong(1, id);
         }));
     }
-
 }
-

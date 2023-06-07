@@ -33,20 +33,20 @@ public class MysqlCartItemRepository implements CartItemRepository {
         return toCartItem(cartItemEntity);
     }
 
+    @Override
+    public List<CartItem> findAllByIds(final List<Long> ids) {
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByIds(ids);
+        return cartItemEntities.stream()
+                .map(this::toCartItem)
+                .collect(Collectors.toList());
+    }
+
     private CartItem toCartItem(final CartItemEntity cartItemEntity) {
         final ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
         final MemberEntity memberEntity = memberDao.findById(cartItemEntity.getMemberId());
-        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), toProduct(productEntity), toMember(memberEntity));
-    }
-
-    private Product toProduct(final ProductEntity productEntity) {
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
-                productEntity.getImageUrl());
-    }
-
-    private Member toMember(final MemberEntity memberEntity) {
-        return new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(),
-                memberEntity.getPassword());
+        final Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
+        final Member member = new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(), memberEntity.getPassword());
+        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), product, member);
     }
 
     @Override

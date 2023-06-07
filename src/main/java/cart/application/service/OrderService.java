@@ -17,7 +17,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
-    
+
     public OrderService(final OrderRepository orderRepository, final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
@@ -25,9 +25,7 @@ public class OrderService {
 
     @Transactional
     public Long buy(final Member member, final OrderRequest orderRequest) {
-        final List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
-                .map(cartItemRepository::findById)
-                .collect(Collectors.toList());
+        final List<CartItem> cartItems = cartItemRepository.findAllByIds(orderRequest.getCartItemIds());
 
         final int price = cartItems.stream()
                 .mapToInt(CartItem::getTotalPrice)
