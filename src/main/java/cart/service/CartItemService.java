@@ -11,11 +11,13 @@ import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
 import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class CartItemService {
     private final ProductDao productDao;
@@ -26,6 +28,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
@@ -39,6 +42,7 @@ public class CartItemService {
         throw new ProductException("존재하지 않는 상품입니다");
     }
 
+    @Transactional(readOnly = true)
     public CartItem findById(Long id) {
         Optional<CartItem> cartItem = cartItemDao.findById(id);
         if (cartItem.isPresent()) {

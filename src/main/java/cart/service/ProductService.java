@@ -7,11 +7,13 @@ import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -21,11 +23,13 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Optional<Product> product = productDao.getProductById(productId);
         if (product.isPresent()) {

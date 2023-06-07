@@ -8,11 +8,12 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.InvalidCardException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Transactional
 @Service
 public class OrderService {
     private final CartItemDao cartItemDao;
@@ -62,6 +63,7 @@ public class OrderService {
         });
     }
 
+    @Transactional(readOnly = true)
     private CartItems getCartItems(List<Long> cartItemIds) {
         List<CartItem> cartItems = cartItemIds.stream()
                 .map(cartItemId -> cartItemDao.findById(cartItemId).orElseThrow(() -> new CartItemException("장바구니 목록에서 조회할 수 없습니다")))
@@ -69,6 +71,7 @@ public class OrderService {
         return new CartItems(cartItems);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAll(Long id) {
         List<Order> orders = shoppingOrderDao.findAll(id);
 
@@ -97,6 +100,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findById(Member member, Long id) {
         Member orderOwner = memberDao.findByOrderId(id).orElseThrow(AuthenticationException::new);
         if (!orderOwner.equals(member)) {
