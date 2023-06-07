@@ -1,23 +1,29 @@
 package cart.dto;
 
 import cart.domain.CartItem;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "장바구니 아이템 응답")
 public class CartItemResponse {
-    private Long id;
-    private int quantity;
-    private ProductResponse product;
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
+    @Schema(description = "장바구니 아이템 ID", example = "1")
+    private final Long id;
+    @Schema(description = "장바구니 아이템 수량", example = "3")
+    private final int quantity;
+    @Schema(description = "장바구니 상품 정보")
+    private final ProductResponse product;
+
+    public CartItemResponse(final Long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
+    public static CartItemResponse of(final CartItem cartItem) {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponse.from(cartItem.getProduct())
         );
     }
 

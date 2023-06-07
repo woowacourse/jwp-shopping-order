@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.controller;
 
 import cart.application.ProductService;
 import cart.dao.MemberDao;
@@ -18,13 +18,13 @@ public class PageController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.findAllProducts());
         return "admin";
     }
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+        model.addAttribute("members", memberDao.findAll());
         return "settings";
     }
 }
