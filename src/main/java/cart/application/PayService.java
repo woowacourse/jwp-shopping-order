@@ -3,6 +3,7 @@ package cart.application;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.dto.request.CartItemIdRequest;
 import cart.dto.request.PayRequest;
 import cart.dto.response.PayResponse;
 import cart.exception.InvalidPriceException;
@@ -13,12 +14,14 @@ import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class PayService {
 
+    private static final double ACCUMULATION_RATE = 0.05;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
@@ -47,7 +50,7 @@ public class PayService {
         final int originalPrice = order.calculateOriginalPrice();
         validateSamePrice(originalPrice, request.getOriginalPrice());
 
-        final int orderPrice = order.calculateTotalPrice();
+        final int orderPrice = order.calculateOrderPrice();
 
         final int updatedPoint = order.calculatedUpdatedPoint(savedPoint);
 
@@ -65,12 +68,22 @@ public class PayService {
                         }
                 );
 
+        final List<Long> cartItemIds = request.getCartItemIds()
+                .stream().map(CartItemIdRequest::getCartItemId)
+                .collect(Collectors.toList());
+
+        for (final Long cartItemId : cartItemIds) {
+            cartItemRepository.deleteById(cartItemId);
+        }
+
+        memberRepository.addPoint(member, (int) (orderPrice * ACCUMULATION_RATE));
+
         return new PayResponse(orderHistoryId);
     }
 
-    @Transactional(readOnly = true)
     private Map<Product, Integer> findProductQuantity(final PayRequest request) {
         return request.getCartItemIds().stream()
+                .map(CartItemIdRequest::getCartItemId)
                 .collect(Collectors.toMap(
                         id -> {
                             final long productId = cartItemRepository.findProductIdOf(id);

@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.dto.request.CartItemCreateRequest;
 import cart.dto.request.CartItemIdRequest;
 import cart.dto.request.PayRequest;
+import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import io.restassured.response.ExtractableResponse;
@@ -27,8 +28,12 @@ import static org.springframework.http.HttpStatus.OK;
 public class PayAcceptanceTest extends AcceptanceTest {
 
     private static final int JOIN_EVENT_POINT = 5000;
+
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -41,14 +46,21 @@ public class PayAcceptanceTest extends AcceptanceTest {
         final Long cartItem1Id = 카트에_아이템_추가하고_아이디_반환(savedMember, new CartItemCreateRequest(product1Id, 1));
         final Long cartItem2Id = 카트에_아이템_추가하고_아이디_반환(savedMember, new CartItemCreateRequest(product2Id, 2));
 
+        final int numberOfItemsBeforeOrder = cartItemRepository.findByMemberId(savedMember.getId()).size();
+
+        final int USED_POINT = 1000;
         final ExtractableResponse<Response> response = 카트_아이템_주문_요청(
                 savedMember,
-                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), 1_543_490, 1000)
+                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), 1_543_490, USED_POINT)
         );
+
+        final int numberOfItemsAfterOrder = cartItemRepository.findByMemberId(savedMember.getId()).size();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(OK.value()),
-                () -> assertThat(response.jsonPath().getLong("orderId")).isNotNull()
+                () -> assertThat(response.jsonPath().getLong("orderId")).isNotNull(),
+                () -> assertThat(memberRepository.findPointOf(savedMember)).isGreaterThan(JOIN_EVENT_POINT - USED_POINT),
+                () -> assertThat(numberOfItemsBeforeOrder).isGreaterThan(numberOfItemsAfterOrder)
         );
     }
 
