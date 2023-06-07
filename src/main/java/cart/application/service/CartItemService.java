@@ -25,7 +25,9 @@ public class CartItemService {
 
     public List<CartItemResponse> getMemberCartItems(final Member member) {
         final List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     public Long createCartItem(final Member member, final CartItemRequest cartItemRequest) {
@@ -34,12 +36,12 @@ public class CartItemService {
         return cartItem.getId();
     }
 
-    public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
-        final CartItem cartItem = cartItemRepository.findById(id);
+    public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
+        final CartItem cartItem = cartItemRepository.findById(cartItemId);
         cartItem.validateOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemRepository.deleteById(id);
+            cartItemRepository.deleteById(cartItemId);
             return;
         }
 
