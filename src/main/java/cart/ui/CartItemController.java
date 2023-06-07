@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
@@ -35,14 +36,16 @@ public class CartItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody @Valid CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable("id") @Min(value = 1, message = "ID는 1 이상의 정수로 입력해주세요") Long id,
+                                                       @RequestBody @Valid CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItems(Member member,
+                                                @PathVariable("id") @Min(value = 1, message = "ID는 1 이상의 정수로 입력해주세요") Long id) {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();

@@ -82,7 +82,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+                .statusCode(HttpStatus.SC_FORBIDDEN);
     }
 
     private void createOrder(Member member, List<Integer> cartItemIds, int point) {

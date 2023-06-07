@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
+
 @RestController
 public class PointController {
     private final PointService pointService;
@@ -24,7 +26,7 @@ public class PointController {
     }
 
     @GetMapping("/saving-point")
-    public ResponseEntity<SavingPointResponse> getSavingPoints(@RequestParam("totalPrice") Long totalPrice) {
+    public ResponseEntity<SavingPointResponse> getSavingPoints(@RequestParam("totalPrice") @Min(value = 0, message = "총 금액은 0 이상으로 입력해주세요") Long totalPrice) {
         SavingPointResponse savingPointResponse = pointService.findSavingPoints(totalPrice);
         return ResponseEntity.ok().body(savingPointResponse);
     }

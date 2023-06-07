@@ -7,12 +7,14 @@ import cart.dto.OrderResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.InvalidCardException;
+import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
 @Transactional
 @Service
 public class OrderService {
@@ -104,7 +106,7 @@ public class OrderService {
     public OrderResponse findById(Member member, Long id) {
         Member orderOwner = memberDao.findByOrderId(id).orElseThrow(AuthenticationException::new);
         if (!orderOwner.equals(member)) {
-            throw new IllegalArgumentException("로그인한 사용자의 주문 목록이 아닙니다");
+            throw new OrderException("로그인한 사용자의 주문 목록이 아닙니다");
         }
 
         List<Order> orders = shoppingOrderDao.findById(id);

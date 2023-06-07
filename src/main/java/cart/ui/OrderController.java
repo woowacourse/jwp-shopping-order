@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderDetail(Member member, @PathVariable Long id) {
+    public ResponseEntity<OrderResponse> getOrderDetail(Member member,
+                                                        @PathVariable("id") @Min(value = 1, message = "ID는 1 이상의 정수로 입력해주세요") Long id) {
         OrderResponse orderResponse = orderService.findById(member, id);
         return ResponseEntity.ok().body(orderResponse);
     }
