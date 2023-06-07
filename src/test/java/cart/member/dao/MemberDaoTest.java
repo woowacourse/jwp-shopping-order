@@ -1,17 +1,15 @@
 package cart.member.dao;
 
 import cart.config.DaoTest;
-import cart.fixtures.MemberFixtures;
 import cart.member.domain.Member;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static cart.fixtures.MemberFixtures.*;
+import static cart.fixtures.MemberFixtures.Member_Ber;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SuppressWarnings("NonAsciiCharacters")

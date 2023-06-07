@@ -26,7 +26,7 @@ public class CartOrderDao {
     }
 
     public List<CartOrder> findByMemberId(final Long memberId) {
-        final String sql = "SELECT order_history.id, order_history.total_price, order_history.created_at, member.email, member.cash " +
+        final String sql = "SELECT order_history.id, order_history.total_price, order_history.created_at, member.email, member.password, member.cash " +
                 "FROM order_history " +
                 "INNER JOIN member ON order_history.member_id = member.id " +
                 "WHERE member.id = ? " +
@@ -36,14 +36,15 @@ public class CartOrderDao {
             Long totalPrice = rs.getLong("order_history.total_price");
             LocalDateTime created = rs.getTimestamp("order_history.created_at").toLocalDateTime();
             String email = rs.getString("member.email");
+            String password = rs.getString("member.password");
             Long cash = rs.getLong("member.cash");
-            Member member = Member.of(memberId, email, null, cash);
+            Member member = Member.of(memberId, email, password, cash);
             return new CartOrder(cartOrderId, member, totalPrice, created);
         });
     }
 
     public CartOrder findById(final Long cartOrderId) {
-        final String sql = "SELECT order_history.total_price, order_history.created_at, member.id, member.email, member.cash " +
+        final String sql = "SELECT order_history.total_price, order_history.created_at, member.id, member.email, member.password, member.cash " +
                 "FROM order_history " +
                 "INNER JOIN member ON order_history.member_id = member.id " +
                 "WHERE order_history.id = ?";
@@ -52,8 +53,9 @@ public class CartOrderDao {
             LocalDateTime created = rs.getTimestamp("order_history.created_at").toLocalDateTime();
             Long memberId = rs.getLong("member.id");
             String email = rs.getString("member.email");
+            String password = rs.getString("member.password");
             Long cash = rs.getLong("member.cash");
-            Member member = Member.of(memberId, email, null, cash);
+            Member member = Member.of(memberId, email, password, cash);
             return new CartOrder(cartOrderId, member, totalPrice, created);
         });
     }
