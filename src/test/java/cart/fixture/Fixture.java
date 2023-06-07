@@ -20,6 +20,6 @@ public class Fixture {
     public static final CartItem A_CART_ITEM_SALAD = new CartItem(2L, 4, SALAD, MEMBER_A);
     public static final CartItem B_CART_ITEM_PIZZA = new CartItem(3L, 5, PIZZA, MEMBER_B);
 
-    public static final Order A_ORDER = new Order(10_6000, MEMBER_A, List.of(A_CART_ITEM_CHICKEN, A_CART_ITEM_SALAD));
-    public static final Order B_ORDER = new Order(85_000, MEMBER_B, List.of(B_CART_ITEM_PIZZA));
+    public static final Order A_ORDER = Order.of(MEMBER_A, List.of(A_CART_ITEM_CHICKEN, A_CART_ITEM_SALAD));
+    public static final Order B_ORDER = Order.of(MEMBER_B, List.of(B_CART_ITEM_PIZZA));
 }

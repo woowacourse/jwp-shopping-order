@@ -39,7 +39,7 @@ public class MysqlOrderRepository implements OrderRepository {
         orderItemDao.saveAll(orderItemEntities);
         cartItemDao.deleteByIds(order.getCartItemIds());
 
-        return new Order(savedOrderEntity.getId(), order.getPrice(), order.getMember(), order.getCartItems());
+        return Order.of(savedOrderEntity.getId(), order.getMember(), order.getCartItems());
     }
 
     @Override
@@ -49,11 +49,7 @@ public class MysqlOrderRepository implements OrderRepository {
                 .map(orderItemEntity -> new CartItem(orderItemEntity.getQuantity(), productRepository.findById(orderItemEntity.getProductId()), member))
                 .collect(Collectors.toList());
 
-        final int totalPrice = cartItems.stream()
-                .mapToInt(CartItem::getTotalPrice)
-                .sum();
-
-        return new Order(id, totalPrice, member, cartItems);
+        return Order.of(id, member, cartItems);
     }
 
     @Override

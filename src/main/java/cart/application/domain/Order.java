@@ -10,15 +10,25 @@ public class Order {
     private final Member member;
     private final List<CartItem> cartItems;
 
-    public Order(final int price, final Member member, final List<CartItem> cartItems) {
-        this(null, price, member, cartItems);
-    }
-
-    public Order(final Long id, final int price, final Member member, final List<CartItem> cartItems) {
+    private Order(final Long id, final int price, final Member member, final List<CartItem> cartItems) {
         this.id = id;
         this.price = price;
         this.member = member;
         this.cartItems = cartItems;
+    }
+
+    public static Order of(final Long id, final Member member, final List<CartItem> cartItems) {
+        final int price = cartItems.stream()
+                .mapToInt(CartItem::getTotalPrice)
+                .sum();
+        return new Order(id, price, member, cartItems);
+    }
+
+    public static Order of(final Member member, final List<CartItem> cartItems) {
+        final int price = cartItems.stream()
+                .mapToInt(CartItem::getTotalPrice)
+                .sum();
+        return new Order(null, price, member, cartItems);
     }
 
     public Long getId() {

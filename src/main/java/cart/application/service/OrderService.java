@@ -27,11 +27,7 @@ public class OrderService {
     public Long createOrder(final Member member, final OrderRequest orderRequest) {
         final List<CartItem> cartItems = cartItemRepository.findAllByIds(orderRequest.getCartItemIds());
 
-        final int price = cartItems.stream()
-                .mapToInt(CartItem::getTotalPrice)
-                .sum();
-
-        final Order order = orderRepository.save(new Order(price, member, cartItems));
+        final Order order = orderRepository.save(Order.of(member, cartItems));
         return order.getId();
     }
 
