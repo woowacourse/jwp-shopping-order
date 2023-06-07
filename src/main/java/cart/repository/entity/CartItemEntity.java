@@ -52,6 +52,19 @@ public class CartItemEntity {
         private long productId;
         private int quantity;
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(id, builder.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
+
         public Builder id(long id) {
             this.id = id;
             return this;

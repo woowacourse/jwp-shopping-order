@@ -1,5 +1,7 @@
 package cart.repository.entity;
 
+import java.util.Objects;
+
 public class MemberEntity {
 
     private final long id;
@@ -14,6 +16,19 @@ public class MemberEntity {
         this.password = password;
         this.point = point;
         this.money = money;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MemberEntity that = (MemberEntity) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public long getId() {
