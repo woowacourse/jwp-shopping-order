@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.exception.InvalidOrderCalculationException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,10 @@ public class Order {
 
     public OrderState getState() {
         return state;
+    }
+
+    public List<CartItem> getCartItems() {
+        return new ArrayList<>(cartItems);
     }
 
     public Member getMember() {

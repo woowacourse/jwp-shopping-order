@@ -52,10 +52,18 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
+
 CREATE TABLE IF NOT EXISTS order_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
-    cart_item_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp on update current_timestamp,
     FOREIGN KEY (orders_id) REFERENCES orders(id),
-    FOREIGN KEY (cart_item_id) REFERENCES cart_item(id)
+    FOREIGN KEY (member_id) REFERENCES member(id)
 );
+

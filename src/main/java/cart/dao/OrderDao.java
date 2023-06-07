@@ -36,39 +36,43 @@ public class OrderDao {
         }, keyHolder);
 
 
-        String sql = "insert into order_item(orders_id, cart_item_id) values (?,?)";
+        String sql = "insert into order_item(orders_id, member_id, product_name, price, image_url, quantity) values (?,?,?,?,?,?)";
         long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        List<Object[]> cartItemIds = new ArrayList<>();
-        for (Long cartItemId : order.getCartItemIds()) {
-            cartItemIds.add(new Object[]{orderId, cartItemId});
+        List<Object[]> orderItemParams = new ArrayList<>();
+        for (CartItem cartItem : order.getCartItems()) {
+            Object[] params = {
+                    orderId,
+                    cartItem.getMember().getId(),
+                    cartItem.getProduct().getName(),
+                    cartItem.getProduct().getPrice(),
+                    cartItem.getProduct().getImageUrl(),
+                    cartItem.getQuantity()
+            };
+            orderItemParams.add(params);
         }
 
-        jdbcTemplate.batchUpdate(sql, cartItemIds);
+        jdbcTemplate.batchUpdate(sql, orderItemParams);
         return orderId;
     }
 
     public OrderDto findById(Long orderId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM orders " +
-                "INNER JOIN order_item ON orders.id = order_item.orders_id " +
-                "INNER JOIN cart_item ON cart_item.id = order_item.cart_item_id " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE orders.id = ?";
+        String sql = "SELECT order_item.orders_id, order_item.member_id, member.email, order_item.product_name, " +
+                "order_item.price, order_item.image_url, order_item.quantity " +
+                "FROM order_item " +
+                "INNER JOIN member ON order_item.member_id = member.id " +
+                "WHERE order_item.orders_id = ?";
 
         List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
+            String productName = rs.getString("product_name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
+            int quantity = rs.getInt("quantity");
             Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            Product product = new Product(null, productName, price, imageUrl);
+            return new CartItem(null, quantity, product, member);
         }, orderId);
 
         String queryOrder = "select orders.price from orders where id = ?";
