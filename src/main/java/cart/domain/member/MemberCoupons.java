@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.exception.MemberCouponNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,16 +17,16 @@ public class MemberCoupons {
         return coupons;
     }
 
-    public boolean isNotContains(MemberCoupons memberCoupons) {
-        return !this.coupons.containsAll(memberCoupons.coupons);
-    }
-
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return coupons.isEmpty();
     }
 
-    public MemberCoupons use() {
-        return new MemberCoupons(coupons.stream()
+    public MemberCoupons use(MemberCoupons memberCoupons) {
+        if (!this.coupons.containsAll(memberCoupons.coupons)) {
+            throw new MemberCouponNotFoundException("쿠폰을 보유하고 있지 않습니다.");
+        }
+
+        return new MemberCoupons(memberCoupons.coupons.stream()
                 .map(MemberCoupon::use)
                 .collect(Collectors.toList()));
     }

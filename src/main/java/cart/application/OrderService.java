@@ -10,7 +10,6 @@ import cart.dto.order.OrderItemRequest;
 import cart.dto.order.OrderItemsRequests;
 import cart.dto.order.OrderProductRequest;
 import cart.entity.OrderEntity;
-import cart.exception.MemberCouponNotFoundException;
 import cart.exception.OrderCartMismatchException;
 import cart.exception.OrderNotFoundException;
 import cart.repository.CartItemRepository;
@@ -59,11 +58,7 @@ public class OrderService {
         MemberCoupons requestCoupons = new MemberCoupons(memberCouponDao.findByIds(request.toMemberCouponIds()));
         MemberCoupons memberCoupons = new MemberCoupons(memberCouponDao.findByMemberId(member.getId()));
 
-        if (memberCoupons.isNotContains(requestCoupons)) {
-            throw new MemberCouponNotFoundException("쿠폰을 보유하고 있지 않습니다.");
-        }
-
-        memberCouponDao.updateCoupon(requestCoupons.use().getCoupons(), member.getId());
+        memberCouponDao.updateCoupon(memberCoupons.use(requestCoupons).getCoupons(), member.getId());
         return requestCoupons;
     }
 
