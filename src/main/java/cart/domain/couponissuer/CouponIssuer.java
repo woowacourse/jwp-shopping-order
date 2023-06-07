@@ -18,7 +18,7 @@ public abstract class CouponIssuer {
 
     abstract public Optional<Coupon> issue(Member member, final Orders orders) throws IllegalAccessException;
 
-    abstract protected void setNext() throws IllegalAccessException;
+    abstract protected void setNext();
 
     protected Optional<Coupon> execute(Member member, Orders orders) throws IllegalAccessException {
         setNext();
