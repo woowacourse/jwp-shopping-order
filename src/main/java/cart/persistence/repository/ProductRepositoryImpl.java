@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MysqlProductRepository implements ProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductDao productDao;
 
-    public MysqlProductRepository(final ProductDao productDao) {
+    public ProductRepositoryImpl(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

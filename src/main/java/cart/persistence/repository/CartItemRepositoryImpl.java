@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MysqlCartItemRepository implements CartItemRepository {
+public class CartItemRepositoryImpl implements CartItemRepository {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final MemberDao memberDao;
 
-    public MysqlCartItemRepository(final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao) {
+    public CartItemRepositoryImpl(final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
         this.memberDao = memberDao;

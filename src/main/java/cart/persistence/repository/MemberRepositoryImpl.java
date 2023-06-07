@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MysqlMemberRepository implements MemberRepository {
+public class MemberRepositoryImpl implements MemberRepository {
 
     private final MemberDao memberDao;
 
-    public MysqlMemberRepository(final MemberDao memberDao) {
+    public MemberRepositoryImpl(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 

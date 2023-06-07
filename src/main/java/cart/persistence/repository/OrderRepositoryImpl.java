@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MysqlOrderRepository implements OrderRepository {
+public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final CartItemDao cartItemDao;
     private final ProductRepository productRepository;
 
-    public MysqlOrderRepository(final OrderDao orderDao, final OrderItemDao orderItemDao, final CartItemDao cartItemDao, final MysqlProductRepository productRepository) {
+    public OrderRepositoryImpl(final OrderDao orderDao, final OrderItemDao orderItemDao, final CartItemDao cartItemDao, final ProductRepositoryImpl productRepository) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.cartItemDao = cartItemDao;
