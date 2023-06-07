@@ -5,9 +5,9 @@ import java.util.Objects;
 public class Product {
 
     private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;

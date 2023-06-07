@@ -94,7 +94,7 @@ class OrderDaoTest {
         assertAll(
                 () -> assertThat(order.getId()).isEqualTo(1L),
                 () -> assertThat(order.getMemberId()).isEqualTo(1L),
-                () -> assertThat(order.getOrderStatusId()).isEqualTo(OrderStatus.CANCELLED.getOrderStatusId())
+                () -> assertThat(order.getOrderStatusId()).isEqualTo(OrderStatus.CANCELED.getOrderStatusId())
         );
     }
 }

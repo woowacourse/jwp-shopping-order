@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Member;
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,21 +28,6 @@ public class MemberDao {
         String sql = "SELECT * FROM member WHERE email = ?";
         List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
-    }
-
-    public void addMember(MemberEntity member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
-    }
-
-    public void updateMember(MemberEntity member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
-
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
     }
 
     public List<MemberEntity> getAllMembers() {

@@ -1,6 +1,8 @@
 package cart.application;
 
-import cart.domain.*;
+import cart.domain.Member;
+import cart.domain.Point;
+import cart.domain.Points;
 import cart.dto.PointResponse;
 import cart.repository.PointRepository;
 import org.junit.jupiter.api.BeforeEach;

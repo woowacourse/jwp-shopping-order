@@ -78,7 +78,7 @@ public class MysqlOrderRepository implements OrderRepository {
         } catch (DataAccessException dataAccessException) {
             throw new OrderException(INVALID_FIND_MESSAGE);
         }
-        if (orderEntity.getOrderStatusId() == OrderStatus.CANCELLED.getOrderStatusId()) {
+        if (orderEntity.getOrderStatusId() == OrderStatus.CANCELED.getOrderStatusId()) {
             throw new OrderException(INVALID_DELETE_MESSAGE);
         }
     }

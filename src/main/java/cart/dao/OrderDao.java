@@ -51,7 +51,7 @@ public class OrderDao {
     public void delete(Long memberId, Long orderId) {
         String sql = "update orders set orders_status_id = ? where member_id = ? and id = ?";
 
-        jdbcTemplate.update(sql, OrderStatus.CANCELLED.getOrderStatusId(), memberId, orderId);
+        jdbcTemplate.update(sql, OrderStatus.CANCELED.getOrderStatusId(), memberId, orderId);
     }
 
     private static class OrderRowMapper implements RowMapper<OrderEntity> {

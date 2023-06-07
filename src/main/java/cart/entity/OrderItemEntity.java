@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class OrderItemEntity {
 
-    private Long orderId;
     private final Long productId;
     private final int quantity;
     private final int totalPrice;
+    private Long orderId;
 
     public OrderItemEntity(Long orderId, Long productId, int quantity, int totalPrice) {
         this.orderId = orderId;

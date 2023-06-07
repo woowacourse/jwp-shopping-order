@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Product;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

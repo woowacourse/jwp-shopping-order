@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MysqlCartItemRepository implements CartItemRepository{
+public class MysqlCartItemRepository implements CartItemRepository {
 
     private final CartItemDao cartItemDao;
     private final MemberDao memberDao;

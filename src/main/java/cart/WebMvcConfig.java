@@ -1,6 +1,6 @@
 package cart;
 
-import cart.domain.*;
+import cart.domain.OrderPage;
 import cart.repository.MemberRepository;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Bean;

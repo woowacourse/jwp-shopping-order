@@ -1,7 +1,5 @@
 package cart.entity;
 
-import cart.domain.Product;
-
 import java.util.Objects;
 
 public class ProductEntity {

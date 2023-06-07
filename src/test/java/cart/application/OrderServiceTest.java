@@ -22,7 +22,6 @@ import static cart.ProductFixture.product1;
 import static cart.ProductFixture.product2;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -113,9 +112,9 @@ class OrderServiceTest {
         when(orderRepository.save(1L, order)).thenReturn(1L);
 
         assertThatCode(() ->
-                        orderService.saveOrder(member, new OrderRequest(4000,
-                                List.of(new ProductOrderRequest(1L, 3),
-                                        new ProductOrderRequest(2L, 2)))))
+                orderService.saveOrder(member, new OrderRequest(4000,
+                        List.of(new ProductOrderRequest(1L, 3),
+                                new ProductOrderRequest(2L, 2)))))
                 .doesNotThrowAnyException();
     }
 
