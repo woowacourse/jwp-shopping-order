@@ -17,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = CartItemController.class, excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class}))
+        type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class, HandlerMethodArgumentResolver.class}))
 class CartItemControllerTest {
 
     @Autowired

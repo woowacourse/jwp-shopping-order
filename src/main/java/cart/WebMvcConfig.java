@@ -1,6 +1,5 @@
 package cart;
 
-import cart.application.service.MemberService;
 import cart.presentation.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -12,10 +11,10 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final MemberService memberService;
+    private final MemberArgumentResolver memberArgumentResolver;
 
-    public WebMvcConfig(MemberService memberService) {
-        this.memberService = memberService;
+    public WebMvcConfig(MemberArgumentResolver memberArgumentResolver) {
+        this.memberArgumentResolver = memberArgumentResolver;
     }
 
     @Override
@@ -33,6 +32,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberService));
+        resolvers.add(memberArgumentResolver);
     }
 }

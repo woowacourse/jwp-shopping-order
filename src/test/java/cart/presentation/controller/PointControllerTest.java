@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = PointController.class, excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class}))
+        type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class, HandlerMethodArgumentResolver.class}))
 class PointControllerTest {
 
     @Autowired
