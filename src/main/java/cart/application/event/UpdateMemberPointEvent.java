@@ -1,4 +1,4 @@
-package cart.application.Event;
+package cart.application.event;
 
 import cart.domain.member.Member;
 import cart.dto.request.OrderRequest;

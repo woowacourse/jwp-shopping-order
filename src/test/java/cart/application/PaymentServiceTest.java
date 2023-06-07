@@ -3,7 +3,7 @@ package cart.application;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-import cart.application.Event.RequestPaymentEvent;
+import cart.application.event.RequestPaymentEvent;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Quantity;

@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.application.Event.UpdateMemberPointEvent;
+import cart.application.event.UpdateMemberPointEvent;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.point.Point;

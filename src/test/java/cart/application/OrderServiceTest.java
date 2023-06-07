@@ -8,8 +8,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import cart.application.Event.RequestPaymentEvent;
-import cart.application.Event.UpdateMemberPointEvent;
+import cart.application.event.RequestPaymentEvent;
+import cart.application.event.UpdateMemberPointEvent;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Quantity;

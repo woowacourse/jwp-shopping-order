@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import cart.application.Event.UpdateMemberPointEvent;
+import cart.application.event.UpdateMemberPointEvent;
 import cart.domain.cart.Quantity;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
