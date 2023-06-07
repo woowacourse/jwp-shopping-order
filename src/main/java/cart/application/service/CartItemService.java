@@ -23,12 +23,12 @@ public class CartItemService {
         this.productRepository = productRepository;
     }
 
-    public List<CartItemResponse> findByMember(final Member member) {
+    public List<CartItemResponse> getMemberCartItems(final Member member) {
         final List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(final Member member, final CartItemRequest cartItemRequest) {
+    public Long createCartItem(final Member member, final CartItemRequest cartItemRequest) {
         final Product product = productRepository.findById(cartItemRequest.getProductId());
         final CartItem cartItem = cartItemRepository.save(new CartItem(product, member));
         return cartItem.getId();
@@ -47,7 +47,7 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(final Member member, final Long id) {
+    public void removeCartItem(final Member member, final Long id) {
         final CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 

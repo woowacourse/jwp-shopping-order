@@ -24,7 +24,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long buy(final Member member, final OrderRequest orderRequest) {
+    public Long createOrder(final Member member, final OrderRequest orderRequest) {
         final List<CartItem> cartItems = cartItemRepository.findAllByIds(orderRequest.getCartItemIds());
 
         final int price = cartItems.stream()
@@ -36,13 +36,13 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse selectOrder(final Long id, final Member member) {
+    public OrderResponse getOrder(final Long id, final Member member) {
         final Order order = orderRepository.findById(id, member);
         return OrderResponse.of(order);
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponse> selectAll(final Member member) {
+    public List<OrderResponse> getAll(final Member member) {
         final List<Order> orders = orderRepository.findMemberOrders(member);
         return orders.stream()
                 .map(OrderResponse::of)

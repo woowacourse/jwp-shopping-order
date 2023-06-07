@@ -29,7 +29,7 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public long createProduct(final ProductRequest productRequest) {
+    public Long createProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         final Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
@@ -40,7 +40,7 @@ public class ProductService {
         productRepository.updateById(productId, product);
     }
 
-    public void deleteProduct(final long id) {
+    public void removeProduct(final long id) {
         productRepository.deleteById(id);
     }
 }

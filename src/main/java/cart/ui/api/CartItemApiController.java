@@ -23,12 +23,12 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.getMemberCartItems(member));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+        Long cartItemId = cartItemService.createCartItem(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
@@ -42,7 +42,7 @@ public class CartItemApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
-        cartItemService.remove(member, id);
+        cartItemService.removeCartItem(member, id);
 
         return ResponseEntity.noContent().build();
     }
