@@ -52,4 +52,12 @@ public class JdbcCartItemRepository implements CartItemRepository {
                 .map(CartItemEntityMapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CartItem> findAllByIds(List<Long> ids) {
+        return cartItemDao.findAllByIds(ids)
+                .stream()
+                .map(CartItemEntityMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }

@@ -100,4 +100,23 @@ class JdbcCartItemRepositoryTest {
         // then
         assertThat(cartItems).hasSize(1);
     }
+
+    @Test
+    void ID_리스트로_모든_장바구니_상품을_조회한다() {
+        // given
+        Product product = new Product("코코닥", 1000, "image");
+        Member member = new Member(null, "email", "1234");
+        CartItem cartItem1 = new CartItem(1L, 10, product, member);
+        CartItem cartItem2 = new CartItem(2L, 15, product, member);
+        given(cartItemDao.findAllByIds(List.of(cartItem1.getId(), cartItem2.getId())))
+                .willReturn(List.of(CartItemEntityMapper.toEntity(cartItem1), CartItemEntityMapper.toEntity(cartItem2)));
+
+        // when
+        List<CartItem> actual = jdbcCartItemRepository.findAllByIds(List.of(1L, 2L));
+
+        // then
+        List<CartItem> expected = List.of(cartItem1, cartItem2);
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
 }
