@@ -8,7 +8,7 @@ import cart.cartitem.domain.CartItem;
 import cart.common.execption.BaseExceptionType;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.RateDiscountPolicy;
-import cart.coupon.domain.SpecificCouponType;
+import cart.coupon.domain.SpecificCouponStrategy;
 import cart.member.domain.Member;
 import cart.order.exception.OrderException;
 import cart.product.domain.Product;
@@ -68,7 +68,7 @@ class OrderItemTest {
         OrderItem orderItem = OrderItem.withCoupon(cartItem, List.of(
                 new Coupon("쿠폰",
                         new RateDiscountPolicy(30),
-                        new SpecificCouponType(10L),
+                        new SpecificCouponStrategy(10L),
                         1L)));
 
         // when & then

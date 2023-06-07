@@ -18,7 +18,7 @@ import cart.cartitem.domain.CartItemRepository;
 import cart.common.execption.BaseExceptionType;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.CouponValidator;
-import cart.coupon.domain.GeneralCouponType;
+import cart.coupon.domain.GeneralCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
 import cart.coupon.exception.CouponException;
 import cart.member.domain.Member;
@@ -104,12 +104,12 @@ class OrderPlaceServiceTest {
         CartItem cartItem = new CartItem(2L, 10, product, member);
         Coupon 쿠폰1 = new Coupon(1L, "쿠폰1",
                 new RateDiscountPolicy(50),
-                new GeneralCouponType(),
+                new GeneralCouponStrategy(),
                 2L
         );
         Coupon 쿠폰2 = new Coupon(2L, "쿠폰2",
                 new RateDiscountPolicy(50),
-                new GeneralCouponType(),
+                new GeneralCouponStrategy(),
                 2L
         );
 

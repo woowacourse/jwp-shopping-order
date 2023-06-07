@@ -9,17 +9,15 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-@DisplayName("SpecificCouponType 은(는)")
-class SpecificCouponTypeTest {
+@DisplayName("GeneralCouponStrategy 은(는)")
+class GeneralCouponStrategyTest {
 
     @Test
-    void 특정_상품에_적용된다() {
+    void 무조건_적용된다() {
         // given
-        Long productId = 1L;
-        CouponType couponType = new SpecificCouponType(productId);
+        CouponStrategy couponStrategy = new GeneralCouponStrategy();
 
         // when & then
-        assertThat(couponType.canApply(productId)).isTrue();
-        assertThat(couponType.canApply(2L)).isFalse();
+        assertThat(couponStrategy.canApply(1L)).isTrue();
     }
 }

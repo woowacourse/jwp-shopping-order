@@ -2,7 +2,7 @@ package cart.coupon.presentation.dto;
 
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.DiscountType;
-import cart.coupon.domain.SpecificCouponType;
+import cart.coupon.domain.SpecificCouponStrategy;
 import cart.coupon.domain.TargetType;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -52,7 +52,7 @@ public abstract class CouponResponse {
                     coupon.value()
             );
         }
-        SpecificCouponType couponType = (SpecificCouponType) coupon.getCouponType();
+        SpecificCouponStrategy couponType = (SpecificCouponStrategy) coupon.getCouponType();
         return new SpecificCouponResponse(
                 coupon.getId(),
                 coupon.getName(),

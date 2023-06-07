@@ -2,11 +2,11 @@ package cart.coupon.domain;
 
 import java.util.Objects;
 
-public class SpecificCouponType implements CouponType {
+public class SpecificCouponStrategy implements CouponStrategy {
 
     private final Long productId;
 
-    public SpecificCouponType(Long productId) {
+    public SpecificCouponStrategy(Long productId) {
         this.productId = productId;
     }
 

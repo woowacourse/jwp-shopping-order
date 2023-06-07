@@ -5,18 +5,18 @@ public class Coupon {
     private final Long id;
     private final String name;
     private final DiscountPolicy discountPolicy;
-    private final CouponType couponType;
+    private final CouponStrategy couponStrategy;
     private final Long memberId;
 
-    public Coupon(String name, DiscountPolicy discountPolicy, CouponType couponType, Long memberId) {
-        this(null, name, discountPolicy, couponType, memberId);
+    public Coupon(String name, DiscountPolicy discountPolicy, CouponStrategy couponStrategy, Long memberId) {
+        this(null, name, discountPolicy, couponStrategy, memberId);
     }
 
-    public Coupon(Long id, String name, DiscountPolicy discountPolicy, CouponType couponType, Long memberId) {
+    public Coupon(Long id, String name, DiscountPolicy discountPolicy, CouponStrategy couponStrategy, Long memberId) {
         this.id = id;
         this.name = name;
         this.discountPolicy = discountPolicy;
-        this.couponType = couponType;
+        this.couponStrategy = couponStrategy;
         this.memberId = memberId;
     }
 
@@ -25,7 +25,7 @@ public class Coupon {
     }
 
     public boolean canApply(Long productId) {
-        return couponType.canApply(productId);
+        return couponStrategy.canApply(productId);
     }
 
     public int value() {
@@ -37,7 +37,7 @@ public class Coupon {
     }
 
     public TargetType targetType() {
-        return couponType.getTargetType();
+        return couponStrategy.getTargetType();
     }
 
     public Long getId() {
@@ -52,8 +52,8 @@ public class Coupon {
         return discountPolicy;
     }
 
-    public CouponType getCouponType() {
-        return couponType;
+    public CouponStrategy getCouponType() {
+        return couponStrategy;
     }
 
     public Long getMemberId() {

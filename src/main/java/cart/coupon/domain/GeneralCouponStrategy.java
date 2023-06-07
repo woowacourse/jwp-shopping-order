@@ -1,6 +1,6 @@
 package cart.coupon.domain;
 
-public class GeneralCouponType implements CouponType{
+public class GeneralCouponStrategy implements CouponStrategy {
 
     @Override
     public boolean canApply(Long productId) {

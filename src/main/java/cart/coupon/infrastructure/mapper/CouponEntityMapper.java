@@ -1,13 +1,13 @@
 package cart.coupon.infrastructure.mapper;
 
 import cart.coupon.domain.Coupon;
-import cart.coupon.domain.CouponType;
+import cart.coupon.domain.CouponStrategy;
 import cart.coupon.domain.DiscountPolicy;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.FixDiscountPolicy;
-import cart.coupon.domain.GeneralCouponType;
+import cart.coupon.domain.GeneralCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
-import cart.coupon.domain.SpecificCouponType;
+import cart.coupon.domain.SpecificCouponStrategy;
 import cart.coupon.domain.TargetType;
 import cart.coupon.infrastructure.entity.CouponEntity;
 
@@ -30,12 +30,12 @@ public class CouponEntityMapper {
         return new FixDiscountPolicy(coupon.getCouponValue());
     }
 
-    private static CouponType getCouponType(CouponEntity coupon) {
+    private static CouponStrategy getCouponType(CouponEntity coupon) {
         TargetType targetType = coupon.getTargetType();
         if (targetType == TargetType.ALL) {
-            return new GeneralCouponType();
+            return new GeneralCouponStrategy();
         }
-        return new SpecificCouponType(coupon.getTargetProductId());
+        return new SpecificCouponStrategy(coupon.getTargetProductId());
     }
 
     public static CouponEntity toEntity(Coupon coupon) {
@@ -49,10 +49,10 @@ public class CouponEntityMapper {
                 coupon.value());
     }
 
-    private static Long getProductId(CouponType couponType) {
-        if (couponType.getTargetType() == TargetType.ALL) {
+    private static Long getProductId(CouponStrategy couponStrategy) {
+        if (couponStrategy.getTargetType() == TargetType.ALL) {
             return null;
         }
-        return ((SpecificCouponType) couponType).getProductId();
+        return ((SpecificCouponStrategy) couponStrategy).getProductId();
     }
 }

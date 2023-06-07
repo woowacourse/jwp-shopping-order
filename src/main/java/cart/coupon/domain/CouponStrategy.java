@@ -1,6 +1,6 @@
 package cart.coupon.domain;
 
-public interface CouponType {
+public interface CouponStrategy {
 
     boolean canApply(Long productId);
 
