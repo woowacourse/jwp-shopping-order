@@ -33,16 +33,14 @@ public class CartItemService {
         return cartItemRepository.save(cartItem);
     }
 
-    public List<CartItemResponse> findByMember(final Member member) {
+    public List<CartItem> findByMember(final Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
 
         for (final CartItem cartItem : cartItems) {
             cartItem.validateOwner(member);
         }
 
-        return cartItems.stream()
-                .map(CartItemResponse::from)
-                .collect(Collectors.toList());
+        return cartItems;
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {

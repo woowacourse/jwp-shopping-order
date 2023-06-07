@@ -141,30 +141,23 @@ public class OrderService {
         );
     }
 
-    public List<OrderResponse> getAllOrderBy(final Long memberId) {
-        List<OrderResponse> result = new ArrayList<>();
-
-        for (final OrderEntity orderEntity : orderDao.findAllByMemberId(memberId)) {
-            List<OrderItemEntity> twoOrderItemEntities = orderItemDao.findTwoByOrderId(orderEntity.getId());
-
-            List<OrderItemResponse> orderItemResponses = twoOrderItemEntities.stream()
-                    .map(orderItemEntity -> OrderItemResponse.of(orderItemEntity, productDao.findById(orderItemEntity.getProductId())))
-                    .collect(toList());
-
-            result.add(OrderResponse.of(orderEntity, orderItemResponses));
-        }
-
-        return result;
+    public List<OrderEntity> getAllOrderBy(final Member member) {
+        return orderDao.findAllByMemberId(member.getId());
     }
 
-    public OrderResponse findOrderBy(final Long orderId) {
-        OrderEntity orderEntity = orderDao.findById(orderId);
-        List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderEntity.getId());
+    public List<OrderItemEntity> getAllOrderItemBy(final OrderEntity orderEntity) {
+        return orderItemDao.findByOrderId(orderEntity.getId());
+    }
 
-        List<OrderItemResponse> orderItemResponses = orderItemEntities.stream()
-                .map(orderItemEntity -> OrderItemResponse.of(orderItemEntity, productDao.findById(orderItemEntity.getProductId())))
+    public List<OrderItemEntity> getSpecificCountOrderItemBy(final OrderEntity orderEntity, final int count) {
+        List<OrderItemEntity> orderItemEntities = getAllOrderItemBy(orderEntity);
+
+        return orderItemEntities.stream()
+                .limit(count)
                 .collect(toList());
+    }
 
-        return OrderResponse.of(orderEntity, orderItemResponses);
+    public OrderEntity findByOrderId(final Long orderId) {
+        return orderDao.findById(orderId);
     }
 }

@@ -1,14 +1,24 @@
 package cart.presentation;
 
+import cart.domain.Product;
 import cart.dto.request.ProductAddRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/products")
@@ -22,12 +32,20 @@ public class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        List<Product> products = productService.getAllProducts();
+        List<ProductResponse> response = products.stream()
+                .map(ProductResponse::from)
+                .collect(toList());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long productId) {
-        return ResponseEntity.ok(productService.getProductById(productId));
+        Product product = productService.getProductById(productId);
+        ProductResponse response = ProductResponse.from(product);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

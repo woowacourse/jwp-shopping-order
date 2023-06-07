@@ -20,8 +20,9 @@ public class PointApiController {
 
     @GetMapping
     public ResponseEntity<PointResponse> getUserPoint(final Member member) {
-        PointResponse pointResponse = pointService.getUserPoint(member);
+        int userPoint = pointService.getUserPoint(member);
+        PointResponse response = new PointResponse(userPoint);
 
-        return ResponseEntity.ok(pointResponse);
+        return ResponseEntity.ok(response);
     }
 }
