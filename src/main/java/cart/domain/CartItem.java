@@ -23,6 +23,10 @@ public class CartItem {
         this.member = member;
     }
 
+    public int getTotalPrice() {
+        return product.getPrice() * quantity;
+    }
+
     public Long getId() {
         return id;
     }
