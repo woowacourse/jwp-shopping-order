@@ -1,11 +1,11 @@
 package cart.dao;
 
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.exception.DataNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ProductDaoTest extends DaoTest {
 
-    private static final Product dummyProduct = new Product(1L, "name", new BigDecimal(100), "imageUrl", 10);
+    private static final Product dummyProduct = new Product(1L, "name", new Price(100), "imageUrl", 10);
 
     private ProductDao productDao;
 
@@ -70,7 +70,7 @@ public class ProductDaoTest extends DaoTest {
         // given
         long savedId = productDao.insert(dummyProduct);
 
-        Product newProduct = new Product(savedId, "newName", new BigDecimal(200), "newImageUrl", 5);
+        Product newProduct = new Product(savedId, "newName", new Price(200), "newImageUrl", 5);
 
         // when
         productDao.update(newProduct);

@@ -2,12 +2,12 @@ package cart.dao;
 
 import cart.domain.CartItemEntity;
 import cart.domain.MemberEntity;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.exception.DataNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CartItemDaoTest extends DaoTest {
 
     private static final MemberEntity dummyMemberEntity = new MemberEntity(1L, "email1", "pw1", 1);
-    private static final Product dummyProduct = new Product(1L, "name1", new BigDecimal(1), "imageUrl1", 1);
+    private static final Product dummyProduct = new Product(1L, "name1", new Price(1), "imageUrl1", 1);
     private static final CartItemEntity dummyCartItemEntity = new CartItemEntity(1L, 1L, 1);
 
     private MemberDao memberDao;

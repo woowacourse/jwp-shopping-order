@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.domain.Quantity;
 import cart.dto.request.CartItemInfoRequest;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -25,8 +25,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     private final Member member1 = new Member(1L, "user1@email.com", "user1Password", 5_000);
     private final Member member2 = new Member(2L, "user2@email.com", "user2Password", 2_000);
-    private final Product product1 = new Product(1L, "product1", new BigDecimal(10_000), "product1ImageUrl", 100);
-    private final Product product2 = new Product(2L, "product2", new BigDecimal(20_000), "product2ImageUrl", 200);
+    private final Product product1 = new Product(1L, "product1", new Price(10_000), "product1ImageUrl", 100);
+    private final Product product2 = new Product(2L, "product2", new Price(20_000), "product2ImageUrl", 200);
     private final CartItem cartItem1 = new CartItem(1L, member1, product1, new Quantity(1));
     private final CartItem cartItem2 = new CartItem(2L, member1, product2, new Quantity(1));
     private final CartItem cartItem3 = new CartItem(3L, member2, product1, new Quantity(1));
@@ -144,7 +144,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void 요청에_담긴_총_상품_금액과_실제_DB에_저장된_상품들의_총_금액이_다르면_예외가_발생한다() {
         // given
-        Product newProduct = new Product(product1.getId(), product1.getName(), new BigDecimal(product1.getPrice() + 9999), product1.getImageUrl(), product1.getStock());
+        Product newProduct = new Product(product1.getId(), product1.getName(), new Price(product1.getPrice() + 9999), product1.getImageUrl(), product1.getStock());
         productDao.update(newProduct);
 
         // when

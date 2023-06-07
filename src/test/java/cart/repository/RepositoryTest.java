@@ -3,14 +3,19 @@ package cart.repository;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.*;
+import cart.domain.CartItem;
+import cart.domain.CartItemEntity;
+import cart.domain.Member;
+import cart.domain.MemberEntity;
+import cart.domain.Point;
+import cart.domain.Price;
+import cart.domain.Product;
+import cart.domain.Quantity;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.math.BigDecimal;
 
 @JdbcTest
 @Sql("/schema.sql")
@@ -39,7 +44,7 @@ public class RepositoryTest {
         this.dummyQuantity = new Quantity(10);
         this.dummyMember = new Member(1L, "email", "pw", 1);
         this.dummyMemberEntity = new MemberEntity(dummyMember.getId(), dummyMember.getEmail(), dummyMember.getPassword(), dummyMember.getPointValue());
-        this.dummyProduct = new Product(1L, "name", new BigDecimal(1_000), "imageUrl", 10);
+        this.dummyProduct = new Product(1L, "name", new Price(1_000), "imageUrl", 10);
         this.dummyCartItem = new CartItem(1L, dummyMember, dummyProduct, dummyQuantity);
         this.dummyCartItemEntity = new CartItemEntity(dummyMemberEntity.getId(), dummyProduct.getId(), dummyQuantity.getValue());
 

@@ -2,16 +2,18 @@ package cart.dao;
 
 import cart.domain.MemberEntity;
 import cart.domain.OrderEntity;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.exception.DataNotFoundException;
 import cart.util.CurrentTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OrderDaoTest extends DaoTest {
 
@@ -20,7 +22,7 @@ class OrderDaoTest extends DaoTest {
     private OrderDao orderDao;
 
     private final MemberEntity memberEntity = new MemberEntity(1L, "1@email.com", "11", 1_000);
-    private final Product product = new Product(1L, "productName", new BigDecimal(1_000), "imageUrl", 10);
+    private final Product product = new Product(1L, "productName", new Price(1_000), "imageUrl", 10);
     private OrderEntity orderEntity;
 
     @BeforeEach
