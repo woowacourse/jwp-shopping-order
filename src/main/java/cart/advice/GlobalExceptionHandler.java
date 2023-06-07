@@ -23,7 +23,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleInternalServerException(final Exception exception, final WebRequest request) {
         logger.error("[ERROR] " + exception.getMessage());
-        return handleExceptionInternal(exception, new ExceptionResponse("[ERROR] " + exception.getMessage()), HttpHeaders.EMPTY, HttpStatus.INTERNAL_SERVER_ERROR, request);
+        return handleExceptionInternal(exception, new ExceptionResponse("[ERROR] 서버가 응답할 수 없습니다."), HttpHeaders.EMPTY, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @Override
