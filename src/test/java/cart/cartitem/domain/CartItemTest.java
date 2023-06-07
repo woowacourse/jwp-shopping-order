@@ -20,7 +20,8 @@ class CartItemTest {
     void 잘못된_유저가_장바구니_상품에_접근하면_예외를_반환하다() {
 
         assertThatThrownBy(() -> Member_Dooly_CartItem1.ENTITY.checkOwner(Member_Ber.ENTITY))
-                .isInstanceOf(CartItemException.IllegalMember.class);
+                .isInstanceOf(CartItemException.class)
+                .hasMessage("해당 유저가 접근할 수 없는 장바구니 상품입니다");
     }
 
     @Test

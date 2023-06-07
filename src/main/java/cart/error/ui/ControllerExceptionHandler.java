@@ -34,8 +34,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<ErrorResponse> handleException(final CartItemException.IllegalMember e) {
+    @ExceptionHandler(CartItemException.class)
+    public ResponseEntity<ErrorResponse> handleException(final CartItemException e) {
         logger.error(LOG_FORMAT,
                 e.getClass().getSimpleName(),
                 e.getMessage());

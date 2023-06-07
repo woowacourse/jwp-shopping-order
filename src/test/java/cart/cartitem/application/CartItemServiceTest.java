@@ -172,8 +172,8 @@ class CartItemServiceTest {
 
             // when, then
             assertThatThrownBy(() -> cartItemService.updateQuantity(Member_Ber.ENTITY, 1L, 5))
-                    .isInstanceOf(CartItemException.IllegalMember.class)
-                    .hasMessage("Illegal member attempts to cart; cartItemId=1, memberId=2");
+                    .isInstanceOf(CartItemException.class)
+                    .hasMessage("해당 유저가 접근할 수 없는 장바구니 상품입니다");
         }
     }
 
@@ -210,8 +210,8 @@ class CartItemServiceTest {
 
             // when, then
             assertThatThrownBy(() -> cartItemService.remove(Member_Ber.ENTITY, Member_Dooly_CartItem1.ID))
-                    .isInstanceOf(CartItemException.IllegalMember.class)
-                    .hasMessage("Illegal member attempts to cart; cartItemId=1, memberId=2");
+                    .isInstanceOf(CartItemException.class)
+                    .hasMessage("해당 유저가 접근할 수 없는 장바구니 상품입니다");
         }
     }
 }

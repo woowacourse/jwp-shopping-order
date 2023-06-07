@@ -32,7 +32,7 @@ public class CartItem {
 
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException("해당 유저가 접근할 수 없는 장바구니 상품입니다");
         }
     }
 
