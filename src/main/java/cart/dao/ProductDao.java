@@ -30,7 +30,7 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM product WHERE deleted = false";
         return jdbcTemplate.query(sql, productMapper);
     }
 
