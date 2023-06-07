@@ -1,26 +1,20 @@
 package cart.domain.product;
 
-import cart.exception.SalePercentageInvalidRangeException;
-
 import java.util.Objects;
 
 public class Product {
-
-    private static final int MAXIMUM_SALE_PERCENT = 100;
-    private static final int MINIMUM_SALE_PERCENT = 1;
-    private static final int DEFAULT_SALE_PRICE = 0;
 
     private Long id;
     private final String name;
     private final int price;
     private final String imageUrl;
-    private Integer salePrice;
+    private final SalePrice salePrice;
 
     public Product(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        salePrice = 0;
+        this.salePrice = SalePrice.createDefault();
     }
 
     public Product(final Long id, final String name, final int price, final String imageUrl, final Integer salePrice) {
@@ -28,40 +22,31 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.salePrice = salePrice;
+        this.salePrice = SalePrice.from(salePrice);
     }
 
-    public int applySale(int percentage) {
-        if (validateRangeOfSalePercentage(percentage)) {
-            throw new SalePercentageInvalidRangeException(percentage);
-        }
-
-        salePrice = (int) (price * percentage * 0.01);
-        return salePrice;
-    }
-
-    private boolean validateRangeOfSalePercentage(final int value) {
-        return value > MAXIMUM_SALE_PERCENT || value < MINIMUM_SALE_PERCENT;
+    public int applySale(final int percentage) {
+        return salePrice.applySale(price, percentage);
     }
 
     public void unApplySale() {
-        this.salePrice = DEFAULT_SALE_PRICE;
+        salePrice.unApplySale();
     }
 
     public int getAppliedDiscountOrOriginPrice() {
-        if (salePrice == null) {
+        if (salePrice.isNoneSale()) {
             return price;
         }
 
-        return price - salePrice;
-    }
-
-    public Integer getSalePrice() {
-        return salePrice;
+        return price - salePrice.getSalePrice();
     }
 
     public boolean isSame(final Long id) {
         return Objects.equals(this.id, id);
+    }
+
+    public int getSalePrice() {
+        return salePrice.getSalePrice();
     }
 
     public Long getId() {

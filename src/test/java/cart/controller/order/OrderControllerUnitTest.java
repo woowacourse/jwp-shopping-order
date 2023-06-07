@@ -20,8 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static cart.fixture.MemberFixture.createMember;
@@ -77,7 +76,7 @@ public class OrderControllerUnitTest {
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
                 List.of(new OrderedCouponHistory(1, "coupon")),
-                Date.from(Instant.now())
+                LocalDateTime.now()
         );
 
         OrdersResponse ordersResponse = OrdersResponse.from(List.of(orderHistory));
@@ -125,7 +124,7 @@ public class OrderControllerUnitTest {
                 List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
                 List.of(new OrderedCouponHistory(1, "coupon")),
-                Date.from(Instant.now())
+                LocalDateTime.now()
         );
 
         when(orderService.findOrder(any(Member.class), anyLong())).thenReturn(OrderResponse.from(orderHistory));

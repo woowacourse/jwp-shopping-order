@@ -78,6 +78,6 @@ class ProductTest {
         Integer result = product.getSalePrice();
 
         // then
-        assertThat(result).isEqualTo(null);
+        assertThat(result).isEqualTo(0);
     }
 }

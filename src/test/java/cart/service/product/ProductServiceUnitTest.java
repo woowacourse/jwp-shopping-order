@@ -118,6 +118,6 @@ class ProductServiceUnitTest {
         productService.unapplySale(id);
 
         // then
-        assertThat(product.getSalePrice()).isEqualTo(null);
+        assertThat(product.getSalePrice()).isEqualTo(0);
     }
 }
