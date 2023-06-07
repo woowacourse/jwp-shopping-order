@@ -2,12 +2,13 @@ package cart.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 public class OrderRequest {
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     private Integer usedPoint;
 
     @NotNull
