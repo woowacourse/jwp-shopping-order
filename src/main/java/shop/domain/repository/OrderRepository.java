@@ -9,7 +9,7 @@ import java.util.List;
 public interface OrderRepository {
     Long save(Long memberId, Long couponId, Order order);
 
-    OrderDetail findDetailsByMemberAndOrderId(Member member, Long orderId);
+    OrderDetail findDetailsByOrderId(Long orderId);
 
     List<Order> findAllByMember(Member member);
 }

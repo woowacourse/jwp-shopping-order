@@ -4,15 +4,19 @@ import org.springframework.stereotype.Repository;
 import shop.domain.cart.Quantity;
 import shop.domain.coupon.Coupon;
 import shop.domain.member.Member;
+import shop.domain.member.MemberName;
+import shop.domain.member.Password;
 import shop.domain.order.Order;
 import shop.domain.order.OrderDetail;
 import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
 import shop.domain.repository.OrderRepository;
+import shop.persistence.dao.MemberDao;
 import shop.persistence.dao.OrderCouponDao;
 import shop.persistence.dao.OrderDao;
 import shop.persistence.dao.OrderProductDao;
+import shop.persistence.entity.MemberEntity;
 import shop.persistence.entity.OrderCouponEntity;
 import shop.persistence.entity.OrderEntity;
 import shop.persistence.entity.OrderProductEntity;
@@ -28,12 +32,14 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
     private final OrderCouponDao orderCouponDao;
+    private final MemberDao memberDao;
 
     public OrderRepositoryImpl(OrderDao orderDao, OrderProductDao orderProductDao,
-                               OrderCouponDao orderCouponDao) {
+                               OrderCouponDao orderCouponDao, MemberDao memberDao) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
         this.orderCouponDao = orderCouponDao;
+        this.memberDao = memberDao;
     }
 
     @Override
@@ -84,14 +90,24 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public OrderDetail findDetailsByMemberAndOrderId(Member member, Long orderId) {
+    public OrderDetail findDetailsByOrderId(Long orderId) {
         OrderEntity orderEntity = orderDao.findById(orderId);
-
+        MemberEntity memberEntity = memberDao.findById(orderEntity.getMemberId());
         List<OrderProductDetail> orderProducts = orderProductDao.findAllByOrderId(orderId);
         Optional<OrderCouponDetail> orderCouponDetail = orderCouponDao.findCouponByOrderId(orderId);
+
+        Member member = toMember(memberEntity);
         Order order = toOrder(member, orderEntity, orderProducts);
 
         return toOrderDetail(orderCouponDetail, order);
+    }
+
+    private Member toMember(MemberEntity memberEntity) {
+        return new Member(
+                memberEntity.getId(),
+                new MemberName(memberEntity.getName()),
+                Password.createFromEncryptedPassword(memberEntity.getPassword())
+        );
     }
 
 

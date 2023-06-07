@@ -94,14 +94,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> getAllOrderHistoryOfMember(Member member) {
         List<Order> orders = orderRepository.findAllByMember(member);
-        orders.forEach(order -> order.checkOwner(member));
 
         return OrderDto.of(orders);
     }
 
     @Override
     public OrderDetailDto getOrderDetailsOfMember(Member member, Long orderId) {
-        OrderDetail orderDetail = orderRepository.findDetailsByMemberAndOrderId(member, orderId);
+        OrderDetail orderDetail = orderRepository.findDetailsByOrderId(orderId);
         orderDetail.getOrder().checkOwner(member);
 
         return OrderDetailDto.of(orderDetail);
