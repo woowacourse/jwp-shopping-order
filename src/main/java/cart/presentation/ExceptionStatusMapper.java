@@ -5,6 +5,7 @@ import cart.exception.application.ExceedAvailablePointException;
 import cart.exception.application.ExceedOwnedPointException;
 import cart.exception.application.IllegalMemberException;
 import cart.exception.application.PointInconsistentException;
+import cart.exception.presentation.NoProperStatusCodeException;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public enum ExceptionStatusMapper {
         return Arrays.stream(values())
                 .filter(value -> value.exceptions.contains(exception.getClass()))
                 .findAny()
-                .orElseThrow()
+                .orElseThrow(() -> new NoProperStatusCodeException(exception))
                 .httpStatus;
     }
 }
