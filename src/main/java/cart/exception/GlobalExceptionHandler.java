@@ -16,25 +16,25 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException exception) {
-		logger.error(exception.getMessage());
+		logger.info(exception.getMessage());
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
 	@ExceptionHandler(CartItemException.IllegalMember.class)
 	public ResponseEntity<Void> handleException(CartItemException.IllegalMember exception) {
-		logger.error(exception.getMessage());
+		logger.info(exception.getMessage());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
-		logger.error(exception.getMessage());
+		logger.info(exception.getMessage());
 		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<NotFoundResponse> handleProductNotFoundException(NotFoundException exception) {
-		logger.error(exception.getMessage());
+		logger.info(exception.getMessage());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(new NotFoundResponse(exception.getId(), exception.getName()));
 	}
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 		IllegalPointUsageException.class
 	})
 	public ResponseEntity<String> handleCustomApiException(RuntimeException exception) {
-		logger.error(exception.getMessage());
+		logger.info(exception.getMessage());
 		return ResponseEntity.badRequest().body(exception.getClass().getSimpleName());
 	}
 }
