@@ -21,6 +21,6 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Void> payment(@Auth Member member, @RequestBody OrderReqeust orderReqeust) {
         Long id = orderService.order(member, orderReqeust);
-        return ResponseEntity.created(URI.create("/payments/" + id)).build();
+        return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 }
