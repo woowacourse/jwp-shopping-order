@@ -8,8 +8,10 @@ import cart.domain.discountpolicy.DiscountPolicyProvider;
 import cart.domain.order.Order;
 import cart.domain.product.OrderItem;
 import cart.persistance.dao.OrderCouponDao;
+import cart.persistance.dao.OrderItemDao;
 import cart.persistance.dao.OrdersDao;
 import cart.persistance.entity.OrderCouponEntity;
+import cart.persistance.entity.OrderItemEntity;
 import cart.persistance.entity.OrdersEntity;
 import org.springframework.stereotype.Repository;
 
@@ -19,21 +21,22 @@ import java.util.stream.Collectors;
 @Repository
 public class OrderRepository {
 
-    private final OrderItemRepository orderItemRepository;
+    private final OrderItemDao orderItemDao;
     private final OrderCouponDao orderCouponDao;
     private final OrdersDao ordersDao;
     private final MemberCouponRepository memberCouponRepository;
     private final MemberRepository memberRepository;
     private final DiscountPolicyProvider discountPolicyProvider;
 
-    public OrderRepository(OrderItemRepository orderItemRepository,
-                           OrderCouponDao orderCouponDao,
-                           OrdersDao ordersDao,
-                           MemberCouponRepository memberCouponRepository,
-                           MemberRepository memberRepository,
-                           DiscountPolicyProvider discountPolicyProvider
+    public OrderRepository(
+            OrderItemDao orderItemDao,
+            OrderCouponDao orderCouponDao,
+            OrdersDao ordersDao,
+            MemberCouponRepository memberCouponRepository,
+            MemberRepository memberRepository,
+            DiscountPolicyProvider discountPolicyProvider
     ) {
-        this.orderItemRepository = orderItemRepository;
+        this.orderItemDao = orderItemDao;
         this.orderCouponDao = orderCouponDao;
         this.ordersDao = ordersDao;
         this.memberCouponRepository = memberCouponRepository;
@@ -44,7 +47,10 @@ public class OrderRepository {
     public Long insert(Order order) {
         Long orderId = ordersDao.insert(OrdersEntity.of(order));
 
-        orderItemRepository.insertAll(order.getOrderItems(), orderId);
+        final List<OrderItemEntity> itemEntities = order.getOrderItems().stream()
+                .map(orderItem -> OrderItemEntity.of(orderItem, order.getId()))
+                .collect(Collectors.toList());
+        orderItemDao.insertAll(itemEntities, orderId);
 
         List<OrderCouponEntity> orderCouponEntities = order.getAppliedCoupons().stream()
                 .map(memberCoupon -> OrderCouponEntity.of(memberCoupon, orderId))
@@ -60,7 +66,10 @@ public class OrderRepository {
     }
 
     private Order getOrder(OrdersEntity ordersEntity) {
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(ordersEntity.getId());
+        List<OrderItemEntity> itemEntities = orderItemDao.findAllByOrderId(ordersEntity.getId());
+        List<OrderItem> orderItems = itemEntities.stream()
+                .map(OrderItemEntity::toDomain)
+                .collect(Collectors.toList());
         List<Long> memberCouponIds = orderCouponDao.findAllByOrderId(ordersEntity.getId()).stream()
                 .map(OrderCouponEntity::getMemberCouponId)
                 .collect(Collectors.toList());

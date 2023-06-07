@@ -4,7 +4,6 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.domain.discountpolicy.DiscountPolicyProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ import static cart.domain.fixture.MemberFixture.MEMBER_A;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@ComponentScan(basePackageClasses = {MemberCouponRepository.class, DiscountPolicyProvider.class})
+@ComponentScan(basePackages = {"cart.repository", "cart.persistance", "cart.domain.discountpolicy"})
 class MemberCouponRepositoryTest {
 
     @Autowired
