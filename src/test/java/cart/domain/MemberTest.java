@@ -1,10 +1,7 @@
 package cart.domain;
 
 import cart.exception.MemberException;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -14,12 +11,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SuppressWarnings("NonAsciiCharacters")
 class MemberTest {
 
-    private Long validId = 1L;
-    private String validEmail = "a@a.com";
-    private String validPassword = "1234a";
+    private final Long validId = 1L;
+    private final String validEmail = "a@a.com";
+    private final String validPassword = "1234a";
 
     @Nested
     class 이메일은 {
+
+        @Test
+        void 정상적인_이메일이_입력된다() {
+            Assertions.assertDoesNotThrow(() -> new Member(validId, validEmail, validPassword));
+        }
 
         @ParameterizedTest
         @ValueSource(strings = {"", "a"})

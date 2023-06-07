@@ -16,10 +16,6 @@ public class Point {
         }
     }
 
-    public Point addPoint(long point) {
-        return new Point(this.value + point);
-    }
-
     public Point minusPoint(long point) {
         return new Point(this.value - point);
     }
@@ -29,7 +25,12 @@ public class Point {
     }
 
     public Point plusPointByPolicy(long useMoney) {
-        return new Point(this.value + pointPolicy(useMoney));
+        long additionalPoint = pointPolicy(useMoney);
+        return addPoint(additionalPoint);
+    }
+
+    private Point addPoint(long point) {
+        return new Point(this.value + point);
     }
 
     private long pointPolicy(long useMoney) {
