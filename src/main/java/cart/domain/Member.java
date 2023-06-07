@@ -32,12 +32,12 @@ public class Member {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Member that = (Member) o;
-        return Objects.equals(id, that.id) && Objects.equals(email, that.email);
+        Member member = (Member) o;
+        return Objects.equals(id, member.id) && Objects.nonNull(id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id);
     }
 }
