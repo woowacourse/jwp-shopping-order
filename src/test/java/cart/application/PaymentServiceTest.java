@@ -18,6 +18,7 @@ import cart.domain.product.Product;
 import cart.dto.request.OrderRequest;
 import cart.exception.PointException;
 import cart.repository.PointRepository;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -46,15 +47,16 @@ class PaymentServiceTest {
     void 결제시_보유_포인트보다_많은_포인트_사용을_요청하면_예외가_발생한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
-        final OrderRequest orderRequest = new OrderRequest(List.of(1L), 100L);
-        final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"), new Price(1000L));
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L), BigDecimal.valueOf(100));
+        final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"),
+                new Price(BigDecimal.valueOf(1000)));
         final Cart cart = new Cart(List.of(new CartItem(1L, new Quantity(2), product, member)));
         final PaymentRequestEvent paymentRequestEvent = new PaymentRequestEvent(
                 member,
                 cart.getTotalPrice(),
                 orderRequest
         );
-        final Point memberPoint = new Point(0L);
+        final Point memberPoint = new Point(BigDecimal.ZERO);
         given(pointRepository.findPointByMember(member)).willReturn(memberPoint);
 
         // expect
@@ -67,15 +69,16 @@ class PaymentServiceTest {
     void 결제시_상품_가격보다_많은_포인트_사용을_요청하면_예외가_발생한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
-        final OrderRequest orderRequest = new OrderRequest(List.of(1L), 10001L);
-        final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"), new Price(1000L));
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L), BigDecimal.valueOf(10001));
+        final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"),
+                new Price(BigDecimal.valueOf(1000)));
         final Cart cart = new Cart(List.of(new CartItem(1L, new Quantity(2), product, member)));
         final PaymentRequestEvent paymentRequestEvent = new PaymentRequestEvent(
                 member,
                 cart.getTotalPrice(),
                 orderRequest
         );
-        final Point memberPoint = new Point(1000000L);
+        final Point memberPoint = new Point(BigDecimal.valueOf(1000000));
         given(pointRepository.findPointByMember(member)).willReturn(memberPoint);
 
         // expect

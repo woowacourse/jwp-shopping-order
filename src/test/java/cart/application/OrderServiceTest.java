@@ -28,6 +28,7 @@ import cart.dto.response.OrderResponse;
 import cart.exception.OrderException;
 import cart.repository.CartRepository;
 import cart.repository.OrderRepository;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,15 +70,17 @@ class OrderServiceTest {
     void 장바구니_목록을_받아_주문이_들어가고_장바구니에서_해당_목록을_삭제한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
-        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"), new Price(1000L));
-        final Product product2 = new Product(1L, new Name("상품2"), new ImageUrl("image2.com"), new Price(2000L));
+        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"),
+                new Price(BigDecimal.valueOf(1000)));
+        final Product product2 = new Product(1L, new Name("상품2"), new ImageUrl("image2.com"),
+                new Price(BigDecimal.valueOf(2000)));
 
         final Cart cart = new Cart(List.of(
                 new CartItem(1L, new Quantity(4), product1, member),
                 new CartItem(2L, new Quantity(3), product2, member)
         ));
 
-        final OrderRequest request = new OrderRequest(List.of(1L, 2L), 1000L);
+        final OrderRequest request = new OrderRequest(List.of(1L, 2L), BigDecimal.valueOf(1000));
         given(cartRepository.findByIds(request.getCartItemIds())).willReturn(cart);
         given(orderRepository.save(any())).willReturn(1L);
 
@@ -95,15 +98,17 @@ class OrderServiceTest {
     void 장바구니_목록을_받아_주문이_들어가고_결제와_포인트_업데이트를_요청한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
-        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"), new Price(1000L));
-        final Product product2 = new Product(1L, new Name("상품2"), new ImageUrl("image2.com"), new Price(2000L));
+        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"),
+                new Price(BigDecimal.valueOf(1000)));
+        final Product product2 = new Product(1L, new Name("상품2"), new ImageUrl("image2.com"),
+                new Price(BigDecimal.valueOf(2000)));
 
         final Cart cart = new Cart(List.of(
                 new CartItem(1L, new Quantity(4), product1, member),
                 new CartItem(2L, new Quantity(3), product2, member)
         ));
 
-        final OrderRequest request = new OrderRequest(List.of(1L, 2L), 1000L);
+        final OrderRequest request = new OrderRequest(List.of(1L, 2L), BigDecimal.valueOf(1000));
         given(cartRepository.findByIds(request.getCartItemIds())).willReturn(cart);
         given(orderRepository.save(any())).willReturn(1L);
 
@@ -120,7 +125,8 @@ class OrderServiceTest {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
         final Long orderId = 1L;
-        final Product product = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"), new Price(1000L));
+        final Product product = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"),
+                new Price(BigDecimal.valueOf(1000)));
         final List<OrderItem> orderItems = List.of(new OrderItem(1L, new Quantity(5), product));
         final Order order = new Order(1L, member, new Timestamp(System.currentTimeMillis()), orderItems);
 
@@ -139,7 +145,8 @@ class OrderServiceTest {
         final Member member1 = new Member(1L, new Email("a@a.com"), new Password("1234"));
         final Member member2 = new Member(2L, new Email("b@b.com"), new Password("1234"));
         final Long orderId = 1L;
-        final Product product = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"), new Price(1000L));
+        final Product product = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"),
+                new Price(BigDecimal.valueOf(1000)));
         final List<OrderItem> orderItems = List.of(new OrderItem(1L, new Quantity(5), product));
         final Order order = new Order(1L, member2, new Timestamp(System.currentTimeMillis()), orderItems);
 
@@ -155,8 +162,10 @@ class OrderServiceTest {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
 
-        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"), new Price(1000L));
-        final Product product2 = new Product(2L, new Name("상품2"), new ImageUrl("image2.com"), new Price(1000L));
+        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("image1.com"),
+                new Price(BigDecimal.valueOf(1000)));
+        final Product product2 = new Product(2L, new Name("상품2"), new ImageUrl("image2.com"),
+                new Price(BigDecimal.valueOf(1000)));
 
         final List<OrderItem> orderItems1 = List.of(new OrderItem(1L, new Quantity(5), product1));
         final List<OrderItem> orderItems2 = List.of(new OrderItem(1L, new Quantity(5), product2));

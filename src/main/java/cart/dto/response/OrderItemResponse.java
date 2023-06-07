@@ -1,19 +1,20 @@
 package cart.dto.response;
 
 import cart.domain.order.OrderItem;
+import java.math.BigDecimal;
 
 public class OrderItemResponse {
 
     private final Long id;
     private final int quantity;
-    private final Long price;
+    private final BigDecimal price;
     private final String name;
     private final String imageUrl;
 
     public OrderItemResponse(
             final Long id,
             final int quantity,
-            final Long price,
+            final BigDecimal price,
             final String name,
             final String imageUrl
     ) {
@@ -42,7 +43,7 @@ public class OrderItemResponse {
         return quantity;
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

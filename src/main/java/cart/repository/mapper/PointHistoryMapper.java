@@ -13,8 +13,8 @@ public class PointHistoryMapper {
     ) {
         return new PointHistoryEntity(
                 order.getMember().getId(),
-                usedPoint.getPoint(),
-                savedPoint.getPoint(),
+                usedPoint.getPoint().longValue(),
+                savedPoint.getPoint().longValue(),
                 order.getId()
         );
     }

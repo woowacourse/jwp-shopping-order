@@ -66,7 +66,7 @@ public class OrderMapper {
                 orderItem.getId(),
                 orderId,
                 orderItem.getProduct().getId(),
-                orderItem.getProduct().getPrice().price(),
+                orderItem.getProduct().getPrice().price().longValue(),
                 orderItem.getQuantity().quantity()
         );
     }

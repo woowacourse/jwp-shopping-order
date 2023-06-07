@@ -37,7 +37,7 @@ public class PointService {
         final Point usePoint = new Point(updateRequest.getOrderRequest().getUsePoint());
         final Point pointByMember = pointRepository.findPointByMember(member);
 
-        final Price memberPaidPrice = new Price(orderPrice.price() - usePoint.getPoint());
+        final Price memberPaidPrice = new Price(orderPrice.price().subtract(usePoint.getPoint()));
         final Point earnPoint = Point.calculateFromPrice(memberPaidPrice);
 
         final Point updatedMemberPoint = pointByMember.subtract(usePoint).add(earnPoint);
@@ -49,13 +49,13 @@ public class PointService {
     @Transactional(readOnly = true)
     public PointResponse findPointByMember(final Member member) {
         final Point pointByMember = pointRepository.findPointByMember(member);
-        return new PointResponse(pointByMember.getPoint());
+        return new PointResponse(pointByMember.getPoint().longValue());
     }
 
     @Transactional(readOnly = true)
     public PointHistoryResponse findPointHistory(final Long orderId) {
         final Point savedPointByOrder = pointRepository.findPointSavedHistory(orderId);
 
-        return new PointHistoryResponse(savedPointByOrder.getPoint());
+        return new PointHistoryResponse(savedPointByOrder.getPoint().longValue());
     }
 }

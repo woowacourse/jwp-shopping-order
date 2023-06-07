@@ -5,6 +5,7 @@ import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
 import cart.entity.ProductEntity;
+import java.math.BigDecimal;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +16,7 @@ public class ProductMapper {
                 entity.getId(),
                 new Name(entity.getName()),
                 new ImageUrl(entity.getImage()),
-                new Price(entity.getPrice())
+                new Price(BigDecimal.valueOf(entity.getPrice()))
         );
     }
 
@@ -24,7 +25,7 @@ public class ProductMapper {
                 product.getId(),
                 product.getName().name(),
                 product.getImage().imageUrl(),
-                product.getPrice().price()
+                product.getPrice().price().longValue()
         );
     }
 
@@ -33,7 +34,7 @@ public class ProductMapper {
                 entity.getId(),
                 new Name(entity.getName()),
                 new ImageUrl(entity.getImage()),
-                new Price(price)
+                new Price(BigDecimal.valueOf(price))
         );
     }
 }

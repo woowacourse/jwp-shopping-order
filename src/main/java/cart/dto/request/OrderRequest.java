@@ -1,5 +1,6 @@
 package cart.dto.request;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,12 +11,12 @@ public class OrderRequest {
     private List<Long> cartItemIds;
 
     @NotNull
-    private Long usePoint;
+    private BigDecimal usePoint;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(final List<Long> cartItemIds, final Long usePoint) {
+    public OrderRequest(final List<Long> cartItemIds, final BigDecimal usePoint) {
         this.cartItemIds = cartItemIds;
         this.usePoint = usePoint;
     }
@@ -24,7 +25,7 @@ public class OrderRequest {
         return cartItemIds;
     }
 
-    public Long getUsePoint() {
+    public BigDecimal getUsePoint() {
         return usePoint;
     }
 }

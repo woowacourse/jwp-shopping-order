@@ -20,6 +20,7 @@ import cart.domain.product.Product;
 import cart.dto.request.OrderRequest;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,11 +54,11 @@ class PointServiceTest {
     void 포인트로_결제한_것_이외의_상품_가격에서_포인트를_기존_멤버의_포인트에_누적한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
-        final OrderRequest orderRequest = new OrderRequest(List.of(1L), 500L);
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L), BigDecimal.valueOf(500));
         final OrderItem orderItem = new OrderItem(
                 1L,
                 new Quantity(1),
-                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(10000L))
+                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(BigDecimal.valueOf(10000)))
         );
         final Order order = new Order(
                 1L,
@@ -65,7 +66,7 @@ class PointServiceTest {
                 new Timestamp(System.currentTimeMillis()),
                 List.of(orderItem)
         );
-        final Point memberPoint = new Point(1000L);
+        final Point memberPoint = new Point(BigDecimal.valueOf(1000));
 
         given(pointRepository.findPointByMember(member)).willReturn(memberPoint);
         given(orderRepository.findByOrderId(1L)).willReturn(order);
@@ -79,7 +80,7 @@ class PointServiceTest {
         verify(pointRepository).updateMemberPoint(memberArgumentCaptor.capture(), pointArgumentCaptor.capture());
         assertAll(
                 () -> assertThat(memberArgumentCaptor.getValue().getId()).isEqualTo(1L),
-                () -> assertThat(pointArgumentCaptor.getValue().getPoint()).isEqualTo(738L)
+                () -> assertThat(pointArgumentCaptor.getValue().getPoint().intValue()).isEqualTo(738L)
         );
     }
 
@@ -87,11 +88,11 @@ class PointServiceTest {
     void 멤버가_주문에_사용한_포인트와_해당_주문으로_누적된_포인트_이력을_저장한다() {
         // given
         final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
-        final OrderRequest orderRequest = new OrderRequest(List.of(1L), 500L);
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L), BigDecimal.valueOf(500));
         final OrderItem orderItem = new OrderItem(
                 1L,
                 new Quantity(1),
-                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(10000L))
+                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(BigDecimal.valueOf(10000)))
         );
         final Order order = new Order(
                 1L,
@@ -99,7 +100,7 @@ class PointServiceTest {
                 new Timestamp(System.currentTimeMillis()),
                 List.of(orderItem)
         );
-        final Point memberPoint = new Point(1000L);
+        final Point memberPoint = new Point(BigDecimal.valueOf(1000));
         //9500  238 saved
         given(pointRepository.findPointByMember(member)).willReturn(memberPoint);
         given(orderRepository.findByOrderId(1L)).willReturn(order);
@@ -119,8 +120,8 @@ class PointServiceTest {
 
         assertAll(
                 () -> assertThat(orderArgumentCaptor.getValue().getId()).isEqualTo(1L),
-                () -> assertThat(usePointArgumentCaptor.getValue().getPoint()).isEqualTo(500L),
-                () -> assertThat(savedPointArgumentCaptor.getValue().getPoint()).isEqualTo(238L)
+                () -> assertThat(usePointArgumentCaptor.getValue().getPoint().intValue()).isEqualTo(500L),
+                () -> assertThat(savedPointArgumentCaptor.getValue().getPoint().intValue()).isEqualTo(238L)
         );
     }
 }

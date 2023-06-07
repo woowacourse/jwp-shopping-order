@@ -12,6 +12,7 @@ import cart.dto.response.CartItemResponse;
 import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +38,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg"));
+        productId = createProduct(
+                new ProductRequest("치킨", BigDecimal.valueOf(10_000), "http://example.com/chicken.jpg"));
+        productId2 = createProduct(
+                new ProductRequest("피자", BigDecimal.valueOf(15_000), "http://example.com/pizza.jpg"));
 
         member = memberRepository.getMemberById(1L);
         member2 = memberRepository.getMemberById(2L);

@@ -14,6 +14,7 @@ import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
 import cart.exception.OrderException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -42,8 +43,10 @@ class OrderTest {
         final Quantity quantity1 = new Quantity(5);
         final Quantity quantity2 = new Quantity(10);
 
-        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("example.com"), new Price(1000L));
-        final Product product2 = new Product(2L, new Name("상품2"), new ImageUrl("example.com"), new Price(100L));
+        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("example.com"),
+                new Price(BigDecimal.valueOf(1000)));
+        final Product product2 = new Product(2L, new Name("상품2"), new ImageUrl("example.com"),
+                new Price(BigDecimal.valueOf(100)));
 
         final OrderItem orderItem1 = new OrderItem(1L, quantity1, product1);
         final OrderItem orderItem2 = new OrderItem(2L, quantity2, product2);
@@ -59,7 +62,7 @@ class OrderTest {
         final Price totalPrice = order.getTotalPrice();
 
         // then
-        assertThat(totalPrice.price()).isEqualTo(6000);
+        assertThat(totalPrice.price().intValue()).isEqualTo(6000);
     }
 
     @Test
@@ -69,7 +72,8 @@ class OrderTest {
 
         final Quantity quantity1 = new Quantity(5);
 
-        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("example.com"), new Price(1000L));
+        final Product product1 = new Product(1L, new Name("상품1"), new ImageUrl("example.com"),
+                new Price(BigDecimal.valueOf(1000)));
 
         final OrderItem orderItem1 = new OrderItem(1L, quantity1, product1);
 

@@ -10,6 +10,7 @@ import cart.exception.PointException;
 import cart.exception.PointHistoryException;
 import cart.repository.mapper.PointHistoryMapper;
 import cart.repository.mapper.PointMapper;
+import java.math.BigDecimal;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,7 +25,7 @@ public class PointRepository {
     }
 
     public void updateMemberPoint(final Member member, final Point point) {
-        pointDao.update(member.getId(), point.getPoint());
+        pointDao.update(member.getId(), point.getPoint().longValue());
     }
 
     public Point findPointByMember(final Member member) {
@@ -46,6 +47,6 @@ public class PointRepository {
                 () -> new PointHistoryException.NotFound(orderId)
         );
 
-        return new Point(pointHistoryEntity.getPointsSaved());
+        return new Point(BigDecimal.valueOf(pointHistoryEntity.getPointsSaved()));
     }
 }

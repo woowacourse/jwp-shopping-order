@@ -1,6 +1,7 @@
 package cart.dto.response;
 
 import cart.domain.order.Order;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,13 +9,13 @@ import java.util.stream.Collectors;
 public class OrderResponse {
 
     private final Long id;
-    private final long price;
+    private final BigDecimal price;
     private final Timestamp orderDate;
     private final List<OrderItemResponse> orders;
 
     public OrderResponse(
             final Long id,
-            final long price,
+            final BigDecimal price,
             final Timestamp orderDate,
             final List<OrderItemResponse> orders
     ) {
@@ -40,7 +41,7 @@ public class OrderResponse {
         return id;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

@@ -13,6 +13,7 @@ import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +30,7 @@ import org.springframework.http.MediaType;
 public class OrderIntegrationTest extends IntegrationTest {
 
     private Member member1 = new Member(1L, new Email("a@a.com"), new Password("1234"));
-    private Member member2 = new Member(2L, new Email("b@b.com"), new Password("1234"));
-    private final Long pointToUseNotUsed = 0L;
+    private final BigDecimal pointToUseNotUsed = BigDecimal.valueOf(0);
 
     @Test
     void 사용자는_장바구니에_있는_상품을_선택해_주문할_수_있다() {
@@ -62,17 +62,17 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderHistoryResponse.jsonPath().getObject("[0]", OrderResponse.class))
                 .usingRecursiveComparison()
                 .ignoringFields("orderDate")
-                .isEqualTo(new OrderResponse(1L, 20_000L, time,
+                .isEqualTo(new OrderResponse(1L, BigDecimal.valueOf(20_000), time,
                         List.of(
-                                new OrderItemResponse(1L, 2, 10_000L, "치킨",
+                                new OrderItemResponse(1L, 2, BigDecimal.valueOf(10_000), "치킨",
                                         "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
                         )));
         assertThat(orderHistoryResponse.jsonPath().getObject("[1]", OrderResponse.class))
                 .usingRecursiveComparison()
                 .ignoringFields("orderDate", "orders[0].imageUrl")
-                .isEqualTo(new OrderResponse(2L, 80_000L, time,
+                .isEqualTo(new OrderResponse(2L, BigDecimal.valueOf(80_000), time,
                         List.of(
-                                new OrderItemResponse(2L, 4, 20_000L, "샐러드",
+                                new OrderItemResponse(2L, 4, BigDecimal.valueOf(20_000), "샐러드",
                                         "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
                         )));
     }
@@ -90,12 +90,12 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .usingRecursiveComparison()
                 .ignoringFields("orderDate")
                 .ignoringFields("imageUrl")
-                .isEqualTo(new OrderResponse(1L, 100_000L,
+                .isEqualTo(new OrderResponse(1L, BigDecimal.valueOf(100_000),
                         Timestamp.valueOf(LocalDateTime.now()),
                         List.of(
-                                new OrderItemResponse(1L, 2, 10_000L, "치킨",
+                                new OrderItemResponse(1L, 2, BigDecimal.valueOf(10_000), "치킨",
                                         "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"),
-                                new OrderItemResponse(2L, 4, 20_000L, "샐러드",
+                                new OrderItemResponse(2L, 4, BigDecimal.valueOf(20_000), "샐러드",
                                         "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
                         )));
     }
@@ -124,7 +124,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         Assertions.assertThat(resultCartItemIds).containsExactly(2L);
     }
 
-    private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member, Long pointToUse) {
+    private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member, BigDecimal pointToUse) {
         OrderRequest orderRequest = new OrderRequest(cartItemIds, pointToUse);
 
         return given().log().all()

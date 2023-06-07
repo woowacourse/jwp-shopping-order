@@ -29,6 +29,7 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.ProductEntity;
 import cart.exception.OrderException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -73,7 +74,7 @@ class OrderRepositoryTest {
         // given
         Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
         final OrderItem orderItem = new OrderItem(new Quantity(5),
-                new Product(1L, new Name("상품명"), new ImageUrl("img.com"), new Price(1000L)));
+                new Product(1L, new Name("상품명"), new ImageUrl("img.com"), new Price(BigDecimal.valueOf(1000))));
         given(orderDao.save(any(OrderEntity.class))).willReturn(1L);
         willDoNothing().given(orderItemDao).batchInsert(anyList());
 
@@ -109,7 +110,9 @@ class OrderRepositoryTest {
                 new Order(1L, new Member(1L, new Email("a@a.com"), new Password("1234")),
                         Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)),
                         List.of(new OrderItem(1L, new Quantity(5),
-                                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(2000L))))));
+                                new Product(1L, new Name("상품"), new ImageUrl("image.com"),
+                                        new Price(BigDecimal.valueOf(2000L)))))
+                ));
     }
 
     @Test
@@ -147,7 +150,10 @@ class OrderRepositoryTest {
                 List.of(new Order(1L, new Member(1L, new Email("a@a.com"), new Password("1234")),
                         Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)),
                         List.of(new OrderItem(1L, new Quantity(5),
-                                new Product(1L, new Name("상품"), new ImageUrl("image.com"), new Price(2000L))))))));
+                                new Product(1L, new Name("상품"), new ImageUrl("image.com"),
+                                        new Price(BigDecimal.valueOf(2000)))))
+                ))
+        ));
     }
 
     @Test
