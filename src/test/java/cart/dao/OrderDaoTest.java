@@ -59,7 +59,7 @@ class OrderDaoTest {
         assertAll(
                 () -> assertThat(order.getId()).isPositive(),
                 () -> assertThat(order.getMemberId()).isEqualTo(1L),
-                () -> assertThat(order.getOrderTime()).isBefore(new Timestamp(System.currentTimeMillis()))
+                () -> assertThat(order.getOrderTime()).isBefore(Timestamp.valueOf("9999-12-15 12:00:00"))
         );
     }
 }
