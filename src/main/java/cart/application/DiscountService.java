@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public class DiscountService {
+
     public int calculateTotalPrice(final MemberGrade grade, final int totalPrice) {
         final int discountAmount = new MemberGradeDiscountPolicy(grade)
                 .and(new PriceDiscountPolicy())

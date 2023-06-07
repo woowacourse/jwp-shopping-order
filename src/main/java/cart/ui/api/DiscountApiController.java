@@ -1,7 +1,7 @@
 package cart.ui.api;
 
 import cart.application.DiscountService;
-import cart.dto.DiscountRequest;
+import cart.dto.DiscountRateRequest;
 import cart.dto.DiscountResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public final class DiscountApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DiscountResponse>> getDiscountRate(final DiscountRequest request) {
+    public ResponseEntity<List<DiscountResponse>> getDiscountRate(final DiscountRateRequest request) {
         final List<DiscountResponse> result = discountService.getDiscountInfo(request.getMemberGrade(), request.getPrice());
 
         return ResponseEntity.ok(result);
