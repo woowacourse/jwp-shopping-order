@@ -46,7 +46,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 주문이_정상적으로_되어야_한다() {
+    void 주문을_생성하면_생성_응답을_반환하고_장바구니에_존재하는_물건을_삭제한다() {
         Long productId = productDao.save(new Product(null, "사과", 1000, "http://image.com/image.png"));
         Product product = productDao.findById(productId).get();
         Long cartItemId = cartItemDao.save(new CartItem(null, 5, product, member));
@@ -67,6 +67,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(response.header("Location")).isEqualTo("/orders/1"),
                 () -> assertThat(cartItemDao.findById(cartItemId)).isEmpty()
         );
     }
