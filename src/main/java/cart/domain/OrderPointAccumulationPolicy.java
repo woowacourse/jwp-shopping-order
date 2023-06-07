@@ -1,7 +1,10 @@
 package cart.domain;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 
+@Component
 public class OrderPointAccumulationPolicy implements PointAccumulationPolicy {
 
     private static final String ORDER_POINT_COMMENT = "상품 구매 포인트";

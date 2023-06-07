@@ -30,14 +30,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public OrderPage getOrderPage() {
         return new OrderPage(LIMIT);
     }
-
-    @Bean
-    public PointExpirePolicy getPointExpirePolicy() {
-        return new OrderPointExpirePolicy();
-    }
-
-    @Bean
-    public PointAccumulationPolicy getPointAccumulationPolicy() {
-        return new OrderPointAccumulationPolicy(getPointExpirePolicy());
-    }
 }
