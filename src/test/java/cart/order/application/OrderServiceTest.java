@@ -1,6 +1,6 @@
 package cart.order.application;
 
-import cart.order.dao.CartOrderDao;
+import cart.order.dao.OrderHistoryDao;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class OrderServiceTest {
 
     @InjectMocks
-    private OrderService cartOrderService;
+    private OrderService orderService;
 
     @Mock
-    private CartOrderDao cartOrderDao;
+    private OrderHistoryDao orderHistoryDao;
 
 }

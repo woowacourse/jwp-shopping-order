@@ -2,7 +2,7 @@ package cart.config;
 
 import cart.cartitem.dao.CartItemDao;
 import cart.member.dao.MemberDao;
-import cart.order.dao.CartOrderDao;
+import cart.order.dao.OrderHistoryDao;
 import cart.order.dao.OrderItemDao;
 import cart.product.dao.ProductDao;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({CartItemDao.class,
         MemberDao.class,
         ProductDao.class,
-        CartOrderDao.class,
+        OrderHistoryDao.class,
         OrderItemDao.class})
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class DaoTest {
@@ -32,7 +32,7 @@ public class DaoTest {
     protected ProductDao productDao;
 
     @Autowired
-    protected CartOrderDao cartOrderDao;
+    protected OrderHistoryDao orderHistoryDao;
 
     @Autowired
     protected OrderItemDao orderItemDao;

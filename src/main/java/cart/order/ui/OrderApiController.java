@@ -43,10 +43,10 @@ public class OrderApiController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{cartOrderId}")
+    @GetMapping("/{orderHistoryId}")
     public ResponseEntity<OrderResponse> getOrder(@Auth Member member,
-                                                  @PathVariable final Long cartOrderId) {
-        final OrderDto orderDto = orderService.findByCartOrderId(cartOrderId);
+                                                  @PathVariable final Long orderHistoryId) {
+        final OrderDto orderDto = orderService.findByOrderHistoryId(orderHistoryId);
 
         final OrderResponse response = OrderResponse.from(orderDto);
 
@@ -58,8 +58,8 @@ public class OrderApiController {
                                           @RequestBody final OrderCartItemsRequest request) {
         final List<OrderCartItemRequest> orderCartItemDtos = request.getOrderCartItemDtos();
 
-        final Long cartOrderId = orderService.addCartOrder(member, orderCartItemDtos);
+        final Long orderHistoryId = orderService.addOrderHistory(member, orderCartItemDtos);
 
-        return ResponseEntity.created(URI.create("/orders/" + cartOrderId)).build();
+        return ResponseEntity.created(URI.create("/orders/" + orderHistoryId)).build();
     }
 }

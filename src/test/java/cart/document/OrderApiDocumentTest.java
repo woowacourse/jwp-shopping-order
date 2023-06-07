@@ -7,7 +7,7 @@ import cart.member.dao.MemberDao;
 import cart.order.application.OrderService;
 import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderedProductDto;
-import cart.order.domain.CartOrder;
+import cart.order.domain.OrderHistory;
 import cart.order.ui.OrderApiController;
 import cart.order.ui.request.OrderCartItemRequest;
 import cart.order.ui.request.OrderCartItemsRequest;
@@ -103,8 +103,8 @@ public class OrderApiDocumentTest {
         // given
         final List<OrderedProductDto> orderedProductDtos = List.of(new OrderedProductDto(CHICKEN.ENTITY, 3),
                 new OrderedProductDto(PIZZA.ENTITY, 2));
-        final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
-        final OrderDto orderDto = new OrderDto(cartOrder, orderedProductDtos);
+        final OrderHistory orderHistory = new OrderHistory(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
+        final OrderDto orderDto = new OrderDto(orderHistory, orderedProductDtos);
 
         given(orderService.findAllByMemberId(Member_Dooly.ID))
                 .willReturn(List.of(orderDto));
@@ -139,14 +139,14 @@ public class OrderApiDocumentTest {
         // given
         final List<OrderedProductDto> orderedProductDtos = List.of(new OrderedProductDto(CHICKEN.ENTITY, 3),
                 new OrderedProductDto(PIZZA.ENTITY, 2));
-        final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
-        final OrderDto orderDto = new OrderDto(cartOrder, orderedProductDtos);
+        final OrderHistory orderHistory = new OrderHistory(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
+        final OrderDto orderDto = new OrderDto(orderHistory, orderedProductDtos);
 
-        given(orderService.findByCartOrderId(cartOrder.getId()))
+        given(orderService.findByOrderHistoryId(orderHistory.getId()))
                 .willReturn(orderDto);
 
         // when, then
-        mockMvc.perform(get("/orders/{cartOrderId}", cartOrder.getId())
+        mockMvc.perform(get("/orders/{orderHistoryId}", orderHistory.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
                 .andExpect(status().isOk())
@@ -156,7 +156,7 @@ public class OrderApiDocumentTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
                         ),
                         pathParameters(
-                                parameterWithName("cartOrderId").description("조회할 주문 ID")
+                                parameterWithName("orderHistoryId").description("조회할 주문 ID")
                         ),
                         responseFields(
                                 fieldWithPath("orderId").type(JsonFieldType.NUMBER).description("주문 ID"),
@@ -180,7 +180,7 @@ public class OrderApiDocumentTest {
         final List<OrderCartItemRequest> orderCartItemDtos = List.of(oneDto, twoDto);
         final OrderCartItemsRequest request = new OrderCartItemsRequest(orderCartItemDtos);
 
-        given(orderService.addCartOrder(any(), any()))
+        given(orderService.addOrderHistory(any(), any()))
                 .willReturn(1L);
 
         // when, then

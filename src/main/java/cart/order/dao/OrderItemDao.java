@@ -2,7 +2,7 @@ package cart.order.dao;
 
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderItemDto;
-import cart.order.domain.CartOrder;
+import cart.order.domain.OrderHistory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -23,27 +23,27 @@ public class OrderItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<OrderItemDto> findByCartOrderId(final Long cartOrderId) {
+    public List<OrderItemDto> findByOrderHistoryId(final Long orderHistoryId) {
         final String sql = "SELECT order_item.id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, order_history.total_price, order_history.created_at, member.id, member.email, member.cash " +
                 "FROM order_item " +
                 "INNER JOIN order_history ON order_item.order_history_id = order_history.id " +
                 "INNER JOIN member ON order_history.member_id = member.id " +
                 "WHERE order_item.order_history_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{cartOrderId}, (rs, rowNum) -> {
+        return jdbcTemplate.query(sql, new Object[]{orderHistoryId}, (rs, rowNum) -> {
             Long orderItemId = rs.getLong("order_item.id");
             Long productId = rs.getLong("order_item.product_id");
             String orderItemName = rs.getString("order_item.name");
             int orderItemPrice = rs.getInt("order_item.price");
             String orderItemUrl = rs.getString("order_item.image_url");
             int orderItemQuantity = rs.getInt("order_item.quantity");
-            Long cartOrderTotalPrice = rs.getLong("order_history.total_price");
-            LocalDateTime cartOrderCreated = rs.getTimestamp("order_history.created_at").toLocalDateTime();
+            Long orderHistoryTotalPrice = rs.getLong("order_history.total_price");
+            LocalDateTime orderHistoryCreated = rs.getTimestamp("order_history.created_at").toLocalDateTime();
             Long memberId = rs.getLong("member.id");
             String memberEmail = rs.getString("member.email");
             Long memberCash = rs.getLong("member.cash");
             Member member = Member.of(memberId, memberEmail, null, memberCash);
-            CartOrder cartOrder = new CartOrder(cartOrderId, member, cartOrderTotalPrice, cartOrderCreated);
-            return new OrderItemDto(orderItemId, cartOrder, productId, orderItemName, orderItemPrice, orderItemUrl, orderItemQuantity);
+            OrderHistory orderHistory = new OrderHistory(orderHistoryId, member, orderHistoryTotalPrice, orderHistoryCreated);
+            return new OrderItemDto(orderItemId, orderHistory, productId, orderItemName, orderItemPrice, orderItemUrl, orderItemQuantity);
         });
     }
 
@@ -56,7 +56,7 @@ public class OrderItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, orderItem.getCartOrder().getId());
+            ps.setLong(1, orderItem.getOrderHistory().getId());
             ps.setLong(2, orderItem.getProductId());
             ps.setString(3, orderItem.getName());
             ps.setInt(4, orderItem.getPrice());

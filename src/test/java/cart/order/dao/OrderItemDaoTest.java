@@ -2,7 +2,7 @@ package cart.order.dao;
 
 import cart.config.DaoTest;
 import cart.order.application.dto.OrderItemDto;
-import cart.order.domain.CartOrder;
+import cart.order.domain.OrderHistory;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +19,9 @@ class OrderItemDaoTest extends DaoTest {
     @Test
     void 주문_ID를_통해_어떤_상품들을_주문했는지_조회한다() {
         // given, when
-        final List<OrderItemDto> orderItemDtos = orderItemDao.findByCartOrderId(1L);
+        final List<OrderItemDto> orderItemDtos = orderItemDao.findByOrderHistoryId(1L);
 
-        // then, getCartOrder 상품 비교 불가 (이유: created_at)
+        // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(orderItemDtos).hasSize(1);
             softAssertions.assertThat(orderItemDtos.get(0).getId()).isEqualTo(1L);
@@ -36,9 +36,9 @@ class OrderItemDaoTest extends DaoTest {
     @Test
     void 장바구니한_상품을_주문하다() {
         // given
-        final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 50000L, LocalDateTime.now());
+        final OrderHistory orderHistory = new OrderHistory(1L, Member_Dooly.ENTITY, 50000L, LocalDateTime.now());
         final OrderItemDto orderItemDto
-                = new OrderItemDto(10L, cartOrder, CHICKEN.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL, 10);
+                = new OrderItemDto(10L, orderHistory, CHICKEN.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL, 10);
 
         // when
         final Long orderItemId = orderItemDao.save(orderItemDto);

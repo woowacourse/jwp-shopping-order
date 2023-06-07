@@ -23,10 +23,10 @@ public class OrderResponse {
 
     public static OrderResponse from(final OrderDto orderDto) {
         return new OrderResponse(
-                orderDto.getCartOrder().getId(),
-                orderDto.getCartOrder().getCreated(),
+                orderDto.getOrderHistory().getId(),
+                orderDto.getOrderHistory().getCreated(),
                 orderDto.getProducts(),
-                orderDto.getCartOrder().getTotalPrice()
+                orderDto.getOrderHistory().getTotalPrice()
         );
     }
 

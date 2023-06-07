@@ -1,21 +1,21 @@
 package cart.order.application.dto;
 
-import cart.order.domain.CartOrder;
+import cart.order.domain.OrderHistory;
 
 import java.util.List;
 
 public class OrderDto {
 
-    private CartOrder cartOrder;
+    private OrderHistory orderHistory;
     private List<OrderedProductDto> products;
 
-    public OrderDto(final CartOrder cartOrder, final List<OrderedProductDto> products) {
-        this.cartOrder = cartOrder;
+    public OrderDto(final OrderHistory orderHistory, final List<OrderedProductDto> products) {
+        this.orderHistory = orderHistory;
         this.products = products;
     }
 
-    public CartOrder getCartOrder() {
-        return cartOrder;
+    public OrderHistory getOrderHistory() {
+        return orderHistory;
     }
 
     public List<OrderedProductDto> getProducts() {

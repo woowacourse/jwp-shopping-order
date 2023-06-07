@@ -7,9 +7,9 @@ import cart.member.domain.Member;
 import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderItemDto;
 import cart.order.application.dto.OrderedProductDto;
-import cart.order.dao.CartOrderDao;
+import cart.order.dao.OrderHistoryDao;
 import cart.order.dao.OrderItemDao;
-import cart.order.domain.CartOrder;
+import cart.order.domain.OrderHistory;
 import cart.order.ui.request.OrderCartItemRequest;
 import cart.product.domain.Product;
 import org.springframework.stereotype.Service;
@@ -21,56 +21,59 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
     private final CartItemDao cartItemDao;
-    private final CartOrderDao cartOrderDao;
+    private final OrderHistoryDao orderHistoryDao;
     private final OrderItemDao orderItemDao;
     private final MemberDao memberDao;
 
-    public OrderService(final CartItemDao cartItemDao, final CartOrderDao cartOrderDao, final OrderItemDao orderItemDao, final MemberDao memberDao) {
+    public OrderService(final CartItemDao cartItemDao,
+                        final OrderHistoryDao orderHistoryDao,
+                        final OrderItemDao orderItemDao,
+                        final MemberDao memberDao) {
         this.cartItemDao = cartItemDao;
-        this.cartOrderDao = cartOrderDao;
+        this.orderHistoryDao = orderHistoryDao;
         this.orderItemDao = orderItemDao;
         this.memberDao = memberDao;
     }
 
     @Transactional(readOnly = true)
     public List<OrderDto> findAllByMemberId(final Long memberId) {
-        final List<CartOrder> cartOrders = cartOrderDao.findByMemberId(memberId);
+        final List<OrderHistory> orderHistories = orderHistoryDao.findByMemberId(memberId);
 
-        final List<OrderDto> orderDtos = cartOrders.stream()
-                .map(cartOrder -> findByCartOrderId(cartOrder.getId()))
+        final List<OrderDto> orderDtos = orderHistories.stream()
+                .map(orderHistory -> findByOrderHistoryId(orderHistory.getId()))
                 .collect(Collectors.toList());
 
         return orderDtos;
     }
 
     @Transactional(readOnly = true)
-    public OrderDto findByCartOrderId(final Long cartOrderId) {
-        final CartOrder cartOrder = cartOrderDao.findById(cartOrderId);
+    public OrderDto findByOrderHistoryId(final Long orderHistoryId) {
+        final OrderHistory orderHistory = orderHistoryDao.findById(orderHistoryId);
 
-        final List<OrderItemDto> orderItemDtos = orderItemDao.findByCartOrderId(cartOrderId);
+        final List<OrderItemDto> orderItemDtos = orderItemDao.findByOrderHistoryId(orderHistoryId);
         final List<OrderedProductDto> products = orderItemDtos.stream()
                 .map(OrderedProductDto::from)
                 .collect(Collectors.toList());
 
-        return new OrderDto(cartOrder, products);
+        return new OrderDto(orderHistory, products);
     }
 
     @Transactional
-    public Long addCartOrder(final Member member,
-                             final List<OrderCartItemRequest> orderCartItemDtos) {
+    public Long addOrderHistory(final Member member,
+                                final List<OrderCartItemRequest> orderCartItemDtos) {
 
         final Long totalPrice = calculateTotalPrice(orderCartItemDtos);
-        final CartOrder cartOrder = new CartOrder(member, totalPrice);
+        final OrderHistory orderHistory = new OrderHistory(member, totalPrice);
 
-        final Long cartOrderId = cartOrderDao.save(cartOrder);
-        addOrderItems(cartOrderId, orderCartItemDtos);
+        final Long orderHistoryId = orderHistoryDao.save(orderHistory);
+        addOrderItems(orderHistoryId, orderCartItemDtos);
         for (OrderCartItemRequest orderCartItemDto : orderCartItemDtos) {
             cartItemDao.deleteById(orderCartItemDto.getCartItemId());
         }
         member.withdraw(totalPrice);
         memberDao.updateMember(member);
 
-        return cartOrderId;
+        return orderHistoryId;
     }
 
     private static Long calculateTotalPrice(final List<OrderCartItemRequest> orderCartItemDtos) {
@@ -80,11 +83,11 @@ public class OrderService {
                 .reduce(0L, Long::sum);
     }
 
-    private void addOrderItems(final Long cartOrderId,
+    private void addOrderItems(final Long orderHistoryId,
                                final List<OrderCartItemRequest> orderCartItemDtos) {
         for (OrderCartItemRequest orderCartItemDto : orderCartItemDtos) {
             validateProductInfo(orderCartItemDto);
-            addOrderItem(orderCartItemDto, cartOrderId);
+            addOrderItem(orderCartItemDto, orderHistoryId);
         }
     }
 
@@ -99,13 +102,13 @@ public class OrderService {
         }
     }
 
-    private void addOrderItem(final OrderCartItemRequest orderCartItemDto, final Long cartOrderId) {
-        final CartOrder cartOrder = cartOrderDao.findById(cartOrderId);
+    private void addOrderItem(final OrderCartItemRequest orderCartItemDto, final Long orderHistoryId) {
+        final OrderHistory orderHistory = orderHistoryDao.findById(orderHistoryId);
         final CartItem cartItem = cartItemDao.findById(orderCartItemDto.getCartItemId());
         final Long productId = cartItem.getProduct().getId();
         final int quantity = cartItem.getQuantity();
 
-        final OrderItemDto orderItem = OrderItemDto.of(cartOrder, productId, orderCartItemDto, quantity);
+        final OrderItemDto orderItem = OrderItemDto.of(orderHistory, productId, orderCartItemDto, quantity);
         orderItemDao.save(orderItem);
     }
 }
