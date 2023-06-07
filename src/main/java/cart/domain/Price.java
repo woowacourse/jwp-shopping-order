@@ -1,6 +1,6 @@
 package cart.domain;
 
-public class Price implements Money {
+public class Price {
     private Integer value;
 
     public Price() {

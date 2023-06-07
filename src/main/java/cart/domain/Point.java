@@ -2,7 +2,7 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class Point implements Money {
+public class Point {
     private Long value;
 
     public Point() {
