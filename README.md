@@ -21,7 +21,7 @@
 ```json
 GET /coupons HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${credentials}
 ```
 
 - Response
@@ -56,7 +56,7 @@ HTTP/1.1 200 OK
 ```json
 POST /coupons/{id} HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${}
 ...
 ```
 
@@ -73,7 +73,7 @@ HTTP/1.1 201 Created
 ```json
 GET /coupons/active?total=100000 HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${}
 ```
 
 - Response
@@ -103,7 +103,7 @@ HTTP/1.1 200 OK
 ```json
 GET /coupons/{id}/discount?total=30000 HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${}
 ```
 
 - Response
@@ -127,7 +127,7 @@ HTTP/1.1 200 OK
 ```json
 POST /orders HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${}
 ...
 
 {
@@ -185,7 +185,7 @@ HTTP/1.1 201 Created
 ```json
 GET /orders/{id} HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${}
 ...
 ```
 
@@ -227,7 +227,7 @@ HTTP/1.1 200 OK
 ```json
 GET /orders HTTP/1.1
 Host: localhost:8080
-Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+Authorization: Basic ${}
 ...
 ```
 
