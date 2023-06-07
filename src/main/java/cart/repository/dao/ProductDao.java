@@ -1,12 +1,15 @@
 package cart.repository.dao;
 
-import cart.domain.Product;
+import cart.entity.ProductEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,17 +28,28 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product WHERE is_deleted = FALSE";
-        return jdbcTemplate.query(sql, productRowMapper);
+    public Page<ProductEntity> getProducts(Pageable pageable) {
+        final int pageSize = pageable.getPageSize();
+        final long offset = pageable.getOffset();
+
+        String sql = "SELECT * FROM product "
+                + "WHERE is_deleted = FALSE "
+                + "LIMIT ? "
+                + "OFFSET ? ";
+        final List<ProductEntity> products = jdbcTemplate.query(sql, new Object[]{pageSize, offset}, productRowMapper);
+
+        String countSql = "SELECT COUNT(*) FROM product";
+        final Integer totalProductCount = jdbcTemplate.queryForObject(countSql, Integer.class);
+
+        return new PageImpl<>(products, pageable, totalProductCount);
     }
 
-    public Product getProductById(Long productId) {
+    public ProductEntity getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ? AND is_deleted = FALSE";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, productRowMapper);
     }
 
-    public List<Product> getProductByIds(List<Long> productIds) {
+    public List<ProductEntity> getProductByIds(List<Long> productIds) {
         String sql = "SELECT id, name, price, image_url, is_deleted FROM product WHERE id IN (:ids) AND is_deleted = FALSE";
 
         Map<String, Object> params = Collections.singletonMap("ids", productIds);
@@ -43,7 +57,7 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(sql, params, productRowMapper);
     }
 
-    public Long createProduct(Product product) {
+    public Long createProduct(ProductEntity product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -62,7 +76,7 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateProduct(Long productId, ProductEntity product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
@@ -72,12 +86,12 @@ public class ProductDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
+    private final RowMapper<ProductEntity> productRowMapper = (rs, rowNum) -> {
         Long productId = rs.getLong("id");
         String name = rs.getString("name");
         int price = rs.getInt("price");
         String imageUrl = rs.getString("image_url");
         boolean isDeleted = rs.getBoolean("is_deleted");
-        return new Product(productId, name, price, imageUrl, isDeleted);
+        return new ProductEntity(productId, name, price, imageUrl, isDeleted);
     };
 }

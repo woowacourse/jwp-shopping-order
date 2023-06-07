@@ -10,6 +10,7 @@ import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         // given
         int unitSize = 5;
         int page = 2;
-        var allProducts = productService.getAllProducts();
+        final List<ProductResponse> allProducts = productService.getAllProducts();
         int expectedTotalPage = 4;
 
         // when
@@ -85,7 +86,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         // then
         assertThat(pagedProductsResponse.getProducts()).hasSize(unitSize);
         assertThat(pagination.getPerPage()).isEqualTo(unitSize);
-        assertThat(pagination.getCurrentPage()).isEqualTo(page);
+        assertThat(pagination.getCurrentPage()).isEqualTo(page - 1);
         assertThat(pagination.getLastPage()).isEqualTo(expectedTotalPage);
         assertThat(pagination.getTotal()).isEqualTo(allProducts.size());
     }

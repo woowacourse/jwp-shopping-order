@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.domain.Member;
-import cart.domain.Product;
+import cart.entity.ProductEntity;
 import cart.domain.order.DiscountPolicy;
 import cart.domain.order.FixedDiscountPolicy;
 import cart.domain.order.Order;
@@ -53,7 +53,7 @@ public class OrderRepository {
                 .map(OrderItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
-        final List<Product> findProducts = productDao.getProductByIds(productIds);
+        final List<ProductEntity> findProducts = productDao.getProductByIds(productIds);
 
         final OrderItems orderItems = OrderItems.of(findOrderItems, findProducts, member);
         final DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());

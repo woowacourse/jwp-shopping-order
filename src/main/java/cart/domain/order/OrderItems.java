@@ -4,6 +4,7 @@ import cart.domain.cart.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.OrderItemEntity;
+import cart.entity.ProductEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,17 +34,22 @@ public class OrderItems {
         return new OrderItems(orderItems, cartItems.getMember());
     }
 
-    public static OrderItems of(final List<OrderItemEntity> orderItemEntities, List<Product> products, Member member) {
+    public static OrderItems of(final List<OrderItemEntity> orderItemEntities,
+                                final List<ProductEntity> products,
+                                final Member member) {
+
         validateSameSize(orderItemEntities, products);
         List<OrderItem> items = new ArrayList<>();
         for (int index = 0; index < orderItemEntities.size(); index++) {
-            final OrderItem orderItem = OrderItem.of(orderItemEntities.get(index), products.get(index), member);
+            final Product product = Product.from(products.get(index));
+            final OrderItem orderItem = OrderItem.of(orderItemEntities.get(index), product, member);
             items.add(orderItem);
         }
         return new OrderItems(items, member);
     }
 
-    private static void validateSameSize(final List<OrderItemEntity> orderItemEntities, final List<Product> products) {
+    private static void validateSameSize(final List<OrderItemEntity> orderItemEntities,
+                                         final List<ProductEntity> products) {
         if (orderItemEntities.size() != products.size()) {
             throw new IllegalArgumentException("주문에 포함된 상품 수와 조회된 상품 수가 일치하지 않습니다");
         }

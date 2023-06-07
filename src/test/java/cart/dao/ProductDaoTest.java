@@ -3,7 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.domain.Product;
+import cart.entity.ProductEntity;
 import cart.repository.dao.ProductDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class ProductDaoTest {
     @Test
     void createProduct() {
         // given
-        final Product product = new Product("product", 1_000, "www.image.png");
+        final ProductEntity product = new ProductEntity("product", 1_000, "www.image.png");
 
         // when
         final Long saveId = productDao.createProduct(product);
@@ -41,11 +41,11 @@ class ProductDaoTest {
     @Test
     void getProductById() {
         // given
-        final Product product = new Product("product", 1_000, "www.image.png");
+        final ProductEntity product = new ProductEntity("product", 1_000, "www.image.png");
         final Long saveId = productDao.createProduct(product);
 
         // when
-        final Product findProduct = productDao.getProductById(saveId);
+        final ProductEntity findProduct = productDao.getProductById(saveId);
 
         // then
         assertThat(findProduct.getName()).isEqualTo(product.getName());
@@ -55,7 +55,7 @@ class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        final Product product = new Product("product", 1_000, "www.image.png");
+        final ProductEntity product = new ProductEntity("product", 1_000, "www.image.png");
         final Long saveId = productDao.createProduct(product);
         productDao.deleteProduct(saveId);
 
@@ -70,10 +70,10 @@ class ProductDaoTest {
         final List<Long> ids = List.of(1L, 3L);
 
         // when
-        final List<Product> findProducts = productDao.getProductByIds(ids);
+        final List<ProductEntity> findProducts = productDao.getProductByIds(ids);
 
         // then
-        assertThat(findProducts).map(Product::getId)
+        assertThat(findProducts).map(ProductEntity::getId)
                 .isEqualTo(ids);
     }
 }

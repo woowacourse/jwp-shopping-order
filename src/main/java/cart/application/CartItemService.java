@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.Member;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
@@ -7,6 +8,7 @@ import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
 import cart.dto.cart.PagedCartItemsResponse;
 import cart.dto.PaginationInfoDto;
+import cart.entity.ProductEntity;
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.ProductDao;
 import java.util.Comparator;
@@ -43,7 +45,9 @@ public class CartItemService {
             cartItemDao.updateQuantity(updateCartItem);
             return updateCartItem.getId();
         }
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+
+        final ProductEntity findProduct = productDao.getProductById(cartItemRequest.getProductId());
+        return cartItemDao.save(new CartItem(member, Product.from(findProduct)));
     }
 
     private Optional<CartItem> getCartItem(final Member member, final Long productId) {
