@@ -4,11 +4,13 @@ import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.OrderEntity;
 import cart.domain.OrderItemEntity;
 import cart.domain.Point;
 import cart.domain.Product;
+import cart.domain.Quantity;
 import cart.dto.request.CartItemInfoRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductInfoRequest;
@@ -46,54 +48,40 @@ public class OrderService {
 
     public long order(final Member member, final OrderRequest orderRequest) {
         List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
+        CartItems cartItems = toCartItems(cartItemInfos);
 
-        validateOwner(member, cartItemInfos);
-        validateTotalProductPrice(cartItemInfos, orderRequest.getTotalProductPrice());
+        cartItems.validateOwner(member);
+        cartItems.validateTotalProductPrice(orderRequest.getTotalProductPrice());
         validateRequestTotalPrice(orderRequest);
 
-        removeCartItem(cartItemInfos);
+        removeCartItem(cartItems);
         updatePoint(member, orderRequest.getTotalProductPrice(), orderRequest.getUsePoint());
-        updateProductStock(cartItemInfos);
+        updateProductStock(cartItems);
         return saveOrderData(member, orderRequest);
     }
 
-    private void validateOwner(final Member member, final List<CartItemInfoRequest> cartItemInfos) {
-        for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
-            CartItem cartItem = cartItemRepository.findById(cartItemInfo.getCartItemId());
+    private CartItems toCartItems(final List<CartItemInfoRequest> cartItemInfos) {
+        List<CartItem> cartItems = cartItemInfos.stream()
+                .map(cartItemInfo -> cartItemRepository.findById(cartItemInfo.getCartItemId()))
+                .collect(toList());
 
-            cartItem.validateOwner(member);
-        }
-    }
-
-    private void validateTotalProductPrice(final List<CartItemInfoRequest> cartItemInfos, final int totalProductPrice) {
-        int expectTotalProductPrice = 0;
-
-        for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
-            ProductInfoRequest productInfo = cartItemInfo.getProduct();
-
-            Product product = productDao.findById(productInfo.getProductId());
-            expectTotalProductPrice += product.getPrice() * cartItemInfo.getQuantity();
-        }
-
-        if (expectTotalProductPrice != totalProductPrice) {
-            throw new OrderException.MismatchedTotalProductPrice("요청의 상품 가격과 실제 상품 가격이 다릅니다.");
-        }
+        return new CartItems(cartItems);
     }
 
     private void validateRequestTotalPrice(final OrderRequest orderRequest) {
-        Integer totalProductPrice = orderRequest.getTotalProductPrice();
-        Integer totalDeliveryFee = orderRequest.getTotalDeliveryFee();
-        Integer usePoint = orderRequest.getUsePoint();
-        Integer totalPrice = orderRequest.getTotalPrice();
+        int totalProductPrice = orderRequest.getTotalProductPrice();
+        int totalDeliveryFee = orderRequest.getTotalDeliveryFee();
+        int usePoint = orderRequest.getUsePoint();
+        int totalPrice = orderRequest.getTotalPrice();
 
         if (totalPrice != (totalProductPrice + totalDeliveryFee - usePoint)) {
             throw new OrderException.MismatchedTotalPrice("요청에서 계산된 결과와 서버에서 계산된 결과가 일치하지 않습니다.");
         }
     }
 
-    private void removeCartItem(final List<CartItemInfoRequest> cartItemInfos) {
-        for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
-            cartItemRepository.deleteById(cartItemInfo.getCartItemId());
+    private void removeCartItem(final CartItems cartItems) {
+        for (final CartItem cartItem : cartItems.getCartItems()) {
+            cartItemRepository.deleteById(cartItem.getId());
         }
     }
 
@@ -104,12 +92,10 @@ public class OrderService {
         memberRepository.update(result);
     }
 
-    private void updateProductStock(final List<CartItemInfoRequest> cartItemInfos) {
-        for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
-            ProductInfoRequest productInfo = cartItemInfo.getProduct();
-            Product product = productDao.findById(productInfo.getProductId());
-
-            Integer quantity = cartItemInfo.getQuantity();
+    private void updateProductStock(final CartItems cartItems) {
+        for (final CartItem cartItem : cartItems.getCartItems()) {
+            Product product = cartItem.getProduct();
+            Quantity quantity = cartItem.getQuantity();
 
             productDao.update(product.updateStock(quantity));
         }
