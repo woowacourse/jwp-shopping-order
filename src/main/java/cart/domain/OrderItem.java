@@ -15,10 +15,6 @@ public class OrderItem {
         this.price = Price.from(price);
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -50,37 +46,5 @@ public class OrderItem {
 
     public Price getPrice() {
         return price;
-    }
-
-
-    public static final class Builder {
-        private Long id;
-        private Product product;
-        private int quantity;
-        private long price;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public Builder quantity(int quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Builder price(long price) {
-            this.price = price;
-            return this;
-        }
-
-        public OrderItem build() {
-            return new OrderItem(id, product, quantity, price);
-        }
     }
 }

@@ -40,12 +40,8 @@ public class OrderService {
     public Long createOrder(OrderCreateRequest orderCreateRequest, Member member) {
         List<OrderItem> orderItems = createOrderItems(orderCreateRequest);
         Point spendPoint = new Point(orderCreateRequest.getSpendPoint());
-        Order order = Order.builder()
-                .member(member)
-                .orderItems(orderItems)
-                .spendPoint(spendPoint.getAmount())
-                .createdAt(LocalDateTime.now())
-                .build();
+        Order order = new Order(null, member, orderItems, spendPoint.getAmount(), LocalDateTime.now());
+
         pointService.decreasePoint(member, spendPoint);
         Order saveOrder = orderRepository.save(order);
         pointService.increasePoint(member, saveOrder.calculateRewardPoint(10));
@@ -59,11 +55,7 @@ public class OrderService {
             Long productId = orderItemCreateRequest.getProductId();
             int quantity = orderItemCreateRequest.getQuantity();
             Product product = findProduct(productId);
-            OrderItem orderItem = OrderItem.builder()
-                    .product(product)
-                    .quantity(quantity)
-                    .price(product.getPrice() * quantity)
-                    .build();
+            OrderItem orderItem = new OrderItem(null, product, quantity, product.getPrice() * quantity);
             orderItems.add(orderItem);
         }
         return orderItems;

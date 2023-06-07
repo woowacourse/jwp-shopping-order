@@ -27,10 +27,6 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     private void validateEmptyOrderItems(List<OrderItem> orderItems) {
         if (orderItems.isEmpty()) {
             throw new IllegalOrderException("주문할 상품이 존재하지 않습니다.");
@@ -128,43 +124,5 @@ public class Order {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-
-    public static final class Builder {
-        private Long id;
-        private Member member;
-        private List<OrderItem> orderItems;
-        private long spendPoint;
-        private LocalDateTime createdAt;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder member(Member member) {
-            this.member = member;
-            return this;
-        }
-
-        public Builder orderItems(List<OrderItem> orderItems) {
-            this.orderItems = orderItems;
-            return this;
-        }
-
-        public Builder spendPoint(long spendPoint) {
-            this.spendPoint = spendPoint;
-            return this;
-        }
-
-        public Builder createdAt(LocalDateTime createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public Order build() {
-            return new Order(id, member, orderItems, spendPoint, createdAt);
-        }
     }
 }
