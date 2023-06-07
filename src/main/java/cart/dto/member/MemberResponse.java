@@ -15,7 +15,9 @@ public class MemberResponse {
     }
 
     public MemberResponse(final Member member) {
-        this(member.getId(), member.getRank().getKorean(), member.getRank().getDiscountRate());
+        this(member.getId(),
+             member.getRank().name(),
+             (int) (member.getRank().getDiscountRate() * 100));
     }
 
     public Long getId() {

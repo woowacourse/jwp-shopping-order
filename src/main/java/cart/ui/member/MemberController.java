@@ -18,7 +18,6 @@ public class MemberController {
 
     @GetMapping("/member")
     public ResponseEntity<MemberResponse> showMember(final Member member) {
-        MemberResponse response = memberService.findByEmail(member);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new MemberResponse(member));
     }
 }

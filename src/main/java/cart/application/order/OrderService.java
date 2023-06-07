@@ -34,7 +34,7 @@ public class OrderService {
                 orderRequest.getTotalMemberDiscountAmount(),
                 orderRequest.getShippingFee());
 
-        memberService.update(member, orderRequest.getTotalPrice());
+        memberService.updateRank(member, orderRequest.getTotalPrice());
         return orderRepository.save(order, bill, orderRequest.getCartItemIds());
     }
 

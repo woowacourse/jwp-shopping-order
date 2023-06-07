@@ -16,14 +16,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void update(final Member member, final int money) {
+    public void updateRank(final Member member, final int money) {
         member.update(money);
         memberRepository.update(member);
-    }
-
-    public MemberResponse findByEmail(final Member member) {
-        Member findedMember = memberRepository.findByEmail(member.getEmail());
-        return new MemberResponse(findedMember);
     }
 
     public Member findByEmail(final String email) {

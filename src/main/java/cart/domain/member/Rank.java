@@ -7,42 +7,36 @@ import java.util.stream.Stream;
 
 public enum Rank {
 
-    NORMAL(0, 0, "일반"),
-    SILVER(5, 100_000, "실버"),
-    GOLD(10, 200_000, "골드"),
-    PLATINUM(15, 300_000, "플래티넘"),
-    DIAMOND(20, 500_000, "다이아몬드");
+    NORMAL(0, 0),
+    SILVER(0.05, 100_000),
+    GOLD(0.1, 200_000),
+    PLATINUM(0.15, 300_000),
+    DIAMOND(0.2, 500_000);
 
-    private final int discountRate;
-    private final int standard;
-    private final String korean;
+    private final double discountRate;
+    private final int minmumCumulativeAmount;
 
-    Rank(int discountRate, int standard, String korean) {
+    Rank(double discountRate, int minmumCumulativeAmount) {
         this.discountRate = discountRate;
-        this.standard = standard;
-        this.korean = korean;
+        this.minmumCumulativeAmount = minmumCumulativeAmount;
     }
 
     public Money getDiscountPrice(final Money price) {
-        return (price.multiply((1 - (double) discountRate / 100)));
+        return price.multiply(1 - discountRate);
     }
 
     public static Rank findRank(final Money totalPurchaseAmount) {
         return Stream.of(Rank.values())
-                .filter(rank -> rank.standard < totalPurchaseAmount.getMoney())
+                .filter(rank -> rank.minmumCumulativeAmount < totalPurchaseAmount.getMoney())
                 .max(Comparator.comparing(Rank::getStandard))
                 .orElseThrow();
     }
 
-    public int getDiscountRate() {
+    public double getDiscountRate() {
         return discountRate;
     }
 
     public int getStandard() {
-        return standard;
-    }
-
-    public String getKorean() {
-        return korean;
+        return minmumCumulativeAmount;
     }
 }
