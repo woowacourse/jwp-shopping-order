@@ -1,7 +1,6 @@
 package cart;
 
 import cart.repository.MemberRepository;
-import cart.repository.dao.MemberDao;
 import cart.ui.api.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -15,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberRepository memberRepository;
 
-    public WebMvcConfig(MemberRepository memberRepository, MemberDao memberDao) {
+    public WebMvcConfig(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
