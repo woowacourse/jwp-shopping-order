@@ -50,6 +50,10 @@ public class Order {
         return DELIVERY_FEE;
     }
 
+    public Price getDisountDeilveryPrice() {
+        return DELIVERY_FEE.minus(getDeliveryPrice());
+    }
+
     public Price getTotalPrice() {
         return orderCartItems.stream()
                 .map(OrderCartItem::getDiscountedPrice)

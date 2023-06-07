@@ -23,7 +23,7 @@ public class OrderResponse {
                 order.getOrderCartItems().stream()
                         .map(OrderCartItemResponse::from)
                         .collect(Collectors.toList()),
-                new DeliveryPriceResponse(order.getDeliveryPrice(), new Price(0)),
+                new DeliveryPriceResponse(order.getDeliveryPrice(), order.getDisountDeilveryPrice()),
                 order.getDiscountPriceFromTotal().getValue()
         );
     }
