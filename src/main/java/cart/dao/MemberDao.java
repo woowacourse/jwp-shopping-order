@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.MemberEntity;
-import cart.exception.MemberNotFoundException;
+import cart.exception.DataNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -51,7 +51,7 @@ public class MemberDao {
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
         } catch (final EmptyResultDataAccessException e) {
-            throw new MemberNotFoundException();
+            throw new DataNotFoundException("회원을 찾을 수 없습니다.");
         }
     }
 
@@ -61,7 +61,7 @@ public class MemberDao {
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, email);
         } catch (final EmptyResultDataAccessException e) {
-            throw new MemberNotFoundException();
+            throw new DataNotFoundException("회원을 찾을 수 없습니다.");
         }
     }
 

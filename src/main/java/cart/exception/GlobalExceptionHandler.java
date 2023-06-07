@@ -12,9 +12,9 @@ public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFoundException(final ProductNotFoundException e) {
-        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<String> handleDataNotFoundException(final DataNotFoundException e) {
+        return createResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -27,28 +27,8 @@ public class GlobalExceptionHandler {
         return createResponseEntity(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
-    @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<String> handleMemberNotFoundException(final MemberNotFoundException e) {
-        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
-
-    @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<String> handleInsufficientStockException(final InsufficientStockException e) {
-        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
-
-    @ExceptionHandler(MismatchedTotalProductPriceException.class)
-    public ResponseEntity<String> handleMismatchedTotalPriceException(final MismatchedTotalProductPriceException e) {
-        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
-
-    @ExceptionHandler(IllegalUsePointException.class)
-    public ResponseEntity<String> handleIllegalUsePointException(final IllegalUsePointException e) {
-        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
-
-    @ExceptionHandler(MismatchedTotalPriceException.class)
-    public ResponseEntity<String> handleMismatchedTotalFeeException(final MismatchedTotalPriceException e) {
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<String> handleOrderException(final OrderException e) {
         return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 

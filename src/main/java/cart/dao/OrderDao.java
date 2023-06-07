@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.OrderEntity;
-import cart.exception.OrderNotFoundException;
+import cart.exception.DataNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -69,7 +69,7 @@ public class OrderDao {
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
         } catch (final EmptyResultDataAccessException e) {
-            throw new OrderNotFoundException();
+            throw new DataNotFoundException("주문을 찾을 수 없습니다.");
         }
     }
 

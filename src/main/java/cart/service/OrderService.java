@@ -3,14 +3,18 @@ package cart.service;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
-import cart.domain.*;
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.OrderEntity;
+import cart.domain.OrderItemEntity;
+import cart.domain.Point;
+import cart.domain.Product;
 import cart.dto.request.CartItemInfoRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductInfoRequest;
 import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
-import cart.exception.MismatchedTotalPriceException;
-import cart.exception.MismatchedTotalProductPriceException;
+import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.util.CurrentTimeUtil;
@@ -20,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cart.domain.Point.validateUsablePoint;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -46,7 +49,6 @@ public class OrderService {
 
         validateOwner(member, cartItemInfos);
         validateTotalProductPrice(cartItemInfos, orderRequest.getTotalProductPrice());
-        validateUsablePoint(orderRequest.getUsePoint());
         validateRequestTotalPrice(orderRequest);
 
         removeCartItem(cartItemInfos);
@@ -74,7 +76,7 @@ public class OrderService {
         }
 
         if (expectTotalProductPrice != totalProductPrice) {
-            throw new MismatchedTotalProductPriceException();
+            throw new OrderException.MismatchedTotalProductPrice("요청의 상품 가격과 실제 상품 가격이 다릅니다.");
         }
     }
 
@@ -85,7 +87,7 @@ public class OrderService {
         Integer totalPrice = orderRequest.getTotalPrice();
 
         if (totalPrice != (totalProductPrice + totalDeliveryFee - usePoint)) {
-            throw new MismatchedTotalPriceException();
+            throw new OrderException.MismatchedTotalPrice("요청에서 계산된 결과와 서버에서 계산된 결과가 일치하지 않습니다.");
         }
     }
 

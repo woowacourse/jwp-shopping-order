@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.exception.ProductNotFoundException;
+import cart.exception.DataNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -54,7 +54,7 @@ public class ProductDao {
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
         } catch (final EmptyResultDataAccessException e) {
-            throw new ProductNotFoundException();
+            throw new DataNotFoundException("상품을 찾을 수 없습니다.");
         }
     }
 

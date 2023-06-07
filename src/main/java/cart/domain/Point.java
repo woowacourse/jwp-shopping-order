@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.IllegalUsePointException;
+import cart.exception.OrderException;
 
 import java.util.Objects;
 
@@ -23,9 +23,9 @@ public class Point {
         }
     }
 
-    public static void validateUsablePoint(final int usePoint) {
+    public void validateUsablePoint(final int usePoint) {
         if (0 < usePoint && usePoint < MIN_USAGE_VALUE) {
-            throw new IllegalUsePointException();
+            throw new OrderException.IllegalUsePoint("최소 사용 기준 포인트보다 작은 값의 포인트는 사용할 수 없습니다.");
         }
     }
 
@@ -41,7 +41,7 @@ public class Point {
 
     public void validateUsePoint(final Point usePoint) {
         if (value < usePoint.value) {
-            throw new IllegalUsePointException();
+            throw new OrderException.IllegalUsePoint(value, usePoint.value);
         }
     }
 

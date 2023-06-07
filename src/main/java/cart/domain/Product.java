@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.InsufficientStockException;
+import cart.exception.OrderException;
 
 import java.util.Objects;
 
@@ -32,7 +32,7 @@ public class Product {
 
     private void validateStock(final int quantity) {
         if (stock < quantity) {
-            throw new InsufficientStockException();
+            throw new OrderException.InsufficientStock("상품의 남은 수량보다 많은 주문량입니다.");
         }
     }
 
