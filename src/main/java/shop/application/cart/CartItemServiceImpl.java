@@ -71,6 +71,7 @@ public class CartItemServiceImpl implements CartItemService {
 
         if (isMemberCartItems) {
             cartRepository.deleteByIds(ids);
+            return;
         }
 
         throw new ShoppingException.IllegalAccessException("접근 권한이 없는 장바구니 상품이 존재합니다." +
