@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MemberCoupon {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
+
     private final Long id;
     private final Member owner;
     private final Coupon coupon;
@@ -39,7 +42,7 @@ public class MemberCoupon {
         LocalDateTime now = LocalDateTime.now();
 
         if (now.isAfter(expiredAt)) {
-            String expiredDate = expiredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS"));
+            String expiredDate = expiredAt.format(DATE_TIME_FORMATTER);
 
             throw new ShoppingException("사용 기간이 만료된 쿠폰입니다. " +
                     "사용 만료 기간 : " + expiredDate);
