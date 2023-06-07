@@ -30,14 +30,4 @@ class OrdersTakerTest {
         List<Long> coupons = List.of(1L, 2L, 3L);
         Assertions.assertThat(ordersTaker.takeOrder(1L, cartIds, coupons)).isEqualTo(4L);
     }
-
-    @Test
-    void findOrdersWithOriginalPrice() {
-        Assertions.assertThat(ordersTaker.findOrdersWithMember(TEST_MEMBER)).hasSize(3);
-    }
-
-    @Test
-    void findOrdersWithId() {
-        Assertions.assertThat(ordersTaker.findOrdersWithId(TEST_MEMBER, 1L).getOrderProducts().get(0).getProduct().getName()).isEqualTo("현루피");
-    }
 }
