@@ -1,0 +1,29 @@
+### 전체 상품 조회
+GET http://localhost:8080/products
+
+### 상품 id로 조회
+GET http://localhost:8080/products/1
+
+### 상품 추가
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "테스트",
+  "price": 1000,
+  "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
+}
+
+### 상품 수정
+PUT http://localhost:8080/products/3
+Content-Type: application/json
+
+{
+  "name": "테스트",
+  "price": 1000,
+  "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
+
+}
+
+### 상품 삭제
+DELETE http://localhost:8080/products/3
