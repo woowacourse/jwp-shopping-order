@@ -27,7 +27,7 @@ public class ProductDao {
             new Product(
                     resultSet.getLong(ID),
                     resultSet.getString(NAME),
-                    resultSet.getInt(PRICE),
+                    resultSet.getBigDecimal(PRICE),
                     resultSet.getString(IMAGE_URL),
                     resultSet.getInt(STOCK)
             );

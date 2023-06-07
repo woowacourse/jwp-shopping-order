@@ -16,7 +16,7 @@ CREATE TABLE product
 (
     id        BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(255)  NOT NULL,
-    price     INT           NOT NULL,
+    price     DECIMAL       NOT NULL,
     image_url VARCHAR(2083) NOT NULL,
     stock     INT           NOT NULL
 );

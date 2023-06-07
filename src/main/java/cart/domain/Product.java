@@ -2,17 +2,18 @@ package cart.domain;
 
 import cart.exception.OrderException;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
 
     private final Long id;
     private final String name;
-    private final int price;
+    private final BigDecimal price;
     private final String imageUrl;
     private final int stock;
 
-    public Product(final Long id, final String name, final int price, final String imageUrl, final int stock) {
+    public Product(final Long id, final String name, final BigDecimal price, final String imageUrl, final int stock) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -20,7 +21,7 @@ public class Product {
         this.stock = stock;
     }
 
-    public Product(final String name, final int price, final String imageUrl, final int stock) {
+    public Product(final String name, final BigDecimal price, final String imageUrl, final int stock) {
         this(null, name, price, imageUrl, stock);
     }
 
@@ -45,7 +46,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price;
+        return price.intValue();
     }
 
     public String getImageUrl() {
@@ -61,7 +62,7 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return price == product.price && stock == product.stock && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(imageUrl, product.imageUrl);
+        return stock == product.stock && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl);
     }
 
     @Override
