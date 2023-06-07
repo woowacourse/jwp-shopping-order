@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS orders
     delivery_fee   BIGINT   NOT NULL,
     total_price    BIGINT   NOT NULL,
     created_at     DATETIME NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS order_items
