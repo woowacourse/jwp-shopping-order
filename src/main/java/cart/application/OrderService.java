@@ -86,9 +86,7 @@ public class OrderService {
     }
 
     private void saveOrderItems(final Order order) {
-        for (OrderItem item : order.getOrderItems()) {
-            orderItemRepository.insert(order.getId(), OrderItem.notPersisted(item.getProduct(), item.getQuantity()));
-        }
+        orderItemRepository.insertAll(order.getId(), order.getOrderItems());
     }
 
     private void deleteCartItems(final Order order) {
