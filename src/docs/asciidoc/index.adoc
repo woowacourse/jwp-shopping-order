@@ -1,0 +1,46 @@
+= REST Docs API 명세
+Shopping Order
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs // 문서에 표기되는 코드들의 하이라이팅을 highlightjs를 사용
+:toc: left // toc (Table Of Contents)를 문서의 좌측에 두기
+:toclevels: 2
+:sectlinks:
+
+[[Order-API]]
+== Order API
+
+[[Fail-카트-아이템이-없으면-실패한다]]
+=== Fail-카트-아이템이-없으면-실패한다
+
+operation::order-cartItemNotExist[snippets='http-request,http-response']
+
+[[Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다]]
+=== Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다
+
+operation::order-couponDoesNotFound[snippets='http-request,http-response']
+
+[[Fail-서버측과-상품-계산이-다르면-실패한다]]
+=== Fail-서버측과-상품-계산이-다르면-실패한다
+
+operation::order-unMatchCalculate[snippets='http-request,http-response']
+
+[[Success-쿠폰과-함께-요청]]
+=== Success-쿠폰과-함께-요청
+
+operation::order-withCoupon[snippets='http-request,http-response']
+
+[[Success-쿠폰-없이-요청]]
+=== Success-쿠폰-없이-요청
+
+operation::order-withoutCoupon[snippets='http-request,http-response']
+
+[[Success-주문-목록-검색]]
+=== Success-주문-목록-검색
+
+operation::orderList[snippets='http-request,http-response']
+
+[[Success-주문-상세-요청]]
+=== Success-주문-상세-요청
+
+operation::orderDetail[snippets='http-request,http-response']

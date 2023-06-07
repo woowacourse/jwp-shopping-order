@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.request;
 
 public class CartItemQuantityUpdateRequest {
     private int quantity;
@@ -6,7 +6,7 @@ public class CartItemQuantityUpdateRequest {
     public CartItemQuantityUpdateRequest() {
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public CartItemQuantityUpdateRequest(final int quantity) {
         this.quantity = quantity;
     }
 
