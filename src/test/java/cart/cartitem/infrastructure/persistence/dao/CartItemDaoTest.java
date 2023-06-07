@@ -101,4 +101,23 @@ class CartItemDaoTest {
         // then
         assertThat(byMemberId).hasSize(2);
     }
+
+    @Test
+    void ID_리스트로_모든_장바구니_상품을_조회한다() {
+        // given
+        CartItemEntity entity1 = new CartItemEntity(null, 10, 1L, "상품1", "image", 1000, memberId);
+        CartItemEntity entity2 = new CartItemEntity(null, 20, 2L, "상품2", "image", 2000, memberId);
+        Long id1 = cartItemDao.insert(entity1);
+        Long id2 = cartItemDao.insert(entity2);
+        List<Long> ids = List.of(id1, id2);
+
+        // when
+        List<CartItemEntity> actual = cartItemDao.findAllByIds(ids);
+
+        // then
+        List<CartItemEntity> expected = List.of(entity1, entity2);
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(expected);
+    }
 }
