@@ -8,9 +8,8 @@ public class MemberException extends ApiException {
 
     public static class InvalidPassword extends MemberException {
 
-        public InvalidPassword(String password) {
-            super("잘못된 비밀번호 형식입니다. " +
-                    "password : " + password);
+        public InvalidPassword() {
+            super("잘못된 비밀번호 형식입니다.");
         }
     }
 

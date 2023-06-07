@@ -36,7 +36,7 @@ public class Member {
 
     private void validatePassword(String password) {
         if (Objects.isNull(password) || password.length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new MemberException.InvalidPassword(password);
+            throw new MemberException.InvalidPassword();
         }
     }
 
