@@ -7,19 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("NonAsciiCharacters")
 class ProductTest {
 
     private Long validId = 1L;
     private String validName = "validName";
     private int validPrice = 1_000;
-    private String validImageUrl = "imageUrl";
-
-    @Test
-    void 아이디를_입력하지_않으면_예외를_던진다() {
-        assertThatThrownBy(() -> new Product(null, validName, validPrice, validImageUrl))
-                .isInstanceOf(ProductException.InvalidIdByNull.class)
-                .hasMessageContaining("상품 아이디를 입력해야 합니다.");
-    }
+    private String validImageUrl = "https://imageUrl";
 
     @Nested
     class 상품_이름이 {

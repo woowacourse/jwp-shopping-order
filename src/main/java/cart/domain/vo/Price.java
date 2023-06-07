@@ -1,6 +1,6 @@
 package cart.domain.vo;
 
-import cart.exception.CartItemException;
+import cart.exception.ProductException;
 
 import java.util.Objects;
 
@@ -17,7 +17,7 @@ public class Price {
 
     private void validate(int price) {
         if (price < MINIMUM_PRICE) {
-            throw new CartItemException.InvalidPrice();
+            throw new ProductException.InvalidPrice();
         }
     }
 

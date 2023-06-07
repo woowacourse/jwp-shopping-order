@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("NonAsciiCharacters")
 class MemberTest {
 
     private Long validId = 1L;

@@ -1,5 +1,6 @@
 package cart.domain.product;
 
+import cart.domain.vo.Price;
 import cart.exception.ProductException;
 
 import java.net.MalformedURLException;
@@ -12,21 +13,21 @@ public class Product {
 
     private Long id;
     private final String name;
-    private final int price;
+    private final Price price;
     private final String imageUrl;
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(long id, String name, int price, String imageUrl) {
         validate(name, imageUrl);
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.price = new Price(price);
         this.imageUrl = imageUrl;
     }
 
     public Product(String name, int price, String imageUrl) {
         validate(name, imageUrl);
         this.name = name;
-        this.price = price;
+        this.price = new Price(price);
         this.imageUrl = imageUrl;
     }
 
@@ -58,7 +59,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     public String getImageUrl() {

@@ -20,6 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class OrderApiControllerTest extends ControllerTestConfig {
 
     private static final String USERNAME = "a@a.com";

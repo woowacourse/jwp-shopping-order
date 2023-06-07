@@ -27,6 +27,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
+@SuppressWarnings("NonAsciiCharacters")
 @Sql("/truncate.sql")
 @ExtendWith(RestDocumentationExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
