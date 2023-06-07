@@ -2,7 +2,7 @@ package cart.application.service;
 
 import cart.application.exception.MemberNotFoundException;
 import cart.application.repository.MemberRepository;
-import cart.application.domain.Member;
+import cart.entity.Member;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
 import cart.application.exception.AuthenticationException;

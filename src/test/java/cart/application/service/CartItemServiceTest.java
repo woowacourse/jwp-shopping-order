@@ -1,13 +1,12 @@
 package cart.application.service;
 
-import cart.application.domain.CartItem;
-import cart.application.domain.Member;
-import cart.application.domain.Product;
+import cart.entity.CartItem;
+import cart.entity.Member;
+import cart.entity.Product;
 import cart.application.exception.IllegalMemberException;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.ProductRepository;
-import cart.application.service.CartItemService;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.request.CartItemQuantityRequest;
 import cart.presentation.dto.request.CartItemRequest;

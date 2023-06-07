@@ -1,8 +1,12 @@
 package cart.application.domain;
 
 import cart.application.exception.ExceedAvailablePointException;
-import cart.application.exception.ExceedOwnedPointException;
 import cart.application.exception.IllegalMemberException;
+import cart.entity.Member;
+import cart.entity.Order;
+import cart.entity.OrderInfo;
+import cart.entity.OrderInfos;
+import cart.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +16,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class OrderTest {
 

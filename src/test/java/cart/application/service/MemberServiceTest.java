@@ -2,15 +2,12 @@ package cart.application.service;
 
 import cart.application.exception.MemberNotFoundException;
 import cart.application.repository.MemberRepository;
-import cart.application.domain.Member;
+import cart.entity.Member;
 import cart.application.exception.AuthenticationException;
-import cart.application.service.MemberService;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

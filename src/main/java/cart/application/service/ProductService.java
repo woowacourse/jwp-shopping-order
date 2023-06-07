@@ -2,7 +2,7 @@ package cart.application.service;
 
 import cart.application.exception.ProductNotFoundException;
 import cart.application.repository.ProductRepository;
-import cart.application.domain.Product;
+import cart.entity.Product;
 import cart.presentation.dto.request.ProductRequest;
 import cart.presentation.dto.response.ProductResponse;
 import org.springframework.stereotype.Service;

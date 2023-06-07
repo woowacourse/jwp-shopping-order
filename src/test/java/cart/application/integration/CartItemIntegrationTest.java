@@ -1,6 +1,6 @@
 package cart.application.integration;
 
-import cart.application.domain.Member;
+import cart.entity.Member;
 import cart.persistence.repository.MemberPersistenceAdapter;
 import cart.presentation.dto.request.CartItemQuantityRequest;
 import cart.presentation.dto.request.CartItemRequest;

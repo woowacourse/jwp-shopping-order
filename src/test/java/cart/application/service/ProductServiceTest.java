@@ -1,14 +1,11 @@
 package cart.application.service;
 
 import cart.application.repository.ProductRepository;
-import cart.application.domain.Product;
-import cart.application.service.ProductService;
+import cart.entity.Product;
 import cart.presentation.dto.request.ProductRequest;
 import cart.presentation.dto.response.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

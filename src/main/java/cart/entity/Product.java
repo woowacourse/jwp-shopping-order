@@ -1,4 +1,4 @@
-package cart.application.domain;
+package cart.entity;
 
 public class Product {
 

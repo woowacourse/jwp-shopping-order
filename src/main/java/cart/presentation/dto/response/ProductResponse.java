@@ -1,6 +1,6 @@
 package cart.presentation.dto.response;
 
-import cart.application.domain.Product;
+import cart.entity.Product;
 
 public class ProductResponse {
 

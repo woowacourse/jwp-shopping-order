@@ -1,6 +1,6 @@
 package cart.persistence.repository;
 
-import cart.application.domain.Product;
+import cart.entity.Product;
 import cart.application.repository.ProductRepository;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

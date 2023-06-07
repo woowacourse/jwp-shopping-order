@@ -1,8 +1,8 @@
 package cart.persistence.repository;
 
-import cart.application.domain.OrderInfo;
-import cart.application.domain.OrderInfos;
-import cart.application.domain.Product;
+import cart.entity.OrderInfo;
+import cart.entity.OrderInfos;
+import cart.entity.Product;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;

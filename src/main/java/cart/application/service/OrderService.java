@@ -1,11 +1,11 @@
 package cart.application.service;
 
-import cart.application.domain.CartItem;
-import cart.application.domain.Member;
-import cart.application.domain.Order;
-import cart.application.domain.OrderInfo;
-import cart.application.domain.OrderInfos;
-import cart.application.domain.Product;
+import cart.entity.CartItem;
+import cart.entity.Member;
+import cart.entity.Order;
+import cart.entity.OrderInfo;
+import cart.entity.OrderInfos;
+import cart.entity.Product;
 import cart.application.exception.CartItemNotFoundException;
 import cart.application.exception.MemberNotFoundException;
 import cart.application.exception.OrderNotFoundException;
