@@ -56,9 +56,9 @@ public class CouponService {
     memberCouponDao.save(member.getId(), couponId);
   }
 
-  public List<AvailableCouponResponse> findAvailableCoupons(final Member member, final int totalAmount) {
+  public List<AvailableCouponResponse> findAvailableCoupons(final Member member, final int productTotalAmount) {
     final List<MemberCoupon> availableMemberCoupons = memberCouponDao.findAvailableCouponsByMemberIdAndTotalAmount(
-        member.getId(), totalAmount);
+        member.getId(), productTotalAmount);
 
     return availableMemberCoupons.stream()
         .map(this::mapToAvailableCouponResponse)
