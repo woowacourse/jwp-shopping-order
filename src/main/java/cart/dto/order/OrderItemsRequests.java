@@ -1,7 +1,5 @@
 package cart.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -10,22 +8,21 @@ import java.util.List;
 public class OrderItemsRequests {
 
     @Min(value = 0, message = "배송비는 음수일 수 없습니다.")
-    private int deliveryFee;
+    private final int deliveryFee;
     @Valid
     @NotNull
-    @JsonProperty("orderItems")
-    private List<OrderItemRequest> orderItemRequests;
+    private final List<OrderItemRequest> orderItems;
 
-    public OrderItemsRequests(final int deliveryFee, final List<OrderItemRequest> orderItemRequests) {
+    public OrderItemsRequests(final int deliveryFee, final List<OrderItemRequest> orderItems) {
         this.deliveryFee = deliveryFee;
-        this.orderItemRequests = orderItemRequests;
+        this.orderItems = orderItems;
     }
 
     public int getDeliveryFee() {
         return deliveryFee;
     }
 
-    public List<OrderItemRequest> getOrderItemRequests() {
-        return orderItemRequests;
+    public List<OrderItemRequest> getOrderItems() {
+        return orderItems;
     }
 }

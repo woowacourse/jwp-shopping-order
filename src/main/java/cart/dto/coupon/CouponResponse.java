@@ -2,20 +2,18 @@ package cart.dto.coupon;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.member.MemberCoupon;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CouponResponse {
 
-    @JsonProperty("couponId")
-    private Long id;
+    private Long couponId;
     private String name;
     private DiscountResponse discount;
 
     private CouponResponse() {
     }
 
-    private CouponResponse(final Long id, final String name, final DiscountResponse discount) {
-        this.id = id;
+    private CouponResponse(final Long couponId, final String name, final DiscountResponse discount) {
+        this.couponId = couponId;
         this.name = name;
         this.discount = discount;
     }
@@ -28,8 +26,8 @@ public class CouponResponse {
         return new CouponResponse(coupon.getId(), coupon.getCoupon().getName(), new DiscountResponse(coupon.getCoupon().getDiscount()));
     }
 
-    public Long getId() {
-        return id;
+    public Long getCouponId() {
+        return couponId;
     }
 
     public String getName() {

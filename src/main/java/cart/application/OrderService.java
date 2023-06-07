@@ -39,8 +39,8 @@ public class OrderService {
 
     @Transactional
     public Long createOrder(OrderItemsRequests request, Member member) {
-        clearCartItems(request.getOrderItemRequests(), member);
-        List<OrderItem> orderItems = createOrderItems(request.getOrderItemRequests(), member);
+        clearCartItems(request.getOrderItems(), member);
+        List<OrderItem> orderItems = createOrderItems(request.getOrderItems(), member);
         return orderRepository.create(orderItems, new OrderEntity(member.getId(), request.getDeliveryFee()));
     }
 
@@ -49,7 +49,7 @@ public class OrderService {
         for (OrderItemRequest orderItemRequest : orderItemRequests) {
             MemberCoupons requestCoupons = usedCoupons(member, orderItemRequest);
 
-            OrderProductRequest productRequest = orderItemRequest.getProductRequest();
+            OrderProductRequest productRequest = orderItemRequest.getProduct();
             orderItems.add(new OrderItem(productRequest.toProduct(), orderItemRequest.getQuantity(), requestCoupons.getCoupons()));
         }
         return orderItems;
@@ -71,7 +71,7 @@ public class OrderService {
         List<CartItem> memberCartItems = cartItemRepository.findByMemberId(member.getId());
 
         List<Long> orderItemIds = orderItemRequests.stream()
-                .map(OrderItemRequest::getCartItemId)
+                .map(OrderItemRequest::getId)
                 .collect(Collectors.toList());
         List<CartItem> requestCartItems = cartItemRepository.findByIds(orderItemIds);
 

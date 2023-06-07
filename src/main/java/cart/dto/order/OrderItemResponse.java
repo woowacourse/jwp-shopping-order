@@ -3,35 +3,32 @@ package cart.dto.order;
 import cart.domain.order.OrderItem;
 import cart.dto.coupon.CouponResponse;
 import cart.dto.product.ProductResponse;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderItemResponse {
 
-    @JsonProperty("orderItemId")
-    private Long id;
+    private Long orderItemId;
     private ProductResponse product;
     private int quantity;
-    @JsonProperty("coupons")
-    private List<CouponResponse> couponIds;
+    private List<CouponResponse> coupons;
     private int total;
 
     private OrderItemResponse() {
     }
 
     public OrderItemResponse(
-            final Long id,
+            final Long orderItemId,
             final ProductResponse product,
             final int quantity,
-            final List<CouponResponse> couponIds,
+            final List<CouponResponse> coupons,
             final int total
     ) {
-        this.id = id;
+        this.orderItemId = orderItemId;
         this.product = product;
         this.quantity = quantity;
-        this.couponIds = couponIds;
+        this.coupons = coupons;
         this.total = total;
     }
 
@@ -50,8 +47,8 @@ public class OrderItemResponse {
         );
     }
 
-    public Long getId() {
-        return id;
+    public Long getOrderItemId() {
+        return orderItemId;
     }
 
     public ProductResponse getProduct() {
@@ -62,8 +59,8 @@ public class OrderItemResponse {
         return quantity;
     }
 
-    public List<CouponResponse> getCouponIds() {
-        return couponIds;
+    public List<CouponResponse> getCoupons() {
+        return coupons;
     }
 
     public int getTotal() {
