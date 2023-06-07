@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.coupon.MemberCoupons;
+import cart.domain.deliverypolicy.DeliveryPolicy;
 import cart.domain.discountpolicy.DiscountPolicyProvider;
 import cart.domain.product.CartItem;
 import cart.domain.product.OrderItem;
@@ -60,9 +61,9 @@ public class Order {
     public static Order make(
             List<CartItem> cartItems,
             List<MemberCoupon> coupons,
-            Money deliveryFee,
             Member member,
-            DiscountPolicyProvider discountPolicyProvider
+            DiscountPolicyProvider discountPolicyProvider,
+            DeliveryPolicy deliveryPolicy
     ) {
         validateCartItems(cartItems);
         validateCouponOwners(coupons, member);
@@ -70,6 +71,7 @@ public class Order {
         Money totalPrice = calculateTotlaPrice(cartItems);
         MemberCoupons memberCoupons = MemberCoupons.of(coupons, discountPolicyProvider);
         Money actualPrice = memberCoupons.apply(totalPrice);
+        Money deliveryFee = deliveryPolicy.getDeliveryFee(actualPrice);
         List<OrderItem> orderItems = cartItems.stream()
                 .map(OrderItem::of)
                 .collect(Collectors.toList());

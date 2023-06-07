@@ -1,8 +1,8 @@
 package cart.application;
 
 import cart.domain.Member;
-import cart.domain.Money;
 import cart.domain.coupon.MemberCoupon;
+import cart.domain.deliverypolicy.DeliveryPolicy;
 import cart.domain.discountpolicy.DiscountPolicyProvider;
 import cart.domain.order.Order;
 import cart.domain.product.CartItem;
@@ -27,17 +27,19 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final DiscountPolicyProvider discountPolicyProvider;
+    private final DeliveryPolicy deliveryPolicy;
     private final MemberCouponRepository memberCouponRepository;
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
 
     public OrderService(
             DiscountPolicyProvider discountPolicyProvider,
-            MemberCouponRepository memberCouponRepository,
+            final DeliveryPolicy deliveryPolicy, MemberCouponRepository memberCouponRepository,
             OrderRepository orderRepository,
             CartItemRepository cartItemRepository
     ) {
         this.discountPolicyProvider = discountPolicyProvider;
+        this.deliveryPolicy = deliveryPolicy;
         this.memberCouponRepository = memberCouponRepository;
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
@@ -47,9 +49,8 @@ public class OrderService {
     public OrderIdResponse makeOrder(Member member, OrderRequest orderRequest) {
         List<CartItem> cartItemsToOrder = getCartItemsToOrder(orderRequest, member);
         List<MemberCoupon> couponsToUse = memberCouponRepository.findAllByIdForUpdate(orderRequest.getCouponIds());
-        Money deliveryFee = new Money(orderRequest.getDeliveryFee());
 
-        Order order = Order.make(cartItemsToOrder, couponsToUse, deliveryFee, member, discountPolicyProvider);
+        Order order = Order.make(cartItemsToOrder, couponsToUse, member, discountPolicyProvider, deliveryPolicy);
 
         Long orderId = orderRepository.insert(order);
         order.getAppliedCoupons().forEach(memberCouponRepository::updateCouponStatus);
