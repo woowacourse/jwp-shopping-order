@@ -36,7 +36,7 @@ public class OrderItem {
         int totalPrice = product.getPrice() * quantity;
         for (MemberCoupon coupon : coupons) {
             Discount discount = coupon.getCoupon().getDiscount();
-            totalPrice -= discount.getDiscountType().calculate(totalPrice, discount.getAmount());
+            totalPrice -= discount.getStrategy().calculate(totalPrice, discount.getAmount());
         }
         if (totalPrice > 0) {
             return totalPrice;

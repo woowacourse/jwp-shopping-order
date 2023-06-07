@@ -1,7 +1,8 @@
 package cart.dao;
 
-import cart.domain.coupon.Coupon;
-import cart.domain.member.MemberCoupon;
+import cart.domain.coupon.RateStrategy;
+import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import cart.fixture.Fixture;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,11 +43,11 @@ class OrderCouponDaoTest {
 
     @Test
     void create() {
-        Long orderCouponId = orderCouponDao.create(orderItemId, memberCouponId);
-        System.out.println(orderCouponId);
-        List<MemberCoupon> memberCoupons = orderCouponDao.findByOrderItemId(orderItemId);
+        orderCouponDao.create(orderItemId, memberCouponId);
+        List<MemberCouponEntity> memberCoupons = orderCouponDao.findByOrderItemId(orderItemId);
 
-        List<Coupon> coupons = memberCoupons.stream().map(MemberCoupon::getCoupon).collect(Collectors.toList());
-        Assertions.assertThat(coupons).contains(Fixture.쿠폰);
+        List<CouponEntity> coupons = memberCoupons.stream().map(MemberCouponEntity::getCoupon).collect(Collectors.toList());
+        Assertions.assertThat(coupons)
+                .contains(new CouponEntity(1L, "오픈 기념 쿠폰", new RateStrategy().getStrategyName().name(), 10));
     }
 }

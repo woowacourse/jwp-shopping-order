@@ -1,7 +1,8 @@
 package cart.entity;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Discount;
+
+import java.util.Objects;
 
 public class CouponEntity {
 
@@ -28,13 +29,9 @@ public class CouponEntity {
         return new CouponEntity(
                 coupon.getId(),
                 coupon.getName(),
-                coupon.getDiscount().getDiscountType().name(),
+                coupon.getDiscount().getStrategy().getStrategyName().name(),
                 coupon.getDiscount().getAmount()
         );
-    }
-
-    public Coupon toCoupon() {
-        return new Coupon(id, name, new Discount(discountType, amount));
     }
 
     public Long getId() {
@@ -51,5 +48,18 @@ public class CouponEntity {
 
     public int getAmount() {
         return amount;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CouponEntity that = (CouponEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

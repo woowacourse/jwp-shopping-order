@@ -2,6 +2,7 @@ package cart.domain.member;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
+import cart.domain.coupon.RateStrategy;
 import cart.exception.MemberCouponNotFoundException;
 import cart.fixture.Fixture;
 import org.assertj.core.api.Assertions;
@@ -29,7 +30,7 @@ class MemberCouponsTest {
 
     @Test
     void useCoupons() {
-        final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount("rate", 10)), true);
+        final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount(new RateStrategy(), 10)), true);
         MemberCoupons memberCoupons = new MemberCoupons(List.of(멤버_쿠폰3));
 
         List<Boolean> usedMemberCoupons = memberCoupons.use(memberCoupons)
@@ -42,7 +43,7 @@ class MemberCouponsTest {
 
     @Test
     void useCouponsFail() {
-        final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount("rate", 10)), true);
+        final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount(new RateStrategy(), 10)), true);
         MemberCoupons memberCoupons = new MemberCoupons(Collections.emptyList());
         MemberCoupons useCoupons = new MemberCoupons(List.of(멤버_쿠폰3));
 
@@ -51,7 +52,7 @@ class MemberCouponsTest {
 
     @Test
     void getUnUsedCoupons() {
-        final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount("rate", 10)), true);
+        final MemberCoupon 멤버_쿠폰3 = new MemberCoupon(3L, new Coupon(2L, "오픈 기념 쿠폰", new Discount(new RateStrategy(), 10)), true);
         MemberCoupons memberCoupons = new MemberCoupons(List.of(Fixture.멤버_쿠폰, Fixture.멤버_쿠폰2, 멤버_쿠폰3));
 
         List<Long> memberCouponIds = memberCoupons.getUnUsedCoupons().getCoupons().stream().map(MemberCoupon::getId).collect(Collectors.toList());

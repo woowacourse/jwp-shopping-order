@@ -3,9 +3,13 @@ package cart.repository;
 import cart.dao.OrderCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Discount;
+import cart.domain.coupon.StrategyFactory;
 import cart.domain.member.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.entity.MemberCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
@@ -20,11 +24,13 @@ public class OrderRepository {
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final OrderCouponDao orderCouponDao;
+    private final StrategyFactory strategyFactory;
 
-    public OrderRepository(final OrderDao orderDao, final OrderItemDao orderItemDao, final OrderCouponDao orderCouponDao) {
+    public OrderRepository(final OrderDao orderDao, final OrderItemDao orderItemDao, final OrderCouponDao orderCouponDao, final StrategyFactory strategyFactory) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.orderCouponDao = orderCouponDao;
+        this.strategyFactory = strategyFactory;
     }
 
     public Long create(List<OrderItem> orderItems, OrderEntity orderEntity) {
@@ -51,8 +57,30 @@ public class OrderRepository {
         List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(orderId);
 
         return orderItemEntities.stream()
-                .map(orderItemEntity -> new OrderItem(orderItemEntity, orderCouponDao.findByOrderItemId(orderItemEntity.getId())))
+                .map(orderItemEntity -> {
+                    List<MemberCoupon> memberCoupons = orderCouponDao.findByOrderItemId(orderItemEntity.getId())
+                            .stream()
+                            .map(this::toMemberCoupon)
+                            .collect(Collectors.toList());
+
+                    return new OrderItem(orderItemEntity, memberCoupons);
+                })
                 .collect(Collectors.toList());
+    }
+
+    private MemberCoupon toMemberCoupon(final MemberCouponEntity entity) {
+        return new MemberCoupon(
+                entity.getId(),
+                new Coupon(
+                        entity.getCoupon().getId(),
+                        entity.getCoupon().getName(),
+                        new Discount(
+                                strategyFactory.findStrategy(entity.getCoupon().getDiscountType()),
+                                entity.getCoupon().getAmount()
+                        )
+                ),
+                entity.isUsed()
+        );
     }
 
     public Optional<Order> findById(Long id) {

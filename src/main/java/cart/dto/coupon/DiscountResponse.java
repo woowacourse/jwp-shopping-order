@@ -16,7 +16,7 @@ public class DiscountResponse {
     }
 
     public DiscountResponse(final Discount discount) {
-        this(discount.getDiscountType().name(), discount.getAmount());
+        this(discount.getStrategy().getStrategyName().name(), discount.getAmount());
     }
 
     public String getType() {

@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.MemberCouponDao;
 import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupons;
@@ -27,12 +26,12 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberCouponDao memberCouponDao;
+    private final CouponService couponService;
     private final CartItemRepository cartItemRepository;
 
-    public OrderService(final OrderRepository orderRepository, final MemberCouponDao memberCouponDao, final CartItemRepository cartItemRepository) {
+    public OrderService(final OrderRepository orderRepository, final CouponService couponService, final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
-        this.memberCouponDao = memberCouponDao;
+        this.couponService = couponService;
         this.cartItemRepository = cartItemRepository;
     }
 
@@ -55,10 +54,10 @@ public class OrderService {
     }
 
     private MemberCoupons usedCoupons(final Member member, final OrderItemRequest request) {
-        MemberCoupons requestCoupons = new MemberCoupons(memberCouponDao.findByIds(request.toMemberCouponIds()));
-        MemberCoupons memberCoupons = new MemberCoupons(memberCouponDao.findByMemberId(member.getId()));
+        MemberCoupons requestCoupons = new MemberCoupons(couponService.findByIds(request.toMemberCouponIds()));
+        MemberCoupons memberCoupons = new MemberCoupons(couponService.findByMemberId(member.getId()));
 
-        memberCouponDao.updateCoupon(memberCoupons.use(requestCoupons).getCoupons(), member.getId());
+        couponService.updateCoupon(memberCoupons.use(requestCoupons).getCoupons(), member.getId());
         return requestCoupons;
     }
 

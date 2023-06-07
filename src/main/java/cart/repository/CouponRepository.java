@@ -2,6 +2,8 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Discount;
+import cart.domain.coupon.StrategyFactory;
 import cart.entity.CouponEntity;
 import org.springframework.stereotype.Repository;
 
@@ -12,16 +14,29 @@ import java.util.stream.Collectors;
 public class CouponRepository {
 
     private final CouponDao couponDao;
+    private final StrategyFactory strategyFactory;
 
-    public CouponRepository(final CouponDao couponDao) {
+    public CouponRepository(final CouponDao couponDao, final StrategyFactory strategyFactory) {
         this.couponDao = couponDao;
+        this.strategyFactory = strategyFactory;
     }
 
     public List<Coupon> findAll() {
         List<CouponEntity> couponEntities = couponDao.findAll();
         return couponEntities.stream()
-                .map(CouponEntity::toCoupon)
+                .map(this::toMemberCoupon)
                 .collect(Collectors.toList());
+    }
+
+    private Coupon toMemberCoupon(final CouponEntity entity) {
+        return new Coupon(
+                entity.getId(),
+                entity.getName(),
+                new Discount(
+                        strategyFactory.findStrategy(entity.getDiscountType()),
+                        entity.getAmount()
+                )
+        );
     }
 
     public Long create(Coupon coupon) {

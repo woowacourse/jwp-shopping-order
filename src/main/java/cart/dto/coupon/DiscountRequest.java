@@ -21,7 +21,7 @@ public class DiscountRequest {
     }
 
     public DiscountRequest(final Discount discount) {
-        this(discount.getDiscountType().name(), discount.getAmount());
+        this(discount.getStrategy().getStrategyName().name(), discount.getAmount());
     }
 
     public String getType() {

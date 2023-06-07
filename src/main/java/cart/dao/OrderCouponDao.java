@@ -1,8 +1,7 @@
 package cart.dao;
 
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Discount;
-import cart.domain.member.MemberCoupon;
+import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,15 +25,15 @@ public class OrderCouponDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private static RowMapper<MemberCoupon> rowMapper() {
-        return (rs, rowNum) -> new MemberCoupon(rs.getLong("member_coupon.id"),
-                new Coupon(
+    private static RowMapper<MemberCouponEntity> rowMapper() {
+        return (rs, rowNum) -> new MemberCouponEntity(rs.getLong("member_coupon.id"),
+                new CouponEntity(
                         rs.getLong("coupon.id"),
                         rs.getString("coupon.name"),
-                        new Discount(rs.getString("coupon.discount_type"), rs.getInt("amount"))
+                        rs.getString("coupon.discount_type"),
+                        rs.getInt("amount")
                 ),
-                rs.getBoolean("used")
-        );
+                rs.getBoolean("used"));
     }
 
     public Long create(Long orderItemId, Long memberCouponId) {
@@ -45,7 +44,7 @@ public class OrderCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<MemberCoupon> findByOrderItemId(Long orderItemId) {
+    public List<MemberCouponEntity> findByOrderItemId(Long orderItemId) {
         try {
             String sql = "SELECT * FROM order_coupon, member_coupon, coupon WHERE order_coupon.member_coupon_id = member_coupon.id AND member_coupon.coupon_id = coupon.id AND order_item_id = ?";
             return jdbcTemplate.query(sql, rowMapper(), orderItemId);

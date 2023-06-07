@@ -1,8 +1,7 @@
 package cart.dao;
 
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Discount;
-import cart.domain.member.MemberCoupon;
+import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +22,6 @@ public class MemberCouponDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-
     public MemberCouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("member_coupon")
@@ -31,17 +29,18 @@ public class MemberCouponDao {
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    private static RowMapper<MemberCoupon> getCouponRowMapper() {
-        return (rs, rowNum) -> new MemberCoupon(rs.getLong("member_coupon.id"),
-                new Coupon(
+    private static RowMapper<MemberCouponEntity> getCouponRowMapper() {
+        return (rs, rowNum) -> new MemberCouponEntity(rs.getLong("member_coupon.id"),
+                new CouponEntity(
                         rs.getLong("coupon.id"),
                         rs.getString("name"),
-                        new Discount(rs.getString("discount_type"), rs.getInt("amount"))
+                        rs.getString("discount_type"),
+                        rs.getInt("amount")
                 ),
                 rs.getBoolean("used"));
     }
 
-    public List<MemberCoupon> findByMemberId(Long memberId) {
+    public List<MemberCouponEntity> findByMemberId(Long memberId) {
         try {
             String sql = "SELECT * FROM coupon INNER JOIN member_coupon ON coupon.id = member_coupon.coupon_id WHERE member_coupon.member_id = ?";
             return jdbcTemplate.query(sql, getCouponRowMapper(), memberId);
@@ -50,7 +49,7 @@ public class MemberCouponDao {
         }
     }
 
-    public List<MemberCoupon> findByIds(List<Long> ids) {
+    public List<MemberCouponEntity> findByIds(List<Long> ids) {
         if (ids.isEmpty()) {
             return Collections.emptyList();
         }
@@ -73,7 +72,7 @@ public class MemberCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void updateCoupon(List<MemberCoupon> memberCoupons, Long memberId) {
+    public void updateCoupon(List<MemberCouponEntity> memberCoupons, Long memberId) {
         if (memberCoupons.isEmpty()) {
             return;
         }
@@ -83,7 +82,7 @@ public class MemberCouponDao {
         jdbcTemplate.batchUpdate(sql,
                 memberCoupons,
                 memberCoupons.size(),
-                (PreparedStatement ps, MemberCoupon memberCoupon) -> {
+                (PreparedStatement ps, MemberCouponEntity memberCoupon) -> {
                     ps.setLong(1, memberId);
                     ps.setLong(2, memberCoupon.getCoupon().getId());
                     ps.setBoolean(3, memberCoupon.isUsed());

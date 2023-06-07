@@ -2,20 +2,16 @@ package cart.domain.coupon;
 
 public class Discount {
 
-    private final DiscountType discountType;
+    private final Strategy strategy;
     private final int amount;
 
-    public Discount(final DiscountType discountType, final int amount) {
-        this.discountType = discountType;
+    public Discount(final Strategy strategy, final int amount) {
+        this.strategy = strategy;
         this.amount = amount;
     }
 
-    public Discount(final String discountType, final int amount) {
-        this(DiscountType.valueOf(discountType), amount);
-    }
-
-    public DiscountType getDiscountType() {
-        return discountType;
+    public Strategy getStrategy() {
+        return strategy;
     }
 
     public int getAmount() {
