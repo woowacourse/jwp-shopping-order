@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,8 +20,10 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+    public List<Product> getAllProductsBy(final int start, final int size) {
+        String sql = "SELECT * FROM product " +
+                "ORDER BY id " +
+                "LIMIT " + size + " OFFSET " + start;
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
@@ -33,12 +35,12 @@ public class ProductDao {
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
-        });
+        }, productId);
     }
 
     public Long createProduct(Product product) {
@@ -50,9 +52,9 @@ public class ProductDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
+            ps.setString(1, product.getNameValue());
+            ps.setInt(2, product.getPriceValue());
+            ps.setString(3, product.getImageUrlValue());
 
             return ps;
         }, keyHolder);
@@ -62,11 +64,16 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getNameValue(), product.getPriceValue(), product.getImageUrlValue(), productId);
     }
 
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public Integer countAllProduct() {
+        final String sql = "SELECT COUNT(*) FROM product";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }

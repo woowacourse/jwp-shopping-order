@@ -1,14 +1,17 @@
 package cart.dto;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductResponse {
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl) {
+    public ProductResponse() {
+    }
+
+    private ProductResponse(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -16,7 +19,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getNameValue(), product.getPriceValue(), product.getImageUrlValue());
     }
 
     public Long getId() {
@@ -27,7 +30,7 @@ public class ProductResponse {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
