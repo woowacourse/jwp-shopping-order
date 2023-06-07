@@ -701,6 +701,7 @@ Content-Length: 27
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /products HTTP/1.1
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -772,8 +773,8 @@ Content-Length: 703
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /products/cart-items?lastId=3&amp;pageItemCount=2 HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -898,6 +899,7 @@ Content-Length: 716
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /products/1 HTTP/1.1
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -980,8 +982,8 @@ Content-Length: 231
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /products/1/cart-items HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1088,8 +1090,8 @@ Content-Length: 314
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /products/4/cart-items HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1184,7 +1186,8 @@ Content-Length: 329
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /products HTTP/1.1
-Content-Type: application/json;charset=UTF-8
+Content-Type: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Content-Length: 219
 Host: localhost:8080
 
@@ -1240,7 +1243,8 @@ Location: /products/1</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /products/1 HTTP/1.1
-Content-Type: application/json;charset=UTF-8
+Content-Type: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Content-Length: 219
 Host: localhost:8080
 
@@ -1314,6 +1318,7 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /products/1 HTTP/1.1
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1570,8 +1575,8 @@ Host: localhost:8080</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /orders HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1603,7 +1608,7 @@ Content-Length: 760
 {
   "orders" : [ {
     "orderId" : 1,
-    "orderedDateTime" : "2023-06-05 23:39:49",
+    "orderedDateTime" : "2023-06-08 01:50:46",
     "products" : [ {
       "product" : {
         "id" : 1,
@@ -1640,6 +1645,11 @@ Content-Length: 760
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orders</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">모든 주문 조회 목록</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>orders.[].orderId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
@@ -1694,8 +1704,8 @@ Content-Length: 760
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /orders/1 HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1726,7 +1736,7 @@ Content-Length: 697
 
 {
   "orderId" : 1,
-  "orderedDateTime" : "2023-06-05 23:39:49",
+  "orderedDateTime" : "2023-06-08 01:50:46",
   "products" : [ {
     "product" : {
       "id" : 1,

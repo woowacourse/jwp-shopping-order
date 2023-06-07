@@ -1,5 +1,6 @@
 package cart.document;
 
+import cart.auth.AuthInterceptor;
 import cart.auth.MemberArgumentResolver;
 import cart.auth.WebMvcConfig;
 import cart.cartitem.application.CartItemService;
@@ -27,13 +28,14 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 
 import java.util.List;
 
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem2;
+import static cart.fixtures.CartItemFixtures.Member_Dooly_CartItem1;
+import static cart.fixtures.CartItemFixtures.Member_Dooly_CartItem2;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -64,6 +66,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CartItemApiDocumentTest {
 
     private static final String BASIC_PREFIX = "Basic ";
+    private static final String ENCODE_DOOLY = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
     @Autowired
     private MockMvc mockMvc;
@@ -85,8 +88,23 @@ public class CartItemApiDocumentTest {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+
         mockMvc = MockMvcBuilders.standaloneSetup(new CartItemApiController(cartItemService, productService))
-                .setCustomArgumentResolvers(new MemberArgumentResolver(memberDao))
+                .defaultRequest(MockMvcRequestBuilders
+                        .get("/cart-items")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .defaultRequest(MockMvcRequestBuilders
+                        .post("/cart-items")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .defaultRequest(MockMvcRequestBuilders
+                        .patch("/cart-items")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .defaultRequest(MockMvcRequestBuilders
+                        .delete("/cart-items")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .setCustomArgumentResolvers(new MemberArgumentResolver())
+                .addInterceptors(new AuthInterceptor(memberDao))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
                 .build();
     }
@@ -94,14 +112,12 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_목록_조회_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(cartItemService.findByMember(Member_Dooly.ENTITY))
-                .willReturn(List.of(MemberA_CartItem1.ENTITY, MemberA_CartItem2.ENTITY));
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
+                .willReturn(List.of(Member_Dooly_CartItem1.ENTITY, Member_Dooly_CartItem2.ENTITY));
 
         // when, then
         mockMvc.perform(get("/cart-items")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("cart-items/showCartItems",
@@ -124,19 +140,17 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_추가_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         final CartItemRequest request = CartItemRequest.from(ProductFixtures.CHICKEN.ID);
         given(cartItemService.add(any(CartItem.class)))
-                .willReturn(MemberA_CartItem1.ID);
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
+                .willReturn(Member_Dooly_CartItem1.ID);
 
         // when, then
         mockMvc.perform(post("/cart-items")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/cart-items/" + MemberA_CartItem1.ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/cart-items/" + Member_Dooly_CartItem1.ID))
                 .andDo(document("cart-items/addCartItems",
                                 preprocessRequest(prettyPrint()),
                                 requestHeaders(
@@ -152,14 +166,12 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_수정_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         final CartItemQuantityUpdateRequest request = CartItemQuantityUpdateRequest.from(10);
-        willDoNothing().given(cartItemService).updateQuantity(Member_Dooly.ENTITY, MemberA_CartItem1.ID, request.getQuantity());
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
+        willDoNothing().given(cartItemService).updateQuantity(Member_Dooly.ENTITY, Member_Dooly_CartItem1.ID, request.getQuantity());
 
         // when, then
-        mockMvc.perform(patch("/cart-items/{id}", MemberA_CartItem1.ID)
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+        mockMvc.perform(patch("/cart-items/{id}", Member_Dooly_CartItem1.ID)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -181,13 +193,11 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_삭제_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
-        willDoNothing().given(cartItemService).remove(Member_Dooly.ENTITY, MemberA_CartItem1.ID);
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
+        willDoNothing().given(cartItemService).remove(Member_Dooly.ENTITY, Member_Dooly_CartItem1.ID);
 
         // when, then
-        mockMvc.perform(delete("/cart-items/{id}", MemberA_CartItem1.ID)
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo))
+        mockMvc.perform(delete("/cart-items/{id}", Member_Dooly_CartItem1.ID)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
                 .andExpect(status().isNoContent())
                 .andDo(document("cart-items/removeCartItems",
                                 requestHeaders(

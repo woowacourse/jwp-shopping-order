@@ -1,5 +1,6 @@
 package cart.document;
 
+import cart.auth.AuthInterceptor;
 import cart.auth.MemberArgumentResolver;
 import cart.auth.WebMvcConfig;
 import cart.member.dao.MemberDao;
@@ -27,6 +28,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 
@@ -62,6 +64,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderApiDocumentTest {
 
     private static final String BASIC_PREFIX = "Basic ";
+    private static final String ENCODE_DOOLY = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
     @Autowired
     private MockMvc mockMvc;
@@ -80,8 +83,17 @@ public class OrderApiDocumentTest {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+
         mockMvc = MockMvcBuilders.standaloneSetup(new OrderApiController(orderService))
-                .setCustomArgumentResolvers(new MemberArgumentResolver(memberDao))
+                .defaultRequest(MockMvcRequestBuilders
+                        .get("/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .defaultRequest(MockMvcRequestBuilders
+                        .post("/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .setCustomArgumentResolvers(new MemberArgumentResolver())
+                .addInterceptors(new AuthInterceptor(memberDao))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
                 .build();
     }
@@ -94,15 +106,13 @@ public class OrderApiDocumentTest {
         final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
         final OrderDto orderDto = new OrderDto(cartOrder, orderedProductDtos);
 
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(orderService.findAllByMemberId(Member_Dooly.ID))
                 .willReturn(List.of(orderDto));
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/orders")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
                 .andExpect(status().isOk())
                 .andDo(document("orders/getOrders",
                         preprocessResponse(prettyPrint()),
@@ -110,6 +120,7 @@ public class OrderApiDocumentTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
                         ),
                         responseFields(
+                                fieldWithPath("orders").type(JsonFieldType.ARRAY).description("모든 주문 조회 목록"),
                                 fieldWithPath("orders.[].orderId").type(JsonFieldType.NUMBER).description("주문 ID"),
                                 fieldWithPath("orders.[].orderedDateTime").type(JsonFieldType.STRING).description("주문한 시각"),
                                 fieldWithPath("orders.[].products").type(JsonFieldType.ARRAY).description("주문한 상품과 수량"),
@@ -131,15 +142,13 @@ public class OrderApiDocumentTest {
         final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
         final OrderDto orderDto = new OrderDto(cartOrder, orderedProductDtos);
 
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(orderService.findByCartOrderId(cartOrder.getId()))
                 .willReturn(orderDto);
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/orders/{cartOrderId}", cartOrder.getId())
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
                 .andExpect(status().isOk())
                 .andDo(document("orders/getOrder",
                         preprocessResponse(prettyPrint()),
@@ -171,16 +180,14 @@ public class OrderApiDocumentTest {
         final List<OrderCartItemRequest> orderCartItemDtos = List.of(oneDto, twoDto);
         final OrderCartItemsRequest request = new OrderCartItemsRequest(orderCartItemDtos);
 
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(orderService.addCartOrder(any(), any()))
                 .willReturn(1L);
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(post("/orders")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/orders/" + 1L))
                 .andDo(document("orders/postOrder",

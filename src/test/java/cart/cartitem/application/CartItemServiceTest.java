@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
+import static cart.fixtures.CartItemFixtures.Member_Dooly_CartItem1;
 import static cart.fixtures.MemberFixtures.Member_Ber;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
@@ -43,7 +43,7 @@ class CartItemServiceTest {
     void 특정_유저의_장바구니_목록을_확인하다() {
         // given
         when(cartItemDao.findByMemberId(Member_Dooly.ID))
-                .thenReturn(List.of(MemberA_CartItem1.ENTITY));
+                .thenReturn(List.of(Member_Dooly_CartItem1.ENTITY));
 
         // when
         final List<CartItem> cartItems = cartItemService.findByMember(Member_Dooly.ENTITY);
@@ -51,7 +51,7 @@ class CartItemServiceTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(cartItems).hasSize(1);
-            softAssertions.assertThat(cartItems.get(0)).isEqualTo(MemberA_CartItem1.ENTITY);
+            softAssertions.assertThat(cartItems.get(0)).isEqualTo(Member_Dooly_CartItem1.ENTITY);
         });
     }
 
@@ -61,7 +61,7 @@ class CartItemServiceTest {
         @Test
         void 특정_유저가_가진_장바구니를_한_개_검색한다() {
             // given
-            final Optional<CartItem> cartItem = Optional.of(MemberA_CartItem1.ENTITY);
+            final Optional<CartItem> cartItem = Optional.of(Member_Dooly_CartItem1.ENTITY);
             when(cartItemDao.findByMemberIdAndProductId(Member_Dooly.ID, CHICKEN.ID))
                     .thenReturn(cartItem);
 
@@ -70,7 +70,7 @@ class CartItemServiceTest {
 
             // then
             SoftAssertions.assertSoftly(softAssertions -> {
-                softAssertions.assertThat(actual).isEqualTo(MemberA_CartItem1.ENTITY);
+                softAssertions.assertThat(actual).isEqualTo(Member_Dooly_CartItem1.ENTITY);
             });
         }
 
@@ -95,16 +95,16 @@ class CartItemServiceTest {
         @Test
         void 장바구니에_이미_존재하는_상품을_추가하면_수량을_늘린다() {
             // given
-            final Optional<CartItem> cartItem = Optional.of(MemberA_CartItem1.ENTITY);
+            final Optional<CartItem> cartItem = Optional.of(Member_Dooly_CartItem1.ENTITY);
             when(cartItemDao.findByMemberIdAndProductId(Member_Dooly.ID, CHICKEN.ID))
                     .thenReturn(cartItem);
-            doNothing().when(cartItemDao).updateQuantity(MemberA_CartItem1.ENTITY);
+            doNothing().when(cartItemDao).updateQuantity(Member_Dooly_CartItem1.ENTITY);
 
             // when
-            final Long cartItemId = cartItemService.add(MemberA_CartItem1.ENTITY);
+            final Long cartItemId = cartItemService.add(Member_Dooly_CartItem1.ENTITY);
 
             // then
-            assertThat(cartItemId).isEqualTo(MemberA_CartItem1.ID);
+            assertThat(cartItemId).isEqualTo(Member_Dooly_CartItem1.ID);
 
         }
 
@@ -114,14 +114,14 @@ class CartItemServiceTest {
             final Optional<CartItem> cartItem = Optional.empty();
             when(cartItemDao.findByMemberIdAndProductId(Member_Dooly.ID, CHICKEN.ID))
                     .thenReturn(cartItem);
-            when(cartItemDao.save(MemberA_CartItem1.ENTITY))
-                    .thenReturn(MemberA_CartItem1.ID);
+            when(cartItemDao.save(Member_Dooly_CartItem1.ENTITY))
+                    .thenReturn(Member_Dooly_CartItem1.ID);
 
             // when
-            final Long cartItemId = cartItemService.add(MemberA_CartItem1.ENTITY);
+            final Long cartItemId = cartItemService.add(Member_Dooly_CartItem1.ENTITY);
 
             // then
-            assertThat(cartItemId).isEqualTo(MemberA_CartItem1.ID);
+            assertThat(cartItemId).isEqualTo(Member_Dooly_CartItem1.ID);
         }
     }
 
@@ -131,13 +131,13 @@ class CartItemServiceTest {
         @Test
         void 멤버의_장바구니_상품의_수량을_변경할_수_있다() {
             // given
-            when(cartItemDao.countById(MemberA_CartItem1.ID)).thenReturn(1L);
-            when(cartItemDao.findById(MemberA_CartItem1.ID))
-                    .thenReturn(MemberA_CartItem1.ENTITY);
-            doNothing().when(cartItemDao).updateQuantity(MemberA_CartItem1.ENTITY);
+            when(cartItemDao.countById(Member_Dooly_CartItem1.ID)).thenReturn(1L);
+            when(cartItemDao.findById(Member_Dooly_CartItem1.ID))
+                    .thenReturn(Member_Dooly_CartItem1.ENTITY);
+            doNothing().when(cartItemDao).updateQuantity(Member_Dooly_CartItem1.ENTITY);
 
             // when, then
-            assertDoesNotThrow(() -> cartItemService.updateQuantity(Member_Dooly.ENTITY, MemberA_CartItem1.ID, 5));
+            assertDoesNotThrow(() -> cartItemService.updateQuantity(Member_Dooly.ENTITY, Member_Dooly_CartItem1.ID, 5));
         }
 
         @Test
@@ -183,12 +183,12 @@ class CartItemServiceTest {
         @Test
         void 상품을_제거하다() {
             // given
-            when(cartItemDao.countById(MemberA_CartItem1.ID)).thenReturn(1L);
-            when(cartItemDao.findById(MemberA_CartItem1.ID)).thenReturn(MemberA_CartItem1.ENTITY);
-            doNothing().when(cartItemDao).deleteById(MemberA_CartItem1.ID);
+            when(cartItemDao.countById(Member_Dooly_CartItem1.ID)).thenReturn(1L);
+            when(cartItemDao.findById(Member_Dooly_CartItem1.ID)).thenReturn(Member_Dooly_CartItem1.ENTITY);
+            doNothing().when(cartItemDao).deleteById(Member_Dooly_CartItem1.ID);
 
             // when, then
-            assertDoesNotThrow(() -> cartItemService.remove(Member_Dooly.ENTITY, MemberA_CartItem1.ID));
+            assertDoesNotThrow(() -> cartItemService.remove(Member_Dooly.ENTITY, Member_Dooly_CartItem1.ID));
         }
 
         @Test
@@ -205,11 +205,11 @@ class CartItemServiceTest {
         @Test
         void 멤버가_다른_멤버의_장바구니에_접근하면_예외를_반환하다() {
             // given
-            when(cartItemDao.countById(MemberA_CartItem1.ID)).thenReturn(1L);
-            when(cartItemDao.findById(MemberA_CartItem1.ID)).thenReturn(MemberA_CartItem1.ENTITY);
+            when(cartItemDao.countById(Member_Dooly_CartItem1.ID)).thenReturn(1L);
+            when(cartItemDao.findById(Member_Dooly_CartItem1.ID)).thenReturn(Member_Dooly_CartItem1.ENTITY);
 
             // when, then
-            assertThatThrownBy(() -> cartItemService.remove(Member_Ber.ENTITY, MemberA_CartItem1.ID))
+            assertThatThrownBy(() -> cartItemService.remove(Member_Ber.ENTITY, Member_Dooly_CartItem1.ID))
                     .isInstanceOf(CartItemException.IllegalMember.class)
                     .hasMessage("Illegal member attempts to cart; cartItemId=1, memberId=2");
         }

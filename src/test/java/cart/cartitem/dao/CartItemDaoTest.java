@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
-import static cart.fixtures.MemberFixtures.Member_Ber;
+import static cart.fixtures.CartItemFixtures.Member_Dooly_CartItem1;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PIZZA;
@@ -65,7 +64,7 @@ class CartItemDaoTest extends DaoTest {
     @Test
     void 장바구니를_저장하다() {
         // given
-        final CartItem cartItem = CartItem.of(null, 10, PIZZA.ENTITY, Member_Ber.ENTITY);
+        final CartItem cartItem = CartItem.of(null, 10, PIZZA.ENTITY, Member_Dooly.ENTITY);
 
         // when
         final Long cartItemId = cartItemDao.save(cartItem);
@@ -81,7 +80,7 @@ class CartItemDaoTest extends DaoTest {
 
     @Test
     void 장바구니_상품의_개수를_수정하다() {
-        assertDoesNotThrow(() -> cartItemDao.updateQuantity(MemberA_CartItem1.ENTITY));
+        assertDoesNotThrow(() -> cartItemDao.updateQuantity(Member_Dooly_CartItem1.ENTITY));
     }
 
     @Test

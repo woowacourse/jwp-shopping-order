@@ -1,5 +1,6 @@
 package cart.order.ui;
 
+import cart.auth.Auth;
 import cart.member.domain.Member;
 import cart.order.application.OrderService;
 import cart.order.application.dto.OrderDto;
@@ -30,7 +31,7 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<OrdersResponse> getOrders(Member member) {
+    public ResponseEntity<OrdersResponse> getOrders(@Auth Member member) {
         final List<OrderDto> orderDtos = orderService.findAllByMemberId(member.getId());
 
         final List<OrderResponse> orderResponses = orderDtos.stream()
@@ -43,7 +44,7 @@ public class OrderApiController {
     }
 
     @GetMapping("/{cartOrderId}")
-    public ResponseEntity<OrderResponse> getOrder(Member member,
+    public ResponseEntity<OrderResponse> getOrder(@Auth Member member,
                                                   @PathVariable final Long cartOrderId) {
         final OrderDto orderDto = orderService.findByCartOrderId(cartOrderId);
 
@@ -53,7 +54,7 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postOrder(Member member,
+    public ResponseEntity<Void> postOrder(@Auth final Member member,
                                           @RequestBody final OrderCartItemsRequest request) {
         final List<OrderCartItemRequest> orderCartItemDtos = request.getOrderCartItemDtos();
 

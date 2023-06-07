@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +30,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     @Test
     void 특정_상품_목록을_페이징해서_조회하다() {
         final ExtractableResponse<Response> response = given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .param("lastId", 3)
                 .param("pageItemCount", 2)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -57,14 +58,11 @@ public class ProductIntegrationTest extends IntegrationTest {
     void 유저와_상품_id를_통해_장바구니를_가져오다() {
         final ExtractableResponse<Response> response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .when()
                 .get("/products/" + 1L + "/cart-items")
                 .then()
                 .extract();
-
-        System.out.println(member.getEmail());
-        System.out.println(member.getPassword());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

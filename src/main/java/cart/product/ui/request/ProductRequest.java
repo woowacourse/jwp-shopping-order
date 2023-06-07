@@ -20,6 +20,9 @@ public class ProductRequest {
     @URL
     private String imageUrl;
 
+    public ProductRequest() {
+    }
+
     private ProductRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;

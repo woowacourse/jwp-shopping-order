@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
+import static cart.fixtures.CartItemFixtures.Member_Dooly_CartItem1;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
@@ -232,7 +232,7 @@ class ProductServiceTest {
         @Test
         void 장바구니에_존재하는_상품을_가져오다() {
             // given
-            final Optional<CartItem> cartItem = Optional.of(MemberA_CartItem1.ENTITY);
+            final Optional<CartItem> cartItem = Optional.of(Member_Dooly_CartItem1.ENTITY);
             when(cartItemDao.findByMemberIdAndProductId(1L, 1L))
                     .thenReturn(cartItem);
 
@@ -244,7 +244,7 @@ class ProductServiceTest {
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(productCartItemDtos).hasSize(1);
                 softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).isEqualTo(CHICKEN.ENTITY);
-                softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).isEqualTo(MemberA_CartItem1.ENTITY);
+                softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).isEqualTo(Member_Dooly_CartItem1.ENTITY);
             });
         }
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
+import static cart.fixtures.CartItemFixtures.Member_Dooly_CartItem1;
 import static cart.fixtures.MemberFixtures.Member_Ber;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +19,7 @@ class CartItemTest {
     @Test
     void 잘못된_유저가_장바구니_상품에_접근하면_예외를_반환하다() {
 
-        assertThatThrownBy(() -> MemberA_CartItem1.ENTITY.checkOwner(Member_Ber.ENTITY))
+        assertThatThrownBy(() -> Member_Dooly_CartItem1.ENTITY.checkOwner(Member_Ber.ENTITY))
                 .isInstanceOf(CartItemException.IllegalMember.class);
     }
 

@@ -1,5 +1,6 @@
 package cart.product.ui;
 
+import cart.auth.Auth;
 import cart.cartitem.application.CartItemService;
 import cart.cartitem.domain.CartItem;
 import cart.member.domain.Member;
@@ -58,7 +59,7 @@ public class ProductApiController {
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<ProductDetailPageResponse> getHomePagingProduct(final Member member,
+    public ResponseEntity<ProductDetailPageResponse> getHomePagingProduct(@Auth final Member member,
                                                                           @RequestParam final Long lastId,
                                                                           @RequestParam final int pageItemCount) {
         final List<Product> products = productService.getProductsInPaging(lastId, pageItemCount);
@@ -75,7 +76,7 @@ public class ProductApiController {
 
     @GetMapping("/{productId}/cart-items")
     public ResponseEntity<ProductDetailResponse> getProductCartItemByProductId(@PathVariable final Long productId,
-                                                                               final Member member) {
+                                                                               @Auth final Member member) {
         final Product product = productService.getProductById(productId);
         final CartItem cartItem = cartItemService.findByMemberAndProduct(member, product);
 

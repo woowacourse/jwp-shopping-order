@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static cart.fixtures.MemberFixtures.Member_Ber;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +21,7 @@ class CartItemApiControllerTest extends IntegrationTest {
         // given, when
         final ExtractableResponse<Response> result = given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(Member_Ber.EMAIL, Member_Ber.PASSWORD)
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .when()
                 .get("/cart-items")
                 .then()
@@ -40,7 +40,7 @@ class CartItemApiControllerTest extends IntegrationTest {
         final ExtractableResponse<Response> result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(Member_Ber.EMAIL, Member_Ber.PASSWORD)
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .body(request)
                 .when()
                 .post("/cart-items")
@@ -60,10 +60,10 @@ class CartItemApiControllerTest extends IntegrationTest {
         final ExtractableResponse<Response> result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(Member_Ber.EMAIL, Member_Ber.PASSWORD)
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .body(request)
                 .when()
-                .patch("/cart-items/" + 3L)
+                .patch("/cart-items/" + 1L)
                 .then()
                 .extract();
 
@@ -75,9 +75,9 @@ class CartItemApiControllerTest extends IntegrationTest {
     void 장바구니_상품을_삭제하다() {
         // given, when
         final ExtractableResponse<Response> result = given()
-                .auth().preemptive().basic(Member_Ber.EMAIL, Member_Ber.PASSWORD)
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .when()
-                .delete("/cart-items/" + 3L)
+                .delete("/cart-items/" + 1L)
                 .then()
                 .extract();
 

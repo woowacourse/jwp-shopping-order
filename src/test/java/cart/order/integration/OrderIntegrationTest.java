@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,14 +24,13 @@ public class OrderIntegrationTest extends IntegrationTest {
         final OrderCartItemRequest orderCartItemDto = new OrderCartItemRequest(1L, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
         final OrderCartItemsRequest request = new OrderCartItemsRequest(List.of(orderCartItemDto));
 
-        final ExtractableResponse<Response> response = given().log().all()
+        final ExtractableResponse<Response> response = given()
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(request)
                 .when()
                 .post("/orders")
-                .then().log().all()
+                .then()
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -40,7 +40,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void 주문_목록을_확인하다() {
         final ExtractableResponse<Response> response = given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .when()
                 .get("/orders")
                 .then()
@@ -53,7 +53,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void 주문_상세를_확인하다() {
         final ExtractableResponse<Response> response = given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(Member_Dooly.EMAIL, Member_Dooly.PASSWORD)
                 .when()
                 .get("/orders/{orderId}", 1L)
                 .then()

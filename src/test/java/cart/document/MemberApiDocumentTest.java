@@ -1,5 +1,6 @@
 package cart.document;
 
+import cart.auth.AuthInterceptor;
 import cart.auth.MemberArgumentResolver;
 import cart.auth.WebMvcConfig;
 import cart.member.application.MemberService;
@@ -23,6 +24,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 
@@ -49,6 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MemberApiDocumentTest {
 
     private static final String BASIC_PREFIX = "Basic ";
+    private static final String ENCODE_DOOLY = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,10 +68,20 @@ public class MemberApiDocumentTest {
     @MockBean
     private MemberDao memberDao;
 
+
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+
         mockMvc = MockMvcBuilders.standaloneSetup(new MemberApiController(memberService))
-                .setCustomArgumentResolvers(new MemberArgumentResolver(memberDao))
+                .defaultRequest(MockMvcRequestBuilders
+                        .post("/members/cash")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .defaultRequest(MockMvcRequestBuilders
+                        .get("/members/cash")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY))
+                .setCustomArgumentResolvers(new MemberArgumentResolver())
+                .addInterceptors(new AuthInterceptor(memberDao))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
                 .build();
     }
@@ -76,15 +89,13 @@ public class MemberApiDocumentTest {
     @Test
     void 캐시_충전_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(memberService.depositCash(Member_Dooly.ENTITY, 5000L))
                 .willReturn(15000L);
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
         final DepositRequest request = DepositRequest.from(5000L);
 
         // when, then
         mockMvc.perform(post("/members/cash")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -108,13 +119,11 @@ public class MemberApiDocumentTest {
     @Test
     void 캐시_확인_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(memberService.findCash(Member_Dooly.ENTITY)).willReturn(Member_Dooly.CASH);
-        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/members/cash")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + ENCODE_DOOLY)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("members/getTotalCash",

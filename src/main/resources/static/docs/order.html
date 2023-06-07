@@ -451,8 +451,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /orders HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -484,7 +484,7 @@ Content-Length: 760
 {
   "orders" : [ {
     "orderId" : 1,
-    "orderedDateTime" : "2023-06-05 23:39:49",
+    "orderedDateTime" : "2023-06-08 01:50:46",
     "products" : [ {
       "product" : {
         "id" : 1,
@@ -521,6 +521,11 @@ Content-Length: 760
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orders</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">모든 주문 조회 목록</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>orders.[].orderId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
@@ -575,8 +580,8 @@ Content-Length: 760
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /orders/1 HTTP/1.1
-Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Accept: application/json
+Authorization: Basic ZG9vbHlAZG9vbHkuY29tOjEyMzQ=
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -607,7 +612,7 @@ Content-Length: 697
 
 {
   "orderId" : 1,
-  "orderedDateTime" : "2023-06-05 23:39:49",
+  "orderedDateTime" : "2023-06-08 01:50:46",
   "products" : [ {
     "product" : {
       "id" : 1,

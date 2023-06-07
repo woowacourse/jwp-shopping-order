@@ -1,5 +1,6 @@
 package cart.cartitem.ui;
 
+import cart.auth.Auth;
 import cart.cartitem.application.CartItemService;
 import cart.cartitem.domain.CartItem;
 import cart.cartitem.ui.request.CartItemQuantityUpdateRequest;
@@ -36,7 +37,7 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(final Member member) {
+    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth final Member member) {
         final List<CartItem> cartItems = cartItemService.findByMember(member);
 
         final List<CartItemResponse> responses = cartItems.stream()
@@ -47,7 +48,7 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(final Member member,
+    public ResponseEntity<Void> addCartItems(@Auth final Member member,
                                              @Valid @RequestBody final CartItemRequest cartItemRequest) {
         final Product product = productService.getProductById(cartItemRequest.getProductId());
         final CartItem cartItem = CartItem.of(member, product);
@@ -57,7 +58,7 @@ public class CartItemApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(final Member member,
+    public ResponseEntity<Void> updateCartItemQuantity(@Auth final Member member,
                                                        @PathVariable final Long id,
                                                        @Valid @RequestBody final CartItemQuantityUpdateRequest request) {
         final int quantity = request.getQuantity();
@@ -68,7 +69,7 @@ public class CartItemApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(final Member member,
+    public ResponseEntity<Void> removeCartItems(@Auth final Member member,
                                                 @PathVariable final Long id) {
         cartItemService.remove(member, id);
 

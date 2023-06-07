@@ -63,7 +63,6 @@ public class CartOrderDao {
                 .addValue("member_id", cartOrder.getMember().getId())
                 .addValue("total_price", cartOrder.getTotalPrice())
                 .addValue("created_at", Timestamp.valueOf(LocalDateTime.now()));
-        ;
 
         return insertAction.executeAndReturnKey(insertParameters).longValue();
     }

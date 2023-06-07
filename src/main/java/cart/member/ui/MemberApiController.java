@@ -1,5 +1,6 @@
 package cart.member.ui;
 
+import cart.auth.Auth;
 import cart.member.application.MemberService;
 import cart.member.domain.Member;
 import cart.member.ui.request.DepositRequest;
@@ -25,7 +26,7 @@ public class MemberApiController {
     }
 
     @PostMapping("/cash")
-    public ResponseEntity<DepositResponse> postDepositCash(final Member member,
+    public ResponseEntity<DepositResponse> postDepositCash(@Auth final Member member,
                                                            @Valid @RequestBody final DepositRequest request) {
         final Long cash = request.getCashToCharge();
         final Long totalCash = memberService.depositCash(member, cash);
@@ -34,7 +35,7 @@ public class MemberApiController {
     }
 
     @GetMapping("/cash")
-    public ResponseEntity<TotalCashResponse> getTotalCash(final Member member) {
+    public ResponseEntity<TotalCashResponse> getTotalCash(@Auth final Member member) {
         final Long totalCash = memberService.findCash(member);
 
         return ResponseEntity.ok(TotalCashResponse.from(totalCash));
