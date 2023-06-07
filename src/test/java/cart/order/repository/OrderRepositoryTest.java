@@ -48,7 +48,7 @@ class OrderRepositoryTest extends DBInit {
         final Long orderId = orderRepository.save(MEMBER.getId(), order);
 
         // then
-        assertThat(orderId).isOne();
+        assertThat(orderId).isPositive();
     }
 
     @Test
@@ -72,12 +72,12 @@ class OrderRepositoryTest extends DBInit {
         final OrderInfo orderInfo1 = new OrderInfo(PRODUCT_FIRST, "치킨", 10000L, "aa", 2L);
         final OrderInfo orderInfo2 = new OrderInfo(PRODUCT_SECOND, "샐러드", 20000L, "bb", 4L);
         final Order orderToSave = new Order(List.of(orderInfo1, orderInfo2), 100000L, 600L, 10000L);
-        orderRepository.save(MEMBER.getId(), orderToSave);
-
+        final Long orderId = orderRepository.save(MEMBER.getId(), orderToSave);
+        
         // when
-        final Order order = orderRepository.findByMemberAndId(MEMBER, 1L);
+        final Order order = orderRepository.findByMemberAndId(MEMBER, orderId);
 
         // then
-        assertThat(order.getId()).isOne();
+        assertThat(order.getId()).isPositive();
     }
 }

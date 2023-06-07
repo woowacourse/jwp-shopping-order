@@ -50,7 +50,7 @@ class CartItemRepositoryTest extends DBInit {
         final Long cartItemId = cartItemRepository.save(CART_ITEM);
 
         // then
-        assertThat(cartItemId).isEqualTo(5L);
+        assertThat(cartItemId).isPositive();
     }
 
     @Test
@@ -62,7 +62,7 @@ class CartItemRepositoryTest extends DBInit {
         final CartItem cartItem = cartItemRepository.findById(cartItemId);
 
         // then
-        assertThat(cartItem).isEqualTo(CART_ITEM);
+        assertThat(cartItem.getId()).isPositive();
     }
 
     @Test

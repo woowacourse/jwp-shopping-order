@@ -236,19 +236,22 @@ public class OrderIntegrationTest extends IntegrationTest {
         final OrderRequest orderRequest2 =
                 new OrderRequest(List.of(4L), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
         
-        given().log().all()
+        final ExtractableResponse<Response> response = given().log().all()
                 .contentType(ContentType.JSON)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(orderRequest2)
                 .when().post("/orders")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+        
+        final String orderId = response.header("Location").substring("/orders/".length());
         
         // expect
         given().log().all()
                 .contentType(ContentType.JSON)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when().get("/orders/" + 3L)
+                .when().get("/orders/" + (Long.parseLong(orderId) + 1L))
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", startsWith("[ERROR]"));

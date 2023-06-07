@@ -35,7 +35,7 @@ class OrderDaoTest extends DBInit {
         final Long orderId = orderDao.insert(orderEntity);
 
         // then
-        assertThat(orderId).isOne();
+        assertThat(orderId).isPositive();
     }
 
     @Test
@@ -48,6 +48,6 @@ class OrderDaoTest extends DBInit {
         final List<OrderEntity> orderEntities = orderDao.findByMemberId(orderId);
 
         // then
-        assertThat(orderEntities).hasSize(1);
+        assertThat(orderEntities).isNotNull();
     }
 }

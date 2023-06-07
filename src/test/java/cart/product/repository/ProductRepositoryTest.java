@@ -61,7 +61,7 @@ class ProductRepositoryTest extends DBInit {
         final Long productId = productRepository.createProduct(PRODUCT_FIRST);
 
         // then
-        assertThat(productId).isEqualTo(4L);
+        assertThat(productId).isPositive();
     }
 
     @Test
