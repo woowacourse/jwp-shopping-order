@@ -1,23 +1,20 @@
-package cart.ui.dto;
+package cart.ui.dto.response;
 
-import cart.domain.OrderItem;
+import cart.domain.Product;
 
-public class OrderItemDto {
-
+public class ProductResponse {
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
-    private int quantity;
     private int discountRate;
     private int discountedPrice;
 
-    private OrderItemDto(
+    public ProductResponse(
             final Long id,
             final String name,
             final int price,
             final String imageUrl,
-            final int quantity,
             final int discountRate,
             final int discountedPrice
     ) {
@@ -25,20 +22,18 @@ public class OrderItemDto {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
         this.discountRate = discountRate;
         this.discountedPrice = discountedPrice;
     }
 
-    public static OrderItemDto from(final OrderItem orderItem) {
-        return new OrderItemDto(
-                orderItem.getId(),
-                orderItem.getName(),
-                orderItem.getPrice(),
-                orderItem.getImageUrl(),
-                orderItem.getQuantity(),
-                orderItem.getDiscountRate(),
-                orderItem.calculateDiscountedPrice()
+    public static ProductResponse of(final Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getDiscountRate(),
+                product.calculateDiscountedPrice()
         );
     }
 
@@ -56,10 +51,6 @@ public class OrderItemDto {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 
     public int getDiscountRate() {

@@ -24,7 +24,6 @@ public class OrderItem {
         this.discountRate = new Rate(product.getDiscountRate());
     }
 
-
     public OrderItem(
             final String name,
             final int price,

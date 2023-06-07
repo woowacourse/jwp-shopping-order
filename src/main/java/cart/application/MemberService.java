@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.repository.MemberRepository;
-import cart.ui.dto.MemberGradeResponse;
+import cart.ui.dto.response.MemberGradeResponse;
 import org.springframework.stereotype.Service;
 
 @Service

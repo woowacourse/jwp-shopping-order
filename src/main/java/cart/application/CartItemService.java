@@ -2,11 +2,11 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
+import cart.ui.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.dto.request.CartItemRequest;
+import cart.ui.dto.response.CartItemResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
