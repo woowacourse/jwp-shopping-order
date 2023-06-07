@@ -4,6 +4,7 @@ import cart.domain.payment.Payment;
 import cart.domain.payment.PointPolicy;
 import cart.domain.vo.Cash;
 import cart.domain.vo.Point;
+import cart.exception.AuthenticationException;
 import cart.exception.MemberException;
 
 import java.util.Objects;
@@ -78,8 +79,10 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public void checkPassword(String password) {
+        if (!this.password.equals(password)) {
+            throw new AuthenticationException("잘못된 사용자입니다.");
+        }
     }
 
     public int getAvailablePoint() {

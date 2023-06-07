@@ -50,6 +50,6 @@ class ProductTest {
     void 이미지_url_형식이_잘못된_경우_예외를_던진다() {
         assertThatThrownBy(() -> new Product(validId, validName, validPrice, ""))
                 .isInstanceOf(ProductException.InvalidImageUrl.class)
-                .hasMessageContaining("잘못된 이미지 url입니다.");
+                .hasMessageContaining("잘못된 이미지 url 형식입니다.'https://' 형태의 주소를 입력해주세요.");
     }
 }

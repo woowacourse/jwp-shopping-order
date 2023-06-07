@@ -37,6 +37,6 @@ class CartItemTest {
     void 멤버가_없으면_예외를_던진다() {
         assertThatThrownBy(() -> new CartItem(validId, validQuantity, validProduct, null))
                 .isInstanceOf(CartItemException.InvalidMember.class)
-                .hasMessageContaining("장바구니에 해당하는 회원이 존재하지 않습니다.");
+                .hasMessageContaining("장바구니에 접근 권한이 없습니다. 아이디와 비밀번호를 확인해주세요.");
     }
 }
