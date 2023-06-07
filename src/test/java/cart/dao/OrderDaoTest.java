@@ -1,12 +1,8 @@
-package cart.repository.dao;
+package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.MemberDao;
-import cart.dao.OrderDao;
-import cart.dao.OrderProductDao;
-import cart.dao.ProductDao;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderProductEntity;
