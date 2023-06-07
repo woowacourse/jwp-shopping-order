@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.AuthenticationException;
+
 import java.util.Objects;
 
 public class Member {
@@ -38,8 +40,10 @@ public class Member {
         return point;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public void checkPassword(String password) {
+        if (!this.password.equals(password)) {
+            throw new AuthenticationException();
+        }
     }
 
     @Override
