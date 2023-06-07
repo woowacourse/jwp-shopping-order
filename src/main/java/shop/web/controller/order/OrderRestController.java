@@ -36,8 +36,8 @@ public class OrderRestController {
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
-    private List<OrderProductDto> toOrderProducts(List<OrderItemRequest> orderItmes) {
-        return orderItmes.stream()
+    private List<OrderProductDto> toOrderProducts(List<OrderItemRequest> orderItems) {
+        return orderItems.stream()
                 .map(item -> new OrderProductDto(item.getProductId(), item.getQuantity()))
                 .collect(Collectors.toList());
     }

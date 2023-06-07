@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderProductResponse {
-    OrderProductDetailResponse product;
+    private OrderProductDetailResponse product;
     private Integer quantity;
 
     private OrderProductResponse() {
