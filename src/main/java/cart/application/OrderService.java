@@ -4,7 +4,6 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
-import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
@@ -17,7 +16,6 @@ import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +35,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long save(Member member, @Valid OrderRequest orderRequest) {
+    public Long save(Member member, OrderRequest orderRequest) {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         List<CartItem> cartItems = makeCartItems(cartItemIds);
         List<OrderProduct> orderProducts = toOrderProduct(cartItems);
@@ -51,7 +49,6 @@ public class OrderService {
         validateMemberIsSameCartItemOwner(cartItems, member);
         validateMemberPointIsGreaterThanUsedPoint(member, orderRequest.getPoint());
         validateUsedPointIsLessThanPrice(orderRequest.getPoint(), order.getTotalPrice(), order.getDeliveryFee());
-        validateAppropriatePointAndPrice(orderRequest.getPoint(), order.getTotalPrice());
 
         accumulatePoint(member, orderRequest, order);
 
@@ -84,15 +81,6 @@ public class OrderService {
     private void validateUsedPointIsLessThanPrice(int point, int totalPrice, int deliveryFee) {
         if (totalPrice + deliveryFee < point) {
             throw new OrderException(ErrorMessage.INVALID_POINT_MORE_THAN_PRICE);
-        }
-    }
-
-    private void validateAppropriatePointAndPrice(int requestedPoint, int totalPrice) {
-        Point point = new Point(requestedPoint);
-        Point expectedPoint = Point.fromTotalPrice(totalPrice);
-
-        if (!point.equals(expectedPoint)) {
-            throw new OrderException(ErrorMessage.INVALID_POINT_INAPPROPRIATE_RATE);
         }
     }
 
