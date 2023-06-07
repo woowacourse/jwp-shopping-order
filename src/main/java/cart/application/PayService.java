@@ -17,7 +17,7 @@ public class PayService {
     }
 
     @Transactional
-    public Order pay(Order order, Money deliveryFee, Money discounting, Long id) {
+    public Order payOrder(Order order, Money deliveryFee, Money discounting, Long id) {
         Order confirmed = order.confirmOrder(deliveryFee, discounting);
         Member member = memberDao.getMemberById(id);
         member.payMoney(confirmed);

@@ -39,7 +39,7 @@ public class OrderService {
 
         Money discountedMoney = applyDiscounting(orderRequest, order);
 
-        Order payed = payService.pay(order, deliveryFee, discountedMoney, member.getId());
+        Order payed = payService.payOrder(order, deliveryFee, discountedMoney, member.getId());
 
         cartItemDao.deleteByIds(orderRequest.getCartItemIds());
 
