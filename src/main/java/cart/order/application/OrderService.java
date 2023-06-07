@@ -7,7 +7,6 @@ import cart.coupon.domain.CouponRepository;
 import cart.order.application.dto.PlaceOrderCommand;
 import cart.order.domain.service.OrderPlaceService;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +29,7 @@ public class OrderService {
     }
 
     public Long place(PlaceOrderCommand command) {
-        List<CartItem> cartItems = command.getCartItemIds().stream()
-                .map(cartItemRepository::findById)
-                .collect(Collectors.toList());
+        List<CartItem> cartItems = cartItemRepository.findAllByIds(command.getCartItemIds());
         List<Coupon> coupons = couponRepository.findAllByIds(command.getCouponIds());
         return orderPlaceService.placeOrder(command.getMemberId(), cartItems, coupons);
     }

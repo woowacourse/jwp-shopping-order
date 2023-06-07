@@ -60,8 +60,7 @@ class OrderServiceTest {
         Member member = new Member(1L, "email", "1234");
         CartItem cartItem1 = new CartItem(product1, member);
         CartItem cartItem2 = new CartItem(product2, member);
-        given(cartItemRepository.findById(1L)).willReturn(cartItem1);
-        given(cartItemRepository.findById(2L)).willReturn(cartItem2);
+        given(cartItemRepository.findAllByIds(List.of(1L, 2L))).willReturn(List.of(cartItem1, cartItem2));
         given(orderRepository.save(any())).willReturn(1L);
 
         // when
@@ -101,8 +100,7 @@ class OrderServiceTest {
         Member member = new Member(1L, "email", "1234");
         CartItem cartItem1 = new CartItem(product1, member);
         CartItem cartItem2 = new CartItem(product2, member);
-        given(cartItemRepository.findById(1L)).willReturn(cartItem1);
-        given(cartItemRepository.findById(2L)).willReturn(cartItem2);
+        given(cartItemRepository.findAllByIds(List.of(1L, 2L))).willReturn(List.of(cartItem1, cartItem2));
         given(orderRepository.save(any())).willReturn(1L);
 
         // when
