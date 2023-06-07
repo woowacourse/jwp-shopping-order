@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.application.exception.AuthenticationException;
+import cart.exception.application.AuthenticationException;
 import cart.application.service.MemberService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;

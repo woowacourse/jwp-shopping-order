@@ -3,7 +3,7 @@ package cart.application.service;
 import cart.entity.CartItem;
 import cart.entity.Member;
 import cart.entity.Product;
-import cart.application.exception.IllegalMemberException;
+import cart.exception.application.IllegalMemberException;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.ProductRepository;

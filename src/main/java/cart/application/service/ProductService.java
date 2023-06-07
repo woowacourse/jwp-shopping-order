@@ -1,6 +1,6 @@
 package cart.application.service;
 
-import cart.application.exception.ProductNotFoundException;
+import cart.exception.application.ProductNotFoundException;
 import cart.application.repository.ProductRepository;
 import cart.entity.Product;
 import cart.presentation.dto.request.ProductRequest;

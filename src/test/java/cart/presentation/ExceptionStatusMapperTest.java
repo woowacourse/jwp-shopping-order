@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.application.exception.IllegalMemberException;
+import cart.exception.application.IllegalMemberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.application.exception.ExceedOwnedPointException;
+import cart.exception.application.ExceedOwnedPointException;
 
 public class Member {
 

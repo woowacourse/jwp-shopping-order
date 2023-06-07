@@ -1,11 +1,11 @@
 package cart.application.service;
 
-import cart.application.exception.MemberNotFoundException;
+import cart.exception.application.MemberNotFoundException;
 import cart.application.repository.MemberRepository;
 import cart.entity.Member;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
-import cart.application.exception.AuthenticationException;
+import cart.exception.application.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

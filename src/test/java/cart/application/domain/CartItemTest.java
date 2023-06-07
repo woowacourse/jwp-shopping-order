@@ -1,6 +1,6 @@
 package cart.application.domain;
 
-import cart.application.exception.IllegalMemberException;
+import cart.exception.application.IllegalMemberException;
 import cart.entity.CartItem;
 import cart.entity.Member;
 import cart.entity.Product;

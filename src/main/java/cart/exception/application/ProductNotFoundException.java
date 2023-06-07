@@ -1,4 +1,4 @@
-package cart.application.exception;
+package cart.exception.application;
 
 public class ProductNotFoundException extends ApplicationException {
 

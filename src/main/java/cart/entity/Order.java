@@ -1,7 +1,7 @@
 package cart.entity;
 
-import cart.application.exception.ExceedAvailablePointException;
-import cart.application.exception.IllegalMemberException;
+import cart.exception.application.ExceedAvailablePointException;
+import cart.exception.application.IllegalMemberException;
 
 import java.util.Objects;
 

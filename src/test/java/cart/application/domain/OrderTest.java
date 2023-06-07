@@ -1,7 +1,7 @@
 package cart.application.domain;
 
-import cart.application.exception.ExceedAvailablePointException;
-import cart.application.exception.IllegalMemberException;
+import cart.exception.application.ExceedAvailablePointException;
+import cart.exception.application.IllegalMemberException;
 import cart.entity.Member;
 import cart.entity.Order;
 import cart.entity.OrderInfo;

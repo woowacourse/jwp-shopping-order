@@ -1,10 +1,10 @@
 package cart.presentation;
 
-import cart.application.exception.AuthenticationException;
-import cart.application.exception.ExceedAvailablePointException;
-import cart.application.exception.ExceedOwnedPointException;
-import cart.application.exception.IllegalMemberException;
-import cart.application.exception.PointInconsistentException;
+import cart.exception.application.AuthenticationException;
+import cart.exception.application.ExceedAvailablePointException;
+import cart.exception.application.ExceedOwnedPointException;
+import cart.exception.application.IllegalMemberException;
+import cart.exception.application.PointInconsistentException;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public enum ExceptionStatusMapper {
         return Arrays.stream(values())
                 .filter(value -> value.exceptions.contains(exception.getClass()))
                 .findAny()
-                .orElseThrow(IllegalStateException::new)
+                .orElseThrow()
                 .httpStatus;
     }
 }

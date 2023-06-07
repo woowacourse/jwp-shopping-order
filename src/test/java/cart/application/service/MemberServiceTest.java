@@ -1,9 +1,9 @@
 package cart.application.service;
 
-import cart.application.exception.MemberNotFoundException;
+import cart.exception.application.MemberNotFoundException;
 import cart.application.repository.MemberRepository;
 import cart.entity.Member;
-import cart.application.exception.AuthenticationException;
+import cart.exception.application.AuthenticationException;
 import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
 import org.junit.jupiter.api.BeforeEach;

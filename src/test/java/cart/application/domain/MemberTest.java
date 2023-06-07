@@ -1,6 +1,6 @@
 package cart.application.domain;
 
-import cart.application.exception.ExceedOwnedPointException;
+import cart.exception.application.ExceedOwnedPointException;
 import cart.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

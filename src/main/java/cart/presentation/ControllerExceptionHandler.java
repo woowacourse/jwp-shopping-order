@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.application.exception.ApplicationException;
+import cart.exception.application.ApplicationException;
 import cart.presentation.dto.response.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.application.exception.IllegalMemberException;
+import cart.exception.application.IllegalMemberException;
 
 import java.util.Objects;
 
