@@ -24,21 +24,25 @@ public class ControllerExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(final AuthenticationException e) {
+    public ResponseEntity<ErrorResponse> handlerAuthenticationException(final AuthenticationException e) {
         logger.error(LOG_FORMAT,
                 e.getClass().getSimpleName(),
                 e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        final ErrorResponse errorResponse = ErrorResponse.from(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(final CartItemException.IllegalMember e) {
+    public ResponseEntity<ErrorResponse> handleException(final CartItemException.IllegalMember e) {
         logger.error(LOG_FORMAT,
                 e.getClass().getSimpleName(),
                 e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        final ErrorResponse errorResponse = ErrorResponse.from(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
