@@ -12,7 +12,6 @@ import cart.dto.DiscountAmountResponse;
 import cart.dto.SaveCouponRequest;
 import cart.exception.BusinessException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -43,11 +42,14 @@ public class CouponService {
     final List<MemberCoupon> memberCoupons = memberCouponDao.findMemberCouponsByMemberId(member.getId());
 
     return memberCoupons.stream()
-        .map(memberCoupon -> {
-          final Coupon coupon = memberCoupon.getCoupon();
-          return new CouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue(),
-              coupon.getDiscountAmount().getValue(), memberCoupon.isUsed());
-        }).collect(Collectors.toList());
+        .map(this::mapToCouponResponse)
+        .collect(Collectors.toList());
+  }
+
+  private CouponResponse mapToCouponResponse(MemberCoupon memberCoupon) {
+    final Coupon coupon = memberCoupon.getCoupon();
+    return new CouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue(),
+        coupon.getDiscountAmount().getValue(), memberCoupon.isUsed());
   }
 
   public void issueCoupon(final Member member, final Long couponId) {
@@ -59,10 +61,13 @@ public class CouponService {
         member.getId(), totalAmount);
 
     return availableMemberCoupons.stream()
-        .map(memberCoupon -> {
-          final Coupon coupon = memberCoupon.getCoupon();
-          return new AvailableCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
-        }).collect(Collectors.toList());
+        .map(this::mapToAvailableCouponResponse)
+        .collect(Collectors.toList());
+  }
+
+  private AvailableCouponResponse mapToAvailableCouponResponse(MemberCoupon memberCoupon) {
+    final Coupon coupon = memberCoupon.getCoupon();
+    return new AvailableCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
   }
 
   public DiscountAmountResponse calculateDiscountAmount(final Member member, final Long couponId, final int totalAmount) {
