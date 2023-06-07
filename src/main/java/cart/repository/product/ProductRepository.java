@@ -3,7 +3,7 @@ package cart.repository.product;
 import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
 import cart.entity.ProductEntity;
-import cart.exception.product.ProductNotFoundException;
+import cart.exception.comon.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,7 +26,8 @@ public class ProductRepository {
     }
 
     public Product findById(final Long id) {
-        ProductEntity productEntity = productDao.getProductById(id).orElseThrow(ProductNotFoundException::new);
+        ProductEntity productEntity = productDao.getProductById(id)
+                .orElseThrow(() -> new NotFoundException("상품"));
         return makeProduct(productEntity);
     }
 

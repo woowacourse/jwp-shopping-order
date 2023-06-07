@@ -7,7 +7,7 @@ import cart.domain.value.Email;
 import cart.domain.value.Money;
 import cart.domain.value.Password;
 import cart.entity.MemberEntity;
-import cart.exception.member.MemberNotFoundException;
+import cart.exception.comon.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,12 +20,14 @@ public class MemberRepository {
     }
 
     public Member findById(final Long id) {
-        MemberEntity memberEntity = memberDao.getMemberById(id).orElseThrow(MemberNotFoundException::new);
+        MemberEntity memberEntity = memberDao.getMemberById(id).
+                orElseThrow(() -> new NotFoundException("사용자"));
         return makeMember(memberEntity);
     }
 
     public Member findByEmail(final String email) {
-        MemberEntity memberEntity = memberDao.getMemberByEmail(email).orElseThrow(MemberNotFoundException::new);
+        MemberEntity memberEntity = memberDao.getMemberByEmail(email)
+                .orElseThrow(() -> new NotFoundException("사용자"));
         return makeMember(memberEntity);
     }
 

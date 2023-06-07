@@ -5,7 +5,7 @@ import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.entity.CartItemEntity;
-import cart.exception.cart.CartItemNotFoundException;
+import cart.exception.comon.NotFoundException;
 import cart.repository.member.MemberRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Repository;
@@ -41,7 +41,8 @@ public class CartItemRepository {
     }
 
     public CartItem findById(final Long id) {
-        CartItemEntity cartItemEntity = cartItemDao.findById(id).orElseThrow(CartItemNotFoundException::new);
+        CartItemEntity cartItemEntity = cartItemDao.findById(id)
+                .orElseThrow(() -> new NotFoundException("장바구니 상품"));
         Product product = productRepository.findById(cartItemEntity.getProductId());
         Member member = memberRepository.findById(cartItemEntity.getMemberId());
         return makeCartItem(cartItemEntity, product, member);
