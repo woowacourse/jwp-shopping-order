@@ -1,6 +1,7 @@
 package cart.exception;
 
 import cart.ui.dto.response.ErrorResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -31,14 +32,17 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleCartItemIdsEmpty(final MethodArgumentNotValidException error) {
-        final Map<String, String> errorMessage = error.getBindingResult()
-                .getAllErrors()
+        final List<String> errorFields = error.getBindingResult().getAllErrors()
+                .stream()
+                .map(FieldError.class::cast)
+                .map(FieldError::getField)
+                .collect(Collectors.toList());
+        final Map<String, String> errors = error.getBindingResult().getAllErrors()
                 .stream()
                 .map(FieldError.class::cast)
                 .collect(Collectors.toUnmodifiableMap(FieldError::getField, ObjectError::getDefaultMessage));
-
         final int statusCode = HttpStatus.BAD_REQUEST.value();
-        final String message = errorMessage.get("cartItemIds");
+        final String message = errors.get(errorFields.get(0));
         return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
     }
 

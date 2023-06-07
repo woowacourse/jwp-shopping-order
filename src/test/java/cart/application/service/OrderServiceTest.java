@@ -8,7 +8,7 @@ import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.ProductDao;
 import cart.application.domain.Member;
-import cart.ui.dto.request.OrderRequest;
+import cart.ui.dto.request.CreateOrderRequest;
 import cart.ui.dto.response.OrderResponse;
 import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.MemberEntity;
@@ -60,7 +60,7 @@ class OrderServiceTest {
         );
 
         // when
-        final Long orderId = orderService.createOrder(member, new OrderRequest(List.of(cartItemId)));
+        final Long orderId = orderService.createOrder(member, new CreateOrderRequest(List.of(cartItemId)));
 
         // then
         assertThat(orderId).isNotNull();
@@ -82,7 +82,7 @@ class OrderServiceTest {
                 new CartItemEntity(null, member.getId(), secondProductId, 3)
         );
 
-        final Long orderId = orderService.createOrder(member, new OrderRequest(List.of(firstCartItemId, secondCartItemId)));
+        final Long orderId = orderService.createOrder(member, new CreateOrderRequest(List.of(firstCartItemId, secondCartItemId)));
 
         // when
         final List<OrderResponse> orderResponses = orderService.getAll(member);
@@ -109,7 +109,7 @@ class OrderServiceTest {
         final long cartItemId = cartItemDao.createCartItem(
                 new CartItemEntity(null, member.getId(), productId, 2)
         );
-        final Long orderId = orderService.createOrder(member, new OrderRequest(List.of(cartItemId)));
+        final Long orderId = orderService.createOrder(member, new CreateOrderRequest(List.of(cartItemId)));
 
         // when
         final OrderResponse orderResponse = orderService.getOrder(orderId, member);

@@ -3,7 +3,7 @@ package cart.application.service;
 import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Order;
-import cart.ui.dto.request.OrderRequest;
+import cart.ui.dto.request.CreateOrderRequest;
 import cart.ui.dto.response.OrderResponse;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.OrderRepository;
@@ -24,8 +24,8 @@ public class OrderService {
     }
 
     @Transactional
-    public Long createOrder(final Member member, final OrderRequest orderRequest) {
-        final List<CartItem> cartItems = cartItemRepository.findAllByIds(orderRequest.getCartItemIds());
+    public Long createOrder(final Member member, final CreateOrderRequest createOrderRequest) {
+        final List<CartItem> cartItems = cartItemRepository.findAllByIds(createOrderRequest.getCartItemIds());
 
         final Order order = orderRepository.save(Order.of(member, cartItems));
         return order.getId();

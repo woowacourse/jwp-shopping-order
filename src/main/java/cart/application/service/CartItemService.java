@@ -3,8 +3,8 @@ package cart.application.service;
 import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Product;
-import cart.ui.dto.request.CartItemQuantityUpdateRequest;
-import cart.ui.dto.request.CartItemRequest;
+import cart.ui.dto.request.UpdateCartItemQuantityRequest;
+import cart.ui.dto.request.CreateCartItemRequest;
 import cart.ui.dto.response.CartItemResponse;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.ProductRepository;
@@ -30,13 +30,13 @@ public class CartItemService {
                 .collect(Collectors.toList());
     }
 
-    public Long createCartItem(final Member member, final CartItemRequest cartItemRequest) {
+    public Long createCartItem(final Member member, final CreateCartItemRequest cartItemRequest) {
         final Product product = productRepository.findById(cartItemRequest.getProductId());
         final CartItem cartItem = cartItemRepository.save(new CartItem(product, member));
         return cartItem.getId();
     }
 
-    public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(final Member member, final Long cartItemId, final UpdateCartItemQuantityRequest request) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId);
         cartItem.validateOwner(member);
 
