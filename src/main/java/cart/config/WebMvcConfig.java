@@ -1,4 +1,4 @@
-package cart;
+package cart.config;
 
 import cart.presentation.MemberArgumentResolver;
 import cart.presentation.MemberAuthInterceptor;

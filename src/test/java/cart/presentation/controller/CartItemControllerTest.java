@@ -1,6 +1,6 @@
 package cart.presentation.controller;
 
-import cart.WebMvcConfig;
+import cart.config.WebMvcConfig;
 import cart.application.service.CartItemService;
 import cart.presentation.dto.request.CartItemQuantityRequest;
 import cart.presentation.dto.request.CartItemRequest;
