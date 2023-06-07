@@ -20,6 +20,24 @@ public class CartItem {
         this.member = member;
     }
 
+    public void checkOwner(Member member) {
+        if (!this.member.equals(member)) {
+            throw new CartItemException(ErrorMessage.INVALID_CART_ITEM_OWNER);
+        }
+    }
+
+    public boolean isSameOwner(Member member) {
+        return this.member.equals(member);
+    }
+
+    public CartItem changeQuantity(int quantity) {
+        return new CartItem(id, quantity, product, member);
+    }
+
+    public int calculatePrice() {
+        return product.getPrice() * quantity.getValue();
+    }
+
     public Long getId() {
         return id;
     }
@@ -34,19 +52,5 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity.getValue();
-    }
-
-    public void checkOwner(Member member) {
-        if (!this.member.equals(member)) {
-            throw new CartItemException(ErrorMessage.INVALID_CART_ITEM_OWNER);
-        }
-    }
-
-    public boolean isSameOwner(Member member) {
-        return this.member.equals(member);
-    }
-
-    public CartItem changeQuantity(int quantity) {
-        return new CartItem(id, quantity, product, member);
     }
 }

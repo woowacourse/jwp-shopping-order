@@ -12,10 +12,7 @@ public class CartItems {
 
     public Price getTotalPrice() {
         int totalPrice = cartItems.stream()
-                .mapToInt(cartItem -> {
-                    Product product = cartItem.getProduct();
-                    return product.getPrice() * cartItem.getQuantity();
-                })
+                .mapToInt(CartItem::calculatePrice)
                 .sum();
 
         return new Price(totalPrice);
