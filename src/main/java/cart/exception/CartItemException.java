@@ -14,14 +14,14 @@ public class CartItemException extends RuntimeException {
     public static class InvalidMember extends CartItemException {
 
         public InvalidMember() {
-            super("장바구니에 해당하는 회원이 존재하지 않습니다.");
+            super("장바구니에 접근 권한이 없습니다. 아이디와 비밀번호를 확인해주세요.");
         }
     }
 
     public static class CartItemNotExists extends CartItemException {
 
         public CartItemNotExists() {
-            super("존재하지 않는 장바구니 상품입니다.");
+            super("찾는 장바구니 상품이 존재하지 않습니다.");
         }
     }
 
@@ -32,17 +32,11 @@ public class CartItemException extends RuntimeException {
         }
     }
 
-    public static class InvalidIdByNull extends CartItemException {
-
-        public InvalidIdByNull() {
-            super("장바구니 아이디를 입력해야 합니다.");
-        }
-    }
-
     public static class InvalidQuantity extends CartItemException {
 
         public InvalidQuantity(CartItem cartItem) {
-            super("장바구니에 담긴 상품의 개수는 최소 " + MINIMUM_QUANTITY + " 이상이어야 합니다.; cartItemId=" + cartItem.getId() + "cartItemQuantity=" + cartItem.getQuantity());
+            super("장바구니에 담긴 상품의 개수는 최소 " + MINIMUM_QUANTITY + " 이상이어야 합니다.\n" +
+                    "cartItemId=" + cartItem.getId() + "cartItemQuantity=" + cartItem.getQuantity());
         }
     }
 

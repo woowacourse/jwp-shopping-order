@@ -11,7 +11,7 @@ public class ProductException extends RuntimeException {
     public static class InvalidImageUrl extends ProductException {
 
         public InvalidImageUrl() {
-            super("잘못된 이미지 url입니다.");
+            super("잘못된 이미지 url 형식입니다." + "'https://' 형태의 주소를 입력해주세요.");
         }
     }
 
