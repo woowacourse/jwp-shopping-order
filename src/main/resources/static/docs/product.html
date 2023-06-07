@@ -521,6 +521,9 @@ Content-Length: 703
 <div class="sect3">
 <h4 id="_2_특정_상품_목록_조회_페이징">2. 특정 상품 목록 조회 (페이징)</h4>
 <h6 id="_요청_2" class="discrete">요청</h6>
+<div class="paragraph">
+<p>첫 페이지 요청시 lastId = 0입니다.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /products/cart-items?lastId=3&amp;pageItemCount=2 HTTP/1.1
@@ -1103,7 +1106,7 @@ Host: localhost:8080</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-03 18:48:34 +0900
+Last updated 2023-06-08 01:58:49 +0900
 </div>
 </div>
 </body>

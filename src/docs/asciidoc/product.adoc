@@ -18,6 +18,7 @@ include::{snippets}/products/getAllProducts/response-fields.adoc[]
 
 [discrete]
 ====== 요청
+첫 페이지 요청시 lastId = 0입니다.
 include::{snippets}/products/getHomePagingProduct/http-request.adoc[]
 include::{snippets}/products/getHomePagingProduct/request-parameters.adoc[]
 
