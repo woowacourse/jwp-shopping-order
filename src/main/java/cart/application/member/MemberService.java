@@ -1,7 +1,6 @@
 package cart.application.member;
 
 import cart.domain.member.Member;
-import cart.dto.member.MemberResponse;
 import cart.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
