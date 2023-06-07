@@ -67,7 +67,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NumberRangeException.class)
-    public ResponseEntity<ShoppingOrderResponse> handleNumberRangeException(NumberRangeException e) {
+    public ResponseEntity<ShoppingOrderResultResponse<Map<String, String>>> handleNumberRangeException(NumberRangeException e) {
         Map<String, String> validation = new HashMap<>();
         validation.put(e.getField(), e.getMessage());
         return ResponseEntity.badRequest()

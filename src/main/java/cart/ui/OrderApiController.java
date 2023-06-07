@@ -38,14 +38,14 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<ShoppingOrderResponse> findAllOrders(Member member) {
+    public ResponseEntity<ShoppingOrderResultResponse<List<OrderResponse>>> findAllOrders(Member member) {
         List<OrderResponse> orderResponses = orderService.findAllOrders(member);
         return ResponseEntity.ok()
                 .body(new ShoppingOrderResultResponse<>("주문이 조회되었습니다.", orderResponses));
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<ShoppingOrderResponse> findOrderDetail(@PathVariable Long orderId, Member member) {
+    public ResponseEntity<ShoppingOrderResultResponse<OrderDetailResponse>> findOrderDetail(@PathVariable Long orderId, Member member) {
         OrderDetailResponse orderDetailResponse = orderService.findOrderById(orderId, member);
         return ResponseEntity.ok()
                 .body(new ShoppingOrderResultResponse<>("상세 주문이 조회되었습니다.", orderDetailResponse));

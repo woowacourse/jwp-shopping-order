@@ -4,9 +4,11 @@ import cart.application.CartItemService;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemCreateRequest;
+import cart.dto.response.CartItemResponse;
 import cart.dto.response.ShoppingOrderResponse;
 import cart.dto.response.ShoppingOrderResultResponse;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +30,7 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<ShoppingOrderResponse> showCartItems(Member member) {
+    public ResponseEntity<ShoppingOrderResultResponse<List<CartItemResponse>>> showCartItems(Member member) {
         return ResponseEntity.ok()
                 .body(new ShoppingOrderResultResponse<>("장바구니에 담긴 상품이 조회되었습니다.", cartItemService.findAllByMember(member)));
     }

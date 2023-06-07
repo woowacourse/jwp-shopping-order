@@ -28,14 +28,14 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<ShoppingOrderResponse> getAllProducts() {
+    public ResponseEntity<ShoppingOrderResultResponse<List<ProductResponse>>> getAllProducts() {
         List<ProductResponse> products = productService.getAllProducts();
         return ResponseEntity.ok()
                 .body(new ShoppingOrderResultResponse<>("모든 상품이 조회되었습니다.", products));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ShoppingOrderResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ShoppingOrderResultResponse<ProductResponse>> getProductById(@PathVariable Long id) {
         ProductResponse product = productService.getProductById(id);
         return ResponseEntity.ok()
                 .body(new ShoppingOrderResultResponse<>("상품이 조회되었습니다.", product));
