@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class CartItemsAcceptanceTest extends AcceptanceTest {
+class CartItemsAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private CartItemDao cartItemDao;

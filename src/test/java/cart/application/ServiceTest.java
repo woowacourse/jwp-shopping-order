@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql({"/schema.sql", "/data.sql"})
 @SpringBootTest
-public class ServiceTest {
+class ServiceTest {
 
     @Autowired
     protected OrderService orderService;

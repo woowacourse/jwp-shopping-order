@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProfileAcceptanceTest extends AcceptanceTest {
+class ProfileAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 로그인된_사용자의_포인트를_조회한다() {

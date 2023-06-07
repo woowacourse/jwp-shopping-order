@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql({"/schema.sql", "/data.sql"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AcceptanceTest {
+class AcceptanceTest {
 
     protected static final String EMAIL = "a@a.com";
     protected static final String PASSWORD = "1234";

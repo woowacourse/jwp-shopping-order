@@ -4,7 +4,7 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class CorsTest extends IntegrationTest {
+class CorsTest extends IntegrationTest {
 
     @Test
     void CORS_기능을_검증한다() {

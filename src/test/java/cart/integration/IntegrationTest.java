@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql({"/schema.sql", "/data.sql"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+class IntegrationTest {
     @LocalServerPort
     private int port;
 

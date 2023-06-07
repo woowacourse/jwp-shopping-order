@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class OrderAcceptanceTest extends AcceptanceTest {
+class OrderAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 주문을_생성한다() {
