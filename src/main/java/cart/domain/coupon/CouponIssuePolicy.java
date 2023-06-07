@@ -5,11 +5,11 @@ import cart.domain.order.Order;
 
 import java.util.Optional;
 
-public abstract class CouponIssuePolicy {
+public interface CouponIssuePolicy {
 
-    public static CouponIssuePolicy of(final Member member) {
+    static CouponIssuePolicy of(final Member member) {
         return new CouponIssuePolicyImpl();
     }
 
-    abstract public Optional<Coupon> IssueCoupon(final Member member, final Order order);
+    Optional<Coupon> issueCoupon(final Member member, final Order order);
 }

@@ -29,7 +29,7 @@ public class CouponService {
 
     public void issueCoupon(final Member member, final Order order) {
         final Optional<Coupon> coupon = CouponIssuePolicy.of(member)
-                .IssueCoupon(member, order);
+                .issueCoupon(member, order);
         if (coupon.isPresent()) {
             couponDao.issue(member, coupon.get());
         }
