@@ -37,8 +37,9 @@ public class OrderRepository {
     private static OrderEntity toOrderEntity(Order order) {
         return new OrderEntity.Builder()
                 .memberId(order.getMember().getId())
-                .totalPayment(order.getPayment().getTotalPrice())
-                .usedPoint(order.getPayment().getUsedPoint())
+                .totalPayment(order.getTotalPrice())
+                // TODO: 디미터의 법칙 지켜보기
+                .usedPoint(order.getUsedPoint().getPoint())
                 .build();
     }
 

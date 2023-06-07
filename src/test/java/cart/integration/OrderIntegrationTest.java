@@ -8,7 +8,6 @@ import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
-import cart.repository.dao.MemberDao;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +32,6 @@ public class OrderIntegrationTest extends IntegrationTest {
     private static final int DELIVERY_FEE = 3_000;
 
     @Autowired
-    private MemberDao memberDao;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -54,8 +50,6 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-
-        memberDao = new MemberDao(jdbcTemplate);
 
         member = memberRepository.getMemberById(1L);
 
@@ -129,17 +123,6 @@ public class OrderIntegrationTest extends IntegrationTest {
             softly.assertThat(orderResponse.getOrderTotalPrice()).isEqualTo(102900);
             softly.assertThat(orderResponse.getUsedPoint()).isEqualTo(100);
         });
-    }
-
-    private OrderProductResponse toOrderProductResponse(CartItem cartItem) {
-        return new OrderProductResponse(
-                cartItem.getProduct().getId(),
-                cartItem.getProduct().getName(),
-                cartItem.getProduct().getPrice(),
-                cartItem.getProduct().getImageUrl(),
-                cartItem.getQuantity(),
-                cartItem.calculateTotalProductsPrice()
-        );
     }
 
     @Test

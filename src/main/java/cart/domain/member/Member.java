@@ -1,10 +1,10 @@
 package cart.domain.member;
 
 import cart.domain.payment.Payment;
-import cart.domain.payment.Point;
+import cart.domain.payment.PointPolicy;
+import cart.domain.vo.Cash;
+import cart.domain.vo.Point;
 import cart.exception.MemberException;
-import cart.exception.NotEnoughMoneyException;
-import cart.exception.PointException;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -12,39 +12,35 @@ import java.util.regex.Pattern;
 public class Member {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
-    private static final int INITIAL_POINT = 1_000;
-    private static final int MINIMUM_POINT = 0;
-    private static final int INITIAL_MONEY = 1_000_000_000;
 
     private Long id;
     private final String email;
     private final String password;
-    private int point;
-    private int money;
+    private Point availablePoint;
+    private Cash availableMoney;
+
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.availablePoint = new Point();
+        this.availableMoney = new Cash();
+    }
 
     public Member(Long id, String email, String password) {
         validate(id, email);
         this.id = id;
         this.email = email;
         this.password = password;
-        this.point = INITIAL_POINT;
-        this.money = INITIAL_MONEY;
+        this.availablePoint = new Point();
+        this.availableMoney = new Cash();
     }
 
-    public Member(String email, String password) {
-        this.email = email;
-        this.password = password;
-        this.point = INITIAL_POINT;
-        this.money = INITIAL_MONEY;
-    }
-
-    public Member(Long id, String email, String password, int money, int point) {
-        validate(id, email);
+    public Member(Long id, String email, String password, Point point, Cash cash) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.point = point;
-        this.money = money;
+        this.availablePoint = point;
+        this.availableMoney = cash;
     }
 
     private void validate(Long id, String email) {
@@ -65,28 +61,9 @@ public class Member {
     }
 
     public void pay(Payment payment) {
-        validatePointToUse(payment.getUsedPoint());
-        validateMoneyToUse(payment.getUserPayment());
-        point -= payment.getUsedPoint();
-        money -= payment.getUserPayment();
-        earnPoint(payment);
-    }
-
-    private void validatePointToUse(int usePoint) {
-        if (usePoint < MINIMUM_POINT || usePoint > point) {
-            throw new PointException.InvalidUsedPoint();
-        }
-    }
-
-    private void validateMoneyToUse(int userPayment) {
-        if (userPayment > money) {
-            throw new NotEnoughMoneyException();
-        }
-    }
-
-    private int earnPoint(Payment payment) {
-        point += Point.calculateEarningPoint(payment.getUserPayment());
-        return point;
+        availablePoint = availablePoint.consume(payment.getUsedPoint());
+        availablePoint = availablePoint.earnPoint(PointPolicy.EARNING_POINT_RATIO, payment.getUserPayment());
+        availableMoney = availableMoney.consume(payment.getUserPayment());
     }
 
     public Long getId() {
@@ -105,12 +82,12 @@ public class Member {
         return this.password.equals(password);
     }
 
-    public int getPoint() {
-        return point;
+    public int getAvailablePoint() {
+        return availablePoint.getPoint();
     }
 
-    public int getMoney() {
-        return money;
+    public int getAvailableMoney() {
+        return availableMoney.getCash();
     }
 
     @Override
@@ -119,7 +96,7 @@ public class Member {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", point=" + point +
+                ", point=" + availablePoint +
                 '}';
     }
 }

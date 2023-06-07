@@ -3,6 +3,9 @@ package cart.domain.order;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.payment.Payment;
+import cart.domain.vo.DeliveryFee;
+import cart.domain.vo.Point;
+import cart.domain.vo.Price;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,13 +34,26 @@ public class Order {
 
     public static Order orderProductsAndUpdatePayment(Member member, List<CartItem> cartItems, int usedPoint, int deliveryFee) {
         OrderProducts orderProducts = OrderProducts.of(cartItems);
-        Payment payment = Payment.of(orderProducts.calculateTotalPrice(), deliveryFee, usedPoint);
+        Price totalPriceOfOrderProducts = new Price(orderProducts.calculateTotalPrice());
+        Payment payment = Payment.of(totalPriceOfOrderProducts, new DeliveryFee(deliveryFee), new Point(usedPoint));
         member.pay(payment);
         return new Order(member, orderProducts, payment);
     }
 
     public static Order orderProductsAndUpdatePayment(long id, Member member, OrderProducts orderProducts, Payment payment, LocalDateTime createdAt) {
         return new Order(id, member, orderProducts, payment, createdAt);
+    }
+
+    public int getTotalPrice() {
+        return payment.getTotalPrice();
+    }
+
+    public Point getUsedPoint() {
+        return payment.getUsedPoint();
+    }
+
+    public int getUserPayment() {
+        return payment.getUserPayment().getCash();
     }
 
     public Long getId() {
