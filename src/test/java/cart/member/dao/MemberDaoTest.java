@@ -1,13 +1,17 @@
 package cart.member.dao;
 
 import cart.config.DaoTest;
+import cart.fixtures.MemberFixtures;
 import cart.member.domain.Member;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static cart.fixtures.MemberFixtures.*;
 import static cart.fixtures.MemberFixtures.Member_Dooly;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -17,22 +21,14 @@ class MemberDaoTest extends DaoTest {
     void 유저_id를_통해_유저를_찾는다() {
         final Member member = memberDao.getMemberById(2L);
 
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(member.getId()).isEqualTo(2L);
-            softAssertions.assertThat(member.getEmail()).isEqualTo("ber@ber.com");
-            softAssertions.assertThat(member.getPassword()).isEqualTo("1234");
-        });
+        assertThat(member).usingRecursiveComparison().isEqualTo(Member_Ber.ENTITY);
     }
 
     @Test
     void 이메일_주소를_통해_유저를_찾는다() {
         final Member member = memberDao.getMemberByEmail("ber@ber.com");
 
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(member.getId()).isEqualTo(2L);
-            softAssertions.assertThat(member.getEmail()).isEqualTo("ber@ber.com");
-            softAssertions.assertThat(member.getPassword()).isEqualTo("1234");
-        });
+        assertThat(member).usingRecursiveComparison().isEqualTo(Member_Ber.ENTITY);
     }
 
     @Test
@@ -60,7 +56,7 @@ class MemberDaoTest extends DaoTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(members).hasSize(3);
-            softAssertions.assertThat(members.get(0)).isEqualTo(Member_Dooly.ENTITY);
+            softAssertions.assertThat(members.get(0)).usingRecursiveComparison().isEqualTo(Member_Dooly.ENTITY);
         });
     }
 }

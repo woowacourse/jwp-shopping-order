@@ -24,64 +24,67 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.cash, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id, cart_item.quantity, member.email, member.password, member.cash, product.id, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ? " +
                 "ORDER BY cart_item.id DESC";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long cash = rs.getLong("cash");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = Member.of(memberId, email, null, cash);
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            Long cash = rs.getLong("cash");
+            Long productId = rs.getLong("product.id");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+            Member member = Member.of(memberId, email, password, cash);
             Product product = Product.of(productId, name, price, imageUrl);
             return CartItem.of(cartItemId, quantity, product, member);
         });
     }
 
     public Optional<CartItem> findByMemberIdAndProductId(final Long memberId, final Long productId) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.cash, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id, cart_item.quantity, member.email, member.password, member.cash, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ? AND product.id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId, productId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long cash = rs.getLong("cash");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = Member.of(memberId, email, null, cash);
+            String email = rs.getString("member.email");
+            String password = rs.getString("member.password");
+            Long cash = rs.getLong("member.cash");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+            Member member = Member.of(memberId, email, password, cash);
             Product product = Product.of(productId, name, price, imageUrl);
             return CartItem.of(cartItemId, quantity, product, member);
         }).stream().findFirst();
     }
 
     public CartItem findById(final Long id) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.cash, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.password, member.cash, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
         final List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            Long cash = rs.getLong("cash");
+            String email = rs.getString("member.email");
+            String password = rs.getString("member.password");
+            Long cash = rs.getLong("member.cash");
             Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = Member.of(memberId, email, null, cash);
+            Member member = Member.of(memberId, email, password, cash);
             Product product = Product.of(productId, name, price, imageUrl);
             return CartItem.of(cartItemId, quantity, product, member);
         });

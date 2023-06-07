@@ -2,6 +2,7 @@ package cart.product.dao;
 
 import cart.config.DaoTest;
 import cart.product.domain.Product;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,7 @@ import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -23,10 +25,10 @@ class ProductDaoTest extends DaoTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(products).hasSize(4);
-            softAssertions.assertThat(products.get(0)).isEqualTo(CHICKEN.ENTITY);
-            softAssertions.assertThat(products.get(1)).isEqualTo(SALAD.ENTITY);
-            softAssertions.assertThat(products.get(2)).isEqualTo(PIZZA.ENTITY);
-            softAssertions.assertThat(products.get(3)).isEqualTo(PANCAKE.ENTITY);
+            softAssertions.assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
+            softAssertions.assertThat(products.get(1)).usingRecursiveComparison().isEqualTo(SALAD.ENTITY);
+            softAssertions.assertThat(products.get(2)).usingRecursiveComparison().isEqualTo(PIZZA.ENTITY);
+            softAssertions.assertThat(products.get(3)).usingRecursiveComparison().isEqualTo(PANCAKE.ENTITY);
         });
     }
 
@@ -34,12 +36,7 @@ class ProductDaoTest extends DaoTest {
     void 상품_아이디를_통해_상품을_찾는다() {
         final Product product = productDao.getProductById(1L);
 
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(product.getId()).isEqualTo(CHICKEN.ID);
-            softAssertions.assertThat(product.getName()).isEqualTo(CHICKEN.NAME);
-            softAssertions.assertThat(product.getPrice()).isEqualTo(CHICKEN.PRICE);
-            softAssertions.assertThat(product.getImageUrl()).isEqualTo(CHICKEN.IMAGE_URL);
-        });
+        assertThat(product).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
     }
 
     @Test
@@ -48,8 +45,8 @@ class ProductDaoTest extends DaoTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(products).hasSize(2);
-            softAssertions.assertThat(products.get(0)).isEqualTo(SALAD.ENTITY);
-            softAssertions.assertThat(products.get(1)).isEqualTo(CHICKEN.ENTITY);
+            softAssertions.assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(SALAD.ENTITY);
+            softAssertions.assertThat(products.get(1)).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
         });
     }
 

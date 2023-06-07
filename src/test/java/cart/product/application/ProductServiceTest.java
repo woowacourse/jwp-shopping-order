@@ -6,6 +6,7 @@ import cart.product.application.dto.ProductCartItemDto;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.exception.NotFoundProductException;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,6 +26,7 @@ import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -56,10 +58,7 @@ class ProductServiceTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(products).hasSize(1);
-            softAssertions.assertThat(products.get(0).getId()).isEqualTo(CHICKEN.ID);
-            softAssertions.assertThat(products.get(0).getName()).isEqualTo(CHICKEN.NAME);
-            softAssertions.assertThat(products.get(0).getPrice()).isEqualTo(CHICKEN.PRICE);
-            softAssertions.assertThat(products.get(0).getImageUrl()).isEqualTo(CHICKEN.IMAGE_URL);
+            softAssertions.assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
         });
     }
 
@@ -76,12 +75,7 @@ class ProductServiceTest {
             final Product product = productService.getProductById(1L);
 
             // then
-            SoftAssertions.assertSoftly(softAssertions -> {
-                softAssertions.assertThat(product.getId()).isEqualTo(CHICKEN.ID);
-                softAssertions.assertThat(product.getName()).isEqualTo(CHICKEN.NAME);
-                softAssertions.assertThat(product.getPrice()).isEqualTo(CHICKEN.PRICE);
-                softAssertions.assertThat(product.getImageUrl()).isEqualTo(CHICKEN.IMAGE_URL);
-            });
+            assertThat(product).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
         }
 
         @Test
@@ -111,8 +105,8 @@ class ProductServiceTest {
             // then
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(products).hasSize(2);
-                softAssertions.assertThat(products.get(0)).isEqualTo(PANCAKE.ENTITY);
-                softAssertions.assertThat(products.get(1)).isEqualTo(PIZZA.ENTITY);
+                softAssertions.assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(PANCAKE.ENTITY);
+                softAssertions.assertThat(products.get(1)).usingRecursiveComparison().isEqualTo(PIZZA.ENTITY);
             });
         }
 
@@ -128,8 +122,8 @@ class ProductServiceTest {
             // then
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(products).hasSize(2);
-                softAssertions.assertThat(products.get(0)).isEqualTo(PIZZA.ENTITY);
-                softAssertions.assertThat(products.get(1)).isEqualTo(SALAD.ENTITY);
+                softAssertions.assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(PIZZA.ENTITY);
+                softAssertions.assertThat(products.get(1)).usingRecursiveComparison().isEqualTo(SALAD.ENTITY);
             });
         }
     }

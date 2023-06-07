@@ -21,7 +21,7 @@ public class ProductFixtures {
     public static class SALAD {
         public static final Long ID = 2L;
         public static final String NAME = "샐러드";
-        public static final int PRICE = 2000;
+        public static final int PRICE = 20000;
         public static final String IMAGE_URL = "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80";
 
         public static final Product DOMAIN = Product.of(NAME, PRICE, IMAGE_URL);

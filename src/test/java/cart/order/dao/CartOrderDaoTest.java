@@ -22,10 +22,10 @@ class CartOrderDaoTest extends DaoTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(cartOrders).hasSize(2);
             softAssertions.assertThat(cartOrders.get(0).getId()).isEqualTo(4L);
-            softAssertions.assertThat(cartOrders.get(0).getMember()).isEqualTo(Member_Dooly.ENTITY);
+            softAssertions.assertThat(cartOrders.get(0).getMember()).usingRecursiveComparison().isEqualTo(Member_Dooly.ENTITY);
             softAssertions.assertThat(cartOrders.get(0).getTotalPrice()).isEqualTo(40000);
             softAssertions.assertThat(cartOrders.get(1).getId()).isEqualTo(1L);
-            softAssertions.assertThat(cartOrders.get(1).getMember()).isEqualTo(Member_Dooly.ENTITY);
+            softAssertions.assertThat(cartOrders.get(1).getMember()).usingRecursiveComparison().isEqualTo(Member_Dooly.ENTITY);
             softAssertions.assertThat(cartOrders.get(1).getTotalPrice()).isEqualTo(20000);
         });
     }
@@ -38,7 +38,7 @@ class CartOrderDaoTest extends DaoTest {
         // when, then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(cartOrder.getId()).isEqualTo(1L);
-            softAssertions.assertThat(cartOrder.getMember()).isEqualTo(Member_Dooly.ENTITY);
+            softAssertions.assertThat(cartOrder.getMember()).usingRecursiveComparison().isEqualTo(Member_Dooly.ENTITY);
             softAssertions.assertThat(cartOrder.getTotalPrice()).isEqualTo(20000);
         });
     }
