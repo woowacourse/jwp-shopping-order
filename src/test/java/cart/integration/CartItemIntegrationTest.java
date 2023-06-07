@@ -6,6 +6,7 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -57,8 +58,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         jdbcTemplate.update("insert into cart_item(member_id, product_id, quantity) values (1, 2, 4)");
         jdbcTemplate.update("insert into cart_item(member_id, product_id, quantity) values (2, 3, 5)");
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.getMemberById(1L);
+        member2 = memberRepository.getMemberById(2L);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

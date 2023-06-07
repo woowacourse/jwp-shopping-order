@@ -2,6 +2,7 @@ package cart;
 
 import cart.dao.MemberDao;
 import cart.domain.*;
+import cart.repository.MemberRepository;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +16,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final int LIMIT = 10;
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new MemberArgumentResolver(memberRepository));
     }
 
     @Bean

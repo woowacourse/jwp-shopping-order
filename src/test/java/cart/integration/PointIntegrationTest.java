@@ -4,6 +4,7 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.ProductOrderRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class PointIntegrationTest extends IntegrationTest{
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -46,8 +47,8 @@ public class PointIntegrationTest extends IntegrationTest{
         jdbcTemplate.update("insert into cart_item(member_id, product_id, quantity) values (1, 2, 4)");
         jdbcTemplate.update("insert into cart_item(member_id, product_id, quantity) values (2, 3, 5)");
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.getMemberById(1L);
+        member2 = memberRepository.getMemberById(2L);
     }
 
     @DisplayName("주문 후 포인트를 확인할 수 있다. - 포인트를 사용하지 않는 경우")

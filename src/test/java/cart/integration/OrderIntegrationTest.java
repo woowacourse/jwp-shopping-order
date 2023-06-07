@@ -4,6 +4,7 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.ProductOrderRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -45,8 +46,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         jdbcTemplate.update("insert into cart_item(member_id, product_id, quantity) values (1, 2, 4)");
         jdbcTemplate.update("insert into cart_item(member_id, product_id, quantity) values (2, 3, 5)");
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.getMemberById(1L);
+        member2 = memberRepository.getMemberById(2L);
     }
 
     @DisplayName("상품을 주문할 수 있다.")
@@ -109,7 +110,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .log().all()
                 .extract();
 
-        assertThat(response1.statusCode()).isEqualTo(401);
+        assertThat(response1.statusCode()).isEqualTo(400);
     }
 
     @DisplayName("없는 상품을 전달한 경우에는 상품을 주문할 수 없다.")

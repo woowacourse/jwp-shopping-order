@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,24 +19,24 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
+    public MemberEntity getMemberById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
+        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
+    public MemberEntity getMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
+        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
+    public void addMember(MemberEntity member) {
         String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 
-    public void updateMember(Member member) {
+    public void updateMember(MemberEntity member) {
         String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
     }
@@ -45,15 +46,15 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<MemberEntity> getAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
-    private static class MemberRowMapper implements RowMapper<Member> {
+    private static class MemberRowMapper implements RowMapper<MemberEntity> {
         @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+        public MemberEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new MemberEntity(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
         }
     }
 }
