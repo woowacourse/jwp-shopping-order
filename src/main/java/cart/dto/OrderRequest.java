@@ -1,5 +1,6 @@
 package cart.dto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -12,6 +13,7 @@ public class OrderRequest {
     @NotNull
     private int cvc;
     @NotNull
+    @Min(0)
     private long point;
 
     public List<Long> getCartItemIds() {

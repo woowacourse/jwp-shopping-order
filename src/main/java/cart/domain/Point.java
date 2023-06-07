@@ -1,22 +1,29 @@
 package cart.domain;
 
+import cart.exception.InvalidPointException;
+
 import java.util.Objects;
 
 public class Point {
     private static final String UNIT = "원";
 
-    private Long value;
-
-    public Point() {
-    }
+    private final Long value;
 
     public Point(Long value) {
+        validatePoint(value);
         this.value = value;
+    }
+
+    private void validatePoint(Long value) {
+        if (value < 0) {
+            throw new InvalidPointException("포인트의 값은 음수가 될 수 없습니다");
+        }
     }
 
     public Long getValue() {
         return value;
     }
+
 
     @Override
     public String toString() {
