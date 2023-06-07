@@ -3,6 +3,8 @@ package cart.coupon.domain;
 import static cart.coupon.exception.CouponExceptionType.INVALID_DISCOUNT_RATE;
 
 import cart.coupon.exception.CouponException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class RateDiscountPolicy implements DiscountPolicy {
 
@@ -21,7 +23,11 @@ public class RateDiscountPolicy implements DiscountPolicy {
 
     @Override
     public int calculatePrice(int price) {
-        return price - (int) (price * (discountRate / 100.0));
+        BigDecimal decimalPrice = BigDecimal.valueOf(price);
+        BigDecimal discount = BigDecimal.valueOf(discountRate).divide(BigDecimal.valueOf(100));
+        BigDecimal discountAmount = decimalPrice.multiply(discount).setScale(0, RoundingMode.FLOOR);
+        BigDecimal finalPrice = decimalPrice.subtract(discountAmount);
+        return finalPrice.intValue();
     }
 
     @Override
