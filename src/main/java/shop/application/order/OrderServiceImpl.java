@@ -2,7 +2,6 @@ package shop.application.order;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.application.cart.CartItemService;
 import shop.application.order.dto.OrderCreationDto;
 import shop.application.order.dto.OrderDetailDto;
 import shop.application.order.dto.OrderDto;
@@ -16,10 +15,7 @@ import shop.domain.order.OrderDetail;
 import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
-import shop.domain.repository.CouponRepository;
-import shop.domain.repository.MemberCouponRepository;
-import shop.domain.repository.OrderRepository;
-import shop.domain.repository.ProductRepository;
+import shop.domain.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,16 +24,16 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final CartItemService cartItemService;
+    private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
 
-    public OrderServiceImpl(CartItemService cartItemService, OrderRepository orderRepository,
+    public OrderServiceImpl(CartRepository cartRepository, OrderRepository orderRepository,
                             ProductRepository productRepository, CouponRepository couponRepository,
                             MemberCouponRepository memberCouponRepository) {
-        this.cartItemService = cartItemService;
+        this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.couponRepository = couponRepository;
@@ -54,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         Long orderId = orderRepository.save(member.getId(), orderCreationDto.getCouponId(), order);
 
         List<Long> productIds = getProductIds(orderItems);
-        cartItemService.removeItems(member, productIds);
+        cartRepository.deleteByMemberIdAndProductIds(member.getId(), productIds);
 
         return orderId;
     }

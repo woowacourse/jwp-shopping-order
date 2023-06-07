@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
 import shop.domain.coupon.CouponType;
-import shop.web.controller.cart.dto.CartItemRequest;
+import shop.web.controller.cart.dto.request.CartItemRequest;
 import shop.web.controller.order.dto.request.OrderCreationRequest;
 import shop.web.controller.order.dto.request.OrderItemRequest;
 

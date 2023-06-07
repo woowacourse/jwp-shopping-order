@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductDto {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    private ProductDto() {
-    }
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     private ProductDto(Long id, String name, int price, String imageUrl) {
         this.id = id;

@@ -1,12 +1,9 @@
 package shop.application.product.dto;
 
 public class ProductModificationDto {
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    public ProductModificationDto() {
-    }
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     public ProductModificationDto(String name, int price, String imageUrl) {
         this.name = name;

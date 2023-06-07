@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import shop.application.cart.CartItemService;
 import shop.application.cart.dto.CartDto;
 import shop.domain.member.Member;
-import shop.web.controller.cart.dto.CartItemRequest;
-import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
+import shop.web.controller.cart.dto.request.CartItemRequest;
+import shop.web.controller.cart.dto.request.CartQuantityUpdateRequest;
+import shop.web.controller.cart.dto.response.CartResponse;
 
 import java.net.URI;
 import java.util.List;
@@ -21,8 +22,9 @@ public class CartRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartDto>> showCartItems(Member member) {
-        List<CartDto> responses = cartItemService.findByMember(member);
+    public ResponseEntity<List<CartResponse>> showCartItems(Member member) {
+        List<CartDto> cartDtos = cartItemService.findByMember(member);
+        List<CartResponse> responses = CartResponse.of(cartDtos);
 
         return ResponseEntity.ok(responses);
     }

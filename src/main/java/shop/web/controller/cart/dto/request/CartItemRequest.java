@@ -1,9 +1,9 @@
-package shop.web.controller.cart.dto;
+package shop.web.controller.cart.dto.request;
 
 public class CartItemRequest {
     private Long productId;
 
-    public CartItemRequest() {
+    private CartItemRequest() {
     }
 
     public CartItemRequest(Long productId) {

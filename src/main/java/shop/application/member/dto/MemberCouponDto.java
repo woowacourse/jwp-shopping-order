@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberCouponDto {
-    private Long id;
-    private String name;
-    private Integer discountRate;
-    private LocalDateTime expiredAt;
-    private Boolean isUsed;
-
-    private MemberCouponDto() {
-    }
+    private final Long id;
+    private final String name;
+    private final Integer discountRate;
+    private final LocalDateTime expiredAt;
+    private final Boolean isUsed;
 
     private MemberCouponDto(Long id, String name, Integer discountRate,
                             LocalDateTime expiredAt, Boolean isUsed) {
@@ -57,7 +54,7 @@ public class MemberCouponDto {
         return expiredAt;
     }
 
-    public Boolean getIsUsed() {
+    public Boolean isUsed() {
         return isUsed;
     }
 }

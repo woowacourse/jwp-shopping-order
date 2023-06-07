@@ -9,7 +9,10 @@ import shop.application.member.dto.MemberCouponDto;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
 import shop.domain.member.Member;
-import shop.web.controller.member.dto.MemberLoginResponse;
+import shop.web.controller.member.dto.request.MemberJoinRequest;
+import shop.web.controller.member.dto.request.MemberLoginRequest;
+import shop.web.controller.member.dto.response.MemberCouponResponse;
+import shop.web.controller.member.dto.response.MemberLoginResponse;
 
 import java.util.List;
 
@@ -25,15 +28,21 @@ public class MemberRestController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Void> joinMember(@RequestBody MemberJoinDto request) {
-        memberService.join(request);
+    public ResponseEntity<Void> joinMember(@RequestBody MemberJoinRequest request) {
+        MemberJoinDto memberJoinDto = toMemberJoinDto(request);
+        memberService.join(memberJoinDto);
 
         return ResponseEntity.ok().build();
     }
 
+    private MemberJoinDto toMemberJoinDto(MemberJoinRequest request) {
+        return new MemberJoinDto(request.getName(), request.getPassword());
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<MemberLoginResponse> loginMember(@RequestBody MemberLoginDto request) {
-        String encryptedPassword = memberService.login(request);
+    public ResponseEntity<MemberLoginResponse> loginMember(@RequestBody MemberLoginRequest request) {
+        MemberLoginDto memberLoginDto = toMemberLoginDto(request);
+        String encryptedPassword = memberService.login(memberLoginDto);
 
         String token = request.getName() + ":" + encryptedPassword;
         String encodedToken = Base64Utils.encodeToUrlSafeString(token.getBytes());
@@ -41,9 +50,14 @@ public class MemberRestController {
         return ResponseEntity.ok(new MemberLoginResponse(encodedToken));
     }
 
+    private MemberLoginDto toMemberLoginDto(MemberLoginRequest request) {
+        return new MemberLoginDto(request.getName(), request.getPassword());
+    }
+
     @GetMapping("/me/coupons")
-    public ResponseEntity<List<MemberCouponDto>> getCouponsOfMember(Member member) {
-        List<MemberCouponDto> responses = couponService.getAllCouponsOfMember(member);
+    public ResponseEntity<List<MemberCouponResponse>> getCouponsOfMember(Member member) {
+        List<MemberCouponDto> memberCouponDtos = couponService.getAllCouponsOfMember(member);
+        List<MemberCouponResponse> responses = MemberCouponResponse.of(memberCouponDtos);
 
         return ResponseEntity.ok(responses);
     }

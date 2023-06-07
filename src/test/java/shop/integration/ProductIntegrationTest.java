@@ -1,10 +1,11 @@
 package shop.integration;
 
-import shop.application.product.dto.ProductModificationDto;
-import shop.application.product.dto.ProductDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import shop.application.product.dto.ProductModificationDto;
+import shop.web.controller.product.dto.request.ProductModificationRequest;
+import shop.web.controller.product.dto.response.ProductResponse;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +41,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getCreatedProduct() {
-        var product = new ProductModificationDto("피자", 15_000, "http://example.com/pizza.jpg");
+        var product = new ProductModificationRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product
         var location =
@@ -61,7 +62,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .jsonPath()
-                .getObject(".", ProductDto.class);
+                .getObject(".", ProductResponse.class);
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");

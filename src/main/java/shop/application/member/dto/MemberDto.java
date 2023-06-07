@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberDto {
-    private Long id;
-    private String name;
-    private String password;
-
-    private MemberDto() {
-    }
+    private final Long id;
+    private final String name;
+    private final String password;
 
     private MemberDto(Long id, String name, String password) {
         this.id = id;

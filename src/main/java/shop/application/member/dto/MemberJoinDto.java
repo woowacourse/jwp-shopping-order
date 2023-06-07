@@ -1,11 +1,8 @@
 package shop.application.member.dto;
 
 public class MemberJoinDto {
-    private String name;
-    private String password;
-
-    private MemberJoinDto() {
-    }
+    private final String name;
+    private final String password;
 
     public MemberJoinDto(String name, String password) {
         this.name = name;

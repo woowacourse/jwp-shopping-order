@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shop.application.cart.dto.CartDto;
 import shop.application.product.dto.ProductModificationDto;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.member.Password;
 import shop.domain.repository.MemberRepository;
-import shop.web.controller.cart.dto.CartItemRequest;
-import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
+import shop.web.controller.cart.dto.request.CartItemRequest;
+import shop.web.controller.cart.dto.request.CartQuantityUpdateRequest;
+import shop.web.controller.cart.dto.response.CartResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,8 +79,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartDto.class).stream()
-                .map(CartDto::getId)
+        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartResponse.class).stream()
+                .map(CartResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
     }
@@ -95,8 +95,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
-        Optional<CartDto> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartDto.class)
+        Optional<CartResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartResponse.class)
                 .stream()
                 .filter(cartDto -> cartDto.getId().equals(cartItemId))
                 .findFirst();
@@ -115,8 +115,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
-        Optional<CartDto> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartDto.class)
+        Optional<CartResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartResponse.class)
                 .stream()
                 .filter(cartDto -> cartDto.getId().equals(cartItemId))
                 .findFirst();
@@ -145,10 +145,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
-        Optional<CartDto> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartDto.class)
+        Optional<CartResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartResponse.class)
                 .stream()
-                .filter(cartDto -> cartDto.getId().equals(cartItemId))
+                .filter(cart -> cart.getId().equals(cartItemId))
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();

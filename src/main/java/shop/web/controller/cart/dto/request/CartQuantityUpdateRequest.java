@@ -1,9 +1,9 @@
-package shop.web.controller.cart.dto;
+package shop.web.controller.cart.dto.request;
 
 public class CartQuantityUpdateRequest {
     private int quantity;
 
-    public CartQuantityUpdateRequest() {
+    private CartQuantityUpdateRequest() {
     }
 
     public CartQuantityUpdateRequest(int quantity) {

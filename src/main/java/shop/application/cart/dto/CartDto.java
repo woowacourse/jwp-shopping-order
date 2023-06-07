@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CartDto {
-    private Long id;
-    private int quantity;
-    private ProductDto product;
-
-    private CartDto() {
-    }
+    private final Long id;
+    private final int quantity;
+    private final ProductDto product;
 
     private CartDto(Long id, int quantity, ProductDto product) {
         this.id = id;
