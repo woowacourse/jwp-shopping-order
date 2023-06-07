@@ -106,7 +106,7 @@ public class CartItemService {
     }
 
     public TotalPriceAndDeliveryFeeResponse getTotalPriceAndDeliveryFee(Member member, List<Long> cartItemIds) {
-        CartItems cartItems = cartItemRepository.findByIds(member, cartItemIds);
+        CartItems cartItems = cartItemRepository.findByMemberAndCartItemIds(member, cartItemIds);
         Price totalPrice = cartItems.getTotalPrice();
         DeliveryFee deliveryFee = DeliveryFee.calculate(totalPrice);
 

@@ -55,7 +55,7 @@ public class CartItemRepository {
         return toDomain(cartItemWithMemberAndProductEntity);
     }
 
-    public CartItems findByIds(Member member, List<Long> cartItemIds) {
+    public CartItems findByMemberAndCartItemIds(Member member, List<Long> cartItemIds) {
         CartItems cartItems = findByMemberId(member);
 
         return cartItems.getContainedCartItems(cartItemIds);

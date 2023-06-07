@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.exception.CartItemException;
 import cart.exception.ErrorMessage;
+import java.util.Objects;
 
 public class CartItem {
     private final Product product;
@@ -52,5 +53,22 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity.getValue();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
