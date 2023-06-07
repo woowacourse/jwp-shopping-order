@@ -4,10 +4,10 @@ import cart.persistence.entity.MemberEntity;
 
 public class Member {
 
-    private Long id;
+    private final Long id;
     private final String email;
-    private String password;
-    private Grade grade;
+    private final String password;
+    private final Grade grade;
 
     public Member(Long id, String grade, String email, String password) {
         this.id = id;
