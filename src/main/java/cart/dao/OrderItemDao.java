@@ -58,8 +58,8 @@ public class OrderItemDao {
         return jdbcTemplate.query(sql, orderItemRowMapper, orderId);
     }
 
-    public List<OrderItemEntity> findAllOrderItemsByOrderIdAndMemberId(final Long orderId, final Long memberId) {
-        final String sql = "select * from order_item where id = ? and (select member_id from orders where id = ?) = ?";
-        return jdbcTemplate.query(sql, orderItemRowMapper, orderId, orderId, memberId);
+    public List<OrderItemEntity> findAllOrderItemsByOrderId(final Long orderId) {
+        final String sql = "select * from order_item where id = ?";
+        return jdbcTemplate.query(sql, orderItemRowMapper, orderId);
     }
 }

@@ -66,7 +66,7 @@ public class OrderService {
     }
 
     public OrderShowResponse showOrder(final Member member, final Long orderId) {
-        final List<OrderItem> orderItems = orderRepository.findAllOrderItemsByIdAndMemberId(orderId, member.getId());
+        final List<OrderItem> orderItems = orderRepository.findAllOrderItemsById(orderId);
         final List<OrderItemDto> orderItemDtos = orderItems.stream()
                 .map(OrderItemDto::from)
                 .collect(Collectors.toList());
@@ -79,15 +79,14 @@ public class OrderService {
 
         final List<Order> orders = orderRepository.findAllByMember(member);
         for (final Order order : orders) {
-            final List<OrderItemDto> orderItemDtos = getOrderItemDtos(member, order);
+            final List<OrderItemDto> orderItemDtos = getOrderItemDtos(order);
             orderShowResponses.add(OrderShowResponse.of(orderItemDtos, order));
         }
         return orderShowResponses;
     }
 
-    private List<OrderItemDto> getOrderItemDtos(final Member member, final Order order) {
-        return orderRepository.findAllOrderItemsByIdAndMemberId(order.getId(),
-                        member.getId())
+    private List<OrderItemDto> getOrderItemDtos(final Order order) {
+        return orderRepository.findAllOrderItemsById(order.getId())
                 .stream()
                 .map(OrderItemDto::from)
                 .collect(Collectors.toList());

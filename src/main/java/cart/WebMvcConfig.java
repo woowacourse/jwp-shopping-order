@@ -35,7 +35,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name()
                 )
-                .exposedHeaders(HttpHeaders.LOCATION)
-                .maxAge(3000);
+                .exposedHeaders(HttpHeaders.LOCATION);
     }
 }
