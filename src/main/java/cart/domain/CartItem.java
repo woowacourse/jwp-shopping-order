@@ -5,20 +5,21 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
+    private static final int INITIAL_QUANTITY = 1;
+
     private final Long id;
+    private final Quantity quantity;
     private final Product product;
     private final Member member;
 
-    private Integer quantity;
-
     public CartItem(Member member, Product product) {
         this.id = null;
-        this.quantity = 1;
+        this.quantity = new Quantity(INITIAL_QUANTITY);
         this.member = member;
         this.product = product;
     }
 
-    public CartItem(Long id, Integer quantity, Product product, Member member) {
+    public CartItem(Long id, Quantity quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -33,11 +34,11 @@ public class CartItem {
     }
 
     public long calculateTotalPrice() {
-        return quantity * product.getPrice().getValue();
+        return quantity.getValue() * product.getPrice().getValue();
     }
 
-    public void changeQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public CartItem changeQuantity(Quantity quantity) {
+        return new CartItem(id, quantity, product, member);
     }
 
     public Long getId() {
@@ -53,6 +54,6 @@ public class CartItem {
     }
 
     public Integer getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 }

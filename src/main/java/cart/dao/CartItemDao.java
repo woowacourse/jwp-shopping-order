@@ -1,9 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Price;
-import cart.domain.Product;
+import cart.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,7 +24,7 @@ public class CartItemDao {
         Price price = new Price(rs.getInt("price"));
         String imageUrl = rs.getString("image_url");
         Long cartItemId = rs.getLong("cart_item.id");
-        Integer quantity = rs.getInt("cart_item.quantity");
+        Quantity quantity = new Quantity(rs.getInt("cart_item.quantity"));
         Member member = new Member(memberId, email, null);
         Product product = new Product(productId, name, price, imageUrl);
         return new CartItem(cartItemId, quantity, product, member);
