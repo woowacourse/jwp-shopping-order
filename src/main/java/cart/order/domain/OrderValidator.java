@@ -22,13 +22,7 @@ public class OrderValidator {
     public void validate(Long memberId, List<CartItem> cartItems) {
         for (CartItem cartItem : cartItems) {
             Product product = productRepository.findById(cartItem.getProductId());
-            if (!cartItem.getName().equals(product.getName())) {
-                throw new OrderException(MISMATCH_PRODUCT);
-            }
-            if (cartItem.getProductPrice() != product.getPrice()) {
-                throw new OrderException(MISMATCH_PRODUCT);
-            }
-            if (!cartItem.getImageUrl().equals(product.getImageUrl())) {
+            if (!cartItem.matches(product)) {
                 throw new OrderException(MISMATCH_PRODUCT);
             }
             if (!cartItem.getMemberId().equals(memberId)) {

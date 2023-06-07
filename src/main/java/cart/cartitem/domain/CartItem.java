@@ -11,41 +11,23 @@ public class CartItem {
 
     private final Long id;
     private int quantity;
+    private final CartProduct cartProduct;
     private final Long productId;
-    private final String name;
-    private final String imageUrl;
-    private final int productPrice;
     private final Long memberId;
 
     public CartItem(Product product, Member member) {
-        this(null, 1, product, member);
+        this(null, 1, product, member.getId());
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
-        this(id,
-                quantity,
-                product.getId(),
-                product.getName(),
-                product.getImageUrl(),
-                product.getPrice(),
-                member.getId());
+        this(id, quantity, product, member.getId());
     }
 
-    public CartItem(
-            Long id,
-            int quantity,
-            Long productId,
-            String name,
-            String imageUrl,
-            int productPrice,
-            Long memberId
-    ) {
+    public CartItem(Long id, int quantity, Product product, Long memberId) {
         this.id = id;
         this.quantity = quantity;
-        this.productId = productId;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.productPrice = productPrice;
+        this.cartProduct = CartProduct.from(product);
+        this.productId = product.getId();
         this.memberId = memberId;
     }
 
@@ -59,6 +41,10 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public boolean matches(Product product) {
+        return Objects.equals(cartProduct, CartProduct.from(product));
+    }
+
     public Long getId() {
         return id;
     }
@@ -67,20 +53,20 @@ public class CartItem {
         return quantity;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
     public String getName() {
-        return name;
-    }
-
-    public int getProductPrice() {
-        return productPrice;
+        return cartProduct.getName();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return cartProduct.getImageUrl();
+    }
+
+    public int getPrice() {
+        return cartProduct.getPrice();
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public Long getMemberId() {

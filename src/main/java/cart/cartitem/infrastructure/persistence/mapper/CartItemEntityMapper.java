@@ -2,6 +2,7 @@ package cart.cartitem.infrastructure.persistence.mapper;
 
 import cart.cartitem.domain.CartItem;
 import cart.cartitem.infrastructure.persistence.entity.CartItemEntity;
+import cart.product.domain.Product;
 
 public class CartItemEntityMapper {
 
@@ -12,7 +13,7 @@ public class CartItemEntityMapper {
                 cartItem.getProductId(),
                 cartItem.getName(),
                 cartItem.getImageUrl(),
-                cartItem.getProductPrice(),
+                cartItem.getPrice(),
                 cartItem.getMemberId()
         );
     }
@@ -21,10 +22,7 @@ public class CartItemEntityMapper {
         return new CartItem(
                 entity.getId(),
                 entity.getQuantity(),
-                entity.getProductId(),
-                entity.getName(),
-                entity.getImageUrl(),
-                entity.getProductPrice(),
+                new Product(entity.getProductId(), entity.getName(), entity.getProductPrice(), entity.getImageUrl()),
                 entity.getMemberId()
         );
     }

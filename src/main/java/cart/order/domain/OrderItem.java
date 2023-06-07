@@ -47,17 +47,17 @@ public class OrderItem {
         return new OrderItem(cartItem.getQuantity(),
                 cartItem.getProductId(),
                 cartItem.getName(),
-                cartItem.getProductPrice(),
+                cartItem.getPrice(),
                 applyCoupon(cartItem, coupons),
                 cartItem.getImageUrl());
     }
 
     private static int applyCoupon(CartItem cartItem, List<Coupon> coupons) {
         return coupons.stream()
-                .filter(it -> it.canApply(cartItem.getProductId()))
+                .filter(coupon -> coupon.canApply(cartItem.getProductId()))
                 .findFirst()
-                .map(it -> it.apply(cartItem.getProductPrice()))
-                .orElseGet(cartItem::getProductPrice);
+                .map(coupon -> coupon.apply(cartItem.getPrice()))
+                .orElseGet(cartItem::getPrice);
     }
 
     private void validateQuantity(int quantity) {

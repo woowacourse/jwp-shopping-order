@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import cart.cartitem.domain.CartItem;
 import cart.common.execption.BaseExceptionType;
 import cart.coupon.exception.CouponException;
+import cart.product.domain.Product;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -54,8 +55,10 @@ class CouponValidatorTest {
                 new RateDiscountPolicy(50),
                 new GeneralCouponType(),
                 1L);
-        CartItem 코코닭 = new CartItem(1L, 100, 1L, "코코닭", "닭집.com", 99, 1L);
-        CartItem 코코오리 = new CartItem(2L, 10, 2L, "코코오리", "오리집.com", 19, 1L);
+        Product product1 = new Product(1L, "코코닭", 99, "닭집.com");
+        Product product2 = new Product(2L, "코코오리", 19, "오리집.com");
+        CartItem 코코닭 = new CartItem(1L, 100, product1, 1L);
+        CartItem 코코오리 = new CartItem(2L, 10, product2, 1L);
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(CouponException.class, () ->
@@ -83,8 +86,10 @@ class CouponValidatorTest {
                 new RateDiscountPolicy(50),
                 new SpecificCouponType(3L),
                 1L);
-        CartItem 코코닭 = new CartItem(1L, 100, 1L, "코코닭", "닭집.com", 99, 1L);
-        CartItem 코코오리 = new CartItem(2L, 10, 2L, "코코오리", "오리집.com", 19, 1L);
+        Product product1 = new Product(1L, "코코닭", 99, "닭집.com");
+        Product product2 = new Product(2L, "코코오리", 19, "오리집.com");
+        CartItem 코코닭 = new CartItem(1L, 100, product1, 1L);
+        CartItem 코코오리 = new CartItem(2L, 10, product2, 1L);
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(CouponException.class, () ->
@@ -112,8 +117,10 @@ class CouponValidatorTest {
                 new RateDiscountPolicy(50),
                 new SpecificCouponType(2L),
                 1L);
-        CartItem 코코닭 = new CartItem(1L, 100, 1L, "코코닭", "닭집.com", 99, 1L);
-        CartItem 코코오리 = new CartItem(2L, 10, 2L, "코코오리", "오리집.com", 19, 1L);
+        Product product1 = new Product(1L, "코코닭", 99, "닭집.com");
+        Product product2 = new Product(2L, "코코오리", 19, "오리집.com");
+        CartItem 코코닭 = new CartItem(1L, 100, product1, 1L);
+        CartItem 코코오리 = new CartItem(2L, 10, product2, 1L);
 
         // when & then
         assertDoesNotThrow(() ->

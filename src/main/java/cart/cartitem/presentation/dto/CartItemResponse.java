@@ -22,7 +22,7 @@ public class CartItemResponse {
                 new ProductResponse(
                         cartItem.getProductId(),
                         cartItem.getName(),
-                        cartItem.getProductPrice(),
+                        cartItem.getPrice(),
                         cartItem.getImageUrl()
                 )
         );
