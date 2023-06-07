@@ -48,8 +48,4 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-    public CartItem addQuantity(int quantity) {
-        return new CartItem(id, this.quantity + quantity, product, member);
-    }
 }

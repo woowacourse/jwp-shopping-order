@@ -4,17 +4,16 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.OrderProductRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.RemoveCartItemsRequest;
 import cart.exception.BusinessException;
-import java.util.Optional;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
@@ -34,16 +33,23 @@ public class CartItemService {
     public Long add(Member member, CartItemRequest cartItemRequest) {
         final Optional<CartItem> optionalCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
             cartItemRequest.getProductId());
-        if (optionalCartItem.isPresent()) {
-            final CartItem cartItem = optionalCartItem.get();
-            final CartItem updatedCartItem = cartItem.addQuantity(cartItemRequest.getQuantity());
-            cartItemDao.updateQuantity(updatedCartItem);
-            return cartItem.getId();
-        }
 
-        return cartItemDao.save(new CartItem(member,
-            productDao.getProductById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다."))));
+        return optionalCartItem
+            .map(cartItem -> {
+                updateQuantity(cartItem, cartItemRequest.getQuantity());
+                return cartItem.getId();
+            })
+            .orElseGet(() -> {
+                final Product product = productDao.getProductById(cartItemRequest.getProductId())
+                    .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다."));
+                final CartItem cartItem = new CartItem(member, product);
+                return cartItemDao.save(cartItem);
+            });
+    }
+
+    private void updateQuantity(CartItem cartItem, int quantity) {
+        cartItem.changeQuantity(quantity);
+        cartItemDao.updateQuantity(cartItem);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
@@ -55,8 +61,7 @@ public class CartItemService {
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        updateQuantity(cartItem, request.getQuantity());
     }
 
     public void remove(Member member, Long id) {
