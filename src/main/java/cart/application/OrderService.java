@@ -7,8 +7,6 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.domain.coupon.Coupon;
-import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.dto.request.OrderRequestDto;
@@ -21,13 +19,10 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
-import cart.exception.CouponNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,23 +33,28 @@ public class OrderService {
     private final CouponService couponService;
     private final OrderDao orderDao;
     private final ProductDao productDao;
+    private final OrderPriceService orderPriceService;
 
-    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final CouponService couponService, final OrderDao orderDao, final ProductDao productDao) {
+    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final CouponService couponService, final OrderDao orderDao, final ProductDao productDao, final OrderPriceService orderPriceService) {
         this.cartItemDao = cartItemDao;
         this.couponDao = couponDao;
         this.couponService = couponService;
         this.orderDao = orderDao;
         this.productDao = productDao;
+        this.orderPriceService = orderPriceService;
     }
 
     public OrderResponseDto order(final Member member, final OrderRequestDto orderRequestDto) {
-        final List<CartItem> cartItems = findCartItem(member, orderRequestDto);
-
-        final Order order = new Order(makeOrderProduct(cartItems, orderRequestDto));
-        order.applyDeliveryFee(new DeliveryFee(3000));
-        applyCoupon(member, orderRequestDto, order);
+        final List<OrderProduct> orderProducts = findOrderProducts(member, orderRequestDto);
+        final Order order = new Order(orderProducts, orderPriceService.calculatePriceOf(member, orderProducts, orderRequestDto));
+        deleteUsedCoupon(member, orderRequestDto);
         validateExpectPrice(order, orderRequestDto);
         return new OrderResponseDto(completeOrder(member, orderRequestDto, order));
+    }
+
+    private List<OrderProduct> findOrderProducts(final Member member, final OrderRequestDto orderRequestDto) {
+        final List<CartItem> cartItems = findCartItem(member, orderRequestDto);
+        return makeOrderProduct(cartItems, orderRequestDto);
     }
 
     private List<CartItem> findCartItem(final Member member, final OrderRequestDto orderRequestDto) {
@@ -79,21 +79,10 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private void applyCoupon(final Member member, final OrderRequestDto orderRequestDto, final Order order) {
-        if (Objects.isNull(orderRequestDto.getCouponId())) {
-            return;
+    private void deleteUsedCoupon(final Member member, final OrderRequestDto orderRequestDto) {
+        if (orderRequestDto.getCouponId() != null) {
+            couponDao.deleteUserCoupon(member, orderRequestDto.getCouponId());
         }
-        order.applyCoupon(findCoupon(member, orderRequestDto));
-        couponDao.deleteUserCoupon(member, orderRequestDto.getCouponId());
-    }
-
-    private Coupon findCoupon(final Member member, final OrderRequestDto orderRequestDto) {
-        final List<Coupon> couponById = couponDao.findCouponById(member.getId());
-        final Optional<Coupon> requestCoupon = couponById.stream().filter(coupon -> coupon.getId() == orderRequestDto.getCouponId()).findAny();
-        if (requestCoupon.isEmpty()) {
-            throw new CouponNotFoundException("해당 쿠폰을 유저가 가지고 있지 않습니다,");
-        }
-        return requestCoupon.get();
     }
 
     private void validateExpectPrice(final Order order, final OrderRequestDto orderRequestDto) {

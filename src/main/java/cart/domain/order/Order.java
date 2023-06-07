@@ -6,19 +6,11 @@ import java.util.List;
 
 public class Order {
     private final List<OrderProduct> products;
-    private final OrderPrice orderPrice;
+    private OrderPrice orderPrice;
 
-    public Order(final List<OrderProduct> products) {
+    public Order(final List<OrderProduct> products, final OrderPrice orderPrice) {
         this.products = products;
-        this.orderPrice = new OrderPrice(products);
-    }
-
-    public void applyDeliveryFee(final DeliveryFee deliveryFee) {
-        orderPrice.calculateDeliveryFee(deliveryFee);
-    }
-
-    public void applyCoupon(final Coupon coupon) {
-        orderPrice.apply(coupon);
+        this.orderPrice = orderPrice;
     }
 
     public int price() {
@@ -27,5 +19,9 @@ public class Order {
 
     public List<OrderProduct> getProducts() {
         return products;
+    }
+
+    public void applyCoupon(final Coupon coupon) {
+        orderPrice = coupon.apply(orderPrice);
     }
 }

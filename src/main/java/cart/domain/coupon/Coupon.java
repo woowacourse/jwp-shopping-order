@@ -1,5 +1,6 @@
 package cart.domain.coupon;
 
+import cart.domain.order.OrderPrice;
 import cart.exception.NegativeCouponException;
 
 import java.util.Objects;
@@ -29,6 +30,10 @@ public class Coupon {
 
     public int calculateDiscount() {
         return discountPrice;
+    }
+
+    public OrderPrice apply(final OrderPrice orderPrice) {
+        return orderPrice.discountGlobal(discountPrice);
     }
 
     public long getId() {

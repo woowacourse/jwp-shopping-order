@@ -1,47 +1,45 @@
 package cart.domain.order;
 
-import cart.domain.coupon.Coupon;
-import cart.exception.CouponDiscountOverPriceException;
+import cart.exception.DiscountOverPriceException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderPrice {
     private static final int MIN_ORDER_PRICE = 1;
-    private final int productPrice;
-    private int increasePrice = 0;
-    private int discountPrice = 0;
+    private final Map<OrderProduct, Integer> priceOfProduct;
+    private final int globalDiscount;
+    private final DeliveryFee deliveryFee;
 
-    public OrderPrice(final List<OrderProduct> products) {
-        productPrice = products.stream().
-                mapToInt(OrderProduct::price)
-                .sum();
+    private OrderPrice(final Map<OrderProduct, Integer> priceOfProduct, final int globalDiscount, final DeliveryFee deliveryFee) {
+        this.priceOfProduct = priceOfProduct;
+        this.globalDiscount = globalDiscount;
+        this.deliveryFee = deliveryFee;
     }
 
-    public void apply(final Coupon coupon) {
-        final int expectPrice = calculatePrice() - coupon.calculateDiscount();
-        if (expectPrice < MIN_ORDER_PRICE) {
-            throw new CouponDiscountOverPriceException("쿠폰 할인 금액이 상품 계산 값보다 더 큽니다.");
+    public static OrderPrice of(final List<OrderProduct> products, final DeliveryFee deliveryFee) {
+        return new OrderPrice(setProductPrice(products), 0, deliveryFee);
+    }
+
+    private static Map<OrderProduct, Integer> setProductPrice(final List<OrderProduct> products) {
+        final HashMap<OrderProduct, Integer> productPrice = new HashMap<>();
+        for (final OrderProduct product : products) {
+            productPrice.put(product, product.price());
         }
-        discount(coupon.calculateDiscount());
+        return productPrice;
     }
 
-    public void calculateDeliveryFee(final DeliveryFee deliveryFee) {
-        increase(deliveryFee.getDeliveryFee());
-    }
-
-    private void discount(final int discountAmount) {
-        final int discountedPrice = calculatePrice() - discountAmount;
-        if (discountedPrice < MIN_ORDER_PRICE) {
-            throw new IllegalArgumentException("상품 금액 이상으로 할인이 적용되었습니다.");
+    public OrderPrice discountGlobal(final int discount) {
+        if (calculatePrice() - discount < MIN_ORDER_PRICE) {
+            throw new DiscountOverPriceException("주문 가격 할인이 주문 가격을 넘었습니다.");
         }
-        discountPrice += discountAmount;
-    }
-
-    private void increase(final int increaseAmount) {
-        increasePrice += increaseAmount;
+        return new OrderPrice(priceOfProduct, globalDiscount + discount, deliveryFee);
     }
 
     public int calculatePrice() {
-        return productPrice + increasePrice - discountPrice;
+        final Integer productPrice = priceOfProduct.values().stream().reduce(Integer::sum)
+                .orElseThrow(() -> new IllegalStateException("상품 가격 계산 과정에서 오류가 발생했습니다."));
+        return productPrice + deliveryFee.getDeliveryFee() - globalDiscount;
     }
 }

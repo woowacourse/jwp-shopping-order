@@ -4,6 +4,7 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponNotFoundException;
+import cart.exception.DiscountOverPriceException;
 import cart.exception.NotExitingCouponIssueException;
 import cart.exception.OrderAuthorizationException;
 import cart.exception.ProductNotFoundException;
@@ -51,6 +52,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotExitingCouponIssueException.class)
     public ResponseEntity<String> handle(final NotExitingCouponIssueException e) {
+        LOGGER.error(e.getMessage());
+        return ResponseEntity.internalServerError().build();
+    }
+
+    @ExceptionHandler(DiscountOverPriceException.class)
+    public ResponseEntity<String> handle(final DiscountOverPriceException e) {
         LOGGER.error(e.getMessage());
         return ResponseEntity.internalServerError().build();
     }
