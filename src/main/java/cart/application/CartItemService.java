@@ -7,10 +7,12 @@ import cart.domain.member.Member;
 import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
@@ -24,10 +26,12 @@ public class CartItemService {
         return cartItemDao.findByMemberId(member.getId());
     }
 
+    @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
         return cartItemDao.save(CartItem.createInitial(member, productDao.getProductById(cartItemRequest.getId())));
     }
 
+    @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -41,6 +45,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(updateCartItem);
     }
 
+    @Transactional
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
