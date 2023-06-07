@@ -8,6 +8,7 @@ import cart.util.CurrentTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrderItemDaoTest extends DaoTest {
 
     private static final MemberEntity memberEntity = new MemberEntity(1L, "email", "password", 0);
-    private static final Product product = new Product(1L, "name", 1000, "image", 10);
+    private static final Product product = new Product(1L, "name", new BigDecimal(1000), "image", 10);
     private static final OrderEntity orderEntity = new OrderEntity(1L, CurrentTimeUtil.asString(), memberEntity.getId(), 1000, 3000, 0, 4000);
 
     private MemberDao memberDao;
@@ -99,8 +100,8 @@ class OrderItemDaoTest extends DaoTest {
     @Test
     void 주문ID로_상위_2개의_데이터만_가져온다() {
         // given
-        Product product2 = new Product(2L, "name2", 2000, "imageUrl2", 200);
-        Product product3 = new Product(3L, "name3", 3000, "imageUrl3", 300);
+        Product product2 = new Product(2L, "name2", new BigDecimal(2000), "imageUrl2", 200);
+        Product product3 = new Product(3L, "name3", new BigDecimal(3000), "imageUrl3", 300);
         productDao.insert(product2);
         productDao.insert(product3);
 

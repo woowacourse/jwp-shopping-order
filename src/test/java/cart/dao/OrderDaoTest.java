@@ -8,6 +8,7 @@ import cart.util.CurrentTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -19,7 +20,7 @@ class OrderDaoTest extends DaoTest {
     private OrderDao orderDao;
 
     private final MemberEntity memberEntity = new MemberEntity(1L, "1@email.com", "11", 1_000);
-    private final Product product = new Product(1L, "productName", 1_000, "imageUrl", 10);
+    private final Product product = new Product(1L, "productName", new BigDecimal(1_000), "imageUrl", 10);
     private OrderEntity orderEntity;
 
     @BeforeEach

@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.math.BigDecimal;
+
 @JdbcTest
 @Sql("/schema.sql")
 public class RepositoryTest {
@@ -37,7 +39,7 @@ public class RepositoryTest {
         this.dummyQuantity = new Quantity(10);
         this.dummyMember = new Member(1L, "email", "pw", 1);
         this.dummyMemberEntity = new MemberEntity(dummyMember.getId(), dummyMember.getEmail(), dummyMember.getPassword(), dummyMember.getPointValue());
-        this.dummyProduct = new Product(1L, "name", 1_000, "imageUrl", 10);
+        this.dummyProduct = new Product(1L, "name", new BigDecimal(1_000), "imageUrl", 10);
         this.dummyCartItem = new CartItem(1L, dummyMember, dummyProduct, dummyQuantity);
         this.dummyCartItemEntity = new CartItemEntity(dummyMemberEntity.getId(), dummyProduct.getId(), dummyQuantity.getValue());
 
