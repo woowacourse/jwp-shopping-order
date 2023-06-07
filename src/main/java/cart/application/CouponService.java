@@ -1,9 +1,9 @@
 package cart.application;
 
 import cart.domain.*;
-import cart.dto.AllCouponResponse;
-import cart.dto.AllOrderCouponResponse;
-import cart.dto.MemberCouponRequest;
+import cart.dto.response.AllCouponResponse;
+import cart.dto.response.AllOrderCouponResponse;
+import cart.dto.request.MemberCouponRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;

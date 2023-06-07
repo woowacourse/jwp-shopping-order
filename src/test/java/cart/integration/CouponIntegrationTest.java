@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.dto.AllCouponResponse;
-import cart.dto.CouponResponse;
+import cart.dto.response.AllCouponResponse;
+import cart.dto.response.CouponResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

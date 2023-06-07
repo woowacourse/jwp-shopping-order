@@ -1,16 +1,29 @@
-package cart.dto;
+package cart.dto.request;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 public class OrderCartItemRequest {
+    @NotNull
     private Long cartItemId;
+
+    @NotNull
+    @Positive
     private Integer quantity;
+
+    @NotNull
     private String name;
+
+    @NotNull
+    @Positive
     private Integer price;
+
+    @NotNull
     private String imageUrl;
 
     public OrderCartItemRequest() {

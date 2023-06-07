@@ -1,9 +1,13 @@
-package cart.dto;
+package cart.dto.request;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MemberCouponRequest {
+    @NotNull
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$")
     private LocalDateTime expiredAt;
 
     public MemberCouponRequest() {

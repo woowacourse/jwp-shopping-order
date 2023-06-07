@@ -1,15 +1,21 @@
-package cart.dto;
+package cart.dto.request;
 
 import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderRequest {
+    @NotNull
+    @Size(min = 1)
     private List<OrderCartItemRequest> products;
+
     private Long couponId;
 
     public OrderRequest() {
