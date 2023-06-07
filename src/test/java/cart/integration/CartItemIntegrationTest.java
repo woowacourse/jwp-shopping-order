@@ -21,7 +21,7 @@ import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.CartItemAddRequest;
 import cart.dto.response.CartItemResponse;
-import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.request.CartItemSetRequest;
 import cart.dto.response.CartItemUpdateResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -125,7 +125,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 	@Test
 	void 장바구니에_담긴_상품의_수량을_변경한다() {
 		// given
-		final CartItemUpdateRequest updateRequest = new CartItemUpdateRequest(8, true);
+		final CartItemSetRequest updateRequest = new CartItemSetRequest(8, true);
 
 		// when
 		final ExtractableResponse<Response> response = given().log().all()
@@ -149,7 +149,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 	@Test
 	void 장바구니에_담긴_상품의_체크여부를_변경한다() {
 		// given
-		final CartItemUpdateRequest updateRequest = new CartItemUpdateRequest(2, false);
+		final CartItemSetRequest updateRequest = new CartItemSetRequest(2, false);
 
 		// when
 		final ExtractableResponse<Response> response = given().log().all()

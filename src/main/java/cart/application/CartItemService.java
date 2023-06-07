@@ -7,7 +7,7 @@ import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.CartItemAddRequest;
 import cart.dto.response.CartItemResponse;
-import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.request.CartItemSetRequest;
 import cart.dto.response.CartItemUpdateResponse;
 import cart.entity.ProductEntity;
 
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -46,7 +45,7 @@ public class CartItemService {
 		return CartItemResponse.of(cartItem);
 	}
 
-	public CartItemUpdateResponse updateQuantity(Member member, Long id, CartItemUpdateRequest request) {
+	public CartItemUpdateResponse updateQuantity(Member member, Long id, CartItemSetRequest request) {
 		CartItem cartItem = cartItemDao.findById(id);
 		cartItem.checkOwner(member);
 

@@ -4,7 +4,7 @@ import cart.application.CartItemService;
 import cart.domain.Member;
 import cart.dto.request.CartItemAddRequest;
 import cart.dto.response.CartItemResponse;
-import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.request.CartItemSetRequest;
 import cart.dto.response.CartItemUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -48,7 +48,7 @@ public class CartItemApiController {
 
     @Operation(summary = "장바구니 상품 수정")
     @PatchMapping("/{id}")
-    public ResponseEntity<CartItemUpdateResponse> updateCartItem(@Auth Member member, @PathVariable Long id, @RequestBody CartItemUpdateRequest request) {
+    public ResponseEntity<CartItemUpdateResponse> updateCartItem(@Auth Member member, @PathVariable Long id, @RequestBody CartItemSetRequest request) {
         CartItemUpdateResponse cartItemUpdateResponse = cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok(cartItemUpdateResponse);

@@ -1,10 +1,10 @@
 package cart.dto.request;
 
-public class CartItemUpdateRequest {
+public class CartItemSetRequest {
     private final int quantity;
     private final boolean checked;
 
-    public CartItemUpdateRequest(final int quantity, final boolean checked) {
+    public CartItemSetRequest(final int quantity, final boolean checked) {
         this.quantity = quantity;
         this.checked = checked;
     }

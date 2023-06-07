@@ -2,7 +2,7 @@ package cart.acceptance;
 
 import cart.dao.CartItemDao;
 import cart.dto.request.CartItemAddRequest;
-import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.request.CartItemSetRequest;
 import cart.dto.response.CartItemUpdateResponse;
 import cart.exception.notfound.CartItemNotFoundException;
 
@@ -41,11 +41,11 @@ public class CartItemsAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 장바구니_아이템_수량_변경() {
-        final CartItemUpdateRequest cartItemUpdateRequest = new CartItemUpdateRequest(350, true);
+        final CartItemSetRequest cartItemSetRequest = new CartItemSetRequest(350, true);
 
         final var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemUpdateRequest)
+                .body(cartItemSetRequest)
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .patch("/cart-items/1")
@@ -62,11 +62,11 @@ public class CartItemsAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 장바구니_아이템_체크_변경() {
-        final CartItemUpdateRequest cartItemUpdateRequest = new CartItemUpdateRequest(2, false);
+        final CartItemSetRequest cartItemSetRequest = new CartItemSetRequest(2, false);
 
         final var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemUpdateRequest)
+                .body(cartItemSetRequest)
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .patch("/cart-items/1")
@@ -83,11 +83,11 @@ public class CartItemsAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 장바구니_아이템_수량을_0으로_변경하면_삭제() {
-        final CartItemUpdateRequest cartItemUpdateRequest = new CartItemUpdateRequest(0, true);
+        final CartItemSetRequest cartItemSetRequest = new CartItemSetRequest(0, true);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemUpdateRequest)
+                .body(cartItemSetRequest)
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .patch("/cart-items/1")
