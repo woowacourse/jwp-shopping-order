@@ -7,7 +7,7 @@ import java.util.List;
 
 public class PayRequest {
     @NotNull(message = "구매할 카트 아이템의 아이디를 입력해 주세요. 입력값 : ${validatedValue}")
-    private final List<Long> cartItemIds;
+    private final List<CartItemIdRequest> cartItemIds;
 
     @NotNull(message = "선택한 아이템의 정가를 입력해 주세요. 입력값 : ${validatedValue}")
     @Positive(message = "선택한 아이템의 정가는 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
@@ -17,13 +17,13 @@ public class PayRequest {
     @PositiveOrZero(message = "사용할 포인트는 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
     private final int points;
 
-    public PayRequest(final List<Long> cartItemIds, final int originalPrice, final Integer points) {
+    public PayRequest(final List<CartItemIdRequest> cartItemIds, final Integer originalPrice, final Integer points) {
         this.cartItemIds = cartItemIds;
         this.originalPrice = originalPrice;
         this.points = points;
     }
 
-    public List<Long> getCartItemIds() {
+    public List<CartItemIdRequest> getCartItemIds() {
         return cartItemIds;
     }
 

@@ -3,6 +3,7 @@ package cart.acceptance;
 import cart.dao.OrderProductDao;
 import cart.domain.Member;
 import cart.dto.request.CartItemCreateRequest;
+import cart.dto.request.CartItemIdRequest;
 import cart.dto.request.PayRequest;
 import cart.entity.OrderProductEntity;
 import cart.repository.CartItemRepository;
@@ -58,7 +59,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final int usedPoint = 1000;
         final long orderHistoryId = 카트_아이템_주문하고_주문_히스토리_아이디_반환(
                 savedMember,
-                new PayRequest(List.of(cartItem1Id, cartItem2Id), originalPrice, usedPoint)
+                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), originalPrice, usedPoint)
         );
 
         final ExtractableResponse<Response> response = 멤버의_주문_목록_조회_요청(savedMember);
@@ -82,7 +83,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final Long cartItem2Id = 카트에_아이템_추가하고_아이디_반환(orderMember, new CartItemCreateRequest(product2Id, 2));
         final long orderHistoryId = 카트_아이템_주문하고_주문_히스토리_아이디_반환(
                 orderMember,
-                new PayRequest(List.of(cartItem1Id, cartItem2Id), 1_543_490, 1000)
+                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), 1_543_490, 1000)
         );
 
         final ExtractableResponse<Response> response = 멤버의_특정_주문을_조회_요청(otherMember, orderHistoryId);
@@ -100,7 +101,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         final long orderHistoryId = 카트_아이템_주문하고_주문_히스토리_아이디_반환(
                 savedMember,
-                new PayRequest(List.of(cartItem1Id, cartItem2Id), 1_543_490, 1000)
+                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), 1_543_490, 1000)
         );
 
         final ExtractableResponse<Response> response = 멤버의_특정_주문을_조회_요청(savedMember, orderHistoryId);

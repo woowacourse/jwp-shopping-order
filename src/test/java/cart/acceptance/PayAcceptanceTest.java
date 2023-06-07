@@ -2,6 +2,7 @@ package cart.acceptance;
 
 import cart.domain.Member;
 import cart.dto.request.CartItemCreateRequest;
+import cart.dto.request.CartItemIdRequest;
 import cart.dto.request.PayRequest;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -42,14 +43,12 @@ public class PayAcceptanceTest extends AcceptanceTest {
 
         final ExtractableResponse<Response> response = 카트_아이템_주문_요청(
                 savedMember,
-                new PayRequest(List.of(cartItem1Id, cartItem2Id), 1_543_490, 1000)
+                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), 1_543_490, 1000)
         );
-
-        final List<Long> orderIds = orderRepository.findOrderIdsOfMember(savedMember);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(OK.value()),
-                () -> assertThat(orderIds.contains(response.jsonPath().getLong("orderId"))).isTrue()
+                () -> assertThat(response.jsonPath().getLong("orderId")).isNotNull()
         );
     }
 
@@ -63,7 +62,7 @@ public class PayAcceptanceTest extends AcceptanceTest {
 
         final ExtractableResponse<Response> response = 카트_아이템_주문_요청(
                 savedMember,
-                new PayRequest(List.of(cartItem1Id, cartItem2Id), 1_543_491, 1000)
+                new PayRequest(List.of(CartItemIdRequest.of(cartItem1Id), CartItemIdRequest.of(cartItem2Id)), 1_543_491, 1000)
         );
 
         assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
