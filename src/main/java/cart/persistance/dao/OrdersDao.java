@@ -1,6 +1,6 @@
-package cart.repository.dao;
+package cart.persistance.dao;
 
-import cart.repository.entity.OrdersEntity;
+import cart.persistance.entity.OrdersEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

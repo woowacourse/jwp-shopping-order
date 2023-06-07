@@ -1,4 +1,4 @@
-package cart.repository.entity;
+package cart.persistance.entity;
 
 import cart.domain.coupon.MemberCoupon;
 

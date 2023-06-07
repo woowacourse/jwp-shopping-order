@@ -7,10 +7,10 @@ import cart.domain.coupon.MemberCoupons;
 import cart.domain.discountpolicy.DiscountPolicyProvider;
 import cart.domain.order.Order;
 import cart.domain.product.OrderItem;
-import cart.repository.dao.OrderCouponDao;
-import cart.repository.dao.OrdersDao;
-import cart.repository.entity.OrderCouponEntity;
-import cart.repository.entity.OrdersEntity;
+import cart.persistance.dao.OrderCouponDao;
+import cart.persistance.dao.OrdersDao;
+import cart.persistance.entity.OrderCouponEntity;
+import cart.persistance.entity.OrdersEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
