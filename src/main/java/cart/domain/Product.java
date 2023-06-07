@@ -2,18 +2,17 @@ package cart.domain;
 
 import cart.exception.OrderException;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
 
     private final Long id;
     private final String name;
-    private final BigDecimal price;
+    private final Price price;
     private final String imageUrl;
     private final int stock;
 
-    public Product(final Long id, final String name, final BigDecimal price, final String imageUrl, final int stock) {
+    public Product(final Long id, final String name, final Price price, final String imageUrl, final int stock) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -21,20 +20,26 @@ public class Product {
         this.stock = stock;
     }
 
-    public Product(final String name, final BigDecimal price, final String imageUrl, final int stock) {
+    public Product(final String name, final Price price, final String imageUrl, final int stock) {
         this(null, name, price, imageUrl, stock);
     }
 
-    public Product updateStock(final int quantity) {
+    public Product updateStock(final Quantity quantity) {
         validateStock(quantity);
 
-        return new Product(id, name, price, imageUrl, stock - quantity);
+        return new Product(id, name, price, imageUrl, stock - quantity.getValue());
     }
 
-    private void validateStock(final int quantity) {
-        if (stock < quantity) {
+    private void validateStock(final Quantity quantity) {
+        if (stock < quantity.getValue()) {
             throw new OrderException.InsufficientStock("상품의 남은 수량보다 많은 주문량입니다.");
         }
+    }
+
+    public int calculateTotalPrice(final int quantity) {
+        Price result = price.calculateTotalPrice(quantity);
+
+        return result.getValue();
     }
 
     public Long getId() {
@@ -46,7 +51,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price.intValue();
+        return price.getValue();
     }
 
     public String getImageUrl() {

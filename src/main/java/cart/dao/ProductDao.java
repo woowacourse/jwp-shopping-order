@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.exception.DataNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,7 +28,7 @@ public class ProductDao {
             new Product(
                     resultSet.getLong(ID),
                     resultSet.getString(NAME),
-                    resultSet.getBigDecimal(PRICE),
+                    new Price(resultSet.getBigDecimal(PRICE)),
                     resultSet.getString(IMAGE_URL),
                     resultSet.getInt(STOCK)
             );

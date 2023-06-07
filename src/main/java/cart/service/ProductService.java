@@ -1,12 +1,12 @@
 package cart.service;
 
 import cart.dao.ProductDao;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.dto.request.ProductAddRequest;
 import cart.dto.response.ProductResponse;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,13 +32,13 @@ public class ProductService {
     }
 
     public Long createProduct(ProductAddRequest productAddRequest) {
-        Product product = new Product(productAddRequest.getName(), new BigDecimal(productAddRequest.getPrice()), productAddRequest.getImageUrl(), productAddRequest.getStock());
+        Product product = new Product(productAddRequest.getName(), new Price(productAddRequest.getPrice()), productAddRequest.getImageUrl(), productAddRequest.getStock());
 
         return productDao.insert(product);
     }
 
     public void updateProduct(Long productId, ProductAddRequest productAddRequest) {
-        Product newProduct = new Product(productId, productAddRequest.getName(), new BigDecimal(productAddRequest.getPrice()), productAddRequest.getImageUrl(), productAddRequest.getStock());
+        Product newProduct = new Product(productId, productAddRequest.getName(), new Price(productAddRequest.getPrice()), productAddRequest.getImageUrl(), productAddRequest.getStock());
 
         productDao.update(newProduct);
     }
