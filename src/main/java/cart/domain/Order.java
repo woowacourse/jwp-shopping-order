@@ -37,7 +37,7 @@ public class Order {
     }
 
     private void validateOwner(List<CartItem> cartItems, Member member) {
-        cartItems.stream().forEach(cartItem -> cartItem.checkOwner(member));
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
     public Order confirmOrder(Money deliveryFee, Money discountingPrice) {
