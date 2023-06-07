@@ -10,7 +10,7 @@ public enum OrderStatus {
     PROCESSING(2, "Processing"),
     SHIPPED(3, "Shipped"),
     DELIVERED(4, "Delivered"),
-    CANCELLED(5, "Canceled");
+    CANCELED(5, "Canceled");
 
     private static final String INVALID_FIND_ORDER_MESSAGE = "주문 번호를 찾을 수 없습니다.";
 
