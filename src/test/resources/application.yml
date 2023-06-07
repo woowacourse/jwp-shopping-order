@@ -1,0 +1,5 @@
+spring:
+  sql:
+    init:
+      data-locations: classpath:/test-data.sql
+      schema-locations: classpath:/test-schema.sql
