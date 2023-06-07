@@ -81,7 +81,7 @@ public class OrderRepository {
         );
     }
 
-    public List<OrderItem> findAllOrderItemsById(final Long orderId) {
+    public List<OrderItem> findAllOrderItemsByOrderId(final Long orderId) {
         return orderItemDao.findAllOrderItemsByOrderId(orderId)
                 .stream()
                 .map(orderItemEntity -> new OrderItem(
