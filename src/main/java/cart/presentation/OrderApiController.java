@@ -39,7 +39,7 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<Void> order(final Member member, final @RequestBody OrderRequest orderRequest) {
-        long orderId = orderService.order(member, orderRequest);
+        long orderId = orderService.createOrder(member, orderRequest);
 
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }

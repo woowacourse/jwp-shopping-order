@@ -14,8 +14,6 @@ import cart.domain.Quantity;
 import cart.dto.request.CartItemInfoRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductInfoRequest;
-import cart.dto.response.OrderItemResponse;
-import cart.dto.response.OrderResponse;
 import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -23,7 +21,6 @@ import cart.util.CurrentTimeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -46,7 +43,7 @@ public class OrderService {
         this.orderItemDao = orderItemDao;
     }
 
-    public long order(final Member member, final OrderRequest orderRequest) {
+    public long createOrder(final Member member, final OrderRequest orderRequest) {
         List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
         CartItems cartItems = toCartItems(cartItemInfos);
 
