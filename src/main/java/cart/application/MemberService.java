@@ -19,12 +19,12 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberResponse getMemberById(final Long id) {
+    public MemberResponse findMemberById(final Long id) {
         final Member member = memberRepository.getMemberById(id);
         return MemberResponse.of(member);
     }
 
-    public MemberResponse getMemberByEmail(final String email) {
+    public MemberResponse findMemberByEmail(final String email) {
         final Member member = memberRepository.getMemberByEmail(new Email(email));
         return MemberResponse.of(member);
     }
