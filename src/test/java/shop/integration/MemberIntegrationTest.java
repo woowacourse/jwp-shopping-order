@@ -14,7 +14,7 @@ import shop.application.member.dto.MemberLoginDto;
 import shop.domain.coupon.CouponType;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
-import shop.domain.member.NaturalPassword;
+import shop.domain.member.Password;
 import shop.domain.repository.MemberRepository;
 import shop.util.Encryptor;
 
@@ -126,7 +126,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     @Test
     void joinWithDuplicateNameTest() {
         //given
-        Member member = new Member(new MemberName("testMember"), new NaturalPassword("password"));
+        Member member = new Member(new MemberName("testMember"), Password.createFromNaturalPassword("password"));
         MemberJoinDto request = new MemberJoinDto("testMember", "asdf1234");
 
         memberRepository.save(member);

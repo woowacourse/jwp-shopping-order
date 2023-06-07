@@ -3,9 +3,9 @@ package shop.persistence.repository;
 import org.springframework.stereotype.Repository;
 import shop.domain.coupon.Coupon;
 import shop.domain.coupon.MemberCoupon;
-import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
+import shop.domain.member.Password;
 import shop.domain.repository.MemberCouponRepository;
 import shop.persistence.dao.MemberCouponDao;
 import shop.persistence.entity.MemberCouponEntity;
@@ -74,7 +74,7 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
         return new Member(
                 memberCouponDetail.getMemberId(),
                 new MemberName(memberCouponDetail.getMemberName()),
-                new EncryptedPassword(memberCouponDetail.getPassword())
+                Password.createFromEncryptedPassword(memberCouponDetail.getPassword())
         );
     }
 

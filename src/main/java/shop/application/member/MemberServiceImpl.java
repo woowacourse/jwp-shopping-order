@@ -7,9 +7,9 @@ import shop.application.member.dto.MemberDto;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
 import shop.domain.coupon.CouponType;
-import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
+import shop.domain.member.Password;
 import shop.domain.repository.MemberRepository;
 import shop.exception.AuthenticationException;
 import shop.exception.ShoppingException;
@@ -42,10 +42,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private Member createMember(MemberJoinDto memberDto) {
-        String encryptedPassword = Encryptor.encrypt(memberDto.getPassword());
-
         MemberName name = new MemberName(memberDto.getName());
-        EncryptedPassword password = new EncryptedPassword(encryptedPassword);
+        Password password = Password.createFromNaturalPassword(memberDto.getPassword());
 
         return new Member(name, password);
     }

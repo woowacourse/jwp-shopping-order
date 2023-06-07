@@ -1,13 +1,5 @@
 package shop.integration;
 
-import shop.domain.member.Member;
-import shop.domain.member.MemberName;
-import shop.domain.member.NaturalPassword;
-import shop.domain.repository.MemberRepository;
-import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
-import shop.web.controller.cart.dto.CartItemRequest;
-import shop.application.cart.dto.CartDto;
-import shop.application.product.dto.ProductModificationDto;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import shop.application.cart.dto.CartDto;
+import shop.application.product.dto.ProductModificationDto;
+import shop.domain.member.Member;
+import shop.domain.member.MemberName;
+import shop.domain.member.Password;
+import shop.domain.repository.MemberRepository;
+import shop.web.controller.cart.dto.CartItemRequest;
+import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +61,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Member illegalMember = new Member(
                 member.getId(),
                 new MemberName(member.getName()),
-                new NaturalPassword(member.getPassword() + "asdf")
+                Password.createFromEncryptedPassword(member.getPassword() + "asdf")
         );
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);

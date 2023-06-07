@@ -1,9 +1,9 @@
 package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
-import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
+import shop.domain.member.Password;
 import shop.domain.repository.MemberRepository;
 import shop.persistence.dao.MemberDao;
 import shop.persistence.entity.MemberEntity;
@@ -53,7 +53,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         return new Member(
                 memberEntity.getId(),
                 new MemberName(memberEntity.getName()),
-                new EncryptedPassword(memberEntity.getPassword())
+                Password.createFromEncryptedPassword(memberEntity.getPassword())
         );
     }
 

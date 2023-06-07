@@ -2,9 +2,9 @@ package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
 import shop.domain.cart.CartItem;
-import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
+import shop.domain.member.Password;
 import shop.domain.product.Product;
 import shop.domain.repository.CartRepository;
 import shop.exception.DatabaseException;
@@ -68,7 +68,7 @@ public class CartRepositoryImpl implements CartRepository {
         return new Member(
                 cartItemDetail.getMemberId(),
                 new MemberName(cartItemDetail.getMemberName()),
-                new EncryptedPassword(cartItemDetail.getPassword())
+                Password.createFromEncryptedPassword(cartItemDetail.getPassword())
         );
     }
 
