@@ -5,6 +5,7 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.dto.response.OrderHistoryResponse;
 import cart.dto.response.OrderProductResponse;
+import cart.dto.response.OrderProductsResponse;
 import cart.exception.AccessNonAvailableMemberException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class OrderService {
 
         for (final Order order : orders) {
             final Long orderId = order.getId();
-            final int totalPrice = order.calculateTotalPrice();
+            final int totalPrice = order.calculateOrderPrice();
             final int totalAmount = order.countTotalAmount();
             final List<String> productNames = order.getProductNames();
             final OrderHistoryResponse response = OrderHistoryResponse.from(orderId, totalPrice, totalAmount, productNames);
@@ -43,7 +44,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderProductResponse> getOrderProductsOf(final Member member, final Long orderHistoryId) {
+    public OrderProductsResponse getOrderProductsOf(final Member member, final Long orderHistoryId) {
         if (!orderRepository.isAccessibleToOrder(member, orderHistoryId)) {
             throw new AccessNonAvailableMemberException("해당 주문 건의 사용자만 주문 건에 대한 상세조회에 접근할 수 있습니다!");
         }
@@ -62,6 +63,11 @@ public class OrderService {
             orderProductResponses.add(response);
         }
 
-        return orderProductResponses;
+        return new OrderProductsResponse(
+                orderProductResponses,
+                order.calculateOriginalPrice(),
+                order.getUsedPoint(),
+                order.calculateOrderPrice()
+        );
     }
 }

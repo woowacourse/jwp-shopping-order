@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.response.OrderHistoryResponse;
-import cart.dto.response.OrderProductResponse;
+import cart.dto.response.OrderProductsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +28,7 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderHistoryId}")
-    public ResponseEntity<List<OrderProductResponse>> getOrderProductByOrderId(Member member, @PathVariable Long orderHistoryId) {
+    public ResponseEntity<OrderProductsResponse> getOrderProductByOrderId(Member member, @PathVariable Long orderHistoryId) {
         return ResponseEntity.ok().body(orderService.getOrderProductsOf(member, orderHistoryId));
     }
 }

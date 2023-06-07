@@ -52,7 +52,7 @@ public class Order {
         return savedPoint - usedPoint;
     }
 
-    public int calculateTotalPrice() {
+    public int calculateOrderPrice() {
         return calculateOriginalPrice() - usedPoint;
     }
 

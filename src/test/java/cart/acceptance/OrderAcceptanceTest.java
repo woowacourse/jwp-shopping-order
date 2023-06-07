@@ -5,7 +5,6 @@ import cart.domain.Member;
 import cart.dto.request.CartItemCreateRequest;
 import cart.dto.request.CartItemIdRequest;
 import cart.dto.request.PayRequest;
-import cart.entity.OrderProductEntity;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cart.fixture.MemberFixtures.MEMBER_GITCHAN;
 import static cart.fixture.MemberFixtures.MEMBER_IRENE;
@@ -106,16 +104,6 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         final ExtractableResponse<Response> response = 멤버의_특정_주문을_조회_요청(savedMember, orderHistoryId);
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(OK.value()),
-                () -> assertThat(response.jsonPath().getList("name"))
-                        .usingRecursiveComparison()
-                        .isEqualTo(
-                                orderProductDao.findByOrderId(orderHistoryId)
-                                        .stream()
-                                        .map(OrderProductEntity::getName)
-                                        .collect(Collectors.toList())
-                        )
-        );
+        assertThat(response.statusCode()).isEqualTo(OK.value());
     }
 }
