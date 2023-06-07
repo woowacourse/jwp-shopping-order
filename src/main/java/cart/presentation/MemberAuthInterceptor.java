@@ -2,6 +2,7 @@ package cart.presentation;
 
 import cart.exception.application.AuthenticationException;
 import cart.application.service.MemberService;
+import cart.exception.presentation.AuthorizationHeaderNotValidException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -38,14 +39,14 @@ public class MemberAuthInterceptor implements HandlerInterceptor {
 
     private void validateNotNull(String authorization) {
         if (Objects.isNull(authorization)) {
-            throw new AuthenticationException();
+            throw new AuthorizationHeaderNotValidException();
         }
     }
 
     private void validateIsBasicEncoded(String authorization) {
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException();
+            throw new AuthorizationHeaderNotValidException();
         }
     }
 
