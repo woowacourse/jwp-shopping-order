@@ -21,7 +21,9 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(final Long productId) {
