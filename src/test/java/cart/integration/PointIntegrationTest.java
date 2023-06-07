@@ -1,13 +1,11 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.ProductOrderRequest;
 import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

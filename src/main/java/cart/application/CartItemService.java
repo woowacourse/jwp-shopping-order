@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;

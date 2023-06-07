@@ -1,6 +1,5 @@
 package cart;
 
-import cart.dao.MemberDao;
 import cart.domain.*;
 import cart.repository.MemberRepository;
 import cart.ui.MemberArgumentResolver;
