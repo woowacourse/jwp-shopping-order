@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+    private static final int INITIAL_CART_ITEM_QUANTITY = 1;
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -33,11 +35,7 @@ public class CartItemService {
     public Long add(Member member, CartItemCreateRequest cartItemCreateRequest) {
         Product product = productDao.findById(cartItemCreateRequest.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException("해당 상품을 찾을 수 없습니다."));
-        CartItem cartItem = CartItem.builder()
-                .member(member)
-                .product(product)
-                .quantity(1)
-                .build();
+        CartItem cartItem = new CartItem(null, INITIAL_CART_ITEM_QUANTITY, product, member);
         return cartItemDao.save(cartItem);
     }
 

@@ -25,11 +25,7 @@ public class CartItemDao {
         long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
         long point = rs.getLong("point");
-        Member member = Member.builder()
-                .id(memberId)
-                .email(email)
-                .point(point)
-                .build();
+        Member member = new Member(memberId, email, null, point);
 
         Long cartItemId = rs.getLong("ci_id");
         int quantity = rs.getInt("quantity");

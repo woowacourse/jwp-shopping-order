@@ -16,10 +16,6 @@ public class Member {
         this.point = new Point(point);
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public void increasePoint(Point point) {
         this.point = this.point.plus(point);
     }
@@ -70,40 +66,5 @@ public class Member {
 
     public Point getPoint() {
         return point;
-    }
-
-
-    public static final class Builder {
-        private Long id;
-        private String email;
-        private String password;
-        private long point;
-
-        public Builder() {
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder point(long point) {
-            this.point = point;
-            return this;
-        }
-
-        public Member build() {
-            return new Member(id, email, password, point);
-        }
     }
 }
