@@ -120,7 +120,7 @@ class OrderServiceImplTest extends ServiceTest {
         List<OrderDto> allOrders = orderService.getAllOrderHistoryOfMember(findMember);
 
         assertThat(allOrders.size()).isEqualTo(2);
-        assertThat(allOrders).extracting("orderItems").extractingResultOf("product")
+        assertThat(allOrders).extracting("orderItems").extracting("product")
                 .extractingResultOf("getName")
                 .containsExactlyInAnyOrder("피자", "치킨", "피자", "치킨");
     }
