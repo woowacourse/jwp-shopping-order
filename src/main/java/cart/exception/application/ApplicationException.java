@@ -1,8 +1,14 @@
 package cart.exception.application;
 
-public class ApplicationException extends RuntimeException {
+import cart.exception.ExpectedException;
+
+public class ApplicationException extends ExpectedException {
 
     public ApplicationException(String message) {
         super(message);
+    }
+
+    public ApplicationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
