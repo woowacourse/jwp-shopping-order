@@ -24,11 +24,11 @@ public class OrderItemDao {
     }
 
     public List<OrderItemDto> findByCartOrderId(final Long cartOrderId) {
-        final String sql = "SELECT order_item.id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, cart_order.total_price, cart_order.created_at, member.id, member.email, member.cash " +
+        final String sql = "SELECT order_item.id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, order_history.total_price, order_history.created_at, member.id, member.email, member.cash " +
                 "FROM order_item " +
-                "INNER JOIN cart_order ON order_item.cart_order_id = cart_order.id " +
-                "INNER JOIN member ON cart_order.member_id = member.id " +
-                "WHERE order_item.cart_order_id = ?";
+                "INNER JOIN order_history ON order_item.order_history_id = order_history.id " +
+                "INNER JOIN member ON order_history.member_id = member.id " +
+                "WHERE order_item.order_history_id = ?";
         return jdbcTemplate.query(sql, new Object[]{cartOrderId}, (rs, rowNum) -> {
             Long orderItemId = rs.getLong("order_item.id");
             Long productId = rs.getLong("order_item.product_id");
@@ -36,8 +36,8 @@ public class OrderItemDao {
             int orderItemPrice = rs.getInt("order_item.price");
             String orderItemUrl = rs.getString("order_item.image_url");
             int orderItemQuantity = rs.getInt("order_item.quantity");
-            Long cartOrderTotalPrice = rs.getLong("cart_order.total_price");
-            LocalDateTime cartOrderCreated = rs.getTimestamp("cart_order.created_at").toLocalDateTime();
+            Long cartOrderTotalPrice = rs.getLong("order_history.total_price");
+            LocalDateTime cartOrderCreated = rs.getTimestamp("order_history.created_at").toLocalDateTime();
             Long memberId = rs.getLong("member.id");
             String memberEmail = rs.getString("member.email");
             Long memberCash = rs.getLong("member.cash");
@@ -52,7 +52,7 @@ public class OrderItemDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO order_item (cart_order_id, product_id, name, price, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO order_item (order_history_id, product_id, name, price, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 

@@ -21,20 +21,20 @@ public class CartOrderDao {
     public CartOrderDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(dataSource)
-                .withTableName("cart_order")
+                .withTableName("order_history")
                 .usingGeneratedKeyColumns("id");
     }
 
     public List<CartOrder> findByMemberId(final Long memberId) {
-        final String sql = "SELECT cart_order.id, cart_order.total_price, cart_order.created_at, member.email, member.cash " +
-                "FROM cart_order " +
-                "INNER JOIN member ON cart_order.member_id = member.id " +
+        final String sql = "SELECT order_history.id, order_history.total_price, order_history.created_at, member.email, member.cash " +
+                "FROM order_history " +
+                "INNER JOIN member ON order_history.member_id = member.id " +
                 "WHERE member.id = ? " +
-                "ORDER BY cart_order.id DESC";
+                "ORDER BY order_history.id DESC";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            Long cartOrderId = rs.getLong("cart_order.id");
-            Long totalPrice = rs.getLong("cart_order.total_price");
-            LocalDateTime created = rs.getTimestamp("cart_order.created_at").toLocalDateTime();
+            Long cartOrderId = rs.getLong("order_history.id");
+            Long totalPrice = rs.getLong("order_history.total_price");
+            LocalDateTime created = rs.getTimestamp("order_history.created_at").toLocalDateTime();
             String email = rs.getString("member.email");
             Long cash = rs.getLong("member.cash");
             Member member = Member.of(memberId, email, null, cash);
@@ -43,13 +43,13 @@ public class CartOrderDao {
     }
 
     public CartOrder findById(final Long cartOrderId) {
-        final String sql = "SELECT cart_order.total_price, cart_order.created_at, member.id, member.email, member.cash " +
-                "FROM cart_order " +
-                "INNER JOIN member ON cart_order.member_id = member.id " +
-                "WHERE cart_order.id = ?";
+        final String sql = "SELECT order_history.total_price, order_history.created_at, member.id, member.email, member.cash " +
+                "FROM order_history " +
+                "INNER JOIN member ON order_history.member_id = member.id " +
+                "WHERE order_history.id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{cartOrderId}, (rs, rowNum) -> {
-            Long totalPrice = rs.getLong("cart_order.total_price");
-            LocalDateTime created = rs.getTimestamp("cart_order.created_at").toLocalDateTime();
+            Long totalPrice = rs.getLong("order_history.total_price");
+            LocalDateTime created = rs.getTimestamp("order_history.created_at").toLocalDateTime();
             Long memberId = rs.getLong("member.id");
             String email = rs.getString("member.email");
             Long cash = rs.getLong("member.cash");
