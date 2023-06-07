@@ -1,16 +1,15 @@
 package cart.dao;
 
 import cart.entity.OrderItemEntity;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Repository;
 public class OrderItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert insertAction;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) -> new OrderItemEntity(
             rs.getLong("id"),
@@ -39,12 +37,17 @@ public class OrderItemDao {
     }
 
     public void batchInsert(final List<OrderItemEntity> orderItems) {
-        final SqlParameterSource[] array = orderItems.stream()
-                .map(BeanPropertySqlParameterSource::new)
-                .collect(Collectors.toList())
-                .toArray(new SqlParameterSource[orderItems.size()]);
+        String sql = "INSERT INTO order_item (order_id, product_id, quantity, price_at_order) values (?, ?, ?, ?)";
 
-        insertAction.executeBatch(array);
+        jdbcTemplate.batchUpdate(sql,
+                orderItems,
+                orderItems.size(),
+                (PreparedStatement ps, OrderItemEntity entity) -> {
+                    ps.setLong(1, entity.getOrderId());
+                    ps.setLong(2, entity.getProductId());
+                    ps.setInt(3, entity.getQuantity());
+                    ps.setLong(4, entity.getPriceAtOrder());
+                });
     }
 
     public List<OrderItemEntity> findByOrderId(final Long orderId) {
