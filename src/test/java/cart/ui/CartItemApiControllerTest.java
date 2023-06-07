@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static cart.fixture.ProductFixture.계란;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -27,9 +28,8 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     private static final String DOCUMENT_IDENTIFIER = "{method-name}";
 
     Product 상품_계란_등록() {
-        final Product product = new Product("계란", 1000, "https://계란_이미지_주소.png");
-        final Long 상품_계란_식별자값 = productRepository.createProduct(product);
-        return new Product(상품_계란_식별자값, product.getName(), product.getPrice(), product.getImageUrl());
+        final Long 상품_계란_식별자값 = productRepository.createProduct(계란);
+        return new Product(상품_계란_식별자값, 계란.getName(), 계란.getPrice(), 계란.getImageUrl());
     }
 
     Member 회원_등록() {

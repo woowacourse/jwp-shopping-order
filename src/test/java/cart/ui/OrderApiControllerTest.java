@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static cart.fixture.ProductFixture.계란;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -26,10 +27,13 @@ public class OrderApiControllerTest extends ControllerTestConfig {
     private static final String DOCUMENT_IDENTIFIER = "{method-name}";
     private static final int 배달비 = 3_000;
 
+    private Member member;
+    private CartItem cartItem1;
+    private CartItem cartItem2;
+
     Product 상품_계란_등록() {
-        final Product product = new Product("계란", 1000, "https://계란_이미지_주소.png");
-        final Long 상품_계란_식별자값 = productRepository.createProduct(product);
-        return new Product(상품_계란_식별자값, product.getName(), product.getPrice(), product.getImageUrl());
+        final Long 상품_계란_식별자값 = productRepository.createProduct(계란);
+        return new Product(상품_계란_식별자값, 계란.getName(), 계란.getPrice(), 계란.getImageUrl());
     }
 
     Member 회원_등록() {
@@ -42,10 +46,6 @@ public class OrderApiControllerTest extends ControllerTestConfig {
         final Long 장바구니_상품_식별자값 = cartItemDao.save(new CartItem(회원, 상품));
         return new CartItem(장바구니_상품_식별자값, 1, 상품, 회원);
     }
-
-    private Member member;
-    private CartItem cartItem1;
-    private CartItem cartItem2;
 
     @BeforeEach
     void setUp() {

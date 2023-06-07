@@ -1,11 +1,11 @@
 package cart.ui;
 
 import cart.config.ControllerTestConfig;
-import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import static cart.fixture.ProductFixture.계란;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -14,7 +14,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 class ProductApiControllerTest extends ControllerTestConfig {
 
     Long 상품_계란_등록() {
-        return productRepository.createProduct(new Product("계란", 1000, "https://계란_이미지_주소.png"));
+        return productRepository.createProduct(계란);
     }
 
     @Test

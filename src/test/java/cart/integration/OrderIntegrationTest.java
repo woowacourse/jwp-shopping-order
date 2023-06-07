@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -30,9 +29,6 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 public class OrderIntegrationTest extends IntegrationTest {
 
     private static final int DELIVERY_FEE = 3_000;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private CartItemRepository cartItemRepository;
