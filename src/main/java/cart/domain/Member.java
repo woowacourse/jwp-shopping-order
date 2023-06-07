@@ -1,14 +1,53 @@
 package cart.domain;
 
-public class Member {
-    private Long id;
-    private String email;
-    private String password;
+import java.util.Objects;
 
-    public Member(Long id, String email, String password) {
+public class Member {
+
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final Point point;
+
+    public Member(final Long id, final String email, final String password, final Point point) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.point = point;
+    }
+
+    public Member(final Long id, final String email, final String password) {
+        this(id, email, password, new Point(Point.DEFAULT_VALUE));
+    }
+
+    public Member(final String email, final String password, final Point point) {
+        this(null, email, password, point);
+    }
+
+    public Member(final Long id, final String email, final String password, final int point) {
+        this(id, email, password, new Point(point));
+    }
+
+    public Member(final String email, final String password) {
+        this(null, email, password);
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
+
+    public Member savePoint(final int totalProductPrice) {
+        Point newPoint = point.calculatePointBy(totalProductPrice);
+
+        return new Member(id, email, password, point.add(newPoint));
+    }
+
+    public Member usePoint(final Point usePoint) {
+        point.validateUsePoint(usePoint);
+
+        Point newPoint = point.subtract(usePoint);
+
+        return new Member(id, email, password, newPoint);
     }
 
     public Long getId() {
@@ -23,7 +62,24 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public Point getPoint() {
+        return point;
+    }
+
+    public int getPointValue() {
+        return point.getValue();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id) && Objects.equals(email, member.email) && Objects.equals(password, member.password) && Objects.equals(point, member.point);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, point);
     }
 }
