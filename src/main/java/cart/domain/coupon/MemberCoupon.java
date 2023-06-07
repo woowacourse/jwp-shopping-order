@@ -60,6 +60,10 @@ public class MemberCoupon {
         }
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
     public Long getCouponId() {
         return coupon.getId();
     }

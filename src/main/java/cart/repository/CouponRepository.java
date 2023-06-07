@@ -57,6 +57,12 @@ public class CouponRepository {
         return entityToDomain(entity);
     }
 
+    public List<Coupon> findByIds(final List<Long> ids) {
+        return couponDao.findByIds(ids).stream()
+                .map(this::entityToDomain)
+                .collect(Collectors.toList());
+    }
+
     public void delete(Coupon coupon) {
         couponDao.delete(domainToEntity(coupon));
     }

@@ -3,97 +3,77 @@ package cart.repository;
 import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.domain.discountpolicy.DiscountPolicy;
-import cart.domain.discountpolicy.DiscountPolicyProvider;
-import cart.domain.discountpolicy.DiscountType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import cart.persistance.dao.MemberCouponDao;
+import cart.persistance.entity.MemberCouponEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class MemberCouponRepository {
 
-    private static final String SELECT_MEMBER_COUPON_SQL = "SELECT member_coupon.id, member_coupon.is_used, member.id, coupon.id, coupon.coupon_name, coupon.discount_type, coupon.discount_value " +
-            "FROM member_coupon " +
-            "INNER JOIN member ON member_coupon.coupon_id = coupon.id " +
-            "INNER JOIN coupon ON member_coupon.member_id = member.id ";
-    private static final String WHERE_MEMBER_ID = "WHERE member_coupon.member_id = ? ";
-    private static final String WHERE_MEMBER_COUPON_ID = "WHERE member_coupon.id = ? ";
-    private static final String WHERE_IN_IDS = "WHERE member_coupon.id IN (:ids) ";
-    private static final String FOR_UPDATE = "FOR UPDATE ";
+    private final CouponRepository couponRepository;
+    private final MemberCouponDao memberCouponDao;
 
-    private final DiscountPolicyProvider discountPolicyProvider;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    public MemberCouponRepository(DiscountPolicyProvider discountPolicyProvider, JdbcTemplate jdbcTemplate) {
-        this.discountPolicyProvider = discountPolicyProvider;
-        this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("member_coupon")
-                .usingGeneratedKeyColumns("id");
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    public MemberCouponRepository(
+            CouponRepository couponRepository,
+            MemberCouponDao memberCouponDao
+    ) {
+        this.couponRepository = couponRepository;
+        this.memberCouponDao = memberCouponDao;
     }
 
     public Long insert(Member member, Coupon coupon) {
-        SqlParameterSource source = new MapSqlParameterSource()
-                .addValue("is_used", false)
-                .addValue("member_id", member.getId())
-                .addValue("coupon_id", coupon.getId());
-
-        return jdbcInsert.executeAndReturnKey(source).longValue();
+        return memberCouponDao.insert(new MemberCouponEntity(false, member.getId(), coupon.getId()));
     }
 
     public List<MemberCoupon> findAllByMemberId(Long memberId) {
-        String sql = SELECT_MEMBER_COUPON_SQL + WHERE_MEMBER_ID;
-        return jdbcTemplate.query(sql, getMemberCouponRowMapper(), memberId);
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllByMemberId(memberId);
+        return entitiesToDomains(memberCouponEntities);
     }
 
-    private RowMapper<MemberCoupon> getMemberCouponRowMapper() {
-        return (rs, rowNum) -> {
-            String typeName = rs.getString("discount_type");
-            DiscountPolicy discountPolicy = discountPolicyProvider.getByType(DiscountType.valueOf(typeName));
-            Coupon coupon = new Coupon(
-                    rs.getLong("coupon.id"),
-                    rs.getString("coupon_name"),
-                    discountPolicy,
-                    rs.getDouble("discount_value")
-            );
-            return new MemberCoupon(
-                    rs.getLong("member_coupon.id"),
-                    rs.getLong("member.id"),
-                    coupon,
-                    rs.getBoolean("is_used")
-            );
-        };
+    private List<MemberCoupon> entitiesToDomains(final List<MemberCouponEntity> memberCouponEntities) {
+        List<Long> couponIds = memberCouponEntities.stream()
+                .map(MemberCouponEntity::getCouponId)
+                .collect(Collectors.toList());
+        List<Coupon> coupons = couponRepository.findByIds(couponIds);
+
+        return combineMemberCouponEntitiesAndCoupons(memberCouponEntities, coupons);
+    }
+
+    private List<MemberCoupon> combineMemberCouponEntitiesAndCoupons(List<MemberCouponEntity> entities, List<Coupon> coupons) {
+        List<MemberCoupon> memberCoupons = new ArrayList<>();
+        for (int index = 0; index < entities.size(); index++) {
+            MemberCouponEntity memberCouponEntity = entities.get(index);
+            Coupon coupon = coupons.get(index);
+            memberCoupons.add(combineMemberCouponEntityAndCoupon(memberCouponEntity, coupon));
+        }
+        return memberCoupons;
+    }
+
+    private MemberCoupon combineMemberCouponEntityAndCoupon(MemberCouponEntity entity, Coupon coupon) {
+        return new MemberCoupon(entity.getId(), entity.getMemberId(), coupon, entity.getUsed());
     }
 
     public MemberCoupon findByIdForUpdate(Long id) {
-        String sql = SELECT_MEMBER_COUPON_SQL + WHERE_MEMBER_COUPON_ID + FOR_UPDATE;
-        return jdbcTemplate.queryForObject(sql, getMemberCouponRowMapper(), id);
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findByIdForUpdate(id);
+        Coupon coupon = couponRepository.findById(memberCouponEntity.getCouponId());
+        return combineMemberCouponEntityAndCoupon(memberCouponEntity, coupon);
     }
 
     public List<MemberCoupon> findAllByIdForUpdate(List<Long> memberCouponIds) {
-        String sql = SELECT_MEMBER_COUPON_SQL + WHERE_IN_IDS + FOR_UPDATE;
-        SqlParameterSource sources = new MapSqlParameterSource("ids", memberCouponIds);
-        return namedParameterJdbcTemplate.query(sql, sources, getMemberCouponRowMapper());
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllByIdForUpdate(memberCouponIds);
+        return entitiesToDomains(memberCouponEntities);
     }
 
     public void updateCouponStatus(MemberCoupon memberCoupon) {
-        String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ? ";
-        jdbcTemplate.update(sql, memberCoupon.isUsed(), memberCoupon.getId());
+        memberCouponDao.updateCouponStatus(MemberCouponEntity.of(memberCoupon));
     }
 
     public List<MemberCoupon> findAllById(List<Long> memberCouponIds) {
-        String sql = SELECT_MEMBER_COUPON_SQL + WHERE_IN_IDS;
-        SqlParameterSource sources = new MapSqlParameterSource("ids", memberCouponIds);
-        return namedParameterJdbcTemplate.query(sql, sources, getMemberCouponRowMapper());
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllById(memberCouponIds);
+        return entitiesToDomains(memberCouponEntities);
     }
 }

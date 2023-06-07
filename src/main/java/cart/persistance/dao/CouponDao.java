@@ -4,6 +4,7 @@ import cart.persistance.entity.CouponEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
@@ -23,12 +24,14 @@ public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert couponInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.couponInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public Long insert(CouponEntity coupon) {
@@ -48,6 +51,12 @@ public class CouponDao {
     public CouponEntity findById(Long id) {
         String sql = "select id, coupon_name, discount_type, discount_value from coupon where id = ?";
         return jdbcTemplate.queryForObject(sql, COUPON_ROW_MAPPER, id);
+    }
+
+    public List<CouponEntity> findByIds(final List<Long> ids) {
+        String sql = "SELECT id, coupon_name, discount_type, discount_value FROM coupon WHERE id IN (:ids) ";
+        SqlParameterSource sources = new MapSqlParameterSource("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, sources, COUPON_ROW_MAPPER);
     }
 
     public void delete(CouponEntity coupon) {
