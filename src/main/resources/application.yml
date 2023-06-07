@@ -3,3 +3,31 @@ spring:
     cache: false
   profiles:
     active: prod
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: classpath:/jwp-shopping-order-secure/application-prod.yml
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+  sql:
+    init:
+      mode: always
+security:
+  jwt:
+    token:
+      secret-key: test
+      expire-length: 3600000
+      server-info: test
+

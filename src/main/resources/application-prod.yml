@@ -1,3 +1,0 @@
-spring:
-  config:
-    import: classpath:/jwp-shopping-order-secure/application-prod.yml
