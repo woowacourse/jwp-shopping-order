@@ -1,7 +1,7 @@
 package cart.presentation;
 
-import cart.exception.AuthenticationException;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -37,7 +37,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         validateAuthType(authHeader[AUTH_TYPE_INDEX]);
 
         String[] credentials = encode(authHeader[AUTH_VALUE_INDEX]);
-        
+
         Member member = memberRepository.findByEmail(credentials[EMAIL_INDEX]);
         validatePassword(member, credentials[PASSWORD_INDEX]);
 

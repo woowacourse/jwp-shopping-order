@@ -3,16 +3,19 @@ package cart.repository;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.MemberEntity;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@AllArgsConstructor
 public class MemberRepository {
 
     private final MemberDao memberDao;
+
+    public MemberRepository(MemberDao memberDao) {
+        this.memberDao = memberDao;
+    }
 
     public long save(final Member member) {
         MemberEntity memberEntity = new MemberEntity(member.getEmail(), member.getPassword(), member.getPointValue());

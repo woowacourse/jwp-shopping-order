@@ -1,11 +1,7 @@
 package cart.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import java.util.Objects;
 
-@AllArgsConstructor
-@Getter
 public class CartItemEntity {
 
     private final Long id;
@@ -13,8 +9,31 @@ public class CartItemEntity {
     private final Long productId;
     private final int quantity;
 
+    public CartItemEntity(final Long id, final Long memberId, final Long productId, final int quantity) {
+        this.id = id;
+        this.memberId = memberId;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
+
     public CartItemEntity(final Long memberId, final Long productId, final int quantity) {
         this(null, memberId, productId, quantity);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     @Override

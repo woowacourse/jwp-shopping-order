@@ -1,14 +1,9 @@
 package cart.domain;
 
 import cart.exception.IllegalAccessCartException;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+
 import java.util.Objects;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 public class CartItem {
 
     private final Long id;
@@ -16,8 +11,11 @@ public class CartItem {
     private final Product product;
     private final Quantity quantity;
 
-    public CartItem(final Member member, final Product product, final Quantity quantity) {
-        this(null, member, product, quantity);
+    public CartItem(final Long id, final Member member, final Product product, final Quantity quantity) {
+        this.id = id;
+        this.member = member;
+        this.product = product;
+        this.quantity = quantity;
     }
 
     public CartItem(final Member member, final Product product) {
@@ -36,5 +34,34 @@ public class CartItem {
 
     public int getQuantityValue() {
         return quantity.getValue();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id) && Objects.equals(member, cartItem.member) && Objects.equals(product, cartItem.product) && Objects.equals(quantity, cartItem.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, member, product, quantity);
     }
 }

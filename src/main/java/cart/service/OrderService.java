@@ -1,36 +1,30 @@
 package cart.service;
 
-import static cart.domain.Point.validateUsablePoint;
-import static java.util.stream.Collectors.toList;
-
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.OrderEntity;
-import cart.domain.OrderItemEntity;
-import cart.domain.Point;
-import cart.domain.Product;
+import cart.domain.*;
 import cart.dto.request.CartItemInfoRequest;
-import cart.dto.response.OrderItemResponse;
 import cart.dto.request.OrderRequest;
-import cart.dto.response.OrderResponse;
 import cart.dto.request.ProductInfoRequest;
+import cart.dto.response.OrderItemResponse;
+import cart.dto.response.OrderResponse;
 import cart.exception.MismatchedTotalPriceException;
 import cart.exception.MismatchedTotalProductPriceException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.util.CurrentTimeUtil;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static cart.domain.Point.validateUsablePoint;
+import static java.util.stream.Collectors.toList;
+
 @Service
 @Transactional
-@AllArgsConstructor
 public class OrderService {
 
     private final MemberRepository memberRepository;
@@ -38,6 +32,14 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
+
+    public OrderService(MemberRepository memberRepository, ProductDao productDao, CartItemRepository cartItemRepository, OrderDao orderDao, OrderItemDao orderItemDao) {
+        this.memberRepository = memberRepository;
+        this.productDao = productDao;
+        this.cartItemRepository = cartItemRepository;
+        this.orderDao = orderDao;
+        this.orderItemDao = orderItemDao;
+    }
 
     public long order(final Member member, final OrderRequest orderRequest) {
         List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();

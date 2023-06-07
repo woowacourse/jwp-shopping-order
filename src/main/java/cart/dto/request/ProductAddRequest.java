@@ -1,10 +1,5 @@
 package cart.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public class ProductAddRequest {
 
     private final String name;
@@ -14,5 +9,28 @@ public class ProductAddRequest {
 
     private ProductAddRequest() {
         this(null, null, null, null);
+    }
+
+    public ProductAddRequest(String name, Integer price, String imageUrl, Integer stock) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.stock = stock;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Integer getStock() {
+        return stock;
     }
 }

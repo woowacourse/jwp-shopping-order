@@ -1,11 +1,7 @@
 package cart.domain;
 
 import java.util.Objects;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
 public class OrderEntity {
 
     private final Long id;
@@ -17,6 +13,24 @@ public class OrderEntity {
     private final int totalPrice;
 
     public OrderEntity(
+            final Long id,
+            final String createdAt,
+            final Long memberId,
+            final int totalProductPrice,
+            final int totalDeliveryFee,
+            final int usePoint,
+            final int totalPrice
+    ) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.memberId = memberId;
+        this.totalProductPrice = totalProductPrice;
+        this.totalDeliveryFee = totalDeliveryFee;
+        this.usePoint = usePoint;
+        this.totalPrice = totalPrice;
+    }
+
+    public OrderEntity(
             final String createdAt,
             final Long memberId,
             final int totalProductPrice,
@@ -25,6 +39,34 @@ public class OrderEntity {
             final int totalPrice
     ) {
         this(null, createdAt, memberId, totalProductPrice, totalDeliveryFee, usePoint, totalPrice);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public int getTotalProductPrice() {
+        return totalProductPrice;
+    }
+
+    public int getTotalDeliveryFee() {
+        return totalDeliveryFee;
+    }
+
+    public int getUsePoint() {
+        return usePoint;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
     }
 
     @Override

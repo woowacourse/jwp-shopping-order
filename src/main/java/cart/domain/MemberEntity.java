@@ -1,11 +1,7 @@
 package cart.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import java.util.Objects;
 
-@AllArgsConstructor
-@Getter
 public class MemberEntity {
 
     private final Long id;
@@ -13,8 +9,31 @@ public class MemberEntity {
     private final String password;
     private final int point;
 
+    public MemberEntity(final Long id, final String email, final String password, final int point) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
     public MemberEntity(final String email, final String password, final int point) {
         this(null, email, password, point);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     @Override

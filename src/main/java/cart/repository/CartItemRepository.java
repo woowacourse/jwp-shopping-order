@@ -2,23 +2,24 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.CartItemEntity;
-import cart.domain.Member;
-import cart.domain.Product;
-import cart.domain.Quantity;
-import lombok.AllArgsConstructor;
+import cart.domain.*;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@AllArgsConstructor
 public class CartItemRepository {
 
     private final MemberRepository memberRepository;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+
+    public CartItemRepository(MemberRepository memberRepository, ProductDao productDao, CartItemDao cartItemDao) {
+        this.memberRepository = memberRepository;
+        this.productDao = productDao;
+        this.cartItemDao = cartItemDao;
+    }
 
     public Long save(final CartItem cartItem) {
         CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getMember().getId(), cartItem.getProduct().getId(), cartItem.getQuantityValue());

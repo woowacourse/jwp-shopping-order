@@ -5,21 +5,25 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.Quantity;
-import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemAddRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.response.CartItemResponse;
 import cart.repository.CartItemRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class CartItemService {
 
     private final ProductDao productDao;
     private final CartItemRepository cartItemRepository;
+
+    public CartItemService(ProductDao productDao, CartItemRepository cartItemRepository) {
+        this.productDao = productDao;
+        this.cartItemRepository = cartItemRepository;
+    }
 
     public Long add(final Member member, final CartItemAddRequest cartItemAddRequest) {
         Product product = productDao.findById(cartItemAddRequest.getProductId());

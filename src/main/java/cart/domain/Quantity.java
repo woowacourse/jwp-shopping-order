@@ -1,10 +1,7 @@
 package cart.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import java.util.Objects;
 
-@Getter
-@EqualsAndHashCode
 public class Quantity {
 
     public static final int DEFAULT_VALUE = 1;
@@ -20,5 +17,22 @@ public class Quantity {
         if (value < 0) {
             throw new IllegalArgumentException("수량은 음수가 될 수 없습니다.");
         }
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quantity quantity = (Quantity) o;
+        return value == quantity.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

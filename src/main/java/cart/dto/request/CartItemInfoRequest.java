@@ -1,10 +1,5 @@
 package cart.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
-@Getter
 public class CartItemInfoRequest {
 
     private final Long cartItemId;
@@ -13,5 +8,23 @@ public class CartItemInfoRequest {
 
     private CartItemInfoRequest() {
         this(null, null, null);
+    }
+
+    public CartItemInfoRequest(Long cartItemId, Integer quantity, ProductInfoRequest product) {
+        this.cartItemId = cartItemId;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    public Long getCartItemId() {
+        return cartItemId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public ProductInfoRequest getProduct() {
+        return product;
     }
 }

@@ -1,11 +1,9 @@
 package cart.domain;
 
 import cart.exception.IllegalUsePointException;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
-@Getter
-@EqualsAndHashCode
+import java.util.Objects;
+
 public class Point {
 
     public static final int DEFAULT_VALUE = 0;
@@ -49,5 +47,22 @@ public class Point {
 
     public Point subtract(final Point other) {
         return new Point(this.value - other.value);
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return value == point.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
