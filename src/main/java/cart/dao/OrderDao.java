@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.*;
 import cart.dto.OrderDto;
+import cart.exception.OrderNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -56,27 +57,34 @@ public class OrderDao {
         return orderId;
     }
 
-    public OrderDto findById(Long orderId) {
+    public OrderDto findById(Long orderId) throws OrderNotFoundException {
         String sql = "SELECT order_item.orders_id, order_item.member_id, member.email, order_item.product_name, " +
                 "order_item.price, order_item.image_url, order_item.quantity " +
                 "FROM order_item " +
                 "INNER JOIN member ON order_item.member_id = member.id " +
                 "WHERE order_item.orders_id = ?";
 
-        List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            String productName = rs.getString("product_name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            int quantity = rs.getInt("quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(null, productName, price, imageUrl);
-            return new CartItem(null, quantity, product, member);
-        }, orderId);
-
         String queryOrder = "select orders.price from orders where id = ?";
-        Integer price = jdbcTemplate.queryForObject(queryOrder, Integer.class, orderId);
+
+        List<CartItem> cartItems = new ArrayList<>();
+        Integer price = 0;
+        try {
+             cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
+                Long memberId = rs.getLong("member_id");
+                String email = rs.getString("email");
+                String productName = rs.getString("product_name");
+                int itemPrice = rs.getInt("price");
+                String imageUrl = rs.getString("image_url");
+                int quantity = rs.getInt("quantity");
+                Member member = new Member(memberId, email, null);
+                Product product = new Product(null, productName, itemPrice, imageUrl);
+                return new CartItem(null, quantity, product, member);
+            }, orderId);
+
+            price = jdbcTemplate.queryForObject(queryOrder, Integer.class, orderId);
+        } catch (Exception e) {
+            throw new OrderNotFoundException("해당 주문 id를 찾을 수 없습니다.");
+        }
 
         return new OrderDto(orderId, cartItems, price);
     }

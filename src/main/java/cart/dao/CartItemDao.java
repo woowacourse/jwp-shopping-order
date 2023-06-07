@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.exception.CartItemException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -11,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -120,7 +122,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteByIds(List<Long> cartItemIds) {
+    public void deleteByIds(List<Long> cartItemIds) throws CartItemException {
         String sql = "UPDATE cart_item SET deleted = true WHERE id = ?;";
         List<Object[]> deleteIds = new ArrayList<>();
 
@@ -128,12 +130,20 @@ public class CartItemDao {
             deleteIds.add(new Object[]{id});
         }
 
-        jdbcTemplate.batchUpdate(sql, deleteIds);
+        int[] ints = jdbcTemplate.batchUpdate(sql, deleteIds);
+
+        boolean hasZero = Arrays.stream(ints).anyMatch(i -> i == 0);
+        if (hasZero) {
+            throw new CartItemException.NotFoundException("장바구니 상품을 찾을 수 없어 삭제가 실패했습니다.");
+        }
     }
 
-    public void updateQuantity(CartItem cartItem) {
+    public void updateQuantity(CartItem cartItem) throws CartItemException {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        int updated = jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        if (updated < 1) {
+            throw new CartItemException.NotFoundException("해당 장바구니 상품을 찾을 수 없어 수량을 변경할 수 없습니다.");
+        }
     }
 
 }
