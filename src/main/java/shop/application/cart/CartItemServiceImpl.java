@@ -8,6 +8,7 @@ import shop.domain.member.Member;
 import shop.domain.product.Product;
 import shop.domain.repository.CartRepository;
 import shop.domain.repository.ProductRepository;
+import shop.exception.ShoppingException;
 
 import java.util.List;
 
@@ -65,8 +66,14 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void removeItems(Member member, List<Long> ids) {
         List<CartItem> cartItems = cartRepository.findAllByMemberId(member.getId());
-        cartItems.forEach(item -> item.checkOwner(member));
+        boolean isMemberCartItems = cartItems.stream()
+                .allMatch(cartItem -> ids.contains(cartItem.getId()));
 
-        cartRepository.deleteByIds(ids);
+        if (isMemberCartItems) {
+            cartRepository.deleteByIds(ids);
+        }
+
+        throw new ShoppingException.IllegalAccessException("접근 권한이 없는 장바구니 상품이 존재합니다." +
+                "장바구니 상품 ID : " + ids + " 회원 ID : " + member.getId());
     }
 }
