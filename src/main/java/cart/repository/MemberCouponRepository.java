@@ -58,7 +58,7 @@ public class MemberCouponRepository {
         List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllByMemberId(member.getId());
         return memberCouponEntities.stream()
                 .map(this::toDomain)
-                .filter(MemberCoupon::isNotExpired)
+                .filter(memberCoupon -> !memberCoupon.isExpired())
                 .collect(Collectors.toList());
     }
 

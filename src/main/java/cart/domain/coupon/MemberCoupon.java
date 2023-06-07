@@ -41,7 +41,7 @@ public class MemberCoupon {
     }
 
     private void checkExpiredDate() {
-        if (!isNotExpired()) {
+        if (isExpired()) {
             throw new CouponException(ExceptionType.INVALID_EXPIRED_DATE);
         }
     }
@@ -52,8 +52,8 @@ public class MemberCoupon {
         }
     }
 
-    public boolean isNotExpired() {
-        return !expiredDate.isBefore(LocalDate.now());
+    public boolean isExpired() {
+        return !LocalDate.now().isBefore(expiredDate);
     }
 
     public boolean isExists() {
