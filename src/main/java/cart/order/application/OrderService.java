@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -34,7 +33,7 @@ public class OrderService {
     
     public Long order(final Member member, final OrderRequest orderRequest) {
         final Member memberByEmail = memberRepository.getMemberByEmail(member.getEmail());
-        final Set<CartItem> cartItems = cartItemRepository.findAllByIds(getCartItemIds(orderRequest));
+        final List<CartItem> cartItems = cartItemRepository.findAllByIds(getCartItemIds(orderRequest));
         validateOwnerOfCartItem(memberByEmail, cartItems);
         removeCartItems(orderRequest);
         
@@ -53,11 +52,11 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
     
-    private void validateOwnerOfCartItem(final Member member, final Set<CartItem> cartItems) {
+    private void validateOwnerOfCartItem(final Member member, final List<CartItem> cartItems) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
     
-    private List<OrderInfo> getOrderInfos(final Set<CartItem> cartItems) {
+    private List<OrderInfo> getOrderInfos(final List<CartItem> cartItems) {
         return cartItems.stream()
                 .map(cartItem -> {
                     final Product product = cartItem.getProduct();

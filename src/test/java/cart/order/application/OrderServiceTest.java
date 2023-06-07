@@ -1,18 +1,12 @@
 package cart.order.application;
 
-import cart.cartitem.domain.CartItemTest;
-import cart.cartitem.dto.CartItemOrderRequest;
-import cart.cartitem.repository.CartItemEntity;
 import cart.cartitem.repository.CartItemRepository;
-import cart.member.domain.Member;
-import cart.member.domain.MemberTest;
 import cart.member.repository.MemberRepository;
 import cart.order.domain.Order;
 import cart.order.dto.OrderDetailResponse;
 import cart.order.dto.OrderRequest;
 import cart.order.dto.OrderResponse;
 import cart.order.repository.OrderRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,14 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Set;
 
-import static cart.cartitem.domain.CartItemTest.*;
-import static cart.member.domain.MemberTest.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static cart.cartitem.domain.CartItemTest.CART_ITEM;
+import static cart.member.domain.MemberTest.MEMBER;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -48,7 +39,7 @@ class OrderServiceTest {
         // given
         final OrderRequest orderRequest = new OrderRequest(List.of(1L), 50000L, 5000L, 5000L);
         given(memberRepository.getMemberByEmail(any())).willReturn(MEMBER);
-        given(cartItemRepository.findAllByIds(any())).willReturn(Set.of(CART_ITEM));
+        given(cartItemRepository.findAllByIds(any())).willReturn(List.of(CART_ITEM));
         given(orderRepository.save(any(), any())).willReturn(1L);
 
         // when

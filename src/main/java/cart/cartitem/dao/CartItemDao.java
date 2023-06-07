@@ -1,14 +1,13 @@
 package cart.cartitem.dao;
 
+import cart.cartitem.domain.CartItem;
 import cart.cartitem.repository.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class CartItemDao {
@@ -43,18 +42,23 @@ public class CartItemDao {
         
         return insertAction.executeAndReturnKey(params).longValue();
     }
-
+    
+    public List<CartItemEntity> findByIds(final List<Long> cartItemIds) {
+        final String inClause = String.join(",", Collections.nCopies(cartItemIds.size(), "?"));
+        String sql = "SELECT * FROM cart_item WHERE id IN (" + inClause + ")";
+        return jdbcTemplate.query(sql, rowMapper, cartItemIds.toArray());
+    }
+    
     public CartItemEntity findById(Long id) {
         final String sql = "SELECT * FROM cart_item WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
     
-    
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
     }
-
+    
     public void update(CartItemEntity cartItemEntity) {
         String sql = "UPDATE cart_item SET member_id = ?, product_id = ?, quantity = ? WHERE id = ?";
         jdbcTemplate.update(
