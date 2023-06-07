@@ -41,6 +41,6 @@ public class CartItems {
             .map(cartItem -> OrderItem.notPersisted(cartItem.getProduct(), cartItem.getQuantity()))
             .collect(Collectors.toList());
         purchaseItems.clear();
-        return Order.beforePersisted(member, new OrderItems(orderItems), orderTime);
+        return Order.notPersisted(member, new OrderItems(orderItems), orderTime);
     }
 }

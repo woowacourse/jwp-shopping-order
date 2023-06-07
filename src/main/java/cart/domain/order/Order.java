@@ -18,14 +18,14 @@ public class Order {
         this.orderTime = orderTime;
     }
 
-    public static Order beforePersisted(final Member member, final OrderItems orderItems,
+    public static Order notPersisted(final Member member, final OrderItems orderItems,
         final LocalDateTime orderTime) {
         return new Order(null, member, orderItems, orderTime);
     }
 
     public static Order persisted(final Long id, final Member member, final OrderItems orderItems,
-        final LocalDateTime created_at) {
-        return new Order(id, member, orderItems, created_at);
+        final LocalDateTime orderTime) {
+        return new Order(id, member, orderItems, orderTime);
     }
 
     public Long getId() {

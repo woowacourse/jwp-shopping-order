@@ -96,7 +96,7 @@ class OrderDaoTest {
     }
 
     private Order createOrder(final Member member, final List<OrderItem> orderItems) {
-        final Order order = Order.beforePersisted(member, new OrderItems(orderItems), LocalDateTime.now());
+        final Order order = Order.notPersisted(member, new OrderItems(orderItems), LocalDateTime.now());
         final OrderPrice orderPrice = OrderPrice.of(order, new BasicDiscountPolicy(), new BasicDeliveryPolicy());
 
         final Order persistedOrder = orderDao.insert(order, orderPrice);
