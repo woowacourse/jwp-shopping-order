@@ -32,7 +32,7 @@ public class ProductRequest {
         java.util.regex.Pattern pattern = Pattern.compile(URL_REGEX);
         Matcher matcher = pattern.matcher(url);
         if (!matcher.matches()) {
-            throw new InvalidURLException();
+            throw new InvalidURLException("유효한 URL 형식이 아닙니다.");
         }
     }
 

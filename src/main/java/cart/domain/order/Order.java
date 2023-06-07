@@ -52,7 +52,7 @@ public class Order {
 
     public void checkOwner(Long memberId) {
         if (this.memberId != memberId) {
-            throw new OrderUnauthorizedException();
+            throw new OrderUnauthorizedException("해당 주문을 볼 수 있는 권한이 없습니다.");
         }
     }
 }

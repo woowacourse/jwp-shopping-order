@@ -60,7 +60,7 @@ public class OrderService {
         MemberCoupons memberCoupons = new MemberCoupons(memberCouponDao.findByMemberId(member.getId()));
 
         if (memberCoupons.isNotContains(requestCoupons)) {
-            throw new MemberCouponNotFoundException();
+            throw new MemberCouponNotFoundException("쿠폰을 보유하고 있지 않습니다.");
         }
 
         memberCouponDao.updateCoupon(requestCoupons.use().getCoupons(), member.getId());
@@ -76,7 +76,7 @@ public class OrderService {
         List<CartItem> requestCartItems = cartItemRepository.findByIds(orderItemIds);
 
         if (requestCartItems.isEmpty() || !memberCartItems.containsAll(requestCartItems)) {
-            throw new OrderCartMismatchException();
+            throw new OrderCartMismatchException("장바구니 내역과 주문 내역이 일치하지 않습니다. 다시 시도해 주세요.");
         }
 
         cartItemRepository.deleteAll(requestCartItems);
@@ -90,7 +90,7 @@ public class OrderService {
         Optional<Order> findOrder = orderRepository.findById(id);
 
         if (findOrder.isEmpty()) {
-            throw new OrderNotFoundException();
+            throw new OrderNotFoundException("주문 정보를 확인할 수 없습니다.");
         }
 
         Order order = findOrder.get();

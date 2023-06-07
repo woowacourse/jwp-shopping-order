@@ -29,12 +29,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            throw new AuthenticationNotFoundException();
+            throw new AuthenticationNotFoundException("사용자 인증 정보를 찾을 수 없습니다.");
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationTypeMismatchException();
+            throw new AuthenticationTypeMismatchException("인증 유형이 일치하지 않습니다.");
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
@@ -47,7 +47,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberRepository.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("사용자 인증에 실패하였습니다.");
         }
         return member;
     }
