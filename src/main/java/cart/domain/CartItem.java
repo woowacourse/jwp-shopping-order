@@ -22,14 +22,20 @@ public class CartItem {
         this(null, member, product, new Quantity(Quantity.DEFAULT_VALUE));
     }
 
-    public void validateOwner(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalAccessCartException(this, member);
+    public void validateOwner(final Member otherMember) {
+        if (!Objects.equals(this.member.getId(), otherMember.getId())) {
+            throw new IllegalAccessCartException(this, otherMember);
         }
     }
 
     public CartItem changeQuantity(final Quantity quantity) {
         return new CartItem(id, member, product, quantity);
+    }
+
+    public Price calculateTotalProductPrice() {
+        int result = product.calculateTotalPrice(quantity.getValue());
+
+        return new Price(result);
     }
 
     public int getQuantityValue() {
