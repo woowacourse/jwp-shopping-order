@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
+import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
@@ -50,6 +51,7 @@ public class OrderService {
         validateMemberIsSameCartItemOwner(cartItems, member);
         validateMemberPointIsGreaterThanUsedPoint(member, orderRequest.getPoint());
         validateUsedPointIsLessThanPrice(orderRequest.getPoint(), order.getTotalPrice(), order.getDeliveryFee());
+        validateAppropriatePointAndPrice(orderRequest.getPoint(), order.getTotalPrice());
 
         accumulatePoint(member, orderRequest, order);
 
@@ -82,6 +84,15 @@ public class OrderService {
     private void validateUsedPointIsLessThanPrice(int point, int totalPrice, int deliveryFee) {
         if (totalPrice + deliveryFee < point) {
             throw new OrderException(ErrorMessage.INVALID_POINT_MORE_THAN_PRICE);
+        }
+    }
+
+    private void validateAppropriatePointAndPrice(int requestedPoint, int totalPrice) {
+        Point point = new Point(requestedPoint);
+        Point expectedPoint = Point.fromTotalPrice(totalPrice);
+
+        if (!point.equals(expectedPoint)) {
+            throw new OrderException(ErrorMessage.INVALID_POINT_INAPPROPRIATE_RATE);
         }
     }
 
