@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS coupon (
     coupon_name varchar(30) NOT NULL,
     image_url VARCHAR(255) NOT NULL,
     discount_price BIGINT NOT NULL,
+    used BOOLEAN NOT NULL DEFAULT false,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp on update current_timestamp,
     FOREIGN KEY (member_id) REFERENCES member(id)

@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Coupon;
 import cart.domain.FixedDiscountCoupon;
 import cart.exception.CouponNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,13 +21,13 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Coupon findById(Long couponId) throws CouponNotFoundException {
-        String sql = "SELECT * FROM coupon WHERE id = ?";
+    public Coupon findUnusedById(Long couponId) throws CouponNotFoundException {
+        String sql = "SELECT * FROM coupon WHERE id = ? AND used = false";
 
         try {
             return jdbcTemplate.queryForObject(sql, new CouponRowMapper(), couponId);
         } catch (Exception e) {
-            throw new CouponNotFoundException("존재하지 않는 쿠폰 id 입니다");
+            throw new CouponNotFoundException("존재하지 않거나 이미 사용된 쿠폰 id 입니다");
         }
     }
 
@@ -49,14 +50,19 @@ public class CouponDao {
         }
     }
 
-    public void delete(Long couponId) {
-        String sql = "DELETE FROM coupon WHERE id = ?";
-        jdbcTemplate.update(sql, couponId);
+    public void updateToUsed(Long couponId) throws CouponNotFoundException, DataIntegrityViolationException {
+        String sql = "UPDATE coupon SET used = true WHERE id = ?";
+        int updated = jdbcTemplate.update(sql, couponId);
+        if (updated < 1) {
+            throw new CouponNotFoundException("사용할 쿠폰 id를 찾을 수 없습니다.");
+        }
+        if (updated >= 2) {
+            throw new DataIntegrityViolationException("중복 쿠폰이 존재합니다.");
+        }
     }
 
     public List<Coupon> findByMemberId(Long memberId) {
-        String sql = "SELECT * FROM coupon WHERE member_id = ?";
-
+        String sql = "SELECT * FROM coupon WHERE member_id = ? AND used = false";
         return jdbcTemplate.query(sql, new Object[]{memberId}, new CouponRowMapper());
     }
 }

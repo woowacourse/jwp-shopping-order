@@ -28,16 +28,16 @@ class CouponDaoTest {
 
     @Test
     void findById() {
-        Coupon coupon = couponDao.findById(1L);
+        Coupon coupon = couponDao.findUnusedById(1L);
         assertThat(coupon.getDiscountPrice()).isEqualTo(Money.from(1000));
     }
 
     @Test
     void delete() {
         //when
-        couponDao.delete(1L);
+        couponDao.updateToUsed(1L);
 
         //then
-        assertThatThrownBy(() -> couponDao.findById(1L)).isInstanceOf(CouponNotFoundException.class);
+        assertThatThrownBy(() -> couponDao.findUnusedById(1L)).isInstanceOf(CouponNotFoundException.class);
     }
 }

@@ -23,9 +23,9 @@ public class CouponService {
 
     @Transactional
     public Money apply(Order order, Long couponId) {
-        Coupon coupon = couponDao.findById(couponId);
+        Coupon coupon = couponDao.findUnusedById(couponId);
         Money discounting = order.apply(coupon);
-        couponDao.delete(couponId);
+        couponDao.updateToUsed(couponId);
         return discounting;
     }
 
