@@ -26,6 +26,16 @@ public class CartItemDao {
             .usingGeneratedKeyColumns("id");
     }
 
+    public CartItem insert(final CartItem cartItem) {
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("member_id", cartItem.getMember().getId());
+        params.addValue("product_id", cartItem.getProduct().getId());
+        params.addValue("quantity", cartItem.getQuantity());
+
+        final long persistedCartItemId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        return new CartItem(persistedCartItemId, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
+    }
+
     public List<CartItem> findByMemberId(final Long memberId) {
         final String sql = "SELECT "
             + "cart_item.id, cart_item.member_id, "
@@ -48,16 +58,6 @@ public class CartItemDao {
             final Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         }, memberId);
-    }
-
-    public CartItem save(final CartItem cartItem) {
-        final MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("member_id", cartItem.getMember().getId());
-        params.addValue("product_id", cartItem.getProduct().getId());
-        params.addValue("quantity", cartItem.getQuantity());
-
-        final long persistedCartItemId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new CartItem(persistedCartItemId, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
     public Optional<CartItem> findById(final Long id) {
@@ -89,7 +89,11 @@ public class CartItemDao {
         }
         return Optional.of(cartItems.get(0));
     }
-
+    
+    public void updateQuantity(final CartItem cartItem) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
 
     public void delete(final Long memberId, final Long productId) {
         final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
@@ -110,11 +114,6 @@ public class CartItemDao {
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    public void updateQuantity(final CartItem cartItem) {
-        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }
 
