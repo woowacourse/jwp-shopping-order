@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.application.event.UpdateMemberPointEvent;
+import cart.application.event.MemberPointUpdateEvent;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.point.Point;
@@ -26,7 +26,7 @@ public class PointService {
     }
 
     @TransactionalEventListener
-    public void updateMemberPoint(final UpdateMemberPointEvent updateRequest) {
+    public void updateMemberPoint(final MemberPointUpdateEvent updateRequest) {
         final Member member = updateRequest.getMember();
         final Order order = orderRepository.findByOrderId(updateRequest.getOrderId());
 

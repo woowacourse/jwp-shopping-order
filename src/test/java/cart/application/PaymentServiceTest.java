@@ -3,7 +3,7 @@ package cart.application;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-import cart.application.event.RequestPaymentEvent;
+import cart.application.event.PaymentRequestEvent;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Quantity;
@@ -49,7 +49,7 @@ class PaymentServiceTest {
         final OrderRequest orderRequest = new OrderRequest(List.of(1L), 100L);
         final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"), new Price(1000L));
         final Cart cart = new Cart(List.of(new CartItem(1L, new Quantity(2), product, member)));
-        final RequestPaymentEvent requestPaymentEvent = new RequestPaymentEvent(
+        final PaymentRequestEvent paymentRequestEvent = new PaymentRequestEvent(
                 member,
                 cart.getTotalPrice(),
                 orderRequest
@@ -58,7 +58,7 @@ class PaymentServiceTest {
         given(pointRepository.findPointByMember(member)).willReturn(memberPoint);
 
         // expect
-        assertThatThrownBy(() -> paymentService.pay(requestPaymentEvent))
+        assertThatThrownBy(() -> paymentService.pay(paymentRequestEvent))
                 .isInstanceOf(PointException.BadRequest.class)
                 .hasMessage("멤버가 소유한 포인트 (" + memberPoint.getPoint() + ") 보다 더 많은 포인트를 사용할 수 없습니다.");
     }
@@ -70,7 +70,7 @@ class PaymentServiceTest {
         final OrderRequest orderRequest = new OrderRequest(List.of(1L), 10001L);
         final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"), new Price(1000L));
         final Cart cart = new Cart(List.of(new CartItem(1L, new Quantity(2), product, member)));
-        final RequestPaymentEvent requestPaymentEvent = new RequestPaymentEvent(
+        final PaymentRequestEvent paymentRequestEvent = new PaymentRequestEvent(
                 member,
                 cart.getTotalPrice(),
                 orderRequest
@@ -79,7 +79,7 @@ class PaymentServiceTest {
         given(pointRepository.findPointByMember(member)).willReturn(memberPoint);
 
         // expect
-        assertThatThrownBy(() -> paymentService.pay(requestPaymentEvent))
+        assertThatThrownBy(() -> paymentService.pay(paymentRequestEvent))
                 .isInstanceOf(PointException.BadRequest.class)
                 .hasMessage("총 구매 가격보다 (2000) 더 많은 포인트는 사용할 수 없습니다.");
     }

@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.application.event.RequestPaymentEvent;
-import cart.application.event.UpdateMemberPointEvent;
+import cart.application.event.MemberPointUpdateEvent;
+import cart.application.event.PaymentRequestEvent;
 import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -55,7 +55,7 @@ public class OrderService {
 
     private void requestPayment(final Member member, final OrderRequest request, final Cart cart) {
         final Price totalPrice = cart.getTotalPrice();
-        applicationEventPublisher.publishEvent(new RequestPaymentEvent(member, totalPrice, request));
+        applicationEventPublisher.publishEvent(new PaymentRequestEvent(member, totalPrice, request));
     }
 
     private Order cartToOrder(final Member member, final Cart cart) {
@@ -67,7 +67,7 @@ public class OrderService {
     }
 
     private void requestPointUpdate(final Member member, final OrderRequest request, final Long orderId) {
-        applicationEventPublisher.publishEvent(new UpdateMemberPointEvent(member, request, orderId));
+        applicationEventPublisher.publishEvent(new MemberPointUpdateEvent(member, request, orderId));
     }
 
     @Transactional(readOnly = true)

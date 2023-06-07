@@ -1,35 +1,33 @@
 package cart.application.event;
 
 import cart.domain.member.Member;
-import cart.domain.product.Price;
 import cart.dto.request.OrderRequest;
 
-public class RequestPaymentEvent {
+public class MemberPointUpdateEvent {
 
     private final Member member;
-    private final Price price;
     private final OrderRequest orderRequest;
+    private final Long orderId;
 
-    public RequestPaymentEvent(
+    public MemberPointUpdateEvent(
             final Member member,
-            final Price price,
-            final OrderRequest orderRequest
-
+            final OrderRequest orderRequest,
+            final Long orderId
     ) {
         this.member = member;
-        this.price = price;
         this.orderRequest = orderRequest;
+        this.orderId = orderId;
     }
 
     public Member getMember() {
         return member;
     }
 
-    public Price getPrice() {
-        return price;
-    }
-
     public OrderRequest getOrderRequest() {
         return orderRequest;
+    }
+
+    public Long getOrderId() {
+        return orderId;
     }
 }

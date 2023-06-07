@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.application.event.RequestPaymentEvent;
+import cart.application.event.PaymentRequestEvent;
 import cart.domain.point.Point;
 import cart.domain.product.Price;
 import cart.exception.PointException;
@@ -20,23 +20,23 @@ public class PaymentService {
 
     @EventListener
     @Transactional(readOnly = true)
-    public void pay(final RequestPaymentEvent requestPaymentEvent) {
-        validateOverPointThanHave(requestPaymentEvent);
-        validateOverPointThanPrice(requestPaymentEvent);
+    public void pay(final PaymentRequestEvent paymentRequestEvent) {
+        validateOverPointThanHave(paymentRequestEvent);
+        validateOverPointThanPrice(paymentRequestEvent);
     }
 
-    private void validateOverPointThanHave(final RequestPaymentEvent requestPaymentEvent) {
-        final Point usePoint = new Point(requestPaymentEvent.getOrderRequest().getUsePoint());
-        final Point memberPoint = pointRepository.findPointByMember(requestPaymentEvent.getMember());
+    private void validateOverPointThanHave(final PaymentRequestEvent paymentRequestEvent) {
+        final Point usePoint = new Point(paymentRequestEvent.getOrderRequest().getUsePoint());
+        final Point memberPoint = pointRepository.findPointByMember(paymentRequestEvent.getMember());
 
         if (usePoint.isMoreThan(memberPoint)) {
             throw new PointException.BadRequest(memberPoint);
         }
     }
 
-    private void validateOverPointThanPrice(final RequestPaymentEvent requestPaymentEvent) {
-        final Price cartPrice = requestPaymentEvent.getPrice();
-        final Point usePoint = new Point(requestPaymentEvent.getOrderRequest().getUsePoint());
+    private void validateOverPointThanPrice(final PaymentRequestEvent paymentRequestEvent) {
+        final Price cartPrice = paymentRequestEvent.getPrice();
+        final Point usePoint = new Point(paymentRequestEvent.getOrderRequest().getUsePoint());
 
         if (usePoint.isMoreThan(new Point(cartPrice.price()))) {
             throw new PointException.BadRequest(cartPrice);

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import cart.application.event.UpdateMemberPointEvent;
+import cart.application.event.MemberPointUpdateEvent;
 import cart.domain.cart.Quantity;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
@@ -71,7 +71,7 @@ class PointServiceTest {
         given(orderRepository.findByOrderId(1L)).willReturn(order);
 
         // when
-        pointService.updateMemberPoint(new UpdateMemberPointEvent(member, orderRequest, 1L));
+        pointService.updateMemberPoint(new MemberPointUpdateEvent(member, orderRequest, 1L));
 
         //then
         ArgumentCaptor<Member> memberArgumentCaptor = ArgumentCaptor.forClass(Member.class);
@@ -105,7 +105,7 @@ class PointServiceTest {
         given(orderRepository.findByOrderId(1L)).willReturn(order);
 
         // when
-        pointService.updateMemberPoint(new UpdateMemberPointEvent(member, orderRequest, 1L));
+        pointService.updateMemberPoint(new MemberPointUpdateEvent(member, orderRequest, 1L));
 
         //then
         ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
