@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,9 +30,6 @@ public class OrderItemDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
                 Objects.requireNonNull(jdbcTemplate.getDataSource())
         );
-        this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order_item")
-                .usingGeneratedKeyColumns("id");
     }
 
     public void batchInsert(final List<OrderItemEntity> orderItems) {
