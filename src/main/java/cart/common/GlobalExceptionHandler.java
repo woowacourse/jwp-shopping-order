@@ -58,8 +58,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DiscountOverPriceException.class)
     public ResponseEntity<String> handle(final DiscountOverPriceException e) {
-        LOGGER.error(e.getMessage());
         return ResponseEntity.internalServerError().build();
     }
 
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<String> handle(final RuntimeException e) {
+        LOGGER.error(e.getMessage());
+        return ResponseEntity.internalServerError().build();
+    }
 }

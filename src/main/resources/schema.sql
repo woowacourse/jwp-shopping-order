@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS product
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
+    deleted   BOOLEAN      NOT NULL DEFAULT FALSE,
     image_url VARCHAR(255) NOT NULL
 );
 

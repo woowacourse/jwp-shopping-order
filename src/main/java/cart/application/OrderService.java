@@ -125,14 +125,10 @@ public class OrderService {
     }
 
     private ProductResponse productResponseOf(final long productId, final List<Product> products) {
-        try {
-            return ProductResponse.of(products.stream()
-                    .filter(product -> productId == product.getId())
-                    .findAny()
-                    .orElseThrow(() -> new IllegalStateException("주문 목록들의 상품 정보를 만드는 과정 중에 장바구니에 존재하는 상품의 Id를 가진 실제 상품 데이터를 읽어오지 못했습니다.")));
-        } catch (final IllegalStateException e) {
-            return ProductResponse.deleted();
-        }
+        return ProductResponse.of(products.stream()
+                .filter(product -> productId == product.getId())
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("주문 내역에서 참조하고 있는 상품의 데이터가 유실 되었습니다. " + productId + " 해당 아이디를 가진 상품에 대한 확인을 해주시기 바랍니다.")));
     }
 
     @Transactional(readOnly = true)

@@ -21,11 +21,7 @@ public class ProductResponse {
     public static ProductResponse of(final Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
-
-    public static ProductResponse deleted() {
-        return new ProductResponse(0L, "deleted", 0, "deleted");
-    }
-
+    
     public Long getId() {
         return id;
     }

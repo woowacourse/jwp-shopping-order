@@ -76,8 +76,8 @@ public class ProductDao {
     }
 
     public int deleteProduct(final Long productId) {
-        final String sql = "DELETE FROM product WHERE id = ?";
-        return jdbcTemplate.update(sql, productId);
+        final String sql = "UPDATE product SET deleted = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, true, productId);
     }
 
     public List<Product> getProductByIds(final List<Long> productIds) {
