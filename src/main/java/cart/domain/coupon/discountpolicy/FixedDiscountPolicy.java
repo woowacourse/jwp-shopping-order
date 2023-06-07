@@ -7,7 +7,7 @@ public class FixedDiscountPolicy implements DiscountPolicy {
 
     @Override
     public boolean isValid(BigDecimal discountValue) {
-        boolean isGreaterThanZero = discountValue.compareTo(BigDecimal.ZERO) == 1;
+        boolean isGreaterThanZero = discountValue.compareTo(BigDecimal.ZERO) > 0;
         return isGreaterThanZero;
     }
 
