@@ -51,7 +51,8 @@ class OrderItemDaoTest {
     void findAll() {
         List<OrderItemEntity> orderItems = orderItemDao.findAll();
 
-        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItemEntity(1L, product1, 3, 30000), new OrderItemEntity(1L, product2, 2, 40000), new OrderItemEntity(2L, product2, 1, 20000));
+        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItemEntity(1L, product1.getId(), 3, 30000),
+                new OrderItemEntity(1L, product2.getId(), 2, 40000), new OrderItemEntity(2L, product2.getId(), 1, 20000));
     }
 
     @DisplayName("주문 번호를 기준으로 주문 상품 정보를 조회할 수 있다.")
@@ -59,15 +60,16 @@ class OrderItemDaoTest {
     void findByOrderId() {
         List<OrderItemEntity> orderItems = orderItemDao.findByOrderId(1L);
 
-        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItemEntity(1L, product1, 3, 30000), new OrderItemEntity(1L, product2, 2, 40000));
+        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItemEntity(1L, product1.getId(), 3, 30000),
+                new OrderItemEntity(1L, product2.getId(), 2, 40000));
     }
 
     @DisplayName("주문 번호들을 기준으로 주문 상품 정보를 조회할 수 있다.")
     @Test
     void findAllByOrderIds() {
-        OrderItemEntity orderItem1 = new OrderItemEntity(1L, product1, 3, 30000);
-        OrderItemEntity orderItem2 = new OrderItemEntity(1L, product2, 2, 40000);
-        OrderItemEntity orderItem3 = new OrderItemEntity(2L, product2, 1, 20000);
+        OrderItemEntity orderItem1 = new OrderItemEntity(1L, product1.getId(), 3, 30000);
+        OrderItemEntity orderItem2 = new OrderItemEntity(1L, product2.getId(), 2, 40000);
+        OrderItemEntity orderItem3 = new OrderItemEntity(2L, product2.getId(), 1, 20000);
 
         List<OrderItemEntity> orderItems = orderItemDao.findAllByOrderIds(List.of(1L, 2L));
 
@@ -77,8 +79,8 @@ class OrderItemDaoTest {
     @DisplayName("주문 상품 정보를 추가할 수 있다.")
     @Test
     void saveAll() {
-        OrderItemEntity orderItem1 = new OrderItemEntity(1L, product1, 4, 40000);
-        OrderItemEntity orderItem2 = new OrderItemEntity(1L, product2, 3, 60000);
+        OrderItemEntity orderItem1 = new OrderItemEntity(1L, product1.getId(), 4, 40000);
+        OrderItemEntity orderItem2 = new OrderItemEntity(1L, product2.getId(), 3, 60000);
 
         List<OrderItemEntity> orderItems = List.of(orderItem1, orderItem2);
         orderItemDao.saveAll(1L, orderItems);

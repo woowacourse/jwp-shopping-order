@@ -3,13 +3,13 @@ package cart.repository;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PointHistoryDao;
+import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import cart.exception.OrderException;
-import cart.exception.OrderServerException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -29,11 +29,13 @@ public class OrderRepository {
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final PointHistoryDao pointHistoryDao;
+    private final ProductDao productDao;
 
-    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, PointHistoryDao pointHistoryDao) {
+    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, PointHistoryDao pointHistoryDao, ProductDao productDao) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.pointHistoryDao = pointHistoryDao;
+        this.productDao = productDao;
     }
 
     public Long save(Long memberId, Order order) {
@@ -55,7 +57,7 @@ public class OrderRepository {
 
     private List<OrderItemEntity> getOrderItemEntities(Order order) {
         return order.getOrderItems().stream()
-                .map(orderItem -> new OrderItemEntity(orderItem.getProduct(), orderItem.getQuantity(), orderItem.getTotalPrice()))
+                .map(orderItem -> new OrderItemEntity(orderItem.getProduct().getId(), orderItem.getQuantity(), orderItem.getTotalPrice()))
                 .collect(Collectors.toList());
     }
 
@@ -123,7 +125,7 @@ public class OrderRepository {
 
     private List<OrderItem> getOrderItems(Map<Long, List<OrderItemEntity>> itemsByOrder, Long id) {
         return itemsByOrder.get(id).stream()
-                .map(orderItemEntity -> new OrderItem(orderItemEntity.getProduct(),
+                .map(orderItemEntity -> new OrderItem(getProduct(orderItemEntity),
                         orderItemEntity.getQuantity(), orderItemEntity.getTotalPrice()))
                 .collect(Collectors.toList());
     }
@@ -151,9 +153,14 @@ public class OrderRepository {
     private List<OrderItem> getOrderItems(Long orderId) {
         List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
         return orderItemEntities.stream()
-                .map(orderItemEntity -> new OrderItem(orderItemEntity.getProduct(),
+                .map(orderItemEntity -> new OrderItem(getProduct(orderItemEntity),
                         orderItemEntity.getQuantity(), orderItemEntity.getTotalPrice()))
                 .collect(Collectors.toList());
+    }
+
+    private Product getProduct(OrderItemEntity orderItemEntity) {
+        Long productId = orderItemEntity.getProductId();
+        return productDao.getProductById(productId);
     }
 
     private List<Long> getOrderIds(List<OrderEntity> orderEntities) {

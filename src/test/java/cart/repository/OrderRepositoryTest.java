@@ -77,8 +77,8 @@ class OrderRepositoryTest {
     void save_success() {
         OrderItem orderItem1 = new OrderItem(product1, 2, 20000);
         OrderItem orderItem2 = new OrderItem(product2, 3, 60000);
-        OrderItemEntity orderItemEntity1 = new OrderItemEntity(2L, product1, 2, 20000);
-        OrderItemEntity orderItemEntity2 = new OrderItemEntity(2L, product2, 3, 60000);
+        OrderItemEntity orderItemEntity1 = new OrderItemEntity(2L, product1.getId(), 2, 20000);
+        OrderItemEntity orderItemEntity2 = new OrderItemEntity(2L, product2.getId(), 3, 60000);
 
         List<OrderItem> orderItems = List.of(orderItem1, orderItem2);
         Order order = new Order(points, orderItems);

@@ -1,25 +1,23 @@
 package cart.entity;
 
-import cart.domain.Product;
-
 import java.util.Objects;
 
 public class OrderItemEntity {
 
     private Long orderId;
-    private final Product product;
+    private final Long productId;
     private final int quantity;
     private final int totalPrice;
 
-    public OrderItemEntity(Long orderId, Product product, int quantity, int totalPrice) {
+    public OrderItemEntity(Long orderId, Long productId, int quantity, int totalPrice) {
         this.orderId = orderId;
-        this.product = product;
+        this.productId = productId;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
     }
 
-    public OrderItemEntity(Product product, int quantity, int totalPrice) {
-        this.product = product;
+    public OrderItemEntity(Long productId, int quantity, int totalPrice) {
+        this.productId = productId;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
     }
@@ -28,8 +26,8 @@ public class OrderItemEntity {
         return orderId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
     public int getQuantity() {
@@ -45,19 +43,19 @@ public class OrderItemEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItemEntity that = (OrderItemEntity) o;
-        return quantity == that.quantity && totalPrice == that.totalPrice && Objects.equals(orderId, that.orderId) && Objects.equals(product, that.product);
+        return quantity == that.quantity && totalPrice == that.totalPrice && Objects.equals(orderId, that.orderId) && Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, product, quantity, totalPrice);
+        return Objects.hash(orderId, productId, quantity, totalPrice);
     }
 
     @Override
     public String toString() {
         return "OrderItemEntity{" +
                 "orderId=" + orderId +
-                ", product=" + product +
+                ", productId=" + productId +
                 ", quantity=" + quantity +
                 ", totalPrice=" + totalPrice +
                 '}';

@@ -25,20 +25,20 @@ public class OrderItemDao {
     }
 
     public List<OrderItemEntity> findAll() {
-        String sql = "select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
+        String sql = "select orders_id, product_id, quantity, total_price from orders_item" +
                 " left join product on orders_item.product_id = product.id";
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
     }
 
     public List<OrderItemEntity> findByOrderId(Long orderId) {
-        String sql = "select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
+        String sql = "select orders_id, product_id, quantity, total_price from orders_item" +
                 " left join product on orders_item.product_id = product.id where orders_id = ?";
         return jdbcTemplate.query(sql, new OrderItemRowMapper(), orderId);
     }
 
     public List<OrderItemEntity> findAllByOrderIds(List<Long> orderIds) {
         String inSql = getInSql(orderIds);
-        String sql = String.format("select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
+        String sql = String.format("select orders_id, product_id, quantity, total_price from orders_item" +
                 " left join product on orders_item.product_id = product.id where orders_item.orders_id in (%s)", inSql);
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
     }
@@ -59,7 +59,7 @@ public class OrderItemDao {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setLong(1, orderId);
-                        ps.setLong(2, orderItems.get(i).getProduct().getId());
+                        ps.setLong(2, orderItems.get(i).getProductId());
                         ps.setInt(3, orderItems.get(i).getQuantity());
                         ps.setInt(4, orderItems.get(i).getTotalPrice());
                     }
@@ -76,15 +76,10 @@ public class OrderItemDao {
         @Override
         public OrderItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             long productId = rs.getLong("product_id");
-            String name = rs.getString("product.name");
-            int price = rs.getInt("product.price");
-            String imageUrl = rs.getString("product.image_url");
-
-            Product product = new Product(productId, name, price, imageUrl);
             long orderId = rs.getLong("orders_id");
             int quantity = rs.getInt("quantity");
             int totalPrice = rs.getInt("total_price");
-            return new OrderItemEntity(orderId, product, quantity, totalPrice);
+            return new OrderItemEntity(orderId, productId, quantity, totalPrice);
         }
     }
 }
