@@ -1,0 +1,12 @@
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${mysqlUrl}
+    username: ${userName}
+    password: ${password}
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
