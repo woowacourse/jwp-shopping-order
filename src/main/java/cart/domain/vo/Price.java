@@ -1,13 +1,24 @@
 package cart.domain.vo;
 
+import cart.exception.CartItemException;
+
 import java.util.Objects;
 
 public class Price {
 
+    public static final int MINIMUM_PRICE = 1;
+
     private final int price;
 
     public Price(int price) {
+        validate(price);
         this.price = price;
+    }
+
+    private void validate(int price) {
+        if (price < MINIMUM_PRICE) {
+            throw new CartItemException.InvalidPrice();
+        }
     }
 
     @Override

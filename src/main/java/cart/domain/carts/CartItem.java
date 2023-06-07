@@ -15,7 +15,6 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    // TODO : 생성자 수정
     public CartItem(Member member, Product product) {
         this(0L, MINIMUM_QUANTITY, product, member);
     }

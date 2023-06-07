@@ -1,5 +1,6 @@
 package cart.domain.vo;
 
+import cart.exception.CashException;
 import cart.exception.NotEnoughMoneyToPurchaseException;
 
 import java.util.Objects;
@@ -7,6 +8,7 @@ import java.util.Objects;
 public class Cash {
 
     private static final int INITIAL_MONEY = 1_000_000_000;
+    private static final int MINIMUM_AMOUNT = 0;
 
     private final int cash;
 
@@ -15,7 +17,14 @@ public class Cash {
     }
 
     public Cash(int cash) {
+        validate(cash);
         this.cash = cash;
+    }
+
+    private void validate(int cash) {
+        if (cash < MINIMUM_AMOUNT) {
+            throw new CashException.SmallerThanMinimum();
+        }
     }
 
     public Cash consume(Cash userPayment) {

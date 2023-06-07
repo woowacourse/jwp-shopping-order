@@ -1,6 +1,8 @@
 package cart.exception;
 
-import static cart.domain.product.Product.*;
+import static cart.domain.product.Product.MAXIMUM_NAME_LENGTH;
+import static cart.domain.product.Product.MINIMUM_NAME_LENGTH;
+import static cart.domain.vo.Price.MINIMUM_PRICE;
 
 public class ProductException extends RuntimeException {
 

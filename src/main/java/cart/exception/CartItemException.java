@@ -3,6 +3,7 @@ package cart.exception;
 import cart.domain.carts.CartItem;
 
 import static cart.domain.carts.CartItem.MINIMUM_QUANTITY;
+import static cart.domain.vo.Price.MINIMUM_PRICE;
 
 public class CartItemException extends RuntimeException {
 
@@ -44,6 +45,13 @@ public class CartItemException extends RuntimeException {
 
         public InvalidProduct() {
             super("장바구니에 담으려는 상품이 존재하지 않습니다.");
+        }
+    }
+
+    public static class InvalidPrice extends CartItemException {
+
+        public InvalidPrice() {
+            super("상품 가격은 최소 " + MINIMUM_PRICE + "부터여야 합니다.");
         }
     }
 }
