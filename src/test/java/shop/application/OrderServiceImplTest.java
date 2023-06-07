@@ -102,7 +102,7 @@ class OrderServiceImplTest extends ServiceTest {
 
     @DisplayName("모든 주문내역을 조회할 수 있다.")
     @Test
-    void getAllorderHistoryTest() {
+    void getAllOrderHistoryTest() {
         //given
         Member findMember = memberRepository.findByName(ServiceTestFixture.member.getName());
 
@@ -120,8 +120,13 @@ class OrderServiceImplTest extends ServiceTest {
         List<OrderDto> allOrders = orderService.getAllOrderHistoryOfMember(findMember);
 
         assertThat(allOrders.size()).isEqualTo(2);
-        assertThat(allOrders).extracting("orderItems").extracting("product")
-                .extractingResultOf("getName")
-                .containsExactlyInAnyOrder("피자", "치킨", "피자", "치킨");
+
+        for (OrderDto order : allOrders) {
+            assertThat(order.getOrderItems()).extractingResultOf("getQuantity")
+                    .containsExactlyInAnyOrder(5, 10);
+            assertThat(order.getOrderItems()).extractingResultOf("getProduct")
+                    .extractingResultOf("getName")
+                    .containsExactlyInAnyOrder("피자", "치킨");
+        }
     }
 }
