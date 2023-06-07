@@ -2,6 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.entity.AuthMemberEntity;
 import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
@@ -38,7 +39,7 @@ class OrderProductDaoTest {
         orderProductDao = new OrderProductDao(jdbcTemplate);
 
         MemberDao memberDao = new MemberDao(jdbcTemplate);
-        memberId = memberDao.save(new MemberEntity("email@email.com", "password"));
+        memberId = memberDao.save(new AuthMemberEntity(new MemberEntity("email@email.com"), "password"));
 
         ProductDao productDao = new ProductDao(jdbcTemplate);
         pizzaId = productDao.save(new ProductEntity("피자", BigDecimal.valueOf(10000), "http://pizza.com"));

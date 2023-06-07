@@ -9,12 +9,10 @@ import static org.mockito.Mockito.verify;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
-import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.MemberInfo;
+import cart.domain.Member;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
-import cart.entity.MemberInfoEntity;
 import cart.entity.ProductEntity;
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,7 +45,7 @@ class CartItemRepositoryTest {
         // when
         CartItem cartItem = cartItemRepository.save(new CartItem(
                 new Product(1L, "밀리", BigDecimal.valueOf(100000000), "http://millie.com"),
-                new MemberInfo(1L, "email@email.com")
+                new Member(1L, "email@email.com")
         ));
 
         // then
@@ -57,7 +55,7 @@ class CartItemRepositoryTest {
     @Test
     void 장바구니_상품을_사용자_id로_조회한다() {
         // given
-        MemberInfoEntity memberEntity = new MemberInfoEntity(1L, "email@email.com");
+        MemberEntity memberEntity = new MemberEntity(1L, "email@email.com");
         given(cartItemDao.findAllByMemberId(1L))
                 .willReturn(List.of(
                         new CartItemEntity(
@@ -87,7 +85,7 @@ class CartItemRepositoryTest {
     @Test
     void 장바구니_상품을_장바구니_id로_조회한다() {
         // given
-        MemberInfoEntity memberEntity = new MemberInfoEntity(1L, "email@email.com");
+        MemberEntity memberEntity = new MemberEntity(1L, "email@email.com");
         given(cartItemDao.findById(1L))
                 .willReturn(Optional.of(new CartItemEntity(
                         1L,
@@ -108,7 +106,7 @@ class CartItemRepositoryTest {
         // given
         CartItem cartItem = new CartItem(
                 new Product(1L, "밀리", BigDecimal.valueOf(100000000), "http://millie.com"),
-                new MemberInfo(1L, "email@email.com")
+                new Member(1L, "email@email.com")
         );
 
         // when
@@ -125,7 +123,7 @@ class CartItemRepositoryTest {
                 1L,
                 1,
                 new Product(1L, "밀리", BigDecimal.valueOf(100000000), "http://millie.com"),
-                new MemberInfo(1L, "email@email.com")
+                new Member(1L, "email@email.com")
         );
 
         // when

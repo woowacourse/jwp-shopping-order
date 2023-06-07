@@ -6,20 +6,18 @@ public class MemberEntity {
 
     private final Long id;
     private final String email;
-    private final String password;
 
-    public MemberEntity(String email, String password) {
-        this(null, email, password);
+    public MemberEntity(String email) {
+        this(null, email);
     }
 
-    public MemberEntity(Long id, String email, String password) {
+    public MemberEntity(Long id, String email) {
         this.id = id;
         this.email = email;
-        this.password = password;
     }
 
     public Member toDomain() {
-        return new Member(id, email, password);
+        return new Member(id, email);
     }
 
     public Long getId() {
@@ -28,9 +26,5 @@ public class MemberEntity {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

@@ -5,9 +5,9 @@ import static java.util.stream.Collectors.toList;
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
 import cart.domain.Product;
-import cart.dto.MemberInfo;
+import cart.domain.Member;
 import cart.entity.CartItemEntity;
-import cart.entity.MemberInfoEntity;
+import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.Optional;
@@ -70,8 +70,8 @@ public class CartItemRepository {
         );
     }
 
-    private MemberInfoEntity toEntity(MemberInfo member) {
-        return new MemberInfoEntity(
+    private MemberEntity toEntity(Member member) {
+        return new MemberEntity(
                 member.getId(),
                 member.getEmail()
         );

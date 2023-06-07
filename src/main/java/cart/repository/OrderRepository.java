@@ -9,7 +9,7 @@ import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
-import cart.dto.MemberInfo;
+import cart.domain.Member;
 import cart.entity.CouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
@@ -42,7 +42,7 @@ public class OrderRepository {
     }
 
     public Order save(Order order) {
-        MemberInfo member = order.getMember();
+        Member member = order.getMember();
         Money deliveryFee = order.getDeliveryFee();
         Long savedOrderId = orderDao.save(toEntity(order));
 
@@ -65,12 +65,12 @@ public class OrderRepository {
             return Optional.empty();
         }
         OrderEntity orderEntity = savedOrderEntity.get();
-        MemberInfo member = getMember(orderEntity);
+        Member member = getMember(orderEntity);
         Order order = toOrder(orderEntity, member);
         return Optional.of(order);
     }
 
-    public List<Order> findAllByMember(MemberInfo member) {
+    public List<Order> findAllByMember(Member member) {
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
         return orderEntities.stream()
                 .map(orderEntity -> toOrder(orderEntity, member))
@@ -78,7 +78,7 @@ public class OrderRepository {
     }
 
     private OrderEntity toEntity(Order order) {
-        MemberInfo member = order.getMember();
+        Member member = order.getMember();
         Money deliveryFee = order.getDeliveryFee();
         Long couponId = order.getCoupon().getId();
         return new OrderEntity(
@@ -109,13 +109,13 @@ public class OrderRepository {
         );
     }
 
-    private MemberInfo getMember(OrderEntity order) {
-        return memberDao.findMemberInfoById(order.getMemberId())
+    private Member getMember(OrderEntity order) {
+        return memberDao.findById(order.getMemberId())
                 .orElseThrow(() -> new MemberException(ExceptionType.NOT_FOUND_MEMBER))
                 .toDomain();
     }
 
-    private Order toOrder(OrderEntity orderEntity, MemberInfo member) {
+    private Order toOrder(OrderEntity orderEntity, Member member) {
         List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(orderEntity.getId());
         List<Item> items = toItems(orderProductEntities);
         Coupon coupon = toCoupon(orderEntity.getCouponId());

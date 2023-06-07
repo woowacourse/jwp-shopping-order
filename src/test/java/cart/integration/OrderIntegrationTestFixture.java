@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
 import cart.domain.Item;
-import cart.domain.Member;
+import cart.domain.AuthMember;
 import cart.domain.Product;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductResponse;
@@ -62,7 +62,7 @@ public class OrderIntegrationTestFixture {
         );
     }
 
-    public static ExtractableResponse<Response> 주문_요청(Member 사용자, int 배송비, Long 내_쿠폰_ID, int 총_가격, Long... 장바구니_ID) {
+    public static ExtractableResponse<Response> 주문_요청(AuthMember 사용자, int 배송비, Long 내_쿠폰_ID, int 총_가격, Long... 장바구니_ID) {
         List<Long> ids = Arrays.asList(장바구니_ID);
         OrderRequest request = new OrderRequest(ids, 내_쿠폰_ID, 배송비, BigDecimal.valueOf(총_가격));
         return RestAssured.given()
@@ -75,7 +75,7 @@ public class OrderIntegrationTestFixture {
 
     }
 
-    public static ExtractableResponse<Response> 주문_상세_조회_요청(Member 사용자, Long 주문_ID) {
+    public static ExtractableResponse<Response> 주문_상세_조회_요청(AuthMember 사용자, Long 주문_ID) {
         return RestAssured.given()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .contentType(MediaType.APPLICATION_JSON_VALUE).log().all()
@@ -97,7 +97,7 @@ public class OrderIntegrationTestFixture {
                 .isEqualTo(responses);
     }
 
-    public static ExtractableResponse<Response> 사용자_주문_전체_조회_요청(Member 사용자) {
+    public static ExtractableResponse<Response> 사용자_주문_전체_조회_요청(AuthMember 사용자) {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())

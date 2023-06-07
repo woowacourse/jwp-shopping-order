@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.CouponEntity;
+import cart.entity.AuthMemberEntity;
 import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import java.math.BigDecimal;
@@ -37,7 +38,7 @@ class OrderDaoTest {
         couponId = couponDao.save(new CouponEntity("쿠폰", "RATE", BigDecimal.valueOf(10), BigDecimal.ZERO));
 
         MemberDao memberDao = new MemberDao(jdbcTemplate);
-        memberId = memberDao.save(new MemberEntity("email@email.com", "password"));
+        memberId = memberDao.save(new AuthMemberEntity(new MemberEntity("email@email.com"), "password"));
     }
 
     @Test

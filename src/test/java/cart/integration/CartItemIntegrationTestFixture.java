@@ -2,7 +2,7 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Member;
+import cart.domain.AuthMember;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 public class CartItemIntegrationTestFixture {
 
-    public static ExtractableResponse<Response> 장바구니에_상품_등록_요청(Member 사용자, Long 상품_ID) {
+    public static ExtractableResponse<Response> 장바구니에_상품_등록_요청(AuthMember 사용자, Long 상품_ID) {
         CartItemRequest request = new CartItemRequest(상품_ID);
         return RestAssured.given().log().all()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
@@ -40,7 +40,7 @@ public class CartItemIntegrationTestFixture {
                 .isEqualTo(list);
     }
 
-    public static ExtractableResponse<Response> 장바구니_상품_전체_조회_요청(Member 사용자) {
+    public static ExtractableResponse<Response> 장바구니_상품_전체_조회_요청(AuthMember 사용자) {
         return RestAssured.given().log().all()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +49,7 @@ public class CartItemIntegrationTestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(Member 사용자, Long 장바구니_ID) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(AuthMember 사용자, Long 장바구니_ID) {
         return RestAssured.given().log().all()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,7 @@ public class CartItemIntegrationTestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_상품_수량_수정_요청(Member 사용자, Long 장바구니_ID, int 변경할_수량) {
+    public static ExtractableResponse<Response> 장바구니_상품_수량_수정_요청(AuthMember 사용자, Long 장바구니_ID, int 변경할_수량) {
         CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(변경할_수량);
         return RestAssured.given().log().all()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())

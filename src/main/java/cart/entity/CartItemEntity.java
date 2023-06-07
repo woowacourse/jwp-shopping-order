@@ -6,14 +6,14 @@ public class CartItemEntity {
 
     private final Long id;
     private final ProductEntity productEntity;
-    private final MemberInfoEntity memberEntity;
+    private final MemberEntity memberEntity;
     private final int quantity;
 
-    public CartItemEntity(ProductEntity productEntity, MemberInfoEntity memberEntity) {
+    public CartItemEntity(ProductEntity productEntity, MemberEntity memberEntity) {
         this(null, productEntity, memberEntity, 1);
     }
 
-    public CartItemEntity(Long id, ProductEntity productEntity, MemberInfoEntity memberEntity, int quantity) {
+    public CartItemEntity(Long id, ProductEntity productEntity, MemberEntity memberEntity, int quantity) {
         this.id = id;
         this.productEntity = productEntity;
         this.memberEntity = memberEntity;
@@ -32,7 +32,7 @@ public class CartItemEntity {
         return productEntity;
     }
 
-    public MemberInfoEntity getMemberEntity() {
+    public MemberEntity getMemberEntity() {
         return memberEntity;
     }
 

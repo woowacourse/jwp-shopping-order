@@ -5,10 +5,10 @@ import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.dto.MemberInfo;
+import cart.domain.Member;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
-import cart.entity.MemberInfoEntity;
+import cart.entity.MemberEntity;
 import cart.exception.CouponException;
 import cart.exception.ExceptionType;
 import cart.exception.MemberException;
@@ -54,7 +54,7 @@ public class MemberCouponRepository {
         return Optional.of(memberCoupon);
     }
 
-    public List<MemberCoupon> findNotExpiredAllByMember(MemberInfo member) {
+    public List<MemberCoupon> findNotExpiredAllByMember(Member member) {
         List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllByMemberId(member.getId());
         return memberCouponEntities.stream()
                 .map(this::toDomain)
@@ -76,7 +76,7 @@ public class MemberCouponRepository {
 
     private MemberCoupon toDomain(MemberCouponEntity memberCoupon) {
         Coupon coupon = toCoupon(memberCoupon.getCouponId());
-        MemberInfo member = toMember(memberCoupon.getMemberId());
+        Member member = toMember(memberCoupon.getMemberId());
         return new MemberCoupon(memberCoupon.getId(), member, coupon, memberCoupon.getExpiredDate());
     }
 
@@ -86,9 +86,9 @@ public class MemberCouponRepository {
                 .orElseThrow(() -> new CouponException(ExceptionType.NOT_FOUND_COUPON));
     }
 
-    private MemberInfo toMember(Long memberId) {
-        return memberDao.findMemberInfoById(memberId)
-                .map(MemberInfoEntity::toDomain)
+    private Member toMember(Long memberId) {
+        return memberDao.findById(memberId)
+                .map(MemberEntity::toDomain)
                 .orElseThrow(() -> new MemberException(ExceptionType.NOT_FOUND_MEMBER));
     }
 }

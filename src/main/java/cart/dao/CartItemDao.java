@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.CartItemEntity;
-import cart.entity.MemberInfoEntity;
+import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -28,7 +28,7 @@ public class CartItemDao {
         String imageUrl = rs.getString("product_image_url");
         Long cartItemId = rs.getLong("cart_item_id");
         int quantity = rs.getInt("cart_item_quantity");
-        MemberInfoEntity member = new MemberInfoEntity(memberId, email);
+        MemberEntity member = new MemberEntity(memberId, email);
         ProductEntity product = new ProductEntity(productId, name, price, imageUrl);
         return new CartItemEntity(cartItemId, product, member, quantity);
     };

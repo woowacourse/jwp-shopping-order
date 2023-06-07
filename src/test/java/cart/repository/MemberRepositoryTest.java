@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.AuthMember;
+import cart.entity.AuthMemberEntity;
 import cart.entity.MemberEntity;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,15 +31,15 @@ class MemberRepositoryTest {
     @Test
     void 사용자를_id로_조회한다() {
         // given
-        given(memberDao.findById(1L))
-                .willReturn(Optional.of(new MemberEntity(1L, "email@email.com", "password")));
+        given(memberDao.findAuthMemberById(1L))
+                .willReturn(Optional.of(new AuthMemberEntity(new MemberEntity(1L, "email@email.com"), "password")));
 
         // when
-        Optional<Member> member = memberRepository.findById(1L);
+        Optional<AuthMember> member = memberRepository.findAuthMemberById(1L);
 
         // then
         assertAll(
-                () -> assertThat(member.get().getEmail()).isEqualTo("email@email.com"),
+                () -> assertThat(member.get().getMember().getEmail()).isEqualTo("email@email.com"),
                 () -> assertThat(member.get().getPassword()).isEqualTo("password")
         );
     }
@@ -46,15 +47,15 @@ class MemberRepositoryTest {
     @Test
     void 사용자를_email로_조회한다() {
         // given
-        given(memberDao.findByEmail("email@email.com"))
-                .willReturn(Optional.of(new MemberEntity(1L, "email@email.com", "password")));
+        given(memberDao.findAuthMemberByEmail("email@email.com"))
+                .willReturn(Optional.of(new AuthMemberEntity(new MemberEntity(1L, "email@email.com"), "password")));
 
         // when
-        Optional<Member> member = memberRepository.findByEmail("email@email.com");
+        Optional<AuthMember> member = memberRepository.findAuthMemberByEmail("email@email.com");
 
         // then
         assertAll(
-                () -> assertThat(member.get().getEmail()).isEqualTo("email@email.com"),
+                () -> assertThat(member.get().getMember().getEmail()).isEqualTo("email@email.com"),
                 () -> assertThat(member.get().getPassword()).isEqualTo("password")
         );
     }

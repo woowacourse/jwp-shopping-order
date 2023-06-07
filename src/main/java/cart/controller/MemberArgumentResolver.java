@@ -1,7 +1,7 @@
 package cart.controller;
 
+import cart.domain.AuthMember;
 import cart.domain.Member;
-import cart.dto.MemberInfo;
 import cart.exception.AuthenticationException;
 import cart.exception.ExceptionType;
 import cart.exception.MemberException;
@@ -27,7 +27,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthPrincipal.class) &&
-                parameter.getParameterType().equals(MemberInfo.class);
+                parameter.getParameterType().equals(Member.class);
     }
 
     @Override
@@ -44,13 +44,13 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = credentials[0];
         String password = credentials[1];
 
-        Member member = memberRepository.findByEmail(email)
+        AuthMember authMember = memberRepository.findAuthMemberByEmail(email)
                 .orElseThrow(() -> new MemberException(ExceptionType.INVALID_LOGIN_INFO));
-        if (!member.checkPassword(password)) {
+        if (!authMember.checkPassword(password)) {
             throw new MemberException(ExceptionType.INVALID_LOGIN_INFO);
         }
 
-        return new MemberInfo(member.getId(), member.getEmail());
+        return new Member(authMember.getId(), authMember.getEmail());
     }
 
     private String[] decode(String authorization) {

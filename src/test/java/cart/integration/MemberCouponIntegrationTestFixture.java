@@ -2,7 +2,7 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Member;
+import cart.domain.AuthMember;
 import cart.dto.CouponsResponse;
 import cart.dto.CouponsResponse.FixedCouponResponse;
 import cart.dto.CouponsResponse.RateCouponResponse;
@@ -35,7 +35,7 @@ public class MemberCouponIntegrationTestFixture {
                 .isEqualTo(couponResponse);
     }
 
-    public static ExtractableResponse<Response> 쿠폰_조회_요청(Member 사용자) {
+    public static ExtractableResponse<Response> 쿠폰_조회_요청(AuthMember 사용자) {
         return RestAssured.given()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

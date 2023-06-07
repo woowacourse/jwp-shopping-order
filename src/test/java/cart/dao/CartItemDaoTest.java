@@ -3,8 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.CartItemEntity;
+import cart.entity.AuthMemberEntity;
 import cart.entity.MemberEntity;
-import cart.entity.MemberInfoEntity;
 import cart.entity.ProductEntity;
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,7 +40,7 @@ class CartItemDaoTest {
     void 장바구니에_상품을_저장한다() {
         // given
         ProductEntity product = getProductEntity();
-        MemberInfoEntity member = getMemberEntity();
+        MemberEntity member = getMemberEntity();
 
         // when
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
@@ -54,7 +54,7 @@ class CartItemDaoTest {
     void 사용자_id로_장바구니_상품을_조회한다() {
         // given
         ProductEntity product = getProductEntity();
-        MemberInfoEntity member = getMemberEntity();
+        MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
         Long cartItemId = cartItemDao.save(cartItemEntity);
 
@@ -69,7 +69,7 @@ class CartItemDaoTest {
     void 장바구니_상품을_조회할_때_삭제된_상품이_안나온다() {
         // given
         ProductEntity product = getProductEntity();
-        MemberInfoEntity member = getMemberEntity();
+        MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
         Long cartItemId = cartItemDao.save(cartItemEntity);
         productDao.deleteById(product.getId());
@@ -85,7 +85,7 @@ class CartItemDaoTest {
     void 장바구니_상품을_id로_조회한다() {
         // given
         ProductEntity product = getProductEntity();
-        MemberInfoEntity member = getMemberEntity();
+        MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
         Long cartItemId = cartItemDao.save(cartItemEntity);
 
@@ -100,7 +100,7 @@ class CartItemDaoTest {
     void 장바구니_상품을_삭제한다() {
         // given
         ProductEntity product = getProductEntity();
-        MemberInfoEntity member = getMemberEntity();
+        MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
         Long cartItemId = cartItemDao.save(cartItemEntity);
 
@@ -115,7 +115,7 @@ class CartItemDaoTest {
     void 장바구니_상품_수량을_변경한다() {
         // given
         ProductEntity product = getProductEntity();
-        MemberInfoEntity member = getMemberEntity();
+        MemberEntity member = getMemberEntity();
         CartItemEntity cartItemEntity = new CartItemEntity(product, member);
         Long cartItemId = cartItemDao.save(cartItemEntity);
 
@@ -127,9 +127,9 @@ class CartItemDaoTest {
         assertThat(savedCartItem.getQuantity()).isEqualTo(100);
     }
 
-    private MemberInfoEntity getMemberEntity() {
-        Long memberId = memberDao.save(new MemberEntity("email1@email.com", "password"));
-        return memberDao.findMemberInfoById(memberId).get();
+    private MemberEntity getMemberEntity() {
+        Long memberId = memberDao.save(new AuthMemberEntity(new MemberEntity("email1@email.com"), "password"));
+        return memberDao.findById(memberId).get();
     }
 
     private ProductEntity getProductEntity() {
