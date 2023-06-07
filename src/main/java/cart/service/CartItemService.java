@@ -13,7 +13,7 @@ import cart.domain.order.OrderCartItem;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import cart.dto.order.OrderReqeust;
+import cart.dto.order.OrderRequest;
 import cart.exception.DuplicateDiscountException;
 import cart.exception.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -63,12 +63,12 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
-    public Order order(Member member, OrderReqeust orderReqeust) {
-        List<Long> notNullCouponIds = orderReqeust.getCouponIds().stream().
+    public Order order(Member member, OrderRequest orderRequest) {
+        List<Long> notNullCouponIds = orderRequest.getCouponIds().stream().
                 filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        List<CartItem> cartItems = orderReqeust.getCartItemIds().stream()
+        List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
                 .map(id -> cartItemDao.findById(id))
                 .collect(Collectors.toList());
 

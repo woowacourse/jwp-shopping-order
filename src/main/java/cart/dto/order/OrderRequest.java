@@ -2,13 +2,13 @@ package cart.dto.order;
 
 import java.util.List;
 
-public class OrderReqeust {
+public class OrderRequest {
     private final List<Long> cartItemIds;
     private final List<Long> couponIds;
     private final int totalPaymentPrice;
     private final boolean isDeliveryFree;
 
-    public OrderReqeust(List<Long> cartItemIds, List<Long> couponIds, int totalPaymentPrice, boolean isDeliveryFree) {
+    public OrderRequest(List<Long> cartItemIds, List<Long> couponIds, int totalPaymentPrice, boolean isDeliveryFree) {
         this.cartItemIds = cartItemIds;
         this.couponIds = couponIds;
         this.totalPaymentPrice = totalPaymentPrice;

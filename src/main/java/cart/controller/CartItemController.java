@@ -6,7 +6,7 @@ import cart.domain.Member;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import cart.dto.order.OrderResponse;
+import cart.dto.order.PreparedOrderResponse;
 import cart.service.CartItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,9 +51,9 @@ public class CartItemController {
     }
 
     @GetMapping("/coupons")
-    public ResponseEntity<OrderResponse> applyCoupons(@Auth Member member, @RequestParam(name = "id") List<Long> couponIds) {
+    public ResponseEntity<PreparedOrderResponse> applyCoupons(@Auth Member member, @RequestParam(name = "id") List<Long> couponIds) {
         Order order = cartItemService.prepareOrder(member, couponIds);
-        return ResponseEntity.ok().body(OrderResponse.from(order));
+        return ResponseEntity.ok().body(PreparedOrderResponse.from(order));
     }
 
 }

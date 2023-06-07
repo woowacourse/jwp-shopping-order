@@ -7,19 +7,19 @@ import cart.dto.DeliveryPriceResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OrderResponse {
+public class PreparedOrderResponse {
     private final List<OrderCartItemResponse> cartItemsPrice;
     private final DeliveryPriceResponse deliveryPrice;
     private final int discountFromTotalPrice;
 
-    public OrderResponse(List<OrderCartItemResponse> cartItemsPrice, DeliveryPriceResponse deliveryPrice, int discountFromTotalPrice) {
+    public PreparedOrderResponse(List<OrderCartItemResponse> cartItemsPrice, DeliveryPriceResponse deliveryPrice, int discountFromTotalPrice) {
         this.cartItemsPrice = cartItemsPrice;
         this.deliveryPrice = deliveryPrice;
         this.discountFromTotalPrice = discountFromTotalPrice;
     }
 
-    public static OrderResponse from(Order order) {
-        return new OrderResponse(
+    public static PreparedOrderResponse from(Order order) {
+        return new PreparedOrderResponse(
                 order.getOrderCartItems().stream()
                         .map(OrderCartItemResponse::from)
                         .collect(Collectors.toList()),

@@ -3,7 +3,7 @@ package cart.service;
 import cart.dao.coupon.CouponBoxDao;
 import cart.domain.*;
 import cart.domain.order.Order;
-import cart.dto.order.OrderReqeust;
+import cart.dto.order.OrderRequest;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +19,15 @@ public class OrderService {
         this.couponBoxDao = couponBoxDao;
     }
 
-    public Long order(Member member, OrderReqeust orderReqeust) {
-        Order order = cartItemService.order(member, orderReqeust);
+    public Long order(Member member, OrderRequest orderRequest) {
+        Order order = cartItemService.order(member, orderRequest);
         Long id = orderRepository.insert(member, order);
 
-        for (Long cartItemId : orderReqeust.getCartItemIds()) {
+        for (Long cartItemId : orderRequest.getCartItemIds()) {
             cartItemService.remove(member, cartItemId);
         }
 
-        for (Long couponId : orderReqeust.getCouponIds()) {
+        for (Long couponId : orderRequest.getCouponIds()) {
             couponBoxDao.delete(member.getId(), couponId);
         }
 
