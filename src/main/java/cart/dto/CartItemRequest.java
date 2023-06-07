@@ -8,7 +8,7 @@ public class CartItemRequest {
     @Min(value = 0, message = "{value} 이상의 값을 입력해주세요")
     private long productId;
 
-    public CartItemRequest() {
+    private CartItemRequest() {
     }
 
     public CartItemRequest(long productId) {

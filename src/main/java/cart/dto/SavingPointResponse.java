@@ -5,7 +5,7 @@ import cart.domain.Point;
 public class SavingPointResponse {
     private Long savingPoint;
 
-    public SavingPointResponse() {
+    private SavingPointResponse() {
     }
 
     public SavingPointResponse(Long savingPoint) {
