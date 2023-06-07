@@ -12,6 +12,7 @@ import cart.dto.DiscountAmountResponse;
 import cart.dto.SaveCouponRequest;
 import cart.exception.BusinessException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,11 @@ public class CouponService {
   }
 
   public Long createCoupon(final SaveCouponRequest request) {
+    couponDao.findByName(request.getName())
+            .ifPresent(coupon -> {
+              throw new BusinessException("해당 쿠폰은 이미 존재합니다.");
+            });
+
     return couponDao.createCoupon(
         new Coupon(request.getName(),
             new Amount(request.getDiscountAmount()),

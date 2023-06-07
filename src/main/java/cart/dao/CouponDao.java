@@ -51,4 +51,14 @@ public class CouponDao {
       return new Coupon(id, name, discountAmount, minAmount);
     }).stream().findAny();
   }
+
+  public Optional<Coupon> findByName(String name) {
+    String sql = "SELECT * FROM coupon WHERE name = ?";
+    return jdbcTemplate.query(sql, new Object[]{name}, (rs, rowNum) -> {
+      final long id = rs.getLong("id");
+      final Amount discountAmount = new Amount(rs.getInt("discount_amount"));
+      final Amount minAmount = new Amount(rs.getInt("min_amount"));
+      return new Coupon(id, name, discountAmount, minAmount);
+    }).stream().findAny();
+  }
 }
