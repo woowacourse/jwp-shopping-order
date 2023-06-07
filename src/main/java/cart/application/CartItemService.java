@@ -4,16 +4,21 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.response.CartItemUpdateResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class CartItemService {
+    private static final int ZERO_QUANTITY = 0;
+    private static final boolean NOT_CHECKED = false;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -22,26 +27,35 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    @Transactional(readOnly = true)
+    public CartItemResponse findById(Long cartItemId) {
+        final CartItem cartItem = cartItemDao.findById(cartItemId);
+        return CartItemResponse.of(cartItem);
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public Long add(Member member, CartItemAddRequest cartItemAddRequest) {
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemAddRequest.getProductId())));
+    }
+
+    public CartItemUpdateResponse updateQuantity(Member member, Long id, CartItemUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
-        if (request.getQuantity() == 0) {
+        if (request.getQuantity() == ZERO_QUANTITY) {
             cartItemDao.deleteById(id);
-            return;
+            return new CartItemUpdateResponse(ZERO_QUANTITY, NOT_CHECKED);
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItem.changeChecked(request.isChecked());
+        cartItemDao.update(cartItem);
+        return new CartItemUpdateResponse(cartItem.getQuantity(), cartItem.isChecked());
     }
 
     public void remove(Member member, Long id) {

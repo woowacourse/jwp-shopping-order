@@ -1,14 +1,28 @@
 package cart.domain;
 
-public class Member {
-    private Long id;
-    private String email;
-    private String password;
+import java.util.Objects;
 
-    public Member(Long id, String email, String password) {
+public class Member {
+    private static final int ZERO_POINTS = 0;
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final int points;
+
+    public Member(final Long id, final String email, final String password, final int points) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.points = points;
+    }
+
+    public Member(final Long id, final String email, final String password) {
+        this(id, email, password, ZERO_POINTS);
+    }
+
+    public Member updatePoints(final int addedPoints, final int usedPoints) {
+        final int totalPoints = points + addedPoints - usedPoints;
+        return new Member(id, email, password, totalPoints);
     }
 
     public Long getId() {
@@ -23,7 +37,24 @@ public class Member {
         return password;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Member member = (Member) o;
+        return id.equals(member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

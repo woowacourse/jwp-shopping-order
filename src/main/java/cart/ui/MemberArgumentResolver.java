@@ -1,8 +1,9 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
+import cart.application.auth.Auth;
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -20,19 +21,20 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.hasParameterAnnotation(Auth.class)
+                & parameter.getParameterType().equals(Member.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationException();
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            throw new AuthenticationException();
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);

@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,12 +34,16 @@ public class ProductDao {
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        final List<Product> product = jdbcTemplate.query(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
-        });
+        }, productId);
+        if (product.isEmpty()) {
+            throw new ProductNotFoundException();
+        }
+        return product.get(0);
     }
 
     public Long createProduct(Product product) {
@@ -62,11 +67,17 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        final int affected = jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        if (affected == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        final int affected = jdbcTemplate.update(sql, productId);
+        if (affected == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 }

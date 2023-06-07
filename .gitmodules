@@ -1,0 +1,3 @@
+[submodule "src/main/resources/order-submodule"]
+	path = src/main/resources/order-submodule
+	url = https://github.com/kevstevie/order-submodule.git
