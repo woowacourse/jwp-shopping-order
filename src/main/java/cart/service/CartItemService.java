@@ -14,7 +14,9 @@ import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class CartItemService {
 
@@ -33,6 +35,7 @@ public class CartItemService {
         return cartItemRepository.save(cartItem).getId();
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findAllByMember(Member member) {
         List<CartItem> cartItems = cartItemRepository.findAllByMemberId(member.getId());
         return cartItems.stream()

@@ -90,6 +90,7 @@ public class OrderService {
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
@@ -97,6 +98,7 @@ public class OrderService {
         return OrderDetailResponse.from(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAll(Member member) {
         List<Order> orders = orderRepository.findAllByMember(member);
 
