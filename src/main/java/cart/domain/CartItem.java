@@ -64,19 +64,6 @@ public class CartItem {
         return checked;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final CartItem cartItem = (CartItem) o;
-        return id.equals(cartItem.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
     public void isSameProductAndQuantity(final Map<Long, Integer> requestProductIdQuantity) {
         final Integer quantity = requestProductIdQuantity.get(product.getId());
         if (Objects.isNull(quantity)) {
@@ -88,5 +75,18 @@ public class CartItem {
         if (!isChecked()) {
             throw new InvalidOrderCheckedException();
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final CartItem cartItem = (CartItem) o;
+        return id.equals(cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
