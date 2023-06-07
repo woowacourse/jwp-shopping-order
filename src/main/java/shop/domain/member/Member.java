@@ -17,8 +17,8 @@ public class Member {
         this(null, name, password);
     }
 
-    public boolean isMatchingPassword(String password) {
-        return Objects.equals(this.password.getPassword(), password);
+    public boolean isMatchingPassword(Password password) {
+        return Objects.equals(this.password.getPassword(), password.getPassword());
     }
 
     public Long getId() {

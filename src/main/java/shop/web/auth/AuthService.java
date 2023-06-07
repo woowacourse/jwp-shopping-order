@@ -3,6 +3,7 @@ package shop.web.auth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.domain.member.Member;
+import shop.domain.member.Password;
 import shop.domain.repository.MemberRepository;
 import shop.exception.AuthenticationException;
 
@@ -17,8 +18,9 @@ public class AuthService {
 
     public void authenticate(String name, String password) {
         Member member = memberRepository.findByName(name);
+        Password encryptedPassword = Password.createFromEncryptedPassword(password);
 
-        if (member.isMatchingPassword(password)) {
+        if (member.isMatchingPassword(encryptedPassword)) {
             return;
         }
 

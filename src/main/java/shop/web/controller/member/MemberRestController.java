@@ -1,7 +1,6 @@
 package shop.web.controller.member;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 import shop.application.coupon.CouponService;
 import shop.application.member.MemberService;
@@ -42,12 +41,10 @@ public class MemberRestController {
     @PostMapping("/login")
     public ResponseEntity<MemberLoginResponse> loginMember(@RequestBody MemberLoginRequest request) {
         MemberLoginDto memberLoginDto = toMemberLoginDto(request);
-        String encryptedPassword = memberService.login(memberLoginDto);
 
-        String token = request.getName() + ":" + encryptedPassword;
-        String encodedToken = Base64Utils.encodeToUrlSafeString(token.getBytes());
+        String loginToken = memberService.login(memberLoginDto);
 
-        return ResponseEntity.ok(new MemberLoginResponse(encodedToken));
+        return ResponseEntity.ok(new MemberLoginResponse(loginToken));
     }
 
     private MemberLoginDto toMemberLoginDto(MemberLoginRequest request) {

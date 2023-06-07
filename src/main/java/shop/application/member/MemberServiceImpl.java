@@ -2,6 +2,7 @@ package shop.application.member;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import shop.application.coupon.CouponService;
 import shop.application.member.dto.MemberDto;
 import shop.application.member.dto.MemberJoinDto;
@@ -13,7 +14,6 @@ import shop.domain.member.Password;
 import shop.domain.repository.MemberRepository;
 import shop.exception.AuthenticationException;
 import shop.exception.ShoppingException;
-import shop.util.Encryptor;
 
 import java.util.List;
 
@@ -51,13 +51,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public String login(MemberLoginDto memberDto) {
         Member findMember = memberRepository.findByName(memberDto.getName());
-        String encryptedPassword = Encryptor.encrypt(memberDto.getPassword());
+        Password password = Password.createFromNaturalPassword(memberDto.getPassword());
 
-        if (!findMember.isMatchingPassword(encryptedPassword)) {
+        if (!findMember.isMatchingPassword(password)) {
             throw new AuthenticationException("Name 및 Password에 일치하는 회원이 없습니다.");
         }
 
-        return findMember.getPassword();
+        return createLoginToken(findMember);
+    }
+
+    private String createLoginToken(Member findMember) {
+        String token = findMember.getName() + ":" + findMember.getPassword();
+
+        return Base64Utils.encodeToUrlSafeString(token.getBytes());
     }
 
     @Override
