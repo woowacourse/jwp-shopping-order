@@ -7,6 +7,8 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.IssuableCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.CouponIssueConditionEntity;
+import cart.exception.CouponException;
+import cart.exception.ExceptionType;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -74,6 +76,6 @@ public class CouponRepository {
     private Coupon toCoupon(CouponIssueConditionEntity it) {
         return couponDao.findById(it.getCouponId())
                 .map(CouponEntity::toDomain)
-                .orElseThrow();
+                .orElseThrow(() -> new CouponException(ExceptionType.NOT_FOUND_COUPON));
     }
 }

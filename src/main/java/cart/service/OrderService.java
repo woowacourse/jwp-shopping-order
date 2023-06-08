@@ -1,15 +1,11 @@
 package cart.service;
 
-import static cart.exception.ExceptionType.NOT_FOUND_CART_ITEM;
-import static cart.exception.ExceptionType.NOT_FOUND_COUPON;
-import static cart.exception.ExceptionType.NOT_FOUND_ORDER;
-
 import cart.domain.CartItem;
+import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.domain.Member;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -73,7 +69,7 @@ public class OrderService {
             return new MemberCoupon(member, Coupon.NONE);
         }
         return memberCouponRepository.findById(couponId)
-                .orElseThrow(() -> new CouponException(NOT_FOUND_COUPON));
+                .orElseThrow(() -> new CouponException(ExceptionType.NOT_FOUND_COUPON));
     }
 
     private void deleteOrdered(List<CartItem> cartItems, MemberCoupon memberCoupon) {
@@ -87,13 +83,13 @@ public class OrderService {
 
     private CartItem getCartItem(Long cartItemId) {
         return cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
+                .orElseThrow(() -> new CartItemException(ExceptionType.NOT_FOUND_CART_ITEM));
     }
 
     @Transactional(readOnly = true)
     public OrderDetailResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
+                .orElseThrow(() -> new OrderException(ExceptionType.NOT_FOUND_ORDER));
         order.checkOwner(member);
         return OrderDetailResponse.from(order);
     }

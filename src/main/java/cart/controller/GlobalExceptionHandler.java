@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.BaseException;
+import cart.exception.ExceptionStatus;
 import cart.exception.ExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error(e.getMessage(), e);
+        ExceptionStatus exceptionStatus = ExceptionStatus.INTERNAL_SERVER_ERROR;
+        ErrorResponse errorResponse = new ErrorResponse(exceptionStatus.getErrorCode());
+        return ResponseEntity.status(exceptionStatus.getHttpStatus()).body(errorResponse);
+    }
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(AuthenticationException e) {
@@ -26,7 +35,8 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(BaseException e) {
         ExceptionType exceptionType = e.getExceptionType();
         log.warn(exceptionType.getErrorMessage(), e);
-        ErrorResponse errorResponse = new ErrorResponse(exceptionType.getErrorCode());
-        return ResponseEntity.status(exceptionType.getHttpStatus()).body(errorResponse);
+        ExceptionStatus exceptionStatus = ExceptionStatus.findByType(exceptionType);
+        ErrorResponse errorResponse = new ErrorResponse(exceptionStatus.getErrorCode());
+        return ResponseEntity.status(exceptionStatus.getHttpStatus()).body(errorResponse);
     }
 }
