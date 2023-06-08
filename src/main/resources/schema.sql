@@ -5,7 +5,7 @@ CREATE TABLE product
     price      INT          NOT NULL,
     image_url  VARCHAR(255) NOT NULL,
     stock      BIGINT       NOT NULL,
-    isDelete   BOOLEAN DEFAULT FALSE,
+    is_delete   BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP    NOT NULL
                        DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP    NOT NULL

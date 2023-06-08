@@ -39,12 +39,14 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, ProductUpdateDto productUpdateDto) {
+        productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
         Product product = new Product(productUpdateDto.getName(), productUpdateDto.getPrice(), productUpdateDto.getImageUrl(),
                 productUpdateDto.getStock());
         productDao.updateProduct(productId, product);
     }
 
     public void deleteProduct(Long productId) {
+        productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
         productDao.deleteProduct(productId);
     }
 }

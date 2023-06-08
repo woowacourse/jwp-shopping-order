@@ -34,14 +34,14 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, mapper);
+        String sql = "SELECT * FROM product WHERE is_delete = ?";
+        return jdbcTemplate.query(sql, mapper, false);
     }
 
     public Optional<Product> findById(Long id) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT * FROM product WHERE id = ? AND is_delete = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, id, false));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -93,7 +93,7 @@ public class ProductDao {
     }
 
     public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        String sql = "UPDATE product SET is_delete = ? WHERE id = ?";
+        jdbcTemplate.update(sql, true, productId);
     }
 }
