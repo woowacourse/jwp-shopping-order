@@ -1,0 +1,44 @@
+### 주문 추가 (쿠폰 있음)
+POST {{host}}/orders
+Content-Type: application/json
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+{
+  "couponId": 1,
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 10
+    },
+    {
+      "productId": 2,
+      "quantity": 5
+    }
+  ]
+}
+
+### 주문 추가 (쿠폰 없음)
+POST {{host}}/orders
+Content-Type: application/json
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+{
+  "items": [
+    {
+      "productId": 3,
+      "quantity": 20
+    }
+  ]
+}
+
+### 주문 단일 조회
+GET {{host}}/orders/1
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+### 사용자 주문 전체 조회
+GET {{host}}/orders
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+### 주문 취소
+POST {{host}}/orders/cancel/1
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==

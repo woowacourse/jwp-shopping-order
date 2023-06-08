@@ -1,44 +1,75 @@
 package cart.application;
 
-import cart.domain.Product;
-import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import org.springframework.stereotype.Service;
+import static cart.application.mapper.ProductMapper.convertProduct;
+import static cart.application.mapper.ProductMapper.convertProductResponse;
 
+import cart.application.dto.product.ProductPageResponse;
+import cart.application.dto.product.ProductRequest;
+import cart.application.dto.product.ProductResponse;
+import cart.application.mapper.ProductMapper;
+import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        final List<Product> products = productRepository.getAllProducts();
+        return products.stream()
+            .map(ProductMapper::convertProductResponse)
+            .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+        final Product product = productRepository.getProductById(productId);
+        return convertProductResponse(productId, product);
     }
 
+    public ProductPageResponse getProductsByPage(final int page, final int size) {
+        final List<Product> products = productRepository.getProductsByPage(page, size);
+        final List<ProductResponse> productResponses = products.stream()
+            .map(ProductMapper::convertProductResponse)
+            .collect(Collectors.toList());
+
+        final long totalProductCount = productRepository.getAllProductCount();
+        final long totalPage = calculateTotalPage(size, totalProductCount);
+        return new ProductPageResponse(totalPage, productResponses);
+    }
+
+    @Transactional
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        final Product product = convertProduct(productRequest);
+        return productRepository.save(product);
     }
 
+    @Transactional
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        final Product product = convertProduct(productRequest);
+        productRepository.updateProduct(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productRepository.deleteProduct(productId);
+    }
+
+    private long calculateTotalPage(final int size, final long totalProductCount) {
+        long totalPage = totalProductCount / size;
+
+        if (totalProductCount % size > 0) {
+            totalPage++;
+        }
+        return totalPage;
     }
 }

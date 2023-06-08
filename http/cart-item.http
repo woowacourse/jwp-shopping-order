@@ -1,0 +1,29 @@
+### 장바구니 상품 생성
+POST {{host}}/cart-items
+Content-Type: application/json
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+{
+  "productId": 1
+}
+
+### 장바구니 상품 수량 변경
+PATCH {{host}}/cart-items/1
+Content-Type: application/json
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+{
+  "quantity": 10
+}
+
+### 장바구니 상품 조회
+GET {{host}}/cart-items
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+### 장바구니 상품 삭제
+DELETE {{host}}/cart-items/1
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+### 장바구니 상품 다중 삭제
+DELETE {{host}}/cart-items?ids=1,2
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
