@@ -38,4 +38,8 @@ public class MemberRepository {
             .map(MemberMapper::toMember)
             .collect(Collectors.toUnmodifiableList());
     }
+
+    public boolean isEmailAndPasswordExist(String email, String password) {
+        return memberDao.isEmailAndPasswordExist(email, password);
+    }
 }

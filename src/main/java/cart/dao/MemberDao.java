@@ -4,6 +4,7 @@ import cart.dao.entity.MemberEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -61,4 +62,12 @@ public class MemberDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
+    public boolean isEmailAndPasswordExist(String email, String password) {
+        String sql = "SELECT EXISTS(SELECT id FROM member WHERE email = ? AND password = ?) AS member_id_exist";
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email, password));
+        } catch (EmptyResultDataAccessException exception) {
+            return false;
+        }
+    }
 }

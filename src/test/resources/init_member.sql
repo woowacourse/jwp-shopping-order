@@ -1,0 +1,1 @@
+INSERT INTO member (email, password) VALUES ('a@a.com', '1234');
