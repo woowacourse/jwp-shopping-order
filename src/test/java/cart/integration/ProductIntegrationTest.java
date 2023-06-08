@@ -3,8 +3,8 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,7 +61,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .jsonPath()
-                .getObject(".", ProductDto.class);
+                .getObject(".", ProductResponse.class);
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");

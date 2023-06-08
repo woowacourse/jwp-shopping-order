@@ -2,8 +2,8 @@ package cart.application;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,14 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductDto> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.findAll();
-        return products.stream().map(ProductDto::of).collect(Collectors.toList());
+        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductDto getProductById(Long productId) {
+    public ProductResponse getProductById(Long productId) {
         Product product = productDao.findById(productId);
-        return ProductDto.of(product);
+        return ProductResponse.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {

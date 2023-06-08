@@ -8,9 +8,9 @@ public class CartItemDto {
 
     private Long id;
     private int quantity;
-    private ProductDto product;
+    private ProductResponse product;
 
-    private CartItemDto(Long id, int quantity, ProductDto product) {
+    private CartItemDto(Long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -20,7 +20,7 @@ public class CartItemDto {
         return new CartItemDto(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductDto.of(cartItem.getProduct())
+                ProductResponse.of(cartItem.getProduct())
         );
     }
 
@@ -32,7 +32,7 @@ public class CartItemDto {
         return quantity;
     }
 
-    public ProductDto getProduct() {
+    public ProductResponse getProduct() {
         return product;
     }
 }
