@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.domain.respository.member.MemberRepository;
 import cart.dto.request.LoginRequest;
 import cart.dto.response.LoginResponse;
+import cart.exception.AuthorizationException;
 import cart.exception.MemberNotExistException;
 import cart.infrastructure.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,9 @@ public class LoginController {
     public ResponseEntity<LoginResponse> login(@ModelAttribute LoginRequest loginRequest) {
         final Member member = memberRepository.getMemberByEmail(loginRequest.getEmail())
             .orElseThrow(() -> new MemberNotExistException("해당 정보의 멤버가 존재하지 않습니다."));
-        member.checkPassword(loginRequest.getPassword());
+        if (!member.checkPassword(loginRequest.getPassword())) {
+            throw new AuthorizationException("회원 정보가 올바르지 않습니다.");
+        }
 
         final String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
         final String refreshToken = jwtTokenProvider.createRefreshToken();
