@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -60,16 +59,22 @@ public class OrderService {
         final OrderItems orderItems = generateOrderItems(orderRequest);
         final CartItems cartItems = new CartItems(cartItemRepository.findByMemberId(memberId));
 
-        orderItems.getItems().forEach(orderItem -> cartItems.buy(new CartItem(member, orderItem.getProduct())));
+        orderItems.getItems()
+            .forEach(orderItem -> cartItems.buy(orderItem.getProduct().getId(), orderItem.getQuantity()));
 
-        final Order order = cartItems.order(member, orderRequest.getOrderTime());
-        final OrderPrice orderPrice = OrderPrice.of(order, discountPolicy, deliveryPolicy);
-        final Order persistOrder = orderRepository.insert(order, orderPrice);
+        final Order order = cartItems.order(member, orderRequest.getOrderTime(), discountPolicy, deliveryPolicy);
+        final Order persistOrder = orderRepository.insert(order, order.getOrderPrice());
 
         saveOrderItems(persistOrder);
         deleteCartItems(persistOrder);
 
-        return OrderResponse.of(persistOrder, OrderPrice.of(persistOrder, discountPolicy, deliveryPolicy));
+        return OrderResponse.of(persistOrder,
+            OrderPrice.of(persistOrder.getProductPrice(), discountPolicy, deliveryPolicy));
+    }
+
+    private Member findExistMemberById(final Long id) {
+        return memberRepository.getMemberById(id)
+            .orElseThrow(() -> new MemberNotExistException("해당 멤버가 존재하지 않습니다."));
     }
 
     private OrderItems generateOrderItems(final OrderRequest orderRequest) {
@@ -100,24 +105,16 @@ public class OrderService {
     public OrderResponse getOrderById(final Long orderId) {
         final Order persistedOrder = orderRepository.findByOrderId(orderId);
 
-        return OrderResponse.of(persistedOrder, OrderPrice.of(persistedOrder, discountPolicy, deliveryPolicy));
+        return OrderResponse.of(persistedOrder, persistedOrder.getOrderPrice());
     }
 
     public OrdersResponse getOrderByMemberId(final Long memberId) {
         final List<Order> persistedOrders = orderRepository.findAllByMemberId(memberId);
 
         final List<OrderResponse> orderResponses = persistedOrders.stream()
-            .map(order -> {
-                final OrderPrice orderPrice = OrderPrice.of(order, discountPolicy, deliveryPolicy);
-                return OrderResponse.of(order, orderPrice);
-            })
+            .map(order -> OrderResponse.of(order, order.getOrderPrice()))
             .collect(Collectors.toList());
 
         return new OrdersResponse(orderResponses);
-    }
-
-    private Member findExistMemberById(final Long id) {
-        return memberRepository.getMemberById(id)
-            .orElseThrow(() -> new MemberNotExistException("해당 멤버가 존재하지 않습니다."));
     }
 }
