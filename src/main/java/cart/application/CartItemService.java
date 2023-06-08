@@ -3,13 +3,13 @@ package cart.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.transaction.annotation.Transactional;
 
+import cart.application.dto.CartItemResponse;
 import cart.application.dto.PatchCartItemQuantityUpdateRequest;
 import cart.application.dto.PostCartItemRequest;
-import cart.application.dto.CartItemResponse;
 import cart.application.event.CartItemDeleteEvent;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
@@ -57,7 +57,8 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @EventListener
+    @Transactional
     public void removeAllWithOutCheckingOwner(CartItemDeleteEvent event) {
         long memberId = event.getMemberId();
         List<QuantityAndProduct> quantityAndProducts = event.getQuantityAndProducts();

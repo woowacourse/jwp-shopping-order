@@ -3,10 +3,9 @@ package cart.application;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import cart.application.dto.GetPointResponse;
 import cart.application.event.PointAdditionEvent;
@@ -52,7 +51,8 @@ public class PointService {
             .sum();
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @EventListener
+    @Transactional
     public void handlePointProcessInOrder(PointAdditionEvent event) {
         long memberId = event.getMemberId();
         int usePointAmount = event.getUsePointAmount();
@@ -91,7 +91,8 @@ public class PointService {
             PointAddition.from(memberId, orderId, addition, now, now.plusDays(POINT_EXPIRATION_DATE)));
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @EventListener
+    @Transactional
     public void handlePointRetrieval(PointRetrieveEvent event) {
         long orderId = event.getOrderId();
         List<PointUsage> pointUsageHistory = pointUsageDao.findAllByOrderId(orderId);
