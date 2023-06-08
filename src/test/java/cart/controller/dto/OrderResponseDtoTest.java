@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import cart.controller.response.OrderProductResponseDto;
 import cart.controller.response.OrderResponseDto;
-import cart.dto.ProductResponseDto;
+import cart.controller.response.ProductResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

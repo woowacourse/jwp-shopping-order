@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import anotation.RepositoryTest;
-import cart.dto.MemberCouponDto;
+import cart.dao.dto.MemberCouponDto;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

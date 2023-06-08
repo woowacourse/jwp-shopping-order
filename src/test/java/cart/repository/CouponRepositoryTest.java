@@ -12,9 +12,9 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import anotation.RepositoryTest;
 import cart.dao.MemberCouponDao;
+import cart.dao.dto.MemberCouponDto;
 import cart.domain.Coupon;
 import cart.domain.MemberCoupon;
-import cart.dto.MemberCouponDto;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

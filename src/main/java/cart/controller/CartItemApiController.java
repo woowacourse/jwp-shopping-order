@@ -1,9 +1,9 @@
 package cart.controller;
 
+import cart.controller.request.CartItemQuantityUpdateRequestDto;
+import cart.controller.request.CartItemRequestDto;
+import cart.controller.response.CartItemResponseDto;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
 import cart.service.CartItemService;
 import java.net.URI;
 import java.util.List;
@@ -28,12 +28,12 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
+    public ResponseEntity<List<CartItemResponseDto>> showCartItems(Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequestDto cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
@@ -41,7 +41,7 @@ public class CartItemApiController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
-                                                       @RequestBody CartItemQuantityUpdateRequest request) {
+                                                       @RequestBody CartItemQuantityUpdateRequestDto request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok().build();

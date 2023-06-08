@@ -1,13 +1,15 @@
 package cart.controller;
 
+import cart.controller.request.CartItemQuantityUpdateRequestDto;
+import cart.controller.request.CartItemRequestDto;
+import cart.controller.request.ProductRequestDto;
+import cart.controller.response.CartItemResponseDto;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,6 @@ import org.springframework.http.MediaType;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,8 +37,8 @@ class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequestDto("치킨", 10_000, "http://example.com/chicken.jpg"));
+        productId2 = createProduct(new ProductRequestDto("피자", 15_000, "http://example.com/pizza.jpg"));
 
         member = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);
@@ -47,7 +47,7 @@ class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        CartItemRequestDto cartItemRequest = new CartItemRequestDto(productId);
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -57,7 +57,7 @@ class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void addCartItemByIllegalMember() {
         Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        CartItemRequestDto cartItemRequest = new CartItemRequestDto(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -73,8 +73,8 @@ class CartItemIntegrationTest extends IntegrationTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
+        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponseDto.class).stream()
+                .map(CartItemResponseDto::getId)
                 .collect(Collectors.toList());
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
     }
@@ -89,8 +89,8 @@ class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
+        Optional<CartItemResponseDto> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartItemResponseDto.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
@@ -109,8 +109,8 @@ class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
+        Optional<CartItemResponseDto> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartItemResponseDto.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
@@ -139,8 +139,8 @@ class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
+        Optional<CartItemResponseDto> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartItemResponseDto.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
@@ -148,7 +148,7 @@ class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse).isNotPresent();
     }
 
-    private Long createProduct(ProductRequest productRequest) {
+    private Long createProduct(ProductRequestDto productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
@@ -165,7 +165,7 @@ class CartItemIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequestDto cartItemRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
@@ -178,7 +178,7 @@ class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequestDto(productId));
         return getIdFromCreatedResponse(response);
     }
 
@@ -194,7 +194,7 @@ class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
-        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
+        CartItemQuantityUpdateRequestDto quantityUpdateRequest = new CartItemQuantityUpdateRequestDto(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

@@ -1,10 +1,10 @@
-package cart.dto;
+package cart.controller.request;
 
 import java.util.Optional;
 import javax.validation.constraints.Positive;
 import org.springframework.lang.Nullable;
 
-public class CartItemRequest {
+public class CartItemRequestDto {
 
     @Positive
     private Long productId;
@@ -12,10 +12,10 @@ public class CartItemRequest {
     @Nullable
     private Integer quantity;
 
-    private CartItemRequest() {
+    private CartItemRequestDto() {
     }
 
-    public CartItemRequest(Long productId) {
+    public CartItemRequestDto(Long productId) {
         this.productId = productId;
     }
 

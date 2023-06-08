@@ -5,7 +5,7 @@ import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import anotation.RepositoryTest;
-import cart.dto.CouponDto;
+import cart.dao.dto.CouponDto;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

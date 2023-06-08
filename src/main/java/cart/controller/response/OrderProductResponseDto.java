@@ -1,7 +1,6 @@
 package cart.controller.response;
 
 import cart.domain.OrderProduct;
-import cart.dto.ProductResponseDto;
 
 public class OrderProductResponseDto {
 

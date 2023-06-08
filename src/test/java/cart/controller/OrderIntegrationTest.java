@@ -5,19 +5,19 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import cart.controller.request.CartItemRequestDto;
 import cart.controller.request.OrderRequestDto;
+import cart.controller.request.ProductRequestDto;
+import cart.controller.response.CartItemResponseDto;
 import cart.controller.response.CouponResponseDto;
 import cart.controller.response.DiscountResponseDto;
 import cart.controller.response.OrderProductResponseDto;
 import cart.controller.response.OrderResponseDto;
+import cart.controller.response.ProductResponseDto;
 import cart.dao.CouponDao;
 import cart.dao.MemberDao;
+import cart.dao.dto.CouponDto;
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.CouponDto;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponseDto;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -51,9 +51,9 @@ class OrderIntegrationTest extends IntegrationTest {
         // given
         // 물품들이 등록되어 있다.
         int PRICE = 1_000_000_000;
-        ProductRequest 홍실 = new ProductRequest("홍실", PRICE, "hongsil.com");
+        ProductRequestDto 홍실 = new ProductRequestDto("홍실", PRICE, "hongsil.com");
         Long hongSilId = createProduct(홍실);
-        ProductRequest 매튜 = new ProductRequest("매튜", PRICE, "matthew.com");
+        ProductRequestDto 매튜 = new ProductRequestDto("매튜", PRICE, "matthew.com");
         Long matthewId = createProduct(매튜);
 
         // 쿠폰이 있다.
@@ -95,7 +95,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
         // 주문한 물품을 장바구니에서 삭제한다.
         ExtractableResponse<Response> cartItems = requestGetCartItems(member);
-        List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {});
+        List<CartItemResponseDto> cartItemResponse = cartItems.as(new TypeRef<>() {});
         assertThat(cartItemResponse).isEmpty();
 
         // 주문내역을 저장한다.
@@ -151,7 +151,7 @@ class OrderIntegrationTest extends IntegrationTest {
         return response.as(new TypeRef<>() {});
     }
 
-    private Long createProduct(ProductRequest productRequest) {
+    private Long createProduct(ProductRequestDto productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
@@ -165,7 +165,7 @@ class OrderIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequestDto cartItemRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
@@ -175,7 +175,7 @@ class OrderIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequestDto(productId));
         return getIdFromCreatedResponse(response);
     }
 

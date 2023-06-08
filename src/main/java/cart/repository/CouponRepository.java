@@ -2,11 +2,11 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
+import cart.dao.dto.CouponDto;
+import cart.dao.dto.MemberCouponDto;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
-import cart.dto.CouponDto;
-import cart.dto.MemberCouponDto;
 import cart.repository.convertor.CouponConvertor;
 import java.util.ArrayList;
 import java.util.List;

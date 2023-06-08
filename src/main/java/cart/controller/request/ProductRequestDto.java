@@ -1,14 +1,14 @@
-package cart.dto;
+package cart.controller.request;
 
-public class ProductRequest {
+public class ProductRequestDto {
     private String name;
     private int price;
     private String imageUrl;
 
-    private ProductRequest() {
+    private ProductRequestDto() {
     }
 
-    public ProductRequest(String name, int price, String imageUrl) {
+    public ProductRequestDto(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

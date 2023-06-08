@@ -1,7 +1,7 @@
 package cart.repository.convertor;
 
+import cart.dao.dto.CouponDto;
 import cart.domain.Coupon;
-import cart.dto.CouponDto;
 
 public class CouponConvertor {
 

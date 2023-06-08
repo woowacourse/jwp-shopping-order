@@ -1,12 +1,12 @@
 package cart.service;
 
+import cart.controller.request.CartItemQuantityUpdateRequestDto;
+import cart.controller.request.CartItemRequestDto;
+import cart.controller.response.CartItemResponseDto;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,12 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
+    public List<CartItemResponseDto> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream().map(CartItemResponseDto::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
+    public Long add(Member member, CartItemRequestDto cartItemRequest) {
         Integer quantity = cartItemRequest.getQuantity()
                 .orElseGet(() -> DEFAULT_QUANTITY);
 
@@ -38,7 +38,7 @@ public class CartItemService {
         );
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequestDto request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 

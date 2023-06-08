@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dao.dto;
 
 public class CouponDto {
 

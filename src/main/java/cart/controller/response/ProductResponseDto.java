@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.controller.response;
 
 import cart.domain.Product;
 
