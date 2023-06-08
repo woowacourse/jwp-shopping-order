@@ -50,11 +50,5 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/coupons")
-    public ResponseEntity<PreparedOrderResponse> applyCoupons(@Auth Member member, @RequestParam(name = "id") List<Long> couponIds) {
-        Order order = cartItemService.prepareOrder(member, couponIds);
-        return ResponseEntity.ok().body(PreparedOrderResponse.from(order));
-    }
-
 }
 

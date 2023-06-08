@@ -1,37 +1,24 @@
 package cart.service;
 
 import cart.dao.CartItemDao;
-import cart.dao.coupon.CouponDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Coupons;
-import cart.domain.coupon.ProductCoupon;
-import cart.domain.coupon.SingleCoupon;
-import cart.domain.order.Order;
-import cart.domain.order.OrderCartItem;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import cart.dto.order.OrderRequest;
-import cart.exception.DuplicateDiscountException;
-import cart.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
-    private final CouponDao couponDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao, CouponDao couponDao) {
+    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
-        this.couponDao = couponDao;
     }
 
     public List<CartItemResponse> findByMember(Member member) {
@@ -61,108 +48,6 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
-    }
-
-    public Order order(Member member, OrderRequest orderRequest) {
-        List<Long> notNullCouponIds = orderRequest.getCouponIds().stream().
-                filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        List<CartItem> cartItems = orderRequest.getCartItemIds().stream()
-                .map(id -> cartItemDao.findById(id))
-                .collect(Collectors.toList());
-
-        if (notNullCouponIds.size() == 0) {
-            List<OrderCartItem> orderCartItems = notApplyCoupon(cartItems);
-            return new Order(orderCartItems);
-        }
-
-        List<Coupon> usingCoupons = notNullCouponIds.stream()
-                .map(couponDao::getCouponById)
-                .collect(Collectors.toList());
-
-        validateCoupons(usingCoupons, couponDao.findByMemberId(member.getId()));
-
-        Coupons coupons = new Coupons(usingCoupons);
-
-        List<Coupon> productCoupons = coupons.findCoupons(ProductCoupon.CATEGORY);
-        List<OrderCartItem> orderCartItems = applyProductCoupon(cartItems, productCoupons);
-
-        List<Coupon> singleCoupons = coupons.findCoupons(SingleCoupon.CATEGORY);
-        return getOrder(orderCartItems, singleCoupons);
-
-    }
-
-
-    public Order prepareOrder(Member member, List<Long> couponIds) {
-        List<Long> notNullCouponIds = couponIds.stream().
-                filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-
-        if (notNullCouponIds.size() == 0) {
-            List<OrderCartItem> orderCartItems = notApplyCoupon(cartItems);
-            return new Order(orderCartItems);
-        }
-
-        List<Coupon> usingCoupons = notNullCouponIds.stream()
-                .map(couponDao::getCouponById)
-                .collect(Collectors.toList());
-
-        List<Coupon> memberCoupons = couponDao.findByMemberId(member.getId());
-
-        validateCoupons(usingCoupons, memberCoupons);
-
-        Coupons coupons = new Coupons(usingCoupons);
-
-        List<Coupon> productCoupons = coupons.findCoupons(ProductCoupon.CATEGORY);
-        List<OrderCartItem> orderCartItems = applyProductCoupon(cartItems, productCoupons);
-
-        List<Coupon> singleCoupons = coupons.findCoupons(SingleCoupon.CATEGORY);
-        return getOrder(orderCartItems, singleCoupons);
-    }
-
-    private void validateCoupons(List<Coupon> usingCoupons, List<Coupon> memberCoupons) {
-        if (usingCoupons.stream()
-                .noneMatch(coupon -> memberCoupons.contains(coupon))) {
-            throw new NotFoundException("회원에게 쿠폰이 존재하지 않습니다.");
-        }
-    }
-
-    private List<OrderCartItem> applyCoupon(List<CartItem> cartItems, Coupon coupon) {
-        return cartItems.stream()
-                .map(cartItem -> new OrderCartItem(cartItem, coupon))
-                .collect(Collectors.toList());
-    }
-
-    private List<OrderCartItem> notApplyCoupon(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(OrderCartItem::new)
-                .collect(Collectors.toList());
-    }
-
-    private Order getOrder(List<OrderCartItem> orderCartItems, List<Coupon> singleCoupons) {
-        if (singleCoupons.size() == 0) {
-            return new Order(orderCartItems);
-        }
-
-        if (singleCoupons.size() == 1) {
-            return new Order(orderCartItems, singleCoupons.get(0));
-        }
-
-        throw new DuplicateDiscountException("중복할인이 불가능합니다. (모든상품할인)");
-    }
-
-    private List<OrderCartItem> applyProductCoupon(List<CartItem> cartItems, List<Coupon> productCoupons) {
-        if (productCoupons.size() == 0) {
-            return notApplyCoupon(cartItems);
-        }
-
-        if (productCoupons.size() == 1) {
-            return applyCoupon(cartItems, productCoupons.get(0));
-        }
-
-        throw new DuplicateDiscountException("중복할인이 불가능합니다.(단순상품할인)");
     }
 
 }
