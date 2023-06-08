@@ -29,8 +29,8 @@ class OrderTest {
 
         assertThat(order.getTimeStamp()).isNotNull();
         assertThat(order.getMember()).isEqualTo(member);
-        assertThat(order.calculateTotalPrice()).isEqualTo(2_000_000_000);
-        assertThat(order.calculateCutPrice()).isEqualTo(cutPrice);
+        assertThat(order.getDiscountInfo().getOriginPrice()).isEqualTo(2_000_000_000);
+        assertThat(order.getDiscountInfo().getDiscountPrice()).isEqualTo(cutPrice);
         assertThat(order.getCouponName()).isEqualTo(couponName);
         assertThat(order.getOrderProducts()).hasSize(2)
                 .extracting(OrderProduct::getProduct)
@@ -41,8 +41,8 @@ class OrderTest {
     private static Stream<Arguments> validateCoupon() {
         return Stream.of(
                 Arguments.of("Coupon 이 없는 경우 할인되지 않는다.", COUPON_3_NULL, 0, "적용된 쿠폰이 없습니다."),
-                Arguments.of("백분율로 할인하는 Coupon 의 경우 기존의 가격에서 discountRate 만큼 할인된다.", COUPON_2_NOT_NULL_RATE, 200_000_000, "할인율 쿠폰"),
-                Arguments.of("고정된 금액으로 할인하는 Coupon 의 경우 기존의 가격에서 discountPrice 만큼 할인된다.", COUPON_1_NOT_NULL_PRICE, 5000, "정액 할인 쿠폰")
+                Arguments.of("백분율로 할인하는 Coupon 의 경우 기존의 가격에서 discountRate 만큼 할인된다.", COUPON_2_NOT_NULL_RATE, -200_000_000, "할인율 쿠폰"),
+                Arguments.of("고정된 금액으로 할인하는 Coupon 의 경우 기존의 가격에서 discountPrice 만큼 할인된다.", COUPON_1_NOT_NULL_PRICE, -5000, "정액 할인 쿠폰")
         );
     }
 

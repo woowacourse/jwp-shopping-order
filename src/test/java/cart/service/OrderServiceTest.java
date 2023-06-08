@@ -58,7 +58,7 @@ class OrderServiceTest {
     private static Stream<Arguments> validateOrder() {
         return Stream.of(
                 Arguments.of("쿠폰 적용 x", null, 0, 100_000),
-                Arguments.of("정액 할인 쿠폰 적용", MEMBER_COUPON_1.getId(), 5000, 95_000)
+                Arguments.of("정액 할인 쿠폰 적용", MEMBER_COUPON_1.getId(), -5000, 95_000)
         );
     }
 

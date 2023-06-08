@@ -3,6 +3,7 @@ package cart.service;
 import cart.controller.response.CouponResponseDto;
 import cart.controller.response.DiscountResponseDto;
 import cart.domain.Coupon;
+import cart.domain.Discount;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.repository.CouponRepository;
@@ -42,7 +43,8 @@ public class CouponService {
                 .map(notNullCoupon -> notNullCoupon.apply(originPrice))
                 .orElseGet(() -> originPrice);
 
-        return DiscountResponseDto.of(originPrice, priceAfterDiscount);
+        Discount discount = Discount.of(originPrice, priceAfterDiscount);
+        return DiscountResponseDto.from(discount);
     }
 
 }

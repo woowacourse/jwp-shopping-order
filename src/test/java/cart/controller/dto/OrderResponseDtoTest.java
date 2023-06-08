@@ -20,7 +20,7 @@ class OrderResponseDtoTest {
 
         assertThat(orderResponseDto)
                 .extracting(OrderResponseDto::getTimestamp, OrderResponseDto::getOriginPrice, OrderResponseDto::getDiscountPrice, OrderResponseDto::getTotalPrice)
-                .containsExactly(TIME.toString(), 86_000, 5000, 81_000);
+                .containsExactly(TIME.toString(), 86_000, -5000, 81_000);
         assertThat(orderResponseDto.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponseDto)
                 .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)

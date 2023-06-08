@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import anotation.ServiceTest;
 import cart.controller.response.CouponResponseDto;
 import cart.controller.response.DiscountResponseDto;
+import cart.domain.Discount;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -60,8 +61,8 @@ class CouponServiceTest {
 
     private static Stream<Arguments> validateDiscountCalculator() {
         return Stream.of(
-                Arguments.of("정액 할인 쿠폰", 10000, MEMBER_COUPON_3.getId(), DiscountResponseDto.of(10000, 5000)),
-                Arguments.of("할인율 쿠폰", 10000, MEMBER_COUPON_4.getId(), DiscountResponseDto.of(10000, 9000))
+                Arguments.of("정액 할인 쿠폰", 10000, MEMBER_COUPON_3.getId(), DiscountResponseDto.from(Discount.of(10000, 5000))),
+                Arguments.of("할인율 쿠폰", 10000, MEMBER_COUPON_4.getId(), DiscountResponseDto.from(Discount.of(10000, 9000)))
         );
     }
 

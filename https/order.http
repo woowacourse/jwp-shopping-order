@@ -7,7 +7,7 @@ Authorization: basic YUBhLmNvbToxMjM0
 HTTP/1.1 200
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Sun, 04 Jun 2023 14:52:03 GMT
+Date: Thu, 08 Jun 2023 12:18:06 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 
@@ -44,7 +44,7 @@ Connection: keep-alive
   ],
   "timestamp": "2023-01-01T12:00",
   "originPrice": 86000,
-  "discountPrice": 5000,
+  "discountPrice": -5000,
   "totalPrice": 81000
 }
 
@@ -57,7 +57,7 @@ Authorization: basic YUBhLmNvbToxMjM0
 HTTP/1.1 200
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Sun, 04 Jun 2023 14:52:33 GMT
+Date: Thu, 08 Jun 2023 12:23:10 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 
@@ -95,7 +95,7 @@ Connection: keep-alive
     ],
     "timestamp": "2023-01-01T12:00",
     "originPrice": 86000,
-    "discountPrice": 5000,
+    "discountPrice": -5000,
     "totalPrice": 81000
   },
   {
@@ -113,7 +113,7 @@ Connection: keep-alive
     ],
     "timestamp": "2023-01-01T12:00",
     "originPrice": 20000,
-    "discountPrice": 2000,
+    "discountPrice": -2000,
     "totalPrice": 18000
   }
 ]
@@ -137,7 +137,7 @@ HTTP/1.1 201
 Location: /orders/5
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Sun, 04 Jun 2023 14:53:02 GMT
+Date: Thu, 08 Jun 2023 12:19:08 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 
@@ -163,31 +163,18 @@ Connection: keep-alive
       "quantity": 4
     }
   ],
-  "timestamp": "2023-06-04T23:53:02.166210",
+  "timestamp": "2023-06-08T21:19:08.578143",
   "originPrice": 100000,
-  "discountPrice": 5000,
+  "discountPrice": -5000,
   "totalPrice": 95000
 }
 
 ### 주문하기 - 쿠폰적용 하지 않는 경우
-POST http://localhost:8080/orders
-Accept: application/json
-Content-Type: application/json
-Authorization: basic YUBhLmNvbToxMjM0
-
-{
-  "cartItemIds": [
-    1,
-    2
-  ]
-}
-
-### response
 HTTP/1.1 201
 Location: /orders/5
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Sun, 04 Jun 2023 14:56:27 GMT
+Date: Thu, 08 Jun 2023 12:19:54 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 
@@ -213,7 +200,7 @@ Connection: keep-alive
       "quantity": 4
     }
   ],
-  "timestamp": "2023-06-04T23:56:27.363398",
+  "timestamp": "2023-06-08T21:19:54.661423",
   "originPrice": 100000,
   "discountPrice": 0,
   "totalPrice": 100000

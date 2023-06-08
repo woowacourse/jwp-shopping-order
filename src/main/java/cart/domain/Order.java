@@ -60,20 +60,16 @@ public class Order {
 
     public Integer calculateTotalPrice() {
         return orderProducts.stream()
-                .mapToInt(this::calculateOrderProduct)
+                .mapToInt(OrderProduct::getTotalPrice)
                 .sum();
     }
 
-    public Integer calculateCutPrice() {
+    public Discount getDiscountInfo() {
         int originPrice = calculateTotalPrice();
         int priceAfterDiscount = getOptionalCoupon()
                 .map(notNullCoupon -> notNullCoupon.apply(originPrice))
                 .orElseGet(() -> originPrice);
-        return  originPrice - priceAfterDiscount;
-    }
-
-    private int calculateOrderProduct(final OrderProduct orderProduct) {
-        return orderProduct.getTotalPrice();
+        return Discount.of(originPrice, priceAfterDiscount);
     }
 
     public Long getId() {

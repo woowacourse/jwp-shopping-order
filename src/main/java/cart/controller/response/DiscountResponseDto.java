@@ -1,5 +1,7 @@
 package cart.controller.response;
 
+import cart.domain.Discount;
+
 public class DiscountResponseDto {
 
     private final Integer discountPrice;
@@ -14,9 +16,8 @@ public class DiscountResponseDto {
         this.totalPrice = totalPrice;
     }
     
-    public static DiscountResponseDto of(final Integer originPrice, final Integer priceAfterDiscount) {
-        int discountPrice = priceAfterDiscount - originPrice;
-        return new DiscountResponseDto(discountPrice, priceAfterDiscount);
+    public static DiscountResponseDto from(Discount discount) {
+        return new DiscountResponseDto(discount.getDiscountPrice(), discount.getPriceAfterDiscount());
     }
 
     public Integer getDiscountPrice() {

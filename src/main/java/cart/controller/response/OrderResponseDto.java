@@ -1,5 +1,6 @@
 package cart.controller.response;
 
+import cart.domain.Discount;
 import cart.domain.Order;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,16 +31,14 @@ public class OrderResponseDto {
         this.totalPrice = totalPrice;
     }
 
-    public static OrderResponseDto from(final Order order) { // TODO : 이 부분을 도메인 로직이 너무 담당하고 있음
-        int originalPrice = order.calculateTotalPrice();
-        int cutPrice = order.calculateCutPrice();
+    public static OrderResponseDto from(final Order order) {
         return new OrderResponseDto(
                 order.getId(),
                 toOrderProductResponseDtos(order),
                 order.getTimeStamp().toString(),
-                originalPrice,
-                cutPrice,
-                originalPrice - cutPrice
+                order.getDiscountInfo().getOriginPrice(),
+                order.getDiscountInfo().getDiscountPrice(),
+                order.getDiscountInfo().getPriceAfterDiscount()
         );
     }
 

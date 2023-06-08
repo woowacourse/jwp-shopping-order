@@ -41,9 +41,9 @@ public class OrderService {
     }
 
     public OrderResponseDto findOrderById(final Member member ,final Long orderId) {
-        Order orderById = orderRepository.findOrderById(member, orderId);
+        Order order = orderRepository.findOrderById(member, orderId);
 
-        return OrderResponseDto.from(orderById);
+        return OrderResponseDto.from(order);
     }
 
     public List<OrderResponseDto> findAllOrder(Member member) {
