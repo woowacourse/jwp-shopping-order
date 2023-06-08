@@ -1,12 +1,12 @@
 package cart.application;
 
-import cart.repository.CartItemRepository;
-import cart.repository.ProductRepository;
-import cart.domain.product.CartItem;
 import cart.domain.Member;
+import cart.domain.product.CartItem;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
+import cart.repository.CartItemRepository;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

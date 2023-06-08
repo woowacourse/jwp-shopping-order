@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.response.CartItemIdResponse;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemIdResponse;
 import cart.dto.response.CartItemResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<CartItemIdResponse> addCartItems(Member member, @Valid  @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<CartItemIdResponse> addCartItems(Member member, @Valid @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)

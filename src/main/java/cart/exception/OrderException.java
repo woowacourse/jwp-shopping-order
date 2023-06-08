@@ -17,7 +17,7 @@ public class OrderException extends RuntimeException {
     }
 
     public static class NoCartItem extends OrderException {
-        public NoCartItem(){
+        public NoCartItem() {
             super("주문하려는 상품이 없습니다.");
         }
     }
