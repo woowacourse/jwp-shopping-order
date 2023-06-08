@@ -46,6 +46,9 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("장바구니에 담은 상품의 갯수는 1이상이여야 합니다.");
+        }
         this.quantity = quantity;
     }
 
@@ -58,6 +61,9 @@ public class CartItem {
             return false;
         }
         final CartItem cartItem = (CartItem) o;
+        if (Objects.isNull(id) || Objects.isNull(cartItem.id)) {
+            return false;
+        }
         return Objects.equals(id, cartItem.id);
     }
 
