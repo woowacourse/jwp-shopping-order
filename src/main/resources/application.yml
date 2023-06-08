@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: dev
   h2:
     console:
       enabled: true
@@ -14,3 +14,11 @@ spring:
     init:
       schema-locations: classpath:/schema.sql
       data-locations:
+  thymeleaf:
+    cache: false
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: debug
+---
