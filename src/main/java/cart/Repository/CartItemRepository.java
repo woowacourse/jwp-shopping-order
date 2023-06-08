@@ -23,7 +23,7 @@ public class CartItemRepository {
     private final MemberDao memberDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemRepository( ProductDao productDao, MemberDao memberDao, CartItemDao cartItemDao) {
+    public CartItemRepository(ProductDao productDao, MemberDao memberDao, CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.memberDao = memberDao;
         this.cartItemDao = cartItemDao;
@@ -32,7 +32,7 @@ public class CartItemRepository {
     public Cart findByMemberId(Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
 
-        if(cartItemEntities.size() ==0){
+        if (cartItemEntities.isEmpty()) {
             return new Cart(Collections.emptyList());
         }
 
@@ -57,7 +57,7 @@ public class CartItemRepository {
     public Cart findByIds(List<Long> cartItemIds) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
 
-        if(cartItemEntities.isEmpty()){
+        if (cartItemEntities.isEmpty()) {
             return new Cart(Collections.emptyList());
         }
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
@@ -92,14 +92,26 @@ public class CartItemRepository {
 
     public void updateQuantity(CartItem cartItem) {
         CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
-        cartItemDao.updateQuantity(cartItemEntity);
+        try {
+            cartItemDao.updateQuantity(cartItemEntity);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException.CartItem(cartItem.getId());
+        }
     }
 
     public void deleteById(Long id) {
-        cartItemDao.deleteById(id);
+        try {
+            cartItemDao.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException.CartItem(id);
+        }
     }
 
     public void deleteByIds(List<Long> cartItemIds) {
-        cartItemDao.deleteByIds(cartItemIds);
+        try {
+            cartItemDao.deleteByIds(cartItemIds);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException.CartItem(cartItemIds);
+        }
     }
 }

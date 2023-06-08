@@ -19,7 +19,7 @@ public class CartItemService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductRepository productRepository, ProductDao productDao, CartItemRepository cartItemRepository) {
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
     }
@@ -31,6 +31,13 @@ public class CartItemService {
                 .stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    public Cart findByCartItemIds(List<Long> cartItemIds) {
+        if(cartItemIds.isEmpty()){
+            throw new IllegalArgumentException();
+        }
+        return cartItemRepository.findByIds(cartItemIds);
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
@@ -55,13 +62,6 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemRepository.deleteById(id);
-    }
-
-    public Cart findByCartItemIds(List<Long> cartItemIds) {
-        if(cartItemIds.isEmpty()){
-            throw new IllegalArgumentException();
-        }
-        return cartItemRepository.findByIds(cartItemIds);
     }
 
     public void removeByIds(List<Long> cartItemIds) {

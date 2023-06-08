@@ -1,5 +1,8 @@
 package cart.exception;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class NotFoundException extends RuntimeException {
 
     public NotFoundException(final String message) {
@@ -26,6 +29,14 @@ public class NotFoundException extends RuntimeException {
 
         public CartItem(final Long id) {
             super(id + " id에 해당하는 장바구니가 없습니다.");
+        }
+
+        public CartItem(List<Long> cartItemIds) {
+            super(toString(cartItemIds) + " id 중 해당하는 존재하지 않는 장바구니가 포함되어 있습니다.");
+        }
+
+        private static String toString(List<Long> cartItemIds){
+            return cartItemIds.stream().map(String::valueOf).collect(Collectors.joining(","));
         }
     }
     public static class Order extends NotFoundException {

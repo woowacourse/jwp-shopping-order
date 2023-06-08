@@ -41,6 +41,15 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
+    public Optional<CartItemEntity> findById(Long id) {
+        String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE id = ? ";
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public List<CartItemEntity> findByIds(List<Long> cartItemIds) {
         String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE id In (:cartItemIds)";
 
@@ -60,28 +69,22 @@ public class CartItemDao {
         return insertAction.executeAndReturnKey(parameters).longValue();
     }
 
-    public Optional<CartItemEntity> findById(Long id) {
-        String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE id = ? ";
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
+    public void updateQuantity(CartItemEntity cartItemEntity) {
+        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        int affectedRow = jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
 
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        if (affectedRow == 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
+        int affectedRow = jdbcTemplate.update(sql, id);
 
-    public void updateQuantity(CartItemEntity cartItemEntity) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+        if (affectedRow == 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void deleteByIds(List<Long> cartItemIds) {
@@ -90,7 +93,11 @@ public class CartItemDao {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("cartItemIds", cartItemIds);
 
-        namedParameterJdbcTemplate.update(sql, parameters);
+        int affectedRow = namedParameterJdbcTemplate.update(sql, parameters);
+
+        if (affectedRow != cartItemIds.size()) {
+            throw new IllegalArgumentException();
+        }
     }
 }
 
