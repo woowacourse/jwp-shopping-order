@@ -30,7 +30,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequestDto cartItemRequest) {
-        Integer quantity = cartItemRequest.getQuantity()
+        int quantity = cartItemRequest.getQuantity()
                 .orElseGet(() -> DEFAULT_QUANTITY);
 
         return cartItemDao.save(

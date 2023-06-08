@@ -30,9 +30,9 @@ public class OrderResponseDto {
         this.totalPrice = totalPrice;
     }
 
-    public static OrderResponseDto from(final Order order) {
-        Integer originalPrice = order.calculateTotalPrice();
-        Integer cutPrice = order.calculateCutPrice();
+    public static OrderResponseDto from(final Order order) { // TODO : 이 부분을 도메인 로직이 너무 담당하고 있음
+        int originalPrice = order.calculateTotalPrice();
+        int cutPrice = order.calculateCutPrice();
         return new OrderResponseDto(
                 order.getId(),
                 toOrderProductResponseDtos(order),

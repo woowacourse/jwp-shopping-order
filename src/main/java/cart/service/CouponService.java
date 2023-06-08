@@ -5,7 +5,6 @@ import cart.controller.response.DiscountResponseDto;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
-import cart.domain.util.DiscountCalculator;
 import cart.repository.CouponRepository;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +40,10 @@ public class CouponService {
     public DiscountResponseDto calculateDiscountPrice(final Member member, final Integer originPrice, final Long memberCouponId) {
         Optional<Coupon> coupon = couponRepository
                 .findCouponByMemberAndMemberCouponId(member, memberCouponId);
-        int priceAfterDiscount = DiscountCalculator.calculatePriceAfterDiscount(originPrice, coupon);
+
+        int priceAfterDiscount = coupon
+                .map(notNullCoupon -> notNullCoupon.apply(originPrice))
+                .orElseGet(() -> originPrice);
 
         return DiscountResponseDto.of(originPrice, priceAfterDiscount);
     }

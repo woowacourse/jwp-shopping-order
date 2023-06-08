@@ -2,7 +2,6 @@ package cart.domain;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.domain.util.DiscountCalculator;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -66,8 +65,10 @@ public class Order {
     }
 
     public Integer calculateCutPrice() {
-        Integer originPrice = calculateTotalPrice();
-        Integer priceAfterDiscount = DiscountCalculator.calculatePriceAfterDiscount(originPrice, getOptionalCoupon());
+        int originPrice = calculateTotalPrice();
+        int priceAfterDiscount = getOptionalCoupon()
+                .map(notNullCoupon -> notNullCoupon.apply(originPrice))
+                .orElseGet(() -> originPrice);
         return  originPrice - priceAfterDiscount;
     }
 
