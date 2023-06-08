@@ -101,14 +101,6 @@ public class JdbcTemplateCartItemDao implements CartItemRepository {
     }
 
     @Override
-    public List<Long> findAllCartIdsByMemberId(Long memberId) {
-        String sql = "SELECT id FROM cart_item WHERE member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) ->
-                rs.getLong("id")
-        );
-    }
-
-    @Override
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

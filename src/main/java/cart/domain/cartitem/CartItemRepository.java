@@ -11,8 +11,6 @@ public interface CartItemRepository {
 
     List<CartItem> findAllCartItemsByMemberId(Long memberId);
 
-    List<Long> findAllCartIdsByMemberId(Long memberId);
-
     Long save(CartItem cartItem);
 
     void updateQuantity(CartItem cartItem);
