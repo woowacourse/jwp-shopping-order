@@ -7,9 +7,6 @@ import cart.exception.customexception.CartException;
 import cart.exception.customexception.ErrorCode;
 
 import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderPoint {
 
@@ -26,32 +23,5 @@ public class OrderPoint {
         long earnedPoint = pointPolicy.calculateEarnedPoint(member, totalPrice - usedPoint);
         Timestamp expiredAt = pointPolicy.calculateExpiredAt(createdAt);
         return new Point(earnedPoint, earnedPoint, member, expiredAt, createdAt);
-    }
-
-    public List<Point> usePoint(long usedPoint, List<Point> points) {
-        long availablePoints = points.stream()
-                .mapToLong(Point::getLeftPoint)
-                .sum();
-        if (availablePoints < usedPoint) {
-            throw new CartException(ErrorCode.POINT_NOT_ENOUGH);
-        }
-        List<Point> sortedPoints = points.stream()
-                .sorted(Comparator.comparing(Point::getExpiredAt))
-                .collect(Collectors.toList());
-
-        for (Point point : sortedPoints) {
-            usedPoint = usePointAndReturnRestPoint(point, usedPoint);
-        }
-        return sortedPoints;
-    }
-
-    private long usePointAndReturnRestPoint(Point point, long usedPoint) {
-        Long leftPoint = point.getLeftPoint();
-        if (usedPoint > leftPoint) {
-            point.usePoint(leftPoint);
-            return usedPoint - leftPoint;
-        }
-        point.usePoint(usedPoint);
-        return 0;
     }
 }

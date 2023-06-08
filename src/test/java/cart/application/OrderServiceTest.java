@@ -1,15 +1,13 @@
 package cart.application;
 
-import cart.domain.cartitem.CartItemRepository;
-import cart.domain.member.MemberRepository;
-import cart.domain.order.OrderRepository;
-import cart.domain.order.OrderItemRepository;
-import cart.domain.point.PointRepository;
-import cart.domain.product.ProductRepository;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItemRepository;
 import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import cart.domain.point.Point;
+import cart.domain.point.PointRepository;
 import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import cart.dto.order.OrderItemResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -59,19 +56,10 @@ public class OrderServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
     private PointRepository pointRepository;
 
     @Autowired
     private CartItemRepository cartItemRepository;
-
-    @Autowired
-    private OrderItemRepository orderItemRepository;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
