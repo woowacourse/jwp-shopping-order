@@ -4,6 +4,7 @@ import cart.cartitem.dao.CartItemDao;
 import cart.cartitem.domain.CartItem;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
+import cart.order.application.dto.OrderCartItemDto;
 import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderItemDto;
 import cart.order.application.dto.OrderedProductDto;
@@ -60,13 +61,13 @@ public class OrderService {
 
     @Transactional
     public Long addOrderHistory(final Member member,
-                                final List<OrderCartItemRequest> orderCartItemDtos) {
+                                final List<OrderCartItemDto> orderCartItemDtos) {
         final Long totalPrice = calculateTotalPrice(orderCartItemDtos);
         final OrderHistory orderHistory = new OrderHistory(member, totalPrice);
 
         final Long orderHistoryId = orderHistoryDao.save(orderHistory);
         addOrderItems(orderHistoryId, orderCartItemDtos);
-        for (final OrderCartItemRequest orderCartItemDto : orderCartItemDtos) {
+        for (final OrderCartItemDto orderCartItemDto : orderCartItemDtos) {
             cartItemDao.deleteById(orderCartItemDto.getCartItemId());
         }
         member.withdraw(totalPrice);
@@ -75,22 +76,22 @@ public class OrderService {
         return orderHistoryId;
     }
 
-    private static Long calculateTotalPrice(final List<OrderCartItemRequest> orderCartItemDtos) {
+    private static Long calculateTotalPrice(final List<OrderCartItemDto> orderCartItemDtos) {
         return orderCartItemDtos.stream()
-                .map(OrderCartItemRequest::getOrderCartItemPrice)
+                .map(OrderCartItemDto::getOrderCartItemPrice)
                 .map(Long::valueOf)
                 .reduce(0L, Long::sum);
     }
 
     private void addOrderItems(final Long orderHistoryId,
-                               final List<OrderCartItemRequest> orderCartItemDtos) {
-        for (OrderCartItemRequest orderCartItemDto : orderCartItemDtos) {
+                               final List<OrderCartItemDto> orderCartItemDtos) {
+        for (final OrderCartItemDto orderCartItemDto : orderCartItemDtos) {
             validateProductInfo(orderCartItemDto);
             addOrderItem(orderCartItemDto, orderHistoryId);
         }
     }
 
-    private void validateProductInfo(OrderCartItemRequest orderCartItemDto) {
+    private void validateProductInfo(final OrderCartItemDto orderCartItemDto) {
         final CartItem cartItem = cartItemDao.findById(orderCartItemDto.getCartItemId());
         final Product originProduct = cartItem.getProduct();
 
@@ -101,7 +102,7 @@ public class OrderService {
         }
     }
 
-    private void addOrderItem(final OrderCartItemRequest orderCartItemDto, final Long orderHistoryId) {
+    private void addOrderItem(final OrderCartItemDto orderCartItemDto, final Long orderHistoryId) {
         final OrderHistory orderHistory = orderHistoryDao.findById(orderHistoryId);
         final CartItem cartItem = cartItemDao.findById(orderCartItemDto.getCartItemId());
         final Long productId = cartItem.getProduct().getId();

@@ -3,6 +3,7 @@ package cart.order.ui;
 import cart.auth.Auth;
 import cart.member.domain.Member;
 import cart.order.application.OrderService;
+import cart.order.application.dto.OrderCartItemDto;
 import cart.order.application.dto.OrderDto;
 import cart.order.ui.request.OrderCartItemRequest;
 import cart.order.ui.request.OrderCartItemsRequest;
@@ -56,7 +57,9 @@ public class OrderApiController {
     @PostMapping
     public ResponseEntity<Void> postOrder(@Auth final Member member,
                                           @RequestBody final OrderCartItemsRequest request) {
-        final List<OrderCartItemRequest> orderCartItemDtos = request.getOrderCartItemDtos();
+        final List<OrderCartItemDto> orderCartItemDtos = request.getOrderCartItemDtos().stream()
+                .map(OrderCartItemDto::from)
+                .collect(Collectors.toList());
 
         final Long orderHistoryId = orderService.addOrderHistory(member, orderCartItemDtos);
 

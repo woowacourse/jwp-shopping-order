@@ -23,7 +23,7 @@ public class OrderItemDto {
         this.quantity = quantity;
     }
 
-    public static OrderItemDto of(final OrderHistory orderHistory, final Long productId, final OrderCartItemRequest orderCartItemDto, final int quantity) {
+    public static OrderItemDto of(final OrderHistory orderHistory, final Long productId, final OrderCartItemDto orderCartItemDto, final int quantity) {
         return new OrderItemDto(
                 null,
                 orderHistory,

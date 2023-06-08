@@ -3,6 +3,7 @@ package cart.order.application;
 import cart.cartitem.dao.CartItemDao;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
+import cart.order.application.dto.OrderCartItemDto;
 import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderItemDto;
 import cart.order.application.dto.OrderedProductDto;
@@ -101,7 +102,7 @@ public class OrderServiceTest {
         void 유저가_주문을_한다() {
             // given
             final Member Dooly = Member.of(1L, "dooly@dooly.com", "1234", 100000L);
-            final OrderCartItemRequest orderCartItemRequest = new OrderCartItemRequest(Member_Dooly_CartItem1.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+            final OrderCartItemDto orderCartItemDto = OrderCartItemDto.of(Member_Dooly_CartItem1.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
             final OrderHistory orderHistory = new OrderHistory(1L, Dooly, 100000L, LocalDateTime.now());
 
             when(orderHistoryDao.save(any(OrderHistory.class))).thenReturn(1L);
@@ -111,7 +112,7 @@ public class OrderServiceTest {
             doNothing().when(memberDao).updateMember(Dooly);
 
             // when
-            final Long orderHistoryId = orderService.addOrderHistory(Dooly, List.of(orderCartItemRequest));
+            final Long orderHistoryId = orderService.addOrderHistory(Dooly, List.of(orderCartItemDto));
 
             // then
             assertThat(orderHistoryId).isEqualTo(1L);
@@ -121,14 +122,14 @@ public class OrderServiceTest {
         void 상품_주문_도중에_상품_정보가_바뀌면_예외를_반환하다() {
             // given
             final Member Dooly = Member.of(1L, "dooly@dooly.com", "1234", 100000L);
-            final OrderCartItemRequest orderCartItemRequest = new OrderCartItemRequest(Member_Dooly_CartItem1.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+            final OrderCartItemDto orderCartItemDto = OrderCartItemDto.of(Member_Dooly_CartItem1.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
             final OrderHistory orderHistory = new OrderHistory(1L, Dooly, 100000L, LocalDateTime.now());
 
             when(orderHistoryDao.save(any(OrderHistory.class))).thenReturn(orderHistory.getId());
             when(cartItemDao.findById(Member_Dooly_CartItem1.ID)).thenReturn(Member_Dooly_CartItem2.ENTITY);
 
             // when, then
-            assertThatThrownBy(() -> orderService.addOrderHistory(Dooly, List.of(orderCartItemRequest)))
+            assertThatThrownBy(() -> orderService.addOrderHistory(Dooly, List.of(orderCartItemDto)))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("상품 정보가 업데이트 되었습니다. 다시 확인해주세요");
         }
