@@ -30,7 +30,7 @@ public class ProductPersistenceAdapter implements ProductRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyHolder);
         return findById(keyHolder.getKeyAs(Long.class))
-                .orElseThrow(); // TODO: 쿼리 또 한번 날리지 않도록 최적화?
+                .orElseThrow();
     }
 
 
