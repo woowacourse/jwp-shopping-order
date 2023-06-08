@@ -13,6 +13,7 @@ import cart.dto.request.ProductRequest;
 import cart.dto.response.LoginResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
@@ -33,9 +34,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Long productId2;
     private Long productId3;
     private Member member1;
+    private Member member2;
     private OrderRequest orderRequest1;
     private OrderRequest orderRequest2;
-    private String accessToken;
 
     @BeforeEach
     void setUp() {
@@ -45,7 +46,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
         productId3 = createProduct(new ProductRequest("셀러드", 20_000, "http://example.com/salad.jpg"));
 
-        member1 = memberDao.getMemberById(1L).get();
+        member1 = memberDao.getMemberByEmail("a@a.com").get();
+        member2 = memberDao.getMemberByEmail("b@b.com").get();
 
         orderRequest1 = new OrderRequest(
             List.of(new OrderItemRequest(productId, 1), new OrderItemRequest(productId2, 1)),
@@ -55,8 +57,6 @@ public class OrderIntegrationTest extends IntegrationTest {
             List.of(new OrderItemRequest(productId2, 1), new OrderItemRequest(productId3, 1)),
             LocalDateTime.of(2023, 4, 4, 4, 4)
         );
-
-        accessToken = getAccessToken();
     }
 
     @DisplayName("장바구니에 담긴 상품을 주문하고 주문내역을 저장한다.")
@@ -69,7 +69,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         //when
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().oauth2(accessToken)
+            .auth().oauth2(getAccessToken(member1.getEmail(), member1.getPassword()))
             .body(orderRequest1)
             .when()
             .post("/orders")
@@ -90,6 +90,26 @@ public class OrderIntegrationTest extends IntegrationTest {
         );
     }
 
+    @DisplayName("장바구니에 없는 상품을 주문시 400 상태코드를 응답한다.")
+    @Test
+    public void saveOrder_notInCartItem() {
+        //given
+        createCartItem(member1, new CartItemRequest(productId));
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().oauth2(getAccessToken(member1.getEmail(), member1.getPassword()))
+            .body(orderRequest1)
+            .when()
+            .post("/orders")
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("주문내역의 ID를 통해 단일 주문내역을 조회한다.")
     @Test
     public void findOrderById() {
@@ -98,7 +118,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
-            .auth().oauth2(accessToken)
+            .auth().oauth2(getAccessToken(member1.getEmail(), member1.getPassword()))
             .when()
             .get("/orders/{orderId}", orderId)
             .then().log().all()
@@ -118,6 +138,22 @@ public class OrderIntegrationTest extends IntegrationTest {
         );
     }
 
+    @DisplayName("다른 멤버의 주문내역을 조회시 401 상태코드를 응답한다.")
+    @Test
+    public void findOrderById_anotherMembersOrder() {
+        //given
+        final Long orderId = createOrder(member2, orderRequest1);
+
+        //when
+        //then
+        RestAssured.given().log().all()
+            .auth().oauth2(getAccessToken(member1.getEmail(), member1.getPassword()))
+            .when()
+            .get("/orders/{orderId}", orderId)
+            .then().log().all()
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("멤버의 전체 주문내역을 조회한다.")
     @Test
     public void findOrders() {
@@ -127,7 +163,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
-            .auth().oauth2(accessToken)
+            .auth().oauth2(getAccessToken(member1.getEmail(), member1.getPassword()))
             .when()
             .get("/orders")
             .then().log().all()
@@ -170,7 +206,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Long createCartItem(Member member, CartItemRequest cartItemRequest) {
         ExtractableResponse<Response> response = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().oauth2(accessToken)
+            .auth().oauth2(getAccessToken(member.getEmail(), member.getPassword()))
             .body(cartItemRequest)
             .when()
             .post("/cart-items")
@@ -193,7 +229,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().oauth2(accessToken)
+            .auth().oauth2(getAccessToken(member.getEmail(), member.getPassword()))
             .body(orderRequest)
             .when()
             .post("/orders")
@@ -204,10 +240,10 @@ public class OrderIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    public String getAccessToken() {
+    public String getAccessToken(final String email, final String password) {
         final ResponseBodyExtractionOptions body = given().log().all()
-            .formParam("email", "a@a.com")
-            .formParam("password", "1234")
+            .formParam("email", email)
+            .formParam("password", password)
             .when()
             .post("/login")
             .then()
