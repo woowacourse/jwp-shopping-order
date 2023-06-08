@@ -90,7 +90,7 @@ public class OrderService {
     public OrderDetailResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderException(ExceptionType.NOT_FOUND_ORDER));
-        order.checkOwner(member);
+        order.validateOwner(member);
         return OrderDetailResponse.from(order);
     }
 

@@ -46,7 +46,7 @@ public class CartItemService {
     public void modifyQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id)
                 .orElseThrow(() -> new CartItemException(ExceptionType.NOT_FOUND_CART_ITEM));
-        cartItem.checkOwner(member);
+        cartItem.validateOwner(member);
 
         if (request.getQuantity() == 0) {
             cartItemRepository.deleteById(id);
@@ -60,7 +60,7 @@ public class CartItemService {
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id)
                 .orElseThrow(() -> new CartItemException(ExceptionType.NOT_FOUND_CART_ITEM));
-        cartItem.checkOwner(member);
+        cartItem.validateOwner(member);
 
         cartItemRepository.deleteById(id);
     }

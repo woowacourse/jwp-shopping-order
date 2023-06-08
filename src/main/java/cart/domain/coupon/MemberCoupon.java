@@ -34,20 +34,20 @@ public class MemberCoupon {
         return LocalDate.now().plusDays(DEFAULT_DATE_PERIOD);
     }
 
-    public void check(Member member) {
+    public void validate(Member member) {
         if (coupon.isCoupon()) {
-            checkExpiredDate();
-            checkOwner(member);
+            validateExpiredDate();
+            validateOwner(member);
         }
     }
 
-    private void checkExpiredDate() {
+    private void validateExpiredDate() {
         if (isExpired()) {
             throw new CouponException(ExceptionType.INVALID_EXPIRED_DATE);
         }
     }
 
-    private void checkOwner(Member member) {
+    private void validateOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new CouponException(ExceptionType.NO_AUTHORITY_COUPON);
         }

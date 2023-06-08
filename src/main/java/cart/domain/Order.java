@@ -52,7 +52,7 @@ public class Order {
     }
 
     public static Order of(Member member, List<CartItem> cartItems, int deliveryFee, MemberCoupon memberCoupon) {
-        memberCoupon.check(member);
+        memberCoupon.validate(member);
         validateOwner(member, cartItems);
         List<Item> items = cartItems.stream()
                 .map(CartItem::getItem)
@@ -62,7 +62,7 @@ public class Order {
 
     private static void validateOwner(Member member, List<CartItem> cartItems) {
         for (CartItem cartItem : cartItems) {
-            cartItem.checkOwner(member);
+            cartItem.validateOwner(member);
         }
     }
 
@@ -70,7 +70,7 @@ public class Order {
         return orderDate.format(ORDER_NUMBER_FORMAT) + memberId;
     }
 
-    public void checkOwner(Member member) {
+    public void validateOwner(Member member) {
         if (!this.member.equals(member)) {
             throw new OrderException(ExceptionType.NO_AUTHORITY_ORDER);
         }

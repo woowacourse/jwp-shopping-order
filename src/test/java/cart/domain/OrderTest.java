@@ -67,7 +67,7 @@ class OrderTest {
     void 다른_사용자의_주문이면_예외가_발생한다() {
         Order order = Order.of(밀리, List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개), 3000, 가짜_쿠폰);
 
-        assertThatThrownBy(() -> order.checkOwner(박스터))
+        assertThatThrownBy(() -> order.validateOwner(박스터))
                 .isInstanceOf(OrderException.class);
     }
 }
