@@ -54,10 +54,10 @@ public class OrderService {
     }
 
     private MemberCoupons usedCoupons(final Member member, final OrderItemRequest request) {
-        MemberCoupons requestCoupons = new MemberCoupons(couponService.findByIds(request.toMemberCouponIds()));
-        MemberCoupons memberCoupons = new MemberCoupons(couponService.findByMemberId(member.getId()));
+        MemberCoupons requestCoupons = new MemberCoupons(couponService.findMemberCouponsByIds(request.toMemberCouponIds()));
+        MemberCoupons memberCoupons = new MemberCoupons(couponService.findMemberCouponsByMemberId(member.getId()));
 
-        couponService.updateCoupon(memberCoupons.use(requestCoupons).getCoupons(), member.getId());
+        couponService.updateMemberCoupon(memberCoupons.use(requestCoupons).getCoupons(), member.getId());
         return requestCoupons;
     }
 
