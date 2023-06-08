@@ -46,8 +46,10 @@ public class DbOrderRepository implements OrderRepository {
         final List<OrderItem> orderItems = orderDtos.stream()
             .map(OrderDto::getOrderItem)
             .collect(Collectors.toList());
+        final OrderPrice orderPrice = OrderPrice.of(orderDto.getOrderProductPrice(), orderDto.getOrderDiscountPrice(),
+            orderDto.getOrderDeliveryFee(), orderDto.getOrderTotalPrice());
 
-        return Order.persisted(orderId, member, new OrderItems(orderItems), orderTime);
+        return Order.persisted(orderId, member, new OrderItems(orderItems), orderPrice, orderTime);
     }
 
     @Override
