@@ -1,6 +1,6 @@
 package cart.ui.point.dto;
 
-import cart.application.service.point.PointHistoryDto;
+import cart.application.point.PointHistoryDto;
 
 public class PointHistoryResponse {
 

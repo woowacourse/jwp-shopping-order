@@ -1,6 +1,6 @@
 package cart.ui.order.dto.response;
 
-import cart.application.service.order.dto.OrderResultDto;
+import cart.application.order.dto.OrderResultDto;
 
 import java.util.List;
 

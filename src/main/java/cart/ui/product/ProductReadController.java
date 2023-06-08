@@ -1,7 +1,7 @@
 package cart.ui.product;
 
-import cart.application.service.product.ProductReadService;
-import cart.application.service.product.dto.ProductResultDto;
+import cart.application.product.ProductReadService;
+import cart.application.product.dto.ProductResultDto;
 import cart.ui.product.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

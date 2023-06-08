@@ -1,6 +1,6 @@
 package cart.persistence.coupon;
 
-import cart.application.service.coupon.dto.MemberCouponDto;
+import cart.application.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.coupon.CouponRepository;
 import org.springframework.dao.EmptyResultDataAccessException;

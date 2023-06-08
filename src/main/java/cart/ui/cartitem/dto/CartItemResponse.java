@@ -1,6 +1,6 @@
 package cart.ui.cartitem.dto;
 
-import cart.application.service.cartitem.dto.CartItemResultDto;
+import cart.application.cartitem.dto.CartItemResultDto;
 import cart.ui.product.dto.ProductResponse;
 
 public class CartItemResponse {

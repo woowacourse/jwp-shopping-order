@@ -1,7 +1,7 @@
 package cart.ui.product;
 
-import cart.application.service.product.ProductWriteService;
-import cart.application.service.product.dto.ProductCreateDto;
+import cart.application.product.ProductWriteService;
+import cart.application.product.dto.ProductCreateDto;
 import cart.ui.product.dto.ProductRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

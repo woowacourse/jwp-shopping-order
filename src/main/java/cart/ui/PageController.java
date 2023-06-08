@@ -1,7 +1,7 @@
 package cart.ui;
 
-import cart.application.service.member.MemberReadService;
-import cart.application.service.product.ProductReadService;
+import cart.application.member.MemberReadService;
+import cart.application.product.ProductReadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

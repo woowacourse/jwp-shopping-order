@@ -1,6 +1,6 @@
 package cart.ui.point.dto;
 
-import cart.application.service.point.PointResultDto;
+import cart.application.point.PointResultDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

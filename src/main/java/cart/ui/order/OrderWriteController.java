@@ -1,6 +1,6 @@
 package cart.ui.order;
 
-import cart.application.service.order.OrderWriteService;
+import cart.application.order.OrderWriteService;
 import cart.ui.MemberAuth;
 import cart.ui.order.dto.CreateOrderDto;
 import cart.ui.order.dto.request.CreateOrderRequest;

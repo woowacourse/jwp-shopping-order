@@ -1,8 +1,8 @@
 package cart.ui.order.dto.response;
 
-import cart.application.service.order.dto.OrderResultDto;
-import cart.application.service.order.dto.OrderedItemResult;
-import cart.application.service.order.dto.UsedCoupon;
+import cart.application.order.dto.OrderResultDto;
+import cart.application.order.dto.OrderedItemResult;
+import cart.application.order.dto.UsedCoupon;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;

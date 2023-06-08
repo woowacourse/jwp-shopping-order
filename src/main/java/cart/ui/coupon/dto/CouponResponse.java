@@ -1,6 +1,6 @@
 package cart.ui.coupon.dto;
 
-import cart.application.service.coupon.CouponResultDto;
+import cart.application.coupon.CouponResultDto;
 
 public class CouponResponse {
 

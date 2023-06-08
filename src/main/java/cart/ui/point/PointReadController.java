@@ -1,7 +1,7 @@
 package cart.ui.point;
 
-import cart.application.service.point.PointReadService;
-import cart.application.service.point.PointResultDto;
+import cart.application.point.PointReadService;
+import cart.application.point.PointResultDto;
 import cart.ui.MemberAuth;
 import cart.ui.point.dto.PointResponse;
 import org.springframework.http.ResponseEntity;

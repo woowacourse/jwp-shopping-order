@@ -1,6 +1,6 @@
 package cart.ui.member.dto;
 
-import cart.application.service.member.dto.MemberResultDto;
+import cart.application.member.dto.MemberResultDto;
 
 public class MemberResponse {
 
