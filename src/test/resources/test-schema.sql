@@ -1,4 +1,12 @@
-CREATE TABLE member
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS member_coupon;
+DROP TABLE IF EXISTS coupon;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
+CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -9,7 +17,7 @@ CREATE TABLE member
 CREATE TABLE member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    email    VARCHAR(255) NOT NULL UNIQUE,
+    email    VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(255) NOT NULL
 );

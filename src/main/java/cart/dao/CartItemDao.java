@@ -58,6 +58,15 @@ public class CartItemDao {
         );
     }
 
+    public Optional<CartItemEntity> findById(final Long id) {
+        final String sql = "SELECT * FROM cart_item WHERE id = ? ";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     public void deleteAllByIds(final List<Long> ids) {
         final String sql = "DELETE FROM cart_item WHERE id = ? ";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -71,15 +80,6 @@ public class CartItemDao {
                 return ids.size();
             }
         });
-    }
-
-    public Optional<CartItemEntity> findById(final Long id) {
-        final String sql = "SELECT * FROM cart_item WHERE id = ? ";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
     }
 
     public void update(final CartItemEntity cartItemEntity) {

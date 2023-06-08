@@ -66,7 +66,7 @@ public class OrderDao {
     }
 
     public void deleteById(final Long id) {
-        final String sql = "DELETE FROM order_item WHERE id = ? ";
+        final String sql = "DELETE FROM `order` WHERE id = ? ";
         jdbcTemplate.update(sql, id);
     }
 }
