@@ -6,6 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
@@ -17,20 +18,24 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CouponRepository couponRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public OrderService(final OrderRepository orderRepository, final CouponRepository couponRepository) {
+    public OrderService(final OrderRepository orderRepository,
+                        final CouponRepository couponRepository,
+                        final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.couponRepository = couponRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public OrderResponseDto orderCartItems(Member member, OrderRequestDto orderRequestDto) {
-        List<CartItem> cartItems = orderRepository.findCartItemsByIds(orderRequestDto.getCartItemIds());
+        List<CartItem> cartItems = cartItemRepository.findCartItemsByIds(orderRequestDto.getCartItemIds());
         Coupon coupon = orderRequestDto.getCouponId()
                 .flatMap(couponId -> couponRepository.findCouponByMemberAndMemberCouponId(member, couponId))
                 .orElse(null);
         Order order = Order.of(member, coupon, cartItems);
         Order orderAfterSave = orderRepository.save(order);
-        orderRepository.deleteCartItems(orderRequestDto.getCartItemIds());
+        cartItemRepository.deleteCartItems(orderRequestDto.getCartItemIds());
         couponRepository.deleteMemberCouponById(orderRequestDto.getCouponId());
         return OrderResponseDto.from(orderAfterSave);
     }

@@ -1,8 +1,5 @@
 package cart.repository;
 
-import static fixture.CartItemFixture.CART_ITEM_1;
-import static fixture.CartItemFixture.CART_ITEM_2;
-import static fixture.CartItemFixture.CART_ITEM_3;
 import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
 import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
 import static fixture.CouponFixture.COUPON_3_NULL;
@@ -10,12 +7,9 @@ import static fixture.OrderFixture.ORDER_1;
 import static fixture.OrderFixture.ORDER_2;
 import static fixture.ProductFixture.PRODUCT_1;
 import static fixture.ProductFixture.PRODUCT_2;
-import static java.lang.System.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import anotation.RepositoryTest;
-import cart.dao.CartItemDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Order;
@@ -36,8 +30,6 @@ class OrderRepositoryTest {
 
     @Autowired
     private OrderRepository orderRepository;
-    @Autowired
-    private CartItemDao cartItemDao;
 
     @DisplayName("Order 를 저장한다.")
     @ParameterizedTest(name = "쿠폰이 {0} 인 경우")
@@ -64,25 +56,6 @@ class OrderRepositoryTest {
         );
     }
 
-    @Test
-    @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (성공)")
-    void delete_success() {
-        orderRepository.deleteCartItems(List.of(1L, 2L));
-
-        List<CartItem> cartItemsAfterDelete = cartItemDao.findByMemberId(MemberFixture.MEMBER_1.getId());
-
-        assertThat(cartItemsAfterDelete).isEmpty();
-    }
-
-    @Test
-    @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (실패)")
-    void delete_fail() {
-        List<Long> removeCartItemIds = List.of(100L, 101L, 102L);
-
-        assertThatThrownBy(() -> orderRepository.deleteCartItems(removeCartItemIds))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
     /*
     INSERT INTO product (name, price, image_url) VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
     INSERT INTO product (name, price, image_url) VALUES ('샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
@@ -104,17 +77,6 @@ class OrderRepositoryTest {
         assertThat(ordersByMember)
                 .usingRecursiveComparison()
                 .isEqualTo(List.of(ORDER_1, ORDER_2));
-    }
-
-    @Test
-    @DisplayName("id 들을 가지고 CartItem 들을 조회한다.")
-    void findCartItemByIds() {
-        List<CartItem> cartItemByIds = orderRepository.findCartItemsByIds(List.of(1L, 2L, 3L));
-
-        assertThat(cartItemByIds)
-                .usingRecursiveComparison()
-                .ignoringFields("member.password")
-                .isEqualTo(List.of(CART_ITEM_1, CART_ITEM_2, CART_ITEM_3));
     }
 
 }
