@@ -37,6 +37,10 @@ public class CartItem {
         return product;
     }
 
+    public Long getMemberId() {
+        return member.getId();
+    }
+
     public Long getProductId() {
         return product.getId();
     }

@@ -59,14 +59,9 @@ public class CartItemRepositoryImpl implements CartItemRepository {
 
     @Override
     public CartItem save(final CartItem cartItem) {
-        final CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
+        final CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getId(), cartItem.getMemberId(), cartItem.getProductId(), cartItem.getQuantity());
         final long id = cartItemDao.createCartItem(cartItemEntity);
         return new CartItem(id, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
-    }
-
-    private CartItemEntity toCartItemEntity(final CartItem cartItem) {
-        return new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(), cartItem.getProduct().getId(),
-                cartItem.getQuantity());
     }
 
     @Override
@@ -76,7 +71,7 @@ public class CartItemRepositoryImpl implements CartItemRepository {
 
     @Override
     public void updateQuantity(final CartItem cartItem) {
-        final CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
+        final CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getId(), cartItem.getMemberId(), cartItem.getProductId(), cartItem.getQuantity());
         cartItemDao.updateQuantity(cartItemEntity);
     }
 }
