@@ -1,6 +1,6 @@
 package cart;
 
-import cart.common.MemberArgumentResolver;
+import cart.member.presentation.MemberArgumentResolver;
 import cart.member.persistence.MemberDao;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

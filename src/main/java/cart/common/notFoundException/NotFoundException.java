@@ -1,4 +1,4 @@
-package cart.common.exception.notFound;
+package cart.common.notFoundException;
 
 public class NotFoundException extends RuntimeException {
 

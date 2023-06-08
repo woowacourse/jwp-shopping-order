@@ -1,4 +1,4 @@
-package cart.common.exception.payment;
+package cart.order.exception.payment;
 
 public class TotalPriceDoesNotMatchException extends PaymentException {
     private static final String MESSAGE = "총 결제 금액이 다릅니다. 입력된 금액 : %d / 실제 금액 : %d";

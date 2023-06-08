@@ -3,7 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.common.exception.point.HavingPointIsLessThanUsePointException;
+import cart.member.exception.point.HavingPointIsLessThanUsePointException;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
 import org.junit.jupiter.api.DisplayName;

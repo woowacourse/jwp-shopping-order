@@ -1,4 +1,4 @@
-package cart.common.exception.auth;
+package cart.member.exception.auth;
 
 public class AuthenticationException extends RuntimeException {
     public AuthenticationException(String message) {

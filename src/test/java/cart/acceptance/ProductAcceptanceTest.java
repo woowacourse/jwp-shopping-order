@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.product.presentation.request.ProductAddRequest;
 import cart.product.application.dto.ProductDto;
-import cart.common.exception.notFound.ProductNotFoundException;
+import cart.common.notFoundException.ProductNotFoundException;
 import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
 import io.restassured.RestAssured;

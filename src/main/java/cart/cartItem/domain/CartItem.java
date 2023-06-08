@@ -1,7 +1,7 @@
 package cart.cartItem.domain;
 
-import cart.common.exception.auth.AuthorizationException;
-import cart.common.exception.order.CartItemQuantityDoesNotMatchException;
+import cart.member.exception.auth.AuthorizationException;
+import cart.order.exception.order.CartItemQuantityDoesNotMatchException;
 import cart.member.domain.Member;
 import cart.product.domain.Product;
 import java.util.Objects;

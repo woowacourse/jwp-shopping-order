@@ -1,6 +1,5 @@
 package cart.order.application.dto;
 
-import cart.cartItem.application.dto.ProductInCartItemDto;
 import cart.cartItem.domain.CartItem;
 
 public class CartItemDto {

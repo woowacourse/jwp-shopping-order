@@ -3,7 +3,7 @@ package cart.product.application;
 import cart.product.application.dto.ProductAddDto;
 import cart.product.application.dto.ProductUpdateDto;
 import cart.product.application.dto.ProductDto;
-import cart.common.exception.notFound.ProductNotFoundException;
+import cart.common.notFoundException.ProductNotFoundException;
 import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
 import java.util.List;

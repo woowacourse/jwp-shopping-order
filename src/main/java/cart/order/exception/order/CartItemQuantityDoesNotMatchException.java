@@ -1,4 +1,4 @@
-package cart.common.exception.order;
+package cart.order.exception.order;
 
 public class CartItemQuantityDoesNotMatchException extends OrderException {
     private static final String MESSAGE = "cartItem의 quantity가 일치하지 않습니다. 다시 확인해주세요.";

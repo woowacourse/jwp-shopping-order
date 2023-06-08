@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.cartItem.domain.CartItem;
-import cart.common.exception.auth.AuthorizationException;
-import cart.common.exception.order.CartItemQuantityDoesNotMatchException;
+import cart.member.exception.auth.AuthorizationException;
+import cart.order.exception.order.CartItemQuantityDoesNotMatchException;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
 import cart.product.domain.Product;

@@ -1,11 +1,11 @@
 package cart.common;
 
-import cart.common.exception.auth.AuthenticationException;
-import cart.common.exception.auth.AuthorizationException;
-import cart.common.exception.notFound.NotFoundException;
-import cart.common.exception.order.OrderException;
-import cart.common.exception.payment.PaymentException;
-import cart.common.exception.point.PointException;
+import cart.member.exception.auth.AuthenticationException;
+import cart.member.exception.auth.AuthorizationException;
+import cart.common.notFoundException.NotFoundException;
+import cart.order.exception.order.OrderException;
+import cart.order.exception.payment.PaymentException;
+import cart.member.exception.point.PointException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package cart.order.persistence;
 
-import cart.common.exception.notFound.PaymentNotFoundException;
+import cart.common.notFoundException.PaymentNotFoundException;
 import cart.member.domain.Member;
 import cart.member.persistence.MemberDao;
 import cart.order.domain.Payment;

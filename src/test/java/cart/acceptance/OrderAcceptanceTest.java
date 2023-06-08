@@ -20,7 +20,7 @@ import cart.cartItem.presentation.request.CartItemRequest;
 import cart.order.application.dto.CartItemDto;
 import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderItemDto;
-import cart.cartItem.application.dto.ProductInCartItemDto;
+import cart.order.application.dto.ProductInCartItemDto;
 import cart.order.presentation.request.OrderAddRequest;
 import cart.order.application.dto.ProductInOrderItemDto;
 import cart.product.presentation.request.ProductAddRequest;
@@ -241,7 +241,7 @@ public class OrderAcceptanceTest {
                 productAddRequest.getImageUrl(), stock));
     }
 
-    private ProductInCartItemDto toProductDto(Long productId, ProductAddRequest productAddRequest) {
+    private cart.order.application.dto.ProductInCartItemDto toProductDto(Long productId, ProductAddRequest productAddRequest) {
         return new ProductInCartItemDto(productId, productAddRequest.getPrice(), productAddRequest.getName(),
                 productAddRequest.getImageUrl(), productAddRequest.getStock());
     }

@@ -3,9 +3,9 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.common.exception.point.HavingPointIsLessThanStandardPointException;
-import cart.common.exception.point.HavingPointIsLessThanUsePointException;
-import cart.common.exception.point.UsePointIsLessThanStandardPointException;
+import cart.member.exception.point.HavingPointIsLessThanStandardPointException;
+import cart.member.exception.point.HavingPointIsLessThanUsePointException;
+import cart.member.exception.point.UsePointIsLessThanStandardPointException;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
 import cart.member.domain.PointPolicy;

@@ -1,7 +1,7 @@
 package cart.member.domain;
 
-import cart.common.exception.point.HavingPointIsLessThanStandardPointException;
-import cart.common.exception.point.UsePointIsLessThanStandardPointException;
+import cart.member.exception.point.HavingPointIsLessThanStandardPointException;
+import cart.member.exception.point.UsePointIsLessThanStandardPointException;
 
 public class PointPolicy {
     public static final Point MINIMUM_POINT_USAGE_STANDARD = new Point(3000);

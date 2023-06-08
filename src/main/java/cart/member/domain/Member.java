@@ -1,6 +1,6 @@
 package cart.member.domain;
 
-import cart.common.exception.point.HavingPointIsLessThanUsePointException;
+import cart.member.exception.point.HavingPointIsLessThanUsePointException;
 
 public class Member {
     private Long id;

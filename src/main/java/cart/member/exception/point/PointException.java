@@ -1,4 +1,4 @@
-package cart.common.exception.point;
+package cart.member.exception.point;
 
 public class PointException extends RuntimeException {
     public PointException(String message) {

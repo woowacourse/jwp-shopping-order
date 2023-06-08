@@ -1,6 +1,6 @@
 package cart.product.domain;
 
-import cart.common.exception.order.OutOfStockException;
+import cart.order.exception.order.OutOfStockException;
 import java.util.Objects;
 
 public class Product {

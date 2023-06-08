@@ -1,7 +1,7 @@
 package cart.order.persistence;
 
 import cart.cartItem.persistence.CartItemDao;
-import cart.common.exception.notFound.OrderNotFoundException;
+import cart.common.notFoundException.OrderNotFoundException;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.product.domain.Product;

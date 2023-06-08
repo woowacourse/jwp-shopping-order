@@ -1,6 +1,6 @@
-package cart.common;
+package cart.member.presentation;
 
-import cart.common.exception.auth.AuthenticationException;
+import cart.member.exception.auth.AuthenticationException;
 import cart.member.domain.Member;
 import cart.member.persistence.MemberDao;
 import org.apache.tomcat.util.codec.binary.Base64;
