@@ -6,7 +6,7 @@ public class PaymentRecordEntity {
 
     private final Long id;
     private final Long orderId;
-    private final int originalTotalPrice;
+    private final int originalTotalPrice; // TODO: 2023/06/08 이거 빼도 되는지 확인하기
 
     public PaymentRecordEntity(final Long id, final Long orderId, final int originalTotalPrice) {
         this.id = id;
@@ -15,7 +15,8 @@ public class PaymentRecordEntity {
     }
 
     public static PaymentRecordEntity from(final PaymentRecord paymentRecord) {
-        return new PaymentRecordEntity(null, paymentRecord.getOrder().getId(), paymentRecord.getOriginalTotalPrice().getValue());
+        return new PaymentRecordEntity(null, paymentRecord.getOrder().getId(),
+                paymentRecord.getOriginalOrderPrice().getValue());
     }
 
     public Long getId() {

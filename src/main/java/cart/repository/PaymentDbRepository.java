@@ -1,41 +1,41 @@
 package cart.repository;
 
-import cart.dao.AppliedDefaultDeliveryPolicyDao;
-import cart.dao.AppliedDefaultDiscountPolicyDao;
+import cart.dao.AppliedDeliveryPolicyDao;
+import cart.dao.AppliedDiscountPolicyDao;
 import cart.dao.PaymentRecordDao;
+import cart.dao.entity.AppliedDeliveryPolicyEntity;
 import cart.dao.entity.PaymentRecordEntity;
-import cart.domain.*;
-import org.springframework.stereotype.Repository;
-
+import cart.domain.DeliveryPolicies;
+import cart.domain.DiscountPolicies;
+import cart.domain.Order;
+import cart.domain.PaymentRecord;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class PaymentDbRepository implements PaymentRepository {
     private final PaymentRecordDao paymentRecordDao;
-    private final AppliedDefaultDiscountPolicyDao appliedDefaultDiscountPolicyDao;
-    private final AppliedDefaultDeliveryPolicyDao appliedDefaultDeliveryPolicyDao;
-    private final List<Function<Long, DiscountPolicy>> applicableDiscountPolicies;
-    private final List<Function<Long, DeliveryPolicy>> applicableDeliveryPolicies;
+    private final AppliedDiscountPolicyDao appliedDiscountPolicyDao;
+    private final AppliedDeliveryPolicyDao appliedDeliveryPolicyDao;
 
-    public PaymentDbRepository(final PaymentRecordDao paymentRecordDao, final AppliedDefaultDiscountPolicyDao appliedDefaultDiscountPolicyDao, final AppliedDefaultDeliveryPolicyDao appliedDefaultDeliveryPolicyDao) {
+    public PaymentDbRepository(final PaymentRecordDao paymentRecordDao,
+                               final AppliedDiscountPolicyDao appliedDiscountPolicyDao,
+                               final AppliedDeliveryPolicyDao appliedDeliveryPolicyDao) {
         this.paymentRecordDao = paymentRecordDao;
-        this.appliedDefaultDiscountPolicyDao = appliedDefaultDiscountPolicyDao;
-        this.appliedDefaultDeliveryPolicyDao = appliedDefaultDeliveryPolicyDao;
-        this.applicableDiscountPolicies = List.of(this.appliedDefaultDiscountPolicyDao::findByPaymentRecordId);
-        this.applicableDeliveryPolicies = List.of(this.appliedDefaultDeliveryPolicyDao::findByPaymentRecordId);
+        this.appliedDiscountPolicyDao = appliedDiscountPolicyDao;
+        this.appliedDeliveryPolicyDao = appliedDeliveryPolicyDao;
     }
 
     @Override
     public Long create(final PaymentRecord paymentRecord) {
         final PaymentRecordEntity paymentRecordEntity = PaymentRecordEntity.from(paymentRecord);
         final long paymentRecordId = this.paymentRecordDao.insert(paymentRecordEntity);
-        paymentRecord.getPolicyToDiscountAmounts().keySet()
-                .forEach(policy -> this.appliedDefaultDiscountPolicyDao.insert(paymentRecordId, policy.getId()));
-        paymentRecord.getPolicyToDeliveryFees().keySet()
-                .forEach(policy -> this.appliedDefaultDeliveryPolicyDao.insert(paymentRecordId, policy.getId()));
+        paymentRecord.getDiscountPolicies()
+                .forEach(policy -> this.appliedDiscountPolicyDao.insert(paymentRecordId, policy.getId()));
+        DeliveryPolicies deliveryPolicy = paymentRecord.getDeliveryPolicy();
+        this.appliedDeliveryPolicyDao.insert(paymentRecordId, deliveryPolicy.getId());
         return paymentRecordId;
     }
 
@@ -43,29 +43,27 @@ public class PaymentDbRepository implements PaymentRepository {
     public Optional<PaymentRecord> findByOrder(final Order order) {
         try {
             final PaymentRecordEntity paymentRecordEntity = this.paymentRecordDao.findByOrderId(order.getId());
-            final List<DiscountPolicy> appliedDiscountPolicies = this.getPolicies(this.applicableDiscountPolicies, paymentRecordEntity);
-            final List<DeliveryPolicy> appliedDeliveryPolicies = this.getPolicies(this.applicableDeliveryPolicies, paymentRecordEntity);
-            final Payment payment = new Payment(appliedDiscountPolicies, appliedDeliveryPolicies);
-            return Optional.of(payment.createPaymentRecord(order));
+            final List<DiscountPolicies> appliedDiscountPolicies = findAppliedDiscountPolicies(paymentRecordEntity);
+            final DeliveryPolicies deliveryPolicy = findAppliedDeliveryPolicy(paymentRecordEntity);
+
+            final PaymentRecord paymentRecord = new PaymentRecord(order, appliedDiscountPolicies, deliveryPolicy);
+            return Optional.of(paymentRecord);
         } catch (final Exception e) {
-            e.printStackTrace();
             return Optional.empty();
         }
     }
 
-    private <T> List<T> getPolicies(final List<Function<Long, T>> functions, final PaymentRecordEntity paymentRecordEntity) {
-        return functions.stream()
-                .map(function -> this.wrapFunction(function, paymentRecordEntity))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toUnmodifiableList());
+    private DeliveryPolicies findAppliedDeliveryPolicy(PaymentRecordEntity paymentRecordEntity) {
+        AppliedDeliveryPolicyEntity appliedDeliveryPolicy = appliedDeliveryPolicyDao.findByPaymentRecordId(
+                paymentRecordEntity.getId());
+        DeliveryPolicies deliveryPolicy = DeliveryPolicies.findById(appliedDeliveryPolicy.getDeliveryPolicyId());
+        return deliveryPolicy;
     }
 
-    private <T> Optional<T> wrapFunction(final Function<Long, T> function, final PaymentRecordEntity paymentRecordEntity) {
-        try {
-            return Optional.of(function.apply(paymentRecordEntity.getId()));
-        } catch (final Exception e) {
-            return Optional.empty();
-        }
+    private List<DiscountPolicies> findAppliedDiscountPolicies(PaymentRecordEntity paymentRecordEntity) {
+        return this.appliedDiscountPolicyDao
+                .findByPaymentRecordId(paymentRecordEntity.getId())
+                .stream().map(entity -> DiscountPolicies.findById(entity.getId()))
+                .collect(Collectors.toList());
     }
 }

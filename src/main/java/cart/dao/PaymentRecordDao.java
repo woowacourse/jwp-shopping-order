@@ -1,13 +1,12 @@
 package cart.dao;
 
 import cart.dao.entity.PaymentRecordEntity;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class PaymentRecordDao {
@@ -29,7 +28,7 @@ public class PaymentRecordDao {
     }
 
 
-    public long insert(final PaymentRecordEntity paymentRecordEntity) {
+    public Long insert(final PaymentRecordEntity paymentRecordEntity) {
         final Map<String, Object> params = new HashMap<>();
         params.put("order_id", paymentRecordEntity.getOrderId());
         params.put("original_total_price", paymentRecordEntity.getOriginalTotalPrice());
