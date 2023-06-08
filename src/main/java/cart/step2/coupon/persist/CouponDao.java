@@ -12,10 +12,13 @@ import java.util.Optional;
 @Repository
 public class CouponDao {
 
+    private static final Integer USAGE_STATUS_FALSE = 0;
+    private static final Integer USAGE_STATUS_TRUE = 1;
+
     private RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> {
         return new CouponEntity(
                 rs.getLong("id"),
-                rs.getString("usage_status"),
+                rs.getInt("usage_status"),
                 rs.getLong("member_id"),
                 rs.getLong("coupon_type_id")
         );
@@ -29,15 +32,16 @@ public class CouponDao {
 
     public void updateUsageStatus(final Long memberId, final Long couponId) {
         String sql = "UPDATE coupon " +
-                "SET usage_status = 'N' " +
-                "WHERE member_id = ? " +
+                "SET usage_status = " +
+                USAGE_STATUS_FALSE +
+                " WHERE member_id = ? " +
                 "AND id = ?";
         jdbcTemplate.update(sql, memberId, couponId);
     }
 
     public Long create(final Long memberId, final Long couponTypeId) {
         String sql = "INSERT INTO coupon(usage_status, member_id, coupon_type_id) VALUES (?, ?, ?) ";
-        return (long) jdbcTemplate.update(sql, "N", memberId, couponTypeId);
+        return (long) jdbcTemplate.update(sql, USAGE_STATUS_FALSE, memberId, couponTypeId);
     }
 
     public Optional<CouponEntity> findById(final Long couponId) {

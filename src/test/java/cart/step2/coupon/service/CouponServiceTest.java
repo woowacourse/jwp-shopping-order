@@ -39,10 +39,10 @@ class CouponServiceTest {
         // given
         final Long memberId = 1L;
         final List<Coupon> coupons = List.of(
-                new Coupon(1L, "N", memberId, 1L),
-                new Coupon(2L, "N", memberId, 2L),
-                new Coupon(3L, "N", memberId, 3L),
-                new Coupon(4L, "N", memberId, 4L)
+                new Coupon(1L, 0, memberId, 1L),
+                new Coupon(2L, 0, memberId, 2L),
+                new Coupon(3L, 0, memberId, 3L),
+                new Coupon(4L, 0, memberId, 4L)
         );
 
         doReturn(coupons).when(couponRepository).findAll(1L);
@@ -72,7 +72,7 @@ class CouponServiceTest {
     void deleteByCouponId() {
         // given
         final Long couponId = 1L;
-        Coupon coupon = new Coupon(couponId, "Y", 1L, 1L);
+        Coupon coupon = new Coupon(couponId, 1, 1L, 1L);
         doReturn(coupon).when(couponRepository).findById(couponId);
 
         // when
@@ -87,7 +87,7 @@ class CouponServiceTest {
     void deleteByCouponIdFail() {
         // given
         final Long couponId = 1L;
-        Coupon coupon = new Coupon(couponId, "N", 1L, 1L);
+        Coupon coupon = new Coupon(couponId, 0, 1L, 1L);
         doReturn(coupon).when(couponRepository).findById(couponId);
 
         // when, then

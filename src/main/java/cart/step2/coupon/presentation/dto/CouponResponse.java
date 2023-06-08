@@ -19,8 +19,8 @@ public class CouponResponse {
         this.isUsed = judgeTrueOrFalse(coupon.getUsageStatus());
     }
 
-    private boolean judgeTrueOrFalse(final String usageStatus) {
-        return usageStatus.equals("Y");
+    private boolean judgeTrueOrFalse(final Integer usageStatus) {
+        return usageStatus.equals(1);
     }
 
     public Long getId() {

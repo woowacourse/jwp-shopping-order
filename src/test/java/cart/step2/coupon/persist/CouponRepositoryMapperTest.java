@@ -32,10 +32,10 @@ class CouponRepositoryMapperTest {
         // given
         final Long memberId = 1L;
         List<CouponEntity> coupons = List.of(
-                new CouponEntity(1L, "N", memberId, 1L),
-                new CouponEntity(2L, "N", memberId, 2L),
-                new CouponEntity(3L, "N", memberId, 3L),
-                new CouponEntity(4L, "N", memberId, 4L)
+                new CouponEntity(1L, 0, memberId, 1L),
+                new CouponEntity(2L, 0, memberId, 2L),
+                new CouponEntity(3L, 0, memberId, 3L),
+                new CouponEntity(4L, 0, memberId, 4L)
         );
         doReturn(coupons).when(couponDao).findAll(memberId);
         
@@ -52,7 +52,7 @@ class CouponRepositoryMapperTest {
                 () -> assertThat(responses).extracting(Coupon::getCouponTypeId)
                         .contains(1L, 2L, 3L, 4L),
                 () -> assertThat(responses).extracting(Coupon::getUsageStatus)
-                        .contains("N", "N", "N", "N")
+                        .contains(0, 0, 0, 0)
         );
     }
 
@@ -62,7 +62,7 @@ class CouponRepositoryMapperTest {
         // given
         final Long memberId = 1L;
         final Long couponTypeId = 1L;
-        Optional<CouponEntity> couponEntityOptional = Optional.of(new CouponEntity(1L, "N", memberId, couponTypeId));
+        Optional<CouponEntity> couponEntityOptional = Optional.of(new CouponEntity(1L, 0, memberId, couponTypeId));
         doReturn(couponEntityOptional).when(couponDao).findById(memberId);
 
         // when
@@ -73,7 +73,7 @@ class CouponRepositoryMapperTest {
                 () -> assertThat(coupon.getId()).isEqualTo(1L),
                 () -> assertThat(coupon.getMemberId()).isEqualTo(memberId),
                 () -> assertThat(coupon.getCouponTypeId()).isEqualTo(couponTypeId),
-                () -> assertThat(coupon.getUsageStatus()).isEqualTo("N")
+                () -> assertThat(coupon.getUsageStatus()).isEqualTo(0)
         );
     }
 
