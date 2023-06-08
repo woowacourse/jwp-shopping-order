@@ -1,6 +1,7 @@
 package cart.fixtures;
 
 import cart.domain.Product;
+import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 
 public class ProductFixtures {
@@ -12,6 +13,8 @@ public class ProductFixtures {
     public static final Product NEW_PRODUCT = new Product(4L, "새상품", 5000, "https://images.unsplash.com/photo-4");
     public static final Product UPDATE_PRODUCT1 = new Product(1L, "치킨", 20000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
 
+    public static final ProductRequest NEW_PRODUCT_REQUEST = new ProductRequest("새상품", 5000, "https://images.unsplash.com/photo-4");
+    public static final ProductRequest UPDATE_PRODUCT1_REQUEST = new ProductRequest("치킨", 20000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
     public static final ProductResponse PRODUCT_RESPONSE1 = ProductResponse.of(PRODUCT1);
     public static final ProductResponse PRODUCT_RESPONSE2 = ProductResponse.of(PRODUCT2);
     public static final ProductResponse PRODUCT_RESPONSE3 = ProductResponse.of(PRODUCT3);
