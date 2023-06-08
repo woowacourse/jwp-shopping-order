@@ -37,19 +37,6 @@ CREATE TABLE IF NOT EXISTS order_item(
     FOREIGN KEY (order_id) REFERENCES order_record(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS default_discount_policy(
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    threshold INT NOT NULL,
-    discount_rate FLOAT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS default_delivery_policy(
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    fee INT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS payment_record(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT NOT NULL,
@@ -57,18 +44,16 @@ CREATE TABLE IF NOT EXISTS payment_record(
     FOREIGN KEY (order_id) REFERENCES order_record(id)
 );
 
-CREATE TABLE IF NOT EXISTS applied_default_discount_policy(
+CREATE TABLE IF NOT EXISTS applied_discount_policy(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     payment_record_id BIGINT NOT NULL,
-    default_discount_policy_id BIGINT NOT NULL,
-    FOREIGN KEY (payment_record_id) REFERENCES payment_record(id),
-    FOREIGN KEY (default_discount_policy_id) REFERENCES default_discount_policy(id)
+    discount_policy_id BIGINT NOT NULL,
+    FOREIGN KEY (payment_record_id) REFERENCES payment_record(id)
 );
 
-CREATE TABLE IF NOT EXISTS applied_default_delivery_policy(
+CREATE TABLE IF NOT EXISTS applied_delivery_policy(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     payment_record_id BIGINT NOT NULL,
-    default_delivery_policy_id BIGINT NOT NULL,
-    FOREIGN KEY (payment_record_id) REFERENCES payment_record(id),
-    FOREIGN KEY (default_delivery_policy_id) REFERENCES default_delivery_policy(id)
+    delivery_policy_id BIGINT NOT NULL,
+    FOREIGN KEY (payment_record_id) REFERENCES payment_record(id)
 );
