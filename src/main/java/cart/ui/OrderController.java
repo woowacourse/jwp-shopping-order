@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Order", description = "주문 API")
 @RestController
 @RequestMapping("/orders")
-public class OrderApiController {
+public class OrderController {
 
     private final OrderService orderService;
 
-    public OrderApiController(OrderService orderService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 

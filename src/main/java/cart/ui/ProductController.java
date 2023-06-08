@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Product", description = "상품 API")
 @RestController
 @RequestMapping("/products")
-public class ProductApiController {
+public class ProductController {
 
     private final ProductService productService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 

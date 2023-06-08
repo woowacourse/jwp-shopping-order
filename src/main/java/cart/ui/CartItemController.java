@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "CartItem", description = "장바구니 API")
 @RestController
 @RequestMapping("/cart-items")
-public class CartItemApiController {
+public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 

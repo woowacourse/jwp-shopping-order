@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Coupon", description = "쿠폰 API")
 @RestController
 @RequestMapping("/coupons")
-public class CouponApiController {
+public class CouponController {
 
     private final CouponService couponService;
 
-    public CouponApiController(CouponService couponService) {
+    public CouponController(CouponService couponService) {
         this.couponService = couponService;
     }
 
