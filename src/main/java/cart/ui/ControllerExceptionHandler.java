@@ -70,6 +70,12 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @ExceptionHandler(OrderException.IllegalMember.class)
+    public ResponseEntity<Void> handleOrderNotExistException(OrderException.IllegalMember e) {
+        logger.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<Void> handleProductException(ProductException e) {
         logger.error(e.getMessage());

@@ -18,6 +18,7 @@ import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
 import cart.exception.MemberNotExistException;
+import cart.exception.OrderException;
 import cart.exception.ProductException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,8 +103,11 @@ public class OrderService {
         cartItemRepository.deleteByMemberIdAndProductIds(order.getMemberId(), productIds);
     }
 
-    public OrderResponse getOrderById(final Long orderId) {
+    public OrderResponse getOrderById(final Member member, final Long orderId) {
         final Order persistedOrder = orderRepository.findByOrderId(orderId);
+        if (!persistedOrder.getMember().equals(member)) {
+            throw new OrderException.IllegalMember("해당 멤버가 한 주문이 아닙니다.");
+        }
 
         return OrderResponse.of(persistedOrder, persistedOrder.getOrderPrice());
     }

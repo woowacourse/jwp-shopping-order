@@ -12,4 +12,11 @@ public class OrderException extends RuntimeException {
             super(message);
         }
     }
+
+    public static class IllegalMember extends OrderException {
+
+        public IllegalMember(final String message) {
+            super(message);
+        }
+    }
 }

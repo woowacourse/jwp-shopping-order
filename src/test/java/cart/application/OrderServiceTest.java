@@ -136,7 +136,7 @@ class OrderServiceTest {
         when(orderRepository.findByOrderId(any())).thenReturn(persistedOrder);
 
         //when
-        final OrderResponse orderResponse = orderService.getOrderById(1L);
+        final OrderResponse orderResponse = orderService.getOrderById(member, 1L);
 
         //then
         assertAll(
