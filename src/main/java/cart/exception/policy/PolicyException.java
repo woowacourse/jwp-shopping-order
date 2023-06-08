@@ -6,8 +6,8 @@ public class PolicyException extends RuntimeException{
         super(message);
     }
 
-    public static class NoShippingFee extends PolicyException {
-        public NoShippingFee() {
+    public static class NotExistShippingFee extends PolicyException {
+        public NotExistShippingFee() {
             super("배송비를 가져올 수 없습니다");
         }
     }

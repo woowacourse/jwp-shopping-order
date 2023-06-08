@@ -44,7 +44,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email).orElseThrow(MemberException.NoMember::new);
+        Member member = memberDao.getMemberByEmail(email).orElseThrow(MemberException.NotExistMember::new);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }

@@ -40,7 +40,6 @@ public class CartItemDao {
             return new CartItem(cartItemId, quantity, product, member);
         });
     }
-
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

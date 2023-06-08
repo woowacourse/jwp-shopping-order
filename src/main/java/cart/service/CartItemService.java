@@ -36,7 +36,7 @@ public class CartItemService {
         }
         final Long cartItemId = cartItemDao.save(new CartItem(member,
                 productDao.getProductById(cartItemRequest.getProductId())
-                        .orElseThrow(ProductException.NoProduct::new)));
+                        .orElseThrow(ProductException.NotExistProduct::new)));
         return new CartItemCreateResponse(cartItemId);
     }
 

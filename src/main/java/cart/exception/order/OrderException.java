@@ -6,8 +6,8 @@ public class OrderException extends RuntimeException{
         super(message);
     }
 
-    public static class NoOrder extends OrderException {
-        public NoOrder() {
+    public static class NotExistOrder extends OrderException {
+        public NotExistOrder() {
             super("존재하지 않는 주문 내역입니다");
         }
     }

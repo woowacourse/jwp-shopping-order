@@ -3,6 +3,7 @@ package cart.domain.order;
 
 import cart.domain.Member;
 import cart.domain.point.Point;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 

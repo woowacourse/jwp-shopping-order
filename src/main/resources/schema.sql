@@ -12,7 +12,7 @@ create table if not exists member
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
----회원 추가할때 point도 같이 추가..
+
 create table if not exists point
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,

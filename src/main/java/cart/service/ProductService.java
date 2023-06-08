@@ -27,7 +27,7 @@ public class ProductService {
 
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId)
-                .orElseThrow(ProductException.NoProduct::new);
+                .orElseThrow(ProductException.NotExistProduct::new);
         return ProductResponse.of(product);
     }
 

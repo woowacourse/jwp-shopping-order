@@ -23,6 +23,6 @@ public class OrderPolicyRepository {
 
     public Long findFee() {
         return shippingFeeDao.findFee()
-                .orElseThrow(PolicyException.NoShippingFee::new).getFee();
+                .orElseThrow(PolicyException.NotExistShippingFee::new).getFee();
     }
 }

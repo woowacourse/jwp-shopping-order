@@ -64,7 +64,7 @@ public class OrderRepository {
     }
 
     public Order findOrderById(final Member member, final Long orderId) {
-        final OrderEntity orderEntity = orderDao.findById(orderId).orElseThrow(OrderException.NoOrder::new);
+        final OrderEntity orderEntity = orderDao.findById(orderId).orElseThrow(OrderException.NotExistOrder::new);
         final List<OrderItem> orderItemList = findOrderItemsByOrderId(orderId);
 
         return new Order(orderEntity.getId(),
@@ -119,7 +119,7 @@ public class OrderRepository {
 
     public ShippingFee findShippingFee() {
         final ShippingFeeEntity shippingFeeEntity = shippingFeeDao.findFee()
-                .orElseThrow(PolicyException.NoShippingFee::new);
+                .orElseThrow(PolicyException.NotExistShippingFee::new);
         return ShippingFee.from(shippingFeeEntity);
     }
 

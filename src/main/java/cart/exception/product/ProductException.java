@@ -5,8 +5,8 @@ public class ProductException extends RuntimeException{
         super(message);
     }
 
-    public static class NoProduct extends ProductException {
-        public NoProduct() {
+    public static class NotExistProduct extends ProductException {
+        public NotExistProduct() {
             super("존재하지 않는 상품입니다");
         }
     }

@@ -36,6 +36,7 @@ public class CartItem {
     }
 
     public Long getQuantity() {
+        Car 영택 = new Car("영택");
         return quantity;
     }
 
