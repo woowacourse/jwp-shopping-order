@@ -15,7 +15,7 @@ public class OrderPriceBaseCouponGenerator implements OrderBaseCouponGenerator {
 
     @Override
     public Optional<Coupon> generate(Order order) {
-        if (order.getFinalPrice() > BONUS_COUPON_ISSUANCE_PRICE) {
+        if (order.getFinalPrice() >= BONUS_COUPON_ISSUANCE_PRICE) {
             return Optional.of(new Coupon(null, COUPON_NAME, DISCOUNT_VALUE, MINIMUM_ORDER_AMOUNT, LocalDateTime.now().plusDays(EXPIRATION_PERIOD)));
         }
         return Optional.empty();
