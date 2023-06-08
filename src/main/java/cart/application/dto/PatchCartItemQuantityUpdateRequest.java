@@ -1,12 +1,12 @@
 package cart.application.dto;
 
-public class CartItemQuantityUpdateRequest {
+public class PatchCartItemQuantityUpdateRequest {
     private int quantity;
 
-    public CartItemQuantityUpdateRequest() {
+    public PatchCartItemQuantityUpdateRequest() {
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public PatchCartItemQuantityUpdateRequest(int quantity) {
         this.quantity = quantity;
     }
 

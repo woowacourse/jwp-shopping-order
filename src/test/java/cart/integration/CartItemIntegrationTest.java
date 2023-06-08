@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
+import cart.application.dto.PatchCartItemQuantityUpdateRequest;
+import cart.application.dto.PostCartItemRequest;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
@@ -46,10 +46,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void addCartItem() throws Exception {
         // given
-        CartItemRequest cartItemRequest = new CartItemRequest(productId1);
+        PostCartItemRequest postCartItemRequest = new PostCartItemRequest(productId1);
 
         // when
-        ResultActions response = requestAddCartItem(member1, cartItemRequest);
+        ResultActions response = requestAddCartItem(member1, postCartItemRequest);
 
         // then
         response.andExpect(status().isCreated());
@@ -60,10 +60,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void addCartItemByIllegalMember() throws Exception {
         // given
         Member illegalMember = new Member(member1.getId(), member1.getEmail(), member1.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId1);
+        PostCartItemRequest postCartItemRequest = new PostCartItemRequest(productId1);
 
         // when
-        ResultActions response = requestAddCartItem(illegalMember, cartItemRequest);
+        ResultActions response = requestAddCartItem(illegalMember, postCartItemRequest);
 
         // then
         response.andExpect(status().isUnauthorized());
@@ -146,10 +146,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
         return Long.parseLong(result.andReturn().getResponse().getHeader("Location").split("/")[2]);
     }
 
-    private ResultActions requestAddCartItem(Member member, CartItemRequest cartItemRequest) throws
+    private ResultActions requestAddCartItem(Member member, PostCartItemRequest postCartItemRequest) throws
         Exception {
         String encodedAuthHeader = getEncodedAuthHeader(member);
-        String jsonRequest = new ObjectMapper().writeValueAsString(cartItemRequest);
+        String jsonRequest = new ObjectMapper().writeValueAsString(postCartItemRequest);
         return mockMvc.perform(post("/cart-items")
             .header("Authorization", encodedAuthHeader)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -169,13 +169,13 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) throws Exception {
-        ResultActions result = requestAddCartItem(member, new CartItemRequest(productId));
+        ResultActions result = requestAddCartItem(member, new PostCartItemRequest(productId));
         return getIdFromCreatedResponse(result);
     }
 
     private ResultActions requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) throws Exception {
         String encodedAuthHeader = getEncodedAuthHeader(member);
-        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
+        PatchCartItemQuantityUpdateRequest quantityUpdateRequest = new PatchCartItemQuantityUpdateRequest(quantity);
         String jsonRequest = new ObjectMapper().writeValueAsString(quantityUpdateRequest);
         return mockMvc.perform(patch("/cart-items/{cartItemId}", cartItemId)
             .header("Authorization", encodedAuthHeader)

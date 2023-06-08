@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
+import cart.application.dto.PatchCartItemQuantityUpdateRequest;
+import cart.application.dto.PostCartItemRequest;
 import cart.application.dto.CartItemResponse;
 import cart.application.event.CartItemDeleteEvent;
 import cart.dao.CartItemDao;
@@ -33,11 +33,11 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    public Long add(Member member, PostCartItemRequest postCartItemRequest) {
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(postCartItemRequest.getProductId())));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(Member member, Long id, PatchCartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
