@@ -73,15 +73,16 @@ public class PurchaseOrderService {
 
     public PurchaseOrderResponse getPurchaseOrderByOrderId(Long orderId) {
         Optional<PurchaseOrderInfo> purchaseOrderInfoById = purchaseOrderDao.findById(orderId);
-        if (purchaseOrderInfoById.isPresent()) {
-            PurchaseOrderInfo purchaseOrderInfo = purchaseOrderInfoById.get();
-            List<PurchaseOrderItemResponse> purchaseOrderItemResponses = getPurchaseOrderItemResponses(orderId);
-            Point savedPoint = memberRewardPointDao.getPointByOrderId(orderId).orElse(new Point(0, null, null));
-            return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(),
-                    purchaseOrderInfo.getStatus(), purchaseOrderInfo.getPayment(),
-                    purchaseOrderInfo.getUsedPoint(), savedPoint.calculatePointByExpired(), purchaseOrderItemResponses);
+        if (purchaseOrderInfoById.isEmpty()) {
+            throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");
         }
-        throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");
+
+        PurchaseOrderInfo purchaseOrderInfo = purchaseOrderInfoById.get();
+        List<PurchaseOrderItemResponse> purchaseOrderItemResponses = getPurchaseOrderItemResponses(orderId);
+        Point savedPoint = memberRewardPointDao.getPointByOrderId(orderId).orElse(new Point(0, null, null));
+        return new PurchaseOrderResponse(orderId, purchaseOrderInfo.getOrderAt(),
+                purchaseOrderInfo.getStatus(), purchaseOrderInfo.getPayment(),
+                purchaseOrderInfo.getUsedPoint(), savedPoint.calculatePointByExpired(), purchaseOrderItemResponses);
     }
 
     private List<PurchaseOrderItemResponse> getPurchaseOrderItemResponses(Long orderId) {
