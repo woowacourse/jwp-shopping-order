@@ -174,6 +174,7 @@
   - 비즈니스 로직에선 쓰이지 않는 것을 확인 후 제거, 대신 DB와 맞닿아 있는 ProductEntity에는 만들어줬다.
 - [x] OrderItem이 Member를 가질 필요가 있을까? (이미 Order에서 가지고 있다)
 - [x] 페이지네이션 제네릭
-- [ ] DirtiesContext 성능 측면에서의 고민
+- [x] DirtiesContext 성능 측면에서의 고민
+  - Sql 어노테이션을 통해 truncate 해주는 방식을 사용했더니 전체 테스트 시간이 4배 가까이 단축되는 것을 확인함  
 - [ ] Order가 파라미터로 CartItems가 아닌, OrderItems를 받는 것?
 - 
