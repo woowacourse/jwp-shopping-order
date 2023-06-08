@@ -1,13 +1,10 @@
 package cart.exception.point;
 
-import cart.exception.policy.PolicyException;
+import cart.exception.BadRequestException;
 
-public class PointException extends RuntimeException{
-    public PointException(String message) {
-        super(message);
-    }
+public class PointException {
 
-    public static class OverThenMemberPoint extends PointException {
+    public static class OverThenMemberPoint extends BadRequestException {
         public OverThenMemberPoint() {
             super("포인트가 부족합니다");
         }
