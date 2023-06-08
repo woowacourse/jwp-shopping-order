@@ -5,6 +5,8 @@ import java.time.temporal.TemporalAdjusters;
 
 public class SavePointPolicy {
 
+    private SavePointPolicy() {}
+
     public static int calculate(int payment) {
         PointAccumulationRate pointAccumulationRate = PointAccumulationRate.findBy(payment);
         return (int) Math.floor(payment * pointAccumulationRate.getRate());
