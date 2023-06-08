@@ -5,7 +5,6 @@ import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItemRepository;
 import cart.domain.cart.CartItems;
-import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -30,7 +29,7 @@ import static org.mockito.BDDMockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+class OrderServiceTest extends CouponFixture {
 
     @InjectMocks
     private OrderService orderService;
@@ -41,23 +40,27 @@ class OrderServiceTest {
     @Mock
     private CartItemRepository cartItemRepository;
 
+    private Member member;
+    private Product chicken;
+    private Product dessert;
+
+    @BeforeEach
+    void init() {
+        member = new Member(1L, "a@a.com", "1234");
+        chicken = new Product(1L, "치킨", 10000, "imgUrl");
+        dessert = new Product(2L, "디저트", 5000, "imgUrl");
+    }
+
     @Nested
     class 주문_할_때 {
 
         private OrderRequest request;
         private CartItems sizeOneCarItems;
-        private Coupon unusedCoupon;
-        private Coupon usedCoupon;
 
         @BeforeEach
         void init() {
             request = new OrderRequest(List.of(1L, 2L), 15000, 1L);
-            final Member member = new Member(1L, "a@a.com", "1234");
-            final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
-            final Product dessert = new Product(2L, "디저트", 5000, "imgUrl");
             sizeOneCarItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member), new CartItem(2L, 1, dessert, member)));
-            unusedCoupon = new Coupon(1L, 1L, "3000원 할인", "오늘만 드리는 선물", 3000, false);
-            usedCoupon = new Coupon(1L, 1L, "3000원 할인", "오늘만 드리는 선물", 3000, true);
         }
 
         @Test
@@ -66,7 +69,7 @@ class OrderServiceTest {
             given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);
             willDoNothing().given(cartItemRepository).deleteAllByIds(request.getCartItemIds());
             given(orderRepository.save(any(Order.class))).willReturn(1L);
-            given(couponRepository.findCouponById(anyLong())).willReturn(unusedCoupon);
+            given(couponRepository.findCouponById(anyLong())).willReturn(unUsedCoupon);
 
             // when
             orderService.order(OrderSaveDto.from(request));
@@ -112,8 +115,6 @@ class OrderServiceTest {
         @Test
         void 상품_아이디가_없으면_실패한다() {
             // given
-            final Member member = new Member(1L, "a@a.com", "1234");
-            final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
             sizeOneCarItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member)));
 
             given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);

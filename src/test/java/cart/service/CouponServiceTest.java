@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.controller.dto.CouponReissueRequest;
-import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.times;
 
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class CouponServiceTest {
+class CouponServiceTest extends CouponFixture {
 
     @InjectMocks
     private CouponService couponService;
@@ -42,17 +41,6 @@ class CouponServiceTest {
 
     @Mock
     private MemberJdbcRepository memberJdbcRepository;
-
-    private Coupon unUsedCoupon;
-    private Coupon usedCoupon;
-    private long couponId;
-
-    @BeforeEach
-    void setUp() {
-        couponId = 1L;
-        usedCoupon = new Coupon(couponId, 1L, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, true);
-        unUsedCoupon = new Coupon(couponId, 1L, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, false);
-    }
 
     @Test
     void 쿠폰을_발급한다() {
@@ -106,13 +94,6 @@ class CouponServiceTest {
 
     @Nested
     class 쿠폰_삭제할_때 {
-
-        private long couponId;
-
-        @BeforeEach
-        void setUp() {
-            couponId = 1L;
-        }
 
         @Test
         void 성공한다() {
