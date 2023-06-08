@@ -24,7 +24,7 @@ public class OrderHistoryService {
 
     public List<OrderHistoryResponse> readOrderHistory(Member member) {
         List<OrderHistoryResponse> orderHistoryResponses = new ArrayList<>();
-        List<OrderEntity> orderEntities = orderRepository.findAllOrder(member);
+        List<OrderEntity> orderEntities = orderRepository.findAllByMemberId(member);
         for (OrderEntity orderEntity : orderEntities) {
             List<OrderItemHistoryResponse> orderItemHistories = orderRepository.findOrderItemsByOrderId(orderEntity.getId()).stream()
                     .map(OrderItemHistoryResponse::from)
@@ -36,7 +36,7 @@ public class OrderHistoryService {
     }
 
     public OrderDetailHistoryResponse readDetailHistory(Member member, Long orderId) {
-        OrderEntity orderEntity = orderRepository.findAllOrder(member).stream()
+        OrderEntity orderEntity = orderRepository.findAllByMemberId(member).stream()
                 .filter(s -> s.getId().equals(orderId))
                 .findAny()
                 .orElseThrow(() -> new NotFoundException("해당 회원에게 해당 주문내역이 존재하지 않습니다."));

@@ -30,7 +30,7 @@ public class OrderRepository {
         return orderId;
     }
 
-    public List<OrderEntity> findAllOrder(Member member) {
+    public List<OrderEntity> findAllByMemberId(Member member) {
         return orderDao.findAll(member.getId());
     }
 
