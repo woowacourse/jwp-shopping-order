@@ -7,10 +7,14 @@ import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.repository.ProductRepository;
 import java.util.List;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
 class ProductServiceTest {
     @Autowired

@@ -18,6 +18,16 @@ public class MemberRepository {
         this.memberDao = memberDao;
     }
 
+    public Long save(Member member) {
+        MemberEntity memberEntity = toEntity(member);
+
+        return memberDao.save(memberEntity);
+    }
+
+    private MemberEntity toEntity(Member member) {
+        return new MemberEntity(null, member.getEmail(), member.getPassword(), member.getPoint());
+    }
+
     public Member findById(Long id) {
         MemberEntity memberEntity = memberDao.findById(id)
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
