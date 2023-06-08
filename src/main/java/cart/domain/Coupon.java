@@ -5,19 +5,17 @@ import cart.exception.CouponException;
 public class Coupon {
 
     private final Long id;
-    private final Member member;
     private final CouponType couponType;
     private final boolean isUsed;
 
-    public Coupon(final Long id, final Member member, final CouponType couponType, final boolean isUsed) {
+    public Coupon(final Long id, final CouponType couponType, final boolean isUsed) {
         this.id = id;
-        this.member = member;
         this.couponType = couponType;
         this.isUsed = isUsed;
     }
 
-    public Coupon(final Long id, final Member member) {
-        this(id, member, null, false);
+    public Coupon(final Long id) {
+        this(id, null, false);
     }
 
     public Money discount(final Money price) {
@@ -31,10 +29,6 @@ public class Coupon {
         return id;
     }
 
-    public Member getMember() {
-        return member;
-    }
-
     public CouponType getCouponType() {
         return couponType;
     }
@@ -43,25 +37,17 @@ public class Coupon {
         return isUsed;
     }
 
-    public Coupon use(final Member member) {
-        checkMember(member);
+    public Coupon use() {
         if (isUsed) {
             throw new CouponException.AlreadyUsed(id);
         }
-        return new Coupon(id, member, couponType, true);
+        return new Coupon(id, couponType, true);
     }
 
-    public Coupon refund(final Member member) {
-        checkMember(member);
+    public Coupon refund() {
         if (!isUsed) {
             throw new CouponException.AlreadyUsable(id);
         }
-        return new Coupon(id, member, couponType, false);
-    }
-
-    private void checkMember(final Member member) {
-        if (this.member.getId() != member.getId()) {
-            throw new CouponException.IllegalMember(this, member);
-        }
+        return new Coupon(id, couponType, false);
     }
 }

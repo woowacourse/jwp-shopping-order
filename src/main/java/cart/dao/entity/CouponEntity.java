@@ -2,7 +2,6 @@ package cart.dao.entity;
 
 import cart.domain.Coupon;
 import cart.domain.CouponType;
-import cart.domain.Member;
 
 public class CouponEntity {
 
@@ -21,20 +20,24 @@ public class CouponEntity {
         this.isUsed = isUsed;
     }
 
-    public static CouponEntity from(final Coupon used) {
+    public static CouponEntity from(final long memberId, final Coupon used) {
         return new CouponEntity(
                 used.getId(),
-                used.getMember().getId(),
+                memberId,
                 used.getCouponType().getId(),
                 used.isUsed());
     }
 
     public Coupon create(final CouponType couponType) {
-        return new Coupon(id, new Member(memberId), couponType, isUsed);
+        return new Coupon(id, couponType, isUsed);
     }
 
     public Long getId() {
         return id;
+    }
+
+    public long getMemberId() {
+        return memberId;
     }
 
     public long getCouponTypeId() {
@@ -43,9 +46,5 @@ public class CouponEntity {
 
     public boolean isUsed() {
         return isUsed;
-    }
-
-    public long getMemberId() {
-        return memberId;
     }
 }

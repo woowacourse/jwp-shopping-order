@@ -49,8 +49,8 @@ class OrderDaoTest {
         // then
         final OrderEntity firstShown = found.get(0);
         final OrderEntity secondShown = found.get(1);
-        assertThat(firstShown.getCouponId()).isEqualTo(2L);
-        assertThat(secondShown.getCouponId()).isEqualTo(1L);
+        assertThat(firstShown.getId()).isEqualTo(createdId2);
+        assertThat(secondShown.getId()).isEqualTo(createdId);
     }
 
     @DisplayName("특정 주문 상세 정보(상품 목록 제외)를 DB에서 조회한다.")
@@ -61,7 +61,7 @@ class OrderDaoTest {
         final Long createdId = orderDao.save(create);
 
         // when
-        final OrderEntity found = orderDao.findById(createdId).get();
+        final OrderEntity found = orderDao.findByIdForMember(1L, createdId).get();
 
         // then
         assertThat(found).isNotNull();
@@ -82,6 +82,6 @@ class OrderDaoTest {
         orderDao.deleteById(createdId);
 
         // then
-        assertThat(orderDao.findById(createdId).isEmpty()).isTrue();
+        assertThat(orderDao.findByIdForMember(1L, createdId).isEmpty()).isTrue();
     }
 }

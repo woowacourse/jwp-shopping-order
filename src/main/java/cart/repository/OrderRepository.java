@@ -5,13 +5,10 @@ import cart.dao.OrderItemDao;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Coupon;
-import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.exception.CouponException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,59 +29,48 @@ public class OrderRepository {
         this.couponRepository = couponRepository;
     }
 
-    public long add(final Member member, final Order order) {
-        final long orderId = orderDao.save(OrderEntity.from(order));
-        final Long couponId = order.getCouponId();
-        if (Objects.nonNull(couponId)) {
-            final Coupon coupon = couponRepository.findById(couponId)
-                    .orElseThrow(() -> new CouponException.IllegalId(couponId));
-            couponRepository.updateStatus(coupon.use(member));
+    public long add(final long memberId, final Order order) {
+        final long orderId = orderDao.save(OrderEntity.from(memberId, order));
+        if (order.hasCoupon()) {
+            couponRepository.updateStatus(memberId, order.getCoupon());
         }
         orderItemDao.saveAll(OrderItemEntity.of(orderId, order.getOrderItems()));
         return orderId;
     }
 
-    public List<Order> findByMember(final Member member) {
-        final List<OrderEntity> foundOrders = orderDao.findByMemberId(member.getId());
+    public List<Order> findByMember(final long memberId) {
+        final List<OrderEntity> foundOrders = orderDao.findByMemberId(memberId);
         final List<Order> orders = new ArrayList<>();
         for (final OrderEntity foundOrder : foundOrders) {
             final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(foundOrder.getId());
-            final Long couponId = foundOrder.getCouponId();
-            orders.add(createOrder(foundOrder, foundOrderItems, couponId));
+            orders.add(createOrder(foundOrder, foundOrderItems));
         }
         return orders;
     }
 
     private Order createOrder(final OrderEntity foundOrder,
-                              final List<OrderItemEntity> foundOrderItems,
-                              final Long couponId) {
+                              final List<OrderItemEntity> foundOrderItems) {
         final List<OrderItem> orderItems = OrderItemEntity.createAll(foundOrderItems);
-        if (Objects.nonNull(couponId)) {
-            final Coupon foundCoupon = couponRepository.findById(couponId)
-                    .orElseThrow(() -> new IllegalStateException("illegal data exists in table ORDERS; coupon_id"));
-            return foundOrder.create(orderItems, foundCoupon);
-        }
-        return foundOrder.create(orderItems);
+        final Coupon coupon = foundOrder.getOptionalCouponId()
+                .flatMap(couponRepository::findById)
+                .orElse(null);
+        return foundOrder.create(orderItems, coupon);
     }
 
-    public Optional<Order> findById(final Long orderId) {
-        return orderDao.findById(orderId)
-                .map(orderEntity -> createOrder(
-                        orderEntity,
-                        orderItemDao.findByOrderId(orderId),
-                        orderEntity.getCouponId()));
+    public Optional<Order> findByIdForMember(final long memberId, final long orderId) {
+        return orderDao.findByIdForMember(memberId, orderId)
+                .map(orderEntity -> createOrder(orderEntity, orderItemDao.findByOrderId(orderId)));
     }
 
-    public void remove(final Long orderId) {
+    public void remove(final long orderId) {
         orderDao.deleteById(orderId);
         orderItemDao.deleteByOrderId(orderId);
     }
 
-    public void update(final Order order) {
-        final Coupon coupon = order.getCoupon();
-        if (Objects.nonNull(coupon)) {
-            couponRepository.updateStatus(coupon);
+    public void update(final long memberId, final Order order) {
+        if (order.hasCoupon()) {
+            couponRepository.updateStatus(memberId, order.getCoupon());
         }
-        orderDao.updateStatus(OrderEntity.from(order));
+        orderDao.updateStatus(OrderEntity.from(memberId, order));
     }
 }

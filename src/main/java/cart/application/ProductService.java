@@ -49,4 +49,10 @@ public class ProductService {
     public void deleteProduct(final Long productId) {
         productRepository.remove(productId);
     }
+
+
+    public Product checkId(final long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductException.IllegalId(id));
+    }
 }

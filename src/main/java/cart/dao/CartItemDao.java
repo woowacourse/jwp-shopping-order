@@ -51,12 +51,13 @@ public class CartItemDao {
         )).longValue();
     }
 
-    public Optional<CartItemEntity> findById(final Long id) {
+    public Optional<CartItemEntity> findByIdForMember(final long memberId, final Long id) {
         final String sql = "SELECT id, member_id, product_id, quantity "
                 + "FROM cart_item "
-                + "WHERE id = ?";
+                + "WHERE member_id = ? "
+                + "AND id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId, id));
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

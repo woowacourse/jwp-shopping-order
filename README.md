@@ -41,19 +41,15 @@
     - [x] 쿠폰이 사용된 주문이 결제 취소되면, 다시 사용 가능한 상태가 된다.
 - [x] 사용자가 가진, 사용 가능한 쿠폰 목록을 확인할 수 있다.
 
-### 쿠폰 (admin)
-
-- [ ] 현재까지 발행된 모든 쿠폰을 최신순으로 확인할 수 있다.
-- [ ] 특정 쿠폰을 클릭 시, 해당 쿠폰의 상세 정보와 발행 현황을 확인할 수 있다.
-- [ ] 쿠폰 이름과 타입, 할인(금액 혹은 비율), 발행매수를 입력하면 쿠폰이 생성된다.
-- [ ] 쿠폰의 이름과 타입, 할인(금액 혹은 비율)을 수정할 수 있다.
-- [ ] 추가 발행 매수를 입력하면 이미 발행된 쿠폰을 추가적으로 발행할 수 있다.
-
 ## 피드백 반영 및 리팩터링 목록
 
 - [x] 사용하지 않는 메소드 삭제
 - [x] [모호한 패키지 구조 변경](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218263913)
 - [x] [Entity 에서 도메인 객체 생성하도록 하기 (도메인 객체가 외부 기술에 의존적이지 않게 함)](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218273156)
-- [ ] [변경에 취약한 도메인 연결 끊기](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218254337)
+- [x] [변경에 취약한 도메인 의존 끊기](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218254337)
+    - [x] member 객체가 필요 없고, id로 조회하는 기능에는 memberId 만을 전달하도록 수정
+    - [x] 다른 도메인 객체가 member를 의존하지 않도록 변경
+        - 특정 member가 가진 도메인을 조회해야 한다면 memberId를 같이 전달하도록 하기
+            - [x] 도메인의 memberId와 member의 id가 일치하지 않는 경우, 도메인의 id가 존재하지 않는 경우 모두 도메인의 id가 잘못된 것으로 판단
 - [ ] 단위 테스트 추가
 - [ ] API 문서 자동화

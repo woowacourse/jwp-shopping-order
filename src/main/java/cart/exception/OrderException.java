@@ -1,8 +1,5 @@
 package cart.exception;
 
-import cart.domain.Member;
-import cart.domain.Order;
-
 public class OrderException extends RuntimeException {
 
     public OrderException(final String message) {
@@ -15,16 +12,9 @@ public class OrderException extends RuntimeException {
         }
     }
 
-
     public static class IllegalId extends OrderException {
         public IllegalId(final Long id) {
             super("Illegal order id; id=" + id);
-        }
-    }
-
-    public static class IllegalMember extends OrderException {
-        public IllegalMember(final Order order, final Member member) {
-            super("Illegal member attempts to order; cartItemId=" + order.getId() + ", memberId=" + member.getId());
         }
     }
 
@@ -37,6 +27,12 @@ public class OrderException extends RuntimeException {
     public static class AlreadyCanceledOrder extends OrderException {
         public AlreadyCanceledOrder(final Long id) {
             super("cannot cancel already canceled order; id =" + id);
+        }
+    }
+
+    public static class AlreadyCompletedOrder extends OrderException {
+        public AlreadyCompletedOrder(final long id) {
+            super("cannot complete already completed order; id =" + id);
         }
     }
 }

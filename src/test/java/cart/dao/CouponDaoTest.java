@@ -46,6 +46,8 @@ class CouponDaoTest {
                         () -> Assertions.fail("coupon not exist; couponId=" + couponId));
     }
 
+    // TODO findByIdForMember
+
     @DisplayName("특정 회원의 모든 쿠폰을 조회한다.")
     @Test
     void findByMember() {

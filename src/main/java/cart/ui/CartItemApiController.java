@@ -30,22 +30,22 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(final Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.findByMember(member.getId()));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(final Member member,
                                              @RequestBody final CartItemRequest cartItemRequest) {
-        final Long cartItemId = cartItemService.add(member, cartItemRequest);
+        final Long cartItemId = cartItemService.add(member.getId(), cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(final Member member,
-                                                       @PathVariable final Long id,
+                                                       @PathVariable final long id,
                                                        @RequestBody final CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+        cartItemService.updateQuantity(member.getId(), id, request);
 
         return ResponseEntity.ok().build();
     }
@@ -53,7 +53,7 @@ public class CartItemApiController {
     @DeleteMapping
     public ResponseEntity<Void> removeCartItems(final Member member,
                                                 @RequestBody final CartItemDeleteRequest cartItemDeleteRequest) {
-        cartItemService.remove(member, cartItemDeleteRequest.getCartItemIds());
+        cartItemService.remove(member.getId(), cartItemDeleteRequest.getCartItemIds());
 
         return ResponseEntity.noContent().build();
     }

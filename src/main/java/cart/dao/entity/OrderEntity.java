@@ -1,7 +1,6 @@
 package cart.dao.entity;
 
 import cart.domain.Coupon;
-import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -9,6 +8,7 @@ import cart.domain.OrderStatus;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class OrderEntity {
 
@@ -37,10 +37,10 @@ public class OrderEntity {
         this(null, memberId, couponId, deliveryFee, OrderStatus.COMPLETE.getValue(), null);
     }
 
-    public static OrderEntity from(final Order order) {
+    public static OrderEntity from(final long memberId, final Order order) {
         return new OrderEntity(
                 order.getId(),
-                order.getMember().getId(),
+                memberId,
                 order.getCouponId(),
                 order.getDeliveryFee().getValue(),
                 order.getStatus().getValue(),
@@ -49,7 +49,6 @@ public class OrderEntity {
 
     public Order create(final List<OrderItem> orderItems, final Coupon coupon) {
         return new Order(id,
-                new Member(memberId),
                 coupon,
                 new Money(deliveryFee),
                 OrderStatus.find(status),
@@ -57,12 +56,12 @@ public class OrderEntity {
                 createdAt);
     }
 
-    public Order create(final List<OrderItem> orderItems) {
-        return create(orderItems, null);
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public Optional<Long> getOptionalCouponId() {
+        return Optional.ofNullable(couponId);
     }
 
     public Long getCouponId() {

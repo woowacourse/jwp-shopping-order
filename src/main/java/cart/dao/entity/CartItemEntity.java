@@ -1,7 +1,6 @@
 package cart.dao.entity;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
 import cart.domain.Product;
 
 public class CartItemEntity {
@@ -23,7 +22,7 @@ public class CartItemEntity {
     }
 
     public CartItem create(final Product product) {
-        return new CartItem(id, new Member(memberId), product, quantity);
+        return new CartItem(id, product, quantity);
     }
 
     public Long getId() {

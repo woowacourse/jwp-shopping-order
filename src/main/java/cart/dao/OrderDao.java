@@ -52,19 +52,20 @@ public class OrderDao {
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
-    public Optional<OrderEntity> findById(final Long id) {
+    public Optional<OrderEntity> findByIdForMember(final long memberId, final long id) {
         final String sql = "SELECT id, coupon_id, member_id, delivery_fee, status, created_at "
                 + "FROM orders "
                 + "WHERE id = ? "
+                + "AND member_id = ? "
                 + "ORDER BY created_at DESC";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId, id));
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    public void deleteById(final Long id) {
+    public void deleteById(final long id) {
         final String sql = "DELETE FROM orders WHERE id = ? ";
         jdbcTemplate.update(sql, id);
     }

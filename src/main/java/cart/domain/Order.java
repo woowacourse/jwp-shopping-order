@@ -8,7 +8,6 @@ import java.util.Objects;
 public class Order {
 
     private final Long id;
-    private final Member member;
     private final Coupon coupon;
     private final Money deliveryFee;
     private final OrderStatus status;
@@ -17,14 +16,12 @@ public class Order {
     private final Timestamp createdAt;
 
     public Order(final Long id,
-                 final Member member,
                  final Coupon coupon,
                  final Money deliveryFee,
                  final OrderStatus status,
                  final List<OrderItem> orderItems,
                  final Timestamp createdAt) {
         this.id = id;
-        this.member = member;
         this.coupon = coupon;
         this.deliveryFee = deliveryFee;
         this.status = status;
@@ -32,17 +29,42 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public Order(final Member member,
-                 final Coupon coupon,
+    public Order(final Coupon coupon,
                  final Money deliveryFee,
                  final List<OrderItem> orderItems) {
-        this(null, member, coupon, deliveryFee, cart.domain.OrderStatus.COMPLETE, orderItems, null);
+        this(null, coupon, deliveryFee, cart.domain.OrderStatus.COMPLETE, orderItems, null);
     }
 
-    public void checkTotalPrice(final Money totalPrice) {
+    public Order complete(final Money totalPrice) {
+        checkTotalPrice(totalPrice);
+        if (Objects.nonNull(coupon)) {
+            return new Order(id, coupon.use(), deliveryFee, OrderStatus.COMPLETE, orderItems, createdAt);
+        }
+        return new Order(id, null, deliveryFee, OrderStatus.COMPLETE, orderItems, createdAt);
+    }
+
+    private void checkTotalPrice(final Money totalPrice) {
         if (!Objects.equals(totalProductPrice(), totalPrice)) {
             throw new OrderException.OutOfDatedProductPrice();
         }
+    }
+
+    public Order cancel() {
+        if (isCanceled()) {
+            throw new OrderException.AlreadyCanceledOrder(id);
+        }
+        if (Objects.nonNull(coupon)) {
+            return new Order(id, coupon.refund(), deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
+        }
+        return new Order(id, null, deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
+    }
+
+    private boolean isCanceled() {
+        return status == OrderStatus.CANCEL;
+    }
+
+    public boolean hasCoupon() {
+        return Objects.nonNull(coupon);
     }
 
     public Money totalProductPrice() {
@@ -60,22 +82,8 @@ public class Order {
         return totalOrderPrice;
     }
 
-    public Order cancel() {
-        if (isCanceled()) {
-            throw new OrderException.AlreadyCanceledOrder(id);
-        }
-        if (Objects.nonNull(coupon)) {
-            return new Order(id, member, coupon.refund(member), deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
-        }
-        return new Order(id, member, null, deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public Member getMember() {
-        return member;
     }
 
     public Coupon getCoupon() {
@@ -103,9 +111,5 @@ public class Order {
 
     public Timestamp getCreatedAt() {
         return createdAt;
-    }
-
-    public boolean isCanceled() {
-        return status == OrderStatus.CANCEL;
     }
 }

@@ -29,9 +29,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CartItemException.class)
     public ResponseEntity<ErrorResponse> handleCartItemException(final CartItemException exception) {
-        if (exception.getClass() == CartItemException.IllegalMember.class) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(exception.getMessage()));
-        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 
@@ -44,9 +41,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleOrderException(final OrderException exception) {
         if (exception.getClass() == OrderException.OutOfDatedProductPrice.class) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
-        }
-        if (exception.getClass() == OrderException.IllegalMember.class) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(exception.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }

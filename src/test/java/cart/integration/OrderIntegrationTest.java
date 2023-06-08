@@ -112,7 +112,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 3000L, null));
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("잘못된 장바구니 아이템 정보로 주문 정보 추가 요청시 실패한다.")
@@ -170,7 +170,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, couponId));
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("주문 정보 목록을 조회한다.")
@@ -282,7 +282,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = 주문_삭제(member2, getIdFromCreatedResponse(createdResponse));
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("주문의 상태를 결제 취소로 변경한다.")
@@ -329,7 +329,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         final String orderStatus = result.jsonPath().get("orderStatus").toString();
         assertThat(orderStatus.substring(1, orderStatus.length() - 1))
                 .isEqualTo(OrderStatus.CANCEL.getValue());
-        assertThat(couponRepository.findById(couponId).get().isUsed())
+        assertThat(couponRepository.findByIdForMember(member.getId(), couponId).get().isUsed())
                 .isFalse();
     }
 

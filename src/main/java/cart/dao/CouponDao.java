@@ -30,7 +30,19 @@ public class CouponDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Optional<CouponEntity> findById(final Long id) {
+    public Optional<CouponEntity> findByIdForMember(final long memberId, final long id) {
+        final String sql = "SELECT id, member_id, coupon_type_id, is_used "
+                + "FROM coupon "
+                + "WHERE id = ? "
+                + "AND member_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId, id));
+        } catch (final EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<CouponEntity> findById(final long id) {
         final String sql = "SELECT id, member_id, coupon_type_id, is_used "
                 + "FROM coupon "
                 + "WHERE id = ? ";
@@ -41,7 +53,7 @@ public class CouponDao {
         }
     }
 
-    public List<CouponEntity> findByMember(final Long memberId) {
+    public List<CouponEntity> findByMember(final long memberId) {
         final String sql = "SELECT id, member_id, coupon_type_id, is_used "
                 + "FROM coupon "
                 + "WHERE member_id = ? ";
@@ -54,4 +66,5 @@ public class CouponDao {
                 + "WHERE id = ? ";
         jdbcTemplate.update(sql, coupon.isUsed(), coupon.getId());
     }
+
 }

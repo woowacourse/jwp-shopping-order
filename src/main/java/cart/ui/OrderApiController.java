@@ -29,32 +29,32 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
-        final Long createdId = orderService.add(member, orderRequest);
+        final Long createdId = orderService.add(member.getId(), orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + createdId)).build();
     }
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> showOrders(final Member member) {
-        final List<OrderResponse> orders = orderService.findOrdersByMember(member);
+        final List<OrderResponse> orders = orderService.findOrdersByMember(member.getId());
         return ResponseEntity.ok().body(orders);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetailResponse> showOrderDetail(final Member member,
                                                                @PathVariable final Long orderId) {
-        final OrderDetailResponse order = orderService.findOrderDetailById(member, orderId);
+        final OrderDetailResponse order = orderService.findOrderDetailById(member.getId(), orderId);
         return ResponseEntity.ok().body(order);
     }
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(final Member member, @PathVariable final Long orderId) {
-        orderService.remove(member, orderId);
+        orderService.remove(member.getId(), orderId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{orderId}")
     public ResponseEntity<Void> cancelOrder(final Member member, @PathVariable final Long orderId) {
-        orderService.cancel(member, orderId);
+        orderService.cancel(member.getId(), orderId);
         return ResponseEntity.ok().build();
     }
 }
