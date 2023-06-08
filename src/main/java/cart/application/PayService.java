@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,7 @@ public class PayService {
     public PayResponse orderCartItems(final Member member, final PayRequest request) {
         final int savedPoint = memberRepository.findPointOf(member);
         final int usedPoint = request.getPoints();
-        final Map<Product, Integer> products = findProductQuantity(request);
+        final Map<Product, Integer> products = findProductQuantity(request, member.getId());
 
         final Order order = new Order(usedPoint, products, member);
 
@@ -79,9 +80,10 @@ public class PayService {
         return new PayResponse(orderHistoryId);
     }
 
-    private Map<Product, Integer> findProductQuantity(final PayRequest request) {
+    private Map<Product, Integer> findProductQuantity(final PayRequest request, final Long memberId) {
         return request.getCartItemIds().stream()
                 .map(CartItemIdRequest::getCartItemId)
+                .filter(isCartItemOf(memberId))
                 .collect(Collectors.toMap(
                         id -> {
                             final long productId = cartItemRepository.findProductIdOf(id);
@@ -89,6 +91,10 @@ public class PayService {
                         },
                         cartItemRepository::findQuantityOf
                 ));
+    }
+
+    private Predicate<Long> isCartItemOf(final Long memberId) {
+        return cartItemId -> cartItemRepository.findById(cartItemId).getMember().getId().equals(memberId);
     }
 
     private static void validateSamePrice(final int originalPrice, final int displayPrice) {
