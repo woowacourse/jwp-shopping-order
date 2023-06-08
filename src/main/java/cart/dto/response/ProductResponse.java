@@ -1,14 +1,17 @@
-package cart.dto;
+package cart.dto.response;
 
 import cart.domain.Product;
 
 public class ProductResponse {
     private Long id;
     private String name;
-    private int price;
+    private long price;
     private String imageUrl;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl) {
+    private ProductResponse() {
+    }
+
+    private ProductResponse(Long id, String name, long price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -27,7 +30,7 @@ public class ProductResponse {
         return name;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 

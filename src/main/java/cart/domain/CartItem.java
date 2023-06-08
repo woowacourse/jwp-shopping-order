@@ -1,20 +1,13 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
-
+import cart.exception.UnauthorizedAccessException;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
+    private final Long id;
     private int quantity;
     private final Product product;
     private final Member member;
-
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-    }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
@@ -40,8 +33,8 @@ public class CartItem {
     }
 
     public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+        if (!Objects.equals(this.member, member)) {
+            throw new UnauthorizedAccessException("해당 회원의 장바구니가 아닙니다.");
         }
     }
 

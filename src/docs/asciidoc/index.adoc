@@ -1,0 +1,13 @@
+= Shopping Order
+:doctype: book
+:toc: left
+:source-highlighter: highlightjs
+:sectlinks:
+
+include::product-api.adoc[]
+
+include::cart-items-api.adoc[]
+
+include::member-api.adoc[]
+
+include::order-api.adoc[]

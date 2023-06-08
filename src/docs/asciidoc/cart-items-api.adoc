@@ -1,0 +1,53 @@
+[[cart-items-api]]
+== 장바구니
+
+[[cart-items-findAll]]
+=== 조회
+
+*요청*
+include::{snippets}/cart-items/showCartItems/http-request.adoc[]
+
+*응답*
+include::{snippets}/cart-items/showCartItems/http-response.adoc[]
+
+[[cart-items-add]]
+=== 등록
+
+*요청*
+include::{snippets}/cart-items/addCartItems/http-request.adoc[]
+
+*요청 바디*
+include::{snippets}/cart-items/addCartItems/request-body.adoc[]
+
+*응답*
+include::{snippets}/cart-items/addCartItems/http-response.adoc[]
+
+[[cart-items-update]]
+=== 수량 수정
+
+*요청*
+include::{snippets}/cart-items/updateCartItems/http-request.adoc[]
+
+*요청 파라미터*
+include::{snippets}/cart-items/updateCartItems/path-parameters.adoc[]
+
+*요청 바디*
+include::{snippets}/cart-items/updateCartItems/request-body.adoc[]
+
+*응답*
+include::{snippets}/cart-items/updateCartItems/http-response.adoc[]
+
+[[cart-items-delete]]
+=== 장바구니 품목 삭제
+
+*요청*
+include::{snippets}/cart-items/deleteCartItems/http-request.adoc[]
+
+*요청 파라미터*
+include::{snippets}/cart-items/deleteCartItems/path-parameters.adoc[]
+
+*응답*
+include::{snippets}/cart-items/deleteCartItems/http-response.adoc[]
+
+
+

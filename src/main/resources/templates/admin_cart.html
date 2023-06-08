@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>어드민 장바구니 관리</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>장바구니 ID</th>
+        <th>수량</th>
+        <th>이메일</th>
+        <th>상품 ID</th>
+        <th>상품 이름</th>
+        <th>상품 가격</th>
+        <th>삭제</th>
+    </tr>
+    <tbody id="product-list">
+    <tr th:each="cartItem : ${cartItems}">
+        <td th:text="${cartItem.id}"></td>
+        <td th:text="${cartItem.quantity}"></td>
+        <td th:text="${cartItem.member.email}"></td>
+        <td th:text="${cartItem.product.id}"></td>
+        <td th:text="${cartItem.product.name}"></td>
+        <td th:text="${cartItem.product.price}"></td>
+        <td>
+            <button th:onclick="deleteProduct([[${cartItem.product.id}]])">삭제</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/admin_cart.js}"></script>
+</body>
+</html>
