@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.domain.Order;
+import cart.domain.OrderItems;
 import cart.domain.Point;
 import cart.entity.OrderEntity;
 import java.util.List;
@@ -23,7 +24,7 @@ public class OrderRepository {
 
     public Long save(Order order) {
         Long orderId = orderDao.save(convertToEntity(order));
-        orderItemRepository.batchSave(order.getOrderItems(), orderId);
+        orderItemRepository.batchSave(order.getOrderItemsByList(), orderId);
 
         return orderId;
     }
@@ -44,7 +45,7 @@ public class OrderRepository {
         return new Order(
                 orderEntity.getId(),
                 memberRepository.findById(orderEntity.getMemberId()),
-                orderItemRepository.findByOrderId(orderEntity.getId()),
+                new OrderItems(orderItemRepository.findByOrderId(orderEntity.getId())),
                 new Point(orderEntity.getUsedPoint()),
                 new Point(orderEntity.getSavedPoint()),
                 orderEntity.getOrderedAt()
