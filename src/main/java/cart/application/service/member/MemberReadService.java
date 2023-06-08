@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,14 +27,14 @@ public class MemberReadService {
     }
 
     public MemberResultDto findMemberById(final Long id) {
-        final Member member = memberRepository.findMemberById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
+        final Member member = memberRepository.getById(id);
+
         return MemberResultDto.from(member);
     }
 
     public MemberResultDto findMemberByEmail(final String email) {
-        final Member member = memberRepository.findMemberByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
+        final Member member = memberRepository.getByEmail(email);
+
         return MemberResultDto.from(member);
     }
 }

@@ -12,6 +12,11 @@ public interface CartItemRepository {
 
     Optional<CartItem> findById(Long id);
 
+    default CartItem getById(Long id) {
+        return findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 상품이 없습니다."));
+    }
+
     void deleteById(Long id);
 
     void updateQuantity(CartItem cartItem);

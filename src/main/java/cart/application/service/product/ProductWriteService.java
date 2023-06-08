@@ -6,8 +6,6 @@ import cart.domain.product.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-
 @Service
 @Transactional
 public class ProductWriteService {
@@ -24,8 +22,7 @@ public class ProductWriteService {
     }
 
     public void updateProduct(final Long productId, final ProductCommandDto productCommandDto) {
-        productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
+        productRepository.getById(productId);
 
         final Product product = new Product(productId, productCommandDto);
         productRepository.updateProduct(product);

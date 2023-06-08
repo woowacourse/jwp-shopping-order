@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,12 +21,13 @@ public class ProductReadService {
 
     public List<ProductResultDto> getAllProducts() {
         final List<Product> products = productRepository.findAll();
+
         return products.stream().map(ProductResultDto::of).collect(Collectors.toList());
     }
 
     public ProductResultDto getProductById(Long productId) {
-        final Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("일치하는 상품이 없습니다."));
+        final Product product = productRepository.getById(productId);
+
         return ProductResultDto.of(product);
     }
 

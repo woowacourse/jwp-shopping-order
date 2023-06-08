@@ -69,9 +69,8 @@ public class OrderMakeService {
 
     private CartItems creatCartItems(final Member member, final CreateOrderDto createOrderDto) {
         final CartItems cartItems = new CartItems(createOrderDto.getCreateOrderItemDtos().stream()
-                .map(createOrderItemDto -> cartItemRepository.findById(createOrderItemDto.getCartItemId())
-                        .orElseThrow(() -> new IllegalArgumentException("장바구니에 일치하는 상품이 없습니다."))
-                ).collect(Collectors.toUnmodifiableList()));
+                .map(createOrderItemDto -> cartItemRepository.getById(createOrderItemDto.getCartItemId()))
+                .collect(Collectors.toUnmodifiableList()));
         cartItems.validate(createOrderDto.getCreateOrderItemDtos(), member.getId());
         return cartItems;
     }
