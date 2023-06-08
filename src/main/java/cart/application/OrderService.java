@@ -51,8 +51,8 @@ public class OrderService {
             List<MemberCoupon> memberCouponsToUse = getMemberCouponsBy(member, orderItemRequest);
 
             cart.applyCouponsOn(itemToOrder, memberCouponsToUse);
-            Order newOrder = cart.order(itemToOrder);
-            order = order.join(newOrder);
+            Order couponAppliedOrder = cart.order(itemToOrder);
+            order = order.join(couponAppliedOrder);
         }
 
         save(order);
