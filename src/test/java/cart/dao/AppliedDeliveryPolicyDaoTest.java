@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.entity.OrderRecordEntity;
 import cart.dao.entity.PaymentEntity;
-import cart.domain.DeliveryPolicy;
-import cart.domain.DiscountPolicy;
-import cart.domain.Order;
-import cart.domain.Payment;
 import cart.domain.fixture.OrderFixture;
+import cart.domain.order.Order;
+import cart.domain.order.payment.DeliveryPolicy;
+import cart.domain.order.payment.DiscountPolicy;
+import cart.domain.order.payment.Payment;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

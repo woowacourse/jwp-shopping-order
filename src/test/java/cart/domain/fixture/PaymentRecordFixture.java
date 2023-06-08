@@ -2,9 +2,9 @@ package cart.domain.fixture;
 
 import static cart.domain.fixture.OrderFixture.orderWithoutId;
 
-import cart.domain.DeliveryPolicy;
-import cart.domain.DiscountPolicy;
-import cart.domain.Payment;
+import cart.domain.order.payment.DeliveryPolicy;
+import cart.domain.order.payment.DiscountPolicy;
+import cart.domain.order.payment.Payment;
 import java.util.List;
 
 public class PaymentRecordFixture {

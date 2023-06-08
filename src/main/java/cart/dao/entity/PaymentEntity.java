@@ -1,6 +1,6 @@
 package cart.dao.entity;
 
-import cart.domain.Payment;
+import cart.domain.order.payment.Payment;
 
 public class PaymentEntity {
 

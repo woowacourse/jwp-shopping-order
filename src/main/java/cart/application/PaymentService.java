@@ -1,9 +1,9 @@
 package cart.application;
 
-import cart.domain.Order;
-import cart.domain.Payment;
+import cart.domain.order.Order;
+import cart.domain.order.payment.Payment;
+import cart.domain.order.payment.PaymentRepository;
 import cart.exception.PaymentException;
-import cart.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 
 @Service

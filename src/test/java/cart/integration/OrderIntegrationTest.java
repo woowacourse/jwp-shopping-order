@@ -10,16 +10,16 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.DiscountResponse;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderItemResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.PaymentResponse;
-import cart.dto.ProductRequest;
+import cart.domain.member.Member;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.order.DiscountResponse;
+import cart.dto.order.OrderDetailResponse;
+import cart.dto.order.OrderItemResponse;
+import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
+import cart.dto.order.PaymentResponse;
+import cart.dto.product.ProductRequest;
 import cart.exception.AuthenticationException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

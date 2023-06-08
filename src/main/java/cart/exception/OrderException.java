@@ -1,7 +1,7 @@
 package cart.exception;
 
-import cart.domain.Member;
-import cart.domain.Order;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
 
 public class OrderException extends RuntimeException {
     public OrderException(String message) {

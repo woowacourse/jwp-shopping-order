@@ -1,10 +1,9 @@
 package cart.domain.fixture;
 
-import cart.domain.Member;
 import cart.domain.Money;
-import cart.domain.Order;
-import cart.domain.OrderItem;
-
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import java.util.List;
 
 public class OrderFixture {

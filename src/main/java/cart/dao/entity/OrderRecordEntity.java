@@ -1,8 +1,8 @@
 package cart.dao.entity;
 
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import java.sql.Timestamp;
 import java.util.List;
 

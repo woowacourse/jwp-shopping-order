@@ -5,10 +5,10 @@ import static cart.domain.fixture.OrderFixture.orderByMember;
 import static cart.domain.fixture.OrderFixture.orderWithoutId;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Order;
-import cart.domain.Payment;
 import cart.domain.fixture.PaymentRecordFixture;
-import cart.repository.OrderRepository;
+import cart.domain.order.Order;
+import cart.domain.order.OrderRepository;
+import cart.domain.order.payment.Payment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

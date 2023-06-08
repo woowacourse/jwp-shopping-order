@@ -3,6 +3,8 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.fixture.OrderFixture;
+import cart.domain.order.Order;
+import cart.domain.order.payment.DeliveryPolicy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

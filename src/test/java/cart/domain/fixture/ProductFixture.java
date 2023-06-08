@@ -1,6 +1,6 @@
 package cart.domain.fixture;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductFixture {
     public static Product PRODUCT = Product.of("치킨", 10_000, "http://example.com/chicken.jpg");

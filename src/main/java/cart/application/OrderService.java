@@ -1,14 +1,14 @@
 package cart.application;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItemRepository;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderRepository;
 import cart.exception.CartItemException;
 import cart.exception.OrderException;
 import cart.exception.OrderException.EmptyItemInput;
-import cart.repository.CartItemRepository;
-import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

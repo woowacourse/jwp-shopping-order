@@ -9,8 +9,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -136,7 +136,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void updateProduct(){
+    void updateProduct() {
         var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product

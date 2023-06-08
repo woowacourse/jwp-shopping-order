@@ -1,6 +1,6 @@
 package cart.exception;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 
 public class PaymentException extends RuntimeException {
     public PaymentException(String message) {

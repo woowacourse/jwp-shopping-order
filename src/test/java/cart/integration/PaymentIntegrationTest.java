@@ -1,11 +1,24 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
+
 import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.*;
+import cart.domain.member.Member;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.order.DiscountResponse;
+import cart.dto.order.PaymentResponse;
+import cart.dto.product.ProductRequest;
 import cart.exception.AuthenticationException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,16 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class PaymentIntegrationTest extends IntegrationTest {
 
@@ -49,7 +52,8 @@ public class PaymentIntegrationTest extends IntegrationTest {
         this.productId3 = this.createProduct(new ProductRequest("보쌈", 15_000, "http://example.com/pizza.jpg"));
 
         this.cartItemIds = List.of(this.requestAddCartItemAndGetId(this.member, this.productId),
-                this.requestAddCartItemAndGetId(this.member, this.productId2), this.requestAddCartItemAndGetId(this.member, this.productId3));
+                this.requestAddCartItemAndGetId(this.member, this.productId2),
+                this.requestAddCartItemAndGetId(this.member, this.productId3));
 
         this.requestUpdateCartItemQuantity(this.member, this.cartItemIds.get(1), 2);
     }
@@ -141,7 +145,8 @@ public class PaymentIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(final Member member, final CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(final Member member,
+                                                             final CartItemRequest cartItemRequest) {
         return given(this.spec).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
@@ -159,7 +164,8 @@ public class PaymentIntegrationTest extends IntegrationTest {
     }
 
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(final Member member, final Long cartItemId, final int quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(final Member member, final Long cartItemId,
+                                                                        final int quantity) {
         final CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given(this.spec).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
