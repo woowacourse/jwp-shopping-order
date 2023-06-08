@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.ErrorCode;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -46,7 +47,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberRepository.findByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException(ErrorCode.UNAUTHORIZED_MEMBER);
         }
         return member;
     }

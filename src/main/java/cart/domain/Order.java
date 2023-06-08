@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.ErrorCode;
 import cart.exception.OrderException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Order {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new OrderException.IllegalMember(this, member);
+            throw new OrderException.IllegalMember(ErrorCode.FORBIDDEN_MEMBER, this, member);
         }
     }
 

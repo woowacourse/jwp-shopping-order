@@ -1,4 +1,9 @@
 package cart.exception;
 
-public class AuthenticationException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class AuthenticationException extends ShoppingCartException {
+    public AuthenticationException(ErrorCode errorCode) {
+        super(errorCode.getErrorMessage(), HttpStatus.UNAUTHORIZED);
+    }
 }
