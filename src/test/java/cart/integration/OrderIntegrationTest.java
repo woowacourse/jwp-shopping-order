@@ -36,7 +36,7 @@ class OrderIntegrationTest extends IntegrationTest {
         final Product savedProduct = productRepository.insertProduct(PRODUCT_1);
         final CartItem savedCartItem = cartItemDao.save(new CartItem(3, MEMBER_1, savedProduct));
         final List<CartItem> cartItems = List.of(savedCartItem);
-        final Order savedOrder = orderRepository.save(Order.of(MEMBER_1, cartItems), cartItems);
+        final Order savedOrder = orderRepository.save(Order.of(MEMBER_1, cartItems));
 
         //when
         final MvcResult result = mockMvc
@@ -65,7 +65,7 @@ class OrderIntegrationTest extends IntegrationTest {
         final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(
                 new MemberCoupon(savedCoupon, MEMBER_1.getId()));
         final List<CartItem> cartItems = List.of(savedCartItem);
-        final Order savedOrder = orderRepository.save(Order.of(MEMBER_1, cartItems, savedMemberCoupon), cartItems);
+        final Order savedOrder = orderRepository.save(Order.of(MEMBER_1, cartItems, savedMemberCoupon));
 
         //when
         final MvcResult result = mockMvc
@@ -94,7 +94,7 @@ class OrderIntegrationTest extends IntegrationTest {
         final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(
                 new MemberCoupon(savedCoupon, MEMBER_1.getId()));
         final List<CartItem> cartItems = List.of(savedCartItem);
-        final Order savedOrder = orderRepository.save(Order.of(MEMBER_1, cartItems, savedMemberCoupon), cartItems);
+        final Order savedOrder = orderRepository.save(Order.of(MEMBER_1, cartItems, savedMemberCoupon));
 
         //when
         final MvcResult result = mockMvc

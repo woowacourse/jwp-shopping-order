@@ -35,7 +35,7 @@ class OrderRepositoryTest {
         final List<CartItem> cartItems = List.of(savedCartItem1, savedCartItem2);
         final Order order = Order.of(MEMBER_1, cartItems);
 
-        final Order orderAfterSave = orderRepository.save(order, cartItems);
+        final Order orderAfterSave = orderRepository.save(order);
 
         assertThat(orderAfterSave)
                 .extracting(Order::getOrderAt, Order::getMemberId)
@@ -54,7 +54,7 @@ class OrderRepositoryTest {
         final CartItem savedCartItem2 = cartItemDao.save(new CartItem(MEMBER_1, savedProduct2));
         final List<CartItem> cartItems = List.of(savedCartItem1, savedCartItem2);
         final Order order = Order.of(MEMBER_1, cartItems);
-        final Long orderId = orderRepository.save(order, cartItems).getId();
+        final Long orderId = orderRepository.save(order).getId();
 
         final Order orderAfterSave = orderRepository.findById(orderId);
 

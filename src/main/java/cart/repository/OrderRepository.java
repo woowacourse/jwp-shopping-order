@@ -41,16 +41,12 @@ public class OrderRepository {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public Order save(final Order order, final List<CartItem> cartItems) {
+    public Order save(final Order order) {
         final OrderDto orderDto = OrderDto.from(order);
         final Long orderId = orderDao.insert(orderDto);
 
         final List<OrderProduct> orderProductsAfterSave = saveOrderProducts(orderId, order.getOrderProducts());
         order.getMemberCoupon().ifPresent(memberCouponRepository::useMemberCoupon);
-
-        for (final CartItem cartItem : cartItems) {
-            cartItemDao.delete(cartItem.getMemberId(), cartItem.getProduct().getId());
-        }
 
         return new Order(orderId, orderProductsAfterSave, order.getOrderAt(), order.getMemberId(),
                 order.getMemberCoupon().orElse(null));

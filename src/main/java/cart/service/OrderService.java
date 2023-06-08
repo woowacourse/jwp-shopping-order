@@ -40,7 +40,10 @@ public class OrderService {
                 .map(cartItemDao::findById)
                 .collect(toUnmodifiableList());
         final Order order = createOrder(member, requestDto, cartItems);
-        final Order savedOrder = orderRepository.save(order, cartItems);
+        final Order savedOrder = orderRepository.save(order);
+        for (final CartItem cartItem : cartItems) {
+            cartItemDao.delete(cartItem.getMemberId(), cartItem.getProduct().getId());
+        }
         return OrderResponseDto.from(savedOrder);
     }
 
