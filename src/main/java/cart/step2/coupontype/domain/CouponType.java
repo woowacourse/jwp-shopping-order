@@ -5,9 +5,9 @@ public class CouponType {
     private final Long id;
     private final String name;
     private final String description;
-    private final int discountAmount;
+    private final Integer discountAmount;
 
-    public CouponType(final Long id, final String name, final String description, final int discountAmount) {
+    public CouponType(final Long id, final String name, final String description, final Integer discountAmount) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -26,7 +26,7 @@ public class CouponType {
         return description;
     }
 
-    public int getDiscountAmount() {
+    public Integer getDiscountAmount() {
         return discountAmount;
     }
 }

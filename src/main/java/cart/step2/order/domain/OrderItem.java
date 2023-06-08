@@ -22,6 +22,7 @@ public class OrderItem {
         return new OrderItem(id, product, quantity);
     }
 
+
     public Long getId() {
         return id;
     }

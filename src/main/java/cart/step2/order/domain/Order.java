@@ -1,18 +1,20 @@
 package cart.step2.order.domain;
 
+import cart.step2.order.exception.PriceIsNotValid;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
 
     private final Long id;
-    private final int price;
+    private final Integer price;
     private final Long couponId;
     private final Long memberId;
     private final LocalDateTime createdAt;
     private final List<OrderItem> orderItems;
 
-    private Order(final Long id, final int price, final Long couponId, final Long memberId, final LocalDateTime createdAt, final List<OrderItem> orderItems) {
+    private Order(final Long id, final Integer price, final Long couponId, final Long memberId, final LocalDateTime createdAt, final List<OrderItem> orderItems) {
         this.id = id;
         this.price = price;
         this.couponId = couponId;
@@ -21,19 +23,32 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-    public static Order createNonePkAndOrderItemsOrder(final int price, final Long couponId, final Long memberId) {
+    public static Order createNonePkAndOrderItemsOrder(final Integer price, final Long couponId, final Long memberId) {
         return new Order(null, price, couponId, memberId, null, null);
     }
 
-    public static Order of(final Long id, final int price, final Long couponId, final Long memberId, final LocalDateTime date, final List<OrderItem> orderItems) {
+    public static Order of(final Long id, final Integer price, final Long couponId, final Long memberId, final LocalDateTime date, final List<OrderItem> orderItems) {
         return new Order(id, price, couponId, memberId, date, orderItems);
+    }
+
+    public void validatePrice(final int discountAmount) {
+        if (price != getTotalPriceAdaptCoupon(discountAmount)) {
+            throw PriceIsNotValid.THROW;
+        }
+    }
+
+    private int getTotalPriceAdaptCoupon(final int couponPrice) {
+        int totalPriceNonAdaptCoupon = orderItems.stream()
+                .mapToInt(orderItem -> (orderItem.getProduct().getPrice()) * orderItem.getQuantity())
+                .sum();
+        return totalPriceNonAdaptCoupon - couponPrice;
     }
 
     public Long getId() {
         return id;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
