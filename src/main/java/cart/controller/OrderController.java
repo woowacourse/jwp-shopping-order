@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.service.OrderService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> addOrder(Member member, @RequestBody OrderRequestDto orderRequestDto) {
+    public ResponseEntity<OrderResponseDto> addOrder(Member member, @RequestBody @Valid OrderRequestDto orderRequestDto) {
         OrderResponseDto orderResponseDto = orderService.orderCartItems(member, orderRequestDto);
 
         return ResponseEntity.created(URI.create("/orders/" + orderResponseDto.getId()))

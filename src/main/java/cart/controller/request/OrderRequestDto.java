@@ -3,11 +3,13 @@ package cart.controller.request;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.constraints.Size;
+import org.springframework.lang.Nullable;
 
 public class OrderRequestDto {
 
     @Size(min = 1)
     private List<Long> cartItemIds;
+    @Nullable
     private Long couponId;
 
     private OrderRequestDto() {
