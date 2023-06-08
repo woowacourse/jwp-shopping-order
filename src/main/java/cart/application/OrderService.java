@@ -32,12 +32,22 @@ public class OrderService {
 
     public OrderCreateResponse add(Member member, OrderRequest orderRequest) {
         int originalPrice = calculateOriginalPrice(orderRequest);
-        Coupon coupon = couponService.findById(orderRequest.getCouponIds().get(0));
+        Coupon coupon = couponService.findById(getCouponId(orderRequest));
         int actualPrice = coupon.calculateActualPrice(originalPrice);
         Order orderToAdd = new Order(member.getId(), originalPrice, actualPrice, orderRequest.getDeliveryFee());
         long orderId = ordersDao.save(orderToAdd);
         addOrderItems(orderId, orderRequest);
         return new OrderCreateResponse(orderId);
+    }
+
+    private Long getCouponId(OrderRequest orderRequest) {
+        if (orderRequest.getCouponIds().size() == 1) {
+            return orderRequest.getCouponIds().get(0);
+        }
+        throw new IllegalArgumentException(String.format(
+                "쿠폰의 개수가 %s개 입력되었습니다. 현재 정책 상 쿠폰은 1개만 입력할 수 있습니다.",
+                orderRequest.getCouponIds().size()
+        ));
     }
 
     private int calculateOriginalPrice(OrderRequest orderRequest) {

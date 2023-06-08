@@ -55,5 +55,5 @@ public class CouponService {
         );
         Coupon savedCoupon = couponDao.save(couponToSave);
         return CouponResponse.from(savedCoupon);
-    }
+    }명
 }
