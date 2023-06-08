@@ -10,10 +10,12 @@ import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.LoginResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBodyExtractionOptions;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Member member1;
     private OrderRequest orderRequest1;
     private OrderRequest orderRequest2;
+    private String accessToken;
 
     @BeforeEach
     void setUp() {
@@ -52,6 +55,8 @@ public class OrderIntegrationTest extends IntegrationTest {
             List.of(new OrderItemRequest(productId2, 1), new OrderItemRequest(productId3, 1)),
             LocalDateTime.of(2023, 4, 4, 4, 4)
         );
+
+        accessToken = getAccessToken();
     }
 
     @DisplayName("장바구니에 담긴 상품을 주문하고 주문내역을 저장한다.")
@@ -64,7 +69,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         //when
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+            .auth().oauth2(accessToken)
             .body(orderRequest1)
             .when()
             .post("/orders")
@@ -93,7 +98,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
-            .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+            .auth().oauth2(accessToken)
             .when()
             .get("/orders/{orderId}", orderId)
             .then().log().all()
@@ -122,7 +127,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
-            .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+            .auth().oauth2(accessToken)
             .when()
             .get("/orders")
             .then().log().all()
@@ -165,7 +170,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Long createCartItem(Member member, CartItemRequest cartItemRequest) {
         ExtractableResponse<Response> response = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .auth().oauth2(accessToken)
             .body(cartItemRequest)
             .when()
             .post("/cart-items")
@@ -188,7 +193,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .auth().oauth2(accessToken)
             .body(orderRequest)
             .when()
             .post("/orders")
@@ -197,5 +202,20 @@ public class OrderIntegrationTest extends IntegrationTest {
             .extract();
 
         return Long.parseLong(response.header("Location").split("/")[2]);
+    }
+
+    public String getAccessToken() {
+        final ResponseBodyExtractionOptions body = given().log().all()
+            .formParam("email", "a@a.com")
+            .formParam("password", "1234")
+            .when()
+            .post("/login")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .body();
+
+        final LoginResponse loginResponse = body.as(LoginResponse.class);
+        return loginResponse.getAccessToken();
     }
 }
