@@ -3,7 +3,7 @@ package cart.domain.delivery;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AdvacedDeliveryPolicy implements DeliveryPolicy {
+public class AdvancedDeliveryPolicy implements DeliveryPolicy {
 
     private static final long BASIC_FEE = 3000L;
     private static final int FREE_BOUND = 50_000;
