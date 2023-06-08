@@ -1,6 +1,10 @@
 package cart.dao;
 
-import static fixture.MemberFixture.MEMBER_1;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.CouponFixture.할인율_쿠폰;
+import static fixture.MemberFixture.유저_1;
+import static fixture.OrderFixture.주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개;
+import static fixture.OrderFixture.주문_유저_1_할인율_쿠폰_치킨_2개;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -23,10 +27,11 @@ class OrderDaoTest {
     @DisplayName("orderDto를 저장하는 기능 테스트")
     void insertTest() {
         LocalDateTime dateTime = LocalDateTime.now();
-        OrderDto orderDto = new OrderDto(2L, 1L, 1L, dateTime);
+        OrderDto orderDto = new OrderDto(유저_1.getId(), 정액_할인_쿠폰.getId(), dateTime);
 
         Long orderId = orderDao.insert(orderDto);
-        OrderDto orderDtoAfterSave = orderDao.findById(orderId).orElseThrow(NoSuchElementException::new);
+        OrderDto orderDtoAfterSave = orderDao.findById(orderId)
+                .orElseThrow(NoSuchElementException::new);
 
         assertThat(orderDtoAfterSave)
                 .usingRecursiveComparison()
@@ -37,12 +42,12 @@ class OrderDaoTest {
     @Test
     @DisplayName("orderDto를 조회하는 기능 테스트")
     void findByIdTest() {
-        OrderDto orderDto = orderDao.findById(1L)
+        OrderDto orderDto = orderDao.findById(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(orderDto)
                 .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getCouponId)
-                .containsExactly(1L, 1L, 1L);
+                .containsExactly(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId(), 유저_1.getId(), 정액_할인_쿠폰.getId());
     }
 
     /**
@@ -52,10 +57,12 @@ class OrderDaoTest {
     @Test
     @DisplayName("Member Id 로 Order 를 찾는다.")
     void findByMemberId() {
-        List<OrderDto> orderDtos = orderDao.findByMemberId(MEMBER_1.getId());
+        List<OrderDto> orderDtos = orderDao.findByMemberId(유저_1.getId());
 
         assertThat(orderDtos)
                 .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getCouponId)
-                .containsExactly(tuple(1L, 1L, 1L), tuple(2L, 1L, 2L));
+                .containsExactly(
+                        tuple(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId(), 유저_1.getId(), 정액_할인_쿠폰.getId()),
+                        tuple(주문_유저_1_할인율_쿠폰_치킨_2개.getId(), 유저_1.getId(), 할인율_쿠폰.getId()));
     }
 }

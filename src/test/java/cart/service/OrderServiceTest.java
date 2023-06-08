@@ -1,11 +1,11 @@
 package cart.service;
 
-import static fixture.CartItemFixture.CART_ITEM_1;
-import static fixture.CartItemFixture.CART_ITEM_2;
-import static fixture.MemberCouponFixture.MEMBER_COUPON_1;
-import static fixture.MemberFixture.MEMBER_1;
-import static fixture.OrderFixture.ORDER_1;
-import static fixture.OrderFixture.ORDER_2;
+import static fixture.CartItemFixture.장바구니_유저_1_치킨_2개;
+import static fixture.CartItemFixture.장바구니_유저_1_샐러드_4개;
+import static fixture.MemberCouponFixture.쿠폰_유저_1_정액_할인_쿠폰;
+import static fixture.MemberFixture.유저_1;
+import static fixture.OrderFixture.주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개;
+import static fixture.OrderFixture.주문_유저_1_할인율_쿠폰_치킨_2개;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -34,10 +34,10 @@ class OrderServiceTest {
     @DisplayName("주문을 진행한다.")
     void orderCartItemsNoCoupon(String testName, Long couponId, Integer discountPrice, Integer totalPrice) {
         OrderRequestDto orderRequestDto = new OrderRequestDto(
-                List.of(CART_ITEM_1.getId(), CART_ITEM_2.getId()), couponId
+                List.of(장바구니_유저_1_치킨_2개.getId(), 장바구니_유저_1_샐러드_4개.getId()), couponId
         );
 
-        OrderResponseDto orderResponseDto = orderService.orderCartItems(MEMBER_1, orderRequestDto);
+        OrderResponseDto orderResponseDto = orderService.orderCartItems(유저_1, orderRequestDto);
 
         assertThat(orderResponseDto)
                 .extracting(OrderResponseDto::getOriginPrice, OrderResponseDto::getDiscountPrice, OrderResponseDto::getTotalPrice)
@@ -58,29 +58,32 @@ class OrderServiceTest {
     private static Stream<Arguments> validateOrder() {
         return Stream.of(
                 Arguments.of("쿠폰 적용 x", null, 0, 100_000),
-                Arguments.of("정액 할인 쿠폰 적용", MEMBER_COUPON_1.getId(), -5000, 95_000)
+                Arguments.of("정액 할인 쿠폰 적용", 쿠폰_유저_1_정액_할인_쿠폰.getId(), -5000, 95_000)
         );
     }
 
     @Test
     @DisplayName("특정 Member 와 Order id 를 가지고 조회를 진행한다.")
     void findOrderById() {
-        OrderResponseDto orderResponseDto = orderService.findOrderById(MEMBER_1, 1L);
+        OrderResponseDto orderResponseDto = orderService.findOrderById(유저_1, 주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId());
 
         assertThat(orderResponseDto)
                 .usingRecursiveComparison()
-                .isEqualTo(OrderResponseDto.from(ORDER_1));
+                .isEqualTo(OrderResponseDto.from(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개));
     }
 
     @Test
     @DisplayName("특정 Member Order 전부를 조회한다.")
     void findAllOrder() {
-        List<OrderResponseDto> orderResponseDtos = orderService.findAllOrder(MEMBER_1);
+        List<OrderResponseDto> orderResponseDtos = orderService.findAllOrder(유저_1);
 
         assertThat(orderResponseDtos)
                 .usingRecursiveComparison()
                 .isEqualTo(
-                        List.of(OrderResponseDto.from(ORDER_1), OrderResponseDto.from(ORDER_2))
+                        List.of(
+                                OrderResponseDto.from(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개),
+                                OrderResponseDto.from(주문_유저_1_할인율_쿠폰_치킨_2개)
+                        )
                 );
     }
 

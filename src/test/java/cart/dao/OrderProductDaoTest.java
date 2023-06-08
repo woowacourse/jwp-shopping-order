@@ -1,5 +1,11 @@
 package cart.dao;
 
+import static fixture.OrderFixture.주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개;
+import static fixture.OrderFixture.주문_유저_1_할인율_쿠폰_치킨_2개;
+import static fixture.OrdersProductFixture.주문_상품_치킨_2개;
+import static fixture.ProductFixture.상품_샐러드;
+import static fixture.ProductFixture.상품_치킨;
+import static fixture.ProductFixture.상품_피자;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -20,7 +26,7 @@ class OrderProductDaoTest {
     @Test
     @DisplayName("OrdersProduct 저장")
     void insert() {
-        OrderProductDto orderProductDto = new OrderProductDto(2L, 3L, 1);
+        OrderProductDto orderProductDto = new OrderProductDto(주문_유저_1_할인율_쿠폰_치킨_2개.getId(), 상품_치킨.getId(), 1);
 
         Long orderProductId = orderProductDao.insert(orderProductDto);
 
@@ -37,12 +43,12 @@ class OrderProductDaoTest {
     @Test
     @DisplayName("OrdersProduct 조회하는 기능 테스트")
     void findById() {
-        OrderProductDto orderProductDto = orderProductDao.findById(1L)
+        OrderProductDto orderProductDto = orderProductDao.findById(주문_상품_치킨_2개.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(orderProductDto)
                 .extracting(OrderProductDto::getId, OrderProductDto::getOrderId, OrderProductDto::getProductId, OrderProductDto::getQuantity)
-                .containsExactly(1L, 1L, 1L, 2);
+                .containsExactly(주문_상품_치킨_2개.getId(), 주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId(), 상품_치킨.getId(), 2);
     }
 
     /**
@@ -53,11 +59,15 @@ class OrderProductDaoTest {
     @Test
     @DisplayName("OrderId 로 OrderProduct 들을 찾는다.")
     void findOrderProductByOrderId() {
-        List<OrderProductDto> orderProductDtos = orderProductDao.findByOrderId(1L);
+        List<OrderProductDto> orderProductDtos = orderProductDao.findByOrderId(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId());
 
         assertThat(orderProductDtos)
                 .extracting(OrderProductDto::getOrderId, OrderProductDto::getProductId, OrderProductDto::getQuantity)
-                .containsExactly(tuple(1L, 1L, 2), tuple(1L, 2L, 2), tuple(1L, 3L, 2));
+                .containsExactly(
+                        tuple(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId(), 상품_치킨.getId(), 2),
+                        tuple(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId(), 상품_샐러드.getId(), 2),
+                        tuple(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개.getId(), 상품_피자.getId(), 2)
+                );
     }
 
 }

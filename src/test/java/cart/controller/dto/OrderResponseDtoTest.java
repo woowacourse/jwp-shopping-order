@@ -1,6 +1,6 @@
 package cart.controller.dto;
 
-import static fixture.OrderFixture.ORDER_1;
+import static fixture.OrderFixture.주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개;
 import static fixture.OrderFixture.TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -16,7 +16,7 @@ class OrderResponseDtoTest {
     @Test
     @DisplayName("Order 를 이용해 OrderResponseDto 를 생성한다.")
     void from() {
-        OrderResponseDto orderResponseDto = OrderResponseDto.from(ORDER_1);
+        OrderResponseDto orderResponseDto = OrderResponseDto.from(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개);
 
         assertThat(orderResponseDto)
                 .extracting(OrderResponseDto::getTimestamp, OrderResponseDto::getOriginPrice, OrderResponseDto::getDiscountPrice, OrderResponseDto::getTotalPrice)

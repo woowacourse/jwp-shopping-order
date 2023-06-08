@@ -1,7 +1,7 @@
 package cart.dao;
 
-import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
-import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.CouponFixture.할인율_쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import anotation.RepositoryTest;
@@ -35,7 +35,7 @@ class CouponDaoTest {
     @Test
     @DisplayName("Coupon Dto 를 조회하는 기능 테스트")
     void findByIdTest() {
-        CouponDto couponDto = couponDao.findById(1L)
+        CouponDto couponDto = couponDao.findById(정액_할인_쿠폰.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(couponDto)
@@ -57,7 +57,7 @@ class CouponDaoTest {
         List<CouponDto> couponDtos = couponDao.findAll();
         assertThat(couponDtos).hasSize(2)
                 .usingRecursiveComparison()
-                .isEqualTo(List.of(COUPON_1_NOT_NULL_PRICE, COUPON_2_NOT_NULL_RATE));
+                .isEqualTo(List.of(정액_할인_쿠폰, 할인율_쿠폰));
     }
 
 }

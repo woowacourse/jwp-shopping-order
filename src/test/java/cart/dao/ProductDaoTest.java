@@ -1,6 +1,6 @@
 package cart.dao;
 
-import static fixture.ProductFixture.PRODUCT_3;
+import static fixture.ProductFixture.상품_피자;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import anotation.RepositoryTest;
@@ -23,7 +23,7 @@ class ProductDaoTest {
 
         assertThat(secondPageWhenPageSizeTwo)
                 .usingRecursiveComparison()
-                .isEqualTo(List.of(PRODUCT_3));
+                .isEqualTo(List.of(상품_피자));
     }
 
 }

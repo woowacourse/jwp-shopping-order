@@ -1,7 +1,7 @@
 package cart.domain;
 
-import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
-import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.CouponFixture.할인율_쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Stream;
@@ -23,8 +23,8 @@ class CouponTest {
 
     private static Stream<Arguments> validateCoupon() {
         return Stream.of(
-                Arguments.of("정액 할인 쿠폰", 10000, COUPON_1_NOT_NULL_PRICE, 5000),
-                Arguments.of("할인율 쿠폰", 10000, COUPON_2_NOT_NULL_RATE, 9000)
+                Arguments.of("정액 할인 쿠폰", 10000, 정액_할인_쿠폰, 5000),
+                Arguments.of("할인율 쿠폰", 10000, 할인율_쿠폰, 9000)
         );
     }
 

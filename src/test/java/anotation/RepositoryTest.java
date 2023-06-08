@@ -23,4 +23,8 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @ActiveProfiles("test")
 public @interface RepositoryTest {
+    /** TODO : truncate-test.sql 을 사용하지 않고서 해결할 방법?
+     * 1. id 를 이용해서 조회하면 안됨
+     * 2. id 를 이용해서 하게되더라도, id 를 얻어내기 위한 행위가 꼭 필요함, 그냥 쌩으로 갑자기 ID 를 바꾸는 것은 안됨
+     */
 }

@@ -1,6 +1,10 @@
 package cart.dao;
 
-import static fixture.MemberFixture.MEMBER_1;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.CouponFixture.할인율_쿠폰;
+import static fixture.MemberCouponFixture.쿠폰_유저_1_정액_할인_쿠폰;
+import static fixture.MemberFixture.유저_1;
+import static fixture.MemberFixture.유저_2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
@@ -23,7 +27,7 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("Member Coupon 저장을 확인한다.")
     void createMemberCoupon_success() {
-        MemberCouponDto memberCouponDto = new MemberCouponDto(1L, 2L, 3L);
+        MemberCouponDto memberCouponDto = new MemberCouponDto(유저_2.getId(), 정액_할인_쿠폰.getId());
 
         Long insert = memberCouponDao.insert(memberCouponDto);
 
@@ -37,12 +41,12 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("Member Coupon Dto 를 조회하는 기능 테스트")
     void findByIdTest() {
-        MemberCouponDto memberCouponDto = memberCouponDao.findById(1L)
+        MemberCouponDto memberCouponDto = memberCouponDao.findById(쿠폰_유저_1_정액_할인_쿠폰.getId())
                 .orElseThrow(NoSuchElementException::new);
 
         assertThat(memberCouponDto)
                 .extracting(MemberCouponDto::getId, MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
-                .containsExactly(1L, 1L, 1L);
+                .containsExactly(1L, 유저_1.getId(), 정액_할인_쿠폰.getId());
     }
 
     @Test
@@ -56,19 +60,19 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("Member id 로 해당하는 Member Coupon 을 찾는다.")
     void findByMemberId() {
-        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(MEMBER_1.getId());
+        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(유저_1.getId());
 
         assertThat(memberCouponDtos)
                 .extracting(MemberCouponDto::getId, MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
-                .containsExactly(tuple(1L, 1L, 1L), tuple(2L, 1L, 2L));
+                .containsExactly(tuple(1L, 유저_1.getId(), 정액_할인_쿠폰.getId()), tuple(2L, 유저_1.getId(), 할인율_쿠폰.getId()));
     }
 
     @Test
     @DisplayName("MemberCouponId 로 Member Coupon 을 삭제한다.")
     void deleteById() {
-        memberCouponDao.deleteById(1L);
+        memberCouponDao.deleteById(쿠폰_유저_1_정액_할인_쿠폰.getId());
 
-        Optional<MemberCouponDto> nullMemberCoupon = memberCouponDao.findById(1L);
+        Optional<MemberCouponDto> nullMemberCoupon = memberCouponDao.findById(쿠폰_유저_1_정액_할인_쿠폰.getId());
 
         assertThatThrownBy(nullMemberCoupon::orElseThrow)
                 .isInstanceOf(NoSuchElementException.class);

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import static fixture.MemberFixture.MEMBER_1;
+import static fixture.MemberFixture.유저_1;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -124,7 +124,7 @@ class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("Coupon 으로 인한 할인 가격을 반환받는다.")
     void getDiscountPrice() {
         DiscountResponseDto discountResponseDto = given().log().all()
-                .auth().preemptive().basic(MEMBER_1.getEmail(), MEMBER_1.getPassword())
+                .auth().preemptive().basic(유저_1.getEmail(), 유저_1.getPassword())
                 .when().get("coupons/discount?origin-price=10000&member-coupon-id=1")
                 .then().statusCode(HttpStatus.OK.value()).extract().as(DiscountResponseDto.class);
 

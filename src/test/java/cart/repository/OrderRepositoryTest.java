@@ -1,12 +1,12 @@
 package cart.repository;
 
-import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
-import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
-import static fixture.CouponFixture.COUPON_3_NULL;
-import static fixture.OrderFixture.ORDER_1;
-import static fixture.OrderFixture.ORDER_2;
-import static fixture.ProductFixture.PRODUCT_1;
-import static fixture.ProductFixture.PRODUCT_2;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.CouponFixture.할인율_쿠폰;
+import static fixture.CouponFixture.빈_쿠폰;
+import static fixture.OrderFixture.주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개;
+import static fixture.OrderFixture.주문_유저_1_할인율_쿠폰_치킨_2개;
+import static fixture.ProductFixture.상품_치킨;
+import static fixture.ProductFixture.상품_샐러드;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import anotation.RepositoryTest;
@@ -35,14 +35,14 @@ class OrderRepositoryTest {
     @ParameterizedTest(name = "쿠폰이 {0} 인 경우")
     @MethodSource("validateCoupon")
     void saveOrder(String testName, Coupon coupon, String couponName) {
-        CartItem hongHongCart = new CartItem(MemberFixture.MEMBER_1, PRODUCT_1);
-        CartItem hongSileCart = new CartItem(MemberFixture.MEMBER_1, PRODUCT_2);
-        Order order = Order.of(MemberFixture.MEMBER_1, coupon, List.of(hongHongCart, hongSileCart));
+        CartItem hongHongCart = new CartItem(MemberFixture.유저_1, 상품_치킨);
+        CartItem hongSileCart = new CartItem(MemberFixture.유저_1, 상품_샐러드);
+        Order order = Order.of(MemberFixture.유저_1, coupon, List.of(hongHongCart, hongSileCart));
         Order orderAfterSave = orderRepository.save(order);
 
         assertThat(orderAfterSave)
                 .extracting(Order::getTimeStamp, Order::getMember, Order::getOptionalCoupon, Order::getCouponName)
-                .contains(order.getTimeStamp(), MemberFixture.MEMBER_1, Optional.ofNullable(coupon), couponName);
+                .contains(order.getTimeStamp(), MemberFixture.유저_1, Optional.ofNullable(coupon), couponName);
         assertThat(orderAfterSave.getOrderProducts())
                 .extracting(OrderProduct::getProduct)
                 .contains(hongHongCart.getProduct(), hongSileCart.getProduct());
@@ -50,9 +50,9 @@ class OrderRepositoryTest {
 
     private static Stream<Arguments> validateCoupon() {
         return Stream.of(
-            Arguments.of("NULL", COUPON_3_NULL, "적용된 쿠폰이 없습니다."),
-            Arguments.of("쿠폰이 Null 이 아닌 경우", COUPON_1_NOT_NULL_PRICE, "정액 할인 쿠폰"),
-            Arguments.of("쿠폰이 Null 이 아닌 경우", COUPON_2_NOT_NULL_RATE, "할인율 쿠폰")
+            Arguments.of("NULL", 빈_쿠폰, "적용된 쿠폰이 없습니다."),
+            Arguments.of("쿠폰이 Null 이 아닌 경우", 정액_할인_쿠폰, "정액 할인 쿠폰"),
+            Arguments.of("쿠폰이 Null 이 아닌 경우", 할인율_쿠폰, "할인율 쿠폰")
         );
     }
 
@@ -72,11 +72,12 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("주문 내역을 조회한다.")
     void findOrderByMember() {
-        List<Order> ordersByMember = orderRepository.findOrdersByMember(MemberFixture.MEMBER_1);
+        List<Order> ordersByMember = orderRepository.findOrdersByMember(MemberFixture.유저_1);
 
         assertThat(ordersByMember)
                 .usingRecursiveComparison()
-                .isEqualTo(List.of(ORDER_1, ORDER_2));
+                .ignoringFields("OrderProducts.OrderProduct.id")
+                .isEqualTo(List.of(주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개, 주문_유저_1_할인율_쿠폰_치킨_2개));
     }
 
 }

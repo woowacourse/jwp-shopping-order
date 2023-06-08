@@ -1,19 +1,19 @@
 package fixture;
 
-import static fixture.ProductFixture.PRODUCT_1;
-import static fixture.ProductFixture.PRODUCT_2;
-import static fixture.ProductFixture.PRODUCT_3;
+import static fixture.ProductFixture.상품_치킨;
+import static fixture.ProductFixture.상품_샐러드;
+import static fixture.ProductFixture.상품_피자;
 
 import cart.domain.OrderProduct;
 import cart.domain.Quantity;
 
 public class OrdersProductFixture {
 
-    public static final OrderProduct ORDER_PRODUCT_1 = new OrderProduct(1L, PRODUCT_1, Quantity.from(2));
-    public static final OrderProduct ORDER_PRODUCT_2 = new OrderProduct(2L, PRODUCT_2, Quantity.from(2));
-    public static final OrderProduct ORDER_PRODUCT_3 = new OrderProduct(3L, PRODUCT_3, Quantity.from(2));
-    public static final OrderProduct ORDER_PRODUCT_4 = new OrderProduct(4L, PRODUCT_1, Quantity.from(2));
-    public static final OrderProduct ORDER_PRODUCT_5 = new OrderProduct(5L, PRODUCT_1, Quantity.from(2));
-    public static final OrderProduct ORDER_PRODUCT_6 = new OrderProduct(6L, PRODUCT_1, Quantity.from(2));
+    public static final OrderProduct 주문_상품_치킨_2개 = new OrderProduct(1L, 상품_치킨, Quantity.from(2));
+    public static final OrderProduct 주문_상품_샐러드_2개 = new OrderProduct(2L, 상품_샐러드, Quantity.from(2));
+    public static final OrderProduct 주문_상품_피자_2개 = new OrderProduct(3L, 상품_피자, Quantity.from(2));
+    public static final OrderProduct 주문_상품_치킨_2개_2 = new OrderProduct(4L, 상품_치킨, Quantity.from(2));
+    public static final OrderProduct 주문_상품_치킨_2개_3 = new OrderProduct(5L, 상품_치킨, Quantity.from(2));
+    public static final OrderProduct 주문_상품_치킨_2개_4 = new OrderProduct(6L, 상품_치킨, Quantity.from(2));
 
 }

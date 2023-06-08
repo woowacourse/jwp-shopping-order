@@ -1,8 +1,8 @@
 package cart.repository;
 
-import static fixture.CartItemFixture.CART_ITEM_1;
-import static fixture.CartItemFixture.CART_ITEM_2;
-import static fixture.CartItemFixture.CART_ITEM_3;
+import static fixture.CartItemFixture.장바구니_유저_1_치킨_2개;
+import static fixture.CartItemFixture.장바구니_유저_1_샐러드_4개;
+import static fixture.CartItemFixture.장바구니_유저_2_피자_5개;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -27,20 +27,20 @@ class CartItemRepositoryTest {
     @Test
     @DisplayName("id 들을 가지고 CartItem 들을 조회한다.")
     void findCartItemByIds() {
-        List<CartItem> cartItemByIds = cartItemRepository.findCartItemsByIds(List.of(1L, 2L, 3L));
+        List<CartItem> cartItemByIds = cartItemRepository.findCartItemsByIds(List.of(장바구니_유저_1_치킨_2개.getId(), 장바구니_유저_1_샐러드_4개.getId(), 장바구니_유저_2_피자_5개.getId()));
 
         assertThat(cartItemByIds)
                 .usingRecursiveComparison()
                 .ignoringFields("member.password")
-                .isEqualTo(List.of(CART_ITEM_1, CART_ITEM_2, CART_ITEM_3));
+                .isEqualTo(List.of(장바구니_유저_1_치킨_2개, 장바구니_유저_1_샐러드_4개, 장바구니_유저_2_피자_5개));
     }
 
     @Test
     @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (성공)")
     void delete_success() {
-        cartItemRepository.deleteCartItems(List.of(1L, 2L));
+        cartItemRepository.deleteCartItems(List.of(장바구니_유저_1_치킨_2개.getId(), 장바구니_유저_1_샐러드_4개.getId()));
 
-        List<CartItem> cartItemsAfterDelete = cartItemDao.findByMemberId(MemberFixture.MEMBER_1.getId());
+        List<CartItem> cartItemsAfterDelete = cartItemDao.findByMemberId(MemberFixture.유저_1.getId());
 
         assertThat(cartItemsAfterDelete).isEmpty();
     }

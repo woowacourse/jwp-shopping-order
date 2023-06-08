@@ -1,14 +1,13 @@
 package cart.domain;
 
-import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
-import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
-import static fixture.CouponFixture.COUPON_3_NULL;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.CouponFixture.할인율_쿠폰;
+import static fixture.CouponFixture.빈_쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,9 @@ class OrderTest {
 
     private static Stream<Arguments> validateCoupon() {
         return Stream.of(
-                Arguments.of("Coupon 이 없는 경우 할인되지 않는다.", COUPON_3_NULL, 0, "적용된 쿠폰이 없습니다."),
-                Arguments.of("백분율로 할인하는 Coupon 의 경우 기존의 가격에서 discountRate 만큼 할인된다.", COUPON_2_NOT_NULL_RATE, -200_000_000, "할인율 쿠폰"),
-                Arguments.of("고정된 금액으로 할인하는 Coupon 의 경우 기존의 가격에서 discountPrice 만큼 할인된다.", COUPON_1_NOT_NULL_PRICE, -5000, "정액 할인 쿠폰")
+                Arguments.of("Coupon 이 없는 경우 할인되지 않는다.", 빈_쿠폰, 0, "적용된 쿠폰이 없습니다."),
+                Arguments.of("백분율로 할인하는 Coupon 의 경우 기존의 가격에서 discountRate 만큼 할인된다.", 할인율_쿠폰, -200_000_000, "할인율 쿠폰"),
+                Arguments.of("고정된 금액으로 할인하는 Coupon 의 경우 기존의 가격에서 discountPrice 만큼 할인된다.", 정액_할인_쿠폰, -5000, "정액 할인 쿠폰")
         );
     }
 
@@ -55,7 +54,7 @@ class OrderTest {
         CartItem cartItem = new CartItem(member, hongProduct);
         List<CartItem> cartItems = List.of(cartItem);
 
-        assertThatThrownBy(() -> Order.of(illegalMember, COUPON_3_NULL, cartItems))
+        assertThatThrownBy(() -> Order.of(illegalMember, 빈_쿠폰, cartItems))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

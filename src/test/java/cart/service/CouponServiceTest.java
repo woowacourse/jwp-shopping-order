@@ -1,10 +1,11 @@
 package cart.service;
 
-import static fixture.MemberCouponFixture.MEMBER_COUPON_3;
-import static fixture.MemberCouponFixture.MEMBER_COUPON_4;
-import static fixture.MemberFixture.MEMBER_1;
-import static fixture.MemberFixture.MEMBER_2;
-import static fixture.MemberFixture.MEMBER_3;
+import static fixture.CouponFixture.정액_할인_쿠폰;
+import static fixture.MemberCouponFixture.쿠폰_유저_2_정액_할인_쿠폰;
+import static fixture.MemberCouponFixture.쿠폰_유저_2_할인율_쿠폰;
+import static fixture.MemberFixture.유저_1;
+import static fixture.MemberFixture.유저_2;
+import static fixture.MemberFixture.아무것도_가지지_않은_유저;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -30,9 +31,9 @@ class CouponServiceTest {
     @Test
     @DisplayName("issue 테스트")
     void issue() {
-        couponService.issue(MEMBER_3, 1L);
+        couponService.issue(아무것도_가지지_않은_유저, 정액_할인_쿠폰.getId());
 
-        List<CouponResponseDto> couponResponseDtos = couponService.findAllByMember(MEMBER_3);
+        List<CouponResponseDto> couponResponseDtos = couponService.findAllByMember(아무것도_가지지_않은_유저);
         assertThat(couponResponseDtos)
                 .extracting(CouponResponseDto::getMemberCouponId, CouponResponseDto::getName)
                 .containsExactly(tuple(5L, "정액 할인 쿠폰"));
@@ -41,7 +42,7 @@ class CouponServiceTest {
     @Test
     @DisplayName("사용자가 가지고 있는 Coupon 들을 조회")
     void findAllByMember() {
-        List<CouponResponseDto> couponResponseDtos = couponService.findAllByMember(MEMBER_1);
+        List<CouponResponseDto> couponResponseDtos = couponService.findAllByMember(유저_1);
 
         assertThat(couponResponseDtos)
                 .extracting(CouponResponseDto::getMemberCouponId, CouponResponseDto::getName)
@@ -52,7 +53,7 @@ class CouponServiceTest {
     @MethodSource("validateDiscountCalculator")
     @DisplayName("쿠폰을 적용했을 때에 총 가격을 반환")
     void calculateDiscountPrice(String testName, Integer originPrice, Long memberCouponId, DiscountResponseDto expected) {
-        DiscountResponseDto discountResponseDto = couponService.calculateDiscountPrice(MEMBER_2, originPrice, memberCouponId);
+        DiscountResponseDto discountResponseDto = couponService.calculateDiscountPrice(유저_2, originPrice, memberCouponId);
 
         assertThat(discountResponseDto)
                 .usingRecursiveComparison()
@@ -61,8 +62,8 @@ class CouponServiceTest {
 
     private static Stream<Arguments> validateDiscountCalculator() {
         return Stream.of(
-                Arguments.of("정액 할인 쿠폰", 10000, MEMBER_COUPON_3.getId(), DiscountResponseDto.from(Discount.of(10000, 5000))),
-                Arguments.of("할인율 쿠폰", 10000, MEMBER_COUPON_4.getId(), DiscountResponseDto.from(Discount.of(10000, 9000)))
+                Arguments.of("정액 할인 쿠폰", 10000, 쿠폰_유저_2_정액_할인_쿠폰.getId(), DiscountResponseDto.from(Discount.of(10000, 5000))),
+                Arguments.of("할인율 쿠폰", 10000, 쿠폰_유저_2_할인율_쿠폰.getId(), DiscountResponseDto.from(Discount.of(10000, 9000)))
         );
     }
 
