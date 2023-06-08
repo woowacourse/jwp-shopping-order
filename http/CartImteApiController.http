@@ -1,0 +1,27 @@
+### 장바구니에 담긴 상품 조회
+GET http://localhost:8080/cart-items
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1
+
+
+### 장바구니에 상품 추가
+POST http://localhost:8080/cart-items
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+### 장바구니 상품 수량 변경
+PATCH http://localhost:8080/cart-items/1
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1
+Content-Type: application/json
+
+{
+  "quantity": 2
+}
+
+### 장바구니  상품 삭제
+DELETE http://localhost:8080/cart-items/1
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1

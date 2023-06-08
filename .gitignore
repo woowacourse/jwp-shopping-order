@@ -1,4 +1,7 @@
-README.md
+src/main/resources/application-private.properties
+src/main/resources/application-dev.properties
+.properties
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -35,3 +38,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/application.properties

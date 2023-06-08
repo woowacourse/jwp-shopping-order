@@ -1,0 +1,19 @@
+### 회원가입
+POST http://localhost:8080/members
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "password"
+}
+### 회원 포인트 조회
+GET http://localhost:8080/members/points
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1
+
+### 회원 주문 내역 조회
+GET http://localhost:8080/members/orders
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1
+
+### 회원 주문 상세 내역 조회
+GET http://localhost:8080/members/orders/1
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1

@@ -1,0 +1,13 @@
+### 장바구니에 있는 상품 주문
+POST http://localhost:8080/pay
+Authorization: Basic cmluZ2xvQGVtYWlsLmNvbTpyaW5nbG8xMDEwMjM1
+Content-Type: application/json
+
+{
+  "cartItemIds": [
+    {"cartItemId": 1},
+    {"cartItemId": 2}
+  ],
+  "originalPrice": 100000,
+  "points": 1000
+}
