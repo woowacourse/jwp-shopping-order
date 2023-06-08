@@ -2,6 +2,7 @@ package cart.domain.Product;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class ImageUrl {
 
@@ -26,5 +27,18 @@ public class ImageUrl {
 
     public String imageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImageUrl imageUrl1 = (ImageUrl) o;
+        return Objects.equals(imageUrl, imageUrl1.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imageUrl);
     }
 }

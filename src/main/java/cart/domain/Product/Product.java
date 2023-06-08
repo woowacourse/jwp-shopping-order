@@ -1,5 +1,7 @@
 package cart.domain.Product;
 
+import java.util.Objects;
+
 public class Product {
     private Long id;
     private Name name;
@@ -39,5 +41,18 @@ public class Product {
 
     public Price multiplyPriceBy(int quantity) {
         return price.multiply(quantity);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
