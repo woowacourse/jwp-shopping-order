@@ -37,7 +37,7 @@ public class CouponApiController {
     @Operation(summary = "사용자에게 쿠폰 발급")
     @PostMapping("/me")
     public ResponseEntity<Void> issueCouponToMember(Member member, @RequestBody CouponIssueRequest couponIssueRequest) {
-        couponService.issueCouponByIdToMember(couponIssueRequest.getCouponId(), member);
+        couponService.issueCouponToMember(couponIssueRequest.getCouponId(), member);
         return ResponseEntity.ok().build();
     }
 

@@ -27,7 +27,7 @@ public class CouponService {
         return couponDao.findById(couponId);
     }
 
-    public void issueCouponByIdToMember(long couponId, Member member) {
+    public void issueCouponToMember(long couponId, Member member) {
         memberCouponDao.save(member.getId(), couponId);
     }
 
