@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
-public class MemberReadController {
+public class MemberController {
 
     private final MemberReadService memberReadService;
 
-    public MemberReadController(final MemberReadService memberReadService) {
+    public MemberController(final MemberReadService memberReadService) {
         this.memberReadService = memberReadService;
     }
 

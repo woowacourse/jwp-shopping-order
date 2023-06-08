@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/coupons")
-public class CouponReadController {
+public class CouponController {
 
     private final CouponReadService couponReadService;
 
-    public CouponReadController(final CouponReadService couponReadService) {
+    public CouponController(final CouponReadService couponReadService) {
         this.couponReadService = couponReadService;
     }
 

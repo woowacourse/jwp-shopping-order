@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/point")
-public class PointReadController {
+public class PointController {
 
     private final PointReadService pointReadService;
 
-    public PointReadController(final PointReadService pointReadService) {
+    public PointController(final PointReadService pointReadService) {
         this.pointReadService = pointReadService;
     }
 

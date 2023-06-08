@@ -2,7 +2,7 @@ package cart.application.service;
 
 import cart.application.repository.product.ProductRepository;
 import cart.application.service.product.ProductWriteService;
-import cart.application.service.product.dto.ProductCreateDto;
+import cart.application.service.product.dto.ProductCommandDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class ProductWriteServiceTest {
         given(productRepository.createProduct(any()))
                 .willReturn(1L);
 
-        assertDoesNotThrow(() -> productWriteService.createProduct(new ProductCreateDto("레오배변패드", 10000, "https://www.google.com/aclk?sa=l&ai=DChcSEwichomlqpz_AhUWMGAKHVkwBDgYABABGgJ0bQ&sig=AOD64_0741-6emp177CIBjUFFPDDyQIwwA&adurl&ctype=5&ved=2ahUKEwjEzIClqpz_AhXVEIgKHRt9DlAQvhd6BAgBEEw")));
+        assertDoesNotThrow(() -> productWriteService.createProduct(new ProductCommandDto("레오배변패드", 10000, "https://www.google.com/aclk?sa=l&ai=DChcSEwichomlqpz_AhUWMGAKHVkwBDgYABABGgJ0bQ&sig=AOD64_0741-6emp177CIBjUFFPDDyQIwwA&adurl&ctype=5&ved=2ahUKEwjEzIClqpz_AhXVEIgKHRt9DlAQvhd6BAgBEEw")));
     }
 
 }

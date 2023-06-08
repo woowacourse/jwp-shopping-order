@@ -1,6 +1,6 @@
 package cart.domain.product;
 
-import cart.application.service.product.dto.ProductCreateDto;
+import cart.application.service.product.dto.ProductCommandDto;
 
 public class Product {
     private final Long id;
@@ -8,7 +8,7 @@ public class Product {
     private final int price;
     private final String imageUrl;
 
-    public Product(final ProductCreateDto productCreateDto) {
+    public Product(final ProductCommandDto productCreateDto) {
         this(null, productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
     }
 
@@ -16,7 +16,7 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
-    public Product(final Long productId, final ProductCreateDto productCreateDto) {
+    public Product(final Long productId, final ProductCommandDto productCreateDto) {
         this(productId, productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
     }
 
