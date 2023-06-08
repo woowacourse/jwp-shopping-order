@@ -1,11 +1,11 @@
 package cart.domain.order;
 
-import cart.domain.member.Member;
-
 import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import java.util.List;
 
 public class Order {
+
     private final Long id;
     private final Member member;
     private final List<OrderItem> orderItems;

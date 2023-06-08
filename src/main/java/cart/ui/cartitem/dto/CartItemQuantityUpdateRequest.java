@@ -1,6 +1,7 @@
 package cart.ui.cartitem.dto;
 
 public class CartItemQuantityUpdateRequest {
+
     private int quantity;
 
     public CartItemQuantityUpdateRequest() {
@@ -13,4 +14,5 @@ public class CartItemQuantityUpdateRequest {
     public int getQuantity() {
         return quantity;
     }
+
 }

@@ -15,7 +15,8 @@ public class PointHistoryResponse {
     }
 
     public static PointHistoryResponse from(final PointHistoryDto pointHistoryDto) {
-        return new PointHistoryResponse(pointHistoryDto.getOrderId(), pointHistoryDto.getEarnedPoint(), pointHistoryDto.getUsedPoint());
+        return new PointHistoryResponse(pointHistoryDto.getOrderId(), pointHistoryDto.getEarnedPoint(),
+                pointHistoryDto.getUsedPoint());
     }
 
     public long getOrderId() {

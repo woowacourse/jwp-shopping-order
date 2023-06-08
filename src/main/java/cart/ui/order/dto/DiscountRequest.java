@@ -2,8 +2,8 @@ package cart.ui.order.dto;
 
 public class DiscountRequest {
 
-    private Long couponId;
-    private Integer point;
+    private final Long couponId;
+    private final Integer point;
 
     public DiscountRequest(final Long couponId, final Integer point) {
         this.couponId = couponId;
@@ -17,4 +17,5 @@ public class DiscountRequest {
     public Integer getPoint() {
         return point;
     }
+
 }

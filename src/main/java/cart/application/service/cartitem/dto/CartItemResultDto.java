@@ -5,9 +5,9 @@ import cart.domain.cartitem.CartItem;
 
 public class CartItemResultDto {
 
-    private Long id;
-    private int quantity;
-    private ProductResultDto productResultDto;
+    private final Long id;
+    private final int quantity;
+    private final ProductResultDto productResultDto;
 
     private CartItemResultDto(Long id, int quantity, ProductResultDto productResultDto) {
         this.id = id;

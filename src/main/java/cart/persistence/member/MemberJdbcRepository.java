@@ -2,6 +2,8 @@ package cart.persistence.member;
 
 import cart.application.repository.MemberRepository;
 import cart.domain.member.Member;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,9 +11,6 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class MemberJdbcRepository implements MemberRepository {
@@ -70,6 +69,7 @@ public class MemberJdbcRepository implements MemberRepository {
             return Optional.empty();
         }
     }
+
     @Override
     public Boolean isMemberExist(final String email, final String password) {
         final String sql = "SELECT EXISTS(SELECT id, name, email, password FROM member WHERE email = ? AND password = ?) AS isExist";

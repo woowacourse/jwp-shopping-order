@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+
     private final ProductReadService productReadService;
     private final MemberReadService memberReadService;
 
@@ -27,4 +28,5 @@ public class PageController {
         model.addAttribute("members", memberReadService.findAllMembers());
         return "settings";
     }
+
 }

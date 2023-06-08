@@ -1,11 +1,11 @@
 package cart.ui.order.dto;
 
 import cart.application.service.order.dto.OrderItemDto;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderItemResponse {
+
     private final Long id;
     private final String productName;
     private final Integer productPrice;

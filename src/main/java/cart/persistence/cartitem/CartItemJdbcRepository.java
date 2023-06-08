@@ -1,10 +1,12 @@
 package cart.persistence.cartitem;
 
 import cart.application.repository.CartItemRepository;
-import cart.domain.member.Member;
-import cart.domain.product.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,9 +15,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class CartItemJdbcRepository implements CartItemRepository {
@@ -64,11 +63,13 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public Optional<CartItem> findById(final Long id) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.id,  member.name, member.email, member.password,product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id = ?";
+        final String sql =
+                "SELECT cart_item.id, cart_item.member_id, member.id,  member.name, member.email, member.password,product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN member ON cart_item.member_id = member.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.id = ?";
         try {
             final CartItem cartItem = jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
             return Optional.of(cartItem);
@@ -79,11 +80,13 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public CartItems findAllCartItemsByMemberId(final Long memberId) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.id,  member.name, member.email, member.password,product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+        final String sql =
+                "SELECT cart_item.id, cart_item.member_id, member.id,  member.name, member.email, member.password,product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN member ON cart_item.member_id = member.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.member_id = ?";
 
         final List<CartItem> cartItems = jdbcTemplate.query(sql, cartItemRowMapper, memberId);
         return new CartItems(cartItems);

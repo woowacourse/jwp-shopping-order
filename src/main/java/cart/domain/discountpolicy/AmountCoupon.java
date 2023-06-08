@@ -1,6 +1,7 @@
 package cart.domain.discountpolicy;
 
-public class AmountCoupon implements CouponPolicy{
+public class AmountCoupon implements CouponPolicy {
+
     private final int minAmount;
     private final int discountAmount;
 
@@ -24,4 +25,5 @@ public class AmountCoupon implements CouponPolicy{
     public int getDiscountAmount() {
         return discountAmount;
     }
+
 }

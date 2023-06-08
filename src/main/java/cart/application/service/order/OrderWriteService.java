@@ -68,11 +68,11 @@ public class OrderWriteService {
         List<Long> couponIds = createOrderDto.getCreateOrderDiscountDto().getCouponIds();
         List<CouponPolicy> couponPolicies = makeCoupon(couponIds);
 
-        return excuteOrder(createOrderDto, member, cartItems, totalPrice, couponIds, couponPolicies);
+        return executeOrder(createOrderDto, member, cartItems, totalPrice, couponIds, couponPolicies);
     }
 
-    private Long excuteOrder(CreateOrderDto createOrderDto, Member member, CartItems cartItems, int totalPrice,
-                          List<Long> couponIds, List<CouponPolicy> couponPolicies) {
+    private Long executeOrder(CreateOrderDto createOrderDto, Member member, CartItems cartItems, int totalPrice,
+                              List<Long> couponIds, List<CouponPolicy> couponPolicies) {
         int paymentPrice = getPaymentPrice(totalPrice, couponPolicies);
         int usedPoint = getUsedPoint(createOrderDto, paymentPrice);
         paymentPrice -= usedPoint;

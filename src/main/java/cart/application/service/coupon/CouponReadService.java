@@ -2,13 +2,12 @@ package cart.application.service.coupon;
 
 import cart.application.repository.CouponRepository;
 import cart.application.service.coupon.dto.CouponResultDto;
-import cart.domain.coupon.Coupon;
 import cart.auth.MemberAuth;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cart.domain.coupon.Coupon;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)

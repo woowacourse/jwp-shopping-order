@@ -18,7 +18,8 @@ public class MemberResponse {
     }
 
     public static MemberResponse from(MemberResultDto memberResultDto) {
-        return new MemberResponse(memberResultDto.getId(), memberResultDto.getName(), memberResultDto.getEmail(), memberResultDto.getPassword());
+        return new MemberResponse(memberResultDto.getId(), memberResultDto.getName(), memberResultDto.getEmail(),
+                memberResultDto.getPassword());
     }
 
     public Long getId() {

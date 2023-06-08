@@ -15,6 +15,7 @@ public class Point {
                 .mapToInt(PointHistory::calculatePoint)
                 .sum();
     }
+
     public List<PointHistory> getPointHistories() {
         return pointHistories;
     }

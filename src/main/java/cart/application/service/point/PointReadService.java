@@ -2,8 +2,8 @@ package cart.application.service.point;
 
 import cart.application.repository.PointRepository;
 import cart.application.service.point.dto.PointResultDto;
-import cart.domain.point.Point;
 import cart.auth.MemberAuth;
+import cart.domain.point.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

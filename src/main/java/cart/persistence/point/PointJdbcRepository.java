@@ -3,13 +3,12 @@ package cart.persistence.point;
 import cart.application.repository.PointRepository;
 import cart.domain.point.Point;
 import cart.domain.point.PointHistory;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Repository
 public class PointJdbcRepository implements PointRepository {

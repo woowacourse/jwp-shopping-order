@@ -4,9 +4,10 @@ import cart.application.service.cartitem.dto.CartItemResultDto;
 import cart.ui.product.dto.ProductResponse;
 
 public class CartItemResponse {
-    private Long id;
-    private int quantity;
-    private ProductResponse product;
+
+    private final Long id;
+    private final int quantity;
+    private final ProductResponse product;
 
     private CartItemResponse(Long id, int quantity, ProductResponse product) {
         this.id = id;
@@ -33,4 +34,5 @@ public class CartItemResponse {
     public ProductResponse getProduct() {
         return product;
     }
+
 }

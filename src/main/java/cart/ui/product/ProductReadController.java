@@ -3,14 +3,13 @@ package cart.ui.product;
 import cart.application.service.product.ProductReadService;
 import cart.application.service.product.dto.ProductResultDto;
 import cart.ui.product.dto.ProductResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")

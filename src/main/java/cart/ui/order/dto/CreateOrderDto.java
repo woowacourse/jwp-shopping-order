@@ -8,7 +8,8 @@ public class CreateOrderDto {
     private final List<CreateOrderItemDto> createOrderItemDtos;
     private final CreateOrderDiscountDto createOrderDiscountDto;
 
-    public CreateOrderDto(final List<CreateOrderItemDto> createOrderItemDtos, final CreateOrderDiscountDto createOrderDiscountDto) {
+    public CreateOrderDto(final List<CreateOrderItemDto> createOrderItemDtos,
+                          final CreateOrderDiscountDto createOrderDiscountDto) {
         this.createOrderItemDtos = createOrderItemDtos;
         this.createOrderDiscountDto = createOrderDiscountDto;
     }
@@ -18,7 +19,8 @@ public class CreateOrderDto {
                 .map(CreateOrderItemDto::from)
                 .collect(Collectors.toUnmodifiableList());
 
-        CreateOrderDiscountDto createOrderDiscounts = CreateOrderDiscountDto.from(createOrderRequest.getOrderDiscounts());
+        CreateOrderDiscountDto createOrderDiscounts = CreateOrderDiscountDto.from(
+                createOrderRequest.getOrderDiscounts());
 
         return new CreateOrderDto(createOrderItems, createOrderDiscounts);
     }

@@ -3,7 +3,6 @@ package cart.domain.cartitem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
-
 import java.util.Objects;
 
 public class CartItem {
