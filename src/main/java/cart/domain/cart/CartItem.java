@@ -36,6 +36,14 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public boolean hasQuantity(final int quantity) {
+        return this.quantity == quantity;
+    }
+
+    public boolean hasPrice(final int price) {
+        return product.hasPrice(price);
+    }
+
     public Long getId() {
         return id;
     }

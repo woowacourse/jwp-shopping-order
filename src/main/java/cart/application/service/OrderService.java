@@ -72,10 +72,10 @@ public class OrderService {
         validateCartSize(cartProductRequests, cartItems);
         for (final CartItem cartItem : cartItems.getCartItems()) {
             OrderProductRequest cartProductRequest = cartProductRequests.get(cartItem.getId());
-            if (cartItem.getQuantity() != cartProductRequest.getQuantity()) {
+            if (!cartItem.hasQuantity(cartProductRequest.getQuantity())) {
                 throw new BadRequestException(CART_ITEM_QUANTITY_INCORRECT);
             }
-            if (cartItem.getProduct().getPrice() != cartProductRequest.getPrice()) {
+            if (!cartItem.hasPrice(cartProductRequest.getPrice())) {
                 throw new BadRequestException(CART_ITEM_PRICE_INCORRECT);
             }
         }
