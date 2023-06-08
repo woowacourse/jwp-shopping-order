@@ -110,8 +110,9 @@ public class PointService {
         List<PointAddition> additions = pointAdditionDao.findAllByMemberId(member.getId());
         List<PointUsage> usages = pointUsageDao.findAllByMemberId(member.getId());
         Points points = new Points(additions, usages);
-        int remaining = points.getTotalRemainingPoint();
-        int toBeExpired = points.getPointsToBeExpired(TO_BE_EXPIRED);
+        int expired = points.sumGivenExpirationDateRemaining(0);
+        int remaining = points.getTotalRemainingPoint() - expired;
+        int toBeExpired = points.sumGivenExpirationDateRemaining(TO_BE_EXPIRED) - expired;
         return new GetPointResponse(remaining, toBeExpired);
     }
 }

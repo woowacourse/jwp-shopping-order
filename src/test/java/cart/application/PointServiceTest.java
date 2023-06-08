@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -17,9 +18,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import cart.application.dto.GetPointResponse;
 import cart.application.event.PointAdditionEvent;
 import cart.dao.PointAdditionDao;
 import cart.dao.PointUsageDao;
+import cart.domain.Member;
 import cart.domain.PointAddition;
 import cart.domain.PointCalculator;
 import cart.domain.PointUsage;
@@ -30,7 +33,10 @@ import cart.exception.IllegalPointException;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class PointServiceTest {
 
-    private final LocalDateTime now = LocalDateTime.now();
+    private static final int POINT_EXPIRATION_DATE = 90;
+    private static final int TO_BE_EXPIRED = 30;
+    private static final LocalDateTime NOW = LocalDateTime.now();
+
     private final long orderId = 1L;
     private final long memberId = 1L;
 
@@ -66,9 +72,9 @@ class PointServiceTest {
             int usePointAmount = 1000;
             int payAmount = 20000;
             PointAdditionEvent pointAdditionEvent = makeEvent(usePointAmount, payAmount);
-            PointAddition plus500 = new PointAddition(1L, memberId, orderId, 500, now, now);
-            PointAddition plus700 = new PointAddition(2L, memberId, orderId, 700, now.plusMinutes(1),
-                now.plusMinutes(1));
+            PointAddition plus500 = new PointAddition(1L, memberId, orderId, 500, NOW, NOW);
+            PointAddition plus700 = new PointAddition(2L, memberId, orderId, 700, NOW.plusMinutes(1),
+                NOW.plusMinutes(1));
             PointUsage minus201 = new PointUsage(1L, memberId, orderId, 1L, 201);
 
             given(pointAdditionDao.findAllByMemberId(anyLong())).willReturn(List.of(plus500, plus700));
@@ -87,9 +93,9 @@ class PointServiceTest {
             int usePointAmount = 1000;
             int payAmount = 20000;
             PointAdditionEvent pointAdditionEvent = makeEvent(usePointAmount, payAmount);
-            PointAddition plus500 = new PointAddition(1L, memberId, orderId, 500, now, now);
-            PointAddition plus700 = new PointAddition(2L, memberId, orderId, 700, now.plusMinutes(1),
-                now.plusMinutes(1));
+            PointAddition plus500 = new PointAddition(1L, memberId, orderId, 500, NOW, NOW);
+            PointAddition plus700 = new PointAddition(2L, memberId, orderId, 700, NOW.plusMinutes(1),
+                NOW.plusMinutes(1));
             PointUsage minus200 = new PointUsage(1L, memberId, orderId, 1L, 200);
 
             given(pointAdditionDao.findAllByMemberId(anyLong())).willReturn(List.of(plus500, plus700));
@@ -101,7 +107,45 @@ class PointServiceTest {
         }
     }
 
+    @Test
+    void 현재_포인트와_유효기간이_얼마_남지_않은_포인트를_응답한다() {
+        // given
+        LocalDateTime nearlyExpired = NOW.minusDays(POINT_EXPIRATION_DATE - TO_BE_EXPIRED + 1);
+        int amount = 500;
+        PointAddition pointAddition = new PointAddition(1L, memberId, orderId, amount, nearlyExpired,
+            nearlyExpired.plusDays(POINT_EXPIRATION_DATE));
+
+        given(pointAdditionDao.findAllByMemberId(anyLong())).willReturn(List.of(pointAddition));
+        given(pointUsageDao.findAllByMemberId(anyLong())).willReturn(Collections.emptyList());
+
+        // when
+        GetPointResponse response = pointService.getPointStatus(new Member(1L, "", ""));
+
+        // then
+        assertThat(response.getCurrentPoint()).isEqualTo(amount);
+        assertThat(response.getToBeExpiredPoint()).isEqualTo(amount);
+    }
+
+    @Test
+    void 유효기간이_지난_포인트는_없는_것으로_취급된다() {
+        // given
+        LocalDateTime expired = NOW.minusDays(POINT_EXPIRATION_DATE  + 1);
+        int amount = 500;
+        PointAddition pointAddition = new PointAddition(1L, memberId, orderId, amount, expired,
+            expired.plusDays(POINT_EXPIRATION_DATE));
+
+        given(pointAdditionDao.findAllByMemberId(anyLong())).willReturn(List.of(pointAddition));
+        given(pointUsageDao.findAllByMemberId(anyLong())).willReturn(Collections.emptyList());
+
+        // when
+        GetPointResponse response = pointService.getPointStatus(new Member(1L, "", ""));
+
+        // then
+        assertThat(response.getCurrentPoint()).isZero();
+        assertThat(response.getToBeExpiredPoint()).isZero();
+    }
+
     private PointAdditionEvent makeEvent(int usePointAmount, int payAmount) {
-        return new PointAdditionEvent(orderId, memberId, usePointAmount, payAmount, now);
+        return new PointAdditionEvent(orderId, memberId, usePointAmount, payAmount, NOW);
     }
 }

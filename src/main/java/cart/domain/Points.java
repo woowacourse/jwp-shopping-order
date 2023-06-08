@@ -108,7 +108,7 @@ public class Points {
         return collect;
     }
 
-    public int getPointsToBeExpired(int expirationDate) {
+    public int sumGivenExpirationDateRemaining(int expirationDate) {
         List<PointAddition> unused = findUnusedPointsAscendingByExpireAt();
         LocalDateTime now = LocalDateTime.now();
         return unused.stream()
