@@ -61,13 +61,12 @@ public class OrderService {
     @Transactional
     public Long addOrderHistory(final Member member,
                                 final List<OrderCartItemRequest> orderCartItemDtos) {
-
         final Long totalPrice = calculateTotalPrice(orderCartItemDtos);
         final OrderHistory orderHistory = new OrderHistory(member, totalPrice);
 
         final Long orderHistoryId = orderHistoryDao.save(orderHistory);
         addOrderItems(orderHistoryId, orderCartItemDtos);
-        for (OrderCartItemRequest orderCartItemDto : orderCartItemDtos) {
+        for (final OrderCartItemRequest orderCartItemDto : orderCartItemDtos) {
             cartItemDao.deleteById(orderCartItemDto.getCartItemId());
         }
         member.withdraw(totalPrice);
@@ -98,7 +97,7 @@ public class OrderService {
         if (!originProduct.getName().equals(orderCartItemDto.getOrderCartItemName())
                 || originProduct.getPrice() != orderCartItemDto.getOrderCartItemPrice()
                 || !originProduct.getImageUrl().equals(orderCartItemDto.getOrderCartItemImageUrl())) {
-            throw new IllegalArgumentException("상품 정보 실패");
+            throw new IllegalArgumentException("상품 정보가 업데이트 되었습니다. 다시 확인해주세요");
         }
     }
 
