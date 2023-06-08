@@ -54,7 +54,6 @@ public class PayService {
 
         final int updatedPoint = order.calculatedUpdatedPoint(savedPoint);
 
-        memberRepository.updatePoint(member, updatedPoint);
         final long orderHistoryId = orderRepository.createOrderHistory(member, originalPrice, usedPoint, orderPrice);
 
         products.keySet()
@@ -76,8 +75,7 @@ public class PayService {
             cartItemRepository.deleteById(cartItemId);
         }
 
-        memberRepository.addPoint(member, (int) (orderPrice * ACCUMULATION_RATE));
-
+        memberRepository.updatePoint(member, updatedPoint + (int) (orderPrice * ACCUMULATION_RATE));
         return new PayResponse(orderHistoryId);
     }
 

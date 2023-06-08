@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.dto.request.MemberCreateRequest;
 import cart.dto.response.MemberCreateResponse;
 import cart.dto.response.MemberPointQueryResponse;
@@ -14,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
-    private static final int JOIN_EVENT_POINT = 5000;
     private final MemberRepository memberRepository;
 
     public MemberService(final MemberRepository memberRepository) {
@@ -23,7 +23,7 @@ public class MemberService {
 
     @Transactional
     public MemberCreateResponse join(final MemberCreateRequest request) {
-        final Member member = memberRepository.addMember(new Member(request.getEmail(), request.getPassword()), JOIN_EVENT_POINT);
+        final Member member = memberRepository.addMember(new Member(request.getEmail(), request.getPassword()), Point.joinEvent().getPoint());
         return MemberCreateResponse.from(member);
     }
 
