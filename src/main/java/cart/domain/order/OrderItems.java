@@ -42,7 +42,7 @@ public class OrderItems {
         List<OrderItem> items = new ArrayList<>();
         for (int index = 0; index < orderItemEntities.size(); index++) {
             final Product product = Product.from(products.get(index));
-            final OrderItem orderItem = OrderItem.of(orderItemEntities.get(index), product, member);
+            final OrderItem orderItem = OrderItem.of(orderItemEntities.get(index), product);
             items.add(orderItem);
         }
         return new OrderItems(items, member);
