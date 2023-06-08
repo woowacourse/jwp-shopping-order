@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.domain.pointmanager.PointManager;
+import cart.domain.pointmanager.PointPolicy;
 import cart.exception.OrderEmptyException;
 import cart.exception.PointBiggerThenLimitException;
 import cart.exception.PointNotEnoughException;
@@ -34,16 +34,16 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public static Order of(final Member member, final int usedPoints, final List<CartItem> cartItems, final PointManager pointManager) {
+    public static Order of(final Member member, final int usedPoints, final List<CartItem> cartItems, final PointPolicy pointPolicy) {
         validateCartItems(cartItems);
 
         final List<OrderItem> orderItems = cartItems.stream().map(OrderItem::of).collect(Collectors.toList());
         final int totalPrice = calculateTotalPrice(orderItems);
 
-        validatePoint(totalPrice, member.getPoints(), usedPoints, pointManager);
+        validatePoint(totalPrice, member.getPoints(), usedPoints, pointPolicy);
 
         final int payPrice = totalPrice - usedPoints;
-        final int earnedPoints = pointManager.calculateEarnedPoints(totalPrice);
+        final int earnedPoints = pointPolicy.calculateEarnedPoints(totalPrice);
 
         return new Order(member.getId(), orderItems, totalPrice, payPrice, earnedPoints, usedPoints);
     }
@@ -61,8 +61,8 @@ public class Order {
                 .sum();
     }
 
-    private static void validatePoint(final int totalPrice, final int memberPoint, final int usedPoints, final PointManager pointManager) {
-        final int limitPoints = pointManager.calculateLimitPoints(totalPrice);
+    private static void validatePoint(final int totalPrice, final int memberPoint, final int usedPoints, final PointPolicy pointPolicy) {
+        final int limitPoints = pointPolicy.calculateLimitPoints(totalPrice);
         if (limitPoints < usedPoints) {
             throw new PointBiggerThenLimitException(limitPoints, usedPoints);
         }

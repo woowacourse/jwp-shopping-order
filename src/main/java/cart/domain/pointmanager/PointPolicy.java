@@ -1,6 +1,6 @@
 package cart.domain.pointmanager;
 
-public interface PointManager {
+public interface PointPolicy {
 
     int calculateEarnedPoints(final int totalPrice);
 

@@ -1,6 +1,6 @@
 package cart.domain.pointmanager;
 
-public final class DefaultPointManager implements PointManager {
+public final class DefaultPointPolicy implements PointPolicy {
 
     private static final double POINT_CHARGE_RATE = 0.1;
     private static final double POINT_SPEND_RATE = 0.1;

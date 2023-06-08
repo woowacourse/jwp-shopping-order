@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.domain.pointmanager.PointManager;
+import cart.domain.pointmanager.PointPolicy;
 
 import java.util.List;
 
@@ -20,11 +20,11 @@ public class OrderCheckout {
         this.availablePoints = availablePoints;
     }
 
-    public static OrderCheckout of(final int currentPoints, final List<CartItem> cartItems, final PointManager pointManager) {
+    public static OrderCheckout of(final int currentPoints, final List<CartItem> cartItems, final PointPolicy pointPolicy) {
         final int totalPrice = calculateTotalPrice(cartItems);
-        final int earnedPoints = pointManager.calculateEarnedPoints(totalPrice);
-        final int limitPoints = pointManager.calculateLimitPoints(totalPrice);
-        final int availablePoints = pointManager.calculateAvailablePoints(currentPoints, limitPoints);
+        final int earnedPoints = pointPolicy.calculateEarnedPoints(totalPrice);
+        final int limitPoints = pointPolicy.calculateLimitPoints(totalPrice);
+        final int availablePoints = pointPolicy.calculateAvailablePoints(currentPoints, limitPoints);
 
         return new OrderCheckout(cartItems, totalPrice, currentPoints, earnedPoints, availablePoints);
     }
