@@ -42,7 +42,7 @@ public class PaymentIntegrationTest extends IntegrationTest {
 
         super.setUp(restDocumentation);
 
-        this.member = this.memberDao.getMemberById(1L).orElseThrow(AuthenticationException.NotFound::new);
+        this.member = this.memberDao.getMemberById(1L).orElseThrow(AuthenticationException.NotFoundException::new);
 
         this.productId = this.createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         this.productId2 = this.createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));

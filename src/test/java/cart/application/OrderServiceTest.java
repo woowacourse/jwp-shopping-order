@@ -108,7 +108,7 @@ class OrderServiceTest {
         //when
         //then
         Assertions.assertThatThrownBy(() -> this.orderService.createDraftOrder(memberWithId, List.of()))
-                .isInstanceOf(OrderException.EmptyItemInput.class);
+                .isInstanceOf(OrderException.EmptyItemInputException.class);
     }
 
     @Test
@@ -120,6 +120,6 @@ class OrderServiceTest {
         //when
         //then
         assertThatThrownBy(() -> this.orderService.createOrderAndSave(unauthorizedMember, List.of(cartItem.getId())))
-                .isInstanceOf(CartItemException.IllegalMember.class);
+                .isInstanceOf(CartItemException.IllegalMemberException.class);
     }
 }

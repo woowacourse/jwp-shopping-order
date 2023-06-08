@@ -60,7 +60,7 @@ public class OrderDbRepository implements OrderRepository {
     public Optional<Order> findById(final Long id) {
         try {
             final OrderEntity orderEntity = this.orderDao.findById(id);
-            final Member member = this.memberDao.getMemberById(orderEntity.getMemberId()).orElseThrow(AuthenticationException.NotFound::new);
+            final Member member = this.memberDao.getMemberById(orderEntity.getMemberId()).orElseThrow(AuthenticationException.NotFoundException::new);
             return Optional.of(this.toOrder(member, orderEntity));
         } catch (final DataAccessException exception) {
             return Optional.empty();

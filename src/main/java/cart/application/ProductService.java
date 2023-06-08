@@ -31,7 +31,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse getProductById(final Long productId) {
         final Product product = this.productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException.NotFound(productId));
+                .orElseThrow(() -> new ProductException.NotFoundException(productId));
         return ProductResponse.of(product);
     }
 

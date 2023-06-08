@@ -9,20 +9,20 @@ public class AuthenticationException extends RuntimeException {
         super(message);
     }
 
-    public static class NotFound extends AuthenticationException {
-        public NotFound() {
+    public static class NotFoundException extends AuthenticationException {
+        public NotFoundException() {
             super("해당 유저를 찾을 수 없습니다.");
         }
     }
 
-    public static class InvalidScheme extends AuthenticationException {
-        public InvalidScheme() {
+    public static class InvalidSchemeException extends AuthenticationException {
+        public InvalidSchemeException() {
             super("올바른 인증 방식이 아닙니다.");
         }
     }
 
-    public static class InvalidCredentials extends AuthenticationException {
-        public InvalidCredentials() {
+    public static class InvalidCredentialsException extends AuthenticationException {
+        public InvalidCredentialsException() {
             super("유저 정보가 올바르지 않습니다.");
         }
     }

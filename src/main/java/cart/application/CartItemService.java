@@ -35,14 +35,14 @@ public class CartItemService {
 
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Product product = this.productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
+                .orElseThrow(() -> new ProductException.NotFoundException(cartItemRequest.getProductId()));
 
         return this.cartItemRepository.create(new CartItem(member, product));
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = this.cartItemRepository.findById(id)
-                .orElseThrow(() -> new CartItemException.NotFound(id));
+                .orElseThrow(() -> new CartItemException.NotFoundException(id));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -56,7 +56,7 @@ public class CartItemService {
 
     public void remove(final Member member, final Long id) {
         final CartItem cartItem = this.cartItemRepository.findById(id)
-                .orElseThrow(() -> new CartItemException.NotFound(id));
+                .orElseThrow(() -> new CartItemException.NotFoundException(id));
         cartItem.checkOwner(member);
         this.cartItemRepository.deleteById(id);
     }

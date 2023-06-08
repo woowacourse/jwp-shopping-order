@@ -7,8 +7,8 @@ public class PaymentException extends RuntimeException {
         super(message);
     }
 
-    public static class NotFound extends PaymentException {
-        public NotFound(Order order) {
+    public static class NotFoundException extends PaymentException {
+        public NotFoundException(Order order) {
             super("해당 주문에 대한 결제기록이 존재하지 않습니다. orderId=" + order.getId());
         }
 

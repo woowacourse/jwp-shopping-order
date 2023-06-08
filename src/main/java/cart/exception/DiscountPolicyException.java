@@ -5,8 +5,8 @@ public class DiscountPolicyException extends RuntimeException {
         super(message);
     }
 
-    public static class InvalidPolicy extends DiscountPolicyException {
-        public InvalidPolicy(final String message) {
+    public static class InvalidPolicyException extends DiscountPolicyException {
+        public InvalidPolicyException(final String message) {
             super(message);
         }
     }

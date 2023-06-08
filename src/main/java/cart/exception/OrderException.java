@@ -21,14 +21,14 @@ public class OrderException extends RuntimeException {
         }
     }
 
-    public static class EmptyItemInput extends OrderException {
-        public EmptyItemInput() {
+    public static class EmptyItemInputException extends OrderException {
+        public EmptyItemInputException() {
             super("주문에 필요한 장바구니 상품 id가 입력되지 않았습니다.");
         }
     }
 
-    public static class PriceMismatch extends OrderException {
-        public PriceMismatch(final Money initialPrice, final Money lastPrice) {
+    public static class PriceMismatchException extends OrderException {
+        public PriceMismatchException(final Money initialPrice, final Money lastPrice) {
             super("주문 금액이 일치하지 않습니다.; initialPrice=" + initialPrice + ", lastPrice=" + lastPrice);
         }
     }

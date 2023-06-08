@@ -36,10 +36,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         final String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException.InvalidScheme();
+            throw new AuthenticationException.InvalidSchemeException();
         }
         if (authHeader.length != 2) {
-            throw new AuthenticationException.InvalidCredentials();
+            throw new AuthenticationException.InvalidCredentialsException();
         }
 
         return this.generateMember(authHeader);
@@ -51,7 +51,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
                 .map(decodedBytes -> decodedBytes.split(":"))
                 .filter(credentials -> credentials.length == 2)
                 .flatMap(this::getMember)
-                .orElseThrow(AuthenticationException.InvalidCredentials::new);
+                .orElseThrow(AuthenticationException.InvalidCredentialsException::new);
     }
 
     private Optional<Member> getMember(final String[] credentials) {

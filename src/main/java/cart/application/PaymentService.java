@@ -42,6 +42,6 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public PaymentRecord findByOrder(final Order order) {
         return this.paymentRepository.findByOrder(order)
-                .orElseThrow(() -> new PaymentException.NotFound(order));
+                .orElseThrow(() -> new PaymentException.NotFoundException(order));
     }
 }

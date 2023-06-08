@@ -28,7 +28,7 @@ public class OrderService {
 
     public Order createDraftOrder(final Member member, final List<Long> cartItemIds) {
         if (cartItemIds.isEmpty()) {
-            throw new OrderException.EmptyItemInput();
+            throw new OrderException.EmptyItemInputException();
         }
         final List<OrderItem> orderItems = cartItemIds.stream()
                 .map(cartItemId -> this.findCartItemOf(cartItemId, member))
@@ -39,10 +39,10 @@ public class OrderService {
 
     private CartItem findCartItemOf(final Long cartItemId, final Member member) {
         final CartItem cartItem = this.cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new CartItemException.NotFound(cartItemId));
+                .orElseThrow(() -> new CartItemException.NotFoundException(cartItemId));
 
         if (!member.equals(cartItem.getMember())) {
-            throw new CartItemException.IllegalMember(cartItem, member);
+            throw new CartItemException.IllegalMemberException(cartItem, member);
         }
 
         return cartItem;
@@ -61,7 +61,7 @@ public class OrderService {
         final Money currentPrice = this.convertCartItemsToPrice(cartItemIds);
         final Money orderPrice = draftOrder.calculateOriginalTotalPrice();
         if (!currentPrice.equals(orderPrice)) {
-            throw new OrderException.PriceMismatch(orderPrice, currentPrice);
+            throw new OrderException.PriceMismatchException(orderPrice, currentPrice);
         }
     }
 

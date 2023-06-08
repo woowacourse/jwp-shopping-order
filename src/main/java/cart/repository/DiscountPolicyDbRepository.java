@@ -20,7 +20,7 @@ public class DiscountPolicyDbRepository implements DiscountPolicyRepository {
         try {
             return this.defaultDiscountPolicyDao.findDefault();
         } catch (final IllegalArgumentException e) {
-            throw new DiscountPolicyException.InvalidPolicy(e.getMessage());
+            throw new DiscountPolicyException.InvalidPolicyException(e.getMessage());
         }
     }
 }

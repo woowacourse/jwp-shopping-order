@@ -15,18 +15,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiErrorResponse.from(e));
     }
 
-    @ExceptionHandler({CartItemException.NotFound.class, OrderException.NotFound.class,
-            ProductException.NotFound.class, PaymentException.NotFound.class})
+    @ExceptionHandler({CartItemException.NotFoundException.class, OrderException.NotFound.class,
+            ProductException.NotFoundException.class, PaymentException.NotFoundException.class})
     public ResponseEntity<ApiErrorResponse> handleNotFoundException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiErrorResponse.from(e));
     }
 
-    @ExceptionHandler({CartItemException.IllegalMember.class, OrderException.IllegalMember.class})
+    @ExceptionHandler({CartItemException.IllegalMemberException.class, OrderException.IllegalMember.class})
     public ResponseEntity<ApiErrorResponse> handleAuthorizationException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiErrorResponse.from(e));
     }
 
-    @ExceptionHandler({DiscountPolicyException.InvalidPolicy.class})
+    @ExceptionHandler({DiscountPolicyException.InvalidPolicyException.class})
     public ResponseEntity<ApiErrorResponse> handleInvalidPolicyException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiErrorResponse.from(e));
     }
