@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS orders
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS order_items
+CREATE TABLE IF NOT EXISTS order_item
 (
     id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id          BIGINT       NOT NULL,
