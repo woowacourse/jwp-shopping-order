@@ -38,21 +38,18 @@ public class OrderWriteService {
     private final CartItemRepository cartItemRepository;
     private final CouponRepository couponRepository;
     private final PointRepository pointRepository;
-    private final PointPolicy pointPolicy;
 
     public OrderWriteService(final OrderRepository orderRepository,
                              final OrderedItemRepository orderedItemRepository,
                              final CartItemRepository cartItemRepository,
                              final CouponRepository couponRepository,
-                             final PointRepository pointRepository,
-                             final PointPolicy pointPolicy
+                             final PointRepository pointRepository
     ) {
         this.orderRepository = orderRepository;
         this.orderedItemRepository = orderedItemRepository;
         this.cartItemRepository = cartItemRepository;
         this.couponRepository = couponRepository;
         this.pointRepository = pointRepository;
-        this.pointPolicy = pointPolicy;
     }
 
     public Long createOrder(final MemberAuth memberAuth, final CreateOrderDto createOrderDto) {
@@ -145,7 +142,7 @@ public class OrderWriteService {
     }
 
     private void addPointHistory(Member member, int paymentPrice, int usedPoint, Long orderId) {
-        int earnedPoint = pointPolicy.calculateEarnedPoint(paymentPrice);
+        int earnedPoint = PointPolicy.EARNED_RATE.calculateEarnedPoint(paymentPrice);
         pointRepository.createPointHistory(member.getId(), new PointHistory(orderId, usedPoint, earnedPoint));
     }
 

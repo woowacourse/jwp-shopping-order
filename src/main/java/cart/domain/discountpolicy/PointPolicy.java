@@ -1,14 +1,18 @@
 package cart.domain.discountpolicy;
 
-import org.springframework.stereotype.Component;
+public enum PointPolicy {
 
-@Component
-public class PointPolicy {
+    EARNED_RATE(0.01);
 
-    private static final double EARNED_RATE = 0.01;
+    private final double value;
+
+    PointPolicy(double value) {
+        this.value = value;
+    }
 
     public int calculateEarnedPoint(int totalPrice) {
-        return (int) (totalPrice * EARNED_RATE);
+        return (int) (totalPrice * value);
     }
 
 }
+

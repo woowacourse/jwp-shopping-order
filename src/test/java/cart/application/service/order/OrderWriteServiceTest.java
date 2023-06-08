@@ -39,16 +39,18 @@ class OrderWriteServiceTest {
 
     @Mock
     private OrderRepository orderRepository;
+
     @Mock
     private OrderedItemRepository orderedItemRepository;
+
     @Mock
     private CartItemRepository cartItemRepository;
+
     @Mock
     private CouponRepository couponRepository;
+
     @Mock
     private PointRepository pointRepository;
-    @Mock
-    PointPolicy pointPolicy;
 
     @InjectMocks
     OrderWriteService orderWriteService;
@@ -79,9 +81,7 @@ class OrderWriteServiceTest {
         when(cartItemRepository.findById(10L)).thenReturn(java.util.Optional.of(cartItem1));
         when(cartItemRepository.findById(11L)).thenReturn(java.util.Optional.of(cartItem2));
         when(couponRepository.findById(anyLong())).thenReturn(new Coupon(1L, "testCoupon", 1000, 10, 0));
-        when(pointPolicy.calculateEarnedPoint(anyInt())).thenReturn(0);
         when(orderRepository.createOrder(any())).thenReturn(1L);
-
 
         // when
         Long orderId = orderWriteService.createOrder(memberAuth, createOrderDto);
