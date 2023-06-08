@@ -42,13 +42,17 @@ public class CartItemService {
                 .orElseThrow(CartItemNotFountException::new);
         cartItem.checkOwner(member);
 
-        if (cartItemQuantityUpdateDto.getQuantity() == 0) {
+        if (checkQuantityIsZero(cartItemQuantityUpdateDto)) {
             cartItemDao.deleteById(id);
             return;
         }
 
         cartItem.changeQuantity(cartItemQuantityUpdateDto.getQuantity());
         cartItemDao.updateQuantity(cartItem);
+    }
+
+    public boolean checkQuantityIsZero(CartItemQuantityUpdateDto dto) {
+        return dto.getQuantity() == 0;
     }
 
     public void remove(Member member, Long id) {
