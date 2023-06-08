@@ -87,12 +87,6 @@ public class DBCartItemRepository implements CartItemRepository {
     }
 
     @Override
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
