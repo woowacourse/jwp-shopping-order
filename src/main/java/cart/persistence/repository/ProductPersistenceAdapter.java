@@ -64,7 +64,7 @@ public class ProductPersistenceAdapter implements ProductRepository {
     @Override
     public void update(Product product) {
         String sql = "UPDATE product SET name = :name, price = :price, image_url = :image_url," +
-                " point_ratio = :point_ratio point_available = :point_available WHERE id = :id";
+                " point_ratio = :point_ratio, point_available = :point_available WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", product.getName())
                 .addValue("price", product.getPrice())
