@@ -10,25 +10,25 @@ import java.util.Objects;
 public class CartItem {
 
     private Long id;
-    private Long quantity;
+    private Quantity quantity;
     private final Member member;
     private final Product product;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1L;
+        this.quantity = new Quantity(1L);
         this.member = member;
         this.product = product;
     }
 
     public CartItem(Long quantity, Member member, Product product) {
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
         this.member = member;
         this.product = product;
     }
 
     public CartItem(Long id, Long quantity, Member member, Product product) {
         this.id = id;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
         this.member = member;
         this.product = product;
     }
@@ -40,13 +40,13 @@ public class CartItem {
     }
 
     public void checkQuantity() {
-        if (product.getStock() < quantity) {
+        if (product.getStock() < quantity.getQuantity()) {
             throw new CartException(ErrorCode.CART_ITEM_QUANTITY_EXCESS);
         }
     }
 
     public void changeQuantity(Long quantity) {
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public boolean haveNoProduct() {
@@ -66,7 +66,7 @@ public class CartItem {
     }
 
     public Long getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 
     @Override

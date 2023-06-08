@@ -1,5 +1,7 @@
 package cart.domain.order;
 
+import cart.domain.cartitem.Quantity;
+
 import java.util.Objects;
 
 public class OrderItem {
@@ -9,14 +11,14 @@ public class OrderItem {
     private final String name;
     private final Long price;
     private final String imageUrl;
-    private final Long quantity;
+    private final Quantity quantity;
 
     public OrderItem(Long productId, String name, Long price, String imageUrl, Long quantity) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public OrderItem(Long id, Long productId, String name, Long price, String imageUrl, Long quantity) {
@@ -25,7 +27,7 @@ public class OrderItem {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public Long getProductId() {
@@ -45,7 +47,7 @@ public class OrderItem {
     }
 
     public Long getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 
     @Override

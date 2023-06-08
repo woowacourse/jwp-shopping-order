@@ -14,7 +14,8 @@ public enum ErrorCode {
     CART_ITEM_DUPLICATED(HttpStatus.BAD_REQUEST, 8, "이미 장바구니에 존재하는 상품입니다. 동일한 상품을 추가할 수 없습니다."),
     ILLEGAL_MEMBER(HttpStatus.FORBIDDEN, 9, "접근할 수 없는 유저입니다."),
     AUTHENTICATION(HttpStatus.UNAUTHORIZED, 11, "인증에 실패하였습니다. 회원정보를 다시 입력해주세요."),
-    PRE_AUTHENTICATION(HttpStatus.BAD_REQUEST, 12, "인증 절차를 진행할 수 없습니다.");
+    PRE_AUTHENTICATION(HttpStatus.BAD_REQUEST, 12, "인증 절차를 진행할 수 없습니다."),
+    QUANTITY_INVALID(HttpStatus.BAD_REQUEST, 13, "수량은 한 개 이상이어ㅑ 합니다.");
 
     private final HttpStatus httpStatus;
     private final int errorCode;
