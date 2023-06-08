@@ -9,6 +9,12 @@ public class AuthenticationException extends RuntimeException {
         super(message);
     }
 
+    public static class MissingCredentials extends AuthenticationException {
+        public MissingCredentials() {
+            super("요청에 인증 정보가 없습니다.");
+        }
+    }
+
     public static class NotFound extends AuthenticationException {
         public NotFound() {
             super("해당 유저를 찾을 수 없습니다.");
