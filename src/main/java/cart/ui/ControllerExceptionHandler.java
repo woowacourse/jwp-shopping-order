@@ -5,6 +5,7 @@ import cart.exception.AuthenticationException;
 import cart.exception.CouponException;
 import cart.exception.ItemException;
 import cart.exception.OrderException;
+import cart.exception.ProductException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,7 +32,9 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = {
             CouponException.class,
-            OrderException.class
+            OrderException.class,
+            ItemException.class,
+            ProductException.class
     })
     public ResponseEntity<ExceptionResponse> handleWrongDiscountInputException(Exception exception) {
         return ResponseEntity.badRequest()

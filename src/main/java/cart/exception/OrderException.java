@@ -33,4 +33,10 @@ public class OrderException extends RuntimeException {
             super("주문하려는 상품의 수량을 다시 확인해 주세요. 수량이 변경된 상품 아이디 : " + actualCartItem.getProduct().getId() + " 이름 : " + actualCartItem.getProduct().getName());
         }
     }
+
+    public static class NotFound extends OrderException {
+        public NotFound() {
+            super("주문 정보를 찾을 수 없습니다.");
+        }
+    }
 }

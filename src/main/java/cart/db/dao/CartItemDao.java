@@ -3,6 +3,8 @@ package cart.db.dao;
 import cart.db.entity.CartItemEntity;
 import cart.db.entity.MemberEntity;
 import cart.db.entity.ProductEntity;
+import cart.exception.ItemException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -71,7 +73,11 @@ public class CartItemDao {
     public CartItemEntity findById(Long id) {
         String sql = CART_ITEM_JOIN_MEMBER_SQL + WHERE_CART_ITEM_ID;
 
-        return jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ItemException.CanNotFindCartItem();
+        }
     }
 
     public List<CartItemEntity> findAllByIds(List<Long> ids) {

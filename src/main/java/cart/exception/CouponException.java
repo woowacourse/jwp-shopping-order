@@ -31,4 +31,10 @@ public class CouponException extends RuntimeException {
             super("쿠폰의 소유자 아닙니다. 접근한 사용자 : " + member.getEmail());
         }
     }
+
+    public static class NotFound extends CouponException {
+        public NotFound() {
+            super("쿠폰 정보를 찾을 수 없습니다.");
+        }
+    }
 }

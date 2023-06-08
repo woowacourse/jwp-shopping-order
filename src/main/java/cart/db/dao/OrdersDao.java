@@ -1,6 +1,8 @@
 package cart.db.dao;
 
 import cart.db.entity.OrdersEntity;
+import cart.exception.OrderException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -49,7 +51,11 @@ public class OrdersDao {
 
     public OrdersEntity findById(Long id) {
         String sql = SELECT_SQL + WHERE_ID;
-        return jdbcTemplate.queryForObject(sql, ORDERS_ROW_MAPPER, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, ORDERS_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new OrderException.NotFound();
+        }
     }
 
     public List<OrdersEntity> findAllByMemberId(Long memberId) {

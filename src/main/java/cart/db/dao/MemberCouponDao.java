@@ -1,6 +1,8 @@
 package cart.db.dao;
 
 import cart.db.entity.MemberCouponEntity;
+import cart.exception.CouponException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -56,7 +58,11 @@ public class MemberCouponDao {
 
     public MemberCouponEntity findByIdForUpdate(Long id) {
         String sql = SELECT_MEMBER_COUPON_SQL + WHERE_MEMBER_COUPON_ID + FOR_UPDATE;
-        return jdbcTemplate.queryForObject(sql, MEMBER_COUPON_ROW_MAPPER, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, MEMBER_COUPON_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CouponException.NotFound();
+        }
     }
 
     public List<MemberCouponEntity> findAllByIdForUpdate(List<Long> memberCouponIds) {

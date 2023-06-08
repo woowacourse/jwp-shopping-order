@@ -13,4 +13,10 @@ public class ItemException extends RuntimeException {
             super("Illegal member attempts to cart; cartItemId=" + item.getId() + ", memberId=" + member.getId());
         }
     }
+
+    public static class CanNotFindCartItem extends ItemException {
+        public CanNotFindCartItem() {
+            super("카트 아이템을 찾을 수 없습니다.");
+        }
+    }
 }

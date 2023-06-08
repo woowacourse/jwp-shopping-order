@@ -1,6 +1,8 @@
 package cart.db.dao;
 
 import cart.db.entity.ProductEntity;
+import cart.exception.ProductException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,12 +35,16 @@ public class ProductDao {
 
     public ProductEntity getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("product_name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new ProductEntity(productId, name, price, imageUrl);
-        });
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+                String name = rs.getString("product_name");
+                int price = rs.getInt("price");
+                String imageUrl = rs.getString("image_url");
+                return new ProductEntity(productId, name, price, imageUrl);
+            });
+        } catch (EmptyResultDataAccessException e) {
+            throw new ProductException.NotFound();
+        }
     }
 
     public Long createProduct(ProductEntity product) {
