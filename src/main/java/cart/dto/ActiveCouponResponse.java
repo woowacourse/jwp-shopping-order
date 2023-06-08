@@ -1,12 +1,12 @@
 package cart.dto;
 
-public class AvailableCouponResponse {
+public class ActiveCouponResponse {
 
   private final long couponId;
   private final String couponName;
   private final int minAmount;
 
-  public AvailableCouponResponse(long couponId, String couponName, int minAmount) {
+  public ActiveCouponResponse(long couponId, String couponName, int minAmount) {
     this.couponId = couponId;
     this.couponName = couponName;
     this.minAmount = minAmount;

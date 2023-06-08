@@ -9,7 +9,7 @@ import cart.dao.MemberCouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
-import cart.dto.AvailableCouponResponse;
+import cart.dto.ActiveCouponResponse;
 import cart.dto.CouponResponse;
 import cart.dto.DiscountAmountResponse;
 import cart.exception.BusinessException;
@@ -56,7 +56,7 @@ class CouponServiceTest {
   }
 
   @Test
-  void findAvailableCoupons() {
+  void findActiveCoupons() {
     final Member member = new Member(1L, "email", "password");
     final boolean isUsedCoupon1 = true;
     final boolean isUsedCoupon2 = false;
@@ -64,14 +64,14 @@ class CouponServiceTest {
     final Coupon coupon1 = CouponFactory.createCoupon(1L, "coupon1", 1000, 10000);
     final Coupon coupon2 = CouponFactory.createCoupon(2L, "coupon2", 2000, 20000);
     final Coupon coupon3 = CouponFactory.createCoupon(3L, "coupon3", 1200, 12000);
-    final List<AvailableCouponResponse> expected = List.of(
-        new AvailableCouponResponse(coupon3.getId(), coupon3.getName(), coupon3.getMinAmount().getValue()));
+    final List<ActiveCouponResponse> expected = List.of(
+        new ActiveCouponResponse(coupon3.getId(), coupon3.getName(), coupon3.getMinAmount().getValue()));
     final int totalAmount = 15000;
     given(memberCouponDao.findAvailableCouponsByMemberIdAndTotalAmount(member.getId(), totalAmount)).willReturn(List.of(
         new MemberCoupon(1L, member, coupon3, isUsedCoupon3)
     ));
 
-    final List<AvailableCouponResponse> actual = couponService.findAvailableCoupons(member, totalAmount);
+    final List<ActiveCouponResponse> actual = couponService.findActiveCoupons(member, totalAmount);
 
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }

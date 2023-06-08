@@ -6,7 +6,7 @@ import cart.domain.Amount;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
-import cart.dto.AvailableCouponResponse;
+import cart.dto.ActiveCouponResponse;
 import cart.dto.CouponResponse;
 import cart.dto.DiscountAmountResponse;
 import cart.dto.SaveCouponRequest;
@@ -56,7 +56,7 @@ public class CouponService {
     memberCouponDao.save(member.getId(), couponId);
   }
 
-  public List<AvailableCouponResponse> findAvailableCoupons(final Member member, final int productTotalAmount) {
+  public List<ActiveCouponResponse> findActiveCoupons(final Member member, final int productTotalAmount) {
     final List<MemberCoupon> availableMemberCoupons = memberCouponDao.findAvailableCouponsByMemberIdAndTotalAmount(
         member.getId(), productTotalAmount);
 
@@ -65,9 +65,9 @@ public class CouponService {
         .collect(Collectors.toList());
   }
 
-  private AvailableCouponResponse mapToAvailableCouponResponse(MemberCoupon memberCoupon) {
+  private ActiveCouponResponse mapToAvailableCouponResponse(MemberCoupon memberCoupon) {
     final Coupon coupon = memberCoupon.getCoupon();
-    return new AvailableCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
+    return new ActiveCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
   }
 
   public DiscountAmountResponse calculateDiscountAmount(final Member member, final Long couponId, final int totalAmount) {

@@ -2,7 +2,7 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
-import cart.dto.AvailableCouponResponse;
+import cart.dto.ActiveCouponResponse;
 import cart.dto.CouponResponse;
 import cart.dto.DiscountAmountResponse;
 import java.util.List;
@@ -35,8 +35,8 @@ public class CouponApiController {
   }
 
   @GetMapping("/active")
-  public ResponseEntity<List<AvailableCouponResponse>> findAvailableCoupons(final Member member, final int total) {
-    return ResponseEntity.ok(couponService.findAvailableCoupons(member, total));
+  public ResponseEntity<List<ActiveCouponResponse>> findActiveCoupons(final Member member, final int total) {
+    return ResponseEntity.ok(couponService.findActiveCoupons(member, total));
   }
 
   @GetMapping("/{id}/discount")
