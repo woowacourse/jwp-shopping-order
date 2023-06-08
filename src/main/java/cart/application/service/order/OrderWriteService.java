@@ -10,6 +10,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.CouponType;
+import cart.domain.discountpolicy.DiscountPolicy;
 import cart.domain.discountpolicy.PointPolicy;
 import cart.domain.discountpolicy.ZlzonStoreDiscountPolicy;
 import cart.domain.member.Member;
@@ -36,7 +37,7 @@ public class OrderWriteService {
     private final CouponRepository couponRepository;
     private final PointRepository pointRepository;
     private final PointPolicy pointPolicy;
-    private final ZlzonStoreDiscountPolicy discountPolicy;
+    private final DiscountPolicy discountPolicy;
 
     public OrderWriteService(OrderRepository orderRepository, OrderedItemRepository orderedItemRepository, CartItemRepository cartItemRepository, CouponRepository couponRepository, PointRepository pointRepository, PointPolicy pointPolicy, ZlzonStoreDiscountPolicy discountPolicy) {
         this.orderRepository = orderRepository;
