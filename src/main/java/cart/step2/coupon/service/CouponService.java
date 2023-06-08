@@ -2,7 +2,6 @@ package cart.step2.coupon.service;
 
 import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupon.domain.repository.CouponRepository;
-import cart.step2.coupontype.domain.repository.CouponTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +12,9 @@ import java.util.List;
 public class CouponService {
 
     private final CouponRepository couponRepository;
-    private final CouponTypeRepository couponTypeRepository;
 
-    public CouponService(final CouponRepository couponRepository, final CouponTypeRepository couponTypeRepository) {
+    public CouponService(final CouponRepository couponRepository) {
         this.couponRepository = couponRepository;
-        this.couponTypeRepository = couponTypeRepository;
     }
 
     @Transactional
@@ -35,7 +32,7 @@ public class CouponService {
     }
 
     @Transactional
-    public void deleteByCouponId(final Long couponId) {
+    public void deleteUsedCouponByCouponId(final Long couponId) {
         validateCouponUsageStatus(couponId);
         couponRepository.deleteById(couponId);
     }

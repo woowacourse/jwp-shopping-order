@@ -63,8 +63,8 @@ public class CouponController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCoupon(Member member, @RequestParam Long couponId) {
-        couponService.deleteByCouponId(couponId);
+    public ResponseEntity<Void> deleteUsedCoupon(Member member, @RequestParam Long couponId) {
+        couponService.deleteUsedCouponByCouponId(couponId);
         return ResponseEntity.noContent().build();
     }
 
