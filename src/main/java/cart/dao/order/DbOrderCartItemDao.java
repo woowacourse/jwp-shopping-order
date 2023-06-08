@@ -1,12 +1,15 @@
 package cart.dao.order;
 
 import cart.entity.OrderCartItemEntity;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,30 @@ public class DbOrderCartItemDao implements OrderCartItemDao {
         params.put("total_discount_price", orderCartItemEntity.getTotalDiscountPrice());
         return insertActor.executeAndReturnKey(params).longValue();
     }
+
+    @Override
+    public void insertAll(List<OrderCartItemEntity> orderCartItemEntities) {
+        String sql = "insert into ordered_item (ordered_id, name, image_url, quantity, " +
+                "total_price, total_discount_price ) values (?,?,?,?,?,?)";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                OrderCartItemEntity orderCartItemEntity = orderCartItemEntities.get(i);
+                ps.setLong(1, orderCartItemEntity.getOrderedId());
+                ps.setString(2, orderCartItemEntity.getName());
+                ps.setString(3, orderCartItemEntity.getImageUrl());
+                ps.setInt(4, orderCartItemEntity.getQuantity());
+                ps.setInt(5, orderCartItemEntity.getTotalPrice());
+                ps.setInt(6, orderCartItemEntity.getTotalDiscountPrice());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return orderCartItemEntities.size();
+            }
+        });
+    }
+
 
     @Override
     public List<OrderCartItemEntity> findByOrderId(Long orderId) {

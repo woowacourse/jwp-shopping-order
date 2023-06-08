@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -26,9 +27,13 @@ public class OrderRepository {
     public Long insert(Member member, Order order) {
         Long orderId = orderDao.insert(OrderEntity.of(member, order));
         List<OrderCartItem> orderCartItems = order.getOrderCartItems();
-        for (OrderCartItem orderCartItem : orderCartItems) {
-            orderCartItemDao.insert(OrderCartItemEntity.of(orderId, orderCartItem));
-        }
+
+        List<OrderCartItemEntity> cartItemEntities = orderCartItems.stream()
+                .map(orderCartItem -> OrderCartItemEntity.of(orderId, orderCartItem))
+                .collect(Collectors.toList());
+
+        orderCartItemDao.insertAll(cartItemEntities);
+
         return orderId;
     }
 

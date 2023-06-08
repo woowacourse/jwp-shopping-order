@@ -8,6 +8,8 @@ public interface OrderCartItemDao {
 
     Long insert(OrderCartItemEntity orderCartItemEntity);
 
+    void insertAll(List<OrderCartItemEntity> orderCartItemEntities);
+
     List<OrderCartItemEntity> findByOrderId(Long orderId);
 
 }
