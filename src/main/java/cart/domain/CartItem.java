@@ -11,17 +11,19 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-    }
-
-    public CartItem(Long id, Integer quantity, Product product, Member member) {
+    private CartItem(Long id, Integer quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public static CartItem createInitCartItem(Member member, Product product) {
+        return new CartItem(null, 1, product, member);
+    }
+
+    public static CartItem of(Long id, Integer quantity, Product product, Member member) {
+        return new CartItem(id, quantity, product, member);
     }
 
     public void checkOwner(Member member) {

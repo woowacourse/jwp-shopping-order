@@ -8,10 +8,14 @@ public class Member {
     private String email;
     private String password;
 
-    public Member(Long id, String email, String password) {
+    private Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public static Member of(Long id, String email, String password) {
+        return new Member(id, email, password);
     }
 
     public boolean checkPassword(String password) {

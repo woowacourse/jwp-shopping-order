@@ -81,7 +81,7 @@ public class OrderDao {
             Timestamp createdAt = rs.getTimestamp("orders.created_at");
 
             List<OrderItem> orderItem = new ArrayList<>();
-            Member member = new Member(memberId, email, null);
+            Member member = Member.of(memberId, email, null);
 
             do {
                 Long orderItemsId = rs.getLong("order_items.id");
@@ -90,12 +90,12 @@ public class OrderDao {
                 String productUrl = rs.getString("order_items.product_image_url");
                 int productQuantity = rs.getInt("order_items.product_quantity");
 
-                orderItem.add(new OrderItem(orderItemsId, new Product(productName, productPrice, productUrl), productQuantity));
+                orderItem.add(OrderItem.of(orderItemsId, Product.of(null, productName, productPrice, productUrl), productQuantity));
             } while (rs.next());
 
-            OrderItems orderItems = new OrderItems(orderItem);
+            OrderItems orderItems = OrderItems.from(orderItem);
 
-            return new Order(orderId, member, orderItems, productTotalPrice, discountPrice, deliveryFee, totalPrice, createdAt);
+            return Order.of(orderId, member, orderItems, productTotalPrice, discountPrice, deliveryFee, totalPrice, createdAt);
         };
     }
 

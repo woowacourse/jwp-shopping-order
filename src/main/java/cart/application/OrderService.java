@@ -32,11 +32,11 @@ public class OrderService {
         List<OrderItem> orderItems = orderRequest.getOrderItems().stream()
                 .map(orderItemRequest -> {
                     Product product = productDao.getProductById(orderItemRequest.getId());
-                    return new OrderItem(product, orderItemRequest.getQuantity());
+                    return OrderItem.createInitOrderItem(product, orderItemRequest.getQuantity());
                 })
                 .collect(Collectors.toList());
 
-        Long orderId = orderDao.save(new Order(member, new OrderItems(orderItems), 3000L, Timestamp.from(Instant.parse(orderRequest.getOrderTime()))));
+        Long orderId = orderDao.save(Order.createInitOrder(member, OrderItems.from(orderItems), Timestamp.from(Instant.parse(orderRequest.getOrderTime()))));
 
         Order order = orderDao.findById(orderId);
 

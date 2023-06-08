@@ -7,8 +7,12 @@ public class OrderItems {
 
     private final List<OrderItem> orderItems;
 
-    public OrderItems(List<OrderItem> orderItems) {
+    private OrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public static OrderItems from(List<OrderItem> orderItems) {
+        return new OrderItems(orderItems);
     }
 
     public Long calculateOrderPrice() {

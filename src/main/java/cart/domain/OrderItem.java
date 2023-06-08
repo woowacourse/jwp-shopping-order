@@ -8,15 +8,18 @@ public class OrderItem {
     private final Product product;
     private final Integer quantity;
 
-    public OrderItem(Product product, Integer quantity) {
+    private OrderItem(Long id, Product product, Integer quantity) {
+        this.id = id;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public OrderItem(Long id, Product product, Integer quantity) {
-        this.id = id;
-        this.product = product;
-        this.quantity = quantity;
+    public static OrderItem createInitOrderItem(Product product, Integer quantity) {
+        return new OrderItem(null, product, quantity);
+    }
+
+    public static OrderItem of(Long id, Product product, Integer quantity) {
+        return new OrderItem(id, product, quantity);
     }
 
     public Long getId() {

@@ -7,10 +7,11 @@ import java.util.Objects;
 
 public class Order {
 
-    public static final int DISCOUNT_STANDARD_PRICE = 100000;
-    public static final double DISCOUNT_RATIO = 0.1;
-    public static final int FREE_DELIVERY_STANDARD_PRICE = 50000;
-    public static final long FREE_DELIVERY_FEE = 0L;
+    private static final int DISCOUNT_STANDARD_PRICE = 100000;
+    private static final double DISCOUNT_RATIO = 0.1;
+    private static final int FREE_DELIVERY_STANDARD_PRICE = 50000;
+    private static final long FREE_DELIVERY_FEE = 0L;
+    private static final long DELIVERY_FEE = 3000L;
 
     private Long id;
     private Member member;
@@ -20,18 +21,7 @@ public class Order {
     private Long deliveryFee;
     private Long totalPrice;
     private Timestamp orderTime;
-
-    public Order(Member member, OrderItems orderItems, Long deliveryFee, Timestamp orderTime) {
-        this.member = member;
-        this.orderItems = orderItems;
-        this.productPrice = orderItems.calculateOrderPrice();
-        this.discountPrice = calculateDiscountedPrice();
-        this.deliveryFee = calculateDeliveryFee(deliveryFee);
-        this.totalPrice = calculateTotalPrice();
-        this.orderTime = orderTime;
-    }
-
-    public Order(Long id, Member member, OrderItems orderItems, Long productPrice, Long discountPrice, Long deliveryFee, Long totalPrice, Timestamp orderTime) {
+    private Order(Long id, Member member, OrderItems orderItems, Long productPrice, Long discountPrice, Long deliveryFee, Long totalPrice, Timestamp orderTime) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
@@ -42,18 +32,31 @@ public class Order {
         this.orderTime = orderTime;
     }
 
-    private Long calculateDiscountedPrice() {
+    public static Order createInitOrder(Member member, OrderItems orderItems, Timestamp orderTime) {
+        Long productPrice = orderItems.calculateOrderPrice();
+        Long discountedPrice = calculateDiscountedPrice(productPrice);
+        Long deliveryFee = calculateDeliveryFee(productPrice);
+        Long totalPrice = calculateTotalPrice(discountedPrice, deliveryFee);
+
+        return new Order(null, member, orderItems, productPrice, discountedPrice, deliveryFee, totalPrice, orderTime);
+    }
+
+    public static Order of(Long id, Member member, OrderItems orderItems, Long productPrice, Long discountPrice, Long deliveryFee, Long totalPrice, Timestamp orderTime) {
+        return new Order(id, member, orderItems, productPrice, discountPrice, deliveryFee, totalPrice, orderTime);
+    }
+
+    private static Long calculateDiscountedPrice(Long productPrice) {
         if (productPrice >= DISCOUNT_STANDARD_PRICE) {
             return (long) (productPrice * (1 - DISCOUNT_RATIO));
         }
         return productPrice;
     }
 
-    private Long calculateDeliveryFee(Long deliveryFee) {
+    private static Long calculateDeliveryFee(Long productPrice) {
         if (productPrice >= FREE_DELIVERY_STANDARD_PRICE) {
             return FREE_DELIVERY_FEE;
         }
-        return deliveryFee;
+        return DELIVERY_FEE;
     }
 
     public void checkOwner(Member member) {
@@ -62,7 +65,7 @@ public class Order {
         }
     }
 
-    private Long calculateTotalPrice() {
+    private static Long calculateTotalPrice(Long discountPrice, Long deliveryFee) {
         return discountPrice + deliveryFee;
     }
 
