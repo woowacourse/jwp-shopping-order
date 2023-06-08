@@ -1,11 +1,11 @@
 
 ### 주문 확인 테스트
-GET http://localhost:8080/cart-items/checkout?ids=1,2
-Authorization: Basic YUBhLmNvbToxMjM0
+GET {{apiAddress}}/cart-items/checkout?ids=1,2
+Authorization: Basic {{basicToken}}
 
 ### 주문 테스트 1
-POST http://localhost:8080/orders
-Authorization: Basic YUBhLmNvbToxMjM0
+POST {{apiAddress}}/orders
+Authorization: Basic {{basicToken}}
 Content-Type: application/json
 
 {
@@ -16,8 +16,8 @@ Content-Type: application/json
 }
 
 ### 주문 테스트 2
-POST http://localhost:8080/orders
-Authorization: Basic YUBhLmNvbToxMjM0
+POST {{apiAddress}}/orders
+Authorization: Basic {{basicToken}}
 Content-Type: application/json
 
 {
@@ -29,9 +29,9 @@ Content-Type: application/json
 
 
 ### 주문 건별 확인 테스트
-GET http://localhost:8080/orders/2
-Authorization: Basic YUBhLmNvbToxMjM0
+GET {{apiAddress}}/orders/2
+Authorization: Basic {{basicToken}}
 
 ### 주문 목록 확인 테스트
-GET http://localhost:8080/orders/
-Authorization: Basic YUBhLmNvbToxMjM0
+GET {{apiAddress}}/orders/
+Authorization: Basic {{basicToken}}
