@@ -12,6 +12,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+import static cart.fixture.MemberFixture.디노;
 import static cart.fixture.MemberFixture.레오;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,6 +28,7 @@ class CartItemReadControllerTest {
 
     @BeforeEach
     void setUp() {
+        memberRepository.createMember(레오);
         RestAssured.port = port;
     }
 
@@ -34,18 +36,17 @@ class CartItemReadControllerTest {
     @DisplayName("[GET] /cart-items 사용자에 맞는 장바구니 정보를 반환한다.(사용자가 없을때 예외처리)")
     void showCartItemsNotExistMember() {
         Response response = RestAssured.given().log().all()
-                .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
+                .auth().preemptive().basic(디노.getEmail(), 레오.getPassword())
                 .when().get("/cart-items")
                 .then().log().all()
                 .extract().response();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
     @DisplayName("[GET] /cart-items 사용자에 맞는 장바구니 정보를 반환한다.")
     void showCartItems() {
-        memberRepository.createMember(레오);
         Response response = RestAssured.given().log().all()
                 .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
                 .when().get("/cart-items")

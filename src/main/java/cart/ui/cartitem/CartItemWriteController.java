@@ -29,9 +29,7 @@ public class CartItemWriteController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(MemberAuth memberAuth, @RequestBody CartItemRequest cartItemRequest) {
-
         Long cartItemId = cartItemWriteService.createCartItem(memberAuth, CartItemCreateDto.from(cartItemRequest));
-
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
@@ -41,7 +39,6 @@ public class CartItemWriteController {
             @PathVariable("id") Long cartItemId,
             @RequestBody CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest
     ) {
-
         cartItemWriteService.updateQuantity(memberAuth, cartItemId, CartItemUpdateDto.from(cartItemQuantityUpdateRequest));
 
         return ResponseEntity.ok().build();
@@ -50,7 +47,6 @@ public class CartItemWriteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(MemberAuth memberAuth, @PathVariable Long id) {
         cartItemWriteService.remove(memberAuth, id);
-
         return ResponseEntity.noContent().build();
     }
 }

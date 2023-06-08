@@ -6,8 +6,6 @@ import cart.ui.MemberAuth;
 import cart.ui.cartitem.dto.CartResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,10 +24,4 @@ public class CartItemReadController {
         CartResultDto cartResult = cartItemReadService.findByMember(memberAuth);
         return ResponseEntity.ok(CartResponse.from(cartResult));
     }
-
-    @PostMapping("/payment")
-    public ResponseEntity<CartPaymentResponse> calculatePrice(@RequestBody CartPaymentRequest cartPaymentRequest) {
-        return null;
-    }
-
 }

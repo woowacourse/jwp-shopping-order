@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.application.service.member.MemberReadService;
-import cart.application.service.member.dto.MemberResultDto;
+import cart.application.repository.MemberRepository;
+import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import cart.ui.MemberAuth;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -17,10 +17,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberArgumentResolver.class);
-    private final MemberReadService memberReadService;
+    private final MemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberReadService memberReadService) {
-        this.memberReadService = memberReadService;
+    public MemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -49,14 +49,14 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String[] credentials = decodedString.split(":");
         String email = credentials[0];
         String password = credentials[1];
-        final MemberResultDto memberResultDto = memberReadService.findMemberByEmail(email);
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(() -> new AuthenticationException());
         // 본인 여부 확인
-        if (!memberResultDto.getPassword().equals(password)) {
+        if (!member.getPassword().equals(password)) {
             logger.warn("Invalid Password, Input Email: {}", email);
             throw new AuthenticationException();
         }
 
-        return new MemberAuth(memberResultDto.getId(), memberResultDto.getName(), email, password);
+        return new MemberAuth(member.getId(), member.getName(), email, password);
     }
 
 }
