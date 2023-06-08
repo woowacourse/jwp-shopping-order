@@ -37,4 +37,8 @@ public class OrderProduct {
                 '}';
     }
 
+    public int getTotalPrice() {
+        return product.getPrice() * quantity.getValue();
+    }
+
 }

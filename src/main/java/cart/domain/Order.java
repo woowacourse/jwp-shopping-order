@@ -73,8 +73,7 @@ public class Order {
     }
 
     private int calculateOrderProduct(final OrderProduct orderProduct) {
-        return orderProduct.getProduct().getPrice() *
-                orderProduct.getQuantity().getValue();
+        return orderProduct.getTotalPrice();
     }
 
     public Long getId() {
