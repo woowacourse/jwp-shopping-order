@@ -1,13 +1,10 @@
 package cart.repository;
 
-import cart.dao.CouponDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,8 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
-@JdbcTest
-@Import({CouponJdbcRepository.class, CouponDao.class})
+@RepositoryTest
 class CouponJdbcRepositoryTest {
 
     @Autowired

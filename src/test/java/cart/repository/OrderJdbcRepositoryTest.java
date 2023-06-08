@@ -1,7 +1,5 @@
 package cart.repository;
 
-import cart.dao.OrderDao;
-import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
@@ -10,43 +8,31 @@ import cart.domain.order.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
-@JdbcTest
+@RepositoryTest
 @Sql("classpath:truncate_order.sql")
 class OrderJdbcRepositoryTest {
 
+    @Autowired
     private OrderRepository orderRepository;
+    @Autowired
     private ProductDao productDao;
     private Order noneCouponOrder;
     private Order couponOrder;
     private Member member;
 
-    @Autowired
-    private DataSource dataSource;
-
     @BeforeEach
     void init() {
-        final NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        final OrderDao orderDao = new OrderDao(jdbcTemplate, dataSource);
-        final OrderItemDao orderItemDao = new OrderItemDao(jdbcTemplate, dataSource);
-
         member = new Member(1L, "a@a.com", "1234");
-
-        productDao = new ProductDao(new JdbcTemplate(dataSource));
         noneCouponOrder = createOrderWithCoupon(null);
         couponOrder = createOrderWithCoupon(new Coupon(1L, 1L, "3000원 할인 쿠폰", "3000원이 할인 됩니다.", 3000, false));
-        orderRepository = new OrderJdbcRepository(orderDao, orderItemDao);
     }
 
     private Order createOrderWithCoupon(final Coupon coupon) {
@@ -90,7 +76,6 @@ class OrderJdbcRepositoryTest {
                 () -> assertThat(getOrder(orders, 1).getOrderItems()).hasSize(2),
                 () -> assertThat(getOrder(orders, 1).getCoupon()).isNull()
         );
-
     }
 
     private static Order getOrder(final List<Order> orders, final int index) {
