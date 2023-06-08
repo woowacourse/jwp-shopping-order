@@ -14,6 +14,7 @@ import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -29,6 +30,7 @@ public class OrderService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public Long save(Member member, OrderRequest orderRequest) {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         List<CartItem> cartItems = cartItemRepository.findByIds(member, cartItemIds);
