@@ -63,7 +63,7 @@ public class CartItemApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItem(Member member, @PathVariable Long id) {
-        cartItemService.removeCartItem(member, id);
+        cartItemService.deleteCartItem(member, id);
 
         return ResponseEntity.noContent().build();
     }
@@ -73,7 +73,7 @@ public class CartItemApiController {
             Member member,
             @Valid @RequestBody CartItemsDeleteRequest cartItemsDeleteRequest
     ) {
-        cartItemService.removeCartItems(member, cartItemsDeleteRequest);
+        cartItemService.deleteCartItems(member, cartItemsDeleteRequest);
 
         return ResponseEntity.noContent().build();
     }

@@ -32,14 +32,6 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        CartItems cartItems = cartItemRepository.findByMemberId(member);
-
-        return cartItems.getCartItems().stream()
-                .map(CartItemResponse::of)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public Long save(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId());
@@ -51,6 +43,22 @@ public class CartItemService {
         }
 
         return cartItemRepository.save(new CartItem(member, product));
+    }
+
+    public List<CartItemResponse> findByMember(Member member) {
+        CartItems cartItems = cartItemRepository.findByMemberId(member);
+
+        return cartItems.getCartItems().stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public TotalPriceAndDeliveryFeeResponse getTotalPriceAndDeliveryFee(Member member, List<Long> cartItemIds) {
+        CartItems cartItems = cartItemRepository.findByMemberAndCartItemIds(member, cartItemIds);
+        Price totalPrice = cartItems.getTotalPrice();
+        DeliveryFee deliveryFee = DeliveryFee.calculate(totalPrice);
+
+        return new TotalPriceAndDeliveryFeeResponse(totalPrice.getValue(), deliveryFee.getValue());
     }
 
     @Transactional
@@ -67,8 +75,7 @@ public class CartItemService {
         cartItemRepository.updateQuantity(updatedCartItem);
     }
 
-    @Transactional
-    public void updateQuantity(Member member, CartItem cartItem, int updateQuantity) {
+    private void updateQuantity(Member member, CartItem cartItem, int updateQuantity) {
         cartItem.checkOwner(member);
 
         if (updateQuantity == 0) {
@@ -81,7 +88,7 @@ public class CartItemService {
     }
 
     @Transactional
-    public void removeCartItem(Member member, Long id) {
+    public void deleteCartItem(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
@@ -89,7 +96,7 @@ public class CartItemService {
     }
 
     @Transactional
-    public void removeCartItems(Member member, CartItemsDeleteRequest cartItemsDeleteRequest) {
+    public void deleteCartItems(Member member, CartItemsDeleteRequest cartItemsDeleteRequest) {
         List<Long> cartItemIds = cartItemsDeleteRequest.getCartItemIds();
         List<CartItem> cartItems = cartItemIds.stream()
                 .map(cartItemRepository::findById)
@@ -103,13 +110,5 @@ public class CartItemService {
         }
 
         cartItemRepository.deleteOrderedCartItem(cartItemIds);
-    }
-
-    public TotalPriceAndDeliveryFeeResponse getTotalPriceAndDeliveryFee(Member member, List<Long> cartItemIds) {
-        CartItems cartItems = cartItemRepository.findByMemberAndCartItemIds(member, cartItemIds);
-        Price totalPrice = cartItems.getTotalPrice();
-        DeliveryFee deliveryFee = DeliveryFee.calculate(totalPrice);
-
-        return new TotalPriceAndDeliveryFeeResponse(totalPrice.getValue(), deliveryFee.getValue());
     }
 }
