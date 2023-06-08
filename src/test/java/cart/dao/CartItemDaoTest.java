@@ -145,7 +145,7 @@ class CartItemDaoTest {
     }
 
     private Member findMemberById(final Long memberId) {
-        return memberDao.getMemberById(1L).orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
+        return memberDao.getMemberById(memberId).orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
     }
 
     private Product createProduct(final String name, final int price, final String imageUrl) {

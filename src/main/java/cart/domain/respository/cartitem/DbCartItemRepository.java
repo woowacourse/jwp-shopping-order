@@ -36,11 +36,6 @@ public class DbCartItemRepository implements CartItemRepository {
     }
 
     @Override
-    public void delete(final Long memberId, final Long productId) {
-        cartItemDao.delete(memberId, productId);
-    }
-
-    @Override
     public void deleteById(final Long id) {
         cartItemDao.deleteById(id);
     }

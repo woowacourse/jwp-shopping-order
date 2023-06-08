@@ -35,18 +35,6 @@ public class OrderResponse {
         );
     }
 
-    public static OrderResponse of(final Long orderId, final List<OrderItemResponse> items,
-        final OrderPrice orderPrice) {
-        return new OrderResponse(
-            orderId,
-            items,
-            orderPrice.getProductPrice(),
-            orderPrice.getDiscountPrice(),
-            orderPrice.getDeliveryFee(),
-            orderPrice.getTotalPrice()
-        );
-    }
-
     public Long getOrderId() {
         return orderId;
     }

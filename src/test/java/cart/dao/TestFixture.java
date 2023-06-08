@@ -12,14 +12,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class TestFixture {
 
-    private JdbcTemplate jdbcTemplate;
     private MemberDao memberDao;
     private ProductDao productDao;
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
 
     public TestFixture(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.memberDao = new MemberDao(jdbcTemplate);
         this.productDao = new ProductDao(jdbcTemplate);
         this.orderDao = new OrderDao(jdbcTemplate);
