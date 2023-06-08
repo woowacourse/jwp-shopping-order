@@ -22,8 +22,4 @@ public class MemberEntity {
     public String getPassword() {
         return password;
     }
-
-    public boolean checkPassword(final String password) {
-        return this.password.equals(password);
-    }
 }

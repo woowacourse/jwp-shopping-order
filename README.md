@@ -51,7 +51,7 @@
 
 ## 피드백 반영 및 리팩터링 목록
 
-- [ ] 사용하지 않는 메소드 삭제
+- [x] 사용하지 않는 메소드 삭제
 - [ ] [모호한 패키지 이름 수정](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218263913)
 - [ ] [Entity 에서 도메인 객체 생성하도록 하기 (도메인 객체가 외부 기술에 의존적이지 않게 함)](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218273156)
 - [ ] [변경에 취약한 도메인 연결 끊기](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218254337)
