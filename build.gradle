@@ -2,9 +2,18 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 sourceCompatibility = '11'
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+configurations {
+    asciidoctorExtensions
+}
 
 repositories {
     mavenCentral()
@@ -14,13 +23,49 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+
+    // Restdocs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
-tasks.named('test') {
+test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+asciidoctor {
+    dependsOn test
+    configurations 'asciidoctorExtensions'
+    baseDirFollowsSourceFile()
+    inputs.dir snippetsDir
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+
+    from file("${asciidoctor.outputDir}")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn copyDocument
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
 }

@@ -1,0 +1,94 @@
+package cart.fixtures;
+
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
+
+import java.util.List;
+
+import cart.domain.product.application.dto.ProductCartItemResponse;
+import cart.domain.product.application.dto.ProductRequest;
+import cart.domain.product.application.dto.ProductResponse;
+import cart.domain.product.domain.Product;
+
+public class ProductFixtures {
+
+    public static class CHICKEN {
+        public static final Long ID = 1L;
+        public static final String NAME = "치킨";
+        public static final int PRICE = 10000;
+        public static final String IMAGE_URL = "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80";
+
+        public static Product DOMAIN() {
+            return new Product(NAME, PRICE, IMAGE_URL);
+        }
+
+        public static Product ENTITY() {
+            return new Product(ID, NAME, PRICE, IMAGE_URL);
+        }
+
+        public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
+        public static final ProductResponse RESPONSE = new ProductResponse(ID, NAME, PRICE, IMAGE_URL);
+    }
+
+    public static class SALAD {
+        public static final Long ID = 2L;
+        public static final String NAME = "샐러드";
+        public static final int PRICE = 20000;
+        public static final String IMAGE_URL = "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80";
+
+        public static Product DOMAIN() {
+            return new Product(NAME, PRICE, IMAGE_URL);
+        }
+
+        public static Product ENTITY() {
+            return new Product(ID, NAME, PRICE, IMAGE_URL);
+        }
+
+        public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
+        public static final ProductResponse RESPONSE = new ProductResponse(ID, NAME, PRICE, IMAGE_URL);
+    }
+
+    public static class PIZZA {
+        public static final Long ID = 3L;
+        public static final String NAME = "피자";
+        public static final int PRICE = 13000;
+        public static final String IMAGE_URL = "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+
+        public static Product ENTITY() {
+            return new Product(ID, NAME, PRICE, IMAGE_URL);
+        }
+    }
+
+    public static class PANCAKE {
+        public static final Long ID = 4L;
+        public static final String NAME = "팬케이크";
+        public static final int PRICE = 8000;
+        public static final String IMAGE_URL = "https://images.unsplash.com/photo-1544726982-b414d58fabaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVEJThDJUFDJUVDJUJDJTgwJUVDJTlEJUI0JUVEJTgxJUFDfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60";
+
+        public static Product ENTITY() {
+            return new Product(ID, NAME, PRICE, IMAGE_URL);
+        }
+
+        public static final ProductResponse RESPONSE = new ProductResponse(ID, NAME, PRICE, IMAGE_URL);
+        public static final ProductCartItemResponse PRODUCT_CART_ITEM_RESPONSE = ProductCartItemResponse.createOnlyProduct(ENTITY());
+    }
+
+    public static class FIRST_PAGING_PRODUCTS {
+        public static final int LIMIT = 3;
+        public static final List<Product> PAGING_PRODUCTS = List.of(
+                PANCAKE.ENTITY(), PIZZA.ENTITY(), SALAD.ENTITY()
+        );
+
+        public static final List<ProductCartItemResponse> PRODUCT_CART_ITEM_RESPONSES = List.of(
+                ProductCartItemResponse.createOnlyProduct(PANCAKE.ENTITY()),
+                ProductCartItemResponse.createOnlyProduct(PIZZA.ENTITY()),
+                ProductCartItemResponse.createContainsCartItem(SALAD.ENTITY(), Dooly_CartItem2.ENTITY())
+        );
+    }
+
+    public static class NEXT_PAGING_PRODUCTS {
+        public static final int LIMIT = 3;
+        public static final List<Product> PAGING_PRODUCTS = List.of(
+                CHICKEN.ENTITY()
+        );
+    }
+}
