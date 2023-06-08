@@ -1,0 +1,4 @@
+### 내 쿠폰함 조회
+GET {{baseUrl}}/users/me/coupons
+Authorization: Basic {{credentials}}
+Content-Type: application/json

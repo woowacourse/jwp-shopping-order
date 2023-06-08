@@ -1,0 +1,28 @@
+### 회원가입
+POST {{baseUrl}}/users/join
+Content-Type: application/json
+
+{
+  "name": "name",
+  "password": "password"
+}
+
+### 로그인
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "name": "name",
+  "password": "password"
+}
+
+> {%
+    client.test("Validate", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json'");
+        client.assert(response.body.token.trim().length > 0);
+    });
+
+    client.log(response.body.token);
+    client.global.set("credentials", response.body.token)
+%}
