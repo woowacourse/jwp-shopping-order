@@ -13,7 +13,7 @@ spring:
   sql:
     init:
       schema-locations: classpath:/schema.sql
-      data-locations:
+      data-locations: classpath:/data.sql
   thymeleaf:
     cache: false
 logging:
