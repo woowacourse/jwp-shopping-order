@@ -73,7 +73,7 @@ public class CartItemDao {
         final List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
-            Long productId = rs.getLong("id");
+            Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -89,7 +89,7 @@ public class CartItemDao {
         }
         return Optional.of(cartItems.get(0));
     }
-    
+
     public void updateQuantity(final CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
