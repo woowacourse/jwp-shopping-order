@@ -1,5 +1,9 @@
 package cart.domain;
 
+import cart.exception.ErrorCode;
+import cart.exception.OrderException;
+import cart.exception.OrderException.InvalidPoint;
+
 public class Point {
     public static final double POINT_POLICY = 0.01;
 
@@ -13,7 +17,10 @@ public class Point {
         return new Point((int) (totalPrice * POINT_POLICY));
     }
 
-    public Point use(Point usedPoint) {
+    public Point use(Point usedPoint) throws InvalidPoint {
+        if (point < usedPoint.point) {
+            throw new OrderException.InvalidPoint(ErrorCode.INVALID_OVER_POINT, this, usedPoint);
+        }
         return new Point(point - usedPoint.point);
     }
 
