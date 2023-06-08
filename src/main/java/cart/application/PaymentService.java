@@ -47,26 +47,50 @@ public class PaymentService {
         this.cartItemDao = cartItemDao;
     }
 
-    // TODO: 2023/06/02 한 메서드가 너무 긴 상태..! 수정 필요
     public Long createPurchaseOrder(Member member, PurchaseOrderRequest purchaseOrderRequest) {
-        List<PurchaseOrderItem> orderItems = getPurchaseOrderItems(purchaseOrderRequest);
-        int payment = getPayment(orderItems);
-        payment -= purchaseOrderRequest.getUsedPoint();
-        int point = SavePointPolicy.calculate(payment);
-
         LocalDateTime now = LocalDateTime.now();
-        Point rewardPoint = new Point(point, now, SavePointPolicy.getExpiredAt(now));
-        PurchaseOrderInfo purchaseOrderInfo = new PurchaseOrderInfo(member, now, payment, purchaseOrderRequest.getUsedPoint());
 
+        List<PurchaseOrderItem> orderItems = getPurchaseOrderItems(purchaseOrderRequest);
+        int payment = getPayment(purchaseOrderRequest, orderItems);
+        Point rewardPoint = getPoint(now, payment);
+
+        PurchaseOrderInfo purchaseOrderInfo = new PurchaseOrderInfo(member, now, payment, purchaseOrderRequest.getUsedPoint());
+        List<UsedPoint> usedPoints = getUsedPoints(member, purchaseOrderRequest);
+        return savePurchaseOrder(member, orderItems, rewardPoint, purchaseOrderInfo, usedPoints);
+    }
+
+    private int getPayment(PurchaseOrderRequest purchaseOrderRequest, List<PurchaseOrderItem> orderItems) {
+        int payment = getAllItemPayment(orderItems);
+        payment -= purchaseOrderRequest.getUsedPoint();
+        return payment;
+    }
+
+    private int getAllItemPayment(List<PurchaseOrderItem> purchaseOrderItems) {
+        return purchaseOrderItems.stream()
+                                 .mapToInt(orderItem ->
+                                         orderItem.getProduct()
+                                                  .getPrice() * orderItem.getQuantity())
+                                 .sum();
+    }
+
+    private static Point getPoint(LocalDateTime now, int payment) {
+        int point = SavePointPolicy.calculate(payment);
+        return new Point(point, now, SavePointPolicy.getExpiredAt(now));
+    }
+
+    private List<UsedPoint> getUsedPoints(Member member, PurchaseOrderRequest purchaseOrderRequest) {
         MemberPoints memberPoints = new MemberPoints(member, memberRewardPointDao.getAllByMemberId(member.getId()));
         List<Point> pointsSnapshot = getPointSnapshot(memberPoints.getPoints());
 
         List<UsedPoint> usedPoints = memberPoints.usedPoint(purchaseOrderRequest.getUsedPoint());
+        updateChangePoints(memberPoints.getPoints(), pointsSnapshot);
+        return usedPoints;
+    }
 
+    private Long savePurchaseOrder(Member member, List<PurchaseOrderItem> orderItems, Point rewardPoint, PurchaseOrderInfo purchaseOrderInfo, List<UsedPoint> usedPoints) {
         PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderInfo, orderItems, usedPoints, rewardPoint);
         Long orderId = savePurchaseOrder(member, purchaseOrder);
         deleteCartItems(member, purchaseOrder.getPurchaseOrderItems());
-        updateChangePoints(memberPoints.getPoints(), pointsSnapshot);
         return orderId;
     }
 
@@ -107,14 +131,6 @@ public class PaymentService {
                        .filter(product -> product.isMatchId(id))
                        .findFirst()
                        .orElseThrow(() -> new PurchaseOrderException("존재하지 않는 상품이 포함되어 있습니다."));
-    }
-
-    private int getPayment(List<PurchaseOrderItem> purchaseOrderItems) {
-        return purchaseOrderItems.stream()
-                                 .mapToInt(orderItem ->
-                                         orderItem.getProduct()
-                                                  .getPrice() * orderItem.getQuantity())
-                                 .sum();
     }
 
     private List<Point> getPointSnapshot(List<Point> points) {
@@ -170,17 +186,6 @@ public class PaymentService {
         }
     }
 
-    private void updateUsedAndRewardPoint(Member member, Long orderId, Point rewardPointByOrder) {
-        List<Point> rewardPointByMember = memberRewardPointDao.getAllByMemberId(member.getId());
-        memberRewardPointDao.deleteById(rewardPointByOrder.getId());
-
-        MemberPoints memberPoints = new MemberPoints(member, rewardPointByMember);
-        List<UsedPoint> usedPoints = orderMemberUsedPointDao.getAllUsedPointByOrderId(orderId);
-        memberPoints.cancelledPoints(usedPoints);
-        memberRewardPointDao.updatePoints(memberPoints.getPoints());
-        orderMemberUsedPointDao.deleteAll(usedPoints);
-    }
-
     private void updatePurchaseOrderStatus(Member member, Long orderId) {
         purchaseOrderDao.findById(orderId)
                         .ifPresent(purchaseOrderInfo -> {
@@ -197,5 +202,16 @@ public class PaymentService {
         if (orderMemberUsedPointDao.isAlreadyUsedReward(rewardPoint.getId())) {
             throw new IllegalArgumentException("해당 주문을 통해 적립된 포인트를 이미 사용해 취소할 수 없습니다.");
         }
+    }
+
+    private void updateUsedAndRewardPoint(Member member, Long orderId, Point rewardPointByOrder) {
+        List<Point> rewardPointByMember = memberRewardPointDao.getAllByMemberId(member.getId());
+        memberRewardPointDao.deleteById(rewardPointByOrder.getId());
+
+        MemberPoints memberPoints = new MemberPoints(member, rewardPointByMember);
+        List<UsedPoint> usedPoints = orderMemberUsedPointDao.getAllUsedPointByOrderId(orderId);
+        memberPoints.cancelledPoints(usedPoints);
+        memberRewardPointDao.updatePoints(memberPoints.getPoints());
+        orderMemberUsedPointDao.deleteAll(usedPoints);
     }
 }
