@@ -11,7 +11,7 @@ public class OrderRequest {
     private List<@Positive(message = "장바구니 아이디가 잘못되었습니다.") Long> cartIds;
     @PositiveOrZero(message = "포인트는 0원 이상 사용할 수 있습니다.")
     private Long point;
-    @PositiveOrZero(message = "아이템을 1개 이상 주문해주세요.")
+    @Positive(message = "아이템을 1개 이상 주문해주세요.")
     private Long totalPrice;
 
     public OrderRequest(List<Long> cartIds, Long point, Long totalPrice) {
