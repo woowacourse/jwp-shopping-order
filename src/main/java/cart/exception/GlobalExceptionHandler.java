@@ -18,8 +18,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalMember.class)
-    public ResponseEntity<Void> handleException(IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<ExceptionDto> handleException(IllegalMember exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ExceptionDto.from(exception));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ExceptionDto.from(exception));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionDto> handleException(Exception exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ExceptionDto.from(exception));
     }
 
