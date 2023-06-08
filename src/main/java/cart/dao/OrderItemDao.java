@@ -36,11 +36,11 @@ public class OrderItemDao {
         return params;
     }
 
-    public void insertAll(final Long orderId, final List<OrderItem> orderItems) {
+    public int[] insertAll(final Long orderId, final List<OrderItem> orderItems) {
         final MapSqlParameterSource[] paramMaps = orderItems.stream()
             .map(orderItem -> generateOrderParamMap(orderId, orderItem))
             .collect(Collectors.toList())
             .toArray(new MapSqlParameterSource[orderItems.size()]);
-        simpleJdbcInsert.executeBatch(paramMaps);
+        return simpleJdbcInsert.executeBatch(paramMaps);
     }
 }
