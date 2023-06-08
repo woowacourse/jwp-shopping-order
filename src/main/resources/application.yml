@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: local
 
 ---
 spring:
@@ -17,6 +17,6 @@ spring:
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: local
   thymeleaf:
     cache: false
