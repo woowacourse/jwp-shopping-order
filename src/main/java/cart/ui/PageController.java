@@ -2,9 +2,13 @@ package cart.ui;
 
 import cart.application.ProductService;
 import cart.dao.MemberDao;
+import cart.ui.dto.product.ProductResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class PageController {
@@ -18,13 +22,16 @@ public class PageController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        final List<ProductResponse> productResponses = productService.getAllProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+        model.addAttribute("products", productResponses);
         return "admin";
     }
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+        model.addAttribute("members", memberDao.findAll());
         return "settings";
     }
 }

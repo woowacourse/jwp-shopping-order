@@ -1,61 +1,80 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
+import cart.domain.member.MemberEmail;
+import cart.domain.member.MemberPassword;
+import cart.domain.member.MemberPoint;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
+@Component
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public MemberDao(JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("member")
+                .usingColumns("email", "password", "point")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public Member getMemberById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    private final RowMapper<Member> memberRowMapper = (rs, rowNum) -> new Member(
+            rs.getLong("id"),
+            new MemberEmail(rs.getString("email")),
+            new MemberPassword(rs.getString("password")),
+            new MemberPoint(rs.getInt("point"))
+    );
+
+    public Long insert(final Member member) {
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("email", member.getEmailValue())
+                .addValue("password", member.getPasswordValue());
+
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Member getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    public Optional<Member> findById(final Long id) {
+        final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    public Optional<Member> findByEmail(final String email) {
+        final String sql = "SELECT id, email, password, point FROM member WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, email));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+    public void update(final Member member) {
+        final String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getEmailValue(), member.getPasswordValue(), member.getPointValue(), member.getId());
     }
 
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
+    public void delete(final Long id) {
+        final String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
-        String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, new MemberRowMapper());
-    }
-
-    private static class MemberRowMapper implements RowMapper<Member> {
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
-        }
+    public List<Member> findAll() {
+        final String sql = "SELECT id, email, password, point FROM member";
+        return jdbcTemplate.query(sql, memberRowMapper);
     }
 }
-

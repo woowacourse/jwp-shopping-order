@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: prod
+
+server:
+  port: 80
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
