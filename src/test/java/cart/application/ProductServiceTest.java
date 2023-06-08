@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.dao.product.ProductDao;
+import cart.domain.product.ProductRepository;
 import cart.dto.product.ProductResponse;
 import cart.exception.customexception.CartException;
 import cart.exception.customexception.ErrorCode;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class ProductServiceTest {
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @InjectMocks
     private ProductService productService;
@@ -31,7 +31,7 @@ public class ProductServiceTest {
     @Test
     void 모든_상품을_조회할_때_상품이_없으면_빈_리스트를_반환한다() {
         // given
-        when(productDao.findAllProducts())
+        when(productRepository.findAllProducts())
                 .thenReturn(Collections.emptyList());
 
         // when
@@ -44,7 +44,7 @@ public class ProductServiceTest {
     @Test
     void 존재하지않는_상품아이디로_상품을_조회할_때_예외를_던진다() {
         // given
-        when(productDao.findProductById(anyLong()))
+        when(productRepository.findProductById(anyLong()))
                 .thenReturn(Optional.empty());
 
         // when, then

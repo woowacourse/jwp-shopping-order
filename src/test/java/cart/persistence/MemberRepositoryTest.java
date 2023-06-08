@@ -1,7 +1,7 @@
-package cart.dao;
+package cart.persistence;
 
-import cart.dao.member.JdbcTemplateMemberDao;
-import cart.dao.member.MemberDao;
+import cart.persistence.member.JdbcTemplateMemberDao;
+import cart.domain.member.MemberRepository;
 import cart.domain.member.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,32 +17,32 @@ import static cart.fixture.MemberFixture.현구막;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-public class MemberDaoTest {
+public class MemberRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {
-        memberDao = new JdbcTemplateMemberDao(jdbcTemplate);
+        memberRepository = new JdbcTemplateMemberDao(jdbcTemplate);
     }
 
     @Test
     void 멤버를_추가하고_이메일로_조회한다() {
         // given, when
-        memberDao.addMember(하디);
+        memberRepository.addMember(하디);
 
         // then
-        assertThat(memberDao.findMemberByEmail(하디.getEmail()).isPresent())
+        assertThat(memberRepository.findMemberByEmail(하디.getEmail()).isPresent())
                 .isTrue();
     }
 
     @Test
     void 멤버를_이메일로_조회할_때_없으면_빈_옵셔널을_반환한다() {
         // given, when
-        Optional<Member> member = memberDao.findMemberByEmail("randomemail@random.com");
+        Optional<Member> member = memberRepository.findMemberByEmail("randomemail@random.com");
 
         // then
         assertThat(member.isEmpty()).isTrue();
@@ -51,18 +51,18 @@ public class MemberDaoTest {
     @Test
     void 멤버를_모두_조회한다() {
         // given, when
-        memberDao.addMember(하디);
-        memberDao.addMember(현구막);
+        memberRepository.addMember(하디);
+        memberRepository.addMember(현구막);
 
         // then
-        assertThat(memberDao.findAllMembers().size())
+        assertThat(memberRepository.findAllMembers().size())
                 .isEqualTo(2);
     }
 
     @Test
     void 전체멤버를_조회할_때_멤버가_없으면_빈_리스트를_반환한다() {
         // given, when
-        List<Member> members = memberDao.findAllMembers();
+        List<Member> members = memberRepository.findAllMembers();
 
         // then
         assertThat(members).isEmpty();
@@ -71,28 +71,28 @@ public class MemberDaoTest {
     @Test
     void 멤버를_업데이트한다() {
         // given
-        memberDao.addMember(하디);
-        Member member = memberDao.findMemberByEmail(하디.getEmail()).get();
+        memberRepository.addMember(하디);
+        Member member = memberRepository.findMemberByEmail(하디.getEmail()).get();
         Member updateMember = new Member(member.getId(), 현구막.getEmail(), 현구막.getPassword());
 
         // when
-        memberDao.updateMember(updateMember);
+        memberRepository.updateMember(updateMember);
 
         // then
-        assertThat(memberDao.findMemberById(member.getId()).get().getEmail())
+        assertThat(memberRepository.findMemberById(member.getId()).get().getEmail())
                 .isEqualTo(updateMember.getEmail());
     }
 
     @Test
     void 멤버를_삭제한다() {
         // given
-        memberDao.addMember(하디);
-        Member member = memberDao.findMemberByEmail(하디.getEmail()).get();
+        memberRepository.addMember(하디);
+        Member member = memberRepository.findMemberByEmail(하디.getEmail()).get();
 
         // when
-        memberDao.deleteMember(member.getId());
+        memberRepository.deleteMember(member.getId());
 
         // then
-        assertThat(memberDao.findMemberByEmail(하디.getEmail()).isEmpty()).isTrue();
+        assertThat(memberRepository.findMemberByEmail(하디.getEmail()).isEmpty()).isTrue();
     }
 }

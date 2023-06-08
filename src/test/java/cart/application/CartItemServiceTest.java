@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.dao.cartitem.CartItemDao;
-import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItemRepository;
+import cart.domain.product.ProductRepository;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
@@ -30,10 +30,10 @@ import static org.mockito.Mockito.when;
 public class CartItemServiceTest {
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Mock
-    private CartItemDao cartItemDao;
+    private CartItemRepository cartItemRepository;
 
     @InjectMocks
     private CartItemService cartItemService;
@@ -42,7 +42,7 @@ public class CartItemServiceTest {
     void 멤버로_장바구니를_조회했을_때_장바구니에_상품이_존재하지_않으면_빈_리스트를_반환한다() {
         // given
         Member member = new Member(1L, 하디.getEmail(), 하디.getPassword());
-        when(cartItemDao.findAllCartItemsByMemberId(anyLong()))
+        when(cartItemRepository.findAllCartItemsByMemberId(anyLong()))
                 .thenReturn(Collections.emptyList());
 
         // when, then
@@ -53,7 +53,7 @@ public class CartItemServiceTest {
     @Test
     void 장바구니에_상품을_추가할_때_없는_상품이라면_예외를_던진다() {
         // given
-        when(productDao.findProductById(anyLong()))
+        when(productRepository.findProductById(anyLong()))
                 .thenReturn(Optional.empty());
         Member member = new Member(1L, 하디.getEmail(), 하디.getPassword());
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
@@ -73,11 +73,11 @@ public class CartItemServiceTest {
         Member member = new Member(1L, 하디.getEmail(), 하디.getPassword());
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
 
-        when(productDao.findProductById(anyLong()))
+        when(productRepository.findProductById(anyLong()))
                 .thenReturn(Optional.of(
                         new Product(1L, 피자.getName(), 피자.getPrice(), 피자.getImageUrl(), 피자.getStock())
                 ));
-        when(cartItemDao.findCartItemByMemberIdAndProductId(anyLong(), anyLong()))
+        when(cartItemRepository.findCartItemByMemberIdAndProductId(anyLong(), anyLong()))
                 .thenReturn(Optional.of(new CartItem(현구막, 피자)));
 
         // when, then

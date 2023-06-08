@@ -1,11 +1,9 @@
-package cart.dao.product;
-
-import cart.domain.product.Product;
+package cart.domain.product;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductDao {
+public interface ProductRepository {
 
     Optional<Product> findProductById(Long productId);
 

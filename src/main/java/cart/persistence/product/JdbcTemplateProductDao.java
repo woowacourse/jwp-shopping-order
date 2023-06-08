@@ -1,6 +1,7 @@
-package cart.dao.product;
+package cart.persistence.product;
 
 import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class JdbcTemplateProductDao implements ProductDao {
+public class JdbcTemplateProductDao implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

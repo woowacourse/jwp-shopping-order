@@ -1,11 +1,9 @@
-package cart.dao.cartitem;
-
-import cart.domain.cartitem.CartItem;
+package cart.domain.cartitem;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CartItemDao {
+public interface CartItemRepository {
 
     Optional<CartItem> findCartItemById(Long id);
 

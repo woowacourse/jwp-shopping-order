@@ -1,10 +1,10 @@
 package cart.application;
 
-import cart.dao.cartitem.CartItemDao;
-import cart.dao.order.OrderDao;
-import cart.dao.order.OrderItemDao;
-import cart.dao.point.PointDao;
-import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItemRepository;
+import cart.domain.order.OrderRepository;
+import cart.domain.order.OrderItemRepository;
+import cart.domain.point.PointRepository;
+import cart.domain.product.ProductRepository;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -30,19 +30,19 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
-    private final PointDao pointDao;
-    private final OrderDao orderDao;
-    private final OrderItemDao orderItemDao;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+    private final PointRepository pointRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final OrderPoint orderPoint;
 
-    public OrderService(CartItemDao cartItemDao, ProductDao productDao, PointDao pointDao, OrderDao orderDao, OrderItemDao orderItemDao, PointPolicy pointPolicy) {
-        this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
-        this.pointDao = pointDao;
-        this.orderDao = orderDao;
-        this.orderItemDao = orderItemDao;
+    public OrderService(CartItemRepository cartItemRepository, ProductRepository productRepository, PointRepository pointRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, PointPolicy pointPolicy) {
+        this.cartItemRepository = cartItemRepository;
+        this.productRepository = productRepository;
+        this.pointRepository = pointRepository;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
         this.orderPoint = new OrderPoint(pointPolicy);
     }
 
@@ -61,7 +61,7 @@ public class OrderService {
 
         // 3. OrderPoint 를 통해 새로운 포인트와 유효기간 계산 후 삽입 [아이디 반환] [총 가격보다, 쓴 포인트가 많으면 예외]
         Point newPoint = orderPoint.earnPoint(member, usePoint, totalPrice, createdAt);
-        Long pointId = pointDao.createPoint(newPoint);
+        Long pointId = pointRepository.createPoint(newPoint);
 
         // 4. CartIds 로 CartItems 조회 [회원의 소유가 아니거나 재고보다 많은 주문량 시 예외]
         List<CartItem> cartItems = findCartItems(member, cartIds);
@@ -74,7 +74,7 @@ public class OrderService {
 
         // 7. Order 객체 생성 후 삽입 [아이디 반환]
         Order order = new Order(member, usePoint, newPoint.getEarnedPoint(), createdAt);
-        Long orderId = orderDao.createOrder(order, pointId);
+        Long orderId = orderRepository.createOrder(order, pointId);
 
         // 8. CartItems 으로 OrderItems 생성 [주문 총가격 checkSum]
         order.addOrderItems(cartItems);
@@ -83,23 +83,23 @@ public class OrderService {
 
         // 9. OrderItem 삽입
         for (OrderItem orderItem : orderItems) {
-            orderItemDao.createOrderItem(orderId, orderItem);
+            orderItemRepository.createOrderItem(orderId, orderItem);
         }
         return orderId;
     }
 
     private void usePoint(Member member, Timestamp createdAt, Long usedPoint) {
-        List<Point> points = pointDao.findAllAvailablePointsByMemberId(member.getId(), createdAt);
+        List<Point> points = pointRepository.findAllAvailablePointsByMemberId(member.getId(), createdAt);
         List<Point> updatePoints = orderPoint.usePoint(usedPoint, points);
         for (Point point : updatePoints) {
-            pointDao.updateLeftPoint(point);
+            pointRepository.updateLeftPoint(point);
         }
     }
 
     private List<CartItem> findCartItems(Member member, List<Long> cartIds) {
         List<CartItem> cartItems = new ArrayList<>();
         for (Long cartId : cartIds) {
-            CartItem cartItem = cartItemDao.findCartItemById(cartId)
+            CartItem cartItem = cartItemRepository.findCartItemById(cartId)
                     .orElseThrow(() -> new CartException(ErrorCode.CART_ITEM_NOT_FOUND));
             if (cartItem.haveNoProduct()) {
                 throw new CartException(ErrorCode.PRODUCT_NOT_FOUND);
@@ -116,7 +116,7 @@ public class OrderService {
             Long productId = cartItem.getProduct().getId();
             Long stock = cartItem.getProduct().getStock();
             Long quantity = cartItem.getQuantity();
-            productDao.updateStock(productId, stock - quantity);
+            productRepository.updateStock(productId, stock - quantity);
         }
     }
 
@@ -124,16 +124,16 @@ public class OrderService {
         List<Long> ids = cartItems.stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
-        cartItemDao.deleteAllIdIn(ids);
+        cartItemRepository.deleteAllIdIn(ids);
     }
 
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Member member, Long orderId) {
-        Order order = orderDao.findOrderById(orderId)
+        Order order = orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new CartException(ErrorCode.ORDER_NOT_FOUND));
         order.checkOwner(member);
 
-        List<OrderItem> orderItems = orderItemDao.findOrderItemsByOrderId(orderId);
+        List<OrderItem> orderItems = orderItemRepository.findOrderItemsByOrderId(orderId);
 
         List<OrderItemResponse> orderItemResponses = orderItems
                 .stream()
@@ -156,9 +156,9 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponse> getOrdersByMember(Member member) {
         List<OrderResponse> orderResponses = new ArrayList<>();
-        List<Order> orders = orderDao.findAllOrdersByMemberId(member.getId());
+        List<Order> orders = orderRepository.findAllOrdersByMemberId(member.getId());
         for (Order order : orders) {
-            List<OrderItem> orderItems = orderItemDao.findOrderItemsByOrderId(order.getId());
+            List<OrderItem> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
             List<OrderItemResponse> orderItemResponses = orderItems
                     .stream()
                     .map(OrderItemResponse::of)

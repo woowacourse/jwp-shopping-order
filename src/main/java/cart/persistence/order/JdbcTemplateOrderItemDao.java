@@ -1,13 +1,14 @@
-package cart.dao.order;
+package cart.persistence.order;
 
 import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItemRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class JdbcTemplateOrderItemDao implements OrderItemDao {
+public class JdbcTemplateOrderItemDao implements OrderItemRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

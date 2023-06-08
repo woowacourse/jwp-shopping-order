@@ -1,6 +1,7 @@
-package cart.dao.member;
+package cart.persistence.member;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcTemplateMemberDao implements MemberDao {
+public class JdbcTemplateMemberDao implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

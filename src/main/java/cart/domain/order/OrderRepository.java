@@ -1,11 +1,9 @@
-package cart.dao.order;
-
-import cart.domain.order.Order;
+package cart.domain.order;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface OrderDao {
+public interface OrderRepository {
 
     Optional<Order> findOrderById(Long id);
 

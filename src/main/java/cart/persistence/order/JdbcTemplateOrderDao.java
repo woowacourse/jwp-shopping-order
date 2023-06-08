@@ -1,7 +1,8 @@
-package cart.dao.order;
+package cart.persistence.order;
 
 import cart.domain.member.Member;
 import cart.domain.order.Order;
+import cart.domain.order.OrderRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -15,7 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class JdbcTemplateOrderDao implements OrderDao {
+public class JdbcTemplateOrderDao implements OrderRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

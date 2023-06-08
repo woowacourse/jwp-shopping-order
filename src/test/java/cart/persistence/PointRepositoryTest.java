@@ -1,9 +1,9 @@
-package cart.dao;
+package cart.persistence;
 
-import cart.dao.member.JdbcTemplateMemberDao;
-import cart.dao.member.MemberDao;
-import cart.dao.point.JdbcTemplatePointDao;
-import cart.dao.point.PointDao;
+import cart.persistence.member.JdbcTemplateMemberDao;
+import cart.domain.member.MemberRepository;
+import cart.persistence.point.JdbcTemplatePointDao;
+import cart.domain.point.PointRepository;
 import cart.domain.member.Member;
 import cart.domain.point.Point;
 import org.assertj.core.api.SoftAssertions;
@@ -21,25 +21,25 @@ import static cart.fixture.MemberFixture.현구막;
 import static cart.fixture.TimestampFixture.*;
 
 @JdbcTest
-public class PointDaoTest {
+public class PointRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MemberDao memberDao;
-    private PointDao pointDao;
+    private MemberRepository memberRepository;
+    private PointRepository pointRepository;
 
     private Member 하디_멤버;
     private Member 현구막_멤버;
 
     @BeforeEach
     void setUp() {
-        this.memberDao = new JdbcTemplateMemberDao(jdbcTemplate);
-        this.pointDao = new JdbcTemplatePointDao(jdbcTemplate);
-        memberDao.addMember(하디);
-        memberDao.addMember(현구막);
-        하디_멤버 = memberDao.findMemberByEmail(하디.getEmail()).get();
-        현구막_멤버 = memberDao.findMemberByEmail(현구막.getEmail()).get();
+        this.memberRepository = new JdbcTemplateMemberDao(jdbcTemplate);
+        this.pointRepository = new JdbcTemplatePointDao(jdbcTemplate);
+        memberRepository.addMember(하디);
+        memberRepository.addMember(현구막);
+        하디_멤버 = memberRepository.findMemberByEmail(하디.getEmail()).get();
+        현구막_멤버 = memberRepository.findMemberByEmail(현구막.getEmail()).get();
     }
 
     @Test
@@ -48,10 +48,10 @@ public class PointDaoTest {
         Point 하디_포인트_1 = new Point(300L, 250L, 하디_멤버, 만료일_1, 생성일_1);
 
         // when
-        Long pointId = pointDao.createPoint(하디_포인트_1);
+        Long pointId = pointRepository.createPoint(하디_포인트_1);
 
         // then
-        List<Point> points = pointDao.findAllAvailablePointsByMemberId(하디_멤버.getId(), 하디_포인트_1.getCreatedAt());
+        List<Point> points = pointRepository.findAllAvailablePointsByMemberId(하디_멤버.getId(), 하디_포인트_1.getCreatedAt());
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(points.size()).isEqualTo(1);
         softAssertions.assertThat(points.get(0).getEarnedPoint()).isEqualTo(하디_포인트_1.getEarnedPoint());
@@ -68,13 +68,13 @@ public class PointDaoTest {
         Point 하디_포인트_1 = new Point(300L, 250L, 하디_멤버, 만료일_1, 생성일_1);
         Point 하디_포인트_2 = new Point(400L, 350L, 하디_멤버, 만료일_2, 생성일_2);
 
-        pointDao.createPoint(하디_포인트_1);
-        Long 하디_포인트_2_아이디 = pointDao.createPoint(하디_포인트_2);
+        pointRepository.createPoint(하디_포인트_1);
+        Long 하디_포인트_2_아이디 = pointRepository.createPoint(하디_포인트_2);
         Timestamp firstPointExpiredAt = 하디_포인트_1.getExpiredAt();
         Timestamp secondPointCreatedAt = 하디_포인트_2.getCreatedAt();
 
         // when
-        List<Point> points = pointDao.findAllAvailablePointsByMemberId(하디_멤버.getId(), secondPointCreatedAt);
+        List<Point> points = pointRepository.findAllAvailablePointsByMemberId(하디_멤버.getId(), secondPointCreatedAt);
 
         // then
         SoftAssertions softAssertions = new SoftAssertions();
@@ -88,10 +88,10 @@ public class PointDaoTest {
     void 남은_포인트가_0이면_조회되지_않는다() {
         // given
         Point 현구막_포인트_1 = new Point(300L, 0L, 현구막_멤버, 만료일_1, 생성일_1);
-        pointDao.createPoint(현구막_포인트_1);
+        pointRepository.createPoint(현구막_포인트_1);
 
         // when
-        List<Point> points = pointDao.findAllAvailablePointsByMemberId(현구막_멤버.getId(), 생성일_1);
+        List<Point> points = pointRepository.findAllAvailablePointsByMemberId(현구막_멤버.getId(), 생성일_1);
 
         // then
         SoftAssertions softAssertions = new SoftAssertions();
@@ -102,14 +102,14 @@ public class PointDaoTest {
     void 남은_포인트를_변경한다() {
         // given
         Point 현구막_포인트_1 = new Point(300L, 300L, 현구막_멤버, 만료일_1, 생성일_1);
-        Long pointId = pointDao.createPoint(현구막_포인트_1);
+        Long pointId = pointRepository.createPoint(현구막_포인트_1);
         Point updatePoint = new Point(pointId, 300L, 1L, 현구막_멤버, 만료일_1, 생성일_1);
 
         // when
-        pointDao.updateLeftPoint(updatePoint);
+        pointRepository.updateLeftPoint(updatePoint);
 
         // then
-        List<Point> points = pointDao.findAllAvailablePointsByMemberId(현구막_멤버.getId(), 생성일_1);
+        List<Point> points = pointRepository.findAllAvailablePointsByMemberId(현구막_멤버.getId(), 생성일_1);
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(points.size()).isEqualTo(1);
         softAssertions.assertThat(points.get(0).getLeftPoint()).isEqualTo(1L);

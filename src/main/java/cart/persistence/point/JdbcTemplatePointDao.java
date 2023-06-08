@@ -1,7 +1,8 @@
-package cart.dao.point;
+package cart.persistence.point;
 
 import cart.domain.member.Member;
 import cart.domain.point.Point;
+import cart.domain.point.PointRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class JdbcTemplatePointDao implements PointDao {
+public class JdbcTemplatePointDao implements PointRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

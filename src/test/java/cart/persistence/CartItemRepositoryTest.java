@@ -1,11 +1,11 @@
-package cart.dao;
+package cart.persistence;
 
-import cart.dao.cartitem.CartItemDao;
-import cart.dao.cartitem.JdbcTemplateCartItemDao;
-import cart.dao.member.JdbcTemplateMemberDao;
-import cart.dao.member.MemberDao;
-import cart.dao.product.JdbcTemplateProductDao;
-import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItemRepository;
+import cart.persistence.cartitem.JdbcTemplateCartItemDao;
+import cart.persistence.member.JdbcTemplateMemberDao;
+import cart.domain.member.MemberRepository;
+import cart.persistence.product.JdbcTemplateProductDao;
+import cart.domain.product.ProductRepository;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
@@ -25,14 +25,14 @@ import static cart.fixture.ProductFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-public class CartItemDaoTest {
+public class CartItemRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MemberDao memberDao;
-    private ProductDao productDao;
-    private CartItemDao cartItemDao;
+    private MemberRepository memberRepository;
+    private ProductRepository productRepository;
+    private CartItemRepository cartItemRepository;
 
     private Long 하디_아이디;
     private Long 현구막_아이디;
@@ -43,18 +43,18 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        memberDao = new JdbcTemplateMemberDao(jdbcTemplate);
-        productDao = new JdbcTemplateProductDao(jdbcTemplate);
-        cartItemDao = new JdbcTemplateCartItemDao(jdbcTemplate);
+        memberRepository = new JdbcTemplateMemberDao(jdbcTemplate);
+        productRepository = new JdbcTemplateProductDao(jdbcTemplate);
+        cartItemRepository = new JdbcTemplateCartItemDao(jdbcTemplate);
 
-        memberDao.addMember(하디);
-        memberDao.addMember(현구막);
-        하디_아이디 = memberDao.findMemberByEmail(하디.getEmail()).get().getId();
-        현구막_아이디 = memberDao.findMemberByEmail(현구막.getEmail()).get().getId();
+        memberRepository.addMember(하디);
+        memberRepository.addMember(현구막);
+        하디_아이디 = memberRepository.findMemberByEmail(하디.getEmail()).get().getId();
+        현구막_아이디 = memberRepository.findMemberByEmail(현구막.getEmail()).get().getId();
 
-        피자_아이디 = productDao.createProduct(피자);
-        샐러드_아이디 = productDao.createProduct(샐러드);
-        치킨_아이디 = productDao.createProduct(치킨);
+        피자_아이디 = productRepository.createProduct(피자);
+        샐러드_아이디 = productRepository.createProduct(샐러드);
+        치킨_아이디 = productRepository.createProduct(치킨);
     }
 
     @Test
@@ -65,13 +65,13 @@ public class CartItemDaoTest {
                 new Product(샐러드_아이디, 샐러드.getName(), 샐러드.getPrice(), 샐러드.getImageUrl(), 피자.getStock()));
 
         // when
-        Long cartItemId = cartItemDao.save(cartItem);
+        Long cartItemId = cartItemRepository.save(cartItem);
 
         // then
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(cartItemDao.findCartItemById(cartItemId))
+        softAssertions.assertThat(cartItemRepository.findCartItemById(cartItemId))
                 .isPresent();
-        softAssertions.assertThat(cartItemDao.findCartItemByMemberIdAndProductId(하디_아이디, 샐러드_아이디))
+        softAssertions.assertThat(cartItemRepository.findCartItemByMemberIdAndProductId(하디_아이디, 샐러드_아이디))
                 .isPresent();
         softAssertions.assertAll();
     }
@@ -85,11 +85,11 @@ public class CartItemDaoTest {
         CartItem secondCartItem = new CartItem(
                 new Member(하디_아이디, 하디.getEmail(), 하디.getPassword()),
                 new Product(치킨_아이디, 치킨.getName(), 치킨.getPrice(), 치킨.getImageUrl(), 치킨.getStock()));
-        Long firstCartItemId = cartItemDao.save(firstCartItem);
-        Long secondCartItemId = cartItemDao.save(secondCartItem);
+        Long firstCartItemId = cartItemRepository.save(firstCartItem);
+        Long secondCartItemId = cartItemRepository.save(secondCartItem);
 
         // when
-        List<CartItem> cartItems = cartItemDao.findAllCartItemsByMemberId(하디_아이디);
+        List<CartItem> cartItems = cartItemRepository.findAllCartItemsByMemberId(하디_아이디);
         List<String> productNames = cartItems.stream()
                 .map(CartItem::getProduct)
                 .map(Product::getName)
@@ -104,7 +104,7 @@ public class CartItemDaoTest {
     @Test
     void 멤버의_장바구니에_아무것도_없을_때_전체상품을_조회하면_빈_리스트를_반환한다() {
         // given, when
-        List<CartItem> cartItems = cartItemDao.findAllCartItemsByMemberId(현구막_아이디);
+        List<CartItem> cartItems = cartItemRepository.findAllCartItemsByMemberId(현구막_아이디);
 
         // then
         assertThat(cartItems).isEmpty();
@@ -116,7 +116,7 @@ public class CartItemDaoTest {
         CartItem cartItem = new CartItem(
                 new Member(하디_아이디, 하디.getEmail(), 하디.getPassword()),
                 new Product(피자_아이디, 피자.getName(), 피자.getPrice(), 피자.getImageUrl(), 피자.getStock()));
-        Long cartItemId = cartItemDao.save(cartItem);
+        Long cartItemId = cartItemRepository.save(cartItem);
 
         Long updateQuantity = 30L;
         CartItem updateCartItem = new CartItem(
@@ -126,10 +126,10 @@ public class CartItemDaoTest {
                 new Product(피자_아이디, 피자.getName(), 피자.getPrice(), 피자.getImageUrl(), 피자.getStock()));
 
         // when
-        cartItemDao.updateQuantity(updateCartItem);
+        cartItemRepository.updateQuantity(updateCartItem);
 
         // then
-        assertThat(cartItemDao.findCartItemById(cartItemId).get().getQuantity())
+        assertThat(cartItemRepository.findCartItemById(cartItemId).get().getQuantity())
                 .isEqualTo(updateQuantity);
     }
 
@@ -139,13 +139,13 @@ public class CartItemDaoTest {
         CartItem cartItem = new CartItem(
                 new Member(하디_아이디, 하디.getEmail(), 하디.getPassword()),
                 new Product(피자_아이디, 피자.getName(), 피자.getPrice(), 피자.getImageUrl(), 피자.getStock()));
-        Long cartItemId = cartItemDao.save(cartItem);
+        Long cartItemId = cartItemRepository.save(cartItem);
 
         // when
-        cartItemDao.deleteById(cartItemId);
+        cartItemRepository.deleteById(cartItemId);
 
         // then
-        assertThat(cartItemDao.findCartItemById(cartItemId).isEmpty()).isTrue();
+        assertThat(cartItemRepository.findCartItemById(cartItemId).isEmpty()).isTrue();
     }
 
     @Test
@@ -154,12 +154,12 @@ public class CartItemDaoTest {
         CartItem cartItem = new CartItem(
                 new Member(하디_아이디, 하디.getEmail(), 하디.getPassword()),
                 new Product(피자_아이디, 피자.getName(), 피자.getPrice(), 피자.getImageUrl(), 피자.getStock()));
-        Long cartItemId = cartItemDao.save(cartItem);
+        Long cartItemId = cartItemRepository.save(cartItem);
 
         // when
-        cartItemDao.delete(하디_아이디, 피자_아이디);
+        cartItemRepository.delete(하디_아이디, 피자_아이디);
 
         // then
-        assertThat(cartItemDao.findCartItemById(cartItemId).isEmpty()).isTrue();
+        assertThat(cartItemRepository.findCartItemById(cartItemId).isEmpty()).isTrue();
     }
 }

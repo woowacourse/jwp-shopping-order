@@ -1,7 +1,7 @@
 package cart.config;
 
 import cart.application.AuthService;
-import cart.dao.member.MemberDao;
+import cart.domain.member.MemberRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -16,9 +16,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberBasicAuthInterceptor memberBasicAuthInterceptor;
     private final MemberArgumentResolver memberArgumentResolver;
 
-    public WebMvcConfig(AuthService authService, MemberDao memberDao) {
+    public WebMvcConfig(AuthService authService, MemberRepository memberRepository) {
         this.memberBasicAuthInterceptor = new MemberBasicAuthInterceptor(authService);
-        this.memberArgumentResolver = new MemberArgumentResolver(memberDao);
+        this.memberArgumentResolver = new MemberArgumentResolver(memberRepository);
     }
 
     @Override

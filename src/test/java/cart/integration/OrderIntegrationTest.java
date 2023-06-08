@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.dao.member.MemberDao;
-import cart.dao.product.ProductDao;
+import cart.domain.member.MemberRepository;
+import cart.domain.product.ProductRepository;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
@@ -31,10 +31,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     private Member 멤버_하디;
     private Member 멤버_현구막;
@@ -249,10 +249,10 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     private void 테스트_멤버_추가() {
         // 멤버 추가를 위한 API가 존재하지 않음
-        memberDao.addMember(하디);
-        멤버_하디 = memberDao.findMemberByEmail(하디.getEmail()).get();
-        memberDao.addMember(현구막);
-        멤버_현구막 = memberDao.findMemberByEmail(현구막.getEmail()).get();
+        memberRepository.addMember(하디);
+        멤버_하디 = memberRepository.findMemberByEmail(하디.getEmail()).get();
+        memberRepository.addMember(현구막);
+        멤버_현구막 = memberRepository.findMemberByEmail(현구막.getEmail()).get();
     }
 
     private void 테스트_상품_추가() {
@@ -263,9 +263,9 @@ public class OrderIntegrationTest extends IntegrationTest {
         Long 샐러드_아이디 = Long.valueOf(상품_추가(샐러드_생성_요청).header("Location").split("/")[2]);
         Long 치킨_아이디 = Long.valueOf(상품_추가(치킨_생성_요청).header("Location").split("/")[2]);
 
-        상품_피자 = productDao.findProductById(피자_아이디).get();
-        상품_샐러드 = productDao.findProductById(샐러드_아이디).get();
-        상품_치킨 = productDao.findProductById(치킨_아이디).get();
+        상품_피자 = productRepository.findProductById(피자_아이디).get();
+        상품_샐러드 = productRepository.findProductById(샐러드_아이디).get();
+        상품_치킨 = productRepository.findProductById(치킨_아이디).get();
     }
 
     private void 테스트_장바구니에_아이템_추가() {

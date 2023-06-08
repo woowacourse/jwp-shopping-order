@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.dao.product.ProductDao;
+import cart.domain.product.ProductRepository;
 import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.findAllProducts();
+        List<Product> products = productRepository.findAllProducts();
         return products.stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
@@ -31,7 +31,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.findProductById(productId)
+        Product product = productRepository.findProductById(productId)
                 .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
         return ProductResponse.of(product);
     }
@@ -43,7 +43,7 @@ public class ProductService {
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
                 productRequest.getStock());
-        return productDao.createProduct(product);
+        return productRepository.createProduct(product);
     }
 
     @Transactional
@@ -53,11 +53,11 @@ public class ProductService {
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
                 productRequest.getStock());
-        productDao.updateProduct(productId, product);
+        productRepository.updateProduct(productId, product);
     }
 
     @Transactional
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productRepository.deleteProduct(productId);
     }
 }

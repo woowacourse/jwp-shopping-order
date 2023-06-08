@@ -1,11 +1,9 @@
-package cart.dao.point;
-
-import cart.domain.point.Point;
+package cart.domain.point;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface PointDao {
+public interface PointRepository {
 
     List<Point> findAllAvailablePointsByMemberId(Long memberId, Timestamp boundary);
 

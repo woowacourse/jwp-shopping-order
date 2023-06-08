@@ -1,7 +1,6 @@
 package cart.config;
 
-import cart.application.AuthService;
-import cart.dao.member.MemberDao;
+import cart.domain.member.MemberRepository;
 import cart.domain.member.Member;
 import cart.exception.customexception.CartException;
 import cart.exception.customexception.ErrorCode;
@@ -17,10 +16,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     public static final String BASIC = "Basic";
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -36,6 +35,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         String[] emailAndPasswordWithDecryption = auth.split(":");
         String email = emailAndPasswordWithDecryption[0];
-        return memberDao.findMemberByEmail(email).orElseThrow(() -> new CartException(ErrorCode.MEMBER_NOT_FOUND));
+        return memberRepository.findMemberByEmail(email).orElseThrow(() -> new CartException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }

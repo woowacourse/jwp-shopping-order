@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.dao.point.PointDao;
+import cart.domain.point.PointRepository;
 import cart.domain.member.Member;
 import cart.domain.point.Point;
 import cart.domain.point.PointPolicy;
@@ -15,11 +15,11 @@ import java.sql.Timestamp;
 @Service
 public class MemberService {
 
-    private final PointDao pointDao;
+    private final PointRepository pointRepository;
     private final PointPolicy pointPolicy;
 
-    public MemberService(PointDao pointDao, PointPolicy pointPolicy) {
-        this.pointDao = pointDao;
+    public MemberService(PointRepository pointRepository, PointPolicy pointPolicy) {
+        this.pointRepository = pointRepository;
         this.pointPolicy = pointPolicy;
     }
 
@@ -27,7 +27,7 @@ public class MemberService {
     public MemberResponse getMemberInfo(Member member) {
         Timestamp createdAt = TimestampGenerator.getCurrentTime(Region.KOREA);
 
-        long point = pointDao.findAllAvailablePointsByMemberId(member.getId(), createdAt)
+        long point = pointRepository.findAllAvailablePointsByMemberId(member.getId(), createdAt)
                 .stream()
                 .mapToLong(Point::getLeftPoint)
                 .sum();

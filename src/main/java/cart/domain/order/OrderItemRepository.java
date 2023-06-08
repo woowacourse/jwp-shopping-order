@@ -1,10 +1,8 @@
-package cart.dao.order;
-
-import cart.domain.order.OrderItem;
+package cart.domain.order;
 
 import java.util.List;
 
-public interface OrderItemDao {
+public interface OrderItemRepository {
 
     List<OrderItem> findOrderItemsByOrderId(Long orderId);
 

@@ -2,8 +2,8 @@ package cart.ui.api;
 
 import cart.application.AuthService;
 import cart.application.CartItemService;
-import cart.dao.member.JdbcTemplateMemberDao;
-import cart.dao.member.MemberDao;
+import cart.persistence.member.JdbcTemplateMemberDao;
+import cart.domain.member.MemberRepository;
 import cart.domain.member.Member;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
@@ -58,7 +58,7 @@ public class CartItemApiControllerTest {
         }
 
         @Bean
-        public MemberDao memberDao() {
+        public MemberRepository memberDao() {
             return new JdbcTemplateMemberDao(jdbcTemplate());
         }
 
@@ -72,7 +72,7 @@ public class CartItemApiControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -82,13 +82,13 @@ public class CartItemApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        memberDao.addMember(하디);
+        memberRepository.addMember(하디);
     }
 
     @AfterEach
     void clear() {
-        하디_멤버 = memberDao.findMemberByEmail(하디.getEmail()).get();
-        memberDao.deleteMember(하디_멤버.getId());
+        하디_멤버 = memberRepository.findMemberByEmail(하디.getEmail()).get();
+        memberRepository.deleteMember(하디_멤버.getId());
     }
 
     @Test

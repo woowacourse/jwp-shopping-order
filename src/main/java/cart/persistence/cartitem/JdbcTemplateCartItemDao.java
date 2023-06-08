@@ -1,6 +1,7 @@
-package cart.dao.cartitem;
+package cart.persistence.cartitem;
 
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItemRepository;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +15,7 @@ import java.sql.Statement;
 import java.util.*;
 
 @Repository
-public class JdbcTemplateCartItemDao implements CartItemDao {
+public class JdbcTemplateCartItemDao implements CartItemRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

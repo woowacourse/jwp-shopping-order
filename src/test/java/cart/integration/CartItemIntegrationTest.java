@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.dao.member.MemberDao;
-import cart.dao.product.ProductDao;
+import cart.domain.member.MemberRepository;
+import cart.domain.product.ProductRepository;
 import cart.domain.member.Member;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
@@ -29,10 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     private Long 치킨_아이디;
     private Long 피자_아이디;
@@ -43,12 +43,12 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        치킨_아이디 = productDao.createProduct(치킨);
-        피자_아이디 = productDao.createProduct(피자);
-        memberDao.addMember(하디);
-        memberDao.addMember(현구막);
-        멤버_하디 = memberDao.findMemberByEmail(하디.getEmail()).get();
-        멤버_현구막 = memberDao.findMemberByEmail(현구막.getEmail()).get();
+        치킨_아이디 = productRepository.createProduct(치킨);
+        피자_아이디 = productRepository.createProduct(피자);
+        memberRepository.addMember(하디);
+        memberRepository.addMember(현구막);
+        멤버_하디 = memberRepository.findMemberByEmail(하디.getEmail()).get();
+        멤버_현구막 = memberRepository.findMemberByEmail(현구막.getEmail()).get();
     }
 
     @Test

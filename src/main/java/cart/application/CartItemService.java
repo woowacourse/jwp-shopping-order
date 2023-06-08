@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.dao.cartitem.CartItemDao;
-import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItemRepository;
+import cart.domain.product.ProductRepository;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 @Service
 public class CartItemService {
 
-    private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+        this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findAllCartItemsByMemberId(member.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllCartItemsByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
@@ -37,39 +37,39 @@ public class CartItemService {
 
     @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.findProductById(cartItemRequest.getProductId())
+        Product product = productRepository.findProductById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new CartException(ErrorCode.PRODUCT_NOT_FOUND));
-        cartItemDao.findCartItemByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId())
+        cartItemRepository.findCartItemByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId())
                 .ifPresent(cartItem -> {
                     throw new CartException(ErrorCode.CART_ITEM_DUPLICATED);
                 });
-        return cartItemDao.save(new CartItem(member, product));
+        return cartItemRepository.save(new CartItem(member, product));
     }
 
     @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findCartItemById(id)
+        CartItem cartItem = cartItemRepository.findCartItemById(id)
                 .orElseThrow(() -> new CartException(ErrorCode.CART_ITEM_NOT_FOUND));
         cartItem.checkOwner(member);
         if (cartItem.haveNoProduct()) {
             throw new CartException(ErrorCode.PRODUCT_NOT_FOUND);
         }
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(id);
             return;
         }
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
     @Transactional
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findCartItemById(id)
+        CartItem cartItem = cartItemRepository.findCartItemById(id)
                 .orElseThrow(() -> new CartException(ErrorCode.CART_ITEM_NOT_FOUND));
         if (cartItem.haveNoProduct()) {
             throw new CartException(ErrorCode.PRODUCT_NOT_FOUND);
         }
         cartItem.checkOwner(member);
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(id);
     }
 }

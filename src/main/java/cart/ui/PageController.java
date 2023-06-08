@@ -1,9 +1,8 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dao.member.MemberDao;
+import cart.domain.member.MemberRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -11,11 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class PageController {
 
     private final ProductService productService;
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public PageController(ProductService productService, MemberDao memberDao) {
+    public PageController(ProductService productService, MemberRepository memberRepository) {
         this.productService = productService;
-        this.memberDao = memberDao;
+        this.memberRepository = memberRepository;
     }
 
     @GetMapping("/admin")
@@ -28,7 +27,7 @@ public class PageController {
     @GetMapping("/settings")
     public ModelAndView members() {
         ModelAndView modelAndView = new ModelAndView("settings");
-        modelAndView.addObject("members", memberDao.findAllMembers());
+        modelAndView.addObject("members", memberRepository.findAllMembers());
         return modelAndView;
     }
 }
