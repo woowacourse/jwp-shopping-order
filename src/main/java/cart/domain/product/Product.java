@@ -23,7 +23,7 @@ public class Product {
     }
 
     public Price calculatePrice(final Quantity quantity) {
-        return price.multi(quantity.getValue());
+        return price.multiply(quantity.getValue());
     }
 
     public Long getId() {

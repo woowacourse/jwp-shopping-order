@@ -18,7 +18,7 @@ public class Price {
         return new Price(value - other.value);
     }
 
-    public Price multi(final Integer value) {
+    public Price multiply(final Integer value) {
         return new Price(value * this.value);
     }
 
