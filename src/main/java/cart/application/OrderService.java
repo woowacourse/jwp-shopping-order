@@ -32,12 +32,12 @@ public class OrderService {
     public Long save(Member member, OrderRequest orderRequest) {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         List<CartItem> cartItems = cartItemRepository.findByIds(member, cartItemIds);
-        List<OrderItem> orderItems = findOrderItems(cartItems);
+        List<OrderItem> orderItems = convertToOrderItems(cartItems);
 
         Point usedPoint = new Point(orderRequest.getPoint());
         member.usePoint(usedPoint);
 
-        int totalPrice = calculateTotalPoint(orderItems);
+        int totalPrice = calculateTotalPrice(orderItems);
         Point savedPoint = Point.calcualtePoint(totalPrice);
         member.savePoint(savedPoint);
 
@@ -66,13 +66,13 @@ public class OrderService {
         return convertToResponse(order);
     }
 
-    private int calculateTotalPoint(List<OrderItem> orderItems) {
+    private int calculateTotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .mapToInt(OrderItem::calculatePrice)
                 .sum();
     }
 
-    private List<OrderItem> findOrderItems(List<CartItem> cartItems) {
+    private List<OrderItem> convertToOrderItems(List<CartItem> cartItems) {
         return cartItems.stream()
                 .map(cartItem -> new OrderItem(
                         cartItem.getProduct(),
