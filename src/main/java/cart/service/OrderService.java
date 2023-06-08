@@ -4,10 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.coupon.CouponBoxDao;
 import cart.dao.coupon.CouponDao;
 import cart.domain.*;
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Coupons;
-import cart.domain.coupon.ProductCoupon;
-import cart.domain.coupon.SingleCoupon;
+import cart.domain.coupon.*;
 import cart.domain.order.Order;
 import cart.domain.order.OrderCartItem;
 import cart.dto.order.OrderRequest;
@@ -71,7 +68,7 @@ public class OrderService {
     }
 
     private Order makeOrder(Member member, List<Long> notNullCouponIds, List<CartItem> cartItems) {
-        if (notNullCouponIds.size() == 0) {
+        if (notNullCouponIds.isEmpty()) {
             List<OrderCartItem> orderCartItems = notApplyCoupon(cartItems);
             return new Order(orderCartItems);
         }
@@ -84,10 +81,10 @@ public class OrderService {
 
         Coupons coupons = new Coupons(usingCoupons);
 
-        List<Coupon> productCoupons = coupons.findCoupons(ProductCoupon.CATEGORY);
+        List<Coupon> productCoupons = coupons.findCoupons(Category.ALL);
         List<OrderCartItem> orderCartItems = applyProductCoupon(cartItems, productCoupons);
 
-        List<Coupon> singleCoupons = coupons.findCoupons(SingleCoupon.CATEGORY);
+        List<Coupon> singleCoupons = coupons.findCoupons(Category.SINGLE);
         return selectOrder(orderCartItems, singleCoupons);
     }
 
@@ -111,7 +108,7 @@ public class OrderService {
     }
 
     private Order selectOrder(List<OrderCartItem> orderCartItems, List<Coupon> singleCoupons) {
-        if (singleCoupons.size() == 0) {
+        if (singleCoupons.isEmpty()) {
             return new Order(orderCartItems);
         }
 
@@ -123,7 +120,7 @@ public class OrderService {
     }
 
     private List<OrderCartItem> applyProductCoupon(List<CartItem> cartItems, List<Coupon> productCoupons) {
-        if (productCoupons.size() == 0) {
+        if (productCoupons.isEmpty()) {
             return notApplyCoupon(cartItems);
         }
 

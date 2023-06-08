@@ -4,6 +4,8 @@ import cart.domain.value.Price;
 
 public interface Coupon {
 
+    boolean isSupport(Category category);
+
     Price apply(Price price);
 
     Long getId();
@@ -14,6 +16,6 @@ public interface Coupon {
 
     int getDiscountValue();
 
-    String getCategory();
+    Category getCategory();
 
 }

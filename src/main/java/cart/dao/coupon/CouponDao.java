@@ -1,5 +1,6 @@
 package cart.dao.coupon;
 
+import cart.domain.coupon.Category;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponResolver;
 import cart.domain.disount.DiscountPolicy;
@@ -30,7 +31,7 @@ public class CouponDao {
         int discountValue = rs.getInt("discount_value");
         String category = rs.getString("category");
         DiscountPolicy discountPolicy = DiscountPolicyResolver.of(discountPolicyName, discountValue);
-        return CouponResolver.of (id, name, discountPolicy, category);
+        return CouponResolver.of(id, name, discountPolicy, Category.valueOf(category.toUpperCase()));
     };
 
     public Coupon getCouponById(Long id) {
@@ -46,7 +47,7 @@ public class CouponDao {
             ps.setString(1, coupon.getName());
             ps.setString(2, coupon.getDiscountPolicyName());
             ps.setInt(3, coupon.getDiscountValue());
-            ps.setString(4, coupon.getCategory());
+            ps.setString(4, coupon.getCategory().name().toLowerCase());
             return ps;
         }, keyHolder);
 

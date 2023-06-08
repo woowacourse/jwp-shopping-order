@@ -6,7 +6,7 @@ import cart.domain.disount.DiscountPolicy;
 import java.util.Objects;
 
 public class ProductCoupon implements Coupon {
-    public static final String CATEGORY = "all";
+    private static final Category CATEGORY = Category.ALL;
     private final Long id;
     private final String name;
     private final DiscountPolicy discountPolicy;
@@ -61,7 +61,12 @@ public class ProductCoupon implements Coupon {
     }
 
     @Override
-    public String getCategory() {
+    public Category getCategory() {
         return CATEGORY;
+    }
+
+    @Override
+    public boolean isSupport(Category category) {
+        return this.CATEGORY == category;
     }
 }

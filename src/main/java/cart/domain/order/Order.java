@@ -1,8 +1,8 @@
 package cart.domain.order;
 
+import cart.domain.coupon.Category;
 import cart.domain.value.Price;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.SingleCoupon;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -16,7 +16,7 @@ public class Order {
 
     public Order(List<OrderCartItem> orderCartItems, Coupon coupon) {
         this.orderCartItems = orderCartItems;
-        if (coupon != null && !coupon.getCategory().equals(SingleCoupon.CATEGORY)) {
+        if (coupon != null && !coupon.isSupport(Category.SINGLE)) {
             throw new IllegalArgumentException("지원하지 않는 쿠폰입니다.");
         }
         this.coupon = coupon;

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class SingleCoupon implements Coupon {
 
-    public static final String CATEGORY = "single";
+    private static final Category CATEGORY = Category.SINGLE;
     private final Long id;
     private final String name;
     private final DiscountPolicy discountPolicy;
@@ -61,8 +61,13 @@ public class SingleCoupon implements Coupon {
     }
 
     @Override
-    public String getCategory() {
+    public Category getCategory() {
         return CATEGORY;
+    }
+
+    @Override
+    public boolean isSupport(Category category) {
+        return this.CATEGORY == category;
     }
 
 }

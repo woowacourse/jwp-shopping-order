@@ -1,9 +1,9 @@
 package cart.domain.order;
 
 import cart.domain.CartItem;
+import cart.domain.coupon.Category;
 import cart.domain.value.Price;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.ProductCoupon;
 
 public class OrderCartItem {
     private final CartItem cartItem;
@@ -11,7 +11,7 @@ public class OrderCartItem {
 
     public OrderCartItem(CartItem cartItem, Coupon coupon) {
         this.cartItem = cartItem;
-        if (coupon != null && !coupon.getCategory().equals(ProductCoupon.CATEGORY)) {
+        if (coupon != null && !coupon.isSupport(Category.ALL)) {
             throw new IllegalArgumentException("지원하지 않는 쿠폰입니다.");
         }
         this.coupon = coupon;
