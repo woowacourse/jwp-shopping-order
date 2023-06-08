@@ -7,6 +7,7 @@ import cart.dao.entity.OrderItemEntity;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 import cart.exception.CouponException;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,28 +58,21 @@ public class OrderRepository {
     private Order createOrder(final OrderEntity foundOrder,
                               final List<OrderItemEntity> foundOrderItems,
                               final Long couponId) {
+        final List<OrderItem> orderItems = OrderItemEntity.createAll(foundOrderItems);
         if (Objects.nonNull(couponId)) {
             final Coupon foundCoupon = couponRepository.findById(couponId)
                     .orElseThrow(() -> new IllegalStateException("illegal data exists in table ORDERS; coupon_id"));
-            return Order.of(foundOrder, foundOrderItems, foundCoupon);
+            return foundOrder.create(orderItems, foundCoupon);
         }
-        return Order.of(foundOrder, foundOrderItems);
+        return foundOrder.create(orderItems);
     }
 
     public Optional<Order> findById(final Long orderId) {
-        final Optional<OrderEntity> foundResult = orderDao.findById(orderId);
-        if (foundResult.isEmpty()) {
-            return Optional.empty();
-        }
-        final OrderEntity foundOrder = foundResult.get();
-        final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(orderId);
-        final Long couponId = foundOrder.getCouponId();
-        if (Objects.nonNull(couponId)) {
-            final Coupon foundCoupon = couponRepository.findById(couponId)
-                    .orElseThrow(() -> new IllegalStateException("illegal data exists in table ORDERS; coupon_id"));
-            return Optional.of(Order.of(foundOrder, foundOrderItems, foundCoupon));
-        }
-        return Optional.of(Order.of(foundOrder, foundOrderItems));
+        return orderDao.findById(orderId)
+                .map(orderEntity -> createOrder(
+                        orderEntity,
+                        orderItemDao.findByOrderId(orderId),
+                        orderEntity.getCouponId()));
     }
 
     public void remove(final Long orderId) {

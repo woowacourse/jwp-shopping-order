@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.dao.entity.CouponEntity;
 import cart.exception.CouponException;
 
 public class Coupon {
@@ -10,7 +9,7 @@ public class Coupon {
     private final CouponType couponType;
     private final boolean isUsed;
 
-    private Coupon(final Long id, final Member member, final CouponType couponType, final boolean isUsed) {
+    public Coupon(final Long id, final Member member, final CouponType couponType, final boolean isUsed) {
         this.id = id;
         this.member = member;
         this.couponType = couponType;
@@ -19,13 +18,6 @@ public class Coupon {
 
     public Coupon(final Long id, final Member member) {
         this(id, member, null, false);
-    }
-
-    public static Coupon of(final CouponEntity coupon, final CouponType couponType) {
-        return new Coupon(coupon.getId(),
-                new Member(coupon.getMemberId()),
-                couponType,
-                coupon.isUsed());
     }
 
     public Money discount(final Money price) {

@@ -53,7 +53,7 @@
 
 - [x] 사용하지 않는 메소드 삭제
 - [x] [모호한 패키지 구조 변경](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218263913)
-- [ ] [Entity 에서 도메인 객체 생성하도록 하기 (도메인 객체가 외부 기술에 의존적이지 않게 함)](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218273156)
+- [x] [Entity 에서 도메인 객체 생성하도록 하기 (도메인 객체가 외부 기술에 의존적이지 않게 함)](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218273156)
 - [ ] [변경에 취약한 도메인 연결 끊기](https://github.com/woowacourse/jwp-shopping-order/pull/47#discussion_r1218254337)
 - [ ] 단위 테스트 추가
 - [ ] API 문서 자동화

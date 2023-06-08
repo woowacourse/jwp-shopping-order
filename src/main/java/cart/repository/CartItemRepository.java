@@ -6,7 +6,6 @@ import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
 import cart.exception.CartItemException;
 import cart.exception.ProductException;
 import java.util.List;
@@ -35,7 +34,7 @@ public class CartItemRepository {
     public CartItem create(final Member member, final Long productId) {
         final ProductEntity product = productDao.findById(productId)
                 .orElseThrow(() -> new ProductException.IllegalId(productId));
-        return new CartItem(member, Product.from(product));
+        return new CartItem(member, product.create());
     }
 
     private void validateDuplicate(final Long memberId, final Long productId) {
@@ -52,20 +51,14 @@ public class CartItemRepository {
     }
 
     public Optional<CartItem> findById(final Long id) {
-        final Optional<CartItemEntity> foundCartItem = cartItemDao.findById(id);
-        if (foundCartItem.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(convert(foundCartItem.get()));
+        return cartItemDao.findById(id)
+                .map(this::convert);
     }
 
     private CartItem convert(final CartItemEntity foundCartItem) {
         final ProductEntity foundProduct = productDao.findById(foundCartItem.getProductId())
                 .orElseThrow(() -> new IllegalStateException("illegal data exists in table CART_ITEM; product_id"));
-        return new CartItem(foundCartItem.getId(), new Member(foundCartItem.getMemberId()),
-                Product.from(foundProduct),
-                foundCartItem.getQuantity()
-        );
+        return foundCartItem.create(foundProduct.create());
     }
 
     public void update(final CartItem cartItem) {

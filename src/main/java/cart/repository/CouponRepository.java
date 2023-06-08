@@ -24,12 +24,8 @@ public class CouponRepository {
     }
 
     public Optional<Coupon> findById(final Long id) {
-        final Optional<CouponEntity> foundCoupon = couponDao.findById(id);
-        if (foundCoupon.isEmpty()) {
-            return Optional.empty();
-        }
-        final CouponTypeEntity couponType = findCouponType(foundCoupon.get().getCouponTypeId());
-        return Optional.of(Coupon.of(foundCoupon.get(), CouponType.from(couponType)));
+        return couponDao.findById(id)
+                .map(couponEntity -> couponEntity.create(findCouponType(couponEntity.getCouponTypeId())));
     }
 
     public void updateStatus(final Coupon coupon) {
@@ -40,13 +36,13 @@ public class CouponRepository {
         final List<CouponEntity> coupons = couponDao.findByMember(member.getId());
         return coupons.stream()
                 .filter(coupon -> !coupon.isUsed())
-                .map(coupon -> Coupon.of(coupon, CouponType.from(findCouponType(coupon.getCouponTypeId()))))
+                .map(coupon -> coupon.create(findCouponType(coupon.getCouponTypeId())))
                 .collect(Collectors.toList());
     }
 
-    private CouponTypeEntity findCouponType(final Long id) {
+    private CouponType findCouponType(final Long id) {
         final CouponTypeEntity couponType = couponTypeDao.findById(id)
                 .orElseThrow(() -> new IllegalStateException("illegal data exists in table COUPON; coupon_type_id"));
-        return couponType;
+        return couponType.create();
     }
 }

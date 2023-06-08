@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.dao.entity.MemberEntity;
-
 public class Member {
     private final Long id;
     private final String email;
@@ -15,13 +13,6 @@ public class Member {
 
     public Member(final long id) {
         this(id, null, null);
-    }
-
-    public static Member from(final MemberEntity member) {
-        return new Member(
-                member.getId(),
-                member.getEmail(),
-                member.getPassword());
     }
 
     public Long getId() {

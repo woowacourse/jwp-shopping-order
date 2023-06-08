@@ -1,5 +1,6 @@
 package cart.dao.entity;
 
+import cart.domain.Money;
 import cart.domain.OrderItem;
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +50,16 @@ public class OrderItemEntity {
         return orderItems.stream()
                 .map(orderItem -> OrderItemEntity.of(orderId, orderItem))
                 .collect(Collectors.toList());
+    }
+
+    public static List<OrderItem> createAll(final List<OrderItemEntity> orderItemEntities) {
+        return orderItemEntities.stream()
+                .map(OrderItemEntity::create)
+                .collect(Collectors.toList());
+    }
+
+    public OrderItem create() {
+        return new OrderItem(id, name, new Money(price), imageUrl, quantity);
     }
 
     public Long getId() {

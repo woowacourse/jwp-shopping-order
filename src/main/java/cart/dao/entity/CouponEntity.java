@@ -1,6 +1,8 @@
 package cart.dao.entity;
 
 import cart.domain.Coupon;
+import cart.domain.CouponType;
+import cart.domain.Member;
 
 public class CouponEntity {
 
@@ -26,7 +28,11 @@ public class CouponEntity {
                 used.getCouponType().getId(),
                 used.isUsed());
     }
-    
+
+    public Coupon create(final CouponType couponType) {
+        return new Coupon(id, new Member(memberId), couponType, isUsed);
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.dao.entity.OrderEntity;
-import cart.dao.entity.OrderItemEntity;
 import cart.exception.OrderException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,13 +16,13 @@ public class Order {
 
     private final Timestamp createdAt;
 
-    private Order(final Long id,
-                  final Member member,
-                  final Coupon coupon,
-                  final Money deliveryFee,
-                  final OrderStatus status,
-                  final List<OrderItem> orderItems,
-                  final Timestamp createdAt) {
+    public Order(final Long id,
+                 final Member member,
+                 final Coupon coupon,
+                 final Money deliveryFee,
+                 final OrderStatus status,
+                 final List<OrderItem> orderItems,
+                 final Timestamp createdAt) {
         this.id = id;
         this.member = member;
         this.coupon = coupon;
@@ -39,29 +37,6 @@ public class Order {
                  final Money deliveryFee,
                  final List<OrderItem> orderItems) {
         this(null, member, coupon, deliveryFee, cart.domain.OrderStatus.COMPLETE, orderItems, null);
-    }
-
-    public static Order of(final OrderEntity order,
-                           final List<OrderItemEntity> orderItems,
-                           final Coupon coupon) {
-        return new Order(order.getId(),
-                new Member(order.getMemberId()),
-                coupon,
-                new Money(order.getDeliveryFee()),
-                OrderStatus.find(order.getStatus()),
-                OrderItem.from(orderItems),
-                order.getCreatedAt());
-    }
-
-    public static Order of(final OrderEntity order,
-                           final List<OrderItemEntity> orderItems) {
-        return new Order(order.getId(),
-                new Member(order.getMemberId()),
-                null,
-                new Money(order.getDeliveryFee()),
-                OrderStatus.find(order.getStatus()),
-                OrderItem.from(orderItems),
-                order.getCreatedAt());
     }
 
     public void checkTotalPrice(final Money totalPrice) {

@@ -1,5 +1,9 @@
 package cart.dao.entity;
 
+import cart.domain.CouponType;
+import cart.domain.DiscountType;
+import cart.domain.Money;
+
 public class CouponTypeEntity {
 
     private final long id;
@@ -12,6 +16,10 @@ public class CouponTypeEntity {
         this.name = name;
         this.discountType = discountType;
         this.discountAmount = discountAmount;
+    }
+
+    public CouponType create() {
+        return new CouponType(id, name, DiscountType.find(discountType), new Money(discountAmount));
     }
 
     public long getId() {

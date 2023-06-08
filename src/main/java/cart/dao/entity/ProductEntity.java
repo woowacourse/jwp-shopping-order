@@ -1,6 +1,9 @@
 package cart.dao.entity;
 
 import cart.domain.Money;
+import cart.domain.Product;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductEntity {
     private final Long id;
@@ -17,6 +20,16 @@ public class ProductEntity {
 
     public ProductEntity(final String name, final Money price, final String imageUrl) {
         this(null, name, price, imageUrl);
+    }
+
+    public static List<Product> createAll(final List<ProductEntity> products) {
+        return products.stream()
+                .map(ProductEntity::create)
+                .collect(Collectors.toList());
+    }
+
+    public Product create() {
+        return new Product(id, name, price, imageUrl);
     }
 
     public Long getId() {

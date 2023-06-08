@@ -1,8 +1,13 @@
 package cart.dao.entity;
 
+import cart.domain.Coupon;
+import cart.domain.Member;
+import cart.domain.Money;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 import cart.domain.OrderStatus;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 public class OrderEntity {
@@ -40,6 +45,20 @@ public class OrderEntity {
                 order.getDeliveryFee().getValue(),
                 order.getStatus().getValue(),
                 null);
+    }
+
+    public Order create(final List<OrderItem> orderItems, final Coupon coupon) {
+        return new Order(id,
+                new Member(memberId),
+                coupon,
+                new Money(deliveryFee),
+                OrderStatus.find(status),
+                orderItems,
+                createdAt);
+    }
+
+    public Order create(final List<OrderItem> orderItems) {
+        return create(orderItems, null);
     }
 
     public Long getId() {

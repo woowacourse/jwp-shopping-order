@@ -1,5 +1,9 @@
 package cart.dao.entity;
 
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.Product;
+
 public class CartItemEntity {
 
     private final Long id;
@@ -16,6 +20,10 @@ public class CartItemEntity {
         this.memberId = memberId;
         this.productId = productId;
         this.quantity = quantity;
+    }
+
+    public CartItem create(final Product product) {
+        return new CartItem(id, new Member(memberId), product, quantity);
     }
 
     public Long getId() {

@@ -16,18 +16,12 @@ public class MemberRepository {
     }
 
     public Optional<Member> findByEmail(final String email) {
-        final Optional<MemberEntity> member = memberDao.getMemberByEmail(email);
-        if (member.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(Member.from(member.get()));
+        return memberDao.getMemberByEmail(email)
+                .map(MemberEntity::create);
     }
 
     public Optional<Member> findById(final Long id) {
-        final Optional<MemberEntity> member = memberDao.getMemberById(id);
-        if (member.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(Member.from(member.get()));
+        return memberDao.getMemberById(id)
+                .map(MemberEntity::create);
     }
 }

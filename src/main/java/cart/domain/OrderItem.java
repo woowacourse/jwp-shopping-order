@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.dao.entity.OrderItemEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,21 +41,6 @@ public class OrderItem {
     public static List<OrderItem> convert(final List<CartItem> cartItems) {
         return cartItems.stream()
                 .map(OrderItem::convert)
-                .collect(Collectors.toList());
-    }
-
-    public static OrderItem from(final OrderItemEntity orderItemEntity) {
-        return new OrderItem(
-                orderItemEntity.getId(),
-                orderItemEntity.getName(),
-                new Money(orderItemEntity.getPrice()),
-                orderItemEntity.getImageUrl(),
-                orderItemEntity.getQuantity());
-    }
-
-    public static List<OrderItem> from(final List<OrderItemEntity> orderItemEntities) {
-        return orderItemEntities.stream()
-                .map(OrderItem::from)
                 .collect(Collectors.toList());
     }
 

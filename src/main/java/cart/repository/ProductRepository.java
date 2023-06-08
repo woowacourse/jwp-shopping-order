@@ -17,15 +17,12 @@ public class ProductRepository {
     }
 
     public List<Product> findAll() {
-        return Product.from(productDao.getAllProducts());
+        return ProductEntity.createAll(productDao.getAllProducts());
     }
 
     public Optional<Product> findById(final Long productId) {
-        final Optional<ProductEntity> productEntity = productDao.findById(productId);
-        if (productEntity.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(Product.from(productEntity.get()));
+        return productDao.findById(productId)
+                .map(ProductEntity::create);
     }
 
     public Long add(final ProductEntity product) {
