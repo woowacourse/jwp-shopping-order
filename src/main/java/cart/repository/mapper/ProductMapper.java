@@ -1,6 +1,6 @@
 package cart.repository.mapper;
 
-import cart.dao.entity.ProductEntity;
+import cart.dao.dto.product.ProductDto;
 import cart.domain.Money;
 import cart.domain.Product;
 
@@ -9,8 +9,8 @@ public class ProductMapper {
     private ProductMapper() {
     }
 
-    public static ProductEntity toProductEntity(Product product) {
-        return new ProductEntity(
+    public static ProductDto toProductDto(Product product) {
+        return new ProductDto(
             product.getId(),
             product.getName(),
             product.getImageUrl(),
@@ -18,12 +18,12 @@ public class ProductMapper {
         );
     }
 
-    public static Product toProduct(ProductEntity productEntity) {
+    public static Product toProduct(ProductDto productDto) {
         return new Product(
-            productEntity.getId(),
-            productEntity.getName(),
-            Money.from(productEntity.getPrice()),
-            productEntity.getImageUrl()
+            productDto.getId(),
+            productDto.getName(),
+            Money.from(productDto.getPrice()),
+            productDto.getImageUrl()
         );
     }
 

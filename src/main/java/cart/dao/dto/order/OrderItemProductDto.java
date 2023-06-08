@@ -1,42 +1,36 @@
-package cart.dao.dto;
+package cart.dao.dto.order;
 
-public class CartItemProductDto {
+public class OrderItemProductDto {
 
-    private final long cartItemId;
+    private final long orderId;
+    private final long orderItemId;
     private final long productId;
-    private final long memberId;
-    private final String email;
     private final int quantity;
     private final String productName;
     private final int price;
     private final String productImageUrl;
 
-    public CartItemProductDto(long cartItemId, long productId, long memberId, String email, int quantity, String productName,
+    public OrderItemProductDto(long orderId, long orderItemId, long productId, int quantity, String productName,
         int price, String productImageUrl) {
-        this.cartItemId = cartItemId;
+        this.orderId = orderId;
+        this.orderItemId = orderItemId;
         this.productId = productId;
-        this.memberId = memberId;
-        this.email = email;
         this.quantity = quantity;
         this.productName = productName;
         this.price = price;
         this.productImageUrl = productImageUrl;
     }
 
-    public long getCartItemId() {
-        return cartItemId;
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public long getOrderItemId() {
+        return orderItemId;
     }
 
     public long getProductId() {
         return productId;
-    }
-
-    public long getMemberId() {
-        return memberId;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public int getQuantity() {

@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.ProductEntity;
+import cart.dao.dto.product.ProductDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
-    private static final RowMapper<ProductEntity> ROW_MAPPER = (rs, rowNum) ->
-        new ProductEntity(rs.getLong("id"),
+    private static final RowMapper<ProductDto> ROW_MAPPER = (rs, rowNum) ->
+        new ProductDto(rs.getLong("id"),
             rs.getString("name"),
             rs.getString("image_url"),
             rs.getInt("price"));
@@ -31,12 +31,12 @@ public class ProductDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public List<ProductEntity> findAll() {
+    public List<ProductDto> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Optional<ProductEntity> findById(Long productId) {
+    public Optional<ProductDto> findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId));
@@ -45,19 +45,19 @@ public class ProductDao {
         }
     }
 
-    public long save(ProductEntity productEntity) {
+    public long save(ProductDto productDto) {
         Number generatedKey = insertAction.executeAndReturnKey(Map.of(
-            "name", productEntity.getName(),
-            "price", productEntity.getPrice(),
-            "image_url", productEntity.getImageUrl()
+            "name", productDto.getName(),
+            "price", productDto.getPrice(),
+            "image_url", productDto.getImageUrl()
         ));
 
         return Objects.requireNonNull(generatedKey).longValue();
     }
 
-    public void updateProduct(Long productId, ProductEntity productEntity) {
+    public void updateProduct(Long productId, ProductDto productDto) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productId);
+        jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), productId);
     }
 
     public void deleteById(long productId) {

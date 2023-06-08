@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dao.dto.CartItemProductDto;
-import cart.dao.entity.CartItemEntity;
+import cart.dao.dto.cart.CartItemProductDto;
+import cart.dao.dto.cart.CartItemDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -52,11 +52,11 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, ITEM_PRODUCT_ROW_MAPPER, memberId);
     }
 
-    public long save(CartItemEntity cartItemEntity) {
+    public long save(CartItemDto cartItemDto) {
         Number generatedKey = insertAction.executeAndReturnKey(
-            Map.of("member_id", cartItemEntity.getMemberId(),
-                "product_id", cartItemEntity.getProductId(),
-                "quantity", cartItemEntity.getQuantity()));
+            Map.of("member_id", cartItemDto.getMemberId(),
+                "product_id", cartItemDto.getProductId(),
+                "quantity", cartItemDto.getQuantity()));
 
         return Objects.requireNonNull(generatedKey).longValue();
     }
@@ -82,10 +82,10 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void updateQuantity(CartItemEntity cartItemEntity) {
+    public void updateQuantity(CartItemDto cartItemDto) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        int quantity = cartItemEntity.getQuantity();
-        jdbcTemplate.update(sql, quantity, cartItemEntity.getId());
+        int quantity = cartItemDto.getQuantity();
+        jdbcTemplate.update(sql, quantity, cartItemDto.getId());
     }
 
     public boolean isNonExistingId(long cartItemId) {

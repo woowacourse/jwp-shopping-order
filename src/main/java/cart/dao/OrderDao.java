@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dao.dto.OrderWithMemberDto;
-import cart.dao.entity.OrderEntity;
+import cart.dao.dto.order.OrderWithMemberDto;
+import cart.dao.dto.order.OrderDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,9 +35,9 @@ public class OrderDao {
             .usingColumns("member_id");
     }
 
-    public long save(OrderEntity orderEntity) {
+    public long save(OrderDto orderDto) {
         Number generatedKey = insertAction.executeAndReturnKey(
-            Map.of("member_id", orderEntity.getMemberId())
+            Map.of("member_id", orderDto.getMemberId())
         );
 
         return Objects.requireNonNull(generatedKey).longValue();

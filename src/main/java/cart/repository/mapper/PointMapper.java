@@ -1,6 +1,6 @@
 package cart.repository.mapper;
 
-import cart.dao.entity.PointEntity;
+import cart.dao.dto.point.PointDto;
 import cart.domain.Point;
 
 public class PointMapper {
@@ -8,16 +8,16 @@ public class PointMapper {
     private PointMapper() {
     }
 
-    public static PointEntity toPointEntity(Point point, long memberId) {
-        return new PointEntity(
+    public static PointDto toPointDto(Point point, long memberId) {
+        return new PointDto(
             point.getValue(),
             memberId
         );
     }
 
-    public static Point toPoint(PointEntity pointEntity) {
+    public static Point toPoint(PointDto pointDto) {
         return new Point(
-            pointEntity.getPoint()
+            pointDto.getPoint()
         );
     }
 

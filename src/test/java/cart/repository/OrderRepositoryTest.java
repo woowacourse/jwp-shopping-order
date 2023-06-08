@@ -11,9 +11,9 @@ import static org.mockito.Mockito.inOrder;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.dao.dto.OrderItemProductDto;
-import cart.dao.dto.OrderWithMemberDto;
-import cart.dao.entity.OrderEntity;
+import cart.dao.dto.order.OrderItemProductDto;
+import cart.dao.dto.order.OrderWithMemberDto;
+import cart.dao.dto.order.OrderDto;
 import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
@@ -58,7 +58,7 @@ class OrderRepositoryTest {
     void save() {
         // given
         Member member = new Member(memberId, memberEmail, memberPassword);
-        given(orderDao.save(any(OrderEntity.class))).willReturn(1L);
+        given(orderDao.save(any(OrderDto.class))).willReturn(1L);
         willDoNothing().given(orderItemDao).batchInsert(anyList());
 
         // when
@@ -70,7 +70,7 @@ class OrderRepositoryTest {
 
         // then
         InOrder inOrder = inOrder(orderDao, orderItemDao);
-        inOrder.verify(orderDao).save(any(OrderEntity.class));
+        inOrder.verify(orderDao).save(any(OrderDto.class));
         inOrder.verify(orderItemDao).batchInsert(anyList());
     }
 

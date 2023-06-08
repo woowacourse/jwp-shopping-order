@@ -1,6 +1,6 @@
 package cart.repository.mapper;
 
-import cart.dao.entity.PointHistoryEntity;
+import cart.dao.dto.point.PointHistoryDto;
 import cart.domain.Point;
 
 public class PointHistoryMapper {
@@ -8,9 +8,9 @@ public class PointHistoryMapper {
     private PointHistoryMapper() {
     }
 
-    public static PointHistoryEntity toPointHistoryEntity(Point savedPoint, Point usedPoint,
+    public static PointHistoryDto toPointHistoryDto(Point savedPoint, Point usedPoint,
         long orderId, long memberId) {
-        return new PointHistoryEntity(
+        return new PointHistoryDto(
             memberId,
             usedPoint.getValue(),
             savedPoint.getValue(),
@@ -18,9 +18,9 @@ public class PointHistoryMapper {
         );
     }
 
-    public static Point toSavedPoint(PointHistoryEntity pointHistoryEntity) {
+    public static Point toSavedPoint(PointHistoryDto pointHistoryDto) {
         return new Point(
-            pointHistoryEntity.getPointsSaved()
+            pointHistoryDto.getPointsSaved()
         );
     }
 

@@ -2,9 +2,9 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.dao.dto.OrderItemProductDto;
-import cart.dao.dto.OrderWithMemberDto;
-import cart.dao.entity.OrderItemEntity;
+import cart.dao.dto.order.OrderItemProductDto;
+import cart.dao.dto.order.OrderWithMemberDto;
+import cart.dao.dto.order.OrderItemDto;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.exception.notfoundexception.OrderNotFoundException;
@@ -27,10 +27,10 @@ public class OrderRepository {
     }
 
     public long save(Order order) {
-        long orderId = orderDao.save(OrderMapper.toOrderEntity(order));
-        List<OrderItemEntity> orderItemEntities = order.getItems()
+        long orderId = orderDao.save(OrderMapper.toOrderDto(order));
+        List<OrderItemDto> orderItemEntities = order.getItems()
             .stream()
-            .map(item -> OrderMapper.toOrderItemEntity(item, orderId))
+            .map(item -> OrderMapper.toOrderItemDto(item, orderId))
             .collect(Collectors.toList());
         orderItemDao.batchInsert(orderItemEntities);
         return orderId;

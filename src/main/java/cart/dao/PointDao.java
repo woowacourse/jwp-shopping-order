@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.PointEntity;
+import cart.dao.dto.point.PointDto;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PointDao {
 
-    private static final RowMapper<PointEntity> ROW_MAPPER = (rs, rowNum) ->
-        new PointEntity(
+    private static final RowMapper<PointDto> ROW_MAPPER = (rs, rowNum) ->
+        new PointDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
             rs.getInt("point")
@@ -23,7 +23,7 @@ public class PointDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<PointEntity> findByMemberId(long memberId) {
+    public Optional<PointDto> findByMemberId(long memberId) {
         String sql = "SELECT * from point WHERE member_id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId));
@@ -32,7 +32,7 @@ public class PointDao {
         }
     }
 
-    public void update(PointEntity point) {
+    public void update(PointDto point) {
         String sql = "UPDATE point SET point = ? WHERE member_id = ?";
         jdbcTemplate.update(sql, point.getPoint(), point.getMemberId());
     }

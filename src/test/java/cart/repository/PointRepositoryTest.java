@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.willDoNothing;
 
 import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
-import cart.dao.entity.PointEntity;
-import cart.dao.entity.PointHistoryEntity;
+import cart.dao.dto.point.PointDto;
+import cart.dao.dto.point.PointHistoryDto;
 import cart.domain.Point;
 import cart.exception.authexception.AuthenticationException;
 import cart.exception.notfoundexception.OrderNotFoundException;
@@ -42,7 +42,7 @@ class PointRepositoryTest {
     @DisplayName("사용자의 보유 포인트를 조회할 수 있다.")
     void findByMemberId() {
         // given
-        given(pointDao.findByMemberId(1L)).willReturn(Optional.of(new PointEntity(1L, 1L, 1000)));
+        given(pointDao.findByMemberId(1L)).willReturn(Optional.of(new PointDto(1L, 1L, 1000)));
 
         // when
         Point point = pointRepository.findByMemberId(1L);
@@ -66,7 +66,7 @@ class PointRepositoryTest {
     @DisplayName("한 주문에 적립된 포인트, 사용한 포인트를 저장한다.")
     void savePointHistory() {
         // given
-        willDoNothing().given(pointHistoryDao).save(any(PointHistoryEntity.class));
+        willDoNothing().given(pointHistoryDao).save(any(PointHistoryDto.class));
         Point usedPoint = new Point(1000);
         Point pointToSave = new Point(500);
 
@@ -81,7 +81,7 @@ class PointRepositoryTest {
         // given
         long orderId = 1L;
         given(pointHistoryDao.findByOrderId(1L)).willReturn(
-            Optional.of(new PointHistoryEntity(1L, 1L, 1000, 500, orderId)));
+            Optional.of(new PointHistoryDto(1L, 1L, 1000, 500, orderId)));
 
         // when
         Point savedPoint = pointRepository.findSavedPointByOrderId(orderId);

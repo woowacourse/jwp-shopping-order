@@ -2,10 +2,10 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.dto.OrderItemProductDto;
-import cart.dao.entity.OrderEntity;
-import cart.dao.entity.OrderItemEntity;
-import cart.dao.entity.ProductEntity;
+import cart.dao.dto.order.OrderItemProductDto;
+import cart.dao.dto.order.OrderDto;
+import cart.dao.dto.order.OrderItemDto;
+import cart.dao.dto.product.ProductDto;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,10 +37,10 @@ class OrderItemDaoTest {
     @DisplayName("주문 상품을 한 번에 저장할 수 있다.")
     void batchInsert() {
         // given
-        OrderEntity orderEntity = new OrderEntity(1L);
-        long orderId = orderDao.save(orderEntity);
-        OrderItemEntity chicken = new OrderItemEntity(orderId, 1L, 3, 10_000);
-        OrderItemEntity pizza = new OrderItemEntity(orderId, 2L, 2, 20_000);
+        OrderDto orderDto = new OrderDto(1L);
+        long orderId = orderDao.save(orderDto);
+        OrderItemDto chicken = new OrderItemDto(orderId, 1L, 3, 10_000);
+        OrderItemDto pizza = new OrderItemDto(orderId, 2L, 2, 20_000);
 
         // when
         orderItemDao.batchInsert(List.of(chicken, pizza));
@@ -54,8 +54,8 @@ class OrderItemDaoTest {
     void findAllByOrderId() {
         // given
         long orderId = saveOrder(
-            new ProductEntity(1L, "치킨", "chickenImg", 10000),
-            new ProductEntity(3L, "피자", "pizzaImg", 13000));
+            new ProductDto(1L, "치킨", "chickenImg", 10000),
+            new ProductDto(3L, "피자", "pizzaImg", 13000));
 
         // when, then
         assertThat(orderItemDao.findAllByOrderId(orderId))
@@ -69,40 +69,40 @@ class OrderItemDaoTest {
     @DisplayName("주문 당시의 금액과 현재의 상품 금액이 다르다면, 주문 당시의 금액이 조회되어야 한다.")
     void findAllByOrderId_priceAtOrderTime() {
         // given
-        ProductEntity productEntity = new ProductEntity(1L, "치킨", "chickenImg", 10000);
-        long productId = productEntity.getId();
-        int priceAtOrderTime = productEntity.getPrice();
-        long orderId = saveOrder(productEntity);
+        ProductDto productDto = new ProductDto(1L, "치킨", "chickenImg", 10000);
+        long productId = productDto.getId();
+        int priceAtOrderTime = productDto.getPrice();
+        long orderId = saveOrder(productDto);
 
         // when
         int priceToUpdate = 20000;
-        modifyProductPrice(productEntity, priceToUpdate);
+        modifyProductPrice(productDto, priceToUpdate);
         List<OrderItemProductDto> orderItems = orderItemDao.findAllByOrderId(orderId);
 
         // then
         assertThat(orderItems)
             .usingRecursiveComparison()
             .isEqualTo(List.of(
-                new OrderItemProductDto(orderId, 1L, productId, 2, productEntity.getName(), priceAtOrderTime,
-                    productEntity.getImageUrl())
+                new OrderItemProductDto(orderId, 1L, productId, 2, productDto.getName(), priceAtOrderTime,
+                    productDto.getImageUrl())
             ));
     }
 
-    private long saveOrder(ProductEntity... productEntities) {
-        OrderEntity orderEntity = new OrderEntity(1L);
-        long orderId = orderDao.save(orderEntity);
+    private long saveOrder(ProductDto... productEntities) {
+        OrderDto orderDto = new OrderDto(1L);
+        long orderId = orderDao.save(orderDto);
 
-        List<OrderItemEntity> orderItemsToSave = Arrays.stream(productEntities)
-            .map(product -> new OrderItemEntity(orderId, product.getId(), 2, product.getPrice()))
+        List<OrderItemDto> orderItemsToSave = Arrays.stream(productEntities)
+            .map(product -> new OrderItemDto(orderId, product.getId(), 2, product.getPrice()))
             .collect(Collectors.toList());
         orderItemDao.batchInsert(orderItemsToSave);
         return orderId;
     }
 
-    private void modifyProductPrice(ProductEntity entity, int price) {
+    private void modifyProductPrice(ProductDto entity, int price) {
         ProductDao productDao = new ProductDao(jdbcTemplate);
         productDao.updateProduct(entity.getId(),
-            new ProductEntity(entity.getId(), entity.getName(), entity.getImageUrl(), price));
+            new ProductDto(entity.getId(), entity.getName(), entity.getImageUrl(), price));
     }
 
     @Test
@@ -110,10 +110,10 @@ class OrderItemDaoTest {
     void findAllByOrderIds() {
         // given
         long orderId1 = saveOrder(
-            new ProductEntity(1L, "치킨", "chickenImg", 10000),
-            new ProductEntity(3L, "피자", "pizzaImg", 13000));
+            new ProductDto(1L, "치킨", "chickenImg", 10000),
+            new ProductDto(3L, "피자", "pizzaImg", 13000));
         long orderId2 = saveOrder(
-            new ProductEntity(1L, "치킨", "chickenImg", 10000));
+            new ProductDto(1L, "치킨", "chickenImg", 10000));
 
         // when
         List<OrderItemProductDto> orderItemProducts = orderItemDao.findAllByOrderIds(

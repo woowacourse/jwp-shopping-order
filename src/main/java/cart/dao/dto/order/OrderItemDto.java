@@ -1,6 +1,6 @@
-package cart.dao.entity;
+package cart.dao.dto.order;
 
-public class OrderItemEntity {
+public class OrderItemDto {
 
     private Long id;
     private final long orderId;
@@ -8,11 +8,11 @@ public class OrderItemEntity {
     private final int quantity;
     private final int priceAtOrderTime;
 
-    public OrderItemEntity(long orderId, long productId, int quantity, int priceAtOrderTime) {
+    public OrderItemDto(long orderId, long productId, int quantity, int priceAtOrderTime) {
         this(null, orderId, productId, quantity, priceAtOrderTime);
     }
 
-    public OrderItemEntity(Long id, long orderId, long productId, int quantity,
+    public OrderItemDto(Long id, long orderId, long productId, int quantity,
         int priceAtOrderTime) {
         this.id = id;
         this.orderId = orderId;

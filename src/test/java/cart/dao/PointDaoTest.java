@@ -2,7 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.entity.PointEntity;
+import cart.dao.dto.point.PointDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ class PointDaoTest {
     @DisplayName("사용자의 포인트를 조회할 수 있다.")
     void findByMemberId_success() {
         // when
-        Optional<PointEntity> pointEntity = pointDao.findByMemberId(memberId);
+        Optional<PointDto> pointEntity = pointDao.findByMemberId(memberId);
 
         // then
         assertThat(pointEntity).isPresent()
@@ -47,7 +47,7 @@ class PointDaoTest {
         long nonExistingMemberId = 3L;
 
         // when
-        Optional<PointEntity> pointEntity = pointDao.findByMemberId(nonExistingMemberId);
+        Optional<PointDto> pointEntity = pointDao.findByMemberId(nonExistingMemberId);
 
         // then
         assertThat(pointEntity).isEmpty();
@@ -57,7 +57,7 @@ class PointDaoTest {
     @DisplayName("사용자의 포인트를 업데이트할 수 있다.")
     void update_success() {
         // given
-        PointEntity pointToUpdate = new PointEntity(1L, memberId, 1500);
+        PointDto pointToUpdate = new PointDto(1L, memberId, 1500);
 
         // when
         pointDao.update(pointToUpdate);

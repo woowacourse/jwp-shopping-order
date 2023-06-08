@@ -1,6 +1,6 @@
-package cart.dao.entity;
+package cart.dao.dto.point;
 
-public class PointHistoryEntity {
+public class PointHistoryDto {
 
     private final Long id;
     private final long memberId;
@@ -8,11 +8,11 @@ public class PointHistoryEntity {
     private final int pointsSaved;
     private final long orderId;
 
-    public PointHistoryEntity(long memberId, int pointsUsed, int pointsSaved, long orderId) {
+    public PointHistoryDto(long memberId, int pointsUsed, int pointsSaved, long orderId) {
         this(null, memberId, pointsUsed, pointsSaved, orderId);
     }
 
-    public PointHistoryEntity(Long id, long memberId, int pointsUsed, int pointsSaved, long orderId) {
+    public PointHistoryDto(Long id, long memberId, int pointsUsed, int pointsSaved, long orderId) {
         this.id = id;
         this.memberId = memberId;
         this.pointsUsed = pointsUsed;

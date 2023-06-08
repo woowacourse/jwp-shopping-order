@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
+import cart.dao.dto.product.ProductDto;
 import cart.domain.Product;
 import cart.exception.notfoundexception.ProductNotFoundException;
 import cart.repository.mapper.ProductMapper;
@@ -19,26 +19,26 @@ public class ProductRepository {
     }
 
     public List<Product> findAll() {
-        List<ProductEntity> productEntities = productDao.findAll();
+        List<ProductDto> productEntities = productDao.findAll();
         return productEntities.stream()
             .map(ProductMapper::toProduct)
             .collect(Collectors.toList());
     }
 
     public Product findById(Long productId) {
-        ProductEntity productEntity = productDao.findById(productId)
+        ProductDto productDto = productDao.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException(productId));
-        return ProductMapper.toProduct(productEntity);
+        return ProductMapper.toProduct(productDto);
     }
 
     public long save(Product product) {
-        return productDao.save(ProductMapper.toProductEntity(product));
+        return productDao.save(ProductMapper.toProductDto(product));
     }
 
 
     public void updateProduct(Long productId, Product product) {
         validateProductExistence(productId);
-        productDao.updateProduct(productId, ProductMapper.toProductEntity(product));
+        productDao.updateProduct(productId, ProductMapper.toProductDto(product));
     }
 
     public void deleteById(long productId) {

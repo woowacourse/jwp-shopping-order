@@ -2,7 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.entity.PointHistoryEntity;
+import cart.dao.dto.point.PointHistoryDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,18 +33,18 @@ class PointHistoryDaoTest {
     @DisplayName("한 주문에서 적립된 포인트, 사용한 포인트를 저장하고 저장 내역을 조회할 수 있다.")
     void save_findByOrderId() {
         // given
-        PointHistoryEntity pointHistoryEntity = new PointHistoryEntity(memberId, 100, 50, orderId);
+        PointHistoryDto pointHistoryDto = new PointHistoryDto(memberId, 100, 50, orderId);
 
         // when
-        pointHistoryDao.save(pointHistoryEntity);
+        pointHistoryDao.save(pointHistoryDto);
 
         // then
-        Optional<PointHistoryEntity> foundHistory = pointHistoryDao.findByOrderId(orderId);
+        Optional<PointHistoryDto> foundHistory = pointHistoryDao.findByOrderId(orderId);
         assertThat(foundHistory).isPresent()
             .get()
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(pointHistoryEntity);
+            .isEqualTo(pointHistoryDto);
     }
 
     @Test
@@ -54,7 +54,7 @@ class PointHistoryDaoTest {
         long nonExistingOrderId = 2L;
 
         // when
-        Optional<PointHistoryEntity> pointHistoryEntity = pointHistoryDao.findByOrderId(
+        Optional<PointHistoryDto> pointHistoryEntity = pointHistoryDao.findByOrderId(
             nonExistingOrderId);
 
         // then

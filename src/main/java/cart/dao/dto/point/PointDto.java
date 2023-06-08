@@ -1,16 +1,16 @@
-package cart.dao.entity;
+package cart.dao.dto.point;
 
-public class PointEntity {
+public class PointDto {
 
     private final Long id;
     private final long memberId;
     private final int point;
 
-    public PointEntity(int point, long memberId) {
+    public PointDto(int point, long memberId) {
         this(null, memberId, point);
     }
 
-    public PointEntity(Long id, long memberId, int point) {
+    public PointDto(Long id, long memberId, int point) {
         this.id = id;
         this.memberId = memberId;
         this.point = point;

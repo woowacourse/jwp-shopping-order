@@ -1,4 +1,4 @@
-package cart.dao.dto;
+package cart.dao.dto.order;
 
 import java.sql.Timestamp;
 

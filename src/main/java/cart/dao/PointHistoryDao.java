@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.PointHistoryEntity;
+import cart.dao.dto.point.PointHistoryDto;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PointHistoryDao {
 
-    private static final RowMapper<PointHistoryEntity> ROW_MAPPER = (rs, rowNum) ->
-        new PointHistoryEntity(
+    private static final RowMapper<PointHistoryDto> ROW_MAPPER = (rs, rowNum) ->
+        new PointHistoryDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
             rs.getInt("points_used"),
@@ -30,16 +30,16 @@ public class PointHistoryDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public void save(PointHistoryEntity pointHistoryEntity) {
+    public void save(PointHistoryDto pointHistoryDto) {
         insertAction.execute(Map.of(
-            "member_id", pointHistoryEntity.getMemberId(),
-            "points_used", pointHistoryEntity.getPointsUsed(),
-            "points_saved", pointHistoryEntity.getPointsSaved(),
-            "order_id", pointHistoryEntity.getOrderId()
+            "member_id", pointHistoryDto.getMemberId(),
+            "points_used", pointHistoryDto.getPointsUsed(),
+            "points_saved", pointHistoryDto.getPointsSaved(),
+            "order_id", pointHistoryDto.getOrderId()
         ));
     }
 
-    public Optional<PointHistoryEntity> findByOrderId(long orderId) {
+    public Optional<PointHistoryDto> findByOrderId(long orderId) {
         String sql = "SELECT * from point_history WHERE order_id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, orderId));

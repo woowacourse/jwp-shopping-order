@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.dao.CartItemDao;
-import cart.dao.dto.CartItemProductDto;
-import cart.dao.entity.CartItemEntity;
+import cart.dao.dto.cart.CartItemProductDto;
+import cart.dao.dto.cart.CartItemDto;
 import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -22,8 +22,8 @@ public class CartItemRepository {
     }
 
     public long save(CartItem cartItem) {
-        CartItemEntity cartItemEntity = CartItemMapper.toCartItemEntity(cartItem);
-        return cartItemDao.save(cartItemEntity);
+        CartItemDto cartItemDto = CartItemMapper.toCartItemDto(cartItem);
+        return cartItemDao.save(cartItemDto);
     }
 
     public CartItem findById(long cartItemId) {
@@ -47,7 +47,7 @@ public class CartItemRepository {
 
     public void updateQuantity(CartItem cartItem) {
         validateCartItemExistence(cartItem.getId());
-        cartItemDao.updateQuantity(CartItemMapper.toCartItemEntity(cartItem));
+        cartItemDao.updateQuantity(CartItemMapper.toCartItemDto(cartItem));
     }
 
     private void validateCartItemExistence(long cartItemId) {

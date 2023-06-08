@@ -2,8 +2,8 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.dto.OrderWithMemberDto;
-import cart.dao.entity.OrderEntity;
+import cart.dao.dto.order.OrderWithMemberDto;
+import cart.dao.dto.order.OrderDto;
 import cart.domain.Member;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -36,10 +36,10 @@ class OrderDaoTest {
     @DisplayName("주문 정보를 저장할 수 있다.")
     void save() {
         // given
-        OrderEntity orderEntity = new OrderEntity(1L);
+        OrderDto orderDto = new OrderDto(1L);
 
         // when
-        long savedId = orderDao.save(orderEntity);
+        long savedId = orderDao.save(orderDto);
 
         // then
         assertThat(savedId).isEqualTo(1L);
@@ -49,8 +49,8 @@ class OrderDaoTest {
     @DisplayName("저장된 주문 정보를 조회할 수 있다.")
     void findById() {
         // given
-        OrderEntity orderEntity = new OrderEntity(1L);
-        long savedId = orderDao.save(orderEntity);
+        OrderDto orderDto = new OrderDto(1L);
+        long savedId = orderDao.save(orderDto);
 
         // when
         Optional<OrderWithMemberDto> foundOrder = orderDao.findById(savedId);
@@ -71,9 +71,9 @@ class OrderDaoTest {
     @DisplayName("사용자의 id로 모든 주문 정보를 조회할 수 있다.")
     void findAllByMemberId() {
         // given
-        long savedId1 = orderDao.save(new OrderEntity(1L));
-        long savedId2 = orderDao.save(new OrderEntity(1L));
-        long savedId3 = orderDao.save(new OrderEntity(2L));
+        long savedId1 = orderDao.save(new OrderDto(1L));
+        long savedId2 = orderDao.save(new OrderDto(1L));
+        long savedId3 = orderDao.save(new OrderDto(2L));
 
         // when
         List<OrderWithMemberDto> ordersWithMember = orderDao.findAllByMemberId(1L);

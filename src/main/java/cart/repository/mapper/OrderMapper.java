@@ -1,9 +1,9 @@
 package cart.repository.mapper;
 
-import cart.dao.dto.OrderItemProductDto;
-import cart.dao.dto.OrderWithMemberDto;
-import cart.dao.entity.OrderEntity;
-import cart.dao.entity.OrderItemEntity;
+import cart.dao.dto.order.OrderItemProductDto;
+import cart.dao.dto.order.OrderWithMemberDto;
+import cart.dao.dto.order.OrderDto;
+import cart.dao.dto.order.OrderItemDto;
 import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
@@ -20,9 +20,9 @@ public class OrderMapper {
     private OrderMapper() {
     }
 
-    public static OrderItemEntity toOrderItemEntity(OrderItem orderItem, long orderId) {
+    public static OrderItemDto toOrderItemDto(OrderItem orderItem, long orderId) {
         OrderProduct product = orderItem.getProduct();
-        return new OrderItemEntity(
+        return new OrderItemDto(
             orderId,
             product.getProductId(),
             orderItem.getQuantityCount(),
@@ -43,8 +43,8 @@ public class OrderMapper {
         );
     }
 
-    public static OrderEntity toOrderEntity(Order order) {
-        return new OrderEntity(
+    public static OrderDto toOrderDto(Order order) {
+        return new OrderDto(
             order.getMemberId()
         );
     }

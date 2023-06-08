@@ -1,16 +1,12 @@
-package cart.dao.entity;
+package cart.dao.dto.member;
 
-public class MemberEntity {
+public class MemberDto {
 
     private final Long id;
     private final String email;
     private final String password;
 
-    public MemberEntity(String email, String password) {
-        this(null, email, password);
-    }
-
-    public MemberEntity(Long id, String email, String password) {
+    public MemberDto(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;

@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dao.dto.OrderItemProductDto;
-import cart.dao.entity.OrderItemEntity;
+import cart.dao.dto.order.OrderItemProductDto;
+import cart.dao.dto.order.OrderItemDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +32,13 @@ public class OrderItemDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public void batchInsert(List<OrderItemEntity> orderItemEntities) {
+    public void batchInsert(List<OrderItemDto> orderItemEntities) {
         String sql = "INSERT INTO order_item (order_id, product_id, quantity, price_at_order_time) values (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
             orderItemEntities,
             orderItemEntities.size(),
-            (PreparedStatement ps, OrderItemEntity entity) -> {
+            (PreparedStatement ps, OrderItemDto entity) -> {
                 ps.setLong(1, entity.getOrderId());
                 ps.setLong(2, entity.getProductId());
                 ps.setInt(3, entity.getQuantity());

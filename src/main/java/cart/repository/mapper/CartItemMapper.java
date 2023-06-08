@@ -1,7 +1,7 @@
 package cart.repository.mapper;
 
-import cart.dao.dto.CartItemProductDto;
-import cart.dao.entity.CartItemEntity;
+import cart.dao.dto.cart.CartItemProductDto;
+import cart.dao.dto.cart.CartItemDto;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Money;
@@ -23,8 +23,8 @@ public class CartItemMapper {
         );
     }
 
-    public static CartItemEntity toCartItemEntity(CartItem cartItem) {
-        return new CartItemEntity(
+    public static CartItemDto toCartItemDto(CartItem cartItem) {
+        return new CartItemDto(
             cartItem.getId(),
             cartItem.getMember().getId(),
             cartItem.getProduct().getId(),

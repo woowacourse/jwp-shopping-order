@@ -2,8 +2,8 @@ package cart.repository;
 
 import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
-import cart.dao.entity.PointEntity;
-import cart.dao.entity.PointHistoryEntity;
+import cart.dao.dto.point.PointDto;
+import cart.dao.dto.point.PointHistoryDto;
 import cart.domain.Point;
 import cart.exception.authexception.AuthenticationException;
 import cart.exception.notfoundexception.OrderNotFoundException;
@@ -23,24 +23,24 @@ public class PointRepository {
     }
 
     public void update(Point point, long memberId) {
-        pointDao.update(PointMapper.toPointEntity(point, memberId));
+        pointDao.update(PointMapper.toPointDto(point, memberId));
     }
 
     public Point findByMemberId(long memberId) {
-        PointEntity pointEntity = pointDao.findByMemberId(memberId)
+        PointDto pointDto = pointDao.findByMemberId(memberId)
             .orElseThrow(AuthenticationException::new);
-        return PointMapper.toPoint(pointEntity);
+        return PointMapper.toPoint(pointDto);
     }
 
     public void savePointHistory(Point pointToSave, Point usedPoint, long orderId, long memberId) {
-        PointHistoryEntity pointHistoryEntity = PointHistoryMapper.toPointHistoryEntity(
+        PointHistoryDto pointHistoryDto = PointHistoryMapper.toPointHistoryDto(
             pointToSave, usedPoint, orderId, memberId);
-        pointHistoryDao.save(pointHistoryEntity);
+        pointHistoryDao.save(pointHistoryDto);
     }
 
     public Point findSavedPointByOrderId(long orderId) {
-        PointHistoryEntity pointHistoryEntity = pointHistoryDao.findByOrderId(orderId)
+        PointHistoryDto pointHistoryDto = pointHistoryDao.findByOrderId(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
-        return PointHistoryMapper.toSavedPoint(pointHistoryEntity);
+        return PointHistoryMapper.toSavedPoint(pointHistoryDto);
     }
 }

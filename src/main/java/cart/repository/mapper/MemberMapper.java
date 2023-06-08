@@ -1,6 +1,6 @@
 package cart.repository.mapper;
 
-import cart.dao.entity.MemberEntity;
+import cart.dao.dto.member.MemberDto;
 import cart.domain.Member;
 
 public class MemberMapper {
@@ -8,11 +8,11 @@ public class MemberMapper {
     private MemberMapper() {
     }
 
-    public static Member toMember(MemberEntity memberEntity) {
+    public static Member toMember(MemberDto memberDto) {
         return new Member(
-            memberEntity.getId(),
-            memberEntity.getEmail(),
-            memberEntity.getPassword()
+            memberDto.getId(),
+            memberDto.getEmail(),
+            memberDto.getPassword()
         );
     }
 

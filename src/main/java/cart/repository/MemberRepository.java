@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.dao.MemberDao;
-import cart.dao.entity.MemberEntity;
+import cart.dao.dto.member.MemberDto;
 import cart.domain.Member;
 import cart.exception.authexception.AuthenticationException;
 import cart.repository.mapper.MemberMapper;
@@ -19,21 +19,21 @@ public class MemberRepository {
     }
 
     public Member findById(long id) {
-        MemberEntity memberEntity = memberDao.getMemberById(id)
+        MemberDto memberDto = memberDao.getMemberById(id)
             .orElseThrow(AuthenticationException::new);
 
-        return MemberMapper.toMember(memberEntity);
+        return MemberMapper.toMember(memberDto);
     }
 
     public Member findByEmail(String email) {
-        MemberEntity memberEntity = memberDao.getMemberByEmail(email)
+        MemberDto memberDto = memberDao.getMemberByEmail(email)
             .orElseThrow(AuthenticationException::new);
 
-        return MemberMapper.toMember(memberEntity);
+        return MemberMapper.toMember(memberDto);
     }
 
     public List<Member> findAll() {
-        List<MemberEntity> allMembers = memberDao.getAllMembers();
+        List<MemberDto> allMembers = memberDao.getAllMembers();
         return allMembers.stream()
             .map(MemberMapper::toMember)
             .collect(Collectors.toUnmodifiableList());

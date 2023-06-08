@@ -1,22 +1,22 @@
-package cart.dao.entity;
+package cart.dao.dto.order;
 
 import java.sql.Timestamp;
 
-public class OrderEntity {
+public class OrderDto {
 
     private final Long id;
     private final long memberId;
     private final Timestamp createdAt;
 
-    public OrderEntity(long memberId) {
+    public OrderDto(long memberId) {
         this(null, memberId);
     }
 
-    public OrderEntity(Long id, long memberId) {
+    public OrderDto(Long id, long memberId) {
         this(id, memberId, null);
     }
 
-    public OrderEntity(Long id, long memberId, Timestamp createdAt) {
+    public OrderDto(Long id, long memberId, Timestamp createdAt) {
         this.id = id;
         this.memberId = memberId;
         this.createdAt = createdAt;
