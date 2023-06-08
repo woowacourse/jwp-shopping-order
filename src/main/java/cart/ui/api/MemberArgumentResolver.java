@@ -47,6 +47,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }
-        return member;
+        return new Member(member.getId(), member.getEmail(), null);
     }
 }
