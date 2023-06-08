@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.application.event.DefaultPaymentRequestEvent;
 import cart.application.event.PaymentRequestEvent;
 import cart.domain.point.Point;
 import cart.domain.product.Price;
@@ -20,7 +21,7 @@ public class PaymentService {
 
     @EventListener
     @Transactional(readOnly = true)
-    public void pay(final PaymentRequestEvent paymentRequestEvent) {
+    public void pay(final DefaultPaymentRequestEvent paymentRequestEvent) {
         validateOverPointThanHave(paymentRequestEvent);
         validateOverPointThanPrice(paymentRequestEvent);
     }

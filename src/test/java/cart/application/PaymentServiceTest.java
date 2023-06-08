@@ -3,7 +3,7 @@ package cart.application;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-import cart.application.event.PaymentRequestEvent;
+import cart.application.event.DefaultPaymentRequestEvent;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Quantity;
@@ -51,7 +51,7 @@ class PaymentServiceTest {
         final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"),
                 new Price(BigDecimal.valueOf(1000)));
         final Cart cart = new Cart(List.of(new CartItem(1L, new Quantity(2), product, member)));
-        final PaymentRequestEvent paymentRequestEvent = new PaymentRequestEvent(
+        final DefaultPaymentRequestEvent paymentRequestEvent = new DefaultPaymentRequestEvent(
                 member,
                 cart.getTotalPrice(),
                 orderRequest
@@ -73,7 +73,7 @@ class PaymentServiceTest {
         final Product product = new Product(1L, new Name("상품"), new ImageUrl("img.com"),
                 new Price(BigDecimal.valueOf(1000)));
         final Cart cart = new Cart(List.of(new CartItem(1L, new Quantity(2), product, member)));
-        final PaymentRequestEvent paymentRequestEvent = new PaymentRequestEvent(
+        final DefaultPaymentRequestEvent paymentRequestEvent = new DefaultPaymentRequestEvent(
                 member,
                 cart.getTotalPrice(),
                 orderRequest

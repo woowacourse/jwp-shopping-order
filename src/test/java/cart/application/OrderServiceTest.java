@@ -8,8 +8,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import cart.application.event.MemberPointUpdateEvent;
-import cart.application.event.PaymentRequestEvent;
+import cart.application.event.DefaultMemberPointUpdateEvent;
+import cart.application.event.DefaultPaymentRequestEvent;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Quantity;
@@ -116,8 +116,8 @@ class OrderServiceTest {
         orderService.addOrder(member, request);
 
         // then
-        verify(applicationEventPublisher, times(1)).publishEvent(any(PaymentRequestEvent.class));
-        verify(applicationEventPublisher, times(1)).publishEvent(any(MemberPointUpdateEvent.class));
+        verify(applicationEventPublisher, times(1)).publishEvent(any(DefaultPaymentRequestEvent.class));
+        verify(applicationEventPublisher, times(1)).publishEvent(any(DefaultMemberPointUpdateEvent.class));
     }
 
     @Test
