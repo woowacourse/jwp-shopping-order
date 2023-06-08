@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.domain.vo.Amount;
+import java.util.List;
 
 public class Coupon {
 
@@ -25,6 +26,10 @@ public class Coupon {
             return 0;
         }
         return total - discountAmount.getValue();
+    }
+
+    public boolean isActive(final List<Long> memberCouponIds, final int totalProductAmount) {
+        return memberCouponIds.contains(id) && minAmount.getValue() <= totalProductAmount;
     }
 
     public Long getId() {

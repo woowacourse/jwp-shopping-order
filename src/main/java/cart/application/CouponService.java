@@ -50,8 +50,7 @@ public class CouponService {
         final List<Long> memberCouponIds = memberCouponRepository.findCouponIdsByMemberId(member.getId());
         final List<Coupon> coupons = couponRepository.findAll();
         final List<Coupon> filteredCoupons = coupons.stream()
-                .filter(it -> memberCouponIds.contains(it.getId())
-                        && it.getMinAmount().getValue() <= totalProductAmount)
+                .filter(it -> it.isActive(memberCouponIds, totalProductAmount))
                 .collect(Collectors.toList());
         return filteredCoupons.stream()
                 .map(it -> new ActiveCouponResponse(it.getId(), it.getName(), it.getMinAmount().getValue()))

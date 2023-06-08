@@ -324,6 +324,6 @@ HTTP/1.1 204 No Content
 
 - [x] 조회 시 @transactional의 readOnly 속성 사용
 - [x] CartItemService의 add 메서드 → save 메서드 명 변경
-- [ ] 사용 가능한 쿠폰을 구하는 로직을 Service → Coupon으로 이동
+- [x] 사용 가능한 쿠폰을 구하는 로직을 Service → Coupon으로 이동
 - [ ] 빈 MemberCoupon에 대한 정적 팩터리 메서드 추가
 - [ ] sql IN 구문을 활용하여 해당하는 데이터를 한 번에 삭제하도록 수정
