@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class Point {
 
-    private static final double POINT_POLICY = 0.1;
     private final Long point;
 
     public Point(Long point) {
