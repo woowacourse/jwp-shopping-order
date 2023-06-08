@@ -35,6 +35,7 @@ public class OrderService {
     public Long add(Member member, OrderRequest orderRequest) {
         Cart cart = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
         cart.checkOwner(member);
+        cart.checkHavingAll(orderRequest.getCartItemIds());
 
         Order order = new Order(toOrderItemsFrom(cart));
         Point usePoint = new Point(orderRequest.getUsePoint());

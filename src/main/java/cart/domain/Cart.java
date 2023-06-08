@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.domain.Member.Member;
+import cart.exception.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,5 +25,11 @@ public class Cart {
         return cartItems.stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public void checkHavingAll(List<Long> searchCartIds) {
+        if (cartItems.size() != searchCartIds.size()) {
+            throw new NotFoundException.CartItem(searchCartIds);
+        }
     }
 }
