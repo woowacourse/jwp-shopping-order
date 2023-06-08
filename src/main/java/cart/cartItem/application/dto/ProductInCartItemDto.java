@@ -1,15 +1,15 @@
-package cart.order.ui.dto;
+package cart.cartItem.application.dto;
 
 import cart.product.domain.Product;
 
-public class ProductInOrderItemDto {
+public class ProductInCartItemDto {
     private Long productId;
     private int price;
     private String name;
     private String imageUrl;
     private int stock;
 
-    public ProductInOrderItemDto(Long productId, int price, String name, String imageUrl, int stock) {
+    public ProductInCartItemDto(Long productId, int price, String name, String imageUrl, int stock) {
         this.productId = productId;
         this.price = price;
         this.name = name;
@@ -17,8 +17,8 @@ public class ProductInOrderItemDto {
         this.stock = stock;
     }
 
-    public static ProductInOrderItemDto from(Product product) {
-        return new ProductInOrderItemDto(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(),
+    public static ProductInCartItemDto from(Product product) {
+        return new ProductInCartItemDto(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(),
                 product.getStock());
     }
 

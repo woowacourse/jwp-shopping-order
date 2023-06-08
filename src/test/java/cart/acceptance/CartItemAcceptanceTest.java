@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.cartItem.domain.CartItem;
 import cart.cartItem.persistence.CartItemDao;
-import cart.cartItem.ui.dto.CartItemDto;
-import cart.cartItem.ui.dto.CartItemRequest;
-import cart.product.ui.dto.ProductRequest;
+import cart.cartItem.application.dto.CartItemDto;
+import cart.cartItem.presentation.request.CartItemRequest;
+import cart.product.presentation.request.ProductAddRequest;
 import cart.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -60,7 +60,7 @@ public class CartItemAcceptanceTest {
     @Test
     void 장바구니에_상품을_추가한다() {
         // given
-        var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
@@ -77,7 +77,7 @@ public class CartItemAcceptanceTest {
     @Test
     void 잘못된_사용자_정보로_장바구니에_상품_추가_요청시_실패한다() {
         // given
-        var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
@@ -94,7 +94,7 @@ public class CartItemAcceptanceTest {
     @Test
     void 장바구니에_담긴_상품의_수량을_변경한다() {
         // given
-        var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
@@ -112,7 +112,7 @@ public class CartItemAcceptanceTest {
     @Test
     void 장바구니에_담긴_상품의_수량을_0으로_변경하면_장바구니에서_아이템이_삭제된다() {
         // given
-        var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
@@ -130,7 +130,7 @@ public class CartItemAcceptanceTest {
     @Test
     void 다른_사용자가_담은_장바구니_상품의_수량을_변경하면_실패한다() {
         // given
-        var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Member member1 = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Member member2 = 유저_생성_요청하고_유저_반환("def", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
@@ -148,7 +148,7 @@ public class CartItemAcceptanceTest {
     @Test
     void 장바구니에_담긴_상품을_삭제한다() {
         // given
-        var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
@@ -166,8 +166,8 @@ public class CartItemAcceptanceTest {
     @Test
     void 장바구니에_담긴_모든_상품을_조회한다() {
         // given
-        var productRequest1 = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        var productRequest2 = new ProductRequest("치킨", 5000, "http://example.com/chicken.jpg", 30);
+        var productRequest1 = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var productRequest2 = new ProductAddRequest("치킨", 5000, "http://example.com/chicken.jpg", 30);
         Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId1 = 상품_생성하고_아이디_반환(productRequest1);
         Long productId2 = 상품_생성하고_아이디_반환(productRequest2);

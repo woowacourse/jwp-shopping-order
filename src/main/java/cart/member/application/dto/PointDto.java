@@ -1,4 +1,4 @@
-package cart.member.ui.dto;
+package cart.member.application.dto;
 
 public class PointDto {
     private final int userPoint;

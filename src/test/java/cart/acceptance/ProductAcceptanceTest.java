@@ -14,8 +14,8 @@ import static cart.acceptance.ProductSteps.특정_상품_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.product.ui.dto.ProductRequest;
-import cart.product.ui.dto.ProductDto;
+import cart.product.presentation.request.ProductAddRequest;
+import cart.product.application.dto.ProductDto;
 import cart.common.exception.notFound.ProductNotFoundException;
 import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
@@ -57,7 +57,7 @@ public class ProductAcceptanceTest {
     @Test
     void 상품을_추가한다() {
         // given
-        var createRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var createRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
 
         // when
         var response = 상품_생성_요청(createRequest);
@@ -70,10 +70,10 @@ public class ProductAcceptanceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        var createRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var createRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Long productId = 상품_생성하고_아이디_반환(createRequest);
 
-        var updateRequest = new ProductRequest("새로운 떡볶이", 7000, "http://example.com/tteokbboki.jpg", 30);
+        var updateRequest = new ProductAddRequest("새로운 떡볶이", 7000, "http://example.com/tteokbboki.jpg", 30);
 
         // when
         var response = 상품_수정_요청(productId, updateRequest);
@@ -86,7 +86,7 @@ public class ProductAcceptanceTest {
     @Test
     void 상품을_삭제한다() {
         // given
-        var createRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var createRequest = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         Long productId = 상품_생성하고_아이디_반환(createRequest);
 
         // when
@@ -100,8 +100,8 @@ public class ProductAcceptanceTest {
     @Test
     void 특정_상품을_조회한다() {
         // given
-        var createRequest1 = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        var createRequest2 = new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg", 50);
+        var createRequest1 = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var createRequest2 = new ProductAddRequest("치킨", 10000, "http://example.com/chicken.jpg", 50);
         상품_생성_요청(createRequest1);
         Long targetProductId = 상품_생성하고_아이디_반환(createRequest2);
 
@@ -116,8 +116,8 @@ public class ProductAcceptanceTest {
     @Test
     void 모든_상품을_조회한다() {
         // given
-        var createRequest1 = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        var createRequest2 = new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg", 50);
+        var createRequest1 = new ProductAddRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
+        var createRequest2 = new ProductAddRequest("치킨", 10000, "http://example.com/chicken.jpg", 50);
         Long productId1 = 상품_생성하고_아이디_반환(createRequest1);
         Long productId2 = 상품_생성하고_아이디_반환(createRequest2);
 
@@ -145,17 +145,17 @@ public class ProductAcceptanceTest {
                 .hasMessage("해당 product가 존재하지 않습니다.");
     }
 
-    private void 특정_상품_조회_결과를_검증한다(ExtractableResponse<Response> response, ProductRequest productRequest) {
+    private void 특정_상품_조회_결과를_검증한다(ExtractableResponse<Response> response, ProductAddRequest productAddRequest) {
         ProductDto productDto = response.as(ProductDto.class);
 
-        assertThat(productDto.getName()).isEqualTo(productRequest.getName());
-        assertThat(productDto.getPrice()).isEqualTo(productRequest.getPrice());
-        assertThat(productDto.getImageUrl()).isEqualTo(productRequest.getImageUrl());
-        assertThat(productDto.getStock()).isEqualTo(productRequest.getStock());
+        assertThat(productDto.getName()).isEqualTo(productAddRequest.getName());
+        assertThat(productDto.getPrice()).isEqualTo(productAddRequest.getPrice());
+        assertThat(productDto.getImageUrl()).isEqualTo(productAddRequest.getImageUrl());
+        assertThat(productDto.getStock()).isEqualTo(productAddRequest.getStock());
     }
 
     private void 모든_상품_조회_결과를_검증한다(ExtractableResponse<Response> response, List<Long> productIds,
-                                   List<ProductRequest> requests) {
+                                   List<ProductAddRequest> requests) {
         List<ProductDto> expectedResponses = new ArrayList<>();
         for (int i = 0; i < productIds.size(); i++) {
             ProductDto productDto = makeResponse(productIds.get(i), requests.get(i));
@@ -168,8 +168,8 @@ public class ProductAcceptanceTest {
                 .isEqualTo(expectedResponses);
     }
 
-    private ProductDto makeResponse(Long productId, ProductRequest productRequest) {
-        return new ProductDto(productId, productRequest.getPrice(), productRequest.getName(),
-                productRequest.getImageUrl(), productRequest.getStock());
+    private ProductDto makeResponse(Long productId, ProductAddRequest productAddRequest) {
+        return new ProductDto(productId, productAddRequest.getPrice(), productAddRequest.getName(),
+                productAddRequest.getImageUrl(), productAddRequest.getStock());
     }
 }

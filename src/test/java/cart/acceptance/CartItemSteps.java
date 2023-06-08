@@ -3,8 +3,8 @@ package cart.acceptance;
 import static cart.acceptance.CommonSteps.LOCATION_헤더에서_ID_추출;
 import static io.restassured.RestAssured.given;
 
-import cart.cartItem.ui.dto.CartItemQuantityUpdateRequest;
-import cart.cartItem.ui.dto.CartItemRequest;
+import cart.cartItem.presentation.request.CartItemQuantityUpdateRequest;
+import cart.cartItem.presentation.request.CartItemRequest;
 import cart.member.domain.Member;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

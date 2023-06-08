@@ -1,12 +1,13 @@
-package cart.product.ui.dto;
+package cart.product.application.dto;
 
-public class ProductRequest {
+public class ProductUpdateDto {
+
     private String name;
     private Integer price;
     private String imageUrl;
     private Integer stock;
 
-    public ProductRequest(String name, Integer price, String imageUrl, Integer stock) {
+    public ProductUpdateDto(String name, Integer price, String imageUrl, Integer stock) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

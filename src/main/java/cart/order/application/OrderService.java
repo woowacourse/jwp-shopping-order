@@ -2,9 +2,9 @@ package cart.order.application;
 
 import cart.cartItem.domain.CartItem;
 import cart.cartItem.persistence.CartItemDao;
-import cart.cartItem.ui.dto.CartItemDto;
-import cart.order.ui.dto.OrderDto;
-import cart.order.ui.dto.OrderRequest;
+import cart.order.application.dto.OrderAddDto;
+import cart.order.application.dto.OrderDto;
+import cart.order.application.dto.CartItemDto;
 import cart.common.exception.notFound.CartItemNotFountException;
 import cart.common.exception.notFound.ProductNotFoundException;
 import cart.common.exception.order.ProductInfoDoesNotMatchException;
@@ -42,8 +42,8 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Long order(Member member, OrderRequest orderRequest) {
-        List<CartItemDto> requestCartItems = orderRequest.getCartItems();
+    public Long order(Member member, OrderAddDto orderAddDto) {
+        List<CartItemDto> requestCartItems = orderAddDto.getCartItems();
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItemDto requestCartItem : requestCartItems) {
@@ -55,8 +55,8 @@ public class OrderService {
         }
 
         Order order = Order.makeOrder(member, orderItems);
-        Payment payment = Payment.makePayment(order, member, new Point(orderRequest.getUsePoint()));
-        validatePayment(orderRequest, payment);
+        Payment payment = Payment.makePayment(order, member, new Point(orderAddDto.getUsePoint()));
+        validatePayment(orderAddDto, payment);
 
         List<Long> cartItemIds = requestCartItems.stream()
                 .map(CartItemDto::getCartItemId)
@@ -83,7 +83,7 @@ public class OrderService {
         }
     }
 
-    private static void validatePayment(OrderRequest request, Payment payment) {
+    private static void validatePayment(OrderAddDto request, Payment payment) {
         if (payment.getTotalProductPrice() != request.getTotalProductPrice()) {
             throw new TotalProductPriceDoesNotMatchException(request.getTotalProductPrice(),
                     payment.getTotalProductPrice());

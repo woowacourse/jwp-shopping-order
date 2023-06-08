@@ -1,7 +1,8 @@
 package cart.product.application;
 
-import cart.product.ui.dto.ProductRequest;
-import cart.product.ui.dto.ProductDto;
+import cart.product.application.dto.ProductAddDto;
+import cart.product.application.dto.ProductUpdateDto;
+import cart.product.application.dto.ProductDto;
 import cart.common.exception.notFound.ProductNotFoundException;
 import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
@@ -31,15 +32,15 @@ public class ProductService {
         return ProductDto.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(),
-                productRequest.getStock());
+    public Long createProduct(ProductAddDto productAddDto) {
+        Product product = new Product(productAddDto.getName(), productAddDto.getPrice(), productAddDto.getImageUrl(),
+                productAddDto.getStock());
         return productDao.createProduct(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(),
-                productRequest.getStock());
+    public void updateProduct(Long productId, ProductUpdateDto productUpdateDto) {
+        Product product = new Product(productUpdateDto.getName(), productUpdateDto.getPrice(), productUpdateDto.getImageUrl(),
+                productUpdateDto.getStock());
         productDao.updateProduct(productId, product);
     }
 

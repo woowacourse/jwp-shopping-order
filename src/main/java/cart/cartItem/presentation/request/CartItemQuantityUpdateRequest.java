@@ -1,4 +1,6 @@
-package cart.cartItem.ui.dto;
+package cart.cartItem.presentation.request;
+
+import cart.cartItem.application.dto.CartItemQuantityUpdateDto;
 
 public class CartItemQuantityUpdateRequest {
     private int quantity;
@@ -10,6 +12,9 @@ public class CartItemQuantityUpdateRequest {
         this.quantity = quantity;
     }
 
+    public CartItemQuantityUpdateDto toDto() {
+        return new CartItemQuantityUpdateDto(quantity);
+    }
     public int getQuantity() {
         return quantity;
     }

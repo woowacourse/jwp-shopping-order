@@ -1,9 +1,9 @@
-package cart.cartItem.ui;
+package cart.cartItem.presentation;
 
 import cart.cartItem.application.CartItemService;
-import cart.cartItem.ui.dto.CartItemDto;
-import cart.cartItem.ui.dto.CartItemQuantityUpdateRequest;
-import cart.cartItem.ui.dto.CartItemRequest;
+import cart.cartItem.application.dto.CartItemDto;
+import cart.cartItem.presentation.request.CartItemQuantityUpdateRequest;
+import cart.cartItem.presentation.request.CartItemRequest;
 import cart.member.domain.Member;
 import java.net.URI;
 import java.util.List;
@@ -29,7 +29,7 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+        Long cartItemId = cartItemService.add(member, cartItemRequest.toDto());
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
@@ -37,7 +37,7 @@ public class CartItemApiController {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
                                                        @RequestBody CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+        cartItemService.updateQuantity(member, id, request.toDto());
 
         return ResponseEntity.ok().build();
     }

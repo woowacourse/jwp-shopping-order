@@ -1,6 +1,6 @@
-package cart.member.ui;
+package cart.member.presentation;
 
-import cart.member.ui.dto.MemberRequest;
+import cart.member.presentation.request.MemberAddRequest;
 import cart.member.application.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +18,8 @@ public class MemberApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addMember(@RequestBody MemberRequest memberRequest) {
-        memberService.addMember(memberRequest);
+    public ResponseEntity<Void> addMember(@RequestBody MemberAddRequest memberAddRequest) {
+        memberService.addMember(memberAddRequest.toDto());
         return ResponseEntity.ok().build();
     }
 }

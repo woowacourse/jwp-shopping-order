@@ -1,9 +1,9 @@
-package cart.order.ui;
+package cart.order.presentation;
 
-import cart.order.ui.dto.OrderDto;
-import cart.order.ui.dto.OrderRequest;
+import cart.order.application.dto.OrderDto;
 import cart.member.domain.Member;
 import cart.order.application.OrderService;
+import cart.order.presentation.request.OrderAddRequest;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(Member member, @RequestBody OrderRequest orderRequest) {
-        Long orderId = orderService.order(member, orderRequest);
+    public ResponseEntity<Void> order(Member member, @RequestBody OrderAddRequest orderAddRequest) {
+        Long orderId = orderService.order(member, orderAddRequest.toDto());
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 

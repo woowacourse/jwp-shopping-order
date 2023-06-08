@@ -1,6 +1,6 @@
-package cart.member.ui;
+package cart.member.presentation;
 
-import cart.member.ui.dto.PointDto;
+import cart.member.application.dto.PointDto;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
 import cart.member.domain.PointPolicy;

@@ -3,19 +3,19 @@ package cart.acceptance;
 import static cart.acceptance.CommonSteps.LOCATION_헤더에서_ID_추출;
 import static io.restassured.RestAssured.given;
 
-import cart.order.ui.dto.OrderRequest;
 import cart.member.domain.Member;
+import cart.order.presentation.request.OrderAddRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderSteps {
-    public static ExtractableResponse<Response> 주문_요청(Member member, OrderRequest orderRequest) {
+    public static ExtractableResponse<Response> 주문_요청(Member member, OrderAddRequest orderAddRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(orderRequest)
+                .body(orderAddRequest)
                 .when()
                 .post("/orders")
                 .then()
@@ -23,8 +23,8 @@ public class OrderSteps {
                 .extract();
     }
 
-    public static Long 주문_요청하고_아이디_반환(Member member, OrderRequest orderRequest) {
-        ExtractableResponse<Response> response = 주문_요청(member, orderRequest);
+    public static Long 주문_요청하고_아이디_반환(Member member, OrderAddRequest orderAddRequest) {
+        ExtractableResponse<Response> response = 주문_요청(member, orderAddRequest);
         return LOCATION_헤더에서_ID_추출(response);
     }
 

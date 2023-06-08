@@ -2,7 +2,7 @@ package cart.acceptance;
 
 import static io.restassured.RestAssured.given;
 
-import cart.member.ui.dto.MemberRequest;
+import cart.member.presentation.request.MemberAddRequest;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
 import org.springframework.http.MediaType;
@@ -10,10 +10,10 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberSteps {
     public static void 유저_생성_요청(String email, String password, int point) {
-        MemberRequest memberRequest = new MemberRequest(email, password, point);
+        MemberAddRequest memberAddRequest = new MemberAddRequest(email, password, point);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(memberRequest)
+                .body(memberAddRequest)
                 .when()
                 .post("/members")
                 .then();

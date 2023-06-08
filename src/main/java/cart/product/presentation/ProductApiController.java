@@ -1,8 +1,9 @@
-package cart.product.ui;
+package cart.product.presentation;
 
-import cart.product.ui.dto.ProductRequest;
-import cart.product.ui.dto.ProductDto;
+import cart.product.presentation.request.ProductAddRequest;
+import cart.product.application.dto.ProductDto;
 import cart.product.application.ProductService;
+import cart.product.presentation.request.ProductUpdateRequest;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,14 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
+    public ResponseEntity<Void> createProduct(@RequestBody ProductAddRequest productAddRequest) {
+        Long id = productService.createProduct(productAddRequest.toDto());
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest productUpdateRequest) {
+        productService.updateProduct(id, productUpdateRequest.toDto());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

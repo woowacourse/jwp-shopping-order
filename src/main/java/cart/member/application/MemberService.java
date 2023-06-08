@@ -1,8 +1,8 @@
 package cart.member.application;
 
+import cart.member.application.dto.MemberAddDto;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
-import cart.member.ui.dto.MemberRequest;
 import cart.member.persistence.MemberDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,13 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public void addMember(MemberRequest memberRequest) {
-        if (memberRequest.getPoint() == null) {
-            Member memberWithoutPoint = new Member(memberRequest.getEmail(), memberRequest.getPassword());
+    public void addMember(MemberAddDto memberAddDto) {
+        if (memberAddDto.getPoint() == null) {
+            Member memberWithoutPoint = new Member(memberAddDto.getEmail(), memberAddDto.getPassword());
             memberDao.addMemberWithoutPoint(memberWithoutPoint);
         }
-        Member memberWithPoint = new Member(memberRequest.getEmail(), memberRequest.getPassword(),
-                new Point(memberRequest.getPoint()));
+        Member memberWithPoint = new Member(memberAddDto.getEmail(), memberAddDto.getPassword(),
+                new Point(memberAddDto.getPoint()));
         memberDao.addMemberWithPoint(memberWithPoint);
     }
 

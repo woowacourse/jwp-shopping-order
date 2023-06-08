@@ -1,11 +1,11 @@
-package cart.member.ui.dto;
+package cart.member.application.dto;
 
-public class MemberRequest {
+public class MemberAddDto {
     private String email;
     private String password;
     private Integer point;
 
-    public MemberRequest(String email, String password, Integer point) {
+    public MemberAddDto(String email, String password, Integer point) {
         this.email = email;
         this.password = password;
         this.point = point;

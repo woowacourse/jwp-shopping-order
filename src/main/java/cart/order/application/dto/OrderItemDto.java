@@ -1,7 +1,7 @@
-package cart.order.ui.dto;
+package cart.order.application.dto;
 
-import cart.cartItem.ui.dto.ProductInCartItemDto;
 import cart.order.domain.OrderItem;
+import cart.order.presentation.request.ProductInOrderItemDto;
 
 public class OrderItemDto {
     private final int quantity;

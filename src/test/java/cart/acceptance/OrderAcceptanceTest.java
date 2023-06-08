@@ -16,14 +16,14 @@ import static cart.acceptance.ProductSteps.상품_생성하고_아이디_반환;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.cartItem.persistence.CartItemDao;
-import cart.cartItem.ui.dto.CartItemDto;
-import cart.cartItem.ui.dto.CartItemRequest;
-import cart.order.ui.dto.OrderDto;
-import cart.order.ui.dto.OrderItemDto;
-import cart.order.ui.dto.OrderRequest;
-import cart.cartItem.ui.dto.ProductInCartItemDto;
-import cart.order.ui.dto.ProductInOrderItemDto;
-import cart.product.ui.dto.ProductRequest;
+import cart.cartItem.presentation.request.CartItemRequest;
+import cart.order.application.dto.CartItemDto;
+import cart.order.application.dto.OrderDto;
+import cart.order.application.dto.OrderItemDto;
+import cart.cartItem.application.dto.ProductInCartItemDto;
+import cart.order.presentation.request.OrderAddRequest;
+import cart.order.presentation.request.ProductInOrderItemDto;
+import cart.product.presentation.request.ProductAddRequest;
 import cart.member.domain.Member;
 import cart.member.persistence.MemberDao;
 import cart.order.persistence.OrderItemDao;
@@ -66,9 +66,9 @@ public class OrderAcceptanceTest {
     @Autowired
     private PaymentDao paymentDao;
 
-    private ProductRequest productRequest1;
-    private ProductRequest productRequest2;
-    private ProductRequest productRequest3;
+    private ProductAddRequest productAddRequest1;
+    private ProductAddRequest productAddRequest2;
+    private ProductAddRequest productAddRequest3;
 
     private Long productId1;
     private Long productId2;
@@ -78,13 +78,13 @@ public class OrderAcceptanceTest {
     void setUp() {
         RestAssured.port = port;
 
-        productRequest1 = new ProductRequest("떡볶이", 5000, "http://teokbboki.jpg", 30);
-        productRequest2 = new ProductRequest("치킨", 10000, "http://chicken.jpg", 30);
-        productRequest3 = new ProductRequest("피자", 15000, "http://pizza.jpg", 30);
+        productAddRequest1 = new ProductAddRequest("떡볶이", 5000, "http://teokbboki.jpg", 30);
+        productAddRequest2 = new ProductAddRequest("치킨", 10000, "http://chicken.jpg", 30);
+        productAddRequest3 = new ProductAddRequest("피자", 15000, "http://pizza.jpg", 30);
 
-        productId1 = 상품_생성하고_아이디_반환(productRequest1);
-        productId2 = 상품_생성하고_아이디_반환(productRequest2);
-        productId3 = 상품_생성하고_아이디_반환(productRequest3);
+        productId1 = 상품_생성하고_아이디_반환(productAddRequest1);
+        productId2 = 상품_생성하고_아이디_반환(productAddRequest2);
+        productId3 = 상품_생성하고_아이디_반환(productAddRequest3);
     }
 
     @Test
@@ -97,11 +97,11 @@ public class OrderAcceptanceTest {
         장바구니_상품_수량_수정_요청(member, cartItemId2, 2);
 
         // when
-        CartItemDto cartItemDto1 = toCartItemDto(cartItemId1, 5, productId1, productRequest1);
-        CartItemDto cartItemDto2 = toCartItemDto(cartItemId2, 2, productId2, productRequest2);
-        OrderRequest orderRequest = new OrderRequest(List.of(cartItemDto1, cartItemDto2), 45000, 3000, 3000, 45000);
+        CartItemDto cartItemDto1 = toCartItemDto(cartItemId1, 5, productId1, productAddRequest1);
+        CartItemDto cartItemDto2 = toCartItemDto(cartItemId2, 2, productId2, productAddRequest2);
+        OrderAddRequest orderAddRequest = new OrderAddRequest(List.of(cartItemDto1, cartItemDto2), 45000, 3000, 3000, 45000);
 
-        var response = 주문_요청(member, orderRequest);
+        var response = 주문_요청(member, orderAddRequest);
 
         // then
         STATUS_CODE를_검증한다(response, 정상_생성);
@@ -152,9 +152,10 @@ public class OrderAcceptanceTest {
         장바구니_상품_수량_수정_요청(member, cartItemId1, 5);
         장바구니_상품_수량_수정_요청(member, cartItemId2, 2);
 
-        OrderRequest orderRequest = new OrderRequest(List.of(toCartItemDto(cartItemId1, 5, productId1, productRequest1),
-                toCartItemDto(cartItemId2, 2, productId2, productRequest2)), 45000, 3000, 3000, 45000);
-        Long orderId = 주문_요청하고_아이디_반환(member, orderRequest);
+        OrderAddRequest orderAddRequest = new OrderAddRequest(List.of(toCartItemDto(cartItemId1, 5, productId1,
+                        productAddRequest1),
+                toCartItemDto(cartItemId2, 2, productId2, productAddRequest2)), 45000, 3000, 3000, 45000);
+        Long orderId = 주문_요청하고_아이디_반환(member, orderAddRequest);
 
         // when
         var response = 주문_상세_조회_요청(member, orderId);
@@ -163,8 +164,8 @@ public class OrderAcceptanceTest {
         STATUS_CODE를_검증한다(response, 정상_처리);
 
         OrderDto orderDto = new OrderDto(orderId, LocalDateTime.now().toString(),
-                List.of(toOrderItemDto(5, productId1, productRequest1, 25),
-                        toOrderItemDto(2, productId2, productRequest2, 28)), 45000);
+                List.of(toOrderItemDto(5, productId1, productAddRequest1, 25),
+                        toOrderItemDto(2, productId2, productAddRequest2, 28)), 45000);
         주문_상세_응답을_검증한다(response, orderDto);
     }
 
@@ -187,20 +188,20 @@ public class OrderAcceptanceTest {
         장바구니_상품_수량_수정_요청(member, cartItemId1, 5);
         장바구니_상품_수량_수정_요청(member, cartItemId2, 2);
 
-        OrderRequest orderRequest1 = new OrderRequest(
-                List.of(toCartItemDto(cartItemId1, 5, productId1, productRequest1),
-                        toCartItemDto(cartItemId2, 2, productId2, productRequest2)), 45000, 3000, 3000, 45000);
-        Long orderId1 = 주문_요청하고_아이디_반환(member, orderRequest1);
+        OrderAddRequest orderAddRequest1 = new OrderAddRequest(
+                List.of(toCartItemDto(cartItemId1, 5, productId1, productAddRequest1),
+                        toCartItemDto(cartItemId2, 2, productId2, productAddRequest2)), 45000, 3000, 3000, 45000);
+        Long orderId1 = 주문_요청하고_아이디_반환(member, orderAddRequest1);
 
         Long cartItemId3 = 장바구니에_상품_추가하고_아이디_반환(member, new CartItemRequest(productId2));
         Long cartItemId4 = 장바구니에_상품_추가하고_아이디_반환(member, new CartItemRequest(productId3));
         장바구니_상품_수량_수정_요청(member, cartItemId3, 3);
         장바구니_상품_수량_수정_요청(member, cartItemId4, 4);
 
-        OrderRequest orderRequest2 = new OrderRequest(
-                List.of(toCartItemDto(cartItemId3, 3, productId2, productRequest2),
-                        toCartItemDto(cartItemId4, 4, productId3, productRequest3)), 90000, 0, 4000, 86000);
-        Long orderId2 = 주문_요청하고_아이디_반환(member, orderRequest2);
+        OrderAddRequest orderAddRequest2 = new OrderAddRequest(
+                List.of(toCartItemDto(cartItemId3, 3, productId2, productAddRequest2),
+                        toCartItemDto(cartItemId4, 4, productId3, productAddRequest3)), 90000, 0, 4000, 86000);
+        Long orderId2 = 주문_요청하고_아이디_반환(member, orderAddRequest2);
 
         // when
         var response = 주문_목록_조회_요청(member);
@@ -209,11 +210,11 @@ public class OrderAcceptanceTest {
         STATUS_CODE를_검증한다(response, 정상_처리);
 
         OrderDto orderDto1 = new OrderDto(orderId1, LocalDateTime.now().toString(),
-                List.of(toOrderItemDto(5, productId1, productRequest1, 25),
-                        toOrderItemDto(2, productId2, productRequest2, 28)), 45000);
+                List.of(toOrderItemDto(5, productId1, productAddRequest1, 25),
+                        toOrderItemDto(2, productId2, productAddRequest2, 28)), 45000);
         OrderDto orderDto2 = new OrderDto(orderId2, LocalDateTime.now().toString(),
-                List.of(toOrderItemDto(3, productId2, productRequest2, 25),
-                        toOrderItemDto(4, productId3, productRequest3, 26)), 86000);
+                List.of(toOrderItemDto(3, productId2, productAddRequest2, 25),
+                        toOrderItemDto(4, productId3, productAddRequest3, 26)), 86000);
         주문_목록_조회_결과를_검증한다(response, List.of(orderDto1, orderDto2));
     }
 
@@ -231,17 +232,17 @@ public class OrderAcceptanceTest {
         }
     }
 
-    private CartItemDto toCartItemDto(Long cartItemId, int quantity, Long productId, ProductRequest productRequest) {
-        return new CartItemDto(cartItemId, quantity, toProductDto(productId, productRequest));
+    private CartItemDto toCartItemDto(Long cartItemId, int quantity, Long productId, ProductAddRequest productAddRequest) {
+        return new CartItemDto(cartItemId, quantity, toProductDto(productId, productAddRequest));
     }
 
-    private OrderItemDto toOrderItemDto(int quantity, Long productId, ProductRequest productRequest, int stock) {
-        return new OrderItemDto(quantity, new ProductInOrderItemDto(productId, productRequest.getPrice(), productRequest.getName(),
-                productRequest.getImageUrl(), stock));
+    private OrderItemDto toOrderItemDto(int quantity, Long productId, ProductAddRequest productAddRequest, int stock) {
+        return new OrderItemDto(quantity, new ProductInOrderItemDto(productId, productAddRequest.getPrice(), productAddRequest.getName(),
+                productAddRequest.getImageUrl(), stock));
     }
 
-    private ProductInCartItemDto toProductDto(Long productId, ProductRequest productRequest) {
-        return new ProductInCartItemDto(productId, productRequest.getPrice(), productRequest.getName(),
-                productRequest.getImageUrl(), productRequest.getStock());
+    private ProductInCartItemDto toProductDto(Long productId, ProductAddRequest productAddRequest) {
+        return new ProductInCartItemDto(productId, productAddRequest.getPrice(), productAddRequest.getName(),
+                productAddRequest.getImageUrl(), productAddRequest.getStock());
     }
 }
