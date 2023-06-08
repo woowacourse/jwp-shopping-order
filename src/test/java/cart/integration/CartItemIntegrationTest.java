@@ -4,8 +4,8 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
-import cart.dto.response.CartItemResponse;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.CartItemResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +51,18 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("장바구니에 동일한 아이템을 추가할 경우 예외가 발생한다.")
+    @Test
+    void addDuplicatedCartItem() {
+        CartItemRequest cartItemRequest1 = new CartItemRequest(productId);
+        requestAddCartItem(member, cartItemRequest1);
+
+        CartItemRequest cartItemRequest2 = new CartItemRequest(productId);
+        ExtractableResponse<Response> response2 = requestAddCartItem(member, cartItemRequest2);
+
+        assertThat(response2.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")

@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
+import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,15 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(CartItem.createInitCartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+
+        CartItem initCartItem = CartItem.createInitCartItem(member, productDao.getProductById(cartItemRequest.getProductId()));
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        boolean isSameCartItem = cartItems.stream()
+                .anyMatch(cartItem -> cartItem.checkSameCartItem(initCartItem));
+        if (isSameCartItem) {
+            throw new CartItemException.SameCartItem(initCartItem);
+        }
+        return cartItemDao.save(initCartItem);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

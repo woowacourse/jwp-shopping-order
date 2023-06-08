@@ -32,6 +32,10 @@ public class CartItem {
         }
     }
 
+    public boolean checkSameCartItem(CartItem cartItem) {
+        return this.product.equals(cartItem.getProduct());
+    }
+
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }

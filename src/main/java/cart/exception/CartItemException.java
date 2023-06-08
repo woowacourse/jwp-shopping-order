@@ -14,4 +14,10 @@ public class CartItemException extends RuntimeException {
             super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
         }
     }
+
+    public static class SameCartItem extends CartItemException {
+        public SameCartItem(CartItem cartItem) {
+            super(cartItem.getProduct().getName() + " is already registered");
+        }
+    }
 }
