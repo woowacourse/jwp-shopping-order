@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/cart-items")
 public class CartItemApiController {
 
-    public static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
     private final CartItemService cartItemService;
 
     public CartItemApiController(final CartItemService cartItemService) {

@@ -20,46 +20,46 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final MemberDao memberDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
+    public MemberArgumentResolver(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
-                                  ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
-        String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    public Object resolveArgument(final MethodParameter parameter,
+                                  final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest,
+                                  final WebDataBinderFactory binderFactory) throws Exception {
+        final String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         validateAuthorizationHeader(header);
 
-        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-        String decoded = new String(Base64.decodeBase64(authHeaderValue));
+        final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        final String decoded = new String(Base64.decodeBase64(authHeaderValue));
 
-        String[] credentials = decoded.split(DELIMITER);
+        final String[] credentials = decoded.split(DELIMITER);
 
         try {
-            String email = credentials[EMAIL_INDEX];
-            String password = credentials[PASSWORD_INDEX];
+            final String email = credentials[EMAIL_INDEX];
+            final String password = credentials[PASSWORD_INDEX];
 
-            Member member = memberDao.getMemberByEmail(email)
+            final Member member = memberDao.getMemberByEmail(email)
                     .orElseThrow(() -> new AuthenticationException("로그인에 실패했습니다."));
-            
+
             if (!member.checkPassword(password)) {
                 throw new AuthenticationException("로그인에 실패했습니다.");
             }
             return member;
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        } catch (final ArrayIndexOutOfBoundsException ex) {
             throw new AuthenticationException("토큰 형식이 올바르지 않습니다.", ex);
         }
     }
 
-    private void validateAuthorizationHeader(String header) {
+    private void validateAuthorizationHeader(final String header) {
         if (header == null) {
             throw new AuthenticationException("로그인이 필요한 기능입니다.");
         }
@@ -68,7 +68,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         }
     }
 
-    private boolean checkNonBasicType(String header) {
+    private boolean checkNonBasicType(final String header) {
         return !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
     }
 }
