@@ -51,18 +51,17 @@ public class OrderService {
         CartItems cartItems = cartItemRepository.findByIds(new ArrayList<>(cartProductRequests.keySet()));
         validateCartItems(cartProductRequests, cartItems);
 
+        cartItemRepository.deleteAll(cartItems);
+
         Long memberCouponId = request.getCouponId();
         if (Objects.isNull(memberCouponId)) {
             Order order = Order.of(member, cartItems, MemberCoupon.none(member));
-            cartItemRepository.deleteAll(cartItems);
             return orderRepository.order(order);
         }
 
         MemberCoupon memberCoupon = memberCouponRepository.findById(memberCouponId)
                 .orElseThrow(() -> new NoExistException(COUPON_NO_EXIST));
         Order order = Order.of(member, cartItems, memberCoupon);
-
-        cartItemRepository.deleteAll(cartItems);
         memberCouponRepository.use(memberCoupon);
         return orderRepository.order(order);
     }
