@@ -3,7 +3,6 @@ package cart.exception;
 import cart.ui.dto.response.ErrorResponse;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,34 +29,34 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleCartItemIdsEmpty(final MethodArgumentNotValidException error) {
-        final List<String> errorFields = error.getBindingResult().getAllErrors()
-                .stream()
-                .map(FieldError.class::cast)
-                .map(FieldError::getField)
-                .collect(Collectors.toList());
-        final Map<String, String> errors = error.getBindingResult().getAllErrors()
-                .stream()
-                .map(FieldError.class::cast)
-                .collect(Collectors.toUnmodifiableMap(FieldError::getField, ObjectError::getDefaultMessage));
-        final int statusCode = HttpStatus.BAD_REQUEST.value();
-        final String message = errors.get(errorFields.get(0));
-        return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
-    }
-
-    @ExceptionHandler
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException e) {
         final int statusCode = HttpStatus.BAD_REQUEST.value();
         final String message = e.getMessage();
         return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException(final NoSuchElementException e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleCartItemIdsEmpty(final MethodArgumentNotValidException error) {
+        final List<String> errorFields = getErrorFields(error);
+        final Map<String, String> errors = getErrors(error);
+
         final int statusCode = HttpStatus.BAD_REQUEST.value();
-        final String message = e.getMessage();
+        final String message = errors.get(errorFields.get(0));
         return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
+    }
+
+    private List<String> getErrorFields(final MethodArgumentNotValidException error) {
+        return error.getBindingResult().getAllErrors().stream()
+                .map(FieldError.class::cast)
+                .map(FieldError::getField)
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, String> getErrors(final MethodArgumentNotValidException error) {
+        return error.getBindingResult().getAllErrors().stream()
+                .map(FieldError.class::cast)
+                .collect(Collectors.toUnmodifiableMap(FieldError::getField, ObjectError::getDefaultMessage));
     }
 
     @ExceptionHandler(Exception.class)
@@ -66,5 +65,4 @@ public class ControllerExceptionHandler {
         final String message =  "서버에 일시적인 문제가 생겼습니다. 관리자에게 문의하세요.";
         return ResponseEntity.status(statusCode).body(new ErrorResponse(statusCode, message));
     }
-
 }

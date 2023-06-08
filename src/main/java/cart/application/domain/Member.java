@@ -33,8 +33,8 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public boolean isNotSamePassword(String password) {
+        return !this.password.equals(password);
     }
 
     public Grade getGrade() {
