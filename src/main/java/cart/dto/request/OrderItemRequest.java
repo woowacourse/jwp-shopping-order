@@ -7,11 +7,11 @@ import org.hibernate.validator.constraints.Range;
 public class OrderItemRequest {
 
     @NotNull
-    private Long id;
+    private final Long id;
 
     @NotNull
     @Range(min = 1)
-    private Integer quantity;
+    private final Integer quantity;
 
     @ConstructorProperties(value = {"id", "quantity"})
     public OrderItemRequest(final Long id, final Integer quantity) {

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 public class CartItemRequest {
 
     @NotNull
-    private Long productId;
+    private final Long productId;
 
     @ConstructorProperties(value = {"productId"})
     public CartItemRequest(Long productId) {

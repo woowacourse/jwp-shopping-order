@@ -8,14 +8,14 @@ import org.hibernate.validator.constraints.Range;
 public class ProductRequest {
 
     @NotBlank
-    private String name;
+    private final String name;
 
     @NotNull
     @Range(min = 1)
-    private int price;
+    private final int price;
 
     @NotBlank
-    private String imageUrl;
+    private final String imageUrl;
 
     @ConstructorProperties(value = {"name", "price", "imageUrl"})
     public ProductRequest(String name, int price, String imageUrl) {

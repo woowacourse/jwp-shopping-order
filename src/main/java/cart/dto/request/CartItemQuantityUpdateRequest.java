@@ -8,7 +8,7 @@ public class CartItemQuantityUpdateRequest {
 
     @NotNull
     @Min(1)
-    private int quantity;
+    private final int quantity;
 
     @ConstructorProperties(value = {"quantity"})
     public CartItemQuantityUpdateRequest(int quantity) {
