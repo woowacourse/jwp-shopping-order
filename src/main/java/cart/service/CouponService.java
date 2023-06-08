@@ -21,12 +21,9 @@ public class CouponService {
     }
 
 
-    public List<CouponResponseDto> issue(final Member member) {
-        List<MemberCoupon> memberCoupons = couponRepository.saveCoupon(member);
-
-        return memberCoupons.stream()
-                .map(CouponResponseDto::from)
-                .collect(Collectors.toList());
+    public CouponResponseDto issue(final Member member, final Long couponId) {
+        MemberCoupon memberCoupons = couponRepository.saveCoupon(member, couponId);
+        return CouponResponseDto.from(memberCoupons);
     }
 
     public List<CouponResponseDto> findAllByMember(final Member member) {

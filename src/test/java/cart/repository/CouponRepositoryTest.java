@@ -33,13 +33,13 @@ class CouponRepositoryTest {
     @Test
     @DisplayName("사용자가 쿠폰을 추가하면, 현재 Coupon 테이블에 있는 쿠폰이 모두 추가된다.")
     void addCoupon() {
-        couponRepository.saveCoupon(MEMBER_3);
+        couponRepository.saveCoupon(MEMBER_3, 1L);
 
         List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(MEMBER_3.getId());
 
         assertThat(memberCouponDtos)
                 .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
-                .containsExactly(tuple(3L, 1L), tuple(3L, 2L));
+                .containsExactly(tuple(3L, 1L));
     }
 
     @Test

@@ -29,12 +29,12 @@ class CouponServiceTest {
     @Test
     @DisplayName("issue 테스트")
     void issue() {
-        couponService.issue(MEMBER_3);
+        couponService.issue(MEMBER_3, 1L);
 
         List<CouponResponseDto> couponResponseDtos = couponService.findAllByMember(MEMBER_3);
         assertThat(couponResponseDtos)
                 .extracting(CouponResponseDto::getMemberCouponId, CouponResponseDto::getName)
-                .containsExactly(tuple(5L, "정액 할인 쿠폰"), tuple(6L, "할인율 쿠폰"));
+                .containsExactly(tuple(5L, "정액 할인 쿠폰"));
     }
 
     @Test

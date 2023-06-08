@@ -57,18 +57,15 @@ class OrderIntegrationTest extends IntegrationTest {
         Long matthewId = createProduct(매튜);
 
         // 쿠폰이 있다.
-        List<CouponResponseDto> memberCoupon = createMemberCoupon();
+        CouponResponseDto memberCoupon = createMemberCoupon();
 
         // 장바구니가 있다.
         Long hongCartItemId = requestAddCartItemAndGetId(member, hongSilId);
         Long mattCartItemId = requestAddCartItemAndGetId(member, matthewId);
 
-        OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(hongCartItemId, mattCartItemId),
-                memberCoupon.stream()
-                        .filter(this::isSameCoupon)
-                        .findFirst()
-                        .map(CouponResponseDto::getMemberCouponId)
-                        .orElse(null)
+        OrderRequestDto orderRequestDto = new OrderRequestDto(
+                List.of(hongCartItemId, mattCartItemId),
+                memberCoupon.getMemberCouponId()
         );
 
         // when
@@ -120,9 +117,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .then().statusCode(HttpStatus.OK.value())
                 .extract().as(new TypeRef<>() {});
 
-        assertThat(couponResponseDtos)
-                .hasSize(1)
-                .noneMatch(couponResponseDto -> couponResponseDto.getName().equals("정액 할인 쿠폰"));
+        assertThat(couponResponseDtos).isEmpty();
     }
 
     @Test
@@ -142,13 +137,11 @@ class OrderIntegrationTest extends IntegrationTest {
                 .equals("정액 할인 쿠폰");
     }
 
-    private List<CouponResponseDto> createMemberCoupon() {
-        ExtractableResponse<Response> response = given()
+    private CouponResponseDto createMemberCoupon() {
+        return given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when().post("/coupons/issue")
-                .then().statusCode(HttpStatus.CREATED.value()).extract();
-
-        return response.as(new TypeRef<>() {});
+                .when().post("/coupons/1/issue")
+                .then().statusCode(HttpStatus.CREATED.value()).extract().as(CouponResponseDto.class);
     }
 
     private Long createProduct(ProductRequestDto productRequest) {

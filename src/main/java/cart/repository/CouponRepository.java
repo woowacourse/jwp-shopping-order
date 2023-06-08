@@ -27,22 +27,19 @@ public class CouponRepository {
         this.memberCouponDao = memberCouponDao;
     }
 
-    public List<MemberCoupon> saveCoupon(Member member) {
-        List<CouponDto> couponDtos = couponDao.findAll();
-        return saveMemberCoupons(member, couponDtos);
+    public MemberCoupon saveCoupon(Member member, Long couponId) {
+        CouponDto couponDto = couponDao.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 쿠폰이 존재하지 않습니다."));
+
+        return saveMemberCoupon(member, couponDto);
     }
 
-    private List<MemberCoupon> saveMemberCoupons(final Member member, final List<CouponDto> couponDtos) {
-        List<MemberCoupon> memberCoupons = new ArrayList<>();
+    private MemberCoupon saveMemberCoupon(final Member member, final CouponDto couponDto) {
+        MemberCouponDto memberCouponDto = new MemberCouponDto(member.getId(), couponDto.getId());
+        Long id = memberCouponDao.insert(memberCouponDto);
+        Coupon coupon = CouponConvertor.dtoToDomain(couponDto);
 
-        for (CouponDto couponDto : couponDtos) {
-            MemberCouponDto memberCouponDto = new MemberCouponDto(member.getId(), couponDto.getId());
-            Long id = memberCouponDao.insert(memberCouponDto);
-            Coupon coupon = CouponConvertor.dtoToDomain(couponDto);
-            memberCoupons.add(new MemberCoupon(id, member, coupon));
-        }
-
-        return memberCoupons;
+        return new MemberCoupon(id, member, coupon);
     }
 
     public List<MemberCoupon> findMemberCouponByMember(Member member) {

@@ -41,25 +41,18 @@ Connection: keep-alive
 ]
 
 ### 멤버의 쿠폰 발급받기(테스트 용)
-POST http://localhost:8080/coupons/issue
+POST http://localhost:8080/coupons/1/issue
 Authorization: basic YUBhLmNvbToxMjM0
 
 ### response
 HTTP/1.1 201
-Location: ignored
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Sun, 04 Jun 2023 14:51:30 GMT
+Date: Thu, 08 Jun 2023 10:45:18 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 
-[
-  {
-    "memberCouponId": 5,
-    "name": "정액 할인 쿠폰"
-  },
-  {
-    "memberCouponId": 6,
-    "name": "할인율 쿠폰"
-  }
-]
+{
+  "memberCouponId": 5,
+  "name": "정액 할인 쿠폰"
+}

@@ -1,3 +1,10 @@
+POST http://localhost:8080/coupons/1/issue
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-08T194518.201.json
+
+###
+
 POST http://localhost:8080/orders
 Accept: application/json
 Content-Type: application/json
