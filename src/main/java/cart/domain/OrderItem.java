@@ -34,6 +34,18 @@ public class OrderItem {
         return quantity;
     }
 
+    public String getProductName() {
+        return this.product.getName();
+    }
+
+    public Integer getProductPrice() {
+        return this.product.getPrice();
+    }
+
+    public String getProductUrl() {
+        return this.product.getImageUrl();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

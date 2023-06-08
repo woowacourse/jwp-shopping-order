@@ -50,7 +50,7 @@ public class OrderDao {
                 "VALUES(?, ?, ?, ?, ?)";
 
         for (OrderItem orderItem : order.getOrderItems().getOrderItems()) {
-            jdbcTemplate.update(relatedSql, orderId, orderItem.getProduct().getName(), orderItem.getProduct().getPrice(), orderItem.getProduct().getImageUrl(), orderItem.getQuantity());
+            jdbcTemplate.update(relatedSql, orderId, orderItem.getProductName(), orderItem.getProductPrice(), orderItem.getProductUrl(), orderItem.getQuantity());
         }
 
         return orderId;
