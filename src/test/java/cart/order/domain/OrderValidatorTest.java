@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class OrderValidatorTest {
 
     private final ProductRepository productRepository = new FakeProductRepository();
-    private final OrderValidator orderValidator = new OrderValidator(productRepository);
+    private final OrderValidator orderValidator = new OrderValidator();
 
     @Test
     void 상품_이름이_변경되면_오류() {
@@ -40,7 +40,7 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(1L, List.of(cartItem))
+                orderValidator.validate(1L, cartItem, updated)
         ).exceptionType();
 
         // then
@@ -60,7 +60,7 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(1L, List.of(cartItem))
+                orderValidator.validate(1L, cartItem, updated)
         ).exceptionType();
 
         // then
@@ -80,7 +80,7 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(1L, List.of(cartItem))
+                orderValidator.validate(1L, cartItem, updated)
         ).exceptionType();
 
         // then
@@ -98,7 +98,7 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(member2.getId(), List.of(cartItem))
+                orderValidator.validate(member2.getId(), cartItem, origin)
         ).exceptionType();
 
         // then
@@ -118,6 +118,6 @@ class OrderValidatorTest {
 
         // when & then
         assertDoesNotThrow(() ->
-                orderValidator.validate(1L, List.of(cartItem)));
+                orderValidator.validate(1L, cartItem, updated));
     }
 }

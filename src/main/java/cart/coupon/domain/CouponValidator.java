@@ -8,9 +8,7 @@ import cart.cartitem.domain.CartItem;
 import cart.coupon.exception.CouponException;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CouponValidator {
 
     public void validate(Long memberId, List<CartItem> cartItems, List<Coupon> coupons) {
