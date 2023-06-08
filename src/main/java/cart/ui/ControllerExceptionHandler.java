@@ -27,7 +27,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExceptionResponse> handlerAuthenticationException(final AuthenticationException ex) {
-        logger.info("", ex);
+        logger.error("", ex);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ExceptionResponse(ex.getMessage()));
@@ -35,7 +35,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalMemberException.class)
     public ResponseEntity<ExceptionResponse> handleException(final IllegalMemberException ex) {
-        logger.info("", ex);
+        logger.error("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse("잘못된 사용자입니다."));
@@ -43,7 +43,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CartItemAlreadyExistException.class)
     public ResponseEntity<ExceptionResponse> handleException(final CartItemAlreadyExistException ex) {
-        logger.info("", ex);
+        logger.error("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse(ex.getMessage()));
@@ -53,7 +53,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             ProductNotFoundException.class,
             MemberNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleNotFoundException(final RuntimeException ex) {
-        logger.info("", ex);
+        logger.error("", ex);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(ex.getMessage()));
@@ -64,7 +64,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             PointBiggerThenLimitException.class,
             PointNegativeException.class})
     public ResponseEntity<ExceptionResponse> handleException(final RuntimeException ex) {
-        logger.info("", ex);
+        logger.error("", ex);
 
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(ex.getMessage()));
@@ -75,7 +75,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpHeaders headers,
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
-        logger.info("", ex);
+        logger.error("", ex);
 
         final String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
                 .stream()
