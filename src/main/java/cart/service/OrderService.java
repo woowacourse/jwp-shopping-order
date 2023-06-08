@@ -16,6 +16,7 @@ import cart.exception.DuplicateDiscountException;
 import cart.exception.NotFoundException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,7 @@ public class OrderService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional
     public Long doOrder(Member member, OrderRequest orderRequest) {
         List<Long> notNullCouponIds = orderRequest.getCouponIds().stream().
                 filter(Objects::nonNull)

@@ -8,6 +8,7 @@ import cart.domain.order.OrderCartItem;
 import cart.entity.OrderCartItemEntity;
 import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class OrderRepository {
         this.orderCartItemDao = orderCartItemDao;
     }
 
+    @Transactional
     public Long insert(Member member, Order order) {
         Long orderId = orderDao.insert(OrderEntity.of(member, order));
         List<OrderCartItem> orderCartItems = order.getOrderCartItems();
