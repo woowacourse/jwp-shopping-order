@@ -3,9 +3,10 @@ package cart.domain.order;
 
 import cart.domain.Member;
 import cart.domain.point.Point;
-import org.springframework.stereotype.Component;
+import cart.exception.order.OrderException;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
 
@@ -32,7 +33,7 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems, Long threshold,Point usedPoint) {
+    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems, Long threshold, Point usedPoint) {
         Long getTotalPrice = orderItems.stream()
                 .mapToLong(orderItem -> orderItem.getProduct().getPrice() * orderItem.getQuantity())
                 .sum();
@@ -41,6 +42,18 @@ public class Order {
         }
 
         return new Order(member, shippingFee, getTotalPrice, orderItems, usedPoint);
+    }
+
+    public void checkSameTotalPrice(Long requestTotalProductsPrice) {
+        if (!Objects.equals(this.totalPrice, requestTotalProductsPrice)) {
+            throw new OrderException.NotSameTotalPrice();
+        }
+    }
+
+    public void checkMinusOrderPrice(Long requestUsedPoint) {
+        if (this.totalPrice + this.shippingFee < requestUsedPoint) {
+            throw new OrderException.MinusOrderPrice();
+        }
     }
 
     public Long getId() {

@@ -12,14 +12,12 @@ import cart.dto.order.OrderCreateResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
-import cart.exception.order.OrderException;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,31 +42,25 @@ public class OrderService {
         final List<OrderItem> orderItemList = orderRequest.getOrder().stream()
                 .map(orderItemDto -> new OrderItem(cartItemDao.findById(orderItemDto.getCartItemId()).getProduct(), orderItemDto.getQuantity()))
                 .collect(toList());
-
-        // TODO: optional 예외처리 구현하기
         final ShippingFee shippingFee = orderRepository.findShippingFee();
         final ShippingDiscountPolicy shippingDiscountPolicy = orderRepository.findShippingDiscountPolicy();
 
-        final Order newOrder = Order.of(member,
-                shippingFee.getFee(),
-                orderItemList,
-                shippingDiscountPolicy.getThreshold(),
-                new Point(orderRequest.getUsedPoint()));
-        if (!Objects.equals(newOrder.getTotalPrice(), orderRequest.getTotalProductsPrice())) {
-            throw new OrderException.NotSameTotalPrice();
-        }
+        final Order newOrder = Order.of(member, shippingFee.getFee(), orderItemList, shippingDiscountPolicy.getThreshold(), new Point(orderRequest.getUsedPoint()));
+        checkOrderException(orderRequest, newOrder);
 
         final Long orderId = orderRepository.saveOrder(member, newOrder);
         final Point memberPoint = pointRepository.findPointByMemberId(member.getId());
-        if (newOrder.getTotalPrice() + newOrder.getShippingFee() < orderRequest.getUsedPoint()) {
-            throw new OrderException.MinusOrderPrice();
-        }
 
         pointRepository.updatePoint(member.getId(), memberPoint.minus(orderRequest.getUsedPoint()));
         final Long earnedPoint = pointPolicyStrategy.caclulatePointWithPolicy(newOrder.getTotalPrice() - orderRequest.getUsedPoint());
         pointRepository.updatePoint(member.getId(), earnedPoint);
 
         return new OrderCreateResponse(orderId, earnedPoint);
+    }
+
+    private static void checkOrderException(OrderRequest orderRequest, Order newOrder) {
+        newOrder.checkSameTotalPrice(orderRequest.getTotalProductsPrice());
+        newOrder.checkMinusOrderPrice(orderRequest.getUsedPoint());
     }
 
     public List<OrdersResponse> findAllOrdersByMember(final Member member) {
