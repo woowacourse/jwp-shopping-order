@@ -1,15 +1,14 @@
 package cart.dao;
 
-import cart.domain.DefaultDiscountPolicy;
 import cart.domain.DiscountPolicy;
 import cart.domain.Money;
+import cart.domain.UpperThresholdPriceDiscountPolicy;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class AppliedDefaultDiscountPolicyDao {
@@ -20,7 +19,7 @@ public class AppliedDefaultDiscountPolicyDao {
         String name = rs.getString("name");
         Money threshold = Money.from(rs.getInt("threshold"));
         double discountRate = rs.getDouble("discount_rate");
-        return new DefaultDiscountPolicy(id, name, threshold, discountRate);
+        return new UpperThresholdPriceDiscountPolicy(id, name, threshold, discountRate);
     };
 
     public AppliedDefaultDiscountPolicyDao(final JdbcTemplate jdbcTemplate) {
@@ -38,9 +37,11 @@ public class AppliedDefaultDiscountPolicyDao {
     }
 
     public DiscountPolicy findByPaymentRecordId(final Long paymentRecordId) {
-        final String sql = "SELECT B.id AS id, B.name AS name, B.threshold AS threshold, B.discount_rate AS discount_rate FROM applied_default_discount_policy AS A " +
-                "INNER JOIN default_discount_policy AS B ON A.default_discount_policy_id = B.id " +
-                "WHERE A.payment_record_id = ?";
+        final String sql =
+                "SELECT B.id AS id, B.name AS name, B.threshold AS threshold, B.discount_rate AS discount_rate FROM applied_default_discount_policy AS A "
+                        +
+                        "INNER JOIN default_discount_policy AS B ON A.default_discount_policy_id = B.id " +
+                        "WHERE A.payment_record_id = ?";
         return this.jdbcTemplate.queryForObject(sql, this.rowMapper, paymentRecordId);
     }
 }

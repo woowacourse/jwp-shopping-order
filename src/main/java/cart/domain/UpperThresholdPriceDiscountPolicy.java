@@ -2,20 +2,21 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class DefaultDiscountPolicy implements DiscountPolicy {
+public class UpperThresholdPriceDiscountPolicy implements DiscountPolicy {
     private final Long id;
     private final String name;
     private final Money threshold;
     private final double discountRate;
 
-    public DefaultDiscountPolicy(final long id, final String name, final Money threshold, final double discountRate) {
+    public UpperThresholdPriceDiscountPolicy(final long id, final String name, final Money threshold,
+                                             final double discountRate) {
         this.id = id;
         this.name = name;
         this.threshold = threshold;
         this.discountRate = discountRate;
     }
 
-    public DefaultDiscountPolicy(final String name, final Money threshold, final double discountRate) {
+    public UpperThresholdPriceDiscountPolicy(final String name, final Money threshold, final double discountRate) {
         this.id = null;
         this.name = name;
         this.threshold = threshold;
@@ -46,9 +47,13 @@ public class DefaultDiscountPolicy implements DiscountPolicy {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-        final DefaultDiscountPolicy that = (DefaultDiscountPolicy) o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final UpperThresholdPriceDiscountPolicy that = (UpperThresholdPriceDiscountPolicy) o;
         return Objects.equals(this.id, that.id);
     }
 

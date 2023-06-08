@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
-class DefaultDiscountPolicyTest {
+class UpperThresholdPriceDiscountPolicyTest {
 
     @Test
     @DisplayName("caculateDiscountAmount()를 호출하면 할인금액을 계산한다.")
