@@ -1,13 +1,9 @@
 package cart.ui.order;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.*;
 
-import cart.application.repository.MemberRepository;
-import cart.application.repository.order.OrderRepository;
 import cart.application.service.member.MemberReadService;
 import cart.application.service.member.dto.MemberResultDto;
-import cart.application.service.order.OrderReadService;
 import cart.application.service.order.dto.OrderItemDto;
 import cart.ui.order.dto.OrderResponse;
 import cart.ui.order.dto.OrdersResponse;
@@ -26,7 +22,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = "/reset.sql",executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(value = "classpath:/test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class OrderReadControllerTest {
 

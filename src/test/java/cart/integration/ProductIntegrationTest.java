@@ -1,5 +1,8 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.ui.product.dto.ProductRequest;
 import cart.ui.product.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
@@ -8,10 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
-@Sql(value = "classpath:reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(value = "classpath:test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public class ProductIntegrationTest extends IntegrationTest {
 
@@ -71,4 +72,5 @@ public class ProductIntegrationTest extends IntegrationTest {
         assertThat(responseProduct.getName()).isEqualTo("피자");
         assertThat(responseProduct.getPrice()).isEqualTo(15_000);
     }
+
 }

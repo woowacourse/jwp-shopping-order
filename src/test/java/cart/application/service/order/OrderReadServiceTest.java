@@ -7,13 +7,13 @@ import static org.mockito.BDDMockito.given;
 
 import cart.application.repository.order.OrderRepository;
 import cart.application.service.order.dto.OrderDto;
-import cart.domain.member.Member;
-import cart.domain.point.Point;
-import cart.domain.point.PointHistory;
+import cart.auth.MemberAuth;
 import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import cart.auth.MemberAuth;
+import cart.domain.point.Point;
+import cart.domain.point.PointHistory;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

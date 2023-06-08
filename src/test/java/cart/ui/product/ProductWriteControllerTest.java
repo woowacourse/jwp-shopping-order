@@ -1,5 +1,9 @@
 package cart.ui.product;
 
+import static cart.fixture.ProductFixture.배변패드;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.application.repository.ProductRepository;
 import cart.domain.product.Product;
 import cart.ui.product.dto.ProductRequest;
@@ -17,12 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
-import static cart.fixture.ProductFixture.배변패드;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = "classpath:/reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 class ProductWriteControllerTest {
 

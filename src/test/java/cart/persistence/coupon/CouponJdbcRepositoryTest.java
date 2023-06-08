@@ -2,13 +2,11 @@ package cart.persistence.coupon;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.CouponPolicy;
-import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
-import cart.fixture.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -20,7 +18,8 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Sql(value = "classpath:reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(value = "classpath:test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 class CouponJdbcRepositoryTest {
