@@ -146,7 +146,7 @@ class CartItemIntegrationTest extends IntegrationTest {
 
         final ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
