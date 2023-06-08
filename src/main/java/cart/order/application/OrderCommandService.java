@@ -68,7 +68,7 @@ public class OrderCommandService {
     cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
 
     if (order.hasCoupon()) {
-      memberCouponCommandService.updateUsedCoupon(order.getCoupon(), member);
+      memberCouponCommandService.updateUsedCoupon(coupon, member);
     }
 
     return savedOrderId;
