@@ -11,16 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberWriteService {
 
     private final MemberRepository memberRepository;
-    private final MemberMapper memberMapper;
 
-    public MemberWriteService(MemberRepository memberRepository, MemberMapper memberMapper) {
+    public MemberWriteService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.memberMapper = memberMapper;
     }
 
     public Long createMember(MemberRequest memberRequest) {
-        Member member = memberMapper.toMember(memberRequest);
+        Member member = toMemberDomain(memberRequest);
         return memberRepository.createMember(member);
+    }
+
+    private Member toMemberDomain(MemberRequest memberRequest) {
+        return new Member(null, memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword());
     }
 
 }

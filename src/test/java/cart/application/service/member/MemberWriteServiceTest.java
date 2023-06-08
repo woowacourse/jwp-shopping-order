@@ -1,6 +1,5 @@
 package cart.application.service.member;
 
-import cart.application.member.MemberMapper;
 import cart.application.member.MemberWriteService;
 import cart.domain.repository.member.MemberRepository;
 import cart.ui.member.dto.MemberRequest;
@@ -24,8 +23,6 @@ class MemberWriteServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
-    @Mock
-    private MemberMapper memberMapper;
 
     @InjectMocks
     private MemberWriteService memberWriteService;
