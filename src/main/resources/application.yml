@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    default: local
+  thymeleaf:
+    cache: false
+logging:
+  level:
+    cart: debug
