@@ -1,7 +1,5 @@
 package cart.application.domain;
 
-import cart.persistence.entity.MemberEntity;
-
 public class Member {
 
     private final Long id;
@@ -14,11 +12,6 @@ public class Member {
         this.email = email;
         this.password = password;
         this.grade = Grade.from(grade);
-    }
-
-    public static Member from(final MemberEntity memberEntity) {
-        return new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(),
-                memberEntity.getPassword());
     }
 
     public Long getId() {
