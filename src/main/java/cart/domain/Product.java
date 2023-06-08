@@ -32,15 +32,15 @@ public class Product {
 
     public int calculateDiscountedPrice(int memberDiscount) {
         if (getIsDiscounted()) {
-            return price - (discountRate * price / 100 - price) * -1;
+            return (discountRate * price / 100 - price) * -1;
         } else {
-            return price - (memberDiscount * price / 100 - price) * -1;
+            return (memberDiscount * price / 100 - price) * -1;
         }
     }
 
     public int calculateDiscountedPrice() {
         if (getIsDiscounted()) {
-            return price - ((discountRate * price / 100 - price) * -1);
+            return ((discountRate * price / 100 - price) * -1);
         }
         return 0;
     }
