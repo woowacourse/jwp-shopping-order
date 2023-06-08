@@ -4,10 +4,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
-import static cart.env.Profile.PROFILE_ZONE;
+import static cart.env.ProfileZone.PROD;
 
 
-@Profile(value = PROFILE_ZONE)
+@Profile(value = PROD)
 @Configuration
 @PropertySource(
         value = {

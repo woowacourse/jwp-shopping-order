@@ -45,7 +45,7 @@ public class ProductService {
                 new ProductName(request.getName()),
                 new ProductPrice(request.getPrice()),
                 new ProductImageUrl(request.getImageUrl()));
-        productRepository.save(product);
+        productRepository.update(product);
     }
 
     @Transactional

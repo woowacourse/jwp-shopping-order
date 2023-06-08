@@ -7,6 +7,7 @@ import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductRepository {
@@ -20,11 +21,11 @@ public class ProductRepository {
     }
 
     public Long save(final Product product) {
-        if (product.getId() == null || productDao.findById(product.getId()).isEmpty()) {
-            return productDao.insert(product);
+        final Optional<Product> productOptional = productDao.findById(product.getId());
+        if (productOptional.isPresent()) {
+            return productOptional.get().getId();
         }
-        productDao.update(product);
-        return product.getId();
+        return productDao.insert(product);
     }
 
     public Product findById(final Long id) {
@@ -34,6 +35,10 @@ public class ProductRepository {
 
     public List<Product> findAll() {
         return productDao.findAll();
+    }
+
+    public void update(final Product product) {
+        productDao.update(product);
     }
 
     public void deleteById(final Long id) {

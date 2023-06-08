@@ -7,6 +7,7 @@ import cart.exception.notfound.CartItemNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -19,11 +20,11 @@ public class CartItemRepository {
     }
 
     public Long save(final CartItem cartItem) {
-        if (cartItem.getId() == null || cartItemDao.findById(cartItem.getId()).isEmpty()) {
-            return cartItemDao.insert(cartItem);
+        final Optional<CartItem> cartItemOptional = cartItemDao.findById(cartItem.getId());
+        if (cartItemOptional.isPresent()) {
+            return cartItemOptional.get().getId();
         }
-        cartItemDao.update(cartItem);
-        return cartItem.getId();
+        return cartItemDao.insert(cartItem);
     }
 
     public CartItem findById(final Long id) {
@@ -41,6 +42,10 @@ public class CartItemRepository {
             throw new InvalidCartItemsException(ids);
         }
         return cartItems;
+    }
+
+    public void update(final CartItem cartItem) {
+        cartItemDao.update(cartItem);
     }
 
     public void delete(final CartItem cartItem) {

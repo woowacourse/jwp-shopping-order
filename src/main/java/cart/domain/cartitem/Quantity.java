@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Quantity {
 
-    public static final int INITIAL_VALUE = 1;
+    private static final int INITIAL_VALUE = 1;
 
     private final int quantity;
 

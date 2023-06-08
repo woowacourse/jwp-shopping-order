@@ -30,6 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .exposedHeaders(HttpHeaders.LOCATION)
-                .maxAge(86400);
+                .maxAge(3600);
     }
 }

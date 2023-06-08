@@ -44,7 +44,7 @@ public class CartItemService {
         final CartItem cartItem = cartItemOptional.get();
         cartItem.checkOwner(member);
         final CartItem addedCartItem = cartItem.addQuantity();
-        cartItemRepository.save(addedCartItem);
+        cartItemRepository.update(addedCartItem);
 
         return cartItem.getId();
     }
@@ -58,7 +58,7 @@ public class CartItemService {
             return;
         }
         final CartItem updatedCartItem = cartItem.updateQuantity(new Quantity(request.getQuantity()));
-        cartItemRepository.save(updatedCartItem);
+        cartItemRepository.update(updatedCartItem);
     }
 
     @Transactional
