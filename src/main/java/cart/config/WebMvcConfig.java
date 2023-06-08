@@ -1,13 +1,16 @@
-package cart.infrastructure;
+package cart.config;
 
+import cart.application.MemberService;
+import cart.config.auth.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final List<String> MAPPING_URLS = List.of(
             "/products/**",
@@ -18,6 +21,12 @@ public class WebConfig implements WebMvcConfigurer {
             "https://feb-dain.github.io",
             "https://cruelladevil.github.io",
             "http://localhost:3000"};
+
+    private final MemberService memberService;
+
+    public WebMvcConfig(final MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
@@ -35,5 +44,10 @@ public class WebConfig implements WebMvcConfigurer {
                     .exposedHeaders("Location")
                     .allowCredentials(true);
         }
+    }
+    
+    @Override
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new MemberArgumentResolver(memberService));
     }
 }

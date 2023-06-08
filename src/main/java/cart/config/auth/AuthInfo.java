@@ -1,4 +1,4 @@
-package cart.infrastructure;
+package cart.config.auth;
 
 public interface AuthInfo {
 

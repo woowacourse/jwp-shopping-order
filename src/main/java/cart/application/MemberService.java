@@ -1,8 +1,8 @@
 package cart.application;
 
+import cart.config.auth.AuthInfo;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
-import cart.infrastructure.AuthInfo;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 

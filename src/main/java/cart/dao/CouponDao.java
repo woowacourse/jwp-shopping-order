@@ -24,6 +24,12 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<CouponEntity> findAll() {
+        final String sql = "SELECT id, member_id, coupon_type_id, is_used "
+                + "FROM coupon ";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
+    }
+
     public Optional<CouponEntity> findById(final Long id) {
         final String sql = "SELECT id, member_id, coupon_type_id, is_used "
                 + "FROM coupon "
@@ -35,17 +41,17 @@ public class CouponDao {
         }
     }
 
-    public void updateStatus(final CouponEntity coupon) {
-        final String sql = "UPDATE coupon "
-                + "SET is_used = ? "
-                + "WHERE id = ? ";
-        jdbcTemplate.update(sql, coupon.isUsed(), coupon.getId());
-    }
-
     public List<CouponEntity> findByMember(final Long memberId) {
         final String sql = "SELECT id, member_id, coupon_type_id, is_used "
                 + "FROM coupon "
                 + "WHERE member_id = ? ";
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
+    }
+
+    public void updateStatus(final CouponEntity coupon) {
+        final String sql = "UPDATE coupon "
+                + "SET is_used = ? "
+                + "WHERE id = ? ";
+        jdbcTemplate.update(sql, coupon.isUsed(), coupon.getId());
     }
 }

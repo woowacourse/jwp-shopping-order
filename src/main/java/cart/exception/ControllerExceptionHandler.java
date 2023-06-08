@@ -1,12 +1,6 @@
-package cart.infrastructure;
+package cart.exception;
 
 import cart.dto.ErrorResponse;
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
-import cart.exception.CouponException;
-import cart.exception.MoneyException;
-import cart.exception.OrderException;
-import cart.exception.ProductException;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

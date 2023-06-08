@@ -1,4 +1,4 @@
-package cart.infrastructure;
+package cart.config.auth;
 
 import cart.application.MemberService;
 import cart.domain.Member;
