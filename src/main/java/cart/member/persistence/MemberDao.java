@@ -1,7 +1,7 @@
 package cart.member.persistence;
 
-import cart.member.application.Member;
-import cart.member.application.Point;
+import cart.member.domain.Member;
+import cart.member.domain.Point;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

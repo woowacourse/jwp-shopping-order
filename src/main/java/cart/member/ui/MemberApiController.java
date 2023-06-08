@@ -1,6 +1,6 @@
 package cart.member.ui;
 
-import cart.common.dto.MemberRequest;
+import cart.member.ui.dto.MemberRequest;
 import cart.member.application.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

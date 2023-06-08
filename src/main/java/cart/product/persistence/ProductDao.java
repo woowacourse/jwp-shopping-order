@@ -1,6 +1,6 @@
 package cart.product.persistence;
 
-import cart.product.application.Product;
+import cart.product.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;

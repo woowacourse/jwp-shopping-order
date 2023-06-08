@@ -1,9 +1,9 @@
 package cart.cartItem.persistence;
 
-import cart.cartItem.application.CartItem;
-import cart.member.application.Member;
-import cart.member.application.Point;
-import cart.product.application.Product;
+import cart.cartItem.domain.CartItem;
+import cart.member.domain.Member;
+import cart.member.domain.Point;
+import cart.product.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;

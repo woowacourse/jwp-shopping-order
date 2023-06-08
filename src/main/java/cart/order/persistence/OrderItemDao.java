@@ -1,7 +1,7 @@
 package cart.order.persistence;
 
-import cart.order.application.OrderItem;
-import cart.product.application.Product;
+import cart.order.domain.OrderItem;
+import cart.product.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;

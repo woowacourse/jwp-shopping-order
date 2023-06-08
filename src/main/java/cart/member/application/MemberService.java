@@ -1,6 +1,8 @@
 package cart.member.application;
 
-import cart.common.dto.MemberRequest;
+import cart.member.domain.Member;
+import cart.member.domain.Point;
+import cart.member.ui.dto.MemberRequest;
 import cart.member.persistence.MemberDao;
 import java.util.List;
 import org.springframework.stereotype.Service;

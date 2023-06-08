@@ -14,10 +14,10 @@ import static cart.acceptance.ProductSteps.특정_상품_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.common.dto.ProductRequest;
-import cart.common.dto.ProductResponse;
-import cart.exception.notFound.ProductNotFoundException;
-import cart.product.application.Product;
+import cart.product.ui.dto.ProductRequest;
+import cart.product.ui.dto.ProductDto;
+import cart.common.exception.notFound.ProductNotFoundException;
+import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -146,30 +146,30 @@ public class ProductAcceptanceTest {
     }
 
     private void 특정_상품_조회_결과를_검증한다(ExtractableResponse<Response> response, ProductRequest productRequest) {
-        ProductResponse productResponse = response.as(ProductResponse.class);
+        ProductDto productDto = response.as(ProductDto.class);
 
-        assertThat(productResponse.getName()).isEqualTo(productRequest.getName());
-        assertThat(productResponse.getPrice()).isEqualTo(productRequest.getPrice());
-        assertThat(productResponse.getImageUrl()).isEqualTo(productRequest.getImageUrl());
-        assertThat(productResponse.getStock()).isEqualTo(productRequest.getStock());
+        assertThat(productDto.getName()).isEqualTo(productRequest.getName());
+        assertThat(productDto.getPrice()).isEqualTo(productRequest.getPrice());
+        assertThat(productDto.getImageUrl()).isEqualTo(productRequest.getImageUrl());
+        assertThat(productDto.getStock()).isEqualTo(productRequest.getStock());
     }
 
     private void 모든_상품_조회_결과를_검증한다(ExtractableResponse<Response> response, List<Long> productIds,
                                    List<ProductRequest> requests) {
-        List<ProductResponse> expectedResponses = new ArrayList<>();
+        List<ProductDto> expectedResponses = new ArrayList<>();
         for (int i = 0; i < productIds.size(); i++) {
-            ProductResponse productResponse = makeResponse(productIds.get(i), requests.get(i));
-            expectedResponses.add(productResponse);
+            ProductDto productDto = makeResponse(productIds.get(i), requests.get(i));
+            expectedResponses.add(productDto);
         }
 
-        List<ProductResponse> actualResponses = response.as(new TypeRef<>() {
+        List<ProductDto> actualResponses = response.as(new TypeRef<>() {
         });
         assertThat(actualResponses).usingRecursiveComparison()
                 .isEqualTo(expectedResponses);
     }
 
-    private ProductResponse makeResponse(Long productId, ProductRequest productRequest) {
-        return new ProductResponse(productId, productRequest.getPrice(), productRequest.getName(),
+    private ProductDto makeResponse(Long productId, ProductRequest productRequest) {
+        return new ProductDto(productId, productRequest.getPrice(), productRequest.getName(),
                 productRequest.getImageUrl(), productRequest.getStock());
     }
 }

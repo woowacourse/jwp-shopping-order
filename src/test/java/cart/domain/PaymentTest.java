@@ -2,12 +2,12 @@ package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.member.application.Member;
-import cart.member.application.Point;
-import cart.order.application.Order;
-import cart.order.application.OrderItem;
-import cart.order.application.Payment;
-import cart.product.application.Product;
+import cart.member.domain.Member;
+import cart.member.domain.Point;
+import cart.order.domain.Order;
+import cart.order.domain.OrderItem;
+import cart.order.domain.Payment;
+import cart.product.domain.Product;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

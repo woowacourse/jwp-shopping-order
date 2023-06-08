@@ -1,8 +1,9 @@
 package cart.product.application;
 
-import cart.common.dto.ProductRequest;
-import cart.common.dto.ProductResponse;
-import cart.exception.notFound.ProductNotFoundException;
+import cart.product.ui.dto.ProductRequest;
+import cart.product.ui.dto.ProductDto;
+import cart.common.exception.notFound.ProductNotFoundException;
+import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,15 +20,15 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream().map(ProductDto::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
+    public ProductDto getProductById(Long productId) {
         Product product = productDao.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
-        return ProductResponse.of(product);
+        return ProductDto.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {

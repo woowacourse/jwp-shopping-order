@@ -1,6 +1,6 @@
 package cart.order.persistence;
 
-import cart.order.application.Payment;
+import cart.order.domain.Payment;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -16,12 +16,12 @@ import static cart.acceptance.MemberSteps.유저_생성_요청하고_유저_반�
 import static cart.acceptance.ProductSteps.상품_생성하고_아이디_반환;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.cartItem.application.CartItem;
+import cart.cartItem.domain.CartItem;
 import cart.cartItem.persistence.CartItemDao;
-import cart.common.dto.CartItemDto;
-import cart.common.dto.CartItemRequest;
-import cart.common.dto.ProductRequest;
-import cart.member.application.Member;
+import cart.cartItem.ui.dto.CartItemDto;
+import cart.cartItem.ui.dto.CartItemRequest;
+import cart.product.ui.dto.ProductRequest;
+import cart.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;

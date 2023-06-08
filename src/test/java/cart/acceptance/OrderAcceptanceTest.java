@@ -16,14 +16,15 @@ import static cart.acceptance.ProductSteps.상품_생성하고_아이디_반환;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.cartItem.persistence.CartItemDao;
-import cart.common.dto.CartItemDto;
-import cart.common.dto.CartItemRequest;
-import cart.common.dto.OrderDto;
-import cart.common.dto.OrderItemDto;
-import cart.common.dto.OrderRequest;
-import cart.common.dto.ProductDto;
-import cart.common.dto.ProductRequest;
-import cart.member.application.Member;
+import cart.cartItem.ui.dto.CartItemDto;
+import cart.cartItem.ui.dto.CartItemRequest;
+import cart.order.ui.dto.OrderDto;
+import cart.order.ui.dto.OrderItemDto;
+import cart.order.ui.dto.OrderRequest;
+import cart.cartItem.ui.dto.ProductInCartItemDto;
+import cart.order.ui.dto.ProductInOrderItemDto;
+import cart.product.ui.dto.ProductRequest;
+import cart.member.domain.Member;
 import cart.member.persistence.MemberDao;
 import cart.order.persistence.OrderItemDao;
 import cart.order.persistence.PaymentDao;
@@ -235,12 +236,12 @@ public class OrderAcceptanceTest {
     }
 
     private OrderItemDto toOrderItemDto(int quantity, Long productId, ProductRequest productRequest, int stock) {
-        return new OrderItemDto(quantity, new ProductDto(productId, productRequest.getPrice(), productRequest.getName(),
+        return new OrderItemDto(quantity, new ProductInOrderItemDto(productId, productRequest.getPrice(), productRequest.getName(),
                 productRequest.getImageUrl(), stock));
     }
 
-    private ProductDto toProductDto(Long productId, ProductRequest productRequest) {
-        return new ProductDto(productId, productRequest.getPrice(), productRequest.getName(),
+    private ProductInCartItemDto toProductDto(Long productId, ProductRequest productRequest) {
+        return new ProductInCartItemDto(productId, productRequest.getPrice(), productRequest.getName(),
                 productRequest.getImageUrl(), productRequest.getStock());
     }
 }

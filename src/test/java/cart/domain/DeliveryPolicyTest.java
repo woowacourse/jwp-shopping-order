@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.order.application.DeliveryPolicy;
+import cart.order.domain.DeliveryPolicy;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

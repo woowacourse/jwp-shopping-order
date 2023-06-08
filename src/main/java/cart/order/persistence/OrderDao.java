@@ -1,8 +1,8 @@
 package cart.order.persistence;
 
-import cart.member.application.Member;
-import cart.member.application.Point;
-import cart.order.application.Order;
+import cart.member.domain.Member;
+import cart.member.domain.Point;
+import cart.order.domain.Order;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDateTime;

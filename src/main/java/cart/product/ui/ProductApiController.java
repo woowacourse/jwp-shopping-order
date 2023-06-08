@@ -1,7 +1,7 @@
 package cart.product.ui;
 
-import cart.common.dto.ProductRequest;
-import cart.common.dto.ProductResponse;
+import cart.product.ui.dto.ProductRequest;
+import cart.product.ui.dto.ProductDto;
 import cart.product.application.ProductService;
 import java.net.URI;
 import java.util.List;
@@ -45,12 +45,12 @@ public class ProductApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 

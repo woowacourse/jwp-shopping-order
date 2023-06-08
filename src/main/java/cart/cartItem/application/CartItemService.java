@@ -1,13 +1,14 @@
 package cart.cartItem.application;
 
+import cart.cartItem.domain.CartItem;
 import cart.cartItem.persistence.CartItemDao;
-import cart.common.dto.CartItemDto;
-import cart.common.dto.CartItemQuantityUpdateRequest;
-import cart.common.dto.CartItemRequest;
-import cart.exception.notFound.CartItemNotFountException;
-import cart.exception.notFound.ProductNotFoundException;
-import cart.member.application.Member;
-import cart.product.application.Product;
+import cart.cartItem.ui.dto.CartItemDto;
+import cart.cartItem.ui.dto.CartItemQuantityUpdateRequest;
+import cart.cartItem.ui.dto.CartItemRequest;
+import cart.common.exception.notFound.CartItemNotFountException;
+import cart.common.exception.notFound.ProductNotFoundException;
+import cart.member.domain.Member;
+import cart.product.domain.Product;
 import cart.product.persistence.ProductDao;
 import java.util.List;
 import java.util.stream.Collectors;

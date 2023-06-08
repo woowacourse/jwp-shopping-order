@@ -3,12 +3,12 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.cartItem.application.CartItem;
-import cart.exception.auth.AuthorizationException;
-import cart.exception.order.CartItemQuantityDoesNotMatchException;
-import cart.member.application.Member;
-import cart.member.application.Point;
-import cart.product.application.Product;
+import cart.cartItem.domain.CartItem;
+import cart.common.exception.auth.AuthorizationException;
+import cart.common.exception.order.CartItemQuantityDoesNotMatchException;
+import cart.member.domain.Member;
+import cart.member.domain.Point;
+import cart.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

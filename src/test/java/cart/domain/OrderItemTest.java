@@ -1,7 +1,7 @@
 package cart.domain;
 
-import cart.order.application.OrderItem;
-import cart.product.application.Product;
+import cart.order.domain.OrderItem;
+import cart.product.domain.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

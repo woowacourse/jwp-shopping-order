@@ -3,8 +3,8 @@ package cart.acceptance;
 import static cart.acceptance.CommonSteps.LOCATION_헤더에서_ID_추출;
 import static io.restassured.RestAssured.given;
 
-import cart.common.dto.OrderRequest;
-import cart.member.application.Member;
+import cart.order.ui.dto.OrderRequest;
+import cart.member.domain.Member;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;

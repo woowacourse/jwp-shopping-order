@@ -1,9 +1,9 @@
 package cart.order.persistence;
 
-import cart.exception.notFound.PaymentNotFoundException;
-import cart.member.application.Member;
+import cart.common.exception.notFound.PaymentNotFoundException;
+import cart.member.domain.Member;
 import cart.member.persistence.MemberDao;
-import cart.order.application.Payment;
+import cart.order.domain.Payment;
 import org.springframework.stereotype.Repository;
 
 @Repository
