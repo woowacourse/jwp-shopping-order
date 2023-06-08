@@ -39,6 +39,9 @@ public class Member {
             return false;
         }
         final Member member = (Member) o;
+        if (Objects.isNull(id) || Objects.isNull(member.id)) {
+            return false;
+        }
         return Objects.equals(id, member.id);
     }
 
