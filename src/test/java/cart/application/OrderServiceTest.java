@@ -66,8 +66,8 @@ class OrderServiceTest {
         );
 
         OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
-        given(couponService.findByIds(eq(List.of(2L)))).willReturn(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(7L, "쿠폰", new Discount(new RateStrategy(), 10)), false))));
-        given(couponService.findByMemberId(eq(5L))).willReturn(new ArrayList<>());
+        given(couponService.findMemberCouponsByIds(eq(List.of(2L)))).willReturn(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(7L, "쿠폰", new Discount(new RateStrategy(), 10)), false))));
+        given(couponService.findMemberCouponsByMemberId(eq(5L))).willReturn(new ArrayList<>());
         given(cartItemRepository.findByIds(eq(List.of(3L)))).willReturn(List.of(CartItem.createFromExisting(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
         given(cartItemRepository.findByMemberId(eq(5L))).willReturn(List.of(CartItem.createFromExisting(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
 

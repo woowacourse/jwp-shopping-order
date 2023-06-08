@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.OrderService;
 import cart.domain.member.Member;
@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+public class OrderApiController {
 
     private final OrderService orderService;
 
-    public OrderController(final OrderService orderService) {
+    public OrderApiController(final OrderService orderService) {
         this.orderService = orderService;
     }
 

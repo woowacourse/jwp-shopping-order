@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class CouponControllerTest extends IntegrationTest {
+class CouponApiControllerTest extends IntegrationTest {
 
     @Test
     void adminShowCoupons() {

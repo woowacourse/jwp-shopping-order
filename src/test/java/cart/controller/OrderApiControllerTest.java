@@ -10,7 +10,7 @@ import cart.dto.order.OrderItemsRequests;
 import cart.dto.order.OrderProductRequest;
 import cart.fixture.Fixture;
 import cart.repository.MemberRepository;
-import cart.ui.OrderController;
+import cart.ui.api.OrderApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureRestDocs
 @SuppressWarnings("NonAsciiCharacters")
-@WebMvcTest(value = OrderController.class)
+@WebMvcTest(value = OrderApiController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class OrderApiControllerTest {
 

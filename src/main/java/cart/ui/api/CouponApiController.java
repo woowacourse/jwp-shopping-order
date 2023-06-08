@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.CouponService;
 import cart.domain.coupon.Coupon;
@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class CouponController {
+public class CouponApiController {
 
     private final CouponService couponService;
 
-    public CouponController(final CouponService couponService) {
+    public CouponApiController(final CouponService couponService) {
         this.couponService = couponService;
     }
 

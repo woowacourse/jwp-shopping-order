@@ -5,7 +5,7 @@ import cart.domain.member.Member;
 import cart.dto.coupon.CouponCreateRequest;
 import cart.fixture.Fixture;
 import cart.repository.MemberRepository;
-import cart.ui.CouponController;
+import cart.ui.api.CouponApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureRestDocs
 @SuppressWarnings("NonAsciiCharacters")
-@WebMvcTest(value = CouponController.class)
+@WebMvcTest(value = CouponApiController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class CouponApiControllerTest {
 

@@ -4,7 +4,7 @@ import cart.WebMvcConfig;
 import cart.application.ProductService;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
-import cart.ui.ProductApiController;
+import cart.ui.api.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
