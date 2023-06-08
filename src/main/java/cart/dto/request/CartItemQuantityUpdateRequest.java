@@ -4,7 +4,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 public class CartItemQuantityUpdateRequest {
-    @NotBlank
     @Min(0)
     private int quantity;
 

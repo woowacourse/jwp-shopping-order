@@ -6,11 +6,9 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 public class OrderRequest {
-    @NotBlank
     @Size(min = 1)
     private final List<Long> cartItemIds;
 
-    @NotBlank
     @Min(0)
     private final int usePoint;
 
