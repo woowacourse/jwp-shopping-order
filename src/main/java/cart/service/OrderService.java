@@ -47,7 +47,7 @@ public class OrderService {
 
         Order order = makeOrder(member, notNullCouponIds, cartItems);
 
-        if (order.isTotalPriceCorrect(new Price(orderRequest.getTotalPaymentPrice()))) {
+        if (!order.isTotalPriceCorrect(new Price(orderRequest.getTotalPaymentPrice()))) {
             throw new IllegalStateException("주문 가격과 관련해 오류가 발생했습나다.");
         }
 

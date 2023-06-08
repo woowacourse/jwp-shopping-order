@@ -44,7 +44,7 @@ public class Order {
                 .reduce(Price::plus)
                 .get();
 
-        if (originTotalPrice.isMoreThan(new Price(30000))) {
+        if (originTotalPrice.isMoreThanOrEqual(new Price(30000))) {
             return new Price(0);
         }
         return DELIVERY_FEE;
@@ -63,7 +63,8 @@ public class Order {
                 .map(OrderCartItem::getDiscountedPrice)
                 .reduce(Price::plus)
                 .get()
-                .plus(getDeliveryPrice());
+                .plus(getDeliveryPrice())
+                .minus(getDiscountPriceFromTotal());
     }
 
     public Timestamp getTime() {

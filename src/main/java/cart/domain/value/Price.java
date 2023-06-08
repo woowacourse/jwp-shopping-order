@@ -37,6 +37,10 @@ public class Price {
         return this.value > price.value;
     }
 
+    public boolean isMoreThanOrEqual(Price price) {
+        return isMoreThan(price) || this.value == price.getValue();
+    }
+
     public boolean isLessThan(Price price) {
         return this.value < price.value;
     }
