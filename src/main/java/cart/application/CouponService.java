@@ -1,6 +1,10 @@
 package cart.application;
 
-import cart.domain.*;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
 import cart.dto.response.AllCouponResponse;
 import cart.dto.response.AllOrderCouponResponse;
 import cart.dto.request.MemberCouponRequest;

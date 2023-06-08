@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.entity.CouponEntity;
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.exception.CouponException;
 import org.springframework.stereotype.Repository;
 

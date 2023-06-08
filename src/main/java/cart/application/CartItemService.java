@@ -1,8 +1,8 @@
 package cart.application;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
-import cart.domain.Member;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
+import cart.domain.member.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;

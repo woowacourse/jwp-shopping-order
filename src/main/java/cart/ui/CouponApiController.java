@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.CouponService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.response.AllCouponResponse;
 import cart.dto.request.MemberCouponRequest;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,9 @@
 package cart.integration;
 
-import cart.domain.Member;
+import cart.domain.member.Email;
+import cart.domain.member.Member;
+import cart.domain.member.Nickname;
+import cart.domain.member.Password;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
@@ -56,7 +59,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf", member.getNickname());
+        Member illegalMember = new Member(member.getId(), new Email(member.getEmail()), new Password(member.getPassword() + "asdf"), new Nickname(member.getNickname()));
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 

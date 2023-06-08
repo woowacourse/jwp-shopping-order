@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.response.MemberResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

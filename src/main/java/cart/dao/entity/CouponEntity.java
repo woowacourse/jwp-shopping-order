@@ -1,6 +1,6 @@
 package cart.dao.entity;
 
-import cart.domain.*;
+import cart.domain.coupon.*;
 
 import java.util.Objects;
 

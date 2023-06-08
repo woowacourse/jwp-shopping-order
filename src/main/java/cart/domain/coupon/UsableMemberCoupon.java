@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.coupon;
 
+import cart.domain.member.Member;
 import cart.exception.MemberCouponException;
 import cart.exception.NoExpectedException;
 

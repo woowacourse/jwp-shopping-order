@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.coupon;
 
+import cart.domain.member.Member;
 import cart.exception.CouponException;
 import cart.exception.MemberCouponException;
 
@@ -29,7 +30,7 @@ public class UsedMemberCoupon implements MemberCoupon {
 
     @Override
     public MemberCoupon use() {
-        throw new CouponException.Unavailable("이미 사용된 쿠폰입니다.");
+        throw new MemberCouponException.Unavailable("이미 사용된 쿠폰입니다.");
     }
 
     @Override

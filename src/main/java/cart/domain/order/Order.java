@@ -1,7 +1,10 @@
-package cart.domain;
+package cart.domain.order;
 
+import cart.domain.member.Member;
+import cart.domain.coupon.MemberCoupon;
 import cart.exception.OrderException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,7 +67,7 @@ public class Order {
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return new ArrayList<>(orderItems);
     }
 
     public MemberCoupon getMemberCoupon() {

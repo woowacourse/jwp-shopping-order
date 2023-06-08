@@ -1,10 +1,9 @@
 package cart.dto.request;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
-import cart.domain.Member;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
+import cart.domain.member.Member;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;

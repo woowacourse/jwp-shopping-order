@@ -1,6 +1,6 @@
 package cart.dao.entity;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 import java.util.Objects;
 

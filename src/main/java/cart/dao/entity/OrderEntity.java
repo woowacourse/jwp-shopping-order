@@ -1,6 +1,11 @@
 package cart.dao.entity;
 
-import cart.domain.*;
+import cart.domain.coupon.EmptyMemberCoupon;
+import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.ShippingFee;
 
 import java.time.LocalDateTime;
 import java.util.List;

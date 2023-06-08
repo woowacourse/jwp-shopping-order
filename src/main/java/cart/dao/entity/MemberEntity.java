@@ -1,7 +1,10 @@
 package cart.dao.entity;
 
 
-import cart.domain.Member;
+import cart.domain.member.Email;
+import cart.domain.member.Member;
+import cart.domain.member.Nickname;
+import cart.domain.member.Password;
 
 import java.util.Objects;
 
@@ -19,7 +22,7 @@ public class MemberEntity {
     }
 
     public Member toMember() {
-        return new Member(id, email, password, nickname);
+        return new Member(id, new Email(email), new Password(password), new Nickname(nickname));
     }
 
     public Long getId() {

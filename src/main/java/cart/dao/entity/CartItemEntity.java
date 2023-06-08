@@ -1,8 +1,8 @@
 package cart.dao.entity;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 
 import java.util.Map;
 import java.util.Objects;

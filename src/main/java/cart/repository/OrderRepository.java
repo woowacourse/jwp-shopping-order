@@ -2,7 +2,12 @@ package cart.repository;
 
 import cart.dao.*;
 import cart.dao.entity.*;
-import cart.domain.*;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.EmptyMemberCoupon;
+import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import cart.exception.CouponException;
 import cart.exception.MemberException;
 import cart.exception.OrderException;

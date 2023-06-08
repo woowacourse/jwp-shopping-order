@@ -1,8 +1,8 @@
 package cart.dto.response;
 
-import cart.domain.Coupon;
-import cart.domain.CouponInfo;
-import cart.domain.MemberCoupon;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponInfo;
+import cart.domain.coupon.MemberCoupon;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

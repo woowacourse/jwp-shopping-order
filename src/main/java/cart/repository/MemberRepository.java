@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.MemberException;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.domain.MemberCoupon;
+import cart.domain.coupon.MemberCoupon;
 
 import java.util.List;
 import java.util.Objects;

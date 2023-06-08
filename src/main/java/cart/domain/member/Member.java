@@ -1,16 +1,14 @@
-package cart.domain;
-
-import cart.exception.AuthenticationException;
+package cart.domain.member;
 
 import java.util.Objects;
 
 public class Member {
     private final Long id;
-    private final String email;
-    private final String password;
-    private final String nickname;
+    private final Email email;
+    private final Password password;
+    private final Nickname nickname;
 
-    public Member(final Long id, final String email, final String password, final String nickname) {
+    public Member(final Long id, final Email email, final Password password, final Nickname nickname) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -18,9 +16,8 @@ public class Member {
     }
 
     public void checkPassword(String password) {
-        if (!this.password.equals(password)) {
-            throw new AuthenticationException.LoginFail("로그인 정보가 잘못되었습니다.");
-        }
+        Password otherPassword = new Password(password);
+        this.password.checkPassword(otherPassword);
     }
 
     public Long getId() {
@@ -28,15 +25,15 @@ public class Member {
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 
     @Override

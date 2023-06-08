@@ -1,7 +1,7 @@
 package cart.dao.entity;
 
-import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.order.OrderItem;
+import cart.domain.product.Product;
 
 import java.util.Objects;
 

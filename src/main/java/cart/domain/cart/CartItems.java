@@ -1,7 +1,12 @@
-package cart.domain;
+package cart.domain.cart;
 
+import cart.domain.member.Member;
+import cart.domain.coupon.MemberCoupon;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import cart.exception.CartItemException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,9 +31,8 @@ public class CartItems {
         return new CartItems(selectedCartItems);
     }
 
-    // TODO: 6/4/23 이걸 private 하게 바꿔도 될듯? 
     public void checkStatus(final CartItems other, final Member member) {
-        for (CartItem cartItem : other.getCartItems()) {
+        for (CartItem cartItem : cartItems) {
             cartItem.checkOwner(member);
             validateValue(cartItem, other.getCartItems());
         }
@@ -71,7 +75,7 @@ public class CartItems {
     }
 
     public List<CartItem> getCartItems() {
-        return cartItems;
+        return new ArrayList<>(cartItems);
     }
 
     @Override

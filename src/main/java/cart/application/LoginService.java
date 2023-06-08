@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import cart.exception.MemberException;
 import cart.repository.MemberRepository;
@@ -38,7 +38,7 @@ public class LoginService {
             Member member = memberRepository.findByEmail(email);
             member.checkPassword(password);
         } catch (MemberException.NoExist exception) {
-            throw new AuthenticationException.LoginFail("로그인 정보가 잘못되었습니다.");
+            throw new AuthenticationException.LoginFail();
         }
     }
 }

@@ -1,7 +1,7 @@
 package cart.dto.response;
 
-import cart.domain.Coupon;
-import cart.domain.CouponType;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponType;
 
 import java.util.Objects;
 
