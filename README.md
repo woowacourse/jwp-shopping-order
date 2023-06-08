@@ -164,7 +164,7 @@
 - [x] 페이징 Dao에서 처리하도록 수정 + Spring Data의 Pageable 이용
 - [x] 트랜잭션 처리
 - [x] Repsotiroy 추상화 계층 맞추기
-- [ ] 테스트 전용 application properties 분리
+- [x] 테스트 전용 application properties 분리
 - [ ] 다른 외부 서비스에서 Order를 필요로 한다면?
   - 서비스간 의존?
   - 외부 서비스에서 Dao 호출?
