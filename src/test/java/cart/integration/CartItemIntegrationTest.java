@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
+import cart.dto.PagedDataResponse;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
-import cart.dto.cart.PagedCartItemsResponse;
 import cart.dto.PaginationInfoDto;
 import cart.dto.product.ProductRequest;
 import cart.repository.dao.MemberDao;
@@ -84,11 +84,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
-        PagedCartItemsResponse pagedCartItemsResponse = response.as(PagedCartItemsResponse.class);
+        PagedDataResponse<CartItemResponse> pagedCartItemsResponse = response.as(PagedDataResponse.class);
         final PaginationInfoDto pagination = pagedCartItemsResponse.getPagination();
 
         // then
-        assertThat(pagedCartItemsResponse.getCartItems()).hasSize(unitSize);
+        assertThat(pagedCartItemsResponse.getData()).hasSize(unitSize);
         assertThat(pagination.getPerPage()).isEqualTo(unitSize);
         assertThat(pagination.getCurrentPage()).isEqualTo(page - 1);
         assertThat(pagination.getLastPage()).isEqualTo(expectedTotalPage);

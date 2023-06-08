@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.application.ProductService;
-import cart.dto.product.PagedProductsResponse;
+import cart.dto.PagedDataResponse;
 import cart.dto.PaginationInfoDto;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
@@ -80,11 +80,11 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
-        PagedProductsResponse pagedProductsResponse = response.as(PagedProductsResponse.class);
+        PagedDataResponse<ProductResponse> pagedProductsResponse = response.as(PagedDataResponse.class);
         final PaginationInfoDto pagination = pagedProductsResponse.getPagination();
 
         // then
-        assertThat(pagedProductsResponse.getProducts()).hasSize(unitSize);
+        assertThat(pagedProductsResponse.getData()).hasSize(unitSize);
         assertThat(pagination.getPerPage()).isEqualTo(unitSize);
         assertThat(pagination.getCurrentPage()).isEqualTo(page - 1);
         assertThat(pagination.getLastPage()).isEqualTo(expectedTotalPage);

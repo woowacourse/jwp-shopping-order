@@ -3,10 +3,10 @@ package cart.application;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.cart.CartItem;
+import cart.dto.PagedDataResponse;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
-import cart.dto.cart.PagedCartItemsResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -88,13 +88,14 @@ public class CartItemService {
     }
 
     @Transactional(readOnly = true)
-    public PagedCartItemsResponse getPagedCartItems(final Member member, final int unitSize, final int page) {
+    public PagedDataResponse<CartItemResponse> getPagedCartItems(final Member member, final int unitSize, final int page) {
         final Pageable sortByIdDesc = PageRequest.of(page - 1, unitSize, Sort.by("id").descending());
         final Page<CartItem> pagedCartItems = cartItemRepository.getPagedCartItemsByMember(
                 sortByIdDesc,
                 member.getId()
         );
 
-        return PagedCartItemsResponse.from(pagedCartItems);
+        final Page<CartItemResponse> response = pagedCartItems.map(cartItem -> CartItemResponse.from(cartItem));
+        return PagedDataResponse.from(response);
     }
 }

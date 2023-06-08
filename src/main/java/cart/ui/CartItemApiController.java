@@ -2,10 +2,10 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
+import cart.dto.PagedDataResponse;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
-import cart.dto.cart.PagedCartItemsResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,11 +29,11 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<PagedCartItemsResponse> showPagedCartItems(Member member,
-                                                                     @RequestParam("unit-size") int unitSize,
-                                                                     @RequestParam int page) {
-        PagedCartItemsResponse pagedCartItemsResponse = cartItemService.getPagedCartItems(member, unitSize, page);
-        return ResponseEntity.ok(pagedCartItemsResponse);
+    public ResponseEntity<PagedDataResponse<CartItemResponse>> showPagedCartItems(Member member,
+                                                                @RequestParam("unit-size") int unitSize,
+                                                                @RequestParam int page) {
+        PagedDataResponse<CartItemResponse> pagedCartItems = cartItemService.getPagedCartItems(member, unitSize, page);
+        return ResponseEntity.ok(pagedCartItems);
     }
 
     @GetMapping("/{cartItemId}")

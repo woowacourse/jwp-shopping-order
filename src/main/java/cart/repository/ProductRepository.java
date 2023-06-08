@@ -3,10 +3,7 @@ package cart.repository;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
 import cart.repository.dao.ProductDao;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -40,10 +37,7 @@ public class ProductRepository {
 
     public Page<Product> findAll(Pageable pageable) {
         final Page<ProductEntity> productEntities = productDao.getProducts(pageable);
-        final List<Product> products = productEntities.stream()
-                .map(productEntity -> Product.from(productEntity))
-                .collect(Collectors.toUnmodifiableList());
 
-        return new PageImpl<>(products, productEntities.getPageable(), productEntities.getTotalElements());
+        return productEntities.map(productEntity -> Product.from(productEntity));
     }
 }

@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.domain.Product;
-import cart.dto.product.PagedProductsResponse;
+import cart.dto.PagedDataResponse;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import cart.repository.ProductRepository;
@@ -53,10 +53,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PagedProductsResponse getPagedProducts(final int unitSize, final int page) {
+    public PagedDataResponse<ProductResponse> getPagedProducts(final int unitSize, final int page) {
         final Pageable sortedByIdDesc = PageRequest.of(page - 1, unitSize, Sort.by("id").descending());
         final Page<Product> pagedProducts = productRepository.findAll(sortedByIdDesc);
 
-        return PagedProductsResponse.from(pagedProducts);
+        final Page<ProductResponse> response = pagedProducts.map(product -> ProductResponse.from(product));
+        return PagedDataResponse.from(response);
     }
 }

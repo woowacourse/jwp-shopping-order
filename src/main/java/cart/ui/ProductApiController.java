@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dto.product.PagedProductsResponse;
+import cart.dto.PagedDataResponse;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import java.net.URI;
@@ -33,8 +33,8 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<PagedProductsResponse> getPagedProduct(@RequestParam("unit-size") int unitSize,
-                                                                 @RequestParam int page) {
+    public ResponseEntity<PagedDataResponse<ProductResponse>> getPagedProduct(@RequestParam("unit-size") int unitSize,
+                                                             @RequestParam int page) {
         return ResponseEntity.ok(productService.getPagedProducts(unitSize, page));
     }
 
