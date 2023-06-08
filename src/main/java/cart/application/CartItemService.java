@@ -32,7 +32,7 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(final Member member, final CartItemRequest cartItemRequest) {
+    public Long save(final Member member, final CartItemRequest cartItemRequest) {
         final Optional<CartItem> cartItem = cartItemRepository.findByMemberIdAndProductId(member.getId(),
             cartItemRequest.getProductId());
         if (cartItem.isPresent()) {
