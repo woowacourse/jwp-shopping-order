@@ -2,14 +2,11 @@ package cart.step2.coupon.service;
 
 import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupon.domain.repository.CouponRepository;
-import cart.step2.coupon.presentation.dto.CouponResponse;
-import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.repository.CouponTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,13 +30,8 @@ public class CouponService {
         couponRepository.updateUsageStatus(memberId, couponId);
     }
 
-    public List<CouponResponse> getMemberCoupons(final Long memberId) {
-        return couponRepository.findAll(memberId).stream()
-                .map(coupon -> {
-                    CouponType couponType = couponTypeRepository.findById(coupon.getCouponTypeId());
-                    return new CouponResponse(coupon, couponType);
-                })
-                .collect(Collectors.toList());
+    public List<Coupon> getMemberCoupons(final Long memberId) {
+        return couponRepository.findAll(memberId);
     }
 
     @Transactional
@@ -50,9 +42,7 @@ public class CouponService {
 
     private void validateCouponUsageStatus(final Long couponId) {
         Coupon coupon = couponRepository.findById(couponId);
-        if (coupon.getUsageStatus().equals("N")) {
-            throw new IllegalArgumentException("사용하지 않은 쿠폰은 삭제할 수 없습니다. 사용한 후에 삭제해주세요!");
-        }
+        coupon.validateUsageStatus();
     }
 
     @Transactional

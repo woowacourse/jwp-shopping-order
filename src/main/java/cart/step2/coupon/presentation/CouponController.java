@@ -1,8 +1,10 @@
 package cart.step2.coupon.presentation;
 
 import cart.domain.Member;
+import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupon.presentation.dto.CouponResponse;
 import cart.step2.coupon.service.CouponService;
+import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.presentation.dto.CouponTypeResponse;
 import cart.step2.coupontype.service.CouponTypeService;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/coupons")
@@ -49,8 +52,14 @@ public class CouponController {
 
     @GetMapping("/member")
     public ResponseEntity<List<CouponResponse>> showMemberCoupons(Member member) {
-        List<CouponResponse> coupons = couponService.getMemberCoupons(member.getId());
-        return ResponseEntity.ok().body(coupons);
+        List<Coupon> coupons = couponService.getMemberCoupons(member.getId());
+        List<CouponResponse> responses = coupons.stream()
+                .map(coupon -> {
+                    CouponType couponType = couponTypeService.getCoupon(coupon.getCouponTypeId());
+                    return new CouponResponse(coupon, couponType);
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(responses);
     }
 
     @DeleteMapping("/{couponId}")

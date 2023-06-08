@@ -45,7 +45,7 @@ class CouponDaoTest {
                 .orElseThrow(() -> CouponNotFoundException.THROW);
 
         // then
-        assertThat(couponEntity.getUsageStatus()).isEqualTo("N");
+        assertThat(couponEntity.getUsageStatus()).isEqualTo(0);
     }
 
     @DisplayName("couponId를 받아 단건 조회한다.")
@@ -63,7 +63,7 @@ class CouponDaoTest {
                 () -> assertThat(couponEntity.getId()).isEqualTo(1L),
                 () -> assertThat(couponEntity.getMemberId()).isEqualTo(1L),
                 () -> assertThat(couponEntity.getCouponTypeId()).isEqualTo(1L),
-                () -> assertThat(couponEntity.getUsageStatus()).isEqualTo("N")
+                () -> assertThat(couponEntity.getUsageStatus()).isEqualTo(0)
         );
     }
 
@@ -85,7 +85,7 @@ class CouponDaoTest {
                 () -> assertThat(couponEntities).extracting(CouponEntity::getId)
                         .contains(1L, 2L, 3L, 4L),
                 () -> assertThat(couponEntities).extracting(CouponEntity::getUsageStatus)
-                        .contains("N")
+                        .contains(0)
         );
     }
 

@@ -1,5 +1,6 @@
 package cart.step2.coupontype.service;
 
+import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.repository.CouponTypeRepository;
 import cart.step2.coupontype.presentation.dto.CouponTypeResponse;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,10 @@ public class CouponTypeService {
         return couponTypeRepository.findAll().stream()
                 .map(CouponTypeResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    public CouponType getCoupon(final Long couponType) {
+        return couponTypeRepository.findById(couponType);
     }
 
 }

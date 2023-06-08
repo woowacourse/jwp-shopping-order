@@ -1,5 +1,7 @@
 package cart.step2.coupon.domain;
 
+import cart.step2.coupon.exception.UnusedCouponsCannotDeleted;
+
 public class Coupon {
 
     private final Long id;
@@ -12,6 +14,12 @@ public class Coupon {
         this.usageStatus = usageStatus;
         this.memberId = memberId;
         this.couponTypeId = couponTypeId;
+    }
+
+    public void validateUsageStatus() {
+        if (usageStatus.equals(0)) {
+            throw UnusedCouponsCannotDeleted.THROW;
+        }
     }
 
     public Long getId() {
@@ -29,5 +37,4 @@ public class Coupon {
     public Long getCouponTypeId() {
         return couponTypeId;
     }
-
 }
