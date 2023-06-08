@@ -20,27 +20,31 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException e) {
         logger.warn("auth error", e);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember e) {
         logger.warn("cartItem error: {}", e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Void> handleException(NoSuchElementException e) {
+    public ResponseEntity<ExceptionResponse> handleException(NoSuchElementException e) {
         logger.warn("no such element error: {}", e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Void> handleException(Exception e) {
+    public ResponseEntity<ExceptionResponse> handleException(Exception e) {
         logger.error("server error: {}", e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ExceptionResponse(e.getMessage()));
     }
 
     @Override
