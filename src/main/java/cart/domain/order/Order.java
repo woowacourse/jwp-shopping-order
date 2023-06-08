@@ -32,7 +32,7 @@ public class Order {
 
     private void validateMember(final Member member, final OrderItems orderItems) {
         if (!member.equals(orderItems.getMember())) {
-            throw new IllegalArgumentException("장바구니 상품을 추가한 Member와 주문을 생성한 Member가 일치하지 않습니다");
+            throw new IllegalArgumentException("주문자가 주문하지 않은 상품이 포함되어 있습니다");
         }
     }
 

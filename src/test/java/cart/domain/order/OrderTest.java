@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 class OrderTest {
 
-    @DisplayName("주문 객체의 Member와 장바구니 상품들의 Member가 다르면 예외가 발생한다")
+    @DisplayName("주문 객체의 Member와 OrderItems 객체의 Member가 다르면 예외가 발생한다")
     @Test
     void createOrder_differentMemberWithCartItems_throws() {
         final Member member = new Member(1L, "test@email.com", "password");
@@ -30,7 +30,7 @@ class OrderTest {
         // when, then
         assertThatThrownBy(() -> new Order(otherMember, orderItems, discountPolicy))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("장바구니 상품을 추가한 Member와 주문을 생성한 Member가 일치하지 않습니다");
+                .hasMessage("주문자가 주문하지 않은 상품이 포함되어 있습니다");
     }
 
     @DisplayName("총 금액이 5만원 이하인 주문에는 할인이 적용되지 않는다")

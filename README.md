@@ -167,8 +167,9 @@
 - [x] 테스트 전용 application properties 분리
 - [ ] 다른 외부 서비스에서 Order를 필요로 한다면?
   - 서비스간 의존?
-  - 외부 서비스에서 Dao 호출?
-- [ ] Member의 equals(), hashcode() 고민
+  - 외부 서비스에서 Dao 호출? 
+- [x] Member의 equals(), hashcode() 고민
+  - id만으로 유일성을 보장할 수 있기 때문에 equals(), hashcode() 역시 id를 통해서만 동등성을 비교하고 있다. id가 존재한다면 동등성 비교가 필요 없는 것인가??
 - [x] Product.isDeleted() 고민
   - 비즈니스 로직에선 쓰이지 않는 것을 확인 후 제거, 대신 DB와 맞닿아 있는 ProductEntity에는 만들어줬다.
 - [ ] OrderItem이 Member를 가질 필요가 있을까? (이미 Order에서 가지고 있다)
