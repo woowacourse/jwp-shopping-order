@@ -24,10 +24,3 @@ spring:
   sql:
     init:
       mode: always
-security:
-  jwt:
-    token:
-      secret-key: test
-      expire-length: 3600000
-      server-info: test
-

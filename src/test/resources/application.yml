@@ -1,3 +1,9 @@
 spring:
   profiles:
     active: test
+security:
+  jwt:
+    token:
+      secret-key: test
+      expire-length: 3600000
+      server-info: test
