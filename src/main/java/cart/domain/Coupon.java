@@ -21,6 +21,10 @@ public class Coupon {
         this.minAmount = minAmount;
     }
 
+    public static Coupon empty() {
+        return new Coupon(null, "", Amount.of(0), Amount.of(0));
+    }
+
     public int calculateDiscountedAmount(final int total) {
         if (discountAmount.getValue() >= total) {
             return 0;

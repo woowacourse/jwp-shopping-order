@@ -66,7 +66,7 @@ public class OrderService {
         if (requestCouponId != null) {
             return memberCouponRepository.findByCouponIdAndMemberId(requestCouponId, memberId);
         }
-        return new MemberCoupon(memberId, new Coupon("", Amount.of(0), Amount.of(0)));
+        return new MemberCoupon(memberId, Coupon.empty());
     }
 
     private List<OrderItem> findOrderItems(final OrderRequest orderRequest) {
