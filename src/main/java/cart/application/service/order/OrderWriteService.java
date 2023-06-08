@@ -5,18 +5,19 @@ import cart.application.repository.CouponRepository;
 import cart.application.repository.PointRepository;
 import cart.application.repository.order.OrderRepository;
 import cart.application.repository.order.OrderedItemRepository;
-import cart.domain.member.Member;
-import cart.domain.point.PointHistory;
+import cart.auth.MemberAuth;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.discountpolicy.CouponPolicy;
 import cart.domain.discountpolicy.PointPolicy;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.point.PointHistory;
 import cart.exception.OverFullPointException;
-import cart.auth.MemberAuth;
 import cart.ui.order.dto.CreateOrderDto;
 import cart.ui.order.dto.CreateOrderItemDto;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,20 +67,28 @@ public class OrderWriteService {
         int totalPrice = getTotalPrice(member, cartItems);
         List<Long> couponIds = createOrderDto.getCreateOrderDiscountDto().getCouponIds();
         List<CouponPolicy> couponPolicies = makeCoupon(couponIds);
+
+        return excuteOrder(createOrderDto, member, cartItems, totalPrice, couponIds, couponPolicies);
+    }
+
+    private Long excuteOrder(CreateOrderDto createOrderDto, Member member, CartItems cartItems, int totalPrice,
+                          List<Long> couponIds, List<CouponPolicy> couponPolicies) {
         int paymentPrice = getPaymentPrice(totalPrice, couponPolicies);
         int usedPoint = getUsedPoint(createOrderDto, paymentPrice);
-
         paymentPrice -= usedPoint;
         int finalPaymentPrice = paymentPrice;
 
         Long orderId = makeOrder(member, cartItems, totalPrice, couponIds, usedPoint, finalPaymentPrice);
+        executeOrderRelated(member, cartItems, couponIds, couponPolicies, paymentPrice, usedPoint, orderId);
+        return orderId;
+    }
 
+    private void executeOrderRelated(Member member, CartItems cartItems, List<Long> couponIds, List<CouponPolicy> couponPolicies,
+                           int paymentPrice, int usedPoint, Long orderId) {
         useMemberCoupon(couponIds);
         addOrderedCoupon(couponIds, couponPolicies, orderId);
         addPointHistory(member, paymentPrice, usedPoint, orderId);
         removeCartItem(cartItems);
-
-        return orderId;
     }
 
     private int getPaymentPrice(int totalPrice, List<CouponPolicy> couponPolicies) {
@@ -113,7 +122,7 @@ public class OrderWriteService {
                         .collect(Collectors.toUnmodifiableList()),
                 couponIds.stream()
                         .map(couponRepository::findById).collect(Collectors.toList()),
-                null
+                LocalDateTime.now().toString()
         );
         Long orderId = orderRepository.createOrder(order);
         orderedItemRepository.createOrderItems(orderId, order.getOrderItems());
@@ -127,10 +136,11 @@ public class OrderWriteService {
     }
 
     private void addOrderedCoupon(List<Long> couponIds, List<CouponPolicy> couponPolicies, Long orderId) {
-        if (couponPolicies.size() > 0) {
-            for (Long memberCouponId : couponIds) {
-                couponRepository.createOrderedCoupon(orderId, memberCouponId);
-            }
+        if (couponPolicies.isEmpty()) {
+            return;
+        }
+        for (Long memberCouponId : couponIds) {
+            couponRepository.createOrderedCoupon(orderId, memberCouponId);
         }
     }
 
