@@ -3,9 +3,11 @@ package cart.application.service.order;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.CouponRepository;
 import cart.application.repository.MemberRepository;
+import cart.application.repository.PointRepository;
 import cart.application.repository.ProductRepository;
 import cart.application.repository.order.OrderRepository;
 import cart.application.repository.order.OrderedItemRepository;
+import cart.domain.PointHistory;
 import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
@@ -67,6 +69,9 @@ class OrderWriteServiceTest {
     @Autowired
     OrderedItemRepository orderedItemRepository;
 
+    @Autowired
+    PointRepository pointRepository;
+
     private long leoId;
     private long dinoId;
     private long beaverId;
@@ -111,6 +116,8 @@ class OrderWriteServiceTest {
         CreateOrderDiscountRequest discountRequest = new CreateOrderDiscountRequest(List.of(usablePercentCouponId), 3000);
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(List.of(bbqCartRequest, padCartRequest), discountRequest);
         CreateOrderDto createOrderDto = CreateOrderDto.from(createOrderRequest);
+
+        레오_포인트_15000적립();
 
         MemberAuth leoAuth = new MemberAuth(leoId, 레오.getName(), 레오.getEmail(), 레오.getPassword());
         Long orderId = orderWriteService.createOrder(leoAuth, createOrderDto);
@@ -167,6 +174,31 @@ class OrderWriteServiceTest {
     }
 
     @Test
+    @DisplayName("사용하려는 포인트보다 실제 포인트가 적으면 예외발생")
+    void invalidPointOrderTest() {
+        Member leo = new Member(leoId, 레오.getName(), 레오.getEmail(), 레오.getPassword());
+        CartItem bbqCart = new CartItem(3, bbq, leo);
+        CartItem padCart = new CartItem(2, pad, leo);
+
+        bbqCartItemId = cartItemRepository.createCartItem(bbqCart);
+        padCartItemId = cartItemRepository.createCartItem(padCart);
+
+        // 1000원 * 3
+        CreateOrderItemRequest bbqCartRequest = new CreateOrderItemRequest(bbqCartItemId, bbqProductId, bbqCart.getQuantity());
+        // 10000원 * 2
+        CreateOrderItemRequest padCartRequest = new CreateOrderItemRequest(padCartItemId, padProductId, padCart.getQuantity());
+        CreateOrderDiscountRequest discountRequest = new CreateOrderDiscountRequest(List.of(10L), 100);
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(List.of(bbqCartRequest, padCartRequest), discountRequest);
+        CreateOrderDto createOrderDto = CreateOrderDto.from(createOrderRequest);
+
+        MemberAuth leoAuth = new MemberAuth(leoId, 레오.getName(), 레오.getEmail(), 레오.getPassword());
+
+        assertThatThrownBy(() -> orderWriteService.createOrder(leoAuth, createOrderDto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("잔여 포인트가 부족합니다.");
+    }
+
+    @Test
     @DisplayName("사용할 수 없는 쿠폰 사용 시 예외 발생")
     void invalidCouponOrderTest() {
         Member leo = new Member(leoId, 레오.getName(), 레오.getEmail(), 레오.getPassword());
@@ -184,6 +216,7 @@ class OrderWriteServiceTest {
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(List.of(bbqCartRequest, padCartRequest), discountRequest);
         CreateOrderDto createOrderDto = CreateOrderDto.from(createOrderRequest);
 
+        레오_포인트_15000적립();
         MemberAuth leoAuth = new MemberAuth(leoId, 레오.getName(), 레오.getEmail(), 레오.getPassword());
         assertThatThrownBy(() -> orderWriteService.createOrder(leoAuth, createOrderDto))
                 .isInstanceOf(NoSuchElementException.class)
@@ -205,10 +238,17 @@ class OrderWriteServiceTest {
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(List.of(bbqCartRequest), discountRequest);
         CreateOrderDto createOrderDto = CreateOrderDto.from(createOrderRequest);
 
+        레오_포인트_15000적립();
+
         MemberAuth leoAuth = new MemberAuth(leoId, 레오.getName(), 레오.getEmail(), 레오.getPassword());
         assertThatThrownBy(() -> orderWriteService.createOrder(leoAuth, createOrderDto))
                 .isInstanceOf(OverFullPointException.class)
                 .hasMessage("사용하려는 포인트가 결제 예상 금액보다 큽니다.");
+    }
+
+    private void 레오_포인트_15000적립() {
+        PointHistory pointHistory = new PointHistory(5L, 15000, 0);
+        pointRepository.createPointHistory(leoId, pointHistory);
     }
 
 

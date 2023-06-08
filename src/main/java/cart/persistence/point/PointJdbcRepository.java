@@ -20,8 +20,8 @@ public class PointJdbcRepository implements PointRepository {
     private final RowMapper<PointHistory> pointHistoryRowMapper = (rs, rowNum) ->
             new PointHistory(
                     rs.getLong("order_id"),
-                    rs.getInt("used_point"),
-                    rs.getInt("earned_point")
+                    rs.getInt("earned_point"),
+                    rs.getInt("used_point")
             );
 
     public PointJdbcRepository(JdbcTemplate jdbcTemplate) {

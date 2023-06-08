@@ -1,9 +1,10 @@
 package cart.ui.order;
 
 import cart.application.repository.CartItemRepository;
-import cart.application.repository.CouponRepository;
 import cart.application.repository.MemberRepository;
+import cart.application.repository.PointRepository;
 import cart.application.repository.ProductRepository;
+import cart.domain.PointHistory;
 import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
@@ -47,7 +48,7 @@ public class OrderControllerTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private CouponRepository couponRepository;
+    PointRepository pointRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -86,12 +87,14 @@ public class OrderControllerTest {
     @Test
     @DisplayName("상품을 주문한다.")
     public void findOrders() {
+        레오_포인트_15000적립();
         CreateOrderItemRequest bbqCart = new CreateOrderItemRequest(bbqCartItem, bbqProductId, 3);
         CreateOrderItemRequest padCart = new CreateOrderItemRequest(padCartItem, padProductId, 6);
 
         CreateOrderDiscountRequest orderDiscounts = new CreateOrderDiscountRequest(List.of(), 3000);
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(List.of(bbqCart, padCart), orderDiscounts);
+
         Response response = given().log().all()
                 .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
                 .contentType(ContentType.JSON)
@@ -106,6 +109,7 @@ public class OrderControllerTest {
     @Test
     @DisplayName("존재하지 않는 장바구니로 주문 요청을 하면 예외발생")
     public void wrongOrder() {
+        레오_포인트_15000적립();
         CreateOrderItemRequest wrongCart = new CreateOrderItemRequest(bbqCartItem, bbqProductId, 3);
         CreateOrderItemRequest padCart = new CreateOrderItemRequest(padCartItem, padProductId, 6);
 
@@ -146,6 +150,7 @@ public class OrderControllerTest {
     @Test
     @DisplayName("이미 사용한 쿠폰으로 재주문 시 예외발생")
     public void invalidCouponOrder() {
+        레오_포인트_15000적립();
         CreateOrderItemRequest bbq = new CreateOrderItemRequest(bbqCartItem, bbqProductId, 3);
         CreateOrderItemRequest padCart = new CreateOrderItemRequest(padCartItem, padProductId, 6);
 
@@ -181,7 +186,7 @@ public class OrderControllerTest {
         CreateOrderItemRequest padCart = new CreateOrderItemRequest(padCartItem, padProductId, 6);
 
         CreateOrderDiscountRequest orderDiscounts1 = new CreateOrderDiscountRequest(List.of(usablePercentCoupon), 3000);
-
+        레오_포인트_15000적립();
         CreateOrderRequest createOrderRequest1 = new CreateOrderRequest(List.of(bbqCart), orderDiscounts1);
         given().log().all()
                 .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
@@ -216,6 +221,7 @@ public class OrderControllerTest {
     @Test
     @DisplayName("사용자 특정 주문을 조회한다")
     public void findOneOrder() {
+        레오_포인트_15000적립();
         CreateOrderItemRequest bbqCart = new CreateOrderItemRequest(bbqCartItem, bbqProductId, 3);
         CreateOrderItemRequest padCart = new CreateOrderItemRequest(padCartItem, padProductId, 6);
 
@@ -312,6 +318,11 @@ public class OrderControllerTest {
 
         bbqCartItem = cartItemRepository.createCartItem(new CartItem(3, bbq, leo));
         padCartItem = cartItemRepository.createCartItem(new CartItem(6, pad, leo));
+    }
+
+    private void 레오_포인트_15000적립() {
+        PointHistory pointHistory = new PointHistory(5L, 15000, 0);
+        pointRepository.createPointHistory(leoId, pointHistory);
     }
 
 }

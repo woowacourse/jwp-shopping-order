@@ -5,6 +5,7 @@ import cart.application.repository.CouponRepository;
 import cart.application.repository.PointRepository;
 import cart.application.repository.order.OrderRepository;
 import cart.application.repository.order.OrderedItemRepository;
+import cart.domain.Point;
 import cart.domain.PointHistory;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
@@ -53,6 +54,7 @@ public class OrderWriteService {
         Member member = new Member(memberAuth.getId(), memberAuth.getName(), memberAuth.getEmail(), memberAuth.getPassword());
         CartItems cartItems = makeCartItems(createOrderDto);
         validateIsOwner(member, cartItems);
+        validatePoint(createOrderDto, member);
 
         // 쿠폰 생성
         List<Long> couponIds = createOrderDto.getCouponIds();
@@ -68,6 +70,14 @@ public class OrderWriteService {
         // cartitem삭제
         removeCartItems(cartItems);
         return orderId;
+    }
+
+    private void validatePoint(CreateOrderDto createOrderDto, Member member) {
+        Point pointByMemberId = pointRepository.findPointByMemberId(member.getId());
+        int point = pointByMemberId.calculateTotalPoint();
+        if (createOrderDto.getPoint() > point) {
+            throw new IllegalArgumentException("잔여 포인트가 부족합니다.");
+        }
     }
 
     private Order makeOrder(CartItems cartItems, CreateOrderDto createOrderDto, Member member, List<CouponType> coupons) {
