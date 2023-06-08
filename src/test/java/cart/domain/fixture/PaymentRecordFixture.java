@@ -1,17 +1,15 @@
 package cart.domain.fixture;
 
-import cart.domain.DefaultDeliveryPolicy;
-import cart.domain.Money;
-import cart.domain.PaymentRecord;
-
-import java.util.Map;
-
-import static cart.domain.fixture.DiscountPolicyFixture.defaultDiscountPolicy;
 import static cart.domain.fixture.OrderFixture.orderWithoutId;
 
+import cart.domain.DeliveryPolicies;
+import cart.domain.DiscountPolicies;
+import cart.domain.PaymentRecord;
+import java.util.List;
+
 public class PaymentRecordFixture {
-    public static final PaymentRecord paymentRecord = new PaymentRecord(orderWithoutId, Money.from(55_000),
-            Map.of(defaultDiscountPolicy, Money.from(5_500)),
-            Map.of(new DefaultDeliveryPolicy("기본 배송 정책", Money.from(3_500)), Money.from(3_500)));
+    public static final PaymentRecord paymentRecord = new PaymentRecord(orderWithoutId,
+            List.of(DiscountPolicies.TEN_PERCENT_DISCOUNT_WHEN_PRICE_IS_UPPER_THAN_FIFTY_THOUSANDS),
+            DeliveryPolicies.DEFAULT);
 
 }

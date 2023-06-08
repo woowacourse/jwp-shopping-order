@@ -1,47 +1,62 @@
 package cart.domain;
 
+import static java.util.stream.Collectors.toMap;
+
+import java.util.List;
 import java.util.Map;
 
 public class PaymentRecord {
     private final Order order;
-    private final Money originalTotalPrice;
-    private final Map<DiscountPolicy, Money> policyToDiscountAmounts;
-    private final Map<DeliveryPolicy, Money> policyToDeliveryFees;
+    private final List<DiscountPolicies> discountPolicies;
+    private final DeliveryPolicies deliveryPolicy;
 
-    public PaymentRecord(Order order, Money originalTotalPrice, Map<DiscountPolicy, Money> policyToDiscountAmounts,
-                         Map<DeliveryPolicy, Money> policyToDeliveryFees) {
+    public PaymentRecord(Order order, List<DiscountPolicies> discountPolicies, DeliveryPolicies deliveryPolicy) {
         this.order = order;
-        this.originalTotalPrice = originalTotalPrice;
-        this.policyToDiscountAmounts = policyToDiscountAmounts;
-        this.policyToDeliveryFees = policyToDeliveryFees;
+        this.discountPolicies = discountPolicies;
+        this.deliveryPolicy = deliveryPolicy;
+    }
+
+    public static PaymentRecord from(Order newOrder) {
+        List<DiscountPolicies> applicablePolicies = DiscountPolicies.getApplicablePolicies(newOrder);
+        DeliveryPolicies deliveryPolicy = DeliveryPolicies.from(newOrder);
+        return new PaymentRecord(newOrder, applicablePolicies, deliveryPolicy);
+    }
+
+    public Map<DiscountPolicies, Money> getPolicyToDiscountAmounts() {
+        return this.discountPolicies.stream()
+                .collect(toMap(discountPolicy -> discountPolicy,
+                        discountPolicy -> discountPolicy.calculateDiscountAmount(this.order)));
+    }
+
+    public Money calculateDiscountedPrice() {
+        Money discountAmount = discountPolicies.stream()
+                .map(deliveryPolicy -> deliveryPolicy.calculateDiscountAmount(this.order))
+                .reduce(Money.from(0), Money::add);
+
+        return order.calculateOriginalTotalPrice().subtract(discountAmount);
+    }
+
+    public Money calculateDeliveryFee() {
+        return deliveryPolicy.calculateDeliveryFee(order);
+    }
+
+    public Money calculateFinalPrice() {
+        return calculateDiscountedPrice().add(calculateDeliveryFee());
     }
 
     public Order getOrder() {
         return order;
     }
 
-    public Money getOriginalTotalPrice() {
-        return originalTotalPrice;
+    public Money getOriginalOrderPrice() {
+        return order.calculateOriginalTotalPrice();
     }
 
-    public Map<DiscountPolicy, Money> getPolicyToDiscountAmounts() {
-        return policyToDiscountAmounts;
+    public List<DiscountPolicies> getDiscountPolicies() {
+        return discountPolicies;
     }
 
-    public Map<DeliveryPolicy, Money> getPolicyToDeliveryFees() {
-        return policyToDeliveryFees;
-    }
-
-    public Money calculateDiscountedPrice() {
-        Money discountAmount = policyToDiscountAmounts.values().stream().reduce(Money.from(0), Money::add);
-        return originalTotalPrice.subtract(discountAmount);
-    }
-
-    public Money calculateDeliveryFee() {
-        return policyToDeliveryFees.values().stream().reduce(Money.from(0), Money::add);
-    }
-
-    public Money calculateFinalPrice() {
-        return calculateDiscountedPrice().add(calculateDeliveryFee());
+    public DeliveryPolicies getDeliveryPolicy() {
+        return deliveryPolicy;
     }
 }

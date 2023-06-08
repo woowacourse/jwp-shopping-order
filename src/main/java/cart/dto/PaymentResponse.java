@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.DiscountPolicy;
+import cart.domain.DiscountPolicies;
 import cart.domain.Money;
 import cart.domain.PaymentRecord;
 import java.util.List;
@@ -24,11 +24,11 @@ public class PaymentResponse {
     }
 
     public static PaymentResponse of(PaymentRecord paymentRecord) {
-        Map<DiscountPolicy, Money> policyToDiscountAmounts = paymentRecord.getPolicyToDiscountAmounts();
+        Map<DiscountPolicies, Money> policyToDiscountAmounts = paymentRecord.getPolicyToDiscountAmounts();
         List<DiscountResponse> discounts = policyToDiscountAmounts.entrySet().stream()
                 .map(entry -> DiscountResponse.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
-        Money originalTotalPrice = paymentRecord.getOriginalTotalPrice();
+        Money originalTotalPrice = paymentRecord.getOriginalOrderPrice();
         Money discountedAmount = paymentRecord.calculateDiscountedPrice();
         Money deliveryFee = paymentRecord.calculateDeliveryFee();
         Money finalPrice = paymentRecord.calculateFinalPrice();
