@@ -26,6 +26,7 @@ public class CouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CouponResponse> findAllByMember(final Member member) {
         final List<Coupon> coupons = couponRepository.findAll();
         final List<Long> memberCouponIds = memberCouponRepository.findCouponIdsByMemberId(member.getId());
@@ -44,6 +45,7 @@ public class CouponService {
         memberCouponRepository.create(id, member.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<ActiveCouponResponse> findActiveCoupons(final Member member, final int totalProductAmount) {
         final List<Long> memberCouponIds = memberCouponRepository.findCouponIdsByMemberId(member.getId());
         final List<Coupon> coupons = couponRepository.findAll();
@@ -56,6 +58,7 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CouponDiscountResponse findCouponDiscountAmount(final Long id, final int total) {
         final Coupon coupon = couponRepository.findById(id);
         final int discountedAmount = coupon.calculateDiscountedAmount(total);

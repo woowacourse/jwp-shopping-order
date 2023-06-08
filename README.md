@@ -322,7 +322,7 @@ HTTP/1.1 204 No Content
 
 ## 2단계 리팩토링 요구사항
 
-- [ ] 조회 시 @transactional의 readOnly 속성 사용
+- [x] 조회 시 @transactional의 readOnly 속성 사용
 - [ ] CartItemService의 add 메서드 → save 메서드 명 변경
 - [ ] 사용 가능한 쿠폰을 구하는 로직을 Service → Coupon으로 이동
 - [ ] 빈 MemberCoupon에 대한 정적 팩터리 메서드 추가

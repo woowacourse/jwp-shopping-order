@@ -84,6 +84,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailResponse showOrderDetail(final Member member, final Long id) {
         final Order order = orderRepository.findById(id, member.getId());
 
@@ -100,6 +101,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> showAllOrders(final Member member) {
         final List<Order> orders = orderRepository.findAll(member.getId());
         return orders.stream()

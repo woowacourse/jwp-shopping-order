@@ -20,6 +20,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         final List<Product> products = productRepository.findAll();
         return products.stream()
@@ -27,6 +28,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findById(final Long id) {
         final Product product = productRepository.findById(id);
         return ProductResponse.of(product);
