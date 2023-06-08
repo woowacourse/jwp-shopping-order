@@ -25,18 +25,6 @@ public class Coupon {
         throw new IllegalStateException("no discount type defined");
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public CouponType getCouponType() {
-        return couponType;
-    }
-
-    public boolean isUsed() {
-        return isUsed;
-    }
-
     public Coupon use() {
         if (isUsed) {
             throw new CouponException.AlreadyUsed(id);
@@ -49,5 +37,17 @@ public class Coupon {
             throw new CouponException.AlreadyUsable(id);
         }
         return new Coupon(id, couponType, false);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public CouponType getCouponType() {
+        return couponType;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
     }
 }
