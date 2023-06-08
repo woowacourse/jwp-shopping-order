@@ -35,8 +35,8 @@ public class CartItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, cartItemEntity.getMember_id());
-            ps.setLong(2, cartItemEntity.getProduct_id());
+            ps.setLong(1, cartItemEntity.getMemberId());
+            ps.setLong(2, cartItemEntity.getProductId());
             ps.setInt(3, cartItemEntity.getQuantity());
 
             return ps;

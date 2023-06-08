@@ -2,14 +2,14 @@ package cart.entity;
 
 public class CartItemEntity {
     private final Long id;
-    private final Long member_id;
-    private final Long product_id;
+    private final Long memberId;
+    private final Long productId;
     private final int quantity;
 
-    public CartItemEntity(Long id, Long member_id, Long product_id, int quantity) {
+    public CartItemEntity(Long id, Long memberId, Long productId, int quantity) {
         this.id = id;
-        this.member_id = member_id;
-        this.product_id = product_id;
+        this.memberId = memberId;
+        this.productId = productId;
         this.quantity = quantity;
     }
 
@@ -17,12 +17,12 @@ public class CartItemEntity {
         return id;
     }
 
-    public Long getMember_id() {
-        return member_id;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public Long getProduct_id() {
-        return product_id;
+    public Long getProductId() {
+        return productId;
     }
 
     public int getQuantity() {

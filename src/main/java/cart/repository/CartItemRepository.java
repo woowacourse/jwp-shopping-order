@@ -28,7 +28,7 @@ public class CartItemRepository {
 
     public CartItem findById(Long id) {
         CartItemEntity cartItemEntity = cartItemDao.findById(id);
-        return convertToDomain(memberRepository.findById(cartItemEntity.getMember_id()), cartItemEntity);
+        return convertToDomain(memberRepository.findById(cartItemEntity.getMemberId()), cartItemEntity);
     }
 
     public List<CartItem> findByIds(Member member, List<Long> ids) {
@@ -65,7 +65,7 @@ public class CartItemRepository {
         return new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
-                productRepository.findById(cartItemEntity.getProduct_id()),
+                productRepository.findById(cartItemEntity.getProductId()),
                 member
         );
     }
