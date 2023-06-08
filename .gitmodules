@@ -1,0 +1,4 @@
+[submodule "config"]
+	path = ./src/main/resources
+	url = https://github.com/donghae-kim/jwp-shopping-order-private.git
+	branch = secret

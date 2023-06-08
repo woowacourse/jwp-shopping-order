@@ -1,12 +1,13 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.domain.Product;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.ProductRepository;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,40 +15,42 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+        this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+    public List<CartItemResponse> findByMemberId(Member member) {
+        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+        return cartItems.stream()
+                .map(CartItemResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    public Long save(Member member, CartItemRequest cartItemRequest) {
+        Product product = productRepository.findById(cartItemRequest.getProductId());
+        CartItem cartItem = new CartItem(member, product);
+        CartItem savedCartItem = cartItemRepository.save(cartItem);
+        return savedCartItem.getId();
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
-
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(id);
             return;
         }
-
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+    public void deleteById(Member member, Long id) {
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
-
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(id);
     }
 }
