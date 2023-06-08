@@ -191,6 +191,10 @@ HTTP/1.1 204 No Content
 ## 포인트
 
 ### 사용자가 가진 포인트 조회
+```javascript
+curl -v -u kangsj9665@gmail.com:1234 http://localhost:8080/points
+```
+
 Request
 ```
 GET /points HTTP/1.1
@@ -208,6 +212,10 @@ Content-Type: application/json
 ```
 
 ### 적립 포인트 조회
+```javascript
+curl -v -u kangsj9665@gmail.com:1234 http://localhost:8080/saving-point?totalPrice=30000
+```
+
 Request
 ```
 GET /saving-point?totalPrice={totalPrice} HTTP/1.1
@@ -226,6 +234,16 @@ Content-Type: application/json
 ## 주문
 
 ### 주문하기
+```javascript
+curl -u "kangsj9665@gmail.com:1234" -H "Content-Type: application/json" -d '{
+"cartItemIds": [1, 2],
+    "cardNumber": "4043-0304-1299-4949",
+    "cvc": 123,
+    "point": 300
+}' localhost:8080/orders
+```
+
+
 Request
 ```
 POST /orders HTTP/1.1
@@ -247,6 +265,10 @@ Location: /orders/{orderId}
 ```
 
 ### 전체 주문 목록 불러오기
+```javascript
+curl -u "kangsj9665@gmail.com:1234" localhost:8080/orders
+```
+
 Request
 ```
 GET /orders HTTP/1.1
@@ -316,6 +338,10 @@ Content-Type: application/json
 ```
 
 ### 주문 상세 내역 불러오기
+```javascript
+curl -u "kangsj9665@gmail.com:1234" localhost:8080/orders/1
+```
+
 Request
 ```
 GET /orders/{orderId} HTTP/1.1
