@@ -3,11 +3,11 @@ package cart.coupon.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.CouponRepository;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.FixDiscountPolicy;
-import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
 import cart.coupon.domain.SpecificProductCouponStrategy;
 import cart.coupon.domain.TargetType;

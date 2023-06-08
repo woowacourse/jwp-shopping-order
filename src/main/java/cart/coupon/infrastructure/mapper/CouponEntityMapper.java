@@ -1,11 +1,11 @@
 package cart.coupon.infrastructure.mapper;
 
+import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.CouponStrategy;
 import cart.coupon.domain.DiscountPolicy;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.FixDiscountPolicy;
-import cart.coupon.domain.AllProductsCouponStrategy;
 import cart.coupon.domain.RateDiscountPolicy;
 import cart.coupon.domain.SpecificProductCouponStrategy;
 import cart.coupon.domain.TargetType;

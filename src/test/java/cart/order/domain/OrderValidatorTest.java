@@ -13,7 +13,6 @@ import cart.order.exception.OrderException;
 import cart.product.domain.Product;
 import cart.product.domain.ProductRepository;
 import cart.product.fixture.FakeProductRepository;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

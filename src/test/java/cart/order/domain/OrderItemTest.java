@@ -12,7 +12,6 @@ import cart.coupon.domain.SpecificProductCouponStrategy;
 import cart.member.domain.Member;
 import cart.order.exception.OrderException;
 import cart.product.domain.Product;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
