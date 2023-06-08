@@ -75,7 +75,7 @@ class AppliedDiscountPolicyDaoTest {
 
         //when
         assertThat(appliedDiscountPolicyDao.findByPaymentRecordId(paymentRecordEntityId).stream()
-                .map(AppliedDiscountPolicyEntity::getDiscountPolicyId))
+                .map(AppliedDiscountPolicyEntity::getId))
                 .containsOnly(generatedId);
     }
 }

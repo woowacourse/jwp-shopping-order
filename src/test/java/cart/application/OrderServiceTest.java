@@ -94,11 +94,10 @@ class OrderServiceTest {
         //given
         final Long order1 = this.orderService.createOrderAndSave(memberWithId, List.of(1L));
         final Long order2 = this.orderService.createOrderAndSave(memberWithId, List.of(2L));
-        final List<Long> orderIds = List.of(order1, order2);
         //when
         final List<Order> orders = this.orderService.retrieveMemberOrders(memberWithId);
         //then
-        orders.forEach(order -> assertThat(order.getId()).isIn(orderIds));
+        assertThat(orders.stream().map(Order::getId)).contains(order1, order2);
     }
 
     @Test

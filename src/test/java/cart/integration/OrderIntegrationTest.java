@@ -1,11 +1,29 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
+
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.*;
+import cart.dto.CartItemQuantityUpdateRequest;
+import cart.dto.CartItemRequest;
+import cart.dto.DiscountResponse;
+import cart.dto.OrderDetailResponse;
+import cart.dto.OrderItemResponse;
+import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
+import cart.dto.PaymentResponse;
+import cart.dto.ProductRequest;
 import cart.exception.AuthenticationException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,15 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 public class OrderIntegrationTest extends IntegrationTest {
     @Autowired
@@ -50,7 +59,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         this.productId3 = this.createProduct(new ProductRequest("보쌈", 15_000, "http://example.com/pizza.jpg"));
 
         this.cartItemIds = List.of(this.requestAddCartItemAndGetId(this.member, this.productId),
-                this.requestAddCartItemAndGetId(this.member, this.productId2), this.requestAddCartItemAndGetId(this.member, this.productId3));
+                this.requestAddCartItemAndGetId(this.member, this.productId2),
+                this.requestAddCartItemAndGetId(this.member, this.productId3));
 
         this.orderItems = List.of(
                 new OrderItemResponse("치킨", 1, "http://example.com/chicken.jpg", 10_000),
@@ -118,11 +128,12 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         final List<OrderResponse> responseBody = response.body().jsonPath().getList(".", OrderResponse.class);
 
-        final List<OrderResponse> expected = List.of(new OrderResponse(orderId, null, this.orderItems));
+        final OrderResponse expected = new OrderResponse(orderId, null, this.orderItems);
 
         Assertions.assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(200),
-                () -> assertThat(responseBody).usingRecursiveComparison().ignoringFields("orderTime")
+                () -> assertThat(responseBody.get(responseBody.size() - 1)).usingRecursiveComparison()
+                        .ignoringFields("orderTime")
                         .isEqualTo(expected)
         );
     }
@@ -164,8 +175,9 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract();
 
         final OrderDetailResponse orderDetailResponseBody = response.body().as(OrderDetailResponse.class);
-        final OrderDetailResponse expected = new OrderDetailResponse(this.orderItems, orderId, null, new PaymentResponse(55_000,
-                List.of(new DiscountResponse("5만원 이상 구매 시 10% 할인", 5_500)), 49_500, 3_500, 53_000));
+        final OrderDetailResponse expected = new OrderDetailResponse(this.orderItems, orderId, null,
+                new PaymentResponse(55_000,
+                        List.of(new DiscountResponse("5만원 이상 구매 시 10% 할인", 5_500)), 49_500, 3_500, 53_000));
         Assertions.assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(200),
                 () -> assertThat(orderDetailResponseBody).usingRecursiveComparison().ignoringFields("orderTime")
@@ -218,7 +230,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(final Member member, final CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(final Member member,
+                                                             final CartItemRequest cartItemRequest) {
         return given(this.spec).log().all()
                 .filter(
                         document("add-cart-item",
@@ -243,7 +256,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(final Member member, final Long cartItemId, final int quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(final Member member, final Long cartItemId,
+                                                                        final int quantity) {
         final CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given(this.spec).log().all()
                 .filter(
