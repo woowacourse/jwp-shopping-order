@@ -1,10 +1,6 @@
 package cart.dao;
 
-import cart.domain.Amount;
-import cart.domain.CartItem;
 import cart.domain.Coupon;
-import cart.domain.Member;
-import cart.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Objects;
@@ -46,8 +42,8 @@ public class CouponDao {
     String sql = "SELECT * FROM coupon WHERE id = ?";
     return jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
       String name = rs.getString("name");
-      final Amount discountAmount = new Amount(rs.getInt("discount_amount"));
-      final Amount minAmount = new Amount(rs.getInt("min_amount"));
+      final int discountAmount = rs.getInt("discount_amount");
+      final int minAmount = rs.getInt("min_amount");
       return new Coupon(id, name, discountAmount, minAmount);
     }).stream().findAny();
   }
@@ -56,8 +52,8 @@ public class CouponDao {
     String sql = "SELECT * FROM coupon WHERE name = ?";
     return jdbcTemplate.query(sql, new Object[]{name}, (rs, rowNum) -> {
       final long id = rs.getLong("id");
-      final Amount discountAmount = new Amount(rs.getInt("discount_amount"));
-      final Amount minAmount = new Amount(rs.getInt("min_amount"));
+      final int discountAmount = rs.getInt("discount_amount");
+      final int minAmount = rs.getInt("min_amount");
       return new Coupon(id, name, discountAmount, minAmount);
     }).stream().findAny();
   }

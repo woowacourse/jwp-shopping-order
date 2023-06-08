@@ -10,15 +10,15 @@ public class Coupon {
   private final Amount discountAmount;
   private final Amount minAmount;
 
-  public Coupon(String name, Amount discountAmount, Amount minAmount) {
+  public Coupon(String name, int discountAmount, int minAmount) {
     this(null, name, discountAmount, minAmount);
   }
 
-  public Coupon(Long id, String name, Amount discountAmount, Amount minAmount) {
+  public Coupon(Long id, String name, int discountAmount, int minAmount) {
     this.id = id;
     this.name = name;
-    this.discountAmount = discountAmount;
-    this.minAmount = minAmount;
+    this.discountAmount = new Amount(discountAmount);
+    this.minAmount = new Amount(minAmount);
   }
 
   public static Coupon empty() {

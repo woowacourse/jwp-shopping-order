@@ -53,4 +53,8 @@ public class Product {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public Amount calculateAmount(int quantity) {
+        return price.multiply(quantity);
+    }
 }
