@@ -15,19 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductDto> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productRepository.getAllProducts();
         return products.stream().map(ProductDto::of).collect(Collectors.toList());
     }
 
     public ProductDto getProductById(Long productId) {
-        Product product = productDao.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
         return ProductDto.of(product);
     }
@@ -35,18 +35,18 @@ public class ProductService {
     public Long createProduct(ProductAddDto productAddDto) {
         Product product = new Product(productAddDto.getName(), productAddDto.getPrice(), productAddDto.getImageUrl(),
                 productAddDto.getStock());
-        return productDao.createProduct(product);
+        return productRepository.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductUpdateDto productUpdateDto) {
-        productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
+        productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Product product = new Product(productUpdateDto.getName(), productUpdateDto.getPrice(), productUpdateDto.getImageUrl(),
                 productUpdateDto.getStock());
-        productDao.updateProduct(productId, product);
+        productRepository.updateProduct(productId, product);
     }
 
     public void deleteProduct(Long productId) {
-        productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
-        productDao.deleteProduct(productId);
+        productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        productRepository.deleteProduct(productId);
     }
 }

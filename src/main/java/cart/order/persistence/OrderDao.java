@@ -2,6 +2,7 @@ package cart.order.persistence;
 
 import cart.member.domain.Member;
 import cart.member.domain.Point;
+import cart.order.application.OrderRepository;
 import cart.order.domain.Order;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -17,7 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderDao {
+public class OrderDao implements OrderRepository {
     private static final RowMapper<Order> mapper = (rs, rowNum) -> {
         long orders_id = rs.getLong("orders_id");
         long member_id = rs.getLong("member_id");

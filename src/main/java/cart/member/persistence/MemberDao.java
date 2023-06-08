@@ -1,5 +1,6 @@
 package cart.member.persistence;
 
+import cart.member.application.MemberRepository;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
 import java.sql.ResultSet;
@@ -10,7 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MemberDao {
+public class MemberDao implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

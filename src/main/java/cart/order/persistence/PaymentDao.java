@@ -1,5 +1,6 @@
 package cart.order.persistence;
 
+import cart.order.application.PaymentRepository;
 import cart.order.domain.Payment;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PaymentDao {
+public class PaymentDao implements PaymentRepository {
     private static final RowMapper<Payment> mapper = (rs, rowNum) -> {
         int total_product_price = rs.getInt("total_product_price");
         int total_delivery_price = rs.getInt("total_delivery_price");

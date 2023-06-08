@@ -1,5 +1,6 @@
 package cart.cartItem.persistence;
 
+import cart.cartItem.application.CartItemRepository;
 import cart.cartItem.domain.CartItem;
 import cart.member.domain.Member;
 import cart.member.domain.Point;
@@ -18,7 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CartItemDao {
+public class CartItemDao implements CartItemRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
@@ -97,12 +98,6 @@ public class CartItemDao {
             Product product = new Product(productId, name, price, imageUrl, stock);
             return new CartItem(cartItemId, quantity, product, member);
         });
-    }
-
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void deleteById(Long id) {

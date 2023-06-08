@@ -1,5 +1,6 @@
 package cart.order.persistence;
 
+import cart.order.application.OrderItemRepository;
 import cart.order.domain.OrderItem;
 import cart.product.domain.Product;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderItemDao {
+public class OrderItemDao implements OrderItemRepository {
     private static final RowMapper<OrderItem> mapper = (rs, rowNum) -> {
         long product_id = rs.getLong("product_id");
         int quantity = rs.getInt("quantity");

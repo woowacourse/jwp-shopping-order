@@ -1,5 +1,6 @@
 package cart.product.persistence;
 
+import cart.product.application.ProductRepository;
 import cart.product.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductDao {
+public class ProductDao implements ProductRepository {
 
     private static final RowMapper<Product> mapper = (rs, rowNum) -> {
         Long id = rs.getLong("id");
