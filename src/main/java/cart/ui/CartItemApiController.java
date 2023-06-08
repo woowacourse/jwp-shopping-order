@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.CartItemService;
+import cart.application.ReadCartItemService;
 import cart.domain.Member;
 import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
@@ -16,14 +17,16 @@ import java.util.List;
 public class CartItemApiController {
 
     private final CartItemService cartItemService;
+    private final ReadCartItemService readCartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemApiController(CartItemService cartItemService, ReadCartItemService readCartItemService) {
         this.cartItemService = cartItemService;
+        this.readCartItemService = readCartItemService;
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(readCartItemService.findByMember(member));
     }
 
     @PostMapping
