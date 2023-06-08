@@ -1,7 +1,7 @@
 package cart.dto;
 
 import cart.domain.Order;
-import cart.domain.PaymentRecord;
+import cart.domain.Payment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,13 +22,13 @@ public class OrderDetailResponse {
         this.paymentResponse = paymentResponse;
     }
 
-    public static OrderDetailResponse from(PaymentRecord paymentRecord) {
-        Order order = paymentRecord.getOrder();
+    public static OrderDetailResponse from(Payment payment) {
+        Order order = payment.getOrder();
         List<OrderItemResponse> productList = order.getOrderItems().stream().map(OrderItemResponse::from)
                 .collect(Collectors.toList());
         Long id = order.getId();
         LocalDateTime orderTime = order.getOrderTime();
-        PaymentResponse paymentResponse = PaymentResponse.of(paymentRecord);
+        PaymentResponse paymentResponse = PaymentResponse.of(payment);
         return new OrderDetailResponse(productList, id, orderTime, paymentResponse);
     }
 

@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.DiscountPolicies;
+import cart.domain.DiscountPolicy;
 import cart.domain.Money;
 
 public class DiscountResponse {
@@ -12,7 +12,7 @@ public class DiscountResponse {
         this.discountAmount = discountAmount;
     }
 
-    public static DiscountResponse of(DiscountPolicies discountPolicy, Money discountAmount) {
+    public static DiscountResponse of(DiscountPolicy discountPolicy, Money discountAmount) {
         return new DiscountResponse(discountPolicy.getName(), discountAmount.getValue());
     }
 

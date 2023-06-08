@@ -1,19 +1,19 @@
 package cart.domain;
 
-import static cart.domain.fixture.PaymentRecordFixture.paymentRecord;
+import static cart.domain.fixture.PaymentRecordFixture.PAYMENT;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class PaymentRecordTest {
+class PaymentTest {
 
     @Test
     @DisplayName("총 할인금액을 반환한다.")
     void calculateDiscountedAmount() {
         //given
         //when
-        Money discountedAmount = paymentRecord.calculateDiscountedPrice();
+        Money discountedAmount = PAYMENT.calculateDiscountedPrice();
         //then
         Assertions.assertThat(discountedAmount).isEqualTo(new Money(49_500));
 
@@ -25,7 +25,7 @@ class PaymentRecordTest {
     void calculateDeliveryFee() {
         //given
         //when
-        Money deliveryAmount = paymentRecord.calculateDeliveryFee();
+        Money deliveryAmount = PAYMENT.calculateDeliveryFee();
         //then
         Assertions.assertThat(deliveryAmount).isEqualTo(new Money(3_500));
     }
@@ -35,7 +35,7 @@ class PaymentRecordTest {
     void createFinalPaymentAmount() {
         //given
         //when
-        Money finalPaymentAmount = paymentRecord.calculateFinalPrice();
+        Money finalPaymentAmount = PAYMENT.calculateFinalPrice();
         //then
         Assertions.assertThat(finalPaymentAmount).isEqualTo(new Money(53_000));
     }

@@ -27,19 +27,19 @@ public class AppliedDiscountPolicyDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long insert(final long paymentRecordId, final long discountPolicyId) {
+    public Long insert(final long paymentEntityId, final long discountPolicyId) {
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("payment_record_id", paymentRecordId);
+        parameters.put("payment_id", paymentEntityId);
         parameters.put("discount_policy_id", discountPolicyId);
         return this.simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
-    public List<AppliedDiscountPolicyEntity> findByPaymentRecordId(final Long paymentRecordId) {
+    public List<AppliedDiscountPolicyEntity> findByPaymentEntityId(final Long paymentEntityId) {
         final String sql =
                 "SELECT A.id AS id, P.order_id AS order_id, A.discount_policy_id AS discount_policy_id " +
                         "FROM applied_discount_policy AS A " +
-                        "INNER JOIN payment_record as P ON (A.payment_record_id = P.id) " +
-                        "WHERE A.payment_record_id = ?";
-        return this.jdbcTemplate.query(sql, this.rowMapper, paymentRecordId);
+                        "INNER JOIN payment as P ON (A.payment_id = P.id) " +
+                        "WHERE A.payment_id = ?";
+        return this.jdbcTemplate.query(sql, this.rowMapper, paymentEntityId);
     }
 }

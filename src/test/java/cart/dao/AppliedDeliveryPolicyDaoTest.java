@@ -4,11 +4,11 @@ import static cart.domain.fixture.MemberFixture.memberWithId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.entity.OrderRecordEntity;
-import cart.dao.entity.PaymentRecordEntity;
-import cart.domain.DeliveryPolicies;
-import cart.domain.DiscountPolicies;
+import cart.dao.entity.PaymentEntity;
+import cart.domain.DeliveryPolicy;
+import cart.domain.DiscountPolicy;
 import cart.domain.Order;
-import cart.domain.PaymentRecord;
+import cart.domain.Payment;
 import cart.domain.fixture.OrderFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ class AppliedDeliveryPolicyDaoTest {
 
     private AppliedDeliveryPolicyDao appliedDeliveryPolicyDao;
 
-    private PaymentRecordDao paymentRecordDao;
+    private PaymentEntityDao paymentEntityDao;
 
     private OrderRecordDao orderRecordDao;
 
@@ -33,7 +33,7 @@ class AppliedDeliveryPolicyDaoTest {
     @BeforeEach
     void setUp() {
         appliedDeliveryPolicyDao = new AppliedDeliveryPolicyDao(jdbcTemplate);
-        paymentRecordDao = new PaymentRecordDao(jdbcTemplate);
+        paymentEntityDao = new PaymentEntityDao(jdbcTemplate);
         orderRecordDao = new OrderRecordDao(jdbcTemplate);
     }
 
@@ -43,15 +43,15 @@ class AppliedDeliveryPolicyDaoTest {
         //given
         Order createdOrder = createOrder();
 
-        DeliveryPolicies appliedDeliveryPolicy = DeliveryPolicies.DEFAULT;
-        PaymentRecord paymentRecord = new PaymentRecord(createdOrder,
-                List.of(DiscountPolicies.TEN_PERCENT_DISCOUNT_WHEN_PRICE_IS_UPPER_THAN_FIFTY_THOUSANDS),
+        DeliveryPolicy appliedDeliveryPolicy = DeliveryPolicy.DEFAULT;
+        Payment payment = new Payment(createdOrder,
+                List.of(DiscountPolicy.TEN_PERCENT_DISCOUNT_WHEN_PRICE_IS_UPPER_THAN_FIFTY_THOUSANDS),
                 appliedDeliveryPolicy);
-        Long paymentRecordEntityId = paymentRecordDao.insert(PaymentRecordEntity.from(paymentRecord));
+        Long paymentEntityId = paymentEntityDao.insert(PaymentEntity.from(payment));
 
         //when
         //then
-        Long generatedId = appliedDeliveryPolicyDao.insert(paymentRecordEntityId, appliedDeliveryPolicy.getId());
+        Long generatedId = appliedDeliveryPolicyDao.insert(paymentEntityId, appliedDeliveryPolicy.getId());
         assertThat(generatedId).isNotNull();
     }
 

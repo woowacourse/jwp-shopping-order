@@ -4,7 +4,7 @@ import cart.application.OrderService;
 import cart.application.PaymentService;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.PaymentRecord;
+import cart.domain.Payment;
 import cart.dto.PaymentResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +28,8 @@ public class PaymentController {
     @GetMapping("/total-cart-price")
     public ResponseEntity<PaymentResponse> getCartPrice(Member member, @RequestParam List<Long> cartItemIds) {
         Order draftOrder = orderService.createDraftOrder(member, cartItemIds);
-        PaymentRecord draftPaymentRecord = paymentService.createDraftPaymentRecord(draftOrder);
-        PaymentResponse paymentResponse = PaymentResponse.of(draftPaymentRecord);
+        Payment draftPayment = paymentService.createDraftPaymentRecord(draftOrder);
+        PaymentResponse paymentResponse = PaymentResponse.of(draftPayment);
         return ResponseEntity.ok(paymentResponse);
     }
 

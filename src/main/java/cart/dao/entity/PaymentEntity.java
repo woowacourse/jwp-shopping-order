@@ -1,22 +1,22 @@
 package cart.dao.entity;
 
-import cart.domain.PaymentRecord;
+import cart.domain.Payment;
 
-public class PaymentRecordEntity {
+public class PaymentEntity {
 
     private final Long id;
     private final Long orderId;
     private final int originalTotalPrice; // TODO: 2023/06/08 이거 빼도 되는지 확인하기
 
-    public PaymentRecordEntity(final Long id, final Long orderId, final int originalTotalPrice) {
+    public PaymentEntity(final Long id, final Long orderId, final int originalTotalPrice) {
         this.id = id;
         this.orderId = orderId;
         this.originalTotalPrice = originalTotalPrice;
     }
 
-    public static PaymentRecordEntity from(final PaymentRecord paymentRecord) {
-        return new PaymentRecordEntity(null, paymentRecord.getOrder().getId(),
-                paymentRecord.getOriginalOrderPrice().getValue());
+    public static PaymentEntity from(final Payment payment) {
+        return new PaymentEntity(null, payment.getOrder().getId(),
+                payment.getOriginalOrderPrice().getValue());
     }
 
     public Long getId() {

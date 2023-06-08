@@ -25,18 +25,18 @@ public class AppliedDeliveryPolicyDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long insert(final long paymentRecordId, final Long policyId) {
-        final Map<String, Object> parameters = Map.of("payment_record_id", paymentRecordId,
+    public Long insert(final long paymentId, final Long policyId) {
+        final Map<String, Object> parameters = Map.of("payment_id", paymentId,
                 "delivery_policy_id", policyId);
         return this.simpleJdbcInsert.executeAndReturnKeyHolder(parameters).getKeyAs(Long.class);
     }
 
-    public AppliedDeliveryPolicyEntity findByPaymentRecordId(final Long paymentRecordId) {
+    public AppliedDeliveryPolicyEntity findByPaymentRecordId(final Long paymentEntityId) {
         final String sql =
                 "SELECT A.id AS id, P.order_id AS order_id, A.delivery_policy_id AS delivery_policy_id " +
                         "FROM applied_delivery_policy AS A " +
-                        "INNER JOIN payment_record as P ON (A.payment_record_id = P.id) " +
-                        "WHERE A.payment_record_id = ?";
-        return this.jdbcTemplate.queryForObject(sql, this.deliveryPolicyRowMapper, paymentRecordId);
+                        "INNER JOIN payment as P ON (A.payment_id = P.id) " +
+                        "WHERE A.payment_id = ?";
+        return this.jdbcTemplate.queryForObject(sql, this.deliveryPolicyRowMapper, paymentEntityId);
     }
 }

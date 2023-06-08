@@ -1,7 +1,7 @@
 drop table cart_item;
 drop table applied_delivery_policy;
 drop table applied_discount_policy;
-drop table payment_record;
+drop table payment;
 drop table order_item;
 drop table order_record;
 drop table member;
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS order_item
     FOREIGN KEY (order_id) REFERENCES order_record (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS payment_record
+CREATE TABLE IF NOT EXISTS payment
 (
     id                   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id             BIGINT NOT NULL,
@@ -59,19 +59,18 @@ CREATE TABLE IF NOT EXISTS payment_record
     FOREIGN KEY (order_id) REFERENCES order_record (id)
 );
 
-
 CREATE TABLE IF NOT EXISTS applied_discount_policy
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    payment_record_id  BIGINT NOT NULL,
+    payment_id         BIGINT NOT NULL,
     discount_policy_id BIGINT NOT NULL,
-    FOREIGN KEY (payment_record_id) REFERENCES payment_record (id)
+    FOREIGN KEY (payment_id) REFERENCES payment (id)
 );
 
 CREATE TABLE IF NOT EXISTS applied_delivery_policy
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    payment_record_id  BIGINT NOT NULL,
+    payment_id         BIGINT NOT NULL,
     delivery_policy_id BIGINT NOT NULL,
-    FOREIGN KEY (payment_record_id) REFERENCES payment_record (id)
+    FOREIGN KEY (payment_id) REFERENCES payment (id)
 );

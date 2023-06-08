@@ -4,7 +4,7 @@ import cart.application.OrderService;
 import cart.application.PaymentService;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.PaymentRecord;
+import cart.domain.Payment;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -57,7 +57,7 @@ public class OrderController {
     public ResponseEntity<OrderDetailResponse> getOrderDetail(final Member member, @PathVariable final Long orderId) {
         final Order order = this.orderService.retrieveOrderById(orderId);
         validateAuthorization(member, order);
-        final PaymentRecord paymentRecord = this.paymentService.findByOrder(order);
-        return ResponseEntity.ok(OrderDetailResponse.from(paymentRecord));
+        final Payment payment = this.paymentService.findByOrder(order);
+        return ResponseEntity.ok(OrderDetailResponse.from(payment));
     }
 }

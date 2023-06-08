@@ -6,7 +6,7 @@ import cart.domain.fixture.OrderFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class DeliveryPoliciesTest {
+class DeliveryPolicyTest {
     @Test
     @DisplayName("기본 배송비 테스트")
     void defaultTest() {
@@ -14,7 +14,7 @@ class DeliveryPoliciesTest {
         Order orderWithoutId = OrderFixture.orderWithoutId;
 
         //when
-        DeliveryPolicies defaultDeliveryPolicy = DeliveryPolicies.DEFAULT;
+        DeliveryPolicy defaultDeliveryPolicy = DeliveryPolicy.DEFAULT;
         Money money = defaultDeliveryPolicy.calculateDeliveryFee(orderWithoutId);
 
         //then

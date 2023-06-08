@@ -5,24 +5,24 @@ import static java.util.stream.Collectors.toMap;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentRecord {
+public class Payment {
     private final Order order;
-    private final List<DiscountPolicies> discountPolicies;
-    private final DeliveryPolicies deliveryPolicy;
+    private final List<DiscountPolicy> discountPolicies;
+    private final DeliveryPolicy deliveryPolicy;
 
-    public PaymentRecord(Order order, List<DiscountPolicies> discountPolicies, DeliveryPolicies deliveryPolicy) {
+    public Payment(Order order, List<DiscountPolicy> discountPolicies, DeliveryPolicy deliveryPolicy) {
         this.order = order;
         this.discountPolicies = discountPolicies;
         this.deliveryPolicy = deliveryPolicy;
     }
 
-    public static PaymentRecord from(Order newOrder) {
-        List<DiscountPolicies> applicablePolicies = DiscountPolicies.getApplicablePolicies(newOrder);
-        DeliveryPolicies deliveryPolicy = DeliveryPolicies.from(newOrder);
-        return new PaymentRecord(newOrder, applicablePolicies, deliveryPolicy);
+    public static Payment from(Order newOrder) {
+        List<DiscountPolicy> applicablePolicies = DiscountPolicy.getApplicablePolicies(newOrder);
+        DeliveryPolicy deliveryPolicy = DeliveryPolicy.from(newOrder);
+        return new Payment(newOrder, applicablePolicies, deliveryPolicy);
     }
 
-    public Map<DiscountPolicies, Money> getPolicyToDiscountAmounts() {
+    public Map<DiscountPolicy, Money> getPolicyToDiscountAmounts() {
         return this.discountPolicies.stream()
                 .collect(toMap(discountPolicy -> discountPolicy,
                         discountPolicy -> discountPolicy.calculateDiscountAmount(this.order)));
@@ -52,11 +52,11 @@ public class PaymentRecord {
         return order.calculateOriginalTotalPrice();
     }
 
-    public List<DiscountPolicies> getDiscountPolicies() {
+    public List<DiscountPolicy> getDiscountPolicies() {
         return discountPolicies;
     }
 
-    public DeliveryPolicies getDeliveryPolicy() {
+    public DeliveryPolicy getDeliveryPolicy() {
         return deliveryPolicy;
     }
 }

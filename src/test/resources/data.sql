@@ -28,8 +28,8 @@ VALUES ('치킨',
         'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
         2, 20000, 1);
 
-INSERT INTO payment_record(order_id, original_total_price)
+INSERT INTO payment(order_id, original_total_price)
 VALUES (1, 23500);
 
-INSERT INTO applied_delivery_policy (payment_record_id, delivery_policy_id)
+INSERT INTO applied_delivery_policy (payment_id, delivery_policy_id)
 VALUES (1, 1);
