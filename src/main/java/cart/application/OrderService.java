@@ -1,9 +1,6 @@
 package cart.application;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.*;
 import cart.exception.CartItemException;
 import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
@@ -13,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +51,29 @@ public class OrderService {
     public Long createOrderAndSave(final Member member, final List<Long> cartItemIds) {
         final Order draftOrder = this.createDraftOrder(member, cartItemIds);
         final Long orderId = this.orderRepository.create(draftOrder);
+        this.checkPriceMatch(cartItemIds, draftOrder);
         cartItemIds.forEach(this.cartItemRepository::deleteById);
+
         return orderId;
+    }
+
+    private void checkPriceMatch(final List<Long> cartItemIds, final Order draftOrder) {
+        final Money currentPrice = this.convertCartItemsToPrice(cartItemIds);
+        final Money orderPrice = draftOrder.calculateOriginalTotalPrice();
+        if (!currentPrice.equals(orderPrice)) {
+            throw new OrderException.PriceMismatch(orderPrice, currentPrice);
+        }
+    }
+
+    private Money convertCartItemsToPrice(final List<Long> cartItemIds) {
+        return cartItemIds.stream()
+                .map(this.cartItemRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(CartItem::getProduct)
+                .map(Product::getPrice)
+                .map(Money::from)
+                .reduce(Money.from(0), Money::add);
     }
 
     @Transactional(readOnly = true)
