@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.DiscountPolicyException.NotFound;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -37,7 +38,9 @@ public enum DiscountPolicy {
         return Stream.of(values())
                 .filter(discountPolicy -> discountPolicy.getId().equals(id))
                 .findFirst()
-                .orElseThrow(); // TODO: 커스텀 예외 처리하기
+                .orElseThrow(() -> {
+                    throw new NotFound(id);
+                });
     }
 
     public Long getId() {

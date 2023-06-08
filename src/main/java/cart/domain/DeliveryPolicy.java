@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.DeliveryPolicyException.NotFound;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -24,7 +25,9 @@ public enum DeliveryPolicy {
         return Stream.of(values())
                 .filter(deliveryPolicy -> deliveryPolicy.getId().equals(id))
                 .findFirst()
-                .orElseThrow(); // TODO: 2023/06/08 커스텀 예외 정의하기
+                .orElseThrow(() -> {
+                    throw new NotFound(id);
+                });
     }
 
     public Money calculateDeliveryFee(Order order) {
