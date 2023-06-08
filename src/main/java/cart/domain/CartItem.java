@@ -49,4 +49,17 @@ public class CartItem {
     public Integer getQuantity() {
         return quantity;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id) && Objects.equals(quantity, cartItem.quantity) && Objects.equals(product, cartItem.product) && Objects.equals(member, cartItem.member);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quantity, product, member);
+    }
 }

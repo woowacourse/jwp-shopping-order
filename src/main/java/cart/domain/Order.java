@@ -97,4 +97,17 @@ public class Order {
     public Long getTotalPrice() {
         return totalPrice;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id) && Objects.equals(member, order.member) && Objects.equals(orderItems, order.orderItems) && Objects.equals(productPrice, order.productPrice) && Objects.equals(discountPrice, order.discountPrice) && Objects.equals(deliveryFee, order.deliveryFee) && Objects.equals(totalPrice, order.totalPrice) && Objects.equals(orderTime, order.orderTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, member, orderItems, productPrice, discountPrice, deliveryFee, totalPrice, orderTime);
+    }
 }
