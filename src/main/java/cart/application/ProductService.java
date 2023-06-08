@@ -18,12 +18,12 @@ public class ProductService {
     }
 
     public List<ProductDto> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productDao.findAll();
         return products.stream().map(ProductDto::of).collect(Collectors.toList());
     }
 
     public ProductDto getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.findById(productId);
         return ProductDto.of(product);
     }
 
