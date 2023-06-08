@@ -64,10 +64,16 @@ public class OrderDao {
         + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount " +
         "FROM `order` " +
         "INNER JOIN member ON member.id = `order`.member_id " +
-        "INNER JOIN JOIN coupon ON `order`.coupon_id = coupon.id " +
+        "INNER JOIN coupon ON `order`.coupon_id = coupon.id " +
         "WHERE `order`.member_id = ?";
 
     return jdbcTemplate.query(sql, new Object[]{memberId}, getOrderRowMapper());
+  }
+
+  public Optional<Order> find(final Long orderId) {
+    String sql = "SELECT * FROM `order` where = ?";
+
+    return jdbcTemplate.query(sql, new Object[]{orderId}, getOrderRowMapper()).stream().findAny();
   }
 
   public Optional<Order> findOrderByOrderId(final Long orderId) {
@@ -76,7 +82,7 @@ public class OrderDao {
         + "coupon.id, coupon.name, coupon.min_amount, coupon.discount_amount " +
         "FROM `order` " +
         "INNER JOIN member ON member.id = `order`.member_id " +
-        "INNER JOIN JOIN coupon ON `order`.coupon_id = coupon.id " +
+        "INNER JOIN coupon ON `order`.coupon_id = coupon.id " +
         "WHERE `order`.id = ?";
 
     return jdbcTemplate.query(sql, new Object[]{orderId}, getOrderRowMapper()).stream().findAny();

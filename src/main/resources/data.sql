@@ -9,3 +9,5 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon (name, min_amount, discount_amount) VALUES ('1000원 할인', 10000, 1000)
