@@ -32,7 +32,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long add(Member member, @RequestBody @Valid OrderRequest orderRequest) {
+    public Long add(Member member, OrderRequest orderRequest) {
         Cart cart = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
         cart.checkOwner(member);
 

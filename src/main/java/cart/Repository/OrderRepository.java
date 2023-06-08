@@ -69,12 +69,12 @@ public class OrderRepository {
             return Collections.emptyList();
         }
 
-        List<ProductEntity> productEntities = productDao.getProductByIds(new ArrayList<>(productIds));
+        Map<Long, ProductEntity> productEntityByIds = productDao.getProductByIds(new ArrayList<>(productIds));
 
         MemberEntity memberEntity = memberDao.getMemberById(memberId)
                 .orElseThrow(() -> new NotFoundException.Member(memberId));
 
-        return toOrders(orders, orderItemsByOrderId, productEntities, memberEntity);
+        return toOrders(orders, orderItemsByOrderId, productEntityByIds, memberEntity);
     }
 
     public Order findById(Long orderId) {
@@ -89,9 +89,9 @@ public class OrderRepository {
         orderItems.forEach(orderItemEntity ->
                 productIds.add(orderItemEntity.getProductId()));
 
-        List<ProductEntity> productEntities = productDao.getProductByIds(new ArrayList<>(productIds));
+        Map<Long, ProductEntity> productEntityByIds = productDao.getProductByIds(new ArrayList<>(productIds));
 
-        return toOrder(orderEntity, orderItems, productEntities, memberEntity);
+        return toOrder(orderEntity, orderItems, productEntityByIds, memberEntity);
     }
 
     private OrderEntity getOrderEntity(Long orderId) {

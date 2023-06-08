@@ -18,11 +18,10 @@ import static java.util.stream.Collectors.toList;
 
 public class CartItemMapper {
 
-    public static Cart toCart(List<CartItemEntity> cartItemEntities, List<ProductEntity> productEntities, MemberEntity memberEntity) {
-        Map<Long, Product> productMappingById = productMappingById(productEntities);
+    public static Cart toCart(List<CartItemEntity> cartItemEntities, Map<Long, ProductEntity> productEntityById, Map<Long, MemberEntity> memberEntity) {
 
         List<CartItem> cartItems = cartItemEntities.stream()
-                .map(it -> toCartItem(it, productMappingById.get(it.getProductId()), memberEntity))
+                .map(it -> toCartItem(it, productEntityById.get(it.getProductId()), memberEntity.get(it.getMemberId())))
                 .collect(toList());
 
         return new Cart(cartItems);

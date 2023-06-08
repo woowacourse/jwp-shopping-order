@@ -16,29 +16,32 @@ import java.util.stream.Collectors;
 
 import static cart.Repository.mapper.MemberMapper.toMember;
 import static cart.Repository.mapper.ProductMapper.productMappingById;
+import static cart.Repository.mapper.ProductMapper.toProduct;
 
 public class OrderMapper {
 
-    public static List<Order> toOrders(List<OrderEntity> orders, Map<Long, List<OrderItemEntity>> orderItemsByOrderId, List<ProductEntity> productEntities, MemberEntity memberEntity) {
+    public static List<Order> toOrders(List<OrderEntity> orders, Map<Long, List<OrderItemEntity>> orderItemsByOrderId, Map<Long, ProductEntity> productEntities, MemberEntity memberEntity) {
         return orders.stream()
-                .map(orderEntity -> toOrder(orderEntity, orderItemsByOrderId.get(orderEntity.getId()), productEntities, memberEntity))
+                .map(orderEntity ->
+                        toOrder(
+                                orderEntity,
+                                orderItemsByOrderId.get(orderEntity.getId()),
+                                productEntities,
+                                memberEntity))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public static OrderItem toOrderItem(OrderItemEntity orderItemEntity, Map<Long, Product> productMappingById) {
-        Long productId = orderItemEntity.getProductId();
+    public static OrderItem toOrderItem(OrderItemEntity orderItemEntity, ProductEntity productEntity) {
 
         return new OrderItem(
-                productMappingById.get(productId),
+                toProduct(productEntity),
                 orderItemEntity.getQuantity()
         );
     }
 
-    public static Order toOrder(OrderEntity orderEntity, List<OrderItemEntity> orderItemEntities, List<ProductEntity> productEntities, MemberEntity memberEntity) {
-        Map<Long, Product> productMappingById = productMappingById(productEntities);
-
+    public static Order toOrder(OrderEntity orderEntity, List<OrderItemEntity> orderItemEntities, Map<Long, ProductEntity> productEntityByIds, MemberEntity memberEntity) {
         List<OrderItem> orderItems = orderItemEntities.stream()
-                .map(it -> toOrderItem(it, productMappingById))
+                .map(it -> toOrderItem(it, productEntityByIds.get(it.getProductId())))
                 .collect(Collectors.toUnmodifiableList());
 
         return new Order(

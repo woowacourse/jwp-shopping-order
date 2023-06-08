@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductDao {
@@ -52,6 +53,17 @@ public class ProductDao {
         }
     }
 
+    public Map<Long, ProductEntity> getProductByIds(List<Long> cartItemIds) {
+        String sql = "SELECT * FROM product WHERE id In (:cartItemIds)";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("cartItemIds", cartItemIds);
+
+        List<ProductEntity> query = namedParameterJdbcTemplate.query(sql, parameters, rowMapper);
+
+        return query.stream().distinct().collect(Collectors.toMap(ProductEntity::getId, e -> e));
+    }
+
     public Long createProduct(final ProductEntity product) {
         final Map<String, Object> parameters = new HashMap<>();
 
@@ -72,7 +84,7 @@ public class ProductDao {
                 productId
         );
 
-        if(affectedRow == 0){
+        if (affectedRow == 0) {
             throw new IllegalArgumentException();
         }
     }
@@ -81,18 +93,8 @@ public class ProductDao {
         String sql = "DELETE FROM product WHERE id = ?";
         int affectedRow = jdbcTemplate.update(sql, productId);
 
-        if(affectedRow == 0){
+        if (affectedRow == 0) {
             throw new IllegalArgumentException();
         }
-    }
-
-    public List<ProductEntity> getProductByIds(List<Long> cartItemIds) {
-
-        String sql = "SELECT * FROM product WHERE id In (:cartItemIds)";
-
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("cartItemIds", cartItemIds);
-
-        return namedParameterJdbcTemplate.query(sql, parameters, rowMapper);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cart.Repository.mapper.CartItemMapper.*;
@@ -36,18 +37,25 @@ public class CartItemRepository {
             return new Cart(Collections.emptyList());
         }
 
-        MemberEntity memberEntity = memberDao.getMemberById(memberId)
-                .orElseThrow(() -> new NotFoundException.Member(memberId));
+        List<Long> memberIds = toMemberIds(cartItemEntities);
 
-        List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
+        Map<Long, MemberEntity> memberEntityById = memberDao.getMemberByIds(memberIds);
+        Map<Long, ProductEntity> productEntityById = getProductInCarts(cartItemEntities);
 
         return toCart(
                 cartItemEntities,
-                productsInCarts,
-                memberEntity);
+                productEntityById,
+                memberEntityById);
     }
 
-    private List<ProductEntity> getProductInCarts(List<CartItemEntity> cartItemEntities) {
+    private static List<Long> toMemberIds(List<CartItemEntity> cartItemEntities) {
+        return cartItemEntities.stream()
+                .map(CartItemEntity::getMemberId)
+                .distinct()
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private Map<Long, ProductEntity> getProductInCarts(List<CartItemEntity> cartItemEntities) {
         List<Long> cartItemIds = cartItemEntities.stream().map(CartItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
@@ -60,16 +68,16 @@ public class CartItemRepository {
         if (cartItemEntities.isEmpty()) {
             return new Cart(Collections.emptyList());
         }
-        List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
+        Map<Long, ProductEntity> productEntityById = getProductInCarts(cartItemEntities);
 
-        //TODO: 멤버도 매핑해주기...
-        MemberEntity memberEntity = memberDao.getMemberById(cartItemEntities.get(0).getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
+        List<Long> memberIds = toMemberIds(cartItemEntities);
+
+        Map<Long, MemberEntity> memberEntityByIds = memberDao.getMemberByIds(memberIds);
 
         return toCart(
                 cartItemEntities,
-                productsInCarts,
-                memberEntity);
+                productEntityById,
+                memberEntityByIds);
     }
 
     public Long save(CartItem cartItem) {

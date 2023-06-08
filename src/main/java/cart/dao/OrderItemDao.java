@@ -4,12 +4,11 @@ import cart.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class OrderItemDao {
             );
 
 
-    public OrderItemDao(JdbcTemplate jdbcTemplate) {
+    public OrderItemDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_item")
@@ -49,20 +48,13 @@ public class OrderItemDao {
         String sql = "select * from order_item " +
                 "where order_id in ( select id from orders where member_id = ? )";
 
-        return jdbcTemplate.query(sql, rs -> {
-            Map<Long, List<OrderItemEntity>> resultMap = new HashMap<>();
-            while (rs.next()) {
-                Long id = rs.getLong("id");
-                Long orderId = rs.getLong("order_id");
-                Long productId = rs.getLong("product_id");
-                int quantity = rs.getInt("quantity");
-                int price = rs.getInt("price");
+        List<OrderItemEntity> orderItemEntities = jdbcTemplate.query(sql, rowMapper, memberId);
 
-                OrderItemEntity orderItem = new OrderItemEntity(id, orderId, productId, quantity, price);
-                resultMap.computeIfAbsent(orderId, k -> new ArrayList<>()).add(orderItem);
-            }
-            return resultMap;
-        }, memberId);
+        return orderItemEntities.stream()
+                .collect(Collectors.groupingBy(
+                        OrderItemEntity::getOrderId,
+                        Collectors.toList()
+                ));
     }
 
     public List<OrderItemEntity> findOrderItemsByOrderId(Long orderId) {
