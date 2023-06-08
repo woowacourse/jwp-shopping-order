@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,14 +22,22 @@ public class MemberDao {
 
     public Optional<Member> getMemberById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
-        final List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
-        return Optional.of(members.get(0));
+        try {
+            final Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), id);
+            return Optional.of(member);
+        } catch (final IncorrectResultSizeDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Member> getMemberByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
-        final List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
-        return Optional.of(members.get(0));
+        try {
+            final Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), email);
+            return Optional.of(member);
+        } catch (final IncorrectResultSizeDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public void addMember(final Member member) {
