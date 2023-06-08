@@ -17,11 +17,8 @@ import org.springframework.stereotype.Repository;
 public class OrderItemDao {
 
   private final JdbcTemplate jdbcTemplate;
-
   private final SimpleJdbcInsert simpleJdbcInsert;
-
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
   private final OrderDao orderDao;
 
   public OrderItemDao(final JdbcTemplate jdbcTemplate, final OrderDao orderDao) {
