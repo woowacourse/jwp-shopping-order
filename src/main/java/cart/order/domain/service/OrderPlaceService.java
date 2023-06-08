@@ -43,9 +43,17 @@ public class OrderPlaceService {
         return id;
     }
 
-    private static List<OrderItem> toOrderItems(List<CartItem> cartItems, List<Coupon> coupons) {
+    private List<OrderItem> toOrderItems(List<CartItem> cartItems, List<Coupon> coupons) {
         return cartItems.stream()
-                .map(it -> OrderItem.withCoupon(it, coupons))
+                .map(cartItem -> toOrderItem(cartItem, coupons))
                 .collect(Collectors.toList());
+    }
+
+    private OrderItem toOrderItem(CartItem cartItem, List<Coupon> coupons) {
+        return coupons.stream()
+                .filter(coupon -> coupon.canApply(cartItem.getProductId()))
+                .findFirst()
+                .map(coupon -> OrderItem.withCoupon(cartItem, coupon))
+                .orElseGet(() -> OrderItem.withoutCoupon(cartItem));
     }
 }

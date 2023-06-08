@@ -5,7 +5,6 @@ import static cart.order.exception.OrderExceptionType.INVALID_ORDER_ITEM_PRODUCT
 import cart.cartitem.domain.CartItem;
 import cart.coupon.domain.Coupon;
 import cart.order.exception.OrderException;
-import java.util.List;
 
 public class OrderItem {
 
@@ -43,27 +42,28 @@ public class OrderItem {
         this.imageUrl = imageUrl;
     }
 
-    public static OrderItem withCoupon(CartItem cartItem, List<Coupon> coupons) {
-        return new OrderItem(cartItem.getQuantity(),
-                cartItem.getProductId(),
-                cartItem.getName(),
-                cartItem.getPrice(),
-                applyCoupon(cartItem, coupons),
-                cartItem.getImageUrl());
-    }
-
-    private static int applyCoupon(CartItem cartItem, List<Coupon> coupons) {
-        return coupons.stream()
-                .filter(coupon -> coupon.canApply(cartItem.getProductId()))
-                .findFirst()
-                .map(coupon -> coupon.apply(cartItem.getPrice()))
-                .orElseGet(cartItem::getPrice);
-    }
-
     private void validateQuantity(int quantity) {
         if (quantity < 1) {
             throw new OrderException(INVALID_ORDER_ITEM_PRODUCT_QUANTITY);
         }
+    }
+
+    public static OrderItem withCoupon(CartItem cartItem, Coupon coupon) {
+        return new OrderItem(cartItem.getQuantity(),
+                cartItem.getProductId(),
+                cartItem.getName(),
+                cartItem.getPrice(),
+                coupon.apply(cartItem.getPrice()),
+                cartItem.getImageUrl());
+    }
+
+    public static OrderItem withoutCoupon(CartItem cartItem) {
+        return new OrderItem(cartItem.getQuantity(),
+                cartItem.getProductId(),
+                cartItem.getName(),
+                cartItem.getPrice(),
+                cartItem.getPrice(),
+                cartItem.getImageUrl());
     }
 
     public int price() {

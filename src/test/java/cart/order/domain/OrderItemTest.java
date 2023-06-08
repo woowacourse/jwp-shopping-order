@@ -65,11 +65,8 @@ class OrderItemTest {
         Product product = new Product(10L, "말랑", 1000, "image");
         Member mallang = new Member(1L, "mallang", "!234");
         CartItem cartItem = new CartItem(product, mallang);
-        OrderItem orderItem = OrderItem.withCoupon(cartItem, List.of(
-                new Coupon("쿠폰",
-                        new RateDiscountPolicy(30),
-                        new SpecificProductCouponStrategy(10L),
-                        1L)));
+        OrderItem orderItem = OrderItem.withCoupon(cartItem,
+                new Coupon("쿠폰", new RateDiscountPolicy(30), new SpecificProductCouponStrategy(10L), 1L));
 
         // when & then
         assertThat(orderItem.getOrderedProductPrice())
