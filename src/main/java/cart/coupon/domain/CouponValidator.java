@@ -13,7 +13,7 @@ public class CouponValidator {
 
     public void validate(Long memberId, List<CartItem> cartItems, List<Coupon> coupons) {
         validateOwner(memberId, coupons);
-        validateMultipleApply(cartItems, coupons);
+        validateProductForMultipleCouponApplications(cartItems, coupons);
         validateUnusedCoupon(cartItems, coupons);
     }
 
@@ -25,7 +25,7 @@ public class CouponValidator {
         }
     }
 
-    private void validateMultipleApply(List<CartItem> cartItems, List<Coupon> coupons) {
+    private void validateProductForMultipleCouponApplications(List<CartItem> cartItems, List<Coupon> coupons) {
         for (CartItem cartItem : cartItems) {
             long applyCount = coupons.stream()
                     .filter(coupon -> coupon.canApply(cartItem.getProductId()))
