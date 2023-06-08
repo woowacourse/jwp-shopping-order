@@ -1,0 +1,32 @@
+= 장바구니 API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+
+== 주문 요청하기
+
+=== 성공
+==== Request
+include::{snippets}/orders/create/success/http-request.adoc[]
+==== Response
+include::{snippets}/orders/create/success/http-response.adoc[]
+
+=== 실패 - 잘못된 금액
+==== Request
+include::{snippets}/orders/create/fail-wrongPrice/http-request.adoc[]
+==== Response
+include::{snippets}/orders/create/fail-wrongPrice/http-response.adoc[]
+
+=== 실패 - 유저 인증 실패
+==== Request
+include::{snippets}/orders/create/fail-authorization/http-request.adoc[]
+==== Response
+include::{snippets}/orders/create/fail-authorization/http-response.adoc[]
+
+=== 실패 - 잘못된 금액
+==== Request
+include::{snippets}/orders/create/fail-cartItemNotFound/http-request.adoc[]
+==== Response
+include::{snippets}/orders/create/fail-cartItemNotFound/http-response.adoc[]
