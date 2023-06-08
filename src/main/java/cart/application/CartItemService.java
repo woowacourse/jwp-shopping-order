@@ -41,7 +41,7 @@ public class CartItemService {
             cartItemRepository.removeById(id);
             return;
         }
-        cartItemRepository.update(cartItem.changeQuantity(quantity));
+        cartItemRepository.update(memberId, cartItem.changeQuantity(quantity));
     }
 
     private void validateQuantityMax(final int quantity) {

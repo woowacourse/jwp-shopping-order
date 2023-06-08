@@ -23,7 +23,7 @@ class OrderDaoTest {
         this.orderDao = new OrderDao(jdbcTemplate);
     }
 
-    @DisplayName("새 주문 정보를 DB에 저장한다")
+    @DisplayName("새 주문 정보를 저장한다")
     @Test
     void save() {
         // given, when
@@ -33,8 +33,7 @@ class OrderDaoTest {
         assertThat(createdId).isNotNull();
     }
 
-
-    @DisplayName("사용자 주문 정보 목록을 DB에서 최신순으로 조회한다.")
+    @DisplayName("사용자 주문 정보 목록을 최신순으로 조회한다.")
     @Test
     void findByMemberId() {
         // given
@@ -53,9 +52,9 @@ class OrderDaoTest {
         assertThat(secondShown.getId()).isEqualTo(createdId);
     }
 
-    @DisplayName("특정 주문 상세 정보(상품 목록 제외)를 DB에서 조회한다.")
+    @DisplayName("주문 아이디, 회원 아이디가 일치하는 주문 상세 정보(상품 목록 제외)를 조회한다.")
     @Test
-    void findDetailById() {
+    void findByIdForMember() {
         // given
         final OrderEntity create = new OrderEntity(1L, 1L, 3000L);
         final Long createdId = orderDao.save(create);
@@ -72,7 +71,7 @@ class OrderDaoTest {
     }
 
 
-    @DisplayName("특정 주문 정보를 DB에서 삭제한다.")
+    @DisplayName("특정 주문 정보를 삭제한다.")
     @Test
     void deleteById() {
         // given

@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.CartItemEntity;
-import cart.domain.CartItem;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,29 +25,13 @@ public class CartItemDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("member_id", "product_id", "quantity");
-    }
-
-    public List<CartItemEntity> findByMemberId(final Long memberId) {
-        final String sql =
-                "SELECT id, member_id, product_id, quantity "
-                        + "FROM cart_item "
-                        + "WHERE member_id = ?";
-        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
-    }
-
-    public Long save(final CartItemEntity cartItem) {
-        return simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "member_id", cartItem.getMemberId(),
-                "product_id", cartItem.getProductId(),
-                "quantity", cartItem.getQuantity()
-        )).longValue();
     }
 
     public Optional<CartItemEntity> findByIdForMember(final long memberId, final Long id) {
@@ -63,7 +46,23 @@ public class CartItemDao {
         }
     }
 
-    public boolean isExist(final Long memberId, final Long productId) {
+    public List<CartItemEntity> findByMemberId(final long memberId) {
+        final String sql =
+                "SELECT id, member_id, product_id, quantity "
+                        + "FROM cart_item "
+                        + "WHERE member_id = ?";
+        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
+    }
+
+    public long save(final CartItemEntity cartItem) {
+        return simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "member_id", cartItem.getMemberId(),
+                "product_id", cartItem.getProductId(),
+                "quantity", cartItem.getQuantity()
+        )).longValue();
+    }
+
+    public boolean isExist(final long memberId, final long productId) {
         final String sql = "SELECT EXISTS (SELECT * FROM cart_item "
                 + "WHERE member_id = ? "
                 + "AND product_id = ?) AS SUCCESS";
@@ -74,7 +73,7 @@ public class CartItemDao {
         ));
     }
 
-    public void deleteById(final Long id) {
+    public void deleteById(final long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
@@ -86,8 +85,16 @@ public class CartItemDao {
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-    public void updateQuantity(final CartItem cartItem) {
-        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    public void updateQuantity(final CartItemEntity cartItem) {
+        final String sql = "UPDATE cart_item SET quantity = ? "
+                + "WHERE id = ? "
+                + "AND member_id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId(), cartItem.getMemberId());
+    }
+
+    public List<CartItemEntity> findAll() {
+        final String sql = "SELECT id, member_id, product_id, quantity "
+                + "FROM cart_item ";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 }

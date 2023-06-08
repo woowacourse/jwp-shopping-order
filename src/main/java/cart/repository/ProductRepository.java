@@ -17,7 +17,7 @@ public class ProductRepository {
     }
 
     public List<Product> findAll() {
-        return ProductEntity.createAll(productDao.getAllProducts());
+        return ProductEntity.createAll(productDao.findAll());
     }
 
     public Optional<Product> findById(final Long productId) {

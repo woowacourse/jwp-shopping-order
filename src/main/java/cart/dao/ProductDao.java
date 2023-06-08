@@ -29,11 +29,6 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> getAllProducts() {
-        final String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, ROW_MAPPER);
-    }
-
     public Optional<ProductEntity> findById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
@@ -41,6 +36,11 @@ public class ProductDao {
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public Long save(final ProductEntity product) {
@@ -64,7 +64,8 @@ public class ProductDao {
 
     public void updateProduct(final ProductEntity product) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
+        jdbcTemplate.update(sql, product.getName(), product.getPrice().getValue(), product.getImageUrl(),
+                product.getId());
     }
 
     public void deleteProduct(final Long productId) {

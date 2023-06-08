@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.CouponTypeEntity;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,6 +33,12 @@ public class CouponTypeDao {
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<CouponTypeEntity> findAll() {
+        final String sql = "SELECT id, name, discount_type, discount_amount "
+                + "FROM coupon_type ";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 }
 

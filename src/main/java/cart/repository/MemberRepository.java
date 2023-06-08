@@ -16,12 +16,12 @@ public class MemberRepository {
     }
 
     public Optional<Member> findByEmail(final String email) {
-        return memberDao.getMemberByEmail(email)
+        return memberDao.findByEmail(email)
                 .map(MemberEntity::create);
     }
 
     public Optional<Member> findById(final Long id) {
-        return memberDao.getMemberById(id)
+        return memberDao.findById(id)
                 .map(MemberEntity::create);
     }
 }

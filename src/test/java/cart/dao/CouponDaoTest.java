@@ -28,7 +28,6 @@ class CouponDaoTest {
 
     @BeforeEach
     void setUp() {
-        // TODO 쿠폰 발급 기능 넣으면, 여기서 쿠폰 넣어주기?
         coupons = couponDao.findAll();
     }
 
@@ -46,14 +45,26 @@ class CouponDaoTest {
                         () -> Assertions.fail("coupon not exist; couponId=" + couponId));
     }
 
-    // TODO findByIdForMember
+    @DisplayName("쿠폰 아이디와 회원 아이디가 일치하는 쿠폰을 조회한다.")
+    @Test
+    void findByIdForMember() {
+        // given
+        final CouponEntity coupon = coupons.get(0);
+        final long memberId = coupon.getMemberId();
+        final Long couponId = coupon.getId();
+
+        // when, then
+        couponDao.findByIdForMember(memberId, couponId)
+                .ifPresentOrElse(
+                        found -> assertThat(found.getId()).isEqualTo(couponId),
+                        () -> Assertions.fail("coupon not exist; couponId=" + couponId));
+    }
 
     @DisplayName("특정 회원의 모든 쿠폰을 조회한다.")
     @Test
     void findByMember() {
         // given
         final CouponEntity coupon = coupons.get(0);
-        final Long couponId = coupon.getId();
 
         // when
         final long memberId = coupon.getMemberId();

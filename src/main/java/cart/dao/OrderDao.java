@@ -55,8 +55,8 @@ public class OrderDao {
     public Optional<OrderEntity> findByIdForMember(final long memberId, final long id) {
         final String sql = "SELECT id, coupon_id, member_id, delivery_fee, status, created_at "
                 + "FROM orders "
-                + "WHERE id = ? "
-                + "AND member_id = ? "
+                + "WHERE member_id = ? "
+                + "AND id = ? "
                 + "ORDER BY created_at DESC";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId, id));

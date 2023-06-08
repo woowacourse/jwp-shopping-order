@@ -33,8 +33,8 @@ public class CouponDao {
     public Optional<CouponEntity> findByIdForMember(final long memberId, final long id) {
         final String sql = "SELECT id, member_id, coupon_type_id, is_used "
                 + "FROM coupon "
-                + "WHERE id = ? "
-                + "AND member_id = ?";
+                + "WHERE member_id = ? "
+                + "AND id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId, id));
         } catch (final EmptyResultDataAccessException exception) {

@@ -25,7 +25,7 @@ public class OrderItemDaoTest {
         this.orderItemDao = new OrderItemDao(jdbcTemplate);
     }
 
-    @DisplayName("주문 정보에 대한 주문 아이템 목록을 DB에 저장한다.")
+    @DisplayName("주문 정보에 대한 주문 아이템 목록을 저장한다.")
     @Test
     void saveOrderItems() {
         // given, when, then
@@ -33,7 +33,7 @@ public class OrderItemDaoTest {
                 List.of(new OrderItemEntity(1L, "doy", 1000, "image.png", 1))));
     }
 
-    @DisplayName("특정 주문의 상품 목록을 DB에서 조회한다.")
+    @DisplayName("특정 주문의 상품 목록을 조회한다.")
     @Test
     void findOrderItemsById() {
         // given
@@ -59,7 +59,7 @@ public class OrderItemDaoTest {
         );
     }
 
-    @DisplayName("특정 주문의 상품 목록을 DB에서 삭제한다.")
+    @DisplayName("특정 주문의 상품 목록을 삭제한다.")
     @Test
     void deleteOrderItemsById() {
         // given

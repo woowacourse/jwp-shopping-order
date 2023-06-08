@@ -51,8 +51,9 @@ public class CartItemRepository {
         return foundCartItem.create(foundProduct);
     }
 
-    public void update(final CartItem cartItem) {
-        cartItemDao.updateQuantity(cartItem);
+    public void update(final long memberId, final CartItem cartItem) {
+        final Long productId = cartItem.getProduct().getId();
+        cartItemDao.updateQuantity(new CartItemEntity(cartItem.getId(), memberId, productId, cartItem.getQuantity()));
     }
 
     public void removeById(final long id) {
