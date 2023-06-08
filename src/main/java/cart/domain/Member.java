@@ -17,19 +17,16 @@ public class Member {
         this.points = new Point(points);
     }
 
-    private Member(final Member member, final Point point) {
-        this.id = member.id;
-        this.email = member.email;
-        this.password = member.password;
-        this.points = point;
-    }
-    
     public Member chargePoint(final int earnedPoints) {
-        return new Member(this, points.add(earnedPoints));
+        return Member.of(this, points.add(earnedPoints));
+    }
+
+    public static Member of(final Member member, final Point point) {
+        return new Member(member.id, member.email, member.password, point.getPoint());
     }
 
     public Member spendPoint(final int usedPoints) {
-        return new Member(this, points.subtract(usedPoints));
+        return Member.of(this, points.subtract(usedPoints));
     }
 
     public Long getId() {
