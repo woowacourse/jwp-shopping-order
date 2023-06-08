@@ -28,20 +28,18 @@ public class OrderRepository {
     private final OrderItemDao orderItemDao;
     private final ShippingFeeDao shippingFeeDao;
     private final ShippingDiscountPolicyDao shippingDiscountPolicyDao;
-    private final CartItemDao cartItemDao;
 
-    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, ShippingFeeDao shippingFeeDao, ShippingDiscountPolicyDao shippingDiscountPolicyDao, CartItemDao cartItemDao) {
+    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, ShippingFeeDao shippingFeeDao, ShippingDiscountPolicyDao shippingDiscountPolicyDao) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.shippingFeeDao = shippingFeeDao;
         this.shippingDiscountPolicyDao = shippingDiscountPolicyDao;
-        this.cartItemDao = cartItemDao;
     }
 
     public Long saveOrder(final Member member, final Order order) {
         final OrderEntity orderEntity = new OrderEntity(
                 member.getId(),
-                order.getShippingFee(),
+                order.getShippingFee().getFee(),
                 order.getTotalPrice(),
                 order.getUsedPoint()
         );
@@ -69,7 +67,7 @@ public class OrderRepository {
 
         return new Order(orderEntity.getId(),
                 member,
-                orderEntity.getShippingFee(),
+                new ShippingFee(orderEntity.getShippingFee()),
                 orderEntity.getTotalProductsPrice(),
                 orderItemList,
                 new Point(orderEntity.getUsedPoint()),
@@ -101,7 +99,7 @@ public class OrderRepository {
         return orderEntityList.stream()
                 .map(orderEntity -> new Order(orderEntity.getId(),
                         member,
-                        orderEntity.getShippingFee(),
+                        new ShippingFee(orderEntity.getShippingFee()),
                         orderEntity.getTotalProductsPrice(),
                         toOrderItemList(maps.get(orderEntity.getId())),
                         new Point(orderEntity.getUsedPoint()),

@@ -34,7 +34,7 @@ public class OrderResponse {
         return new OrderResponse(order.getId(),
                 order.getCreatedAt(),
                 order.getTotalPrice(),
-                order.getShippingFee(),
+                order.getShippingFee().getFee(),
                 order.getUsedPoint(),
                 orderDetailsDtoList
         );

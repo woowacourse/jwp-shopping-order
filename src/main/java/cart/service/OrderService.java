@@ -45,7 +45,7 @@ public class OrderService {
         final ShippingFee shippingFee = orderRepository.findShippingFee();
         final ShippingDiscountPolicy shippingDiscountPolicy = orderRepository.findShippingDiscountPolicy();
 
-        final Order newOrder = Order.of(member, shippingFee.getFee(), orderItemList, shippingDiscountPolicy.getThreshold(), new Point(orderRequest.getUsedPoint()));
+        final Order newOrder = Order.of(member, shippingFee, orderItemList, shippingDiscountPolicy.getThreshold(), new Point(orderRequest.getUsedPoint()));
         checkOrderException(orderRequest, newOrder);
 
         final Long orderId = orderRepository.saveOrder(member, newOrder);

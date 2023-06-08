@@ -3,6 +3,7 @@ package cart.domain.order;
 
 import cart.domain.Member;
 import cart.domain.point.Point;
+import cart.domain.shipping.ShippingFee;
 import cart.exception.order.OrderException;
 
 import java.util.List;
@@ -12,18 +13,17 @@ public class Order {
 
     private final Long id;
     private final Member member;
-    // TODO: shippingFee 도메인으로 수정
-    private final Long shippingFee;
+    private final ShippingFee shippingFee;
     private final Long totalPrice;
     private final List<OrderItem> orderItems;
     private final Point usedPoint;
     private final String createdAt;
 
-    public Order(Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Point usedPoint) {
+    public Order(Member member, ShippingFee shippingFee, Long totalPrice, List<OrderItem> orderItems, Point usedPoint) {
         this(null, member, shippingFee, totalPrice, orderItems, usedPoint, null);
     }
 
-    public Order(Long id, Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, Point usedPoint, String createdAt) {
+    public Order(Long id, Member member, ShippingFee shippingFee, Long totalPrice, List<OrderItem> orderItems, Point usedPoint, String createdAt) {
         this.id = id;
         this.member = member;
         this.shippingFee = shippingFee;
@@ -33,12 +33,12 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, Long shippingFee, List<OrderItem> orderItems, Long threshold, Point usedPoint) {
+    public static Order of(Member member, ShippingFee shippingFee, List<OrderItem> orderItems, Long threshold, Point usedPoint) {
         Long getTotalPrice = orderItems.stream()
                 .mapToLong(orderItem -> orderItem.getProduct().getPrice() * orderItem.getQuantity())
                 .sum();
         if (getTotalPrice >= threshold) {
-            return new Order(member, 0L, getTotalPrice, orderItems, usedPoint);
+            return new Order(member, new ShippingFee(0L), getTotalPrice, orderItems, usedPoint);
         }
 
         return new Order(member, shippingFee, getTotalPrice, orderItems, usedPoint);
@@ -51,7 +51,7 @@ public class Order {
     }
 
     public void checkMinusOrderPrice(Long requestUsedPoint) {
-        if (this.totalPrice + this.shippingFee < requestUsedPoint) {
+        if (this.totalPrice + this.shippingFee.getFee() < requestUsedPoint) {
             throw new OrderException.MinusOrderPrice();
         }
     }
@@ -64,7 +64,7 @@ public class Order {
         return member;
     }
 
-    public Long getShippingFee() {
+    public ShippingFee getShippingFee() {
         return shippingFee;
     }
 
