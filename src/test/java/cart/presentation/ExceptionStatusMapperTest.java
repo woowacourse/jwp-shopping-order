@@ -1,6 +1,7 @@
 package cart.presentation;
 
 import cart.exception.application.IllegalMemberException;
+import cart.exception.presentation.NoProperStatusCodeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -32,6 +33,6 @@ class ExceptionStatusMapperTest {
         Exception exception = new Exception();
         // when, then
         assertThatThrownBy(() -> ExceptionStatusMapper.of(exception))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(NoProperStatusCodeException.class);
     }
 }

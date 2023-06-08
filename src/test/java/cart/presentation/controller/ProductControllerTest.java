@@ -82,7 +82,7 @@ class ProductControllerTest {
     @DisplayName("상품을 생성할 수 있다")
     void createProduct() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("피자", 1000L, "", 5.0, false);
+        ProductRequest request = new ProductRequest("피자", 1000L, "https://", 5.0, false);
         String body = objectMapper.writeValueAsString(request);
         when(productService.createProduct(any())).thenReturn(1L);
         // when
@@ -99,7 +99,7 @@ class ProductControllerTest {
     @DisplayName("상품을 업데이트 할 수 있다")
     void updateProduct() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("피자", 1000L, "", 5.0, false);
+        ProductRequest request = new ProductRequest("피자", 1000L, "https://", 5.0, false);
         String body = objectMapper.writeValueAsString(request);
         doNothing().when(productService).updateProduct(any(), any());
         // when

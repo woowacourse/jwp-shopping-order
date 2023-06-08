@@ -96,7 +96,7 @@ class CartItemControllerTest {
     @DisplayName("장바구니 품목 수량을 변경할 수 있다")
     void updateCartItemQuantity() throws Exception {
         // given
-        CartItemQuantityRequest request = new CartItemQuantityRequest();
+        CartItemQuantityRequest request = new CartItemQuantityRequest(3L);
         String body = objectMapper.writeValueAsString(request);
         doNothing().when(cartItemService).updateQuantity(any(), any(), any());
         // when
