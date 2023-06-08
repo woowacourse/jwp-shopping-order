@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.PointEntity;
+import cart.domain.Member;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,8 +32,13 @@ public class PointDao {
         }
     }
 
+    public void insertPoint(Long memberId) {
+        String sql = "INSERT INTO point (member_id) VALUES (?)";
+        jdbcTemplate.update(sql, memberId);
+    }
+
     public void updatePoint(Long memberId, Long point) {
         final String sql = "UPDATE point SET point = ? where member_id = ?";
-        jdbcTemplate.update(sql, memberId, point);
+        jdbcTemplate.update(sql, point, memberId);
     }
 }

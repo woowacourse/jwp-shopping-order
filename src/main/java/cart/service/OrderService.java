@@ -50,9 +50,11 @@ public class OrderService {
 
         final Long orderId = orderRepository.saveOrder(member, newOrder);
         final Point memberPoint = pointRepository.findPointByMemberId(member.getId());
-
-        pointRepository.updatePoint(member.getId(), memberPoint.minus(orderRequest.getUsedPoint()));
+        Long minus = memberPoint.minus(orderRequest.getUsedPoint());
+        pointRepository.updatePoint(member.getId(), minus);
+        System.out.println("minus"+minus);
         final Long earnedPoint = pointPolicyStrategy.caclulatePointWithPolicy(newOrder.getTotalPrice() - orderRequest.getUsedPoint());
+        System.out.println("earnedPoint"+earnedPoint);
         pointRepository.updatePoint(member.getId(), earnedPoint);
 
         return new OrderCreateResponse(orderId, earnedPoint);
