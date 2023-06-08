@@ -1,7 +1,9 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.domain.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,14 @@ import java.util.Objects;
 
 @Repository
 public class ProductDao {
+
+    private RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
+            new ProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url")
+            );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -68,5 +78,10 @@ public class ProductDao {
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public List<ProductEntity> findByIds(final List<Long> ids) {
+        String sql = "SELECT * FROM product WHERE id IN (:ids)";
+        return jdbcTemplate.query(sql, rowMapper, ids);
     }
 }
