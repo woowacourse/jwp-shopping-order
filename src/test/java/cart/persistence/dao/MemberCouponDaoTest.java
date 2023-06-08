@@ -65,7 +65,7 @@ class MemberCouponDaoTest {
                         .isEqualTo(Member_test1.getEntityOf(memberId)),
                 () -> assertThat(result.get().getMemberCouponEntity())
                         .usingRecursiveComparison()
-                        .ignoringFields("id")
+                        .ignoringFields("id", "createdAt")
                         .isEqualTo(memberCoupon)
         );
     }

@@ -30,17 +30,14 @@ public class FindCouponResponse {
 
     public static FindCouponResponse from(final Coupon coupon) {
         CouponInfo couponInfo = coupon.getCouponInfo();
-        CouponType type = coupon.getType();
-        Integer discountAmount = (type == CouponType.FIXED_AMOUNT) ? coupon.getValue() : null;
-        Double discountPercent = (type == CouponType.FIXED_PERCENTAGE) ? (double) (coupon.getValue()) / 100 : null;
         return new FindCouponResponse(
                 coupon.getId(),
                 couponInfo.getName(),
                 couponInfo.getMinOrderPrice(),
                 couponInfo.getMaxDiscountPrice(),
                 coupon.getType(),
-                discountAmount,
-                discountPercent);
+                coupon.getDiscountAmount().orElse(null),
+                coupon.getDiscountPercentage().orElse(null));
     }
 
     public long getId() {

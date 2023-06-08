@@ -46,7 +46,8 @@ public class Order {
                 .map(OrderItem::of)
                 .collect(Collectors.toList());
 
-        int discountPrice = memberCoupon.getDiscountPrice(cartItems);
+        int discountPrice = memberCoupon.getDiscountPrice(cartItems)
+                .orElseThrow(() -> new BadRequestException(COUPON_UNAVAILABLE));
         int totalProductPrice = cartItems.calculateTotalProductPrice();
         ShippingFee shippingFee = ShippingFee.fromTotalOrderPrice(totalProductPrice - discountPrice);
         int totalOrderPrice = totalProductPrice - discountPrice + shippingFee.getValue();

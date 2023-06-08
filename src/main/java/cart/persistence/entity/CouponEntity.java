@@ -33,24 +33,20 @@ public class CouponEntity {
 
     public static CouponEntity from(final Coupon coupon) {
         CouponInfo couponInfo = coupon.getCouponInfo();
-        CouponType type = coupon.getType();
-        Integer discountAmount = (type == CouponType.FIXED_AMOUNT) ? coupon.getValue() : null;
-        Double discountPercent = (type == CouponType.FIXED_PERCENTAGE) ? (double) (coupon.getValue()) / 100 : null;
         return new CouponEntity(
                 coupon.getId(),
                 couponInfo.getName(),
                 couponInfo.getMinOrderPrice(),
                 couponInfo.getMaxDiscountPrice(),
-                type,
-                discountAmount,
-                discountPercent
+                coupon.getType(),
+                coupon.getDiscountAmount().orElse(null),
+                coupon.getDiscountPercentage().orElse(null)
         );
     }
 
     public Coupon toDomain() {
         CouponInfo couponInfo = new CouponInfo(name, minOrderPrice, maxDiscountPrice);
-        int value = (type == CouponType.FIXED_AMOUNT) ? discountAmount : (int) (discountPercentage * 100);
-        return new Coupon(id, couponInfo, value, type);
+        return Coupon.of(id, couponInfo, discountAmount, discountPercentage, type);
     }
 
     public Long getId() {

@@ -5,6 +5,7 @@ import cart.domain.cart.CartItems;
 import cart.exception.forbidden.ForbiddenException;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class MemberCoupon {
 
@@ -51,8 +52,11 @@ public class MemberCoupon {
         }
     }
 
-    public int getDiscountPrice(final CartItems cartItems) {
-        return coupon.calculateDiscountPrice(cartItems);
+    public Optional<Integer> getDiscountPrice(final CartItems cartItems) {
+        if (!isApplicable(cartItems)) {
+            return Optional.empty();
+        }
+        return Optional.of(coupon.calculateDiscountPrice(cartItems));
     }
 
     public Long getId() {

@@ -34,14 +34,13 @@ public class OrderCouponResponse {
     public static OrderCouponResponse from(final MemberCoupon memberCoupon, final CartItems cartItems) {
         Coupon coupon = memberCoupon.getCoupon();
         CouponInfo couponInfo = coupon.getCouponInfo();
-        boolean applicable = memberCoupon.isApplicable(cartItems);
         return new OrderCouponResponse(
                 memberCoupon.getId(),
                 couponInfo.getName(),
                 couponInfo.getMinOrderPrice(),
                 couponInfo.getMaxDiscountPrice(),
-                applicable,
-                applicable ? memberCoupon.getDiscountPrice(cartItems) : null,
+                memberCoupon.isApplicable(cartItems),
+                memberCoupon.getDiscountPrice(cartItems).orElse(null),
                 memberCoupon.getExpiredAt());
     }
 
