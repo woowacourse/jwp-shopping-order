@@ -1,14 +1,15 @@
 package cart.domain;
 
 import cart.domain.pointmanager.PointManager;
-import cart.exception.OrderException;
-import cart.exception.PointException;
+import cart.exception.OrderEmptyException;
+import cart.exception.PointBiggerThenLimitException;
+import cart.exception.PointNotEnoughException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Order {
-    
+
     private final Long id;
     private final Long memberId;
     private final List<OrderItem> orderItems;
@@ -49,7 +50,7 @@ public class Order {
 
     private static void validateCartItems(final List<CartItem> cartItems) {
         if (cartItems.isEmpty()) {
-            throw new OrderException.EmptyOrder();
+            throw new OrderEmptyException();
         }
     }
 
@@ -63,10 +64,10 @@ public class Order {
     private static void validatePoint(final int totalPrice, final int memberPoint, final int usedPoints, final PointManager pointManager) {
         final int limitPoints = pointManager.calculateLimitPoints(totalPrice);
         if (limitPoints < usedPoints) {
-            throw new PointException.BiggerThenLimit(limitPoints, usedPoints);
+            throw new PointBiggerThenLimitException(limitPoints, usedPoints);
         }
         if (memberPoint < usedPoints) {
-            throw new PointException.NotEnough(memberPoint, usedPoints);
+            throw new PointNotEnoughException(memberPoint, usedPoints);
         }
     }
 

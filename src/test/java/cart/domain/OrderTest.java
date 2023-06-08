@@ -2,8 +2,9 @@ package cart.domain;
 
 import cart.Fixture;
 import cart.domain.pointmanager.DefaultPointManager;
-import cart.exception.OrderException;
-import cart.exception.PointException;
+import cart.exception.OrderEmptyException;
+import cart.exception.PointBiggerThenLimitException;
+import cart.exception.PointNotEnoughException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,8 +35,8 @@ class OrderTest {
     @DisplayName("사용 포인트가 이용자가 보유한 포인트보다 크면 예외가 발생한다")
     @Test
     void pointNotEnoughFail() {
-        assertThatThrownBy(() -> Order.of(Fixture.memberA, 9999, List.of(Fixture.cartItem1), new DefaultPointManager()))
-                .isInstanceOf(PointException.NotEnough.class);
+        assertThatThrownBy(() -> Order.of(Fixture.memberA, 1, List.of(Fixture.cartItem1), new DefaultPointManager()))
+                .isInstanceOf(PointNotEnoughException.class);
     }
 
     @DisplayName("사용 포인트가 이용자가 사용 가능 최대 포인트보다크면 예외가 발생한다")
@@ -45,7 +46,7 @@ class OrderTest {
 
         assertDoesNotThrow(() -> Order.of(member, 300, List.of(Fixture.cartItem1), new DefaultPointManager()));
         assertThatThrownBy(() -> Order.of(member, 301, List.of(Fixture.cartItem1), new DefaultPointManager()))
-                .isInstanceOf(PointException.BiggerThenLimit.class);
+                .isInstanceOf(PointBiggerThenLimitException.class);
     }
 
 
@@ -53,6 +54,6 @@ class OrderTest {
     @Test
     void cartItemSizeFail() {
         assertThatThrownBy(() -> Order.of(Fixture.memberA, 0, List.of(), new DefaultPointManager()))
-                .isInstanceOf(OrderException.EmptyOrder.class);
+                .isInstanceOf(OrderEmptyException.class);
     }
 }

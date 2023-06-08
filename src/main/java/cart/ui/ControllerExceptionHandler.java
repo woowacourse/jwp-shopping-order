@@ -33,25 +33,25 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<ExceptionResponse> handleException(final CartItemException.IllegalMember ex) {
+    @ExceptionHandler(IllegalMemberException.class)
+    public ResponseEntity<ExceptionResponse> handleException(final IllegalMemberException ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse("잘못된 사용자입니다."));
     }
 
-    @ExceptionHandler(CartItemException.AlreadyExist.class)
-    public ResponseEntity<ExceptionResponse> handleException(final CartItemException.AlreadyExist ex) {
+    @ExceptionHandler(CartItemAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> handleException(final CartItemAlreadyExistException ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler({CartItemException.NotFound.class,
-            ProductException.NotFound.class,
-            MemberException.NotFound.class})
+    @ExceptionHandler({CartItemNotFoundException.class,
+            ProductNotFoundException.class,
+            MemberNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleNotFoundException(final RuntimeException ex) {
         logger.info("", ex);
 
@@ -59,10 +59,10 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler({OrderException.EmptyOrder.class,
-            PointException.NotEnough.class,
-            PointException.BiggerThenLimit.class,
-            PointException.NegativePoint.class})
+    @ExceptionHandler({OrderEmptyException.class,
+            PointNotEnoughException.class,
+            PointBiggerThenLimitException.class,
+            PointNegativeException.class})
     public ResponseEntity<ExceptionResponse> handleException(final RuntimeException ex) {
         logger.info("", ex);
 

@@ -11,8 +11,9 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.CheckoutResponse;
-import cart.exception.CartItemException;
-import cart.exception.ProductException;
+import cart.exception.CartItemAlreadyExistException;
+import cart.exception.CartItemNotFoundException;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,17 +36,17 @@ public class CartItemService {
 
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         if (cartItemDao.isExistBy(member.getId(), cartItemRequest.getProductId())) {
-            throw new CartItemException.AlreadyExist(member, cartItemRequest.getProductId());
+            throw new CartItemAlreadyExistException(member, cartItemRequest.getProductId());
         }
 
         final Product product = productDao.getProductById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
+                .orElseThrow(() -> new ProductNotFoundException(cartItemRequest.getProductId()));
         return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemDao.findById(id)
-                .orElseThrow(() -> new CartItemException.NotFound(id));
+                .orElseThrow(() -> new CartItemNotFoundException(id));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -59,7 +60,7 @@ public class CartItemService {
 
     public void remove(final Member member, final Long id) {
         final CartItem cartItem = cartItemDao.findById(id)
-                .orElseThrow(() -> new CartItemException.NotFound(id));
+                .orElseThrow(() -> new CartItemNotFoundException(id));
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
@@ -78,6 +79,6 @@ public class CartItemService {
         return ids.stream().map(id -> cartItems.stream()
                 .filter(cartItem -> cartItem.getId().equals(id))
                 .findAny()
-                .orElseThrow(() -> new CartItemException.NotFound(id))).collect(Collectors.toList());
+                .orElseThrow(() -> new CartItemNotFoundException(id))).collect(Collectors.toList());
     }
 }

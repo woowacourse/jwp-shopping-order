@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.PointException;
+import cart.exception.PointNegativeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ class PointTest {
     @DisplayName("포인트는 음수일 수 없다")
     @Test
     void negativeException() {
-        assertThatThrownBy(() -> new Point(-1)).isInstanceOf(PointException.NegativePoint.class);
+        assertThatThrownBy(() -> new Point(-1)).isInstanceOf(PointNegativeException.class);
     }
 
     @DisplayName("포인트를 증가시킨다")

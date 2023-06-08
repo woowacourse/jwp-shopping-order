@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.PointException;
+import cart.exception.PointNegativeException;
 
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ public class Point {
 
     private void validatePoint(final int point) {
         if (point < MINIMUM_POINT) {
-            throw new PointException.NegativePoint(point);
+            throw new PointNegativeException(point);
         }
     }
 
