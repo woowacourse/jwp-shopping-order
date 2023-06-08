@@ -1,5 +1,8 @@
 package cart.dto;
 
+import cart.domain.CartItem;
+import cart.domain.OrderedItem;
+
 public class OrderedItemResponse {
 
     private Long id;
@@ -10,7 +13,7 @@ public class OrderedItemResponse {
     private int discountRate;
     private int discountedPrice;
 
-    public OrderedItemResponse(Long id, String name, int price, String imageUrl, int quantity, int discountRate, int discountedPrice) {
+    private OrderedItemResponse(Long id, String name, int price, String imageUrl, int quantity, int discountRate, int discountedPrice) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -20,16 +23,19 @@ public class OrderedItemResponse {
         this.discountedPrice = discountedPrice;
     }
 
-    public OrderedItemResponse(String name, int price, String imageUrl, int quantity, int discountRate, int discountedPrice) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
-        this.discountRate = discountRate;
-        this.discountedPrice = discountedPrice;
+    public OrderedItemResponse() {
     }
 
-    public OrderedItemResponse() {
+    public static OrderedItemResponse of(OrderedItem orderedItem) {
+        return new OrderedItemResponse(
+                orderedItem.getId(),
+                orderedItem.getName(),
+                orderedItem.getPrice(),
+                orderedItem.getImageUrl(),
+                orderedItem.getQuantity(),
+                orderedItem.getDiscountRate(),
+                orderedItem.calculateDiscountedPrice()
+        );
     }
 
     public Long getId() {

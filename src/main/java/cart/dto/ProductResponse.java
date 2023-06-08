@@ -8,21 +8,11 @@ public class ProductResponse {
     private String name;
     private int price;
     private String imageUrl;
-    private int quantity;
     private int discountRate;
     private int discountedPrice;
 
-    public ProductResponse(Long id, String name, int price, String imageUrl, int discountRate, int discountedPrice) {
+    private ProductResponse(Long id, String name, int price, String imageUrl, int discountRate, int discountedPrice) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        //this.isDiscounted = isDiscounted;
-        this.discountRate = discountRate;
-        this.discountedPrice = discountedPrice;
-    }
-
-    public ProductResponse(String name, int price, String imageUrl, int discountRate, int discountedPrice) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -53,10 +43,6 @@ public class ProductResponse {
     public String getImageUrl() {
         return imageUrl;
     }
-
-//    public boolean getIsDiscounted() {
-//        return isDiscounted;
-//    }
 
     public int getDiscountRate() {
         return discountRate;

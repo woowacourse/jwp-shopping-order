@@ -29,7 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
                 .exposedHeaders(HttpHeaders.LOCATION)
-                .allowedHeaders("*")// exposed header 지정
+                .allowedHeaders("*")
                 .maxAge(3000);
 
     }

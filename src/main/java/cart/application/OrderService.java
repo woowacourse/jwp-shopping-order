@@ -1,7 +1,6 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
@@ -12,8 +11,6 @@ import cart.domain.Price;
 import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderResponse;
-import cart.dto.OrderedItemResponse;
-import cart.exception.PriceValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,16 +27,10 @@ public class OrderService {
     private CartItemDao cartItemDao;
     @Autowired
     private OrderItemDao orderItemDao;
-    @Autowired
-    private MemberDao memberDao;
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
         Long orderId = makeOrder(member, orderCreateRequest);
-
-        //주문한 상품들은 ordered_item에 추가
         List<CartItem> cartItems = createOrderedItems(orderCreateRequest, orderId);
-
-        //주문한 상품은 장바구니에서 삭제
         deleteCartItemsInCart(member, cartItems);
 
         return orderId;
@@ -65,14 +56,8 @@ public class OrderService {
         int price = calculateTotalItemPrice(orderCreateRequest);
         int requestPrice = orderCreateRequest.getTotalItemPrice();
 
-        return isSamePrice(price, requestPrice);
-    }
 
-    public int isSamePrice(int original, int compare) {
-        if (original == compare) {
-            return original;
-        }
-        throw new PriceValidationException();
+        return Price.isSamePrice(price, requestPrice);
     }
 
     public int calculateTotalItemPrice(OrderCreateRequest orderCreateRequest) {
@@ -85,7 +70,7 @@ public class OrderService {
         int price = calculateDiscountedTotalItemPrice(member, orderCreateRequest);
         int requestPrice = orderCreateRequest.getDiscountedTotalItemPrice();
 
-        return isSamePrice(price, requestPrice);
+        return Price.isSamePrice(price, requestPrice);
     }
 
     public int calculateDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest) {
@@ -99,7 +84,7 @@ public class OrderService {
         int shippingFee = Price.calculateShippingFee(totalItemPrice);
         int requestFee = orderCreateRequest.getShippingFee();
 
-        return isSamePrice(shippingFee, requestFee);
+        return Price.isSamePrice(shippingFee, requestFee);
     }
 
     private void deleteCartItemsInCart(Member member, List<CartItem> cartItems) {
@@ -136,20 +121,7 @@ public class OrderService {
         int totalItemDiscountedAmount = calculateTotalItemDiscountedPriceForOrder(orderedItems);
         int totalMemberDiscountAmount = calculateTotalMemberDiscountAmountForOrder(order, totalItemDiscountedAmount);
 
-        return new OrderResponse(order.getId(), convertToResponse(orderedItems), order.getOrderedAt(), totalItemDiscountedAmount, totalMemberDiscountAmount, order.getTotalItemPrice(),
-                order.getDiscountedTotalItemPrice(), order.getShippingFee(),
-                order.getDiscountedTotalItemPrice() + order.getShippingFee());
-    }
-
-    public List<OrderedItemResponse> convertToResponse(List<OrderedItem> orderedItems) {
-        return orderedItems.stream()
-                .map(this::createOrderedItemResponse)
-                .collect(Collectors.toList());
-    }
-
-    private OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
-        return new OrderedItemResponse(orderedItem.getId(), orderedItem.getName(), orderedItem.getPrice(), orderedItem.getImageUrl(), orderedItem.getQuantity(),
-                orderedItem.getDiscountRate(), orderedItem.calculateDiscountedPrice());
+        return OrderResponse.of(order, orderedItems, totalItemDiscountedAmount, totalMemberDiscountAmount);
     }
 
     private int calculateTotalItemDiscountedPriceForOrder(List<OrderedItem> orderedItems) {

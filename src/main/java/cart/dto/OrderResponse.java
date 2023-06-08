@@ -1,9 +1,12 @@
 package cart.dto;
 
+import cart.domain.Order;
 import cart.domain.OrderedItem;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderResponse {
 
@@ -18,7 +21,7 @@ public class OrderResponse {
     private int shippingFee;
     private int totalPrice;
 
-    public OrderResponse(Long id, List<OrderedItemResponse> orderedItems, LocalDateTime orderedAt, int totalItemDiscountAmount,
+    private OrderResponse(Long id, List<OrderedItemResponse> orderedItems, LocalDateTime orderedAt, int totalItemDiscountAmount,
                          int totalMemberDiscountAmount, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
         this.id = id;
         this.orderedItems = orderedItems;
@@ -32,6 +35,25 @@ public class OrderResponse {
     }
 
     public OrderResponse() {
+    }
+
+    public static OrderResponse of(Order order, List<OrderedItem> orderedItems, int totalItemDiscountedAmount, int totalMemberDiscountAmount){
+        return new OrderResponse(order.getId(), convertToResponse(orderedItems), order.getOrderedAt(), totalItemDiscountedAmount, totalMemberDiscountAmount, order.getTotalItemPrice(),
+                order.getDiscountedTotalItemPrice(), order.getShippingFee(),
+                order.getDiscountedTotalItemPrice() + order.getShippingFee());
+    }
+
+    public static List<OrderedItemResponse> convertToResponse(List<OrderedItem> orderedItems) {
+        List<OrderedItemResponse> list = new ArrayList<>();
+        for (OrderedItem orderedItem : orderedItems) {
+            OrderedItemResponse orderedItemResponse = createOrderedItemResponse(orderedItem);
+            list.add(orderedItemResponse);
+        }
+        return list;
+    }
+
+    public static OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
+        return OrderedItemResponse.of(orderedItem);
     }
 
     public Long getId() {

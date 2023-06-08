@@ -1,5 +1,8 @@
 package cart.dto;
 
+import cart.domain.CartItem;
+import cart.domain.Member;
+
 public class MemberResponse {
 
     private Long id;
@@ -9,11 +12,20 @@ public class MemberResponse {
     public MemberResponse() {
     }
 
-    public MemberResponse(Long id, String rank, int discountRate) {
+    private MemberResponse(Long id, String rank, int discountRate) {
         this.id = id;
         this.rank = rank;
         this.discountRate = discountRate;
     }
+
+    public static MemberResponse of(Member member) {
+        return new MemberResponse(
+                member.getId(),
+                member.getGrade(),
+                member.findDiscountedPercentage()
+        );
+    }
+
 
     public Long getId() {
         return id;

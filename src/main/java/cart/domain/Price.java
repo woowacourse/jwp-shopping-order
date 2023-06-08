@@ -1,6 +1,7 @@
 package cart.domain;
 
-import java.util.ArrayList;
+import cart.exception.PriceValidationException;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class Price {
         return Order.calculatePriceSum(prices);
     }
 
-    public static List<Product> getProducts(List<CartItem> cartItems) {
+    private static List<Product> getProducts(List<CartItem> cartItems) {
         return cartItems.stream()
                 .flatMap(cartItem -> Collections.nCopies(cartItem.getQuantity(), cartItem.getProduct()).stream())
                 .collect(Collectors.toList());
@@ -37,5 +38,12 @@ public class Price {
             return 0;
         }
         return SHIPPING_FEE;
+    }
+
+    public static int isSamePrice(int original, int compare) {
+        if (original == compare) {
+            return original;
+        }
+        throw new PriceValidationException();
     }
 }
