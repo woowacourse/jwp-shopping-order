@@ -8,10 +8,10 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
+import cart.exception.internal.NoMemberException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +28,7 @@ public class MemberJdbcRepository implements MemberRepository {
 
     public Member findMemberByMemberIdWithCoupons(final Long memberId) {
         final MemberEntity memberEntity = memberDao.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
+                .orElseThrow(NoMemberException::new);
         final List<CouponTypeCouponResultMap> couponTypeCouponResultMap = couponDao.findByMemberId(memberId);
 
         return toDomain(memberEntity, couponTypeCouponResultMap);

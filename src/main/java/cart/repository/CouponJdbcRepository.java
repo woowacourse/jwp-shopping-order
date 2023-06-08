@@ -8,10 +8,10 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
+import cart.exception.internal.NoCouponException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -66,7 +66,7 @@ public class CouponJdbcRepository implements CouponRepository {
     @Override
     public Coupon findCouponById(final Long couponId) {
         final CouponTypeCouponResultMap resultMap = couponDao.findById(couponId)
-                .orElseThrow(() -> new NoSuchElementException("쿠폰을 찾을 수 없습니다."));
+                .orElseThrow(NoCouponException::new);
         return toDomain(resultMap);
     }
 

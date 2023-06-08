@@ -2,7 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.Product;
 import cart.domain.member.Member;
-import cart.exception.CartItemException;
+import cart.exception.network.IllegalCartItemMemberException;
 
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new IllegalCartItemMemberException();
         }
     }
 

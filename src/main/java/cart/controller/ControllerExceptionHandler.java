@@ -1,7 +1,10 @@
 package cart.controller;
 
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
+import cart.exception.error.ErrorResponse;
+import cart.exception.internal.InternalException;
+import cart.exception.network.AuthenticationException;
+import cart.exception.network.IllegalCartItemMemberException;
+import cart.exception.network.NetworkException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -16,7 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.NoSuchElementException;
 
 import static java.util.stream.Collectors.joining;
 
@@ -26,39 +28,33 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleIllegalArgumentException(final Exception e) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(final Exception e) {
         log.error("[ERROR] 예상치 못한 예외가 발생 했습니다. = {}", createErrorMessage(e));
-        return ResponseEntity.badRequest().body("예상치 못한 예외가 발생했습니다.");
+        return ResponseEntity.badRequest().body(new ErrorResponse(9999, "예상치 못한 예외가 발생했습니다."));
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<String> handlerAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<ErrorResponse> handlerAuthenticationException(AuthenticationException e) {
         log.warn("[ERROR] 권한이 없는 사용자입니다. = {}", createErrorMessage(e));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("권한이 없는 사용자입니다.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.create(e));
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<String> handleException(CartItemException.IllegalMember e) {
+    @ExceptionHandler(IllegalCartItemMemberException.class)
+    public ResponseEntity<ErrorResponse> handleException(IllegalCartItemMemberException e) {
         log.warn("[ERROR] 권한이 없는 사용자입니다. = {}", createErrorMessage(e));
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없는 사용자입니다.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.create(e));
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleIllegalStatementException(final IllegalStateException e) {
-        log.error("[ERROR] 예외가 발생 했습니다. = {}", createErrorMessage(e));
-        return ResponseEntity.internalServerError().body("서버 오류 입니다.");
+    @ExceptionHandler(InternalException.class)
+    public ResponseEntity<ErrorResponse> handleInternalException(final InternalException e) {
+        log.error("[ERROR] 서버 에러가 발생했습니다. = {}", createErrorMessage(e));
+        return ResponseEntity.internalServerError().body(ErrorResponse.create(e));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException e) {
-        log.warn("[ERROR] 잘못된 값을 입력했습니다. = {}", createErrorMessage(e));
-        return ResponseEntity.badRequest().body("잘못된 값을 입력했습니다.");
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNoSuchElementException(final NoSuchElementException e) {
-        log.warn("[ERROR] 해당하는 객체를 찾을 수 없습니다. = {}", createErrorMessage(e));
-        return ResponseEntity.badRequest().body("잘못된 값을 입력했습니다.");
+    @ExceptionHandler(NetworkException.class)
+    public ResponseEntity<ErrorResponse> handleNetworkException(final NetworkException e) {
+        log.warn("[ERROR] 네트워크 에러가 발생했습니다.= {}", createErrorMessage(e));
+        return ResponseEntity.badRequest().body(ErrorResponse.create(e));
     }
 
     @Override
@@ -70,7 +66,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         log.info("[ERROR] 잘못된 값을 입력했습니다. = {}", createErrorMessage(ex));
 
-        String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
+        final String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(joining(System.lineSeparator()));

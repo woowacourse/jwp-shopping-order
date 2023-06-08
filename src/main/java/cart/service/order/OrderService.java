@@ -7,13 +7,12 @@ import cart.domain.coupon.CouponRepository;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.Price;
-import cart.exception.AlreadyUsedCouponException;
+import cart.exception.network.AlreadyUsedCouponException;
+import cart.exception.network.DifferentCartItemSizeException;
 import cart.service.dto.OrderSaveDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -32,7 +31,7 @@ public class OrderService {
     public Long order(final OrderSaveDto saveDto) {
         final CartItems cartItems = cartItemRepository.findAllByCartItemIds(saveDto.getCartItemIds());
         if (cartItems.isNotSameSize(saveDto.getCartItemIds().size())) {
-            throw new NoSuchElementException("존재하지 않는 상품이 포함되어 있습니다.");
+            throw new DifferentCartItemSizeException();
         }
 
         Coupon coupon = findCoupon(saveDto.getCouponId());

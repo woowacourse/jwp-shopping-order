@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.exception.CannotFindCouponException;
+import cart.exception.internal.CannotFindCouponException;
 
 import java.util.Collections;
 import java.util.List;

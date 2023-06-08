@@ -3,11 +3,11 @@ package cart.repository;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
+import cart.exception.internal.NoCouponException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
@@ -82,6 +82,6 @@ class CouponJdbcRepositoryTest {
 
         // then
         assertThatThrownBy(() -> couponJdbcRepository.findCouponById(2L))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(NoCouponException.class);
     }
 }

@@ -9,7 +9,8 @@ import cart.domain.coupon.CouponRepository;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
-import cart.exception.AlreadyUsedCouponException;
+import cart.exception.network.AlreadyUsedCouponException;
+import cart.exception.network.DifferentCartItemSizeException;
 import cart.service.dto.OrderSaveDto;
 import cart.service.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -121,7 +121,7 @@ class OrderServiceTest extends CouponFixture {
 
             // when, then
             assertThatThrownBy(() -> orderService.order(OrderSaveDto.from(request)))
-                    .isInstanceOf(NoSuchElementException.class);
+                    .isInstanceOf(DifferentCartItemSizeException.class);
         }
     }
 }
