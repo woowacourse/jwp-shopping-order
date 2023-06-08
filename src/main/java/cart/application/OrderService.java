@@ -63,11 +63,13 @@ public class OrderService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findOrder(final Long orderId, final Member member) {
         Order order = orderRepository.findOrder(orderId, member);
         return OrderResponse.from(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderSimpleResponse> findAllByMember(Member member) {
         List<Order> orders = orderRepository.findAllByMember(member);
         return orders.stream()

@@ -12,7 +12,9 @@ import cart.repository.CartItemRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class CartItemService {
     private final CartItemRepository cartItemRepository;
@@ -21,6 +23,7 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         CartItems cartItems = cartItemRepository.findByMember(member);
         return cartItems.getItems().stream().map(CartItemResponse::from).collect(Collectors.toList());
@@ -44,6 +47,7 @@ public class CartItemService {
         cartItemRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public CartItemsResponse findCartItems(Member member, int size, int page) {
         CartItems cartItems = cartItemRepository.findCartItemsByPage(member, size, page);
         PageInfo pageInfo = cartItemRepository.findPageInfo(member, size, page);

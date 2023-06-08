@@ -9,7 +9,9 @@ import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -19,17 +21,20 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public ProductsResponse getProducts(int size, int page) {
         PageInfo pageInfo = productRepository.findPageInfo(size, page);
         List<Product> products = productRepository.findProductsByPage(size, page);
         return ProductsResponse.of(products, pageInfo);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> allProducts = productRepository.getAllProducts();
         return allProducts.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findProductById(productId);
         return ProductResponse.from(product);
