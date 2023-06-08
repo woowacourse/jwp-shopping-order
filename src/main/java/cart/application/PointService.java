@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class PointService {
 
     private final PointRepository pointRepository;
@@ -19,6 +18,7 @@ public class PointService {
         this.pointRepository = pointRepository;
     }
 
+    @Transactional
     public void savePointOfOrder(int requestedPoint, Order order) {
         Point pointToUse = new Point(requestedPoint);
         checkPointAbleToUse(pointToUse, order);

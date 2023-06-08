@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class CartItemService {
 
     private final ProductRepository productRepository;
@@ -37,11 +36,13 @@ public class CartItemService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
         return cartItemRepository.save(
             new CartItem(member, productRepository.findById(cartItemRequest.getProductId())));
     }
 
+    @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
@@ -55,6 +56,7 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
@@ -62,6 +64,7 @@ public class CartItemService {
         cartItemRepository.delete(cartItem);
     }
 
+    @Transactional
     public void removeOrderedItems(Cart cart) {
         List<Long> cartItemIds = cart.getCartItemIds();
         cartItemRepository.removeAllByIds(cartItemIds);

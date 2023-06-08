@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class OrderService {
 
     private final CartItemService cartItemService;
@@ -28,6 +27,7 @@ public class OrderService {
         this.pointService = pointService;
     }
 
+    @Transactional
     public long createOrder(OrderRequest request, Member member) {
         Cart cart = cartItemService.findAllByIds(request.getCartItemIds(), member);
         Order order = saveCartItemsAsOrder(cart, member);
