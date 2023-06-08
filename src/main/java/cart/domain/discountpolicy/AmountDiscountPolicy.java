@@ -11,4 +11,9 @@ public class AmountDiscountPolicy implements DiscountPolicy {
         Money discountMoney = new Money((int) value);
         return original.subtract(discountMoney);
     }
+
+    @Override
+    public boolean isSupportTyp(final DiscountType type) {
+        return type == DiscountType.AMOUNT;
+    }
 }

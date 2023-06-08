@@ -10,4 +10,9 @@ public class RateDiscountPolicy implements DiscountPolicy {
     public Money apply(Money original, double value) {
         return new Money((int) (original.getValue() * value));
     }
+
+    @Override
+    public boolean isSupportTyp(final DiscountType type) {
+        return type == DiscountType.RATE;
+    }
 }

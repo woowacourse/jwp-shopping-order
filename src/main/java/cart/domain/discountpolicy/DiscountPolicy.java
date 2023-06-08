@@ -5,4 +5,6 @@ import cart.domain.Money;
 public interface DiscountPolicy {
 
     Money apply(Money original, double value);
+
+    boolean isSupportTyp(DiscountType type);
 }
