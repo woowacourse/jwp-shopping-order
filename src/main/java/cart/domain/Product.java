@@ -11,12 +11,6 @@ public class Product {
     private int discountRate;
     private int discountedPrice;
 
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
     public Product(Long id, String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
         this.id = id;
         this.name = name;
@@ -36,28 +30,12 @@ public class Product {
         this.discountedPrice = calculateDiscountedPrice();
     }
 
-    public Product(Long id, String name, int price, String imageUrl, int discountRate) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.discountRate = discountRate;
-    }
-
     public int calculateDiscountedPrice(int memberDiscount) {
         if (getIsDiscounted()) {
-            return (discountRate * price / 100 - price) * -1;
+            return price - (discountRate * price / 100 - price) * -1;
         } else {
-            return (memberDiscount * price / 100 - price) * -1;
+            return price - (memberDiscount * price / 100 - price) * -1;
         }
-    }
-
-
-    public int calculateMemberDiscountedPrice(int memberDiscount) {
-        if (!getIsDiscounted() && memberDiscount > 0) {
-            return price - ((memberDiscount * price / 100 - price) * -1);
-        }
-        return 0;
     }
 
     public int calculateDiscountedPrice() {
