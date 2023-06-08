@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.CouponEntity;
-import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeCouponResultMap;
 import cart.dao.entity.CouponTypeEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class CouponDaoTest {
     @Test
     void 회원_아이디로_쿠폰을_조회한다() {
         // when
-        final List<CouponTypeCouponEntity> results = couponDao.findByMemberId(1L);
+        final List<CouponTypeCouponResultMap> results = couponDao.findByMemberId(1L);
 
         // then
         assertThat(results).hasSize(3);
@@ -60,7 +60,7 @@ class CouponDaoTest {
         couponDao.changeStatus(1L, true);
 
         // then
-        final List<CouponTypeCouponEntity> results = couponDao.findByMemberId(1L);
+        final List<CouponTypeCouponResultMap> results = couponDao.findByMemberId(1L);
         assertAll(
                 () -> assertThat(results).hasSize(3),
                 () -> assertThat(results.get(0).getUsageStatus()).isTrue()
@@ -84,19 +84,19 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_쿠폰아이디로_조회한다() {
         // when
-        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findById(1L).get();
+        final CouponTypeCouponResultMap couponTypeCouponResultMap = couponDao.findById(1L).get();
 
         // then
-        assertThat(couponTypeCouponEntity.getCouponId()).isNotNull();
+        assertThat(couponTypeCouponResultMap.getCouponId()).isNotNull();
     }
 
     @Test
     void 쿠폰을_삭제한다() {
         // given
-        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findById(1L).get();
+        final CouponTypeCouponResultMap couponTypeCouponResultMap = couponDao.findById(1L).get();
 
         // when
-        couponDao.deleteCoupon(couponTypeCouponEntity.getCouponId());
+        couponDao.deleteCoupon(couponTypeCouponResultMap.getCouponId());
 
         // then
         assertThat(couponDao.findById(1L)).isNotPresent();

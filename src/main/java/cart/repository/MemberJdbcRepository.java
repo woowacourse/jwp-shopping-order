@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberDao;
-import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeCouponResultMap;
 import cart.dao.entity.MemberEntity;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
@@ -29,13 +29,13 @@ public class MemberJdbcRepository implements MemberRepository {
     public Member findMemberByMemberIdWithCoupons(final Long memberId) {
         final MemberEntity memberEntity = memberDao.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
-        final List<CouponTypeCouponEntity> couponTypeCouponEntities = couponDao.findByMemberId(memberId);
+        final List<CouponTypeCouponResultMap> couponTypeCouponResultMap = couponDao.findByMemberId(memberId);
 
-        return toDomain(memberEntity, couponTypeCouponEntities);
+        return toDomain(memberEntity, couponTypeCouponResultMap);
     }
 
-    private Member toDomain(final MemberEntity memberEntity, final List<CouponTypeCouponEntity> couponTypeCouponEntities) {
-        final List<Coupon> coupons = mapToCoupon(couponTypeCouponEntities);
+    private Member toDomain(final MemberEntity memberEntity, final List<CouponTypeCouponResultMap> resultMap) {
+        final List<Coupon> coupons = mapToCoupon(resultMap);
 
         return new Member(
                 memberEntity.getId(),
@@ -45,8 +45,8 @@ public class MemberJdbcRepository implements MemberRepository {
         );
     }
 
-    private static List<Coupon> mapToCoupon(final List<CouponTypeCouponEntity> couponTypeCouponEntities) {
-        return couponTypeCouponEntities.stream()
+    private static List<Coupon> mapToCoupon(final List<CouponTypeCouponResultMap> couponTypeCouponResultMap) {
+        return couponTypeCouponResultMap.stream()
                 .map(entity -> new Coupon(
                         entity.getCouponId(),
                         entity.getCouponTypeId(),

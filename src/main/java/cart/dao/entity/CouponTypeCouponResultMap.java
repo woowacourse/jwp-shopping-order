@@ -1,6 +1,6 @@
 package cart.dao.entity;
 
-public class CouponTypeCouponEntity {
+public class CouponTypeCouponResultMap {
 
     private final Long couponTypeId;
     private final Long couponId;
@@ -9,7 +9,7 @@ public class CouponTypeCouponEntity {
     private final int discountAmount;
     private final boolean usageStatus;
 
-    public CouponTypeCouponEntity(
+    public CouponTypeCouponResultMap(
             final Long couponTypeId,
             final Long couponId,
             final String name,

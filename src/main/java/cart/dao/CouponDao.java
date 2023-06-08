@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.CouponEntity;
-import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeCouponResultMap;
 import cart.dao.entity.CouponTypeEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,8 +23,8 @@ public class CouponDao {
 
     private final NamedParameterJdbcOperations jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final RowMapper<CouponTypeCouponEntity> couponTypeCouponEntityRowMapper = (rs, num) ->
-            new CouponTypeCouponEntity(
+    private final RowMapper<CouponTypeCouponResultMap> couponTypeCouponResultMapRowMapper = (rs, num) ->
+            new CouponTypeCouponResultMap(
                     rs.getLong("couponTypeId"),
                     rs.getLong("couponId"),
                     rs.getString("name"),
@@ -45,7 +45,7 @@ public class CouponDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<CouponTypeCouponEntity> findByMemberId(final Long memberId) {
+    public List<CouponTypeCouponResultMap> findByMemberId(final Long memberId) {
         final String sql = "SELECT c.id couponId, " +
                 "ct.id couponTypeId, " +
                 "ct.name name, " +
@@ -58,7 +58,7 @@ public class CouponDao {
 
         final Map<String, Long> params = Collections.singletonMap("memberId", memberId);
 
-        return jdbcTemplate.query(sql, params, couponTypeCouponEntityRowMapper);
+        return jdbcTemplate.query(sql, params, couponTypeCouponResultMapRowMapper);
     }
 
     public void changeStatus(final Long couponId, final Boolean toChange) {
@@ -72,7 +72,7 @@ public class CouponDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public Optional<CouponTypeCouponEntity> findById(final Long couponId) {
+    public Optional<CouponTypeCouponResultMap> findById(final Long couponId) {
         final String sql = "SELECT c.id couponId, " +
                 "ct.id couponTypeId, " +
                 "ct.name name, " +
@@ -86,7 +86,7 @@ public class CouponDao {
         final Map<String, Long> params = Collections.singletonMap("couponId", couponId);
 
         try {
-            final CouponTypeCouponEntity couponTypeEntity = jdbcTemplate.queryForObject(sql, params, couponTypeCouponEntityRowMapper);
+            final CouponTypeCouponResultMap couponTypeEntity = jdbcTemplate.queryForObject(sql, params, couponTypeCouponResultMapRowMapper);
             return Optional.ofNullable(couponTypeEntity);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();

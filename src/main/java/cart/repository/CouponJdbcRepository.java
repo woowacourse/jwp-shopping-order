@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.entity.CouponEntity;
-import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeCouponResultMap;
 import cart.dao.entity.CouponTypeEntity;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
@@ -41,8 +41,8 @@ public class CouponJdbcRepository implements CouponRepository {
 
     @Override
     public Coupons findCouponsByMemberId(final Long memberId) {
-        final List<CouponTypeCouponEntity> couponTypeCouponEntities = couponDao.findByMemberId(memberId);
-        final List<Coupon> coupons = couponTypeCouponEntities.stream()
+        final List<CouponTypeCouponResultMap> couponTypeCouponResultMap = couponDao.findByMemberId(memberId);
+        final List<Coupon> coupons = couponTypeCouponResultMap.stream()
                 .map(CouponJdbcRepository::toDomain)
                 .collect(toList());
 
@@ -65,19 +65,19 @@ public class CouponJdbcRepository implements CouponRepository {
 
     @Override
     public Coupon findCouponById(final Long couponId) {
-        final CouponTypeCouponEntity entity = couponDao.findById(couponId)
+        final CouponTypeCouponResultMap resultMap = couponDao.findById(couponId)
                 .orElseThrow(() -> new NoSuchElementException("쿠폰을 찾을 수 없습니다."));
-        return toDomain(entity);
+        return toDomain(resultMap);
     }
 
-    private static Coupon toDomain(final CouponTypeCouponEntity entity) {
+    private static Coupon toDomain(final CouponTypeCouponResultMap resultMap) {
         return new Coupon(
-                entity.getCouponId(),
-                entity.getCouponTypeId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getDiscountAmount(),
-                entity.getUsageStatus()
+                resultMap.getCouponId(),
+                resultMap.getCouponTypeId(),
+                resultMap.getName(),
+                resultMap.getDescription(),
+                resultMap.getDiscountAmount(),
+                resultMap.getUsageStatus()
         );
     }
 }
