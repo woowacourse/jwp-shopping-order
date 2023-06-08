@@ -56,7 +56,7 @@ public class MemberCouponDao {
     return jdbcTemplate.query(sql, new Object[]{memberCouponId}, getMemberCouponRowMapper()).stream().findAny();
   }
 
-  public void use(final long memberId, final long couponId) {
+  public void updateIsUsed(final long memberId, final long couponId) {
     String sql = "UPDATE member_coupon SET is_used = ? WHERE member_id = ? AND coupon_id = ?";
     jdbcTemplate.update(sql, true, memberId, couponId);
   }

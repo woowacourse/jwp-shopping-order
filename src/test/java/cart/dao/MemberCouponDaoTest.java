@@ -7,7 +7,6 @@ import cart.domain.MemberCoupon;
 import cart.factory.CouponFactory;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ class MemberCouponDaoTest {
     final Long couponId = couponDao.createCoupon(CouponFactory.createCoupon("1000원 할인", 1000, 10000));
     final Long memberCouponId = memberCouponDao.save(member.getId(), couponId);
 
-    memberCouponDao.use(member.getId(), couponId);
+    memberCouponDao.updateIsUsed(member.getId(), couponId);
 
     final MemberCoupon memberCoupon = memberCouponDao.findMemberCouponById(memberCouponId).get();
     assertThat(memberCoupon.isUsed()).isTrue();
@@ -81,7 +80,7 @@ class MemberCouponDaoTest {
     memberCouponDao.save(member.getId(), couponId1);
     memberCouponDao.save(member.getId(), couponId2);
     memberCouponDao.save(member.getId(), couponId3);
-    memberCouponDao.use(member.getId(), couponId1);
+    memberCouponDao.updateIsUsed(member.getId(), couponId1);
 
     final List<MemberCoupon> memberCoupons = memberCouponDao.findAvailableCouponsByMemberIdAndTotalAmount(member.getId(), 15000);
 

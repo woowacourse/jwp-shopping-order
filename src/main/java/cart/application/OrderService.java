@@ -64,7 +64,7 @@ public class OrderService {
 
   private void useIfSelectCoupon(Member member, Coupon coupon) {
     if (!coupon.isEmpty()) {
-      memberCouponDao.use(member.getId(), coupon.getId());
+      memberCouponDao.updateIsUsed(member.getId(), coupon.getId());
     }
   }
 
