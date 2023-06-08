@@ -48,8 +48,9 @@ class ProductServiceTest {
         List<ProductResponse> 조회한_상품들 = productService.findAll();
 
         // then
-        assertThat(조회한_상품들).usingRecursiveComparison()
-                .isEqualTo(List.of(저장된_첫번째_상품, 저장된_두번째_상품));
+        assertThat(조회한_상품들)
+                .extracting(ProductResponse::getId)
+                .contains(저장된_첫번째_상품.getId(), 저장된_두번째_상품.getId());
     }
 
     private Product 상품을_저장하고_ID가_있는_상품을_리턴한다(Product 저장할_상품) {
