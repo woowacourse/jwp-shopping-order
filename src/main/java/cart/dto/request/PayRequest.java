@@ -9,8 +9,8 @@ public class PayRequest {
     @NotNull(message = "구매할 카트 아이템의 아이디를 입력해 주세요. 입력값 : ${validatedValue}")
     private final List<CartItemIdRequest> cartItemIds;
 
-    @NotNull(message = "선택한 아이템의 정가를 입력해 주세요. 입력값 : ${validatedValue}")
-    @Positive(message = "선택한 아이템의 정가는 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
+    @NotNull(message = "선택한 아이템의 정가의 총합를 입력해 주세요. 입력값 : ${validatedValue}")
+    @Positive(message = "선택한 아이템의 정가의 총합은 1 이상으로 입력해 주세요. 입력값 : ${validatedValue}")
     private final Integer originalPrice;
 
     @NotNull(message = "사용할 포인트 입력해 주세요. 입력값 : ${validatedValue}")
