@@ -75,7 +75,7 @@ public class PointService {
         List<PointUsage> pointUsages = pointUsageDao.findAllByMemberId(memberId);
         Points points = new Points(pointAdditions, pointUsages);
         validateIsPointEnough(usePointAmount, points);
-        List<PointUsage> pointsToBeUsed = points.findPointsToBeUsed(usePointAmount);
+        List<PointUsage> pointsToBeUsed = points.decidePointsToBeUsed(usePointAmount);
         pointUsageDao.insertAll(pointsToBeUsed);
     }
 

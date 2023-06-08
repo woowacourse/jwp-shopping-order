@@ -51,7 +51,7 @@ class PointsTest {
             Points points = new Points(List.of(plus500, plus700), List.of(minus201, minus299));
 
             // when
-            List<PointUsage> pointsToBeUsed = points.findPointsToBeUsed(usePointAmount);
+            List<PointUsage> pointsToBeUsed = points.decidePointsToBeUsed(usePointAmount);
 
             // then
             assertAll(() -> {
@@ -73,7 +73,7 @@ class PointsTest {
             Points points = new Points(List.of(plus500, plus700), List.of(minus200));
 
             // when
-            List<PointUsage> pointsToBeUsed = points.findPointsToBeUsed(usePointAmount);
+            List<PointUsage> pointsToBeUsed = points.decidePointsToBeUsed(usePointAmount);
 
             // then
             assertAll(() -> {
@@ -95,7 +95,7 @@ class PointsTest {
             Points points = new Points(List.of(plus500, plus700), List.of(minus200));
 
             // when
-            List<PointUsage> pointsToBeUsed = points.findPointsToBeUsed(usePointAmount);
+            List<PointUsage> pointsToBeUsed = points.decidePointsToBeUsed(usePointAmount);
 
             // then
             assertAll(() -> {
@@ -119,7 +119,7 @@ class PointsTest {
             Points points = new Points(List.of(plus500, plus700), List.of(minus200));
 
             // when
-            List<PointUsage> pointsToBeUsed = points.findPointsToBeUsed(usePointAmount);
+            List<PointUsage> pointsToBeUsed = points.decidePointsToBeUsed(usePointAmount);
 
             // then
             assertAll(() -> {
