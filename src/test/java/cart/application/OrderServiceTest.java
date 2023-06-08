@@ -10,11 +10,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 
-import cart.domain.cart.CartItem;
 import cart.domain.Member;
+import cart.domain.cart.CartItem;
 import cart.dto.order.OrderCreateRequest;
+import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import cart.repository.dao.CartItemDao;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,10 +23,10 @@ import org.junit.jupiter.api.Test;
 
 class OrderServiceTest {
 
-    private final CartItemDao cartItemDao = mock(CartItemDao.class);
+    private final CartItemRepository cartItemRepository = mock(CartItemRepository.class);
     private final OrderRepository orderRepository = mock(OrderRepository.class);
 
-    private final OrderService orderService = new OrderService(cartItemDao, orderRepository);
+    private final OrderService orderService = new OrderService(cartItemRepository, orderRepository);
 
     private final Member member = new Member(1L, "test@email.com", "password");
 
@@ -37,7 +37,7 @@ class OrderServiceTest {
                 자몽_허니_블랙티_ID_2_7개_39900원(member),
                 맥북_ID_5_1개_1500000원(member));
 
-        willReturn(cartItems).given(cartItemDao).findByIds(List.of(1L, 2L, 5L));
+        willReturn(cartItems).given(cartItemRepository).findByIds(List.of(1L, 2L, 5L));
         willReturn(1L).given(orderRepository).createOrder(any());
     }
 
@@ -64,7 +64,7 @@ class OrderServiceTest {
                 자몽_허니_블랙티_ID_2_7개_39900원(member),
                 바닐라_크림_콜드브루_ID_4_3개_17400원(otherMember)
         );
-        willReturn(illegalCartItems).given(cartItemDao).findByIds(List.of(1L, 2L, 4L));
+        willReturn(illegalCartItems).given(cartItemRepository).findByIds(List.of(1L, 2L, 4L));
 
         final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(List.of(1L, 2L, 4L), 84_800);
 
@@ -80,7 +80,7 @@ class OrderServiceTest {
         // given
         final List<Long> nonExistIds = List.of(Long.MAX_VALUE, Long.MAX_VALUE - 1);
         final List<CartItem> illegalCartItems = Collections.emptyList();
-        willReturn(illegalCartItems).given(cartItemDao).findByIds(nonExistIds);
+        willReturn(illegalCartItems).given(cartItemRepository).findByIds(nonExistIds);
 
         final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(nonExistIds, 84_800);
 

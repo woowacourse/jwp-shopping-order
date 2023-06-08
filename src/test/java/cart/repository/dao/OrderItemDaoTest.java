@@ -3,6 +3,7 @@ package cart.repository.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItems;
 import cart.domain.Member;
@@ -10,9 +11,12 @@ import cart.domain.order.DiscountPolicy;
 import cart.domain.order.FixedDiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
+import cart.entity.CartItemEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.entity.ProductEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,7 @@ class OrderItemDaoTest {
     private OrderItemDao orderItemDao;
     private OrderDao orderDao;
     private CartItemDao cartItemDao;
+    private ProductDao productDao;
 
     private MemberDao memberDao;
 
@@ -37,13 +42,17 @@ class OrderItemDaoTest {
         this.orderDao = new OrderDao(jdbcTemplate);
         this.memberDao = new MemberDao(jdbcTemplate);
         this.cartItemDao = new CartItemDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
     }
 
     @Test
     void saveAllOrderItems() {
         // given
         final Member findMember = memberDao.getMemberById(1L);
-        final List<CartItem> findCartItems = cartItemDao.findByMemberId(findMember.getId());
+        final List<CartItem> findCartItems= cartItemDao.findByMemberId(findMember.getId()).stream()
+                .map(this::mapToCartItem)
+                .collect(Collectors.toUnmodifiableList());
+
         final CartItems cartItems = new CartItems(findCartItems, findMember);
 
         final OrderItems orderItems = OrderItems.from(cartItems);
@@ -61,7 +70,9 @@ class OrderItemDaoTest {
     void getOrderItemsByOrderId() {
         // given
         final Member findMember = memberDao.getMemberById(1L);
-        final List<CartItem> findCartItems = cartItemDao.findByMemberId(findMember.getId());
+        final List<CartItem> findCartItems= cartItemDao.findByMemberId(findMember.getId()).stream()
+                .map(this::mapToCartItem)
+                .collect(Collectors.toUnmodifiableList());
         final CartItems cartItems = new CartItems(findCartItems, findMember);
 
         final OrderItems orderItems = OrderItems.from(cartItems);
@@ -77,5 +88,12 @@ class OrderItemDaoTest {
 
         // then
         assertThat(findOrderItems).hasSize(orderItems.getOrderItems().size());
+    }
+
+    private CartItem mapToCartItem(CartItemEntity cartItemEntity) {
+        final Member member = memberDao.getMemberById(cartItemEntity.getMemberId());
+        final ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
+
+        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), Product.from(productEntity), member);
     }
 }

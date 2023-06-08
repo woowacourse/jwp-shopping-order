@@ -2,7 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cart.CartItem;
+import cart.entity.CartItemEntity;
 import cart.repository.dao.CartItemDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +32,10 @@ class CartItemDaoTest {
         final List<Long> cartItemIds = List.of(1L, 2L, 5L);
 
         // when
-        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+        final List<CartItemEntity> cartItems = cartItemDao.findByIds(cartItemIds);
 
         // then
-        assertThat(cartItems).map(CartItem::getId)
+        assertThat(cartItems).map(CartItemEntity::getId)
                 .isEqualTo(cartItemIds);
     }
 
@@ -46,7 +46,7 @@ class CartItemDaoTest {
         final List<Long> cartItemIds = List.of(1L, 2L, Long.MAX_VALUE);
 
         // when
-        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+        final List<CartItemEntity> cartItems = cartItemDao.findByIds(cartItemIds);
 
         // then
         assertThat(cartItems).hasSize(cartItemIds.size() - 1);
@@ -60,7 +60,7 @@ class CartItemDaoTest {
 
         // when
         cartItemDao.deleteByIds(cartItemIds);
-        final List<CartItem> findCartItems = cartItemDao.findByIds(cartItemIds);
+        final List<CartItemEntity> findCartItems = cartItemDao.findByIds(cartItemIds);
 
         // then
         assertThat(findCartItems).isEmpty();

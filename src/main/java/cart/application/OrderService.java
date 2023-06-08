@@ -1,20 +1,20 @@
 package cart.application;
 
+import cart.domain.Member;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItems;
-import cart.domain.Member;
 import cart.domain.order.DiscountPolicy;
 import cart.domain.order.FixedDiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
 import cart.domain.order.Price;
-import cart.dto.order.discountpolicy.DiscountPolicyResponse;
-import cart.dto.order.discountpolicy.FixedDiscountPolicyResponse;
 import cart.dto.order.OrderCreateRequest;
 import cart.dto.order.OrderSelectResponse;
 import cart.dto.order.OrderSimpleInfoResponse;
+import cart.dto.order.discountpolicy.DiscountPolicyResponse;
+import cart.dto.order.discountpolicy.FixedDiscountPolicyResponse;
+import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import cart.repository.dao.CartItemDao;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,17 +24,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrderService {
 
-    private final CartItemDao cartItemDao;
+    private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
 
-    public OrderService(final CartItemDao cartItemDao, final OrderRepository orderRepository) {
-        this.cartItemDao = cartItemDao;
+    public OrderService(final CartItemRepository cartItemRepository, final OrderRepository orderRepository) {
+        this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
     }
 
     @Transactional
     public Long order(final Member member, final OrderCreateRequest orderCreateRequest) {
-        final List<CartItem> findCartItems = cartItemDao.findByIds(orderCreateRequest.getCartItemIds());
+        final List<CartItem> findCartItems = cartItemRepository.findByIds(orderCreateRequest.getCartItemIds());
         final CartItems cartItems = new CartItems(findCartItems, member);
 
         final OrderItems orderItems = OrderItems.from(cartItems);
@@ -44,7 +44,7 @@ public class OrderService {
         validateOrderPrice(orderCreateRequest, order);
 
         final Long orderId = orderRepository.createOrder(order);
-        cartItemDao.deleteByIds(orderCreateRequest.getCartItemIds());
+        cartItemRepository.deleteByIds(orderCreateRequest.getCartItemIds());
 
         return orderId;
     }

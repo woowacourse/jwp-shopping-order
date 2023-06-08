@@ -159,3 +159,20 @@
 - [x] 주문 생성 기능 서비스 테스트 작성
 - [x] 주문 내역 조회시, response의 키 값 cartItems -> orderItems로 바꾸는 거 어떤지 팀원과 논의한 후에 변경하기
 - [x] Product 조회 시에 is_deleted = 0인 row만 조회하도록 수정
+
+## 2단계 리뷰 내용
+- [x] 페이징 Dao에서 처리하도록 수정 + Spring Data의 Pageable 이용
+- [x] 트랜잭션 처리
+- [x] Repsotiroy 추상화 계층 맞추기
+- [ ] 테스트 전용 application properties 분리
+- [ ] 다른 외부 서비스에서 Order를 필요로 한다면?
+  - 서비스간 의존?
+  - 외부 서비스에서 Dao 호출?
+- [ ] Member의 equals(), hashcode() 고민
+- [x] Product.isDeleted() 고민
+  - 비즈니스 로직에선 쓰이지 않는 것을 확인 후 제거, 대신 DB와 맞닿아 있는 ProductEntity에는 만들어줬다.
+- [ ] OrderItem이 Member를 가질 필요가 있을까? (이미 Order에서 가지고 있다)
+- [ ] 페이지네이션 제네릭
+- [ ] DirtiesContext 성능 측면에서의 고민
+- [ ] Order가 파라미터로 CartItems가 아닌, OrderItems를 받는 것?
+- 

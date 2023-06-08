@@ -3,7 +3,6 @@ package cart.domain.cart;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.exception.CartItemException;
-
 import java.util.Objects;
 
 public class CartItem {
@@ -23,10 +22,6 @@ public class CartItem {
         this.quantity = quantity;
         this.product = product;
         this.member = member;
-    }
-
-    public boolean equalsProductId(Long productId) {
-        return product.getId().equals(productId);
     }
 
     public Long getId() {

@@ -90,7 +90,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         // then
         assertThat(pagedCartItemsResponse.getCartItems()).hasSize(unitSize);
         assertThat(pagination.getPerPage()).isEqualTo(unitSize);
-        assertThat(pagination.getCurrentPage()).isEqualTo(page);
+        assertThat(pagination.getCurrentPage()).isEqualTo(page - 1);
         assertThat(pagination.getLastPage()).isEqualTo(expectedTotalPage);
         assertThat(pagination.getTotal()).isEqualTo(allProducts.size());
     }
