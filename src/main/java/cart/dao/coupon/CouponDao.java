@@ -26,10 +26,10 @@ public class CouponDao {
     private final RowMapper<Coupon> rowMapper = (rs, rowNum) -> {
         Long id = rs.getLong("id");
         String name = rs.getString("name");
-        String discount_policy_name = rs.getString("discount_policy_name");
+        String discountPolicyName = rs.getString("discount_policy_name");
         int discountValue = rs.getInt("discount_value");
         String category = rs.getString("category");
-        DiscountPolicy discountPolicy = DiscountPolicyResolver.of(discount_policy_name, discountValue);
+        DiscountPolicy discountPolicy = DiscountPolicyResolver.of(discountPolicyName, discountValue);
         return CouponResolver.of (id, name, discountPolicy, category);
     };
 

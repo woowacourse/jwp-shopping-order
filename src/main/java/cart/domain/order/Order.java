@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Order {
-    private final static Price DELIVERY_FEE = Price.DELIVERY;
+    private static final Price DELIVERY_FEE = Price.DELIVERY;
     private final List<OrderCartItem> orderCartItems;
     private final Coupon coupon;
     private final Timestamp time;
