@@ -20,7 +20,7 @@ class OrderTest {
     final Order order = new Order(productOrders, coupon, new Amount(2000), "address", member);
     final Amount expectedAmount = new Amount(39000);
 
-    final Amount actualAmount = order.calculateDiscountedAmount();
+    final Amount actualAmount = order.calculateDiscountedAmount(40000);
 
     Assertions.assertThat(actualAmount).usingRecursiveComparison().isEqualTo(expectedAmount);
   }

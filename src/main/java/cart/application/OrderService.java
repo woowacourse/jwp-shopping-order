@@ -82,8 +82,9 @@ public class OrderService {
   }
 
   private OrderResponse mapToOrderResponse(Order order) {
-    return new OrderResponse(order.getId(), order.calculateTotalProductAmount().getValue(),
-        order.getDeliveryAmount().getValue(), order.calculateDiscountedAmount().getValue(),
+    final int totalProductAmount = order.calculateTotalProductAmount().getValue();
+    return new OrderResponse(order.getId(), totalProductAmount,
+        order.getDeliveryAmount().getValue(), order.calculateDiscountedAmount(totalProductAmount).getValue(),
         order.getAddress(), makeOrderProductResponses(order));
   }
 

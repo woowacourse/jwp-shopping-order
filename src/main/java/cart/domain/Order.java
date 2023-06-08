@@ -34,12 +34,11 @@ public class Order {
     return sum;
   }
 
-  public Amount calculateDiscountedAmount() {
-    final Amount totalProductAmount = calculateTotalProductAmount();
+  public Amount calculateDiscountedAmount(int totalProductAmount) {
     if (coupon == null) {
-      return totalProductAmount;
+      return new Amount(totalProductAmount);
     }
-    return coupon.apply(totalProductAmount);
+    return coupon.apply(new Amount(totalProductAmount));
   }
 
   @Override
