@@ -26,7 +26,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> addOrder(Member member, @RequestBody @Valid OrderRequestDto orderRequestDto) {
+    public ResponseEntity<OrderResponseDto> addOrder(Member member,
+                                                     @RequestBody @Valid OrderRequestDto orderRequestDto) {
         OrderResponseDto orderResponseDto = orderService.orderCartItems(member, orderRequestDto);
 
         return ResponseEntity.created(URI.create("/orders/" + orderResponseDto.getId()))
@@ -40,7 +41,8 @@ public class OrderController {
     }
 
     @GetMapping("/{order-id}")
-    public ResponseEntity<OrderResponseDto> getOrder(Member member, @PathVariable(name = "order-id") Long orderId) {
+    public ResponseEntity<OrderResponseDto> getOrder(Member member,
+                                                     @PathVariable(name = "order-id") Long orderId) {
         return ResponseEntity.ok()
                 .body(orderService.findOrderById(member, orderId));
     }

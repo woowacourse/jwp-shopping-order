@@ -4,8 +4,8 @@ import cart.controller.response.CouponResponseDto;
 import cart.controller.response.DiscountResponseDto;
 import cart.domain.Member;
 import cart.service.CouponService;
-import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +25,7 @@ public class CouponController {
 
     @PostMapping("/issue")
     public ResponseEntity<List<CouponResponseDto>> issueCoupon(Member member) {
-        return ResponseEntity.created(URI.create("ignored"))
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(couponService.issue(member));
     }
 
