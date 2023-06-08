@@ -19,7 +19,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public void validateMember(String email, String password) {
         Member member = memberRepository.findMemberByEmail(email)
-                .orElseThrow(() -> new CartException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CartException(ErrorCode.AUTHENTICATION));
 
         if (isWrongPassword(member, password)) {
             throw new CartException(ErrorCode.AUTHENTICATION);

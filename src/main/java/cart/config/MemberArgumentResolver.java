@@ -35,6 +35,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         String[] emailAndPasswordWithDecryption = auth.split(":");
         String email = emailAndPasswordWithDecryption[0];
-        return memberRepository.findMemberByEmail(email).orElseThrow(() -> new CartException(ErrorCode.MEMBER_NOT_FOUND));
+        return memberRepository.findMemberByEmail(email).orElseThrow(() -> new CartException(ErrorCode.AUTHENTICATION));
     }
 }
