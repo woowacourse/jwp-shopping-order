@@ -7,6 +7,7 @@ import cart.domain.*;
 import cart.domain.coupon.*;
 import cart.domain.order.Order;
 import cart.domain.order.OrderCartItem;
+import cart.domain.value.Price;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.PreparedOrderResponse;
 import cart.exception.DuplicateDiscountException;
@@ -45,6 +46,11 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         Order order = makeOrder(member, notNullCouponIds, cartItems);
+
+        if (order.isTotalPriceCorrect(new Price(orderRequest.getTotalPaymentPrice()))) {
+            throw new IllegalStateException("주문 가격과 관련해 오류가 발생했습나다.");
+        }
+
         Long id = orderRepository.insert(member, order);
 
         for (Long cartItemId : orderRequest.getCartItemIds()) {

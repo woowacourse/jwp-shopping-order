@@ -54,7 +54,11 @@ public class Order {
         return DELIVERY_FEE.minus(getDeliveryPrice());
     }
 
-    public Price getTotalPrice() {
+    public boolean isTotalPriceCorrect(Price price) {
+        return getTotalPrice().equals(price);
+    }
+
+    private Price getTotalPrice() {
         return orderCartItems.stream()
                 .map(OrderCartItem::getDiscountedPrice)
                 .reduce(Price::plus)
