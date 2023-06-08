@@ -235,8 +235,8 @@ class ProductServiceTest {
             // then
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(productCartItemDtos).hasSize(1);
-                softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).isEqualTo(CHICKEN.ENTITY);
-                softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).isEqualTo(Member_Dooly_CartItem1.ENTITY);
+                softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
+                softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).usingRecursiveComparison().isEqualTo(Member_Dooly_CartItem1.ENTITY);
             });
         }
 
@@ -254,7 +254,7 @@ class ProductServiceTest {
             // then
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(productCartItemDtos).hasSize(1);
-                softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).isEqualTo(CHICKEN.ENTITY);
+                softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
                 softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).isNull();
             });
         }
