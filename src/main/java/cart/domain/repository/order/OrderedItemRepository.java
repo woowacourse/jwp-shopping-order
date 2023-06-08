@@ -1,4 +1,4 @@
-package cart.application.repository.order;
+package cart.domain.repository.order;
 
 import cart.domain.order.OrderItem;
 

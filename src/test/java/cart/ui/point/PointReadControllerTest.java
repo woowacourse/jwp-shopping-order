@@ -1,7 +1,7 @@
 package cart.ui.point;
 
-import cart.application.repository.PointRepository;
 import cart.config.WebMvcConfig;
+import cart.domain.repository.point.PointRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

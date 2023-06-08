@@ -1,11 +1,11 @@
 package cart.application.service.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.ProductRepository;
 import cart.application.service.cartitem.dto.CartItemCreateDto;
 import cart.application.service.cartitem.dto.CartItemUpdateDto;
 import cart.domain.cartitem.CartItem;
+import cart.domain.repository.cartitem.CartItemRepository;
+import cart.domain.repository.member.MemberRepository;
+import cart.domain.repository.product.ProductRepository;
 import cart.fixture.MemberFixture;
 import cart.fixture.ProductFixture;
 import cart.ui.MemberAuth;

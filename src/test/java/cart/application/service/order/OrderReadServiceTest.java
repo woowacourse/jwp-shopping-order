@@ -1,13 +1,13 @@
 package cart.application.service.order;
 
-import cart.application.repository.CouponRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.order.OrderRepository;
-import cart.application.repository.order.OrderedItemRepository;
 import cart.application.service.order.dto.OrderResultDto;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.repository.coupon.CouponRepository;
+import cart.domain.repository.member.MemberRepository;
+import cart.domain.repository.order.OrderRepository;
+import cart.domain.repository.order.OrderedItemRepository;
 import cart.fixture.ProductFixture;
 import cart.ui.MemberAuth;
 import org.junit.jupiter.api.BeforeEach;

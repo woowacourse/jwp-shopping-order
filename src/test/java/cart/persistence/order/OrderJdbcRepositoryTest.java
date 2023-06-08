@@ -1,8 +1,8 @@
 package cart.persistence.order;
 
-import cart.application.repository.MemberRepository;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
+import cart.domain.repository.member.MemberRepository;
 import cart.fixture.MemberFixture;
 import cart.persistence.member.MemberJdbcRepository;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package cart.persistence.product;
 
-import cart.application.repository.ProductRepository;
 import cart.domain.Product;
+import cart.domain.repository.product.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.*;
+import static cart.fixture.ProductFixture.꼬리요리;
+import static cart.fixture.ProductFixture.배변패드;
+import static cart.fixture.ProductFixture.통구이;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 

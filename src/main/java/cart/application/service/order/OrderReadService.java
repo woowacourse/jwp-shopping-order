@@ -1,14 +1,14 @@
 package cart.application.service.order;
 
-import cart.application.repository.CouponRepository;
-import cart.application.repository.order.OrderRepository;
-import cart.application.repository.order.OrderedItemRepository;
 import cart.application.service.order.dto.OrderResultDto;
 import cart.application.service.order.dto.OrderedItemResult;
 import cart.application.service.order.dto.UsedCoupon;
 import cart.domain.coupon.Coupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.repository.coupon.CouponRepository;
+import cart.domain.repository.order.OrderRepository;
+import cart.domain.repository.order.OrderedItemRepository;
 import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
 package cart.persistence.member;
 
-import cart.application.repository.MemberRepository;
 import cart.domain.member.Member;
+import cart.domain.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

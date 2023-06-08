@@ -1,8 +1,8 @@
 package cart.ui.product;
 
-import cart.application.repository.ProductRepository;
 import cart.config.WebMvcConfig;
 import cart.domain.Product;
+import cart.domain.repository.product.ProductRepository;
 import cart.ui.product.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

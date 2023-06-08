@@ -1,8 +1,8 @@
 package cart.persistence.point;
 
-import cart.application.repository.PointRepository;
 import cart.domain.Point;
 import cart.domain.PointHistory;
+import cart.domain.repository.point.PointRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

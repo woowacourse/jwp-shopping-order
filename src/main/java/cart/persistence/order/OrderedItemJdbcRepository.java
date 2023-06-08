@@ -1,7 +1,7 @@
 package cart.persistence.order;
 
-import cart.application.repository.order.OrderedItemRepository;
 import cart.domain.order.OrderItem;
+import cart.domain.repository.order.OrderedItemRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

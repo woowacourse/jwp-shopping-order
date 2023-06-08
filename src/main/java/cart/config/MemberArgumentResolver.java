@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.application.repository.MemberRepository;
 import cart.domain.member.Member;
+import cart.domain.repository.member.MemberRepository;
 import cart.exception.AuthenticationException;
 import cart.ui.MemberAuth;
 import org.apache.tomcat.util.codec.binary.Base64;

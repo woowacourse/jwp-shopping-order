@@ -1,4 +1,4 @@
-package cart.application.repository;
+package cart.domain.repository.member;
 
 import cart.domain.member.Member;
 

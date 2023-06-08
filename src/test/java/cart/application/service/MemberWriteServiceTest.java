@@ -1,8 +1,8 @@
 package cart.application.service;
 
-import cart.application.repository.MemberRepository;
 import cart.application.service.member.MemberMapper;
 import cart.application.service.member.MemberWriteService;
+import cart.domain.repository.member.MemberRepository;
 import cart.ui.member.dto.MemberRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,12 +1,12 @@
 package cart.application.service.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.ProductRepository;
 import cart.application.service.cartitem.dto.CartResultDto;
 import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
+import cart.domain.repository.cartitem.CartItemRepository;
+import cart.domain.repository.member.MemberRepository;
+import cart.domain.repository.product.ProductRepository;
 import cart.ui.MemberAuth;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package cart.application.service.point;
 
-import cart.application.repository.PointRepository;
 import cart.domain.Point;
+import cart.domain.repository.point.PointRepository;
 import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package cart.ui.cartitem;
 
-import cart.application.repository.MemberRepository;
+import cart.domain.repository.member.MemberRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

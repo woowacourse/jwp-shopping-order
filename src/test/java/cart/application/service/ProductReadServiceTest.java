@@ -1,7 +1,7 @@
 package cart.application.service;
 
-import cart.application.repository.ProductRepository;
 import cart.application.service.product.ProductReadService;
+import cart.domain.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.통구이;
 import static cart.fixture.ProductFixture.꼬리요리;
+import static cart.fixture.ProductFixture.통구이;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.any;

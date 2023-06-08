@@ -1,8 +1,8 @@
 package cart.ui.coupon;
 
-import cart.application.repository.CouponRepository;
-import cart.application.repository.MemberRepository;
 import cart.domain.member.Member;
+import cart.domain.repository.coupon.CouponRepository;
+import cart.domain.repository.member.MemberRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

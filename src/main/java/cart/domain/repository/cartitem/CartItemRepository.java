@@ -1,4 +1,4 @@
-package cart.application.repository;
+package cart.domain.repository.cartitem;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;

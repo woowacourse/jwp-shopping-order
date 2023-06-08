@@ -1,4 +1,4 @@
-package cart.application.repository;
+package cart.domain.repository.coupon;
 
 import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;

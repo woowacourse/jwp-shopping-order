@@ -1,4 +1,4 @@
-package cart.application.repository;
+package cart.domain.repository.point;
 
 import cart.domain.Point;
 import cart.domain.PointHistory;

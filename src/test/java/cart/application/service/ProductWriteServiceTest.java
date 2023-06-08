@@ -1,8 +1,8 @@
 package cart.application.service;
 
-import cart.application.repository.ProductRepository;
 import cart.application.service.product.ProductWriteService;
 import cart.application.service.product.dto.ProductCreateDto;
+import cart.domain.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

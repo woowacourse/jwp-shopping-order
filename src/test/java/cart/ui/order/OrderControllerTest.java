@@ -1,13 +1,13 @@
 package cart.ui.order;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.PointRepository;
-import cart.application.repository.ProductRepository;
 import cart.domain.PointHistory;
 import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
+import cart.domain.repository.cartitem.CartItemRepository;
+import cart.domain.repository.member.MemberRepository;
+import cart.domain.repository.point.PointRepository;
+import cart.domain.repository.product.ProductRepository;
 import cart.fixture.MemberFixture;
 import cart.fixture.ProductFixture;
 import cart.ui.order.dto.request.CreateOrderDiscountRequest;
