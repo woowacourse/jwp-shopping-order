@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.integration.step.ProductStep;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
@@ -79,5 +80,50 @@ public class ProductIntegrationTest extends IntegrationTest {
                 () -> assertThat(추기된_피자.getName()).isEqualTo("피자"),
                 () -> assertThat(추기된_피자.getPrice()).isEqualTo(15_000)
         );
+    }
+
+    @DisplayName("상품을 변경한다")
+    @Test
+    public void updateProduct() {
+        // given
+        ProductRequest 치킨 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        ProductRequest 피자 = new ProductRequest("피자", 10_000, "http://example.com/chicken.jpg");
+        Long 치킨_ID = ProductStep.상품_추가_응답에서_아이디를_가져온다(치킨);
+
+        // when
+        ExtractableResponse<Response> 상품_변경_응답 = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(피자)
+                .when()
+                .put("/products/" + 치킨_ID)
+                .then()
+                .extract();
+        ExtractableResponse<Response> 상품_조회_응답 = ProductStep.상품을_상세_조회한다(치킨_ID);
+
+        // then
+        Assertions.assertAll(
+                () -> assertThat(상품_변경_응답.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(상품_조회_응답.as(ProductResponse.class).getName()).isEqualTo("피자")
+        );
+    }
+
+    @DisplayName("상품을 삭제한다")
+    @Test
+    public void deleteProduct() {
+        // given
+        ProductRequest 치킨 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long 치킨_ID = ProductStep.상품_추가_응답에서_아이디를_가져온다(치킨);
+
+        // when
+        ExtractableResponse<Response> 상품_삭제_응답 = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(치킨)
+                .when()
+                .delete("/products/" + 치킨_ID)
+                .then()
+                .extract();
+
+        // then
+        assertThat(상품_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
