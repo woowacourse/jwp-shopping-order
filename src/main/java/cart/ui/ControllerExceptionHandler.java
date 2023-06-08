@@ -1,7 +1,8 @@
 package cart.ui;
 
 import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
+import cart.exception.BusinessException;
+import cart.ui.dto.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,13 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<ExceptionResponse> handlerAuthenticationException(final AuthenticationException e) {
+        final ExceptionResponse response = new ExceptionResponse("인증에 실패했습니다.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ExceptionResponse> handleBusinessException(final BusinessException e) {
+        final ExceptionResponse response = new ExceptionResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
 }

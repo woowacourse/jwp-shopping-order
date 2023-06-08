@@ -3,36 +3,60 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
+import cart.domain.Product;
+import cart.exception.BusinessException;
+import cart.ui.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.dto.request.CartItemRequest;
+import cart.ui.dto.request.RemoveCartItemsRequest;
+import cart.ui.dto.response.CartItemResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+    public List<CartItemResponse> findByMember(final Member member) {
+        final CartItems cartItems = cartItemDao.findByMemberId(member.getId());
+        return cartItems.getValue()
+            .stream()
+            .map(CartItemResponse::of)
+            .collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    @Transactional
+    public Long add(final Member member, final CartItemRequest cartItemRequest) {
+        final Optional<CartItem> optionalCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
+            cartItemRequest.getProductId());
+        if (optionalCartItem.isPresent()) {
+            final CartItem cartItem = optionalCartItem.get();
+            final CartItem updatedCartItem = cartItem.addQuantity(cartItemRequest.getQuantity());
+            cartItemDao.updateQuantity(updatedCartItem);
+            return cartItem.getId();
+        }
+        final Product product = productDao.findById(cartItemRequest.getProductId())
+            .orElseThrow(() -> new BusinessException("존재하지 않는 상품입니다."));
+        return cartItemDao.save(
+            new CartItem(cartItemRequest.getQuantity(), product, member));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+    @Transactional
+    public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
+        final CartItem cartItem = cartItemDao.findById(id)
+            .orElseThrow(() -> new BusinessException("카트에 존재하지 않는 상품입니다."));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -44,10 +68,21 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+    @Transactional
+    public void remove(final Member member, final Long id) {
+        final CartItem cartItem = cartItemDao.findById(id)
+            .orElseThrow(() -> new BusinessException("카트에 존재하지 않는 상품입니다."));
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    @Transactional
+    public void remove(final Member member, final RemoveCartItemsRequest request) {
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(request.getCartItemIds());
+        for (final CartItem cartItem : cartItems) {
+            cartItem.checkOwner(member);
+        }
+        cartItemDao.deleteAll(cartItems);
     }
 }
