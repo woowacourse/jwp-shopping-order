@@ -1,6 +1,5 @@
 package cart.ui;
 
-import cart.application.CartItemService;
 import cart.application.OrderService;
 import cart.application.PaymentService;
 import cart.domain.Member;
@@ -9,6 +8,7 @@ import cart.domain.PaymentRecord;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.exception.OrderException.IllegalMember;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,13 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderService orderService;
     private final PaymentService paymentService;
-    private final CartItemService cartItemService;
 
-    public OrderController(final OrderService orderService, final PaymentService paymentService,
-                           final CartItemService cartItemService) {
+    public OrderController(final OrderService orderService, final PaymentService paymentService) {
         this.orderService = orderService;
         this.paymentService = paymentService;
-        this.cartItemService = cartItemService;
+    }
+
+    private static void validateAuthorization(Member member, Order order) {
+        if (!order.getMember().equals(member)) {
+            throw new IllegalMember(order, member);
+        }
     }
 
     @PostMapping
@@ -53,6 +56,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetailResponse> getOrderDetail(final Member member, @PathVariable final Long orderId) {
         final Order order = this.orderService.retrieveOrderById(orderId);
+        validateAuthorization(member, order);
         final PaymentRecord paymentRecord = this.paymentService.findByOrder(order);
         return ResponseEntity.ok(OrderDetailResponse.from(paymentRecord));
     }
