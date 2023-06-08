@@ -3,7 +3,6 @@ package cart.dao;
 import static cart.domain.fixture.MemberFixture.memberWithId;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.entity.AppliedDiscountPolicyEntity;
 import cart.dao.entity.OrderRecordEntity;
 import cart.dao.entity.PaymentRecordEntity;
 import cart.domain.DeliveryPolicies;
@@ -13,15 +12,16 @@ import cart.domain.PaymentRecord;
 import cart.domain.fixture.OrderFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-class AppliedDiscountPolicyDaoTest {
+class AppliedDeliveryPolicyDaoTest {
 
-    private AppliedDiscountPolicyDao appliedDiscountPolicyDao;
+    private AppliedDeliveryPolicyDao appliedDeliveryPolicyDao;
 
     private PaymentRecordDao paymentRecordDao;
 
@@ -32,25 +32,26 @@ class AppliedDiscountPolicyDaoTest {
 
     @BeforeEach
     void setUp() {
-        appliedDiscountPolicyDao = new AppliedDiscountPolicyDao(jdbcTemplate);
+        appliedDeliveryPolicyDao = new AppliedDeliveryPolicyDao(jdbcTemplate);
         paymentRecordDao = new PaymentRecordDao(jdbcTemplate);
         orderRecordDao = new OrderRecordDao(jdbcTemplate);
     }
 
     @Test
+    @DisplayName("삽입하기 테스트")
     void insert() {
         //given
         Order createdOrder = createOrder();
 
-        DiscountPolicies appliedDiscountPolicy = DiscountPolicies.TEN_PERCENT_DISCOUNT_WHEN_PRICE_IS_UPPER_THAN_FIFTY_THOUSANDS;
+        DeliveryPolicies appliedDeliveryPolicy = DeliveryPolicies.DEFAULT;
         PaymentRecord paymentRecord = new PaymentRecord(createdOrder,
-                List.of(appliedDiscountPolicy),
-                DeliveryPolicies.DEFAULT);
+                List.of(DiscountPolicies.TEN_PERCENT_DISCOUNT_WHEN_PRICE_IS_UPPER_THAN_FIFTY_THOUSANDS),
+                appliedDeliveryPolicy);
         Long paymentRecordEntityId = paymentRecordDao.insert(PaymentRecordEntity.from(paymentRecord));
 
         //when
         //then
-        Long generatedId = appliedDiscountPolicyDao.insert(paymentRecordEntityId, appliedDiscountPolicy.getId());
+        Long generatedId = appliedDeliveryPolicyDao.insert(paymentRecordEntityId, appliedDeliveryPolicy.getId());
         assertThat(generatedId).isNotNull();
     }
 
@@ -59,23 +60,5 @@ class AppliedDiscountPolicyDaoTest {
         Long orderId = orderRecordDao.insert(OrderRecordEntity.from(orderFixture));
         Order createdOrder = new Order(orderId, orderFixture.getMember(), orderFixture.getOrderItems());
         return createdOrder;
-    }
-
-    @Test
-    void findByPaymentRecordId() {
-        //given
-        Order createdOrder = createOrder();
-
-        DiscountPolicies appliedDiscountPolicy = DiscountPolicies.TEN_PERCENT_DISCOUNT_WHEN_PRICE_IS_UPPER_THAN_FIFTY_THOUSANDS;
-        PaymentRecord paymentRecord = new PaymentRecord(createdOrder,
-                List.of(appliedDiscountPolicy),
-                DeliveryPolicies.DEFAULT);
-        Long paymentRecordEntityId = paymentRecordDao.insert(PaymentRecordEntity.from(paymentRecord));
-        Long generatedId = appliedDiscountPolicyDao.insert(paymentRecordEntityId, appliedDiscountPolicy.getId());
-
-        //when
-        assertThat(appliedDiscountPolicyDao.findByPaymentRecordId(paymentRecordEntityId).stream()
-                .map(AppliedDiscountPolicyEntity::getDiscountPolicyId))
-                .containsOnly(generatedId);
     }
 }
