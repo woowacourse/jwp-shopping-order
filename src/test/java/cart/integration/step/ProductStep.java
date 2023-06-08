@@ -2,7 +2,7 @@ package cart.integration.step;
 
 import static io.restassured.RestAssured.given;
 
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;

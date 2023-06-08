@@ -3,7 +3,7 @@ package cart.integration.step;
 import static io.restassured.RestAssured.given;
 
 import cart.domain.Member;
-import cart.dto.OrderRequest;
+import cart.dto.request.OrderRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;

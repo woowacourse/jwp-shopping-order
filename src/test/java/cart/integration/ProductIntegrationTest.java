@@ -3,8 +3,8 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.integration.step.ProductStep;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

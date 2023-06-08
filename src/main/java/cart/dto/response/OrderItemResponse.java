@@ -1,19 +1,18 @@
-package cart.dto;
+package cart.dto.response;
 
 import cart.domain.OrderItem;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderItemResponse {
-
     private final Long id;
     private final int quantity;
-    private final ProductResponse products;
+    private final ProductResponse product;
 
-    public OrderItemResponse(Long id, int quantity, ProductResponse products) {
+    public OrderItemResponse(Long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
-        this.products = products;
+        this.product = product;
     }
 
     public static List<OrderItemResponse> of(List<OrderItem> orderItems) {
@@ -34,7 +33,7 @@ public class OrderItemResponse {
         return quantity;
     }
 
-    public ProductResponse getProducts() {
-        return products;
+    public ProductResponse getProduct() {
+        return product;
     }
 }

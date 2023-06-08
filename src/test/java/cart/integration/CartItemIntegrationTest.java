@@ -3,9 +3,9 @@ package cart.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.CartItemResponse;
 import cart.integration.step.CartItemStep;
 import cart.integration.step.ProductStep;
 import cart.repository.MemberRepository;

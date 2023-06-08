@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderRequest;
-import cart.dto.ProductRequest;
+import cart.dto.request.OrderRequest;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.OrderDetailResponse;
 import cart.integration.step.CartItemStep;
 import cart.integration.step.OrderStep;
 import cart.integration.step.ProductStep;

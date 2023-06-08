@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Member;
-import cart.dto.PointResponse;
-import cart.dto.SavingPointResponse;
+import cart.dto.response.PointResponse;
+import cart.dto.response.SavingPointResponse;
 import cart.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
