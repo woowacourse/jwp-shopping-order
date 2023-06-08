@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.illegalexception.IllegalQuantityException;
+import java.util.Objects;
 
 public class Quantity {
 
@@ -21,6 +22,23 @@ public class Quantity {
         if (count < MIN_COUNT) {
             throw new IllegalQuantityException("상품 수량은 1개 이상이어야 합니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Quantity quantity = (Quantity) o;
+        return count == quantity.count;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(count);
     }
 
     public int getCount() {

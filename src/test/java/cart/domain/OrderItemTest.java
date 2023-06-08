@@ -20,4 +20,18 @@ class OrderItemTest {
         // then
         assertThat(price).isEqualTo(Money.from(20_000));
     }
+
+    @Test
+    @DisplayName("같은 id를 가진 orderItem이라면 같은 객체로 취급된다.")
+    void sameId_sameOrderItem() {
+        // given
+        OrderItem orderItem1 = new OrderItem(1L, new OrderProduct("name", Money.from(5000), "img"),
+            Quantity.DEFAULT);
+        OrderItem orderItem2 = new OrderItem(1L, new OrderProduct("name2", Money.from(5000), "img"),
+            Quantity.DEFAULT);
+
+        // when, then
+        assertThat(orderItem1).isEqualTo(orderItem2);
+    }
+
 }

@@ -21,6 +21,36 @@ public class CartItem {
         this.member = member;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartUnauthorizedException(id, member.getId());
+        }
+    }
+
+    public void changeQuantity(Quantity quantity) {
+        this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CartItem cartItem = (CartItem) o;
+        if (cartItem.id == null && id == null) {
+            return false;
+        }
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     public Long getId() {
         return id;
     }
@@ -39,16 +69,6 @@ public class CartItem {
 
     public int getQuantityCount() {
         return quantity.getCount();
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartUnauthorizedException(id, member.getId());
-        }
-    }
-
-    public void changeQuantity(Quantity quantity) {
-        this.quantity = quantity;
     }
 
     public Money getPrice() {
