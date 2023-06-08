@@ -2,6 +2,7 @@ package cart.config.auth;
 
 import cart.application.MemberService;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -28,12 +29,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             throws Exception {
         final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationException();
         }
 
         final BasicAuthInfo authInfo = BasicAuthInfo.from(authorization);
         if (authInfo == null) {
-            return null;
+            throw new AuthenticationException();
         }
 
         return memberService.checkLoginMember(authInfo);
