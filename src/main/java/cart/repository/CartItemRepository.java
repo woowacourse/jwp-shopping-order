@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.domain.product.CartItem;
-import cart.persistance.dao.CartItemDao;
-import cart.persistance.entity.CartItemEntity;
+import cart.db.dao.CartItemDao;
+import cart.db.entity.CartItemEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package cart.persistance.dao;
+package cart.db.dao;
 
-import cart.persistance.entity.MemberCouponEntity;
+import cart.db.entity.MemberCouponEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

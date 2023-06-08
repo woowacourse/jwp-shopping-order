@@ -1,4 +1,4 @@
-package cart.persistance.entity;
+package cart.db.entity;
 
 import cart.domain.product.CartItem;
 

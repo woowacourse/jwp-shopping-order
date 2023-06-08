@@ -1,4 +1,4 @@
-package cart.persistance.entity;
+package cart.db.entity;
 
 public class CouponEntity {
 

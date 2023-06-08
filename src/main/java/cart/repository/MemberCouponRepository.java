@@ -3,8 +3,8 @@ package cart.repository;
 import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.persistance.dao.MemberCouponDao;
-import cart.persistance.entity.MemberCouponEntity;
+import cart.db.dao.MemberCouponDao;
+import cart.db.entity.MemberCouponEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

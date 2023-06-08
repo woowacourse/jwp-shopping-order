@@ -19,7 +19,7 @@ import static cart.domain.fixture.MemberFixture.MEMBER_A;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@ComponentScan(basePackages = {"cart.repository", "cart.persistance", "cart.domain.discountpolicy"})
+@ComponentScan(basePackages = {"cart.repository", "cart.db", "cart.domain.discountpolicy"})
 class MemberCouponRepositoryTest {
 
     @Autowired
