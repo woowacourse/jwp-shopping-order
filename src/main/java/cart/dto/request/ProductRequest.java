@@ -9,9 +9,11 @@ public class ProductRequest {
 
     @NotBlank
     private String name;
+
     @NotNull
     @Range(min = 1)
     private int price;
+
     @NotBlank
     private String imageUrl;
 

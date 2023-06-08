@@ -8,6 +8,7 @@ public class OrderItemRequest {
 
     @NotNull
     private Long id;
+
     @NotNull
     @Range(min = 1)
     private Integer quantity;
