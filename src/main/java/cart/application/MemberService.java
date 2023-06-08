@@ -8,6 +8,7 @@ import cart.domain.time.Region;
 import cart.domain.time.TimestampGenerator;
 import cart.dto.member.MemberResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -22,6 +23,7 @@ public class MemberService {
         this.pointPolicy = pointPolicy;
     }
 
+    @Transactional(readOnly = true)
     public MemberResponse getMemberInfo(Member member) {
         Timestamp createdAt = TimestampGenerator.getCurrentTime(Region.KOREA);
 

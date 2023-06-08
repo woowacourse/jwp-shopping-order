@@ -5,17 +5,19 @@ import cart.domain.member.Member;
 import cart.exception.customexception.CartException;
 import cart.exception.customexception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
 
     private final MemberDao memberDao;
 
-    public AuthService(final MemberDao memberDao) {
+    public AuthService(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
-    public void validateMember(final String email, final String password) {
+    @Transactional(readOnly = true)
+    public void validateMember(String email, String password) {
         Member member = memberDao.findMemberByEmail(email)
                 .orElseThrow(() -> new CartException(ErrorCode.MEMBER_NOT_FOUND));
 
