@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.exception.AuthenticationException;
+import cart.exception.AuthorizationException;
 import cart.exception.CartItemException;
 import cart.exception.CartItemException.CartItemNotExistException;
 import cart.exception.InvalidTokenException;
@@ -25,6 +26,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<Void> handleException(Exception e) {
         logger.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Void> handlerAuthenticationException(AuthorizationException e) {
+        logger.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @ExceptionHandler(AuthenticationException.class)
