@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
-public class IssuableSearchCouponService {
+public class CouponWithIssueStateService {
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
 
-    public IssuableSearchCouponService(CouponRepository couponRepository, MemberCouponRepository memberCouponRepository) {
+    public CouponWithIssueStateService(CouponRepository couponRepository, MemberCouponRepository memberCouponRepository) {
         this.couponRepository = couponRepository;
         this.memberCouponRepository = memberCouponRepository;
     }

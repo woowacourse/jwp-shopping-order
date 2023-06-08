@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.application.IssuableSearchCouponService;
+import cart.application.CouponWithIssueStateService;
 import cart.domain.member.Member;
 import cart.dto.IssuableSearchCouponResponse;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +12,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/coupons")
-public class IssuableSearchCouponController {
-    private final IssuableSearchCouponService issuableSearchCouponService;
+public class CouponController {
+    private final CouponWithIssueStateService couponWithIssueStateService;
 
-    public IssuableSearchCouponController(IssuableSearchCouponService issuableSearchCouponService) {
-        this.issuableSearchCouponService = issuableSearchCouponService;
+    public CouponController(CouponWithIssueStateService couponWithIssueStateService) {
+        this.couponWithIssueStateService = couponWithIssueStateService;
     }
 
     @GetMapping
     public ResponseEntity<List<IssuableSearchCouponResponse>> findAllWithIssuableCondition(Member member) {
-        return ResponseEntity.ok(issuableSearchCouponService.findAll(member));
+        return ResponseEntity.ok(couponWithIssueStateService.findAll(member));
     }
 }
