@@ -52,6 +52,8 @@ public class ProductService {
     }
 
     public void deleteProduct(final Long productId) {
-        productRepository.deleteById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoExistException(PRODUCT_NO_EXIST));
+        productRepository.delete(product);
     }
 }

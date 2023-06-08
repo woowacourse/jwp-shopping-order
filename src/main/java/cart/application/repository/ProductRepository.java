@@ -14,5 +14,5 @@ public interface ProductRepository {
 
     void update(Product product);
 
-    void deleteById(long id);
+    void delete(Product product);
 }

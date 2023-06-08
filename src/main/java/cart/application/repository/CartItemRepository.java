@@ -10,7 +10,6 @@ public interface CartItemRepository {
 
     long create(CartItem cartItem);
 
-    // TODO: CartItems(일급 컬렉션) 활용하도록 수정
     List<CartItem> findByMember(Member member);
 
     Optional<CartItem> findById(long id);
@@ -19,8 +18,7 @@ public interface CartItemRepository {
 
     void updateQuantity(CartItem cartItem);
 
-    // TODO: CartItem 객체 받도록 수정
-    void deleteById(long id);
+    void delete(CartItem cartItem);
 
     void deleteAll(CartItems cartItems);
 }

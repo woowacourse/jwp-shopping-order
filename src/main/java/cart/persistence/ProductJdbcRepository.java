@@ -48,7 +48,7 @@ public class ProductJdbcRepository implements ProductRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
-        productDao.deleteById(id);
+    public void delete(final Product product) {
+        productDao.deleteById(product.getId());
     }
 }

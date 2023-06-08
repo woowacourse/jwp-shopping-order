@@ -63,8 +63,8 @@ public class CartItemJdbcRepository implements CartItemRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
-        cartItemDao.deleteById(id);
+    public void delete(final CartItem cartItem) {
+        cartItemDao.deleteById(cartItem.getId());
     }
 
     @Override

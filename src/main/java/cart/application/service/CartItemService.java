@@ -50,7 +50,7 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemRepository.deleteById(id);
+            cartItemRepository.delete(cartItem);
             return;
         }
 
@@ -63,6 +63,6 @@ public class CartItemService {
                 .orElseThrow(() -> new NoExistException(CART_ITEM_NO_EXIST));
         cartItem.checkOwner(member);
 
-        cartItemRepository.deleteById(id);
+        cartItemRepository.delete(cartItem);
     }
 }
