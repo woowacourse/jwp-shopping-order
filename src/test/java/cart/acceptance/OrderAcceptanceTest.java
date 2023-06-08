@@ -22,7 +22,7 @@ import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderItemDto;
 import cart.cartItem.application.dto.ProductInCartItemDto;
 import cart.order.presentation.request.OrderAddRequest;
-import cart.order.presentation.request.ProductInOrderItemDto;
+import cart.order.application.dto.ProductInOrderItemDto;
 import cart.product.presentation.request.ProductAddRequest;
 import cart.member.domain.Member;
 import cart.member.persistence.MemberDao;

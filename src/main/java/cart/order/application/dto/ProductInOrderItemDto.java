@@ -1,4 +1,4 @@
-package cart.order.presentation.request;
+package cart.order.application.dto;
 
 import cart.product.domain.Product;
 
