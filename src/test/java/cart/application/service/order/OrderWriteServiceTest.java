@@ -1,7 +1,6 @@
 package cart.application.service.order;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -18,7 +17,6 @@ import cart.application.repository.order.OrderedItemRepository;
 import cart.auth.MemberAuth;
 import cart.domain.cartitem.CartItem;
 import cart.domain.coupon.Coupon;
-import cart.domain.discountpolicy.PointPolicy;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.product.Product;
