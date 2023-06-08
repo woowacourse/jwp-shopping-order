@@ -7,9 +7,6 @@ public class OrderRequest {
     private List<OrderItemRequest> orderItems;
     private String orderTime;
 
-    public OrderRequest() {
-    }
-
     public OrderRequest(List<OrderItemRequest> orderItems, String orderTime) {
         this.orderItems = orderItems;
         this.orderTime = orderTime;
