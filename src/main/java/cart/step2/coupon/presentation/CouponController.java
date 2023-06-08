@@ -11,9 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -32,14 +32,14 @@ public class CouponController {
         this.couponTypeService = couponTypeService;
     }
 
-    @PostMapping("/{couponTypeId}")
-    public ResponseEntity<Void> createCoupon(Member member, @PathVariable Long couponTypeId) {
+    @PostMapping
+    public ResponseEntity<Void> createCoupon(Member member, @RequestParam Long couponTypeId) {
         Long couponId = couponService.createCoupon(member.getId(), couponTypeId);
         return ResponseEntity.created(URI.create("/coupons/" + couponId)).build();
     }
 
-    @PatchMapping("/{couponId}")
-    public ResponseEntity<Void> issuanceCoupon(Member member, @PathVariable Long couponId) {
+    @PatchMapping
+    public ResponseEntity<Void> issuanceCoupon(Member member, @RequestParam Long couponId) {
         couponService.addCoupon(member.getId(), couponId);
         return ResponseEntity.ok().build();
     }
@@ -62,8 +62,8 @@ public class CouponController {
         return ResponseEntity.ok().body(responses);
     }
 
-    @DeleteMapping("/{couponId}")
-    public ResponseEntity<Void> deleteCoupon(Member member, @PathVariable Long couponId) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCoupon(Member member, @RequestParam Long couponId) {
         couponService.deleteByCouponId(couponId);
         return ResponseEntity.noContent().build();
     }
