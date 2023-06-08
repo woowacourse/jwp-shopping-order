@@ -42,21 +42,6 @@ public class MemberDao {
         }
     }
 
-    public void addMember(MemberEntity member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
-    }
-
-    public void updateMember(MemberEntity member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
-
-    public void deleteMember(long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public List<MemberEntity> getAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, ROW_MAPPER);
