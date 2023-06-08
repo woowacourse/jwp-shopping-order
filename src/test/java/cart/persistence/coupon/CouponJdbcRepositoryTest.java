@@ -46,7 +46,7 @@ class CouponJdbcRepositoryTest {
     }
 
     @Test
-    @DisplayName("사용자의 따라 저장되어있는 쿠폰 조회 테스트")
+    @DisplayName("사용자에 따라 저장되어있는 쿠폰 조회 테스트")
     void findByMemberId() {
         List<MemberCouponDto> coupons = couponJdbcRepository.findByMemberId(2L);
         List<String> couponNames = coupons.stream().map(MemberCouponDto::getCouponName).collect(Collectors.toList());
