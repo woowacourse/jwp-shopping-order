@@ -1,16 +1,18 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class ProductIntegrationTest extends IntegrationTest {
 
+    @DisplayName("상품 목록을 조회한다.")
     @Test
     public void getProducts() {
         final var result = given()
@@ -23,6 +25,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @DisplayName("상품을 추가한다.")
     @Test
     public void createProduct() {
         final var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
@@ -38,6 +41,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("추가한 상품을 조회한다.")
     @Test
     public void getCreatedProduct() {
         final var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
