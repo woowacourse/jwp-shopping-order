@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class OrderTest {
 
-    private Member member = new Member(1L, "email", "password");
+    private final Member member = new Member(1L, "email", "password");
 
     @Test
     @DisplayName("한 개 이상의 상품을 주문하지 않으면 주문에 실패한다.")
@@ -54,7 +54,7 @@ class OrderTest {
         Order order = new Order(1L, orderItems, Timestamp.valueOf(LocalDateTime.now()), member);
 
         // when, then
-        assertThatThrownBy(() -> order.checkOwner(Member.fromId(2L)))
+        assertThatThrownBy(() -> order.checkOwner(new Member(2L, "email2", "password2")))
             .isInstanceOf(OrderUnauthorizedException.class)
             .hasMessageContaining("다른 사용자의 주문 내역은 조회할 수 없습니다. orderId = 1");
     }

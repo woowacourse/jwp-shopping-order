@@ -2,7 +2,9 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dao.dto.OrderWithMemberDto;
 import cart.dao.entity.OrderEntity;
+import cart.domain.Member;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql({"classpath:/schema.sql", "classpath:/init_cart_item.sql"})
 class OrderDaoTest {
 
+    private final Member member = new Member(1L, "a@a.com", "1234");
     private OrderDao orderDao;
 
     @Autowired
@@ -48,17 +51,20 @@ class OrderDaoTest {
         // given
         OrderEntity orderEntity = new OrderEntity(1L);
         long savedId = orderDao.save(orderEntity);
-        OrderEntity savedEntity = new OrderEntity(savedId, 1L);
 
         // when
-        Optional<OrderEntity> foundEntity = orderDao.findById(savedId);
+        Optional<OrderWithMemberDto> foundOrder = orderDao.findById(savedId);
 
         // then
-        assertThat(foundEntity).isPresent()
+        OrderWithMemberDto expectedResult = new OrderWithMemberDto(savedId, 1L,
+            Timestamp.valueOf(LocalDateTime.now()),
+            member.getEmail(), member.getPassword());
+
+        assertThat(foundOrder).isPresent()
             .get()
             .usingRecursiveComparison()
             .ignoringFields("createdAt")
-            .isEqualTo(savedEntity);
+            .isEqualTo(expectedResult);
     }
 
     @Test
@@ -70,15 +76,15 @@ class OrderDaoTest {
         long savedId3 = orderDao.save(new OrderEntity(2L));
 
         // when
-        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(1L);
+        List<OrderWithMemberDto> ordersWithMember = orderDao.findAllByMemberId(1L);
 
         // then
         Timestamp time = Timestamp.valueOf(LocalDateTime.now());
-        assertThat(orderEntities).usingRecursiveComparison()
+        assertThat(ordersWithMember).usingRecursiveComparison()
             .ignoringFields("createdAt")
             .isEqualTo(List.of(
-                new OrderEntity(savedId1, 1L, time),
-                new OrderEntity(savedId2, 1L, time)
+                new OrderWithMemberDto(savedId1, 1L, time, member.getEmail(), member.getPassword()),
+                new OrderWithMemberDto(savedId2, 1L, time, member.getEmail(), member.getPassword())
             ));
     }
 }

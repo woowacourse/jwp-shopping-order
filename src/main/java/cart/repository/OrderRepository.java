@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.dto.OrderItemProductDto;
-import cart.dao.entity.OrderEntity;
+import cart.dao.dto.OrderWithMemberDto;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -37,25 +37,26 @@ public class OrderRepository {
     }
 
     public Order findById(long id) {
-        OrderEntity orderEntity = orderDao.findById(id)
+        OrderWithMemberDto orderWithMemberDto = orderDao.findById(id)
             .orElseThrow(() -> new OrderNotFoundException(id));
         List<OrderItemProductDto> orderItemProducts = orderItemDao.findAllByOrderId(id);
-        return OrderMapper.toOrder(orderEntity, orderItemProducts);
+        return OrderMapper.toOrder(orderWithMemberDto, orderItemProducts);
     }
 
     public List<Order> findAllByMember(Member member) {
-        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
-        List<OrderItemProductDto> orderItems = findAllByOrders(orderEntities);
-        Map<OrderEntity, List<OrderItemProductDto>> orderItemsByOrderEntity = orderItems.stream()
-            .collect(Collectors.groupingBy(orderProduct -> findMatchingOrderEntityById(orderEntities,
-                orderProduct.getOrderId()), Collectors.toList()));
+        List<OrderWithMemberDto> ordersWithMember = orderDao.findAllByMemberId(member.getId());
+        List<OrderItemProductDto> orderItems = findAllByOrders(ordersWithMember);
+        Map<OrderWithMemberDto, List<OrderItemProductDto>> orderItemsByOrder = orderItems.stream()
+            .collect(
+                Collectors.groupingBy(orderProduct -> findMatchingOrderEntityById(ordersWithMember,
+                    orderProduct.getOrderId()), Collectors.toList()));
 
-        return OrderMapper.toOrdersSortedById(orderItemsByOrderEntity);
+        return OrderMapper.toOrdersSortedById(orderItemsByOrder);
     }
 
-    private List<OrderItemProductDto> findAllByOrders(List<OrderEntity> orderEntities) {
-        List<Long> orderIds = orderEntities.stream()
-            .map(OrderEntity::getId)
+    private List<OrderItemProductDto> findAllByOrders(List<OrderWithMemberDto> ordersWithMember) {
+        List<Long> orderIds = ordersWithMember.stream()
+            .map(OrderWithMemberDto::getId)
             .collect(Collectors.toList());
         if (orderIds.isEmpty()) {
             return Collections.emptyList();
@@ -63,9 +64,10 @@ public class OrderRepository {
         return orderItemDao.findAllByOrderIds(orderIds);
     }
 
-    private OrderEntity findMatchingOrderEntityById(List<OrderEntity> orderEntities, long id) {
-        return orderEntities.stream()
-            .filter(orderEntity -> orderEntity.getId().equals(id))
+    private OrderWithMemberDto findMatchingOrderEntityById(
+        List<OrderWithMemberDto> ordersWithMember, long id) {
+        return ordersWithMember.stream()
+            .filter(order -> order.getId().equals(id))
             .findAny()
             .orElseThrow(() -> new OrderNotFoundException(id));
     }

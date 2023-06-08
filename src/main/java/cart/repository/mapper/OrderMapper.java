@@ -1,6 +1,7 @@
 package cart.repository.mapper;
 
 import cart.dao.dto.OrderItemProductDto;
+import cart.dao.dto.OrderWithMemberDto;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Member;
@@ -48,19 +49,23 @@ public class OrderMapper {
         );
     }
 
-    public static Order toOrder(OrderEntity orderEntity,
+    public static Order toOrder(OrderWithMemberDto orderWithMemberDto,
         List<OrderItemProductDto> orderItemProducts) {
         List<OrderItem> orderItems = orderItemProducts.stream()
             .map(OrderMapper::toOrderItem)
             .collect(Collectors.toList());
         return new Order(
-            orderEntity.getId(), orderItems, orderEntity.getCreatedAt(),
-            Member.fromId(orderEntity.getMemberId()));
+            orderWithMemberDto.getId(), orderItems, orderWithMemberDto.getCreatedAt(),
+            new Member(
+                orderWithMemberDto.getMemberId(),
+                orderWithMemberDto.getEmail(),
+                orderWithMemberDto.getPassword())
+        );
     }
 
     public static List<Order> toOrdersSortedById(
-        Map<OrderEntity, List<OrderItemProductDto>> orderProductsByOrderEntity) {
-        return orderProductsByOrderEntity.entrySet()
+        Map<OrderWithMemberDto, List<OrderItemProductDto>> orderProductsByOrder) {
+        return orderProductsByOrder.entrySet()
             .stream()
             .map(orderWithItem -> OrderMapper.toOrder(orderWithItem.getKey(),
                 orderWithItem.getValue()))

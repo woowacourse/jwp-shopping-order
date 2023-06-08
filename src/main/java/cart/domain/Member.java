@@ -3,6 +3,7 @@ package cart.domain;
 import java.util.Objects;
 
 public class Member {
+
     private Long id;
     private final String email;
     private final String password;
@@ -11,14 +12,6 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-    }
-
-    public static Member fromId(long id) {
-        return new Member(id, null, null);
-    }
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
     }
 
     @Override

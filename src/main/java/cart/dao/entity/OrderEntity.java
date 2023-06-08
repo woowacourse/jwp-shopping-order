@@ -4,9 +4,9 @@ import java.sql.Timestamp;
 
 public class OrderEntity {
 
-    private Long id;
-    private long memberId;
-    private Timestamp createdAt;
+    private final Long id;
+    private final long memberId;
+    private final Timestamp createdAt;
 
     public OrderEntity(long memberId) {
         this(null, memberId);

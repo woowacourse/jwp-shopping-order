@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.dto.OrderWithMemberDto;
 import cart.dao.entity.OrderEntity;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderDao {
 
-    private static final RowMapper<OrderEntity> ROW_MAPPER = (rs, rowNum) ->
-        new OrderEntity(
+    private static final RowMapper<OrderWithMemberDto> ROW_MAPPER = (rs, rowNum) ->
+        new OrderWithMemberDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
-            rs.getTimestamp("created_at")
+            rs.getTimestamp("created_at"),
+            rs.getString("email"),
+            rs.getString("password")
         );
 
     private final JdbcTemplate jdbcTemplate;
@@ -40,8 +43,9 @@ public class OrderDao {
         return Objects.requireNonNull(generatedKey).longValue();
     }
 
-    public Optional<OrderEntity> findById(long id) {
-        String sql = "SELECT * from `order` WHERE id = ?";
+    public Optional<OrderWithMemberDto> findById(long id) {
+        String sql = "SELECT `order`.id, member_id, created_at, email, password  FROM `order` "
+            + "INNER JOIN member ON `order`.member_id = member.id WHERE `order`.id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
@@ -49,8 +53,9 @@ public class OrderDao {
         }
     }
 
-    public List<OrderEntity> findAllByMemberId(long memberId) {
-        String sql = "SELECT * from `order` WHERE member_id = ?";
+    public List<OrderWithMemberDto> findAllByMemberId(long memberId) {
+        String sql = "SELECT `order`.id, member_id, created_at, email, password FROM `order` "
+            + "INNER JOIN member ON `order`.member_id = member.id WHERE member_id = ?";
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 }
