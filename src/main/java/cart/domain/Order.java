@@ -76,6 +76,13 @@ public class Order {
         }
     }
 
+    public void validateTotalPrice(Money totalOrderPrice) {
+        Money calculatedTotalPrice = calculateTotalPrice();
+        if (calculatedTotalPrice.isNotSameValue(totalOrderPrice.getValue())) {
+            throw new OrderException(ExceptionType.INCORRECT_PRICE);
+        }
+    }
+
     public Money calculateTotalPrice() {
         Money totalCartsPrice = calculateBeforeDiscountPrice();
         Money discountedPrice = coupon.discountPrice(totalCartsPrice);

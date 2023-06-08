@@ -37,6 +37,15 @@ class OrderTest {
     }
 
     @Test
+    void 주문_전체_금액을_들어온_전체_금액과_비교하여_다르면_예외가_발생한다() {
+        Order order = Order.of(밀리, List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개), 3000, 밀리_쿠폰_10퍼센트);
+
+        assertThatThrownBy(
+                () -> order.validateTotalPrice(new Money(1000))
+        ).isInstanceOf(OrderException.class);
+    }
+
+    @Test
     void 쿠폰을_적용하지_않는_주문의_전체_금액을_계산한다() {
         Order order = Order.of(밀리, List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개), 3000, 가짜_쿠폰);
 

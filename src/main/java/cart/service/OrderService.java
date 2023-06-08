@@ -50,16 +50,15 @@ public class OrderService {
         MemberCoupon memberCoupon = getMemberCoupon(orderRequest.getCouponId(), member);
 
         Order order = Order.of(member, cartItems, orderRequest.getDeliveryFee(), memberCoupon);
-
-        Money totalPrice = order.calculateTotalPrice();
-        if (totalPrice.isNotSameValue(orderRequest.getTotalOrderPrice())) {
-            throw new OrderException(ExceptionType.INCORRECT_PRICE);
-        }
+        Money requestedOrderPrice = new Money(orderRequest.getTotalOrderPrice());
+        order.validateTotalPrice(requestedOrderPrice);
 
         Order savedOrder = orderRepository.save(order);
         deleteOrdered(cartItems, memberCoupon);
+
+        Money totalOrderPrice = order.calculateTotalPrice();
         if (order.isUnusedCoupon()) {
-            couponService.issueByOrderPrice(totalPrice, member);
+            couponService.issueByOrderPrice(totalOrderPrice, member);
         }
         return savedOrder.getId();
     }
