@@ -38,7 +38,7 @@ public class CouponService {
             request.getMinAmount()));
   }
 
-  public List<CouponResponse> findMemberCouponsByMemberId(final Member member) {
+  public List<CouponResponse> findMemberCouponsByMember(final Member member) {
     final List<MemberCoupon> memberCoupons = memberCouponDao.findMemberCouponsByMemberId(member.getId());
 
     return memberCoupons.stream()

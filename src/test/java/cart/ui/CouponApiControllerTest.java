@@ -9,6 +9,7 @@ import cart.dto.SaveCouponRequest;
 import cart.integration.IntegrationTest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -38,6 +39,7 @@ class CouponApiControllerTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("멤버쿠폰들을 반환할 수 있다")
   void findMemberCoupons() {
     final Long coupon1 = couponService.createCoupon(new SaveCouponRequest("1000원 할인", 10000, 1000));
     final Long coupon2 = couponService.createCoupon(new SaveCouponRequest("2000원 할인", 20000, 2000));
@@ -56,6 +58,7 @@ class CouponApiControllerTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("사용 가능한 쿠폰들을 반환할 수 있다.")
   void findAvailableCoupons() {
     final Long coupon1 = couponService.createCoupon(new SaveCouponRequest("1000원 할인", 10000, 1000));
     final Long coupon2 = couponService.createCoupon(new SaveCouponRequest("2000원 할인", 20000, 2000));
@@ -75,6 +78,7 @@ class CouponApiControllerTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("할인 금액을 계산할 수 있다.")
   void calculateDiscountAmount() {
     final Long couponId = couponService.createCoupon(new SaveCouponRequest("1000원 할인", 10000, 1000));
     final Member member = memberService.findByEmail(EMAIL);

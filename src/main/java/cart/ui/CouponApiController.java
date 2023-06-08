@@ -25,7 +25,7 @@ public class CouponApiController {
 
   @GetMapping
   public ResponseEntity<List<CouponResponse>> findMemberCoupons(final Member member) {
-    return ResponseEntity.ok(couponService.findMemberCouponsByMemberId(member));
+    return ResponseEntity.ok(couponService.findMemberCouponsByMember(member));
   }
 
   @PostMapping("/{id}")

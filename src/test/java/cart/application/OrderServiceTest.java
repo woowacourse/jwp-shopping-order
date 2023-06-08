@@ -18,6 +18,7 @@ import cart.factory.ProductFactory;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,7 +47,9 @@ class OrderServiceTest {
   private OrderService orderService;
 
   @Test
+  @DisplayName("주문을 할 수 있다.")
   void order() {
+    //given
     final OrderProductResponse chicken = new OrderProductResponse(1L, "치킨", 20000, "chicken", 2);
     final OrderProductResponse pizza = new OrderProductResponse(2L, "피자", 15000, "pizza", 1);
     final List<OrderProductResponse> orderProductResponses = List.of(chicken, pizza);
@@ -73,8 +76,10 @@ class OrderServiceTest {
         .willReturn(Optional.of(CouponFactory.createCoupon(couponId, "1000원 할인", discountAmount, 15000)));
     given(orderDao.createOrder(any())).willReturn(orderId);
 
+    //when
     final OrderResponse actual = orderService.order(member, orderRequest);
 
+    //then
     Assertions.assertThat(actual)
         .usingRecursiveComparison()
         .ignoringFields("products.id")

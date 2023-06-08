@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,7 @@ class OrderApiControllerTest {
   }
 
   @Test
+  @DisplayName("주문을 할 수 있다.")
   void order() {
     final Long couponId = couponService.createCoupon(new SaveCouponRequest("1000원 할인", 15000, 1000));
     final Long chickenId = productService.createProduct(new ProductRequest("치킨", 15000, "chicken"));

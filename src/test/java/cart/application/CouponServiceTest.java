@@ -16,6 +16,7 @@ import cart.exception.BusinessException;
 import cart.factory.CouponFactory;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,8 +34,11 @@ class CouponServiceTest {
 
   @InjectMocks
   private CouponService couponService;
+
   @Test
-  void findMemberCouponsByMemberId() {
+  @DisplayName("멤버가 가지고 있는 쿠폰들을 찾을 수 있다.")
+  void findMemberCouponsByMember() {
+    //given
     final Member member = new Member(1L, "email", "password");
     final boolean isUsedCoupon1 = false;
     final boolean isUsedCoupon2 = true;
@@ -50,13 +54,17 @@ class CouponServiceTest {
         new MemberCoupon(2L, member, coupon2, isUsedCoupon2)
     ));
 
-    final List<CouponResponse> actual = couponService.findMemberCouponsByMemberId(member);
+    //when
+    final List<CouponResponse> actual = couponService.findMemberCouponsByMember(member);
 
+    //then
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }
 
   @Test
+  @DisplayName("사용 가능한 쿠폰을 찾을 수 있다.")
   void findActiveCoupons() {
+    //given
     final Member member = new Member(1L, "email", "password");
     final boolean isUsedCoupon1 = true;
     final boolean isUsedCoupon2 = false;
@@ -71,13 +79,17 @@ class CouponServiceTest {
         new MemberCoupon(1L, member, coupon3, isUsedCoupon3)
     ));
 
+    //when
     final List<ActiveCouponResponse> actual = couponService.findActiveCoupons(member, totalAmount);
 
+    //then
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }
 
   @Test
+  @DisplayName("할인 금액을 계산할 수 있다.")
   void calculateDiscountAmount() {
+    //given
     final Member member = new Member(1L, "email", "password");
     final int totalAmount = 15000;
     final int discountAmount = 1000;
@@ -87,18 +99,24 @@ class CouponServiceTest {
     final DiscountAmountResponse expect = new DiscountAmountResponse(totalAmount - discountAmount,
         discountAmount);
 
+    //when
     final DiscountAmountResponse actual = couponService.calculateDiscountAmount(member, coupon.getId(),
         totalAmount);
 
+    //then
     assertThat(actual).usingRecursiveComparison().isEqualTo(expect);
   }
 
   @Test
+  @DisplayName("해당 멤버가 가지고 있는 쿠폰이 아닌경우 에러가 발생한다.")
   void calculateDiscountAmountWithInvalidCoupon() {
+    //given
     final Member member = new Member(1L, "email", "password");
     final Coupon coupon = CouponFactory.createCoupon(1L, "coupon1", 1000, 10000);
     given(memberCouponDao.existsByMemberIdAndCouponId(member.getId(), coupon.getId())).willReturn(false);
 
+    //when
+    //then
     assertThatThrownBy(() -> couponService.calculateDiscountAmount(member, coupon.getId(), 15000))
         .isInstanceOf(BusinessException.class);
   }
