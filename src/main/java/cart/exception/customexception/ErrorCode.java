@@ -15,7 +15,7 @@ public enum ErrorCode {
     ILLEGAL_MEMBER(HttpStatus.FORBIDDEN, 9, "접근할 수 없는 유저입니다."),
     AUTHENTICATION(HttpStatus.UNAUTHORIZED, 11, "인증에 실패하였습니다. 회원정보를 다시 입력해주세요."),
     PRE_AUTHENTICATION(HttpStatus.BAD_REQUEST, 12, "인증 절차를 진행할 수 없습니다."),
-    QUANTITY_INVALID(HttpStatus.BAD_REQUEST, 13, "수량은 한 개 이상이어ㅑ 합니다.");
+    QUANTITY_INVALID(HttpStatus.BAD_REQUEST, 13, "수량은 한 개 이상이어야 합니다.");
 
     private final HttpStatus httpStatus;
     private final int errorCode;
