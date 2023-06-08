@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS `cart_item`
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity   INT    NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES `member` (id),
-    FOREIGN KEY (product_id) REFERENCES `product` (id)
+    FOREIGN KEY (member_id) REFERENCES `member` (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES `product` (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `coupon`
@@ -37,37 +37,37 @@ CREATE TABLE IF NOT EXISTS `member_coupon`
     id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES `member` (id),
-    FOREIGN KEY (coupon_id) REFERENCES `coupon` (id)
+    FOREIGN KEY (member_id) REFERENCES `member` (id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES `coupon` (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `order`
 (
-    id          BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id   BIGINT   NOT NULL,
-    delivery_fee INT NOT NULL,
-    payed_price INT      NOT NULL,
-    order_date  DATETIME NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES `member` (id)
+    id           BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT   NOT NULL,
+    delivery_fee INT      NOT NULL,
+    payed_price  INT      NOT NULL,
+    order_date   DATETIME NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES `member` (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `order_coupon`
 (
-    id BIGINT NOT NULL  AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id  BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES `order` (id),
-    FOREIGN KEY (coupon_id) REFERENCES `coupon` (id)
+    FOREIGN KEY (order_id) REFERENCES `order` (id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES `coupon` (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `order_item`
 (
-    id        BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id  BIGINT       NOT NULL,
-    product_id BIGINT NOT NULL,
+    id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id          BIGINT       NOT NULL,
+    product_id        BIGINT       NOT NULL,
     product_name      VARCHAR(255) NOT NULL,
     product_price     INT          NOT NULL,
     product_image_url VARCHAR(255) NOT NULL,
-    quantity  INT          NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES `order` (id)
+    quantity          INT          NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES `order` (id) ON DELETE CASCADE
 );
