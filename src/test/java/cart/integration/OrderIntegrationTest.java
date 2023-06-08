@@ -35,7 +35,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
         final MemberEntity memberEntity = memberDao.findById(1L);
 
-        member = Member.from(memberEntity);
+        member = new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 
     @Test

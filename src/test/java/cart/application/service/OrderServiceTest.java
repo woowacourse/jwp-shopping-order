@@ -44,13 +44,13 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         final MemberEntity memberEntity = memberDao.findById(3L);
-        member = Member.from(memberEntity);
+        member = new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 
     @Test
     void 장바구니에_담긴_상품을_주문할_수_있다() {
         final MemberEntity memberEntity = memberDao.findById(2L);
-        member = Member.from(memberEntity);
+        member = new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(), memberEntity.getPassword());
         // given
         final long productId = productDao.createProduct(
                 new ProductEntity("피자", 10_000, "피자사진")

@@ -46,8 +46,8 @@ class CartItemIntegrationTest extends IntegrationTest {
         final MemberEntity memberEntity = memberDao.findById(1L);
         final MemberEntity memberEntity2 = memberDao.findById(2L);
 
-        member = Member.from(memberEntity);
-        member2 = Member.from(memberEntity2);
+        member = new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(), memberEntity.getPassword());
+        member2 = new Member(memberEntity2.getId(), memberEntity2.getGrade(), memberEntity2.getEmail(), memberEntity2.getPassword());
     }
 
     @Test
