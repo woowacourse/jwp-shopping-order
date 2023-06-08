@@ -5,6 +5,9 @@ import cart.domain.value.Money;
 import cart.domain.value.Password;
 
 public class Member {
+
+    private static final int PERCENT = 100;
+
     private Long id;
     private Email email;
     private Password password;
@@ -75,6 +78,10 @@ public class Member {
         if (totalPurchaseAmount.getValue() >= 500_000) {
             grade = Grade.DIAMOND;
         }
+    }
+
+    public int getDiscountPercent() {
+        return (int) (grade.getDiscountRate() * PERCENT);
     }
 
     public Long getId() {

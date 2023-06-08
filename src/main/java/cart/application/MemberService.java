@@ -19,7 +19,7 @@ public class MemberService {
         return new MemberGradeResponse(
                 member.getId(),
                 member.getGrade().getKorean(),
-                (int) (member.getGrade().getDiscountRate() * 100)
+                member.getDiscountPercent()
         );
     }
 }

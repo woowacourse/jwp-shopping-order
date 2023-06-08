@@ -7,6 +7,7 @@ import cart.ui.dto.response.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -29,6 +30,7 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
+    @Transactional
     public Long createProduct(final ProductRequest productRequest) {
         final Product product = new Product(
                 productRequest.getName(),
@@ -40,6 +42,7 @@ public class ProductService {
         return productRepository.save(product).getId();
     }
 
+    @Transactional
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
         final Product product = new Product(
                 productRequest.getName(),
@@ -51,6 +54,7 @@ public class ProductService {
         productRepository.updateById(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(final Long productId) {
         productRepository.deleteById(productId);
     }

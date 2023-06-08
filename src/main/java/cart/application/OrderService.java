@@ -36,7 +36,16 @@ public class OrderService {
     @Transactional
     public Long createOrder(final Member member, final OrderCreateRequest request) {
         final List<OrderItem> orderItems = new ArrayList<>();
+        addOrderItems(request, orderItems);
 
+        final Order order = new Order(orderItems, request.getShippingFee(), member);
+        final Long savedId = orderRepository.saveOrder(order).getId();
+
+        updateMemberInfo(member, order);
+        return savedId;
+    }
+
+    private void addOrderItems(final OrderCreateRequest request, final List<OrderItem> orderItems) {
         final List<CartItem> cartItems = getCartItems(request);
         for (final CartItem cartItem : cartItems) {
             final OrderItem orderItem = new OrderItem(cartItem.getProduct(), cartItem);
@@ -44,12 +53,6 @@ public class OrderService {
 
             cartItemRepository.deleteById(cartItem.getId());
         }
-
-        final Order order = new Order(orderItems, request.getShippingFee(), member);
-        final Long savedId = orderRepository.saveOrder(order).getId();
-
-        updateMemberInfo(member, order);
-        return savedId;
     }
 
     private List<CartItem> getCartItems(final OrderCreateRequest request) {
@@ -59,7 +62,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private void updateMemberInfo(Member member, Order order) {
+    private void updateMemberInfo(final Member member, final Order order) {
         member.addTotalPurchaseAmount(order.calculateTotalPrice());
         member.upgradeGrade();
         memberRepository.update(member);
