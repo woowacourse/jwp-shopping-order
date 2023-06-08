@@ -48,7 +48,9 @@ public class OrderService {
         orderRequest.getAddress(), member);
     final Long orderId = orderDao.createOrder(order);
     saveProductOrders(productOrders, orderId);
-    return mapToOrderResponse(order);
+    return mapToOrderResponse(
+        new Order(orderId, order.getMember(), order.getProducts(), order.getCoupon(), order.getDeliveryAmount(),
+            order.getAddress()));
   }
 
   private List<ProductOrder> findProductOrders(List<OrderProductRequest> requestProducts) {
@@ -64,7 +66,7 @@ public class OrderService {
 
   private Coupon findCoupon(Long couponId) {
     return couponDao.findById(couponId)
-        .orElse(Coupon.empty());
+        .orElse(new Coupon());
   }
 
   private void saveProductOrders(List<ProductOrder> productOrders, Long orderId) {
@@ -74,7 +76,7 @@ public class OrderService {
   }
 
   private void useIfSelectCoupon(Member member, Coupon coupon) {
-    if (!coupon.isEmpty()) {
+    if (coupon != null) {
       memberCouponDao.updateIsUsed(member.getId(), coupon.getId());
     }
   }

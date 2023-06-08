@@ -71,7 +71,7 @@ public class MemberCouponDao {
       final int discountAmount = rs.getInt("discount_amount");
 
       final Member member = new Member(findMemberId, email, password);
-      final Coupon coupon = new Coupon(couponId, name, new Amount(discountAmount), new Amount(minAmount));
+      final Coupon coupon = new Coupon(couponId, name, discountAmount, minAmount);
       return new MemberCoupon(memberCouponId, member, coupon, isUsed);
     };
   }

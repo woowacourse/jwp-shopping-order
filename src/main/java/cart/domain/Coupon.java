@@ -5,10 +5,13 @@ import java.util.Objects;
 
 public class Coupon {
 
-  private final Long id;
-  private final String name;
-  private final Amount discountAmount;
-  private final Amount minAmount;
+  private Long id;
+  private String name;
+  private Amount discountAmount;
+  private Amount minAmount;
+
+  public Coupon() {
+  }
 
   public Coupon(String name, int discountAmount, int minAmount) {
     this(null, name, discountAmount, minAmount);
@@ -19,10 +22,6 @@ public class Coupon {
     this.name = name;
     this.discountAmount = new Amount(discountAmount);
     this.minAmount = new Amount(minAmount);
-  }
-
-  public static Coupon empty() {
-    return new Coupon(null, null, null, null);
   }
 
   public Amount apply(final Amount amount) {
@@ -65,9 +64,5 @@ public class Coupon {
 
   public Amount getMinAmount() {
     return minAmount;
-  }
-
-  public boolean isEmpty() {
-    return id == null && name == null && discountAmount == null && minAmount == null;
   }
 }

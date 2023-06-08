@@ -36,7 +36,7 @@ public class Order {
 
   public Amount calculateDiscountedAmount() {
     final Amount totalProductAmount = calculateTotalProductAmount();
-    if (coupon.isEmpty()) {
+    if (coupon == null) {
       return totalProductAmount;
     }
     return coupon.apply(totalProductAmount);

@@ -31,7 +31,7 @@ public class ProductOrderDao {
           Statement.RETURN_GENERATED_KEYS
       );
 
-      ps.setLong(1, productOrder.getId());
+      ps.setLong(1, productOrder.getProduct().getId());
       ps.setLong(2, orderId);
       ps.setInt(3, productOrder.getQuantity());
 

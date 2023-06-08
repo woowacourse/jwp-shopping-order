@@ -95,7 +95,7 @@ public class OrderDao {
       int minAmount = rs.getInt("min_amount");
       int discountAmount = rs.getInt("discount_amount");
       final Member member = new Member(memberId, email, password);
-      final Coupon coupon = new Coupon(couponId, couponName, new Amount(discountAmount), new Amount(minAmount));
+      final Coupon coupon = new Coupon(couponId, couponName, discountAmount, minAmount);
       return new Order(orderId, member, productOrderDao.findByOrderId(orderId), coupon,
           new Amount(deliveryAmount), address);
     };

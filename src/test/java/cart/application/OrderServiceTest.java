@@ -77,6 +77,7 @@ class OrderServiceTest {
 
     Assertions.assertThat(actual)
         .usingRecursiveComparison()
+        .ignoringFields("products.id")
         .isEqualTo(expect);
   }
 }

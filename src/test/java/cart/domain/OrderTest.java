@@ -15,7 +15,7 @@ class OrderTest {
         new ProductOrder(chicken, 1),
         new ProductOrder(pizza, 2)
     );
-    final Coupon coupon = new Coupon("1000원 할인", new Amount(1000), new Amount(15000));
+    final Coupon coupon = new Coupon("1000원 할인",1000, 15000);
     final Member member = new Member(1L, "email", "password");
     final Order order = new Order(productOrders, coupon, new Amount(2000), "address", member);
     final Amount expectedAmount = new Amount(39000);

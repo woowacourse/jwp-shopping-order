@@ -34,8 +34,8 @@ public class CouponService {
 
     return couponDao.createCoupon(
         new Coupon(request.getName(),
-            new Amount(request.getDiscountAmount()),
-            new Amount(request.getMinAmount())));
+            request.getDiscountAmount(),
+            request.getMinAmount()));
   }
 
   public List<CouponResponse> findMemberCouponsByMemberId(final Member member) {
