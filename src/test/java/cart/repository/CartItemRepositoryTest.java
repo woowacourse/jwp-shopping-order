@@ -38,10 +38,10 @@ class CartItemRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private CartItemRepository cartItemRepository;
     private CartItemDao cartItemDao;
     private MemberDao memberDao;
     private ProductDao productDao;
+    private CartItemRepository cartItemRepository;
 
     @BeforeEach
     void setUp() {

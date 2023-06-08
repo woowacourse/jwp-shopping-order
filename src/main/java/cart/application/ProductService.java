@@ -19,6 +19,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
+    public Long save(ProductRequest productRequest) {
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
+                productRequest.getImageUrl());
+        return productRepository.save(product);
+    }
+
     public List<ProductResponse> findAll() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
@@ -27,13 +34,6 @@ public class ProductService {
     public ProductResponse findById(Long productId) {
         Product product = productRepository.findById(productId);
         return ProductResponse.of(product);
-    }
-
-    @Transactional
-    public Long save(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
-        return productRepository.save(product);
     }
 
     @Transactional
