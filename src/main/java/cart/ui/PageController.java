@@ -1,19 +1,20 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dao.MemberDao;
+import cart.repository.MemberRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
-    private final ProductService productService;
-    private final MemberDao memberDao;
 
-    public PageController(ProductService productService, MemberDao memberDao) {
+    private final ProductService productService;
+    private final MemberRepository memberRepository;
+
+    public PageController(ProductService productService, MemberRepository memberRepository) {
         this.productService = productService;
-        this.memberDao = memberDao;
+        this.memberRepository = memberRepository;
     }
 
     @GetMapping("/admin")
@@ -24,7 +25,7 @@ public class PageController {
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+        model.addAttribute("members", memberRepository.getAllMembers());
         return "settings";
     }
 }

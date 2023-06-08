@@ -5,10 +5,11 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
+
     private final Product product;
     private final Member member;
+    private Long id;
+    private int quantity;
 
     public CartItem(Member member, Product product) {
         this.quantity = 1;
@@ -47,5 +48,28 @@ public class CartItem {
 
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItem cartItem = (CartItem) o;
+        return quantity == cartItem.quantity && Objects.equals(id, cartItem.id) && Objects.equals(product, cartItem.product) && Objects.equals(member, cartItem.member);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quantity, product, member);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
     }
 }
