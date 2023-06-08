@@ -92,7 +92,6 @@ public class DBOrderRepository implements OrderRepository {
                 "oi.quantity, " +
                 "m.id AS member_id, " +
                 "m.email, " +
-                "m.password, " +
                 "c.id AS coupon_id, " +
                 "c.name AS coupon_name, " +
                 "c.discount_value, " +
@@ -168,8 +167,7 @@ public class DBOrderRepository implements OrderRepository {
     private static Member getMember(ResultSet rs) throws SQLException {
         Long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
-        String password = rs.getString("password");
-        return new Member(memberId, email, password);
+        return new Member(memberId, email, null);
     }
 
     @Override
@@ -184,7 +182,6 @@ public class DBOrderRepository implements OrderRepository {
                 "oi.quantity, " +
                 "m.id AS member_id, " +
                 "m.email, " +
-                "m.password, " +
                 "c.id AS coupon_id, " +
                 "c.name AS coupon_name, " +
                 "c.discount_value, " +
