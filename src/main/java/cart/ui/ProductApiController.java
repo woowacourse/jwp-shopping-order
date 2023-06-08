@@ -24,10 +24,7 @@ import cart.application.product.dto.ProductRequest;
 import cart.application.product.dto.ProductResponse;
 
 
-@CrossOrigin(origins = {"https://feb-dain.github.io", "https://cruelladevil.github.io", "http://localhost:3000"},
-	allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH,
-	RequestMethod.DELETE, RequestMethod.OPTIONS},
-	allowCredentials = "true", exposedHeaders = "Location")
+
 @RestController
 @RequestMapping("/products")
 public class ProductApiController {
@@ -41,6 +38,10 @@ public class ProductApiController {
 		this.productCommandService = productCommandService;
 	}
 
+	@CrossOrigin(origins = {"https://feb-dain.github.io", "https://cruelladevil.github.io", "http://localhost:3000"},
+		allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH,
+		RequestMethod.DELETE, RequestMethod.OPTIONS},
+		allowCredentials = "true", exposedHeaders = "Location")
 	@GetMapping
 	public ResponseEntity<List<ProductResponse>> getAllProducts() {
 		final List<ProductResponse> productResponses = productQueryService.getAllProducts();

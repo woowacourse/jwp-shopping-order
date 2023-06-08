@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import cart.application.order.dto.OrderDetailResponse;
 import cart.application.order.dto.OrderRequest;
@@ -30,14 +29,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 		final Member member = memberRepository.findById(1L).get();
 
 		//when
-		final List<OrderResponse> orderResponses = given().log().all()
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.when()
-			.get("/orders")
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.OK.value())
-			.extract()
+		final List<OrderResponse> orderResponses = get(member, "/orders")
 			.jsonPath()
 			.getList(".", OrderResponse.class);
 
@@ -56,14 +48,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 		final long orderId = 1L;
 
 		//when
-		final OrderDetailResponse orderDetailResponse = given().log().all()
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.when()
-			.get("/orders/{orderId}", orderId)
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.OK.value())
-			.extract()
+		final OrderDetailResponse orderDetailResponse = get(member, "/orders/{orderId}", orderId, HttpStatus.OK.value())
 			.jsonPath()
 			.getObject(".", OrderDetailResponse.class);
 
@@ -96,13 +81,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 		final long orderId = 1L;
 
 		//when
-		given().log().all()
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.when()
-			.get("/orders/{orderId}", orderId)
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.BAD_REQUEST.value());
+		get(member, "/orders/{orderId}", orderId, HttpStatus.BAD_REQUEST.value());
 	}
 
 	@Test
@@ -117,16 +96,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 		//when
 		final OrderRequest orderRequest = new OrderRequest(cartItemIdList, totalPrice, deliveryFee, null);
 
-		final String location = given().log().all()
-			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.body(orderRequest)
-			.when()
-			.post("/orders")
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.CREATED.value())
-			.extract().header("Location");
+		final String location = post(member, orderRequest, "/orders", HttpStatus.CREATED.value())
+			.header("Location");
 
 		//then
 		assertThat(location).isNotNull();
@@ -140,13 +111,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 		final long orderId = 3L;
 
 		//when
-		given().log().all()
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.when()
-			.patch("/orders/{orderId}", orderId)
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.OK.value());
+		patch(member, "/orders/{orderId}", orderId, HttpStatus.OK.value());
 	}
 
 	@Test
@@ -157,12 +122,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 		final long orderId = 1L;
 
 		// when & then
-		given().log().all()
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.when()
-			.delete("/orders/{orderId}", orderId)
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.NO_CONTENT.value());
+		delete(member, "/orders/{orderId}", orderId, HttpStatus.NO_CONTENT.value());
+
 	}
 }

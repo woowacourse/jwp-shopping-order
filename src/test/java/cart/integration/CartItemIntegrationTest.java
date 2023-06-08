@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.domain.member.Member;
-import cart.persistence.member.MemberJdbcRepository;
 import cart.application.cart.dto.CartItemQuantityUpdateRequest;
 import cart.application.cart.dto.CartItemRemoveRequest;
 import cart.application.cart.dto.CartItemRequest;
 import cart.application.cart.dto.CartItemResponse;
 import cart.application.product.dto.ProductRequest;
+import cart.domain.member.Member;
+import cart.persistence.member.MemberJdbcRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 

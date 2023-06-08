@@ -100,7 +100,7 @@ public class OrderCommandService {
 	}
 
 	private void validateOrderStatus(final Order order) {
-		if (order.getOrderStatus() != OrderStatus.PAID) {
+		if (!order.isStatusPaid()) {
 			throw new BadRequestException.OrderStatusUpdate();
 		}
 	}

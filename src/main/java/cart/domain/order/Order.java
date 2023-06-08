@@ -61,6 +61,10 @@ public class Order {
 		return totalPayments;
 	}
 
+	public boolean isStatusPaid() {
+		return orderStatus == OrderStatus.PAID;
+	}
+
 	public Long getId() {
 		return id;
 	}

@@ -29,6 +29,12 @@ public class BadRequestException extends RuntimeException {
 		}
 	}
 
+	public static class Percentage extends BadRequestException {
+		public Percentage() {
+			super("할인율을 100% 이상이 될 수 없습니다.");
+		}
+	}
+
 	public static class Coupon extends BadRequestException {
 		public Coupon() {
 			super("해당 쿠폰을 찾을 수 없습니다.");

@@ -44,14 +44,7 @@ public class CouponIntegrationTest extends IntegrationTest {
 		final Member member = memberRepository.findById(2L).get();
 
 		//when
-		final List<CouponResponse> couponResponses = given().log().all()
-			.auth().preemptive().basic(member.getEmail(), member.getPassword())
-			.when()
-			.get("/coupons")
-			.then()
-			.log().all()
-			.statusCode(HttpStatus.OK.value())
-			.extract()
+		final List<CouponResponse> couponResponses = get(member, "/coupons")
 			.jsonPath()
 			.getList(".", CouponResponse.class);
 

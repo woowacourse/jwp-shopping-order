@@ -1,6 +1,8 @@
 package cart.application.coupon;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import cart.domain.coupon.MemberCouponRepository;
 import cart.domain.coupon.SerialNumber;
 import cart.domain.coupon.SerialNumberRepository;
 import cart.domain.coupon.type.CouponInfo;
+import cart.error.exception.BadRequestException;
 
 @Transactional
 @Service
@@ -30,12 +33,21 @@ public class CouponCommandService {
 	}
 
 	public Long createCoupon(final CouponRequest request) {
+		validatePercentage(request);
+
 		final Long savedId = couponRepository.createCoupon(
 			CouponInfo.of(null, request.getCouponType(), request.getName(), request.getDiscount()));
 		final List<SerialNumber> serialNumbers = SerialNumber.generateSerialNumbers(request.getCouponCount());
 
 		serialNumberRepository.generateCouponSerialNumber(savedId, serialNumbers);
 		return savedId;
+	}
+
+	private void validatePercentage(final CouponRequest request) {
+		final int compare = request.getDiscount().compareTo(BigDecimal.valueOf(100));
+		if (Objects.equals(request.getCouponType(), "PERCENTAGE") && compare >= 0) {
+			throw new BadRequestException.Percentage();
+		}
 	}
 
 	public Long addCoupon(final Long memberId, final Long couponId) {
@@ -48,6 +60,7 @@ public class CouponCommandService {
 	}
 
 	public void updateCoupon(final Long couponId, final CouponRequest request) {
+		validatePercentage(request);
 		final CouponInfo couponInfo = CouponInfo.of(couponId, request.getCouponType(), request.getName(),
 			request.getDiscount());
 		couponRepository.updateCouponInfo(couponInfo);

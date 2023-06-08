@@ -9,8 +9,9 @@ const showEditModal = (coupon) => {
     const elements = modal.getElementsByTagName('input');
     for (const element of elements) {
         element.value = coupon[element.getAttribute('name')];
-
     }
+    document.getElementById("couponType").value = coupon.couponType;
+
     modal.dataset.formType = 'edit';
     modal.dataset.couponId = coupon.id;
     modal.style.display = 'block';
