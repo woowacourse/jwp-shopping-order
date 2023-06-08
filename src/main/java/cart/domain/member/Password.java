@@ -1,6 +1,9 @@
 package cart.domain.member;
 
+import cart.exception.BadRequestException;
 import cart.util.Sha256Encryptor;
+
+import static cart.exception.ErrorCode.INVALID_PASSWORD_LENGTH;
 
 public class Password {
 
@@ -21,8 +24,12 @@ public class Password {
 
     private static void validatePlainPassword(final String password) {
         if (password.length() < 4 || password.length() > 10) {
-            throw new IllegalArgumentException("비밀번호는 4글자 이상 10글자 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_PASSWORD_LENGTH);
         }
+    }
+
+    public boolean checkPassword(final String password) {
+        return this.password.equals(password);
     }
 
     public String getPassword() {

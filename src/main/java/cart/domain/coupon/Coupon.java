@@ -1,6 +1,10 @@
 package cart.domain.coupon;
 
+import cart.exception.BadRequestException;
+
 import java.time.LocalDateTime;
+
+import static cart.exception.ErrorCode.*;
 
 public class Coupon {
 
@@ -32,28 +36,27 @@ public class Coupon {
 
     private void validateName(final String name) {
         if (name.length() < 1 || name.length() > 50) {
-            throw new IllegalArgumentException("쿠폰 이름은 1글자 이상 50글자 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_COUPON_NAME_LENGTH);
         }
     }
 
     private void validateDiscountRate(final int discountRate) {
         if (discountRate < 5 || discountRate > 90) {
-            throw new IllegalArgumentException("쿠폰 할인율은 5% 이상 90% 이하로 입력해주세요");
+            throw new BadRequestException(INVALID_COUPON_DISCOUNT_RATE);
         }
     }
 
     private void validatePeriod(final int period) {
         if (period < 1 || period > 365) {
-            throw new IllegalArgumentException("쿠폰 기간은 1일 이상 365일 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_COUPON_PERIOD_LENGTH);
         }
     }
 
     private void validateExpiredAt(final LocalDateTime expiredAt) {
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("쿠폰 만료 날짜는 현재 시간 이후로 입력해주세요.");
+            throw new BadRequestException(INVALID_COUPON_EXPIRATION_DATE);
         }
     }
-
 
     public Long getId() {
         return id;

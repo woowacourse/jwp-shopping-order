@@ -1,5 +1,9 @@
 package cart.domain.product;
 
+import cart.exception.BadRequestException;
+
+import static cart.exception.ErrorCode.INVALID_ITEM_QUANTITY_SIZE;
+
 public class Item {
 
     private final Long id;
@@ -23,7 +27,7 @@ public class Item {
 
     private void validateQuantity(final int quantity) {
         if (quantity < 1 || quantity > 1000) {
-            throw new IllegalArgumentException("상품 수량은 1개 이상 1000개 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_ITEM_QUANTITY_SIZE);
         }
     }
 

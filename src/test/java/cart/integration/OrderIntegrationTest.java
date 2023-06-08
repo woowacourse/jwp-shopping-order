@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.db.repository.MemberRepository;
 import cart.domain.member.Member;
+import cart.dto.cart.CartItemRequest;
 import cart.dto.product.ItemRequest;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
@@ -55,6 +56,9 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         member1 = memberRepository.findById(1L);
         member2 = memberRepository.findById(2L);
+
+        장바구니_아이템_추가_요청(member1, new CartItemRequest(chickenId));
+        장바구니_아이템_추가_요청(member1, new CartItemRequest(pizzaId));
 
         // 치킨2, 피자4 + 10% 쿠폰 = 80_000, 8000원 할인
         order1 = new OrderRequest(
@@ -111,6 +115,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void findOrdersByMember() {
         // given
         사용자_주문_요청(member1, order1);
+        장바구니_아이템_추가_요청(member1, new CartItemRequest(chickenId));
         사용자_주문_요청(member1, order2);
 
         // when
@@ -191,7 +196,6 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         String location = 사용자_주문_요청(member1, order1).header("location");
 
-
         // when
         ExtractableResponse<Response> response = 사용자_상세_주문_조회(member2, location);
         ErrorResponse errorResponse = response.body()
@@ -234,6 +238,18 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .when()
                 .post("/orders")
                 .then()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_추가_요청(Member member, CartItemRequest cartItemRequest) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getName(), member.getPassword())
+                .body(cartItemRequest)
+                .when()
+                .post("/cart-items")
+                .then()
+                .log().all()
                 .extract();
     }
 

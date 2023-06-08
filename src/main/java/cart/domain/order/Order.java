@@ -43,16 +43,6 @@ public class Order {
         this.orderedAt = orderedAt;
     }
 
-    public Order(final Long id, final Member member, final List<Item> items, final int totalPrice, final int deliveryPrice, final LocalDateTime orderedAt) {
-        this.id = id;
-        this.member = member;
-        this.items = new Items(items);
-        this.coupon = Optional.empty();
-        this.totalPrice = totalPrice;
-        this.deliveryPrice = deliveryPrice;
-        this.orderedAt = orderedAt;
-    }
-
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new AuthorizationException(NOT_AUTHORIZATION_MEMBER);

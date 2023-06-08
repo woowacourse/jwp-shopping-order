@@ -1,5 +1,10 @@
 package cart.domain.product;
 
+import cart.exception.BadRequestException;
+
+import static cart.exception.ErrorCode.INVALID_PRODUCT_NAME_LENGTH;
+import static cart.exception.ErrorCode.INVALID_PRODUCT_PRICE_SIZE;
+
 public class Product {
     private final Long id;
     private final String name;
@@ -27,13 +32,13 @@ public class Product {
 
     private void validatePrice(final int price) {
         if (price < 1 || price > 10_000_000) {
-            throw new IllegalArgumentException("상품 가격은 1원 이상 10,000,000원 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_PRODUCT_PRICE_SIZE);
         }
     }
 
     private void validateName(final String name) {
         if (name.length() < 1 || name.length() > 20) {
-            throw new IllegalArgumentException("상품 이름은 1글자 이상 20글자 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_PRODUCT_NAME_LENGTH);
         }
     }
 

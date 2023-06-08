@@ -79,7 +79,7 @@ public class CartItemService {
     @Transactional
     public void removeItemsByProductIds(final Member member, final List<Long> productIds) {
         List<CartItem> cartItems = cartItemRepository.findByMemberIdAndProductIds(member.getId(), productIds);
-        if (cartItems.size() != productIds.size()) { // TODO: 사이즈만 같다고 유효하다고 볼 수 있을까?
+        if (cartItems.size() != productIds.size()) {
             throw new BadRequestException(INVALID_PRODUCT_ID);
         }
         cartItemRepository.deleteByProductIds(productIds);

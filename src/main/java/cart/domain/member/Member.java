@@ -1,5 +1,9 @@
 package cart.domain.member;
 
+import cart.exception.BadRequestException;
+
+import static cart.exception.ErrorCode.INVALID_MEMBER_NAME_LENGTH;
+
 public class Member {
 
     private final Long id;
@@ -15,7 +19,7 @@ public class Member {
 
     private void validateName(final String name) {
         if (name.length() < 4 || name.length() > 10) {
-            throw new IllegalArgumentException("아이디는 4글자 이상 10글자 이하로 입력해주세요.");
+            throw new BadRequestException(INVALID_MEMBER_NAME_LENGTH);
         }
     }
 
@@ -26,7 +30,7 @@ public class Member {
     }
 
     public boolean checkPassword(final String password) {
-        return this.password.getPassword().equals(password);
+        return this.password.checkPassword(password);
     }
 
     public Long getId() {
