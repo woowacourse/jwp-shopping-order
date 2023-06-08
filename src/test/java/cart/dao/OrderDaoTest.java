@@ -56,7 +56,8 @@ class OrderDaoTest {
         //given
         createCartItem(new CartItem(member, product1));
         final Order order = createOrder(member, List.of(OrderItem.notPersisted(product1, 1)));
-        final OrderPrice orderPrice = OrderPrice.of(order, new BasicDiscountPolicy(), new BasicDeliveryPolicy());
+        final OrderPrice orderPrice = OrderPrice.of(order.getProductPrice(), new BasicDiscountPolicy(),
+            new BasicDeliveryPolicy());
         //when
         final Order persistedOrder = orderDao.insert(order, orderPrice);
 
@@ -95,11 +96,13 @@ class OrderDaoTest {
         return productDao.createProduct(product);
     }
 
-    private Order createOrder(final Member member, final List<OrderItem> orderItems) {
-        final Order order = Order.notPersisted(member, new OrderItems(orderItems), LocalDateTime.now());
-        final OrderPrice orderPrice = OrderPrice.of(order, new BasicDiscountPolicy(), new BasicDeliveryPolicy());
+    private Order createOrder(final Member member, final List<OrderItem> orderItemList) {
+        final OrderItems orderItems = new OrderItems(orderItemList);
+        final Order order = Order.notPersisted(member, orderItems,
+            OrderPrice.of(orderItems.getTotalPrice(), new BasicDiscountPolicy(), new BasicDeliveryPolicy()),
+            LocalDateTime.now());
 
-        final Order persistedOrder = orderDao.insert(order, orderPrice);
+        final Order persistedOrder = orderDao.insert(order, order.getOrderPrice());
         order.getOrderItems().forEach((orderItem -> orderItemDao.insert(persistedOrder.getId(), orderItem)));
         return persistedOrder;
     }

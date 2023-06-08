@@ -37,7 +37,7 @@ public class OrderDao {
 
         final long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return Order.persisted(orderId, order.getMember(),
-            new OrderItems(order.getOrderItems()), order.getOrderTime());
+            new OrderItems(order.getOrderItems()), orderPrice, order.getOrderTime());
     }
 
     public List<OrderDto> findByOrderId(final Long orderId) {
