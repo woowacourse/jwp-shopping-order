@@ -39,45 +39,59 @@ public class AddOrderService {
 
     @Transactional
     public Long addOrder(Member member, PostOrderRequest request) {
-        List<QuantityAndProduct> quantityAndProducts = mapToQuantityAndProducts(request);
-        int totalPrice = quantityAndProducts.stream()
-            .mapToInt(q -> q.getQuantity() * q.getProduct().getPrice())
-            .sum();
+        List<SingleKindProductRequest> singleKindProducts = request.getProducts();
+        List<Long> productIds = collectProductIds(singleKindProducts);
+        Map<Long, Product> productsById = findProducts(productIds);
+        validateProductsPresence(productIds, productsById);
 
+        List<QuantityAndProduct> quantityAndProducts = toQuantityAndProducts(singleKindProducts, productsById);
+        int totalPrice = getTotalPrice(quantityAndProducts);
         LocalDateTime now = LocalDateTime.now();
         int payAmount = totalPrice - request.getUsedPoint();
-        Long orderId = orderRepository.insert(new Order(member, now, payAmount, OrderStatus.PENDING, quantityAndProducts));
+        Long orderId = insertOrder(member, now, payAmount, quantityAndProducts);
 
-        handlePointAddition(member, request, now, payAmount, orderId);
-        handleCartItemDeletion(member, quantityAndProducts);
+        publisher.publishEvent(new PointAdditionEvent(orderId, member.getId(), request.getUsedPoint(), payAmount, now));
+        publisher.publishEvent(new CartItemDeleteEvent(member.getId(), quantityAndProducts));
         return orderId;
     }
 
-    private List<QuantityAndProduct> mapToQuantityAndProducts(PostOrderRequest request) {
-        List<SingleKindProductRequest> requestProducts = request.getProducts();
-        List<Long> productIds = requestProducts.stream()
-            .map(SingleKindProductRequest::getProductId).distinct().collect(toList());
-        List<Product> foundProducts = productDao.findProductsByIds(productIds);
-        validateProductsPresence(productIds, foundProducts);
-
-        Map<Long, Product> productsById = foundProducts.stream()
-            .collect(toMap(Product::getId, Function.identity()));
+    private List<Long> collectProductIds(List<SingleKindProductRequest> requestProducts) {
         return requestProducts.stream()
-            .map(product -> new QuantityAndProduct(product.getQuantity(), productsById.get(product.getProductId())))
+            .map(SingleKindProductRequest::getProductId)
+            .distinct()
             .collect(toList());
     }
 
-    private void validateProductsPresence(List<Long> productIds, List<Product> foundProducts) {
-        if (productIds.size() != foundProducts.size()) {
+    private Map<Long, Product> findProducts(List<Long> productIds) {
+        List<Product> persistProducts = productDao.findProductsByIds(productIds);
+        return persistProducts.stream()
+            .collect(toMap(Product::getId, Function.identity()));
+    }
+
+    private void validateProductsPresence(List<Long> productIds, Map<Long, Product> productsById) {
+        if (productIds.size() != productsById.keySet().size()) {
             throw new IllegalOrderException("존재하지 않는 상품을 주문할 수 없습니다");
         }
     }
 
-    private void handlePointAddition(Member member, PostOrderRequest request, LocalDateTime now, int payAmount, Long orderId) {
-        publisher.publishEvent(new PointAdditionEvent(orderId, member.getId(), request.getUsedPoint(), payAmount, now));
+    private List<QuantityAndProduct> toQuantityAndProducts(List<SingleKindProductRequest> singleKindProducts,
+        Map<Long, Product> productsById) {
+        return singleKindProducts.stream()
+            .map(singleKindProduct -> new QuantityAndProduct(singleKindProduct.getQuantity(),
+                productsById.get(singleKindProduct.getProductId())))
+            .collect(toList());
     }
 
-    private void handleCartItemDeletion(Member member, List<QuantityAndProduct> quantityAndProducts) {
-        publisher.publishEvent(new CartItemDeleteEvent(member.getId(), quantityAndProducts));
+    private Long insertOrder(
+        Member member, LocalDateTime now, int payAmount, List<QuantityAndProduct> quantityAndProducts
+    ) {
+        Order order = new Order(member, now, payAmount, OrderStatus.PENDING, quantityAndProducts);
+        return orderRepository.insert(order);
+    }
+
+    private int getTotalPrice(List<QuantityAndProduct> quantityAndProducts) {
+        return quantityAndProducts.stream()
+            .mapToInt(QuantityAndProduct::getTotalPrice)
+            .sum();
     }
 }

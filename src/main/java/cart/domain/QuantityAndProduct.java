@@ -10,6 +10,10 @@ public class QuantityAndProduct {
         this.product = product;
     }
 
+    public int getTotalPrice() {
+        return quantity * product.getPrice();
+    }
+
     public int getQuantity() {
         return quantity;
     }
