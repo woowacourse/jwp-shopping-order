@@ -53,7 +53,7 @@ public class CouponService {
                 CouponType.from(couponCreateRequest.getType()),
                 couponCreateRequest.getAmount()
         );
-        Coupon couponAfterSave = couponDao.save(couponToSave);
-        return CouponResponse.from(couponAfterSave);
+        Coupon savedCoupon = couponDao.save(couponToSave);
+        return CouponResponse.from(savedCoupon);
     }
 }
