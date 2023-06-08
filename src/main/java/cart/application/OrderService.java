@@ -34,10 +34,10 @@ public class OrderService {
 
     public Long createOrder(final Member member, final OrderRequest request) {
         CartItems cartItems = orderRepository.findCartItemsByMemberId(member);
-        CartItems subCartItems = cartItems.getSubCartItems(request.getCartItemIds());
-        Payment payment = getPayment(request, subCartItems);
-        OrderItems orderItems = createOrderItems(subCartItems);
-        return orderRepository.createOrder(new Order(payment, orderItems, member), subCartItems);
+        CartItems orderedCartItems = cartItems.getSubCartItemsByIds(request.getCartItemIds());
+        Payment payment = getPayment(request, orderedCartItems);
+        OrderItems orderItems = createOrderItems(orderedCartItems);
+        return orderRepository.createOrder(new Order(payment, orderItems, member), orderedCartItems);
     }
 
     private Payment getPayment(final OrderRequest request, final CartItems cartItems) {
@@ -53,7 +53,7 @@ public class OrderService {
     }
 
     private Price calculateTotalPrice(final CartItems cartItems, final OrderRequest request) {
-        CartItems subCartItems = cartItems.getSubCartItems(request.getCartItemIds());
+        CartItems subCartItems = cartItems.getSubCartItemsByIds(request.getCartItemIds());
         return subCartItems.calculateTotalPrice();
     }
 

@@ -16,7 +16,7 @@ public class CartItems {
                 .reduce(Price.ZERO_PRICE, Price::sum);
     }
 
-    public CartItems getSubCartItems(List<Long> cartItemIds) {
+    public CartItems getSubCartItemsByIds(List<Long> cartItemIds) {
         return new CartItems(items.stream()
                 .filter(item -> cartItemIds.contains(item.getId()))
                 .collect(Collectors.toList()));

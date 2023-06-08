@@ -91,7 +91,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("주문 정책을 조회한다.")
+    @DisplayName("주문 시 할인 정책을 조회한다.")
     void showDiscountPolicies() {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
