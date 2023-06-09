@@ -1,9 +1,11 @@
 package cart.application;
 
+import cart.domain.Amount;
 import cart.domain.Product;
 import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,17 +26,18 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId)
+            .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다."));
         return ProductResponse.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(), new Amount(productRequest.getPrice()), productRequest.getImageUrl());
         return productDao.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(), new Amount(productRequest.getPrice()), productRequest.getImageUrl());
         productDao.updateProduct(productId, product);
     }
 

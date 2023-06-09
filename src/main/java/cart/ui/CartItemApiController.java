@@ -1,11 +1,12 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
+import cart.dto.OrderProductRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.RemoveCartItemsRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,13 @@ public class CartItemApiController {
     public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> removeCartItems(final Member member,
+        @RequestBody final RemoveCartItemsRequest request) {
+        cartItemService.remove(member, request);
         return ResponseEntity.noContent().build();
     }
 }
