@@ -2,15 +2,12 @@ package cart.order.application.mapper;
 
 import cart.coupon.application.dto.CouponResponse;
 import cart.member.domain.Member;
+import cart.order.application.dto.OrderItemResponse;
 import cart.order.application.dto.OrderResponse;
-import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.dto.SpecificOrderResponse;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
-import cart.order.domain.OrderStatus;
-import cart.order.application.dto.OrderItemResponse;
 import cart.value_object.Money;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class OrderMapper {
@@ -20,14 +17,14 @@ public class OrderMapper {
 
   public static OrderEntity mapToOrderEntity(
       final Member member,
-      final RegisterOrderRequest registerOrderRequest
+      final Order order
   ) {
     return new OrderEntity(
         member.getId(),
-        registerOrderRequest.getDeliveryFee(),
-        registerOrderRequest.getCouponId(),
-        OrderStatus.COMPLETE.getValue(),
-        ZonedDateTime.now()
+        order.getDeliveryFee().getValue(),
+        order.getCoupon().getId(),
+        order.getOrderStatus().getValue(),
+        order.getCreatedAt()
     );
   }
 

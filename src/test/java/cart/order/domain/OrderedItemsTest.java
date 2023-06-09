@@ -2,8 +2,6 @@ package cart.order.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cart.order.domain.OrderItem;
-import cart.order.domain.OrderedItems;
 import cart.value_object.Money;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +19,7 @@ class OrderedItemsTest {
         new OrderItem(null, null, new Money(20000), null, 5)
     );
 
-    final OrderedItems orderedItems = new OrderedItems(orderItems);
+    final OrderedItems orderedItems = OrderedItems.createdFromLookUp(orderItems);
 
     //when & then
     assertEquals(new Money(130000), orderedItems.calculateAllItemPrice());

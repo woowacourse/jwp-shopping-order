@@ -73,7 +73,9 @@ public class OrderDao {
       final Instant instant = createdAt.toInstant();
       final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
       final String orderStatus = rs.getString("order_status");
-      final OrderedItems orderedItems = new OrderedItems(orderItemDao.findByOrderId(id));
+      final OrderedItems orderedItems = OrderedItems.createdFromLookUp(
+          orderItemDao.findByOrderId(id)
+      );
       return new Order(
           id, member,
           new Money(deliveryFee), coupon,

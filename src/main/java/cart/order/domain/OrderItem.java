@@ -26,7 +26,7 @@ public class OrderItem {
     this.quantity = quantity;
   }
 
-  OrderItem(
+  public OrderItem(
       final String name,
       final Money price,
       final String imageUrl,
@@ -38,7 +38,7 @@ public class OrderItem {
     this.quantity = quantity;
   }
 
-  Money calculatePrice() {
+  public Money calculatePrice() {
     return price.multiply(quantity);
   }
 

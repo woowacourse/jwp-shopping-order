@@ -31,6 +31,10 @@ public abstract class Coupon {
     return id != null && !id.equals(NOT_USE_ID);
   }
 
+  public boolean isNotSame(final Long couponId) {
+    return !id.equals(couponId);
+  }
+
   protected abstract Money calculate(final Money totalPrice);
 
   protected abstract Money discountPrice();

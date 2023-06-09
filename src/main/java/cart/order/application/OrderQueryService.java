@@ -42,7 +42,7 @@ public class OrderQueryService {
       validateOrderOwner(order, member);
 
       final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
-      final OrderedItems orderedItems = new OrderedItems(orderItems);
+      final OrderedItems orderedItems = OrderedItems.createdFromLookUp(orderItems);
 
       final Money totalPayments = order.calculateTotalPayments(
           orderedItems.calculateAllItemPrice()
@@ -65,7 +65,7 @@ public class OrderQueryService {
     validateOrderOwner(order, member);
 
     final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
-    final OrderedItems orderedItems = new OrderedItems(orderItems);
+    final OrderedItems orderedItems = OrderedItems.createdFromLookUp(orderItems);
     final Money totalItemPrice = orderedItems.calculateAllItemPrice();
 
     final Money totalPayments = order.calculateTotalPayments(totalItemPrice);

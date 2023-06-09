@@ -7,6 +7,7 @@ import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.cart_item.dao.CartItemDao;
 import cart.cart_item.domain.CartItem;
 import cart.cart_item.exception.CanNotRemoveCartItemsMoreThanSavedCartItems;
+import cart.cart_item.exception.NotAllCartItemInCartException;
 import cart.cart_item.exception.NotExistCartItemInCart;
 import cart.member.domain.Member;
 import cart.product.dao.ProductDao;
@@ -32,7 +33,19 @@ public class CartItemService {
   }
 
   public List<CartItem> findCartItemByCartIds(final List<Long> cartItemIds, final Member member) {
-    return cartItemDao.findByIdsIn(cartItemIds, member.getId());
+    final List<CartItem> cartItems = cartItemDao.findByIdsIn(cartItemIds, member.getId());
+    validateAllCartItemInCart(cartItemIds, cartItems);
+
+    return cartItems;
+  }
+
+  private void validateAllCartItemInCart(
+      final List<Long> cartItemIds,
+      final List<CartItem> cartItems
+  ) {
+    if (cartItemIds.size() != cartItems.size()) {
+      throw new NotAllCartItemInCartException("요청한 물품이 모두 장바구니에 들어있지 않습니다.");
+    }
   }
 
   public Long add(Member member, CartItemRequest cartItemRequest) {

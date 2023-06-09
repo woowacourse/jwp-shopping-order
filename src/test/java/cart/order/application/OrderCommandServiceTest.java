@@ -8,7 +8,6 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.exception.CanNotChangeNotMyOrderException;
-import cart.order.exception.CanNotOrderNotInCartException;
 import cart.order.exception.NotSameTotalPriceException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -104,26 +103,6 @@ class OrderCommandServiceTest {
 
     //then
     assertNotNull(savedId);
-  }
-
-  @Test
-  @DisplayName("registerOrderItem() : 장바구니에 담지 않은 물품을 주문할 경우에는 CanNotOrderNotInCart이 발생합니다.")
-  void test_registerOrder_CanNotOrderNotInCart() throws Exception {
-    //given
-    final List<Long> cartItemIds = List.of(1L, 2L, 3L, 4L, 8L);
-    final Member member = memberDao.getMemberById(1L);
-
-    final RegisterOrderRequest registerOrderRequest =
-        new RegisterOrderRequest(
-            cartItemIds,
-            BigDecimal.valueOf(120000),
-            BigDecimal.valueOf(50000),
-            1L
-        );
-
-    //when & then
-    assertThatThrownBy(() -> orderCommandService.registerOrder(member, registerOrderRequest))
-        .isInstanceOf(CanNotOrderNotInCartException.class);
   }
 
   @Test

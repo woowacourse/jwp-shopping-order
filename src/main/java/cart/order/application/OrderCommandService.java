@@ -6,13 +6,13 @@ import cart.cart_item.domain.CartItem;
 import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.member_coupon.application.MemberCouponCommandService;
+import cart.member_coupon.application.MemberCouponQueryService;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.mapper.OrderItemMapper;
 import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
 import cart.order.dao.OrderItemDao;
 import cart.order.dao.entity.OrderEntity;
-import cart.order.dao.entity.OrderItemEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
@@ -33,85 +33,68 @@ public class OrderCommandService {
   private final OrderItemDao orderItemDao;
   private final CartItemService cartItemService;
   private final MemberCouponCommandService memberCouponCommandService;
+  private final MemberCouponQueryService memberCouponQueryService;
 
   public OrderCommandService(
-      final OrderDao orderDao,
-      final OrderItemDao orderItemDao,
+      final OrderDao orderDao, final OrderItemDao orderItemDao,
       final CartItemService cartItemService,
-      final MemberCouponCommandService memberCouponCommandService
+      final MemberCouponCommandService memberCouponCommandService,
+      final MemberCouponQueryService memberCouponQueryService
   ) {
     this.orderDao = orderDao;
     this.orderItemDao = orderItemDao;
     this.cartItemService = cartItemService;
     this.memberCouponCommandService = memberCouponCommandService;
+    this.memberCouponQueryService = memberCouponQueryService;
   }
 
   public Long registerOrder(final Member member, final RegisterOrderRequest registerOrderRequest) {
 
-    final List<Long> cartItemIds = registerOrderRequest.getCartItemIds();
-    final Money totalPrice = new Money(registerOrderRequest.getTotalPrice());
+    final List<CartItem> cartItems = removeCartItemsFromOrder(member, registerOrderRequest);
 
-    final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, registerOrderRequest);
-    final Long savedOrderId = orderDao.save(orderEntity);
+    final OrderedItems orderedItems = OrderedItems.createdFromOrder(
+        OrderItemMapper.mapToOrderItemsFrom(cartItems),
+        new Money(registerOrderRequest.getTotalPrice())
+    );
 
-    final Order order = orderDao.findByOrderId(savedOrderId);
+    final Coupon coupon = memberCouponQueryService.searchCouponOwnedByMember(
+        member,
+        registerOrderRequest.getCouponId()
+    );
 
-    final OrderedItems orderedItems = registerOrderItem(cartItemIds, order, member);
-    final Money orderItemsTotalPrice = orderedItems.calculateAllItemPrice();
-    validateSameTotalPrice(orderItemsTotalPrice, totalPrice);
-
-    final Coupon coupon = order.getCoupon();
-    validateCouponExceedTotalPrice(orderedItems, coupon);
-
-    cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
+    final Order order = new Order(
+        member,
+        new Money(registerOrderRequest.getDeliveryFee()),
+        coupon,
+        orderedItems
+    );
 
     if (order.hasCoupon()) {
       memberCouponCommandService.updateUsedCoupon(coupon, member);
     }
 
+    return saveOrder(member, order, orderedItems);
+  }
+
+  private Long saveOrder(final Member member, final Order order, final OrderedItems orderedItems) {
+    final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, order);
+    final Long savedOrderId = orderDao.save(orderEntity);
+    orderItemDao.save(OrderItemMapper.mapToOrderItemEntities(orderedItems, savedOrderId));
+
     return savedOrderId;
   }
 
-  private OrderedItems registerOrderItem(
-      final List<Long> cartItemIds,
-      final Order order,
-      final Member member
+  private List<CartItem> removeCartItemsFromOrder(
+      final Member member,
+      final RegisterOrderRequest registerOrderRequest
   ) {
-    final List<CartItem> cartItems = cartItemService.findCartItemByCartIds(cartItemIds, member);
-    validateAllCartItemInOrder(cartItemIds, cartItems);
-
-    final List<OrderItemEntity> orderItemEntities = OrderItemMapper.mapToOrderItemEntities(
-        cartItems,
-        order
+    final List<Long> cartItemIds = registerOrderRequest.getCartItemIds();
+    final List<CartItem> cartItems = cartItemService.findCartItemByCartIds(
+        cartItemIds,
+        member
     );
-    orderItemDao.save(orderItemEntities);
-
-    final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
-    return new OrderedItems(orderItems);
-  }
-
-  private void validateAllCartItemInOrder(
-      final List<Long> cartItemIds,
-      final List<CartItem> cartItems
-  ) {
-    if (cartItemIds.size() != cartItems.size()) {
-      throw new OrderException(OrderExceptionType.CAN_NOT_ORDER_NOT_IN_CART);
-    }
-  }
-
-  private void validateCouponExceedTotalPrice(
-      final OrderedItems orderedItems,
-      final Coupon coupon
-  ) {
-    if (coupon.isExceedDiscountFrom(orderedItems.calculateAllItemPrice())) {
-      throw new OrderException(OrderExceptionType.CAN_NOT_DISCOUNT_PRICE_MORE_THEN_TOTAL_PRICE);
-    }
-  }
-
-  private void validateSameTotalPrice(final Money totalPrice, final Money targetTotalPrice) {
-    if (totalPrice.isNotSame(targetTotalPrice)) {
-      throw new OrderException(OrderExceptionType.NOT_SAME_TOTAL_PRICE);
-    }
+    cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
+    return cartItems;
   }
 
   public void deleteOrder(final Member member, final Long orderId) {

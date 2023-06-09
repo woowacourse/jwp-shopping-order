@@ -3,15 +3,9 @@ package cart.order.dao;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cart.coupon.domain.EmptyCoupon;
-import cart.member.domain.Member;
 import cart.order.dao.entity.OrderItemEntity;
-import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
-import cart.order.domain.OrderStatus;
-import cart.value_object.Money;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,14 +57,6 @@ class OrderItemDaoTest {
   void test_findByOrderId() throws Exception {
     //given
     final Long orderId = 1L;
-
-    final Member member = new Member(1L, "email", "password");
-    final Order order = new Order(
-        1L, member,
-        new Money(100), new EmptyCoupon(),
-        OrderStatus.CANCEL, ZonedDateTime.now(),
-        null
-    );
 
     //when
     final List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
