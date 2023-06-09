@@ -7,7 +7,7 @@ import cart.domain.member.Member;
 
 import java.util.Objects;
 
-public class MemberCoupon implements Model, DiscountAction {
+public class MemberCoupon implements Model {
     private final Long id;
     private final Member member;
     private final Coupon coupon;
@@ -45,10 +45,5 @@ public class MemberCoupon implements Model, DiscountAction {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public int discount(int money) {
-        return coupon.discount(money);
     }
 }
