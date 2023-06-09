@@ -17,10 +17,8 @@ import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
 import cart.order.domain.OrderedItems;
-import cart.order.exception.CanNotChangeNotMyOrderException;
-import cart.order.exception.CanNotDiscountPriceMoreThanTotalPriceException;
-import cart.order.exception.CanNotOrderNotInCartException;
-import cart.order.exception.NotSameTotalPriceException;
+import cart.order.exception.enum_exception.OrderException;
+import cart.order.exception.enum_exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,7 +95,7 @@ public class OrderCommandService {
       final List<CartItem> cartItems
   ) {
     if (cartItemIds.size() != cartItems.size()) {
-      throw new CanNotOrderNotInCartException("장바구니에 담지 않은 물품은 주문할 수 없습니다.");
+      throw new OrderException(OrderExceptionType.CAN_NOT_ORDER_NOT_IN_CART);
     }
   }
 
@@ -106,13 +104,13 @@ public class OrderCommandService {
       final Coupon coupon
   ) {
     if (coupon.isExceedDiscountFrom(orderedItems.calculateAllItemPrice())) {
-      throw new CanNotDiscountPriceMoreThanTotalPriceException("쿠폰 가격이 전체 가격보다 높으면 사용할 수 있습니다.");
+      throw new OrderException(OrderExceptionType.CAN_NOT_DISCOUNT_PRICE_MORE_THEN_TOTAL_PRICE);
     }
   }
 
   private void validateSameTotalPrice(final Money totalPrice, final Money targetTotalPrice) {
     if (totalPrice.isNotSame(targetTotalPrice)) {
-      throw new NotSameTotalPriceException("주문된 총액이 올바르지 않습니다.");
+      throw new OrderException(OrderExceptionType.NOT_SAME_TOTAL_PRICE);
     }
   }
 
@@ -131,7 +129,7 @@ public class OrderCommandService {
 
   private void validateOrderOwner(final Order order, final Member member) {
     if (order.isNotMyOrder(member)) {
-      throw new CanNotChangeNotMyOrderException("사용자의 주문 목록 이외는 수정할 수 없습니다.");
+      throw new OrderException(OrderExceptionType.CAN_NOT_CHANGE_NOT_MY_ORDER);
     }
   }
 

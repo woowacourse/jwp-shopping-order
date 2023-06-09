@@ -8,7 +8,8 @@ import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderStatus;
-import cart.order.exception.NotFoundOrderException;
+import cart.order.exception.enum_exception.OrderException;
+import cart.order.exception.enum_exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -85,7 +86,7 @@ public class OrderDao {
     try {
       return jdbcTemplate.queryForObject(sql, getRowMapper(), orderId);
     } catch (EmptyResultDataAccessException exception) {
-      throw new NotFoundOrderException("해당 주문은 존재하지 않습니다.");
+      throw new OrderException(OrderExceptionType.CAN_NOT_FOUND_ORDER);
     }
   }
 

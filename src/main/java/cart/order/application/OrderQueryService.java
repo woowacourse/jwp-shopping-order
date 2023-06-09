@@ -11,7 +11,8 @@ import cart.order.dao.OrderItemDao;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderedItems;
-import cart.order.exception.CanNotSearchNotMyOrderException;
+import cart.order.exception.enum_exception.OrderException;
+import cart.order.exception.enum_exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -79,7 +80,7 @@ public class OrderQueryService {
 
   private void validateOrderOwner(final Order order, final Member member) {
     if (order.isNotMyOrder(member)) {
-      throw new CanNotSearchNotMyOrderException("사용자의 주문 목록 이외는 조회할 수 없습니다.");
+      throw new OrderException(OrderExceptionType.CAN_NOT_SEARCH_NOT_MY_ORDER);
     }
   }
 }

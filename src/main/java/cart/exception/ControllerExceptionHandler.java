@@ -1,6 +1,8 @@
 package cart.exception;
 
 import cart.cart_item.exception.CartItemException;
+import cart.exception.enum_exception.CustomException;
+import cart.exception.enum_exception.CustomExceptionType;
 import cart.member.exception.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,17 @@ public class ControllerExceptionHandler {
     return new ResponseEntity<>(new ExceptionResponse(
         exception.getMessage()),
         exception.getHttpStatus()
+    );
+  }
+
+  @ExceptionHandler(CustomException.class)
+  public ResponseEntity<ExceptionResponse> handleCustomException(final CustomException exception) {
+    final CustomExceptionType exceptionType = exception.getExceptionType();
+    infoLogging(exception);
+
+    return new ResponseEntity<>(new ExceptionResponse(
+        exception.getMessage()),
+        exceptionType.httpStatus()
     );
   }
 
