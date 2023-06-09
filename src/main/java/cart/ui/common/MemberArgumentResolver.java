@@ -1,8 +1,11 @@
-package cart.ui;
+package cart.ui.common;
 
-import cart.exception.AuthenticationException;
-import cart.dao.MemberDao;
+import static cart.exception.ErrorMessage.INVALID_AUTHORIZATION_INFORMATION;
+import static cart.exception.ErrorMessage.UNAUTHORIZED_MEMBER;
+
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
+import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -12,10 +15,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(final MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -24,7 +27,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             return null;
@@ -39,13 +43,17 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(":");
+
+        if (credentials.length != 2) {
+            throw new AuthenticationException(INVALID_AUTHORIZATION_INFORMATION);
+        }
         String email = credentials[0];
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+        Member member = memberRepository.findByEmail(email);
+        if (!member.isSamePassword(password)) {
+            throw new AuthenticationException(UNAUTHORIZED_MEMBER);
         }
         return member;
     }
