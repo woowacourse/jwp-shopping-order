@@ -5,7 +5,7 @@ import cart.dao.PurchaseOrderDao;
 import cart.dao.PurchaseOrderItemDao;
 import cart.domain.Member;
 import cart.dto.product.ProductResponse;
-import cart.dto.purchaseorder.PurchaseOrderItemInfoResponse;
+import cart.dto.purchaseorder.response.PurchaseOrderItemInfoResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderItemResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderPageResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderResponse;

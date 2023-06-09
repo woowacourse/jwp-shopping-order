@@ -1,4 +1,4 @@
-package cart.dto.purchaseorder;
+package cart.dto.purchaseorder.response;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

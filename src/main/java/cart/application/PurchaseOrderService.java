@@ -10,7 +10,7 @@ import cart.domain.point.Point;
 import cart.domain.purchaseorder.PurchaseOrderInfo;
 import cart.domain.purchaseorder.PurchaseOrderItem;
 import cart.dto.product.ProductResponse;
-import cart.dto.purchaseorder.PurchaseOrderItemInfoResponse;
+import cart.dto.purchaseorder.response.PurchaseOrderItemInfoResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderItemResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderPageResponse;
 import cart.dto.purchaseorder.response.PurchaseOrderResponse;
