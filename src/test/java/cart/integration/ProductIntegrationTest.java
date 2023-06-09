@@ -1,13 +1,13 @@
 package cart.integration;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import cart.ui.dto.request.ProductRequest;
+import cart.ui.dto.response.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
@@ -25,7 +25,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", false, 0);
 
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", false, 0);
 
         // create product
         var location =
