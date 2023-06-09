@@ -29,8 +29,8 @@ public class OrderItemMapper {
         .collect(Collectors.toList());
   }
 
-  public static List<OrderItemResponse> mapToOrderItemResponse(final List<OrderItem> orderItems) {
-    return orderItems.stream()
+  public static List<OrderItemResponse> mapToOrderItemResponse(final OrderedItems orderedItems) {
+    return orderedItems.getOrderItems().stream()
         .map(orderItem -> new OrderItemResponse(
             orderItem.getId(),
             orderItem.getName(),

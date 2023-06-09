@@ -7,16 +7,12 @@ import cart.order.application.dto.SpecificOrderResponse;
 import cart.order.application.mapper.OrderItemMapper;
 import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
-import cart.order.dao.OrderItemDao;
 import cart.order.domain.Order;
-import cart.order.domain.OrderItem;
-import cart.order.domain.OrderedItems;
 import cart.order.exception.enum_exception.OrderException;
 import cart.order.exception.enum_exception.OrderExceptionType;
-import cart.value_object.Money;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,56 +21,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderQueryService {
 
   private final OrderDao orderDao;
-  private final OrderItemDao orderItemDao;
 
-  public OrderQueryService(final OrderDao orderDao, final OrderItemDao orderItemDao) {
+  public OrderQueryService(final OrderDao orderDao) {
     this.orderDao = orderDao;
-    this.orderItemDao = orderItemDao;
   }
 
   public List<OrderResponse> searchOrders(final Member member) {
-    final List<Order> orders = orderDao.findByMemberId(member.getId());
-    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
-
-    final List<OrderResponse> orderResponses = new ArrayList<>();
-
-    for (final Order order : orders) {
-      validateOrderOwner(order, member);
-
-      final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
-      final OrderedItems orderedItems = OrderedItems.createdFromLookUp(orderItems);
-
-      final Money totalPayments = order.calculateTotalPayments(
-          orderedItems.calculateAllItemPrice()
-      );
-
-      final OrderResponse orderResponse = OrderMapper.mapToOrderResponse(
-          order,
-          OrderItemMapper.mapToOrderItemResponse(orderItems),
-          totalPayments
-      );
-
-      orderResponses.add(orderResponse);
-    }
-
-    return orderResponses;
+    return orderDao.findByMemberId(member.getId()).stream()
+        .peek(order -> validateOrderOwner(order, member))
+        .map(order -> OrderMapper.mapToOrderResponse(
+            order,
+            OrderItemMapper.mapToOrderItemResponse(order.getOrderedItems())))
+        .sorted(Comparator.comparing(OrderResponse::getCreatedAt).reversed())
+        .collect(Collectors.toList());
   }
 
   public SpecificOrderResponse searchOrder(final Member member, final Long orderId) {
     Order order = orderDao.findByOrderId(orderId);
     validateOrderOwner(order, member);
 
-    final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
-    final OrderedItems orderedItems = OrderedItems.createdFromLookUp(orderItems);
-    final Money totalItemPrice = orderedItems.calculateAllItemPrice();
-
-    final Money totalPayments = order.calculateTotalPayments(totalItemPrice);
-    final Money deliveryFee = order.getDeliveryFee();
-
     return OrderMapper.mapToSpecificOrderResponse(
-        order, OrderItemMapper.mapToOrderItemResponse(orderItems),
-        totalItemPrice, deliveryFee,
-        totalPayments, CouponMapper.mapToCouponResponse(order.getCoupon())
+        order,
+        OrderItemMapper.mapToOrderItemResponse(order.getOrderedItems()),
+        CouponMapper.mapToCouponResponse(order.getCoupon())
     );
   }
 

@@ -65,9 +65,12 @@ public class Order {
     return !this.member.isMe(member);
   }
 
-  public Money calculateTotalPayments(final Money totalItemPrice) {
-    final Money totalOrderPrice = totalItemPrice.add(deliveryFee);
-    return coupon.discount(totalOrderPrice);
+  public Money calculateTotalPayments() {
+    return coupon.discount(orderedItems.calculateAllItemPrice());
+  }
+
+  public Money calculateTotalPrice() {
+    return orderedItems.calculateAllItemPrice();
   }
 
   public boolean hasCoupon() {
@@ -92,5 +95,9 @@ public class Order {
 
   public OrderStatus getOrderStatus() {
     return orderStatus;
+  }
+
+  public OrderedItems getOrderedItems() {
+    return orderedItems;
   }
 }

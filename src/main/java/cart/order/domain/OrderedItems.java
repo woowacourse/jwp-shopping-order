@@ -36,7 +36,7 @@ public class OrderedItems {
     }
   }
 
-  public Money calculateAllItemPrice() {
+  Money calculateAllItemPrice() {
     return orderItems.stream()
         .map(OrderItem::calculatePrice)
         .reduce(Money.ZERO, (Money::add));

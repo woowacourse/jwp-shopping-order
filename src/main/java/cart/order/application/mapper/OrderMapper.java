@@ -7,7 +7,6 @@ import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
-import cart.value_object.Money;
 import java.util.List;
 
 public class OrderMapper {
@@ -30,29 +29,28 @@ public class OrderMapper {
 
   public static OrderResponse mapToOrderResponse(
       final Order order,
-      final List<OrderItemResponse> orderItemResponses,
-      final Money totalPayments
+      final List<OrderItemResponse> orderItemResponses
   ) {
     return new OrderResponse(
         order.getId(),
         orderItemResponses,
-        totalPayments.getValue(),
+        order.calculateTotalPayments().getValue(),
         order.getCreatedAt(),
         order.getOrderStatus().getValue()
     );
   }
 
   public static SpecificOrderResponse mapToSpecificOrderResponse(
-      final Order order, final List<OrderItemResponse> orderItemResponses,
-      final Money totalItemPrice, final Money deliveryFee,
-      final Money totalPayments, final CouponResponse couponResponse
+      final Order order,
+      final List<OrderItemResponse> orderItemResponses,
+      final CouponResponse couponResponse
   ) {
     return new SpecificOrderResponse(
         order.getId(),
         orderItemResponses,
-        totalItemPrice.getValue(),
-        deliveryFee.getValue(),
-        totalPayments.getValue(),
+        order.calculateTotalPrice().getValue(),
+        order.getDeliveryFee().getValue(),
+        order.calculateTotalPayments().getValue(),
         couponResponse,
         order.getCreatedAt(),
         order.getOrderStatus().getValue()
