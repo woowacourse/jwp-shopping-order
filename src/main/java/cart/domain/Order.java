@@ -67,10 +67,6 @@ public class Order {
         return memberId;
     }
     
-//    public List<OrderItem> getOrderItems() {
-//        return new ArrayList<>(orderItems);
-//    }
-    
     public OrderItems getOrderItems() {
         return orderItems;
     }

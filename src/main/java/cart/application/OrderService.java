@@ -17,7 +17,9 @@ import cart.dto.OrderItemRequest;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class OrderService {
     
@@ -76,6 +78,4 @@ public class OrderService {
         orderDao.delete(orderId);
     }
     
-    //todo : addOrder메서드에서  productDao.getProductById()메서드에서 id없는 경우 Optional설정해줘야함?
-    // 그게 아니면, 예외 처리 어떻게 해야하는지 생각해보기!
 }

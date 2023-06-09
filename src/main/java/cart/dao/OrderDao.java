@@ -119,33 +119,5 @@ public class OrderDao {
             orderMap.put(orderId, new Order(orderId, memberId, new OrderItems(List.of(orderItem)), deliveryFee, discountPrice, createdAt));
             return null;
         }
-//        @Override
-//        public Void mapRow(ResultSet rs, int rowNum) throws SQLException {//주문
-//            Long orderId = rs.getLong("orders.id");
-//            Long memberId = rs.getLong("member_id");
-//            Integer deliveryFee = rs.getInt("delivery_fee");
-//            Integer discountPrice = rs.getInt("discount_price");
-//            LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
-//
-//            //주문 상품 정보
-//            Long orderItemId = rs.getLong("order_items.id");
-//            String productName = rs.getString("product_name");
-//            Integer productPrice = rs.getInt("product_price");
-//            String productImageUrl = rs.getString("product_image_url");
-//            Integer productQuantity = rs.getInt("product_quantity");
-//
-//            OrderItem orderItem = new OrderItem(orderItemId, new Product(productName, productPrice, productImageUrl), productQuantity);
-//
-//            if(orderMap.containsKey(orderId)) {
-//                Order order = orderMap.get(orderId);
-//                List<OrderItem> updatedOrderItems = order.getOrderItems();
-//                updatedOrderItems.add(orderItem);
-//                orderMap.replace(orderId, new Order(order.getId(), order.getMemberId(), updatedOrderItems,
-//                        order.getDeliveryFee(), order.getDiscountPrice(), order.getCreatedAt()));
-//                return null;
-//            }
-//            orderMap.put(orderId, new Order(orderId, memberId, List.of(orderItem), deliveryFee, discountPrice, createdAt));
-//            return null;
-//        }
     }
 }
