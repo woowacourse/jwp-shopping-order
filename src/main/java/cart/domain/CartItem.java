@@ -5,18 +5,18 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
     private final Product product;
     private final Member member;
+    private Long id;
+    private int quantity;
 
-    public CartItem(Member member, Product product) {
+    public CartItem(final Member member, final Product product) {
         this.quantity = 1;
         this.member = member;
         this.product = product;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(final Long id, final int quantity, final Product product, final Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -24,28 +24,28 @@ public class CartItem {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public Member getMember() {
-        return member;
+        return this.member;
     }
 
     public Product getProduct() {
-        return product;
+        return this.product;
     }
 
     public int getQuantity() {
-        return quantity;
+        return this.quantity;
     }
 
-    public void checkOwner(Member member) {
+    public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException.IllegalMemberException(this, member);
         }
     }
 
-    public void changeQuantity(int quantity) {
+    public void changeQuantity(final int quantity) {
         this.quantity = quantity;
     }
 }
