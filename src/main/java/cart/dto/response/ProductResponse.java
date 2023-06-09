@@ -2,6 +2,9 @@ package cart.dto.response;
 
 import cart.domain.product.Product;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProductResponse {
     private Long id;
     private String name;
@@ -17,6 +20,12 @@ public class ProductResponse {
 
     public static ProductResponse of(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    public static List<ProductResponse> makeProductResponses(final List<Product> products) {
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

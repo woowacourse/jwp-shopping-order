@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -22,7 +21,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return ProductResponse.makeProductResponses(products);
     }
 
     @Transactional(readOnly = true)

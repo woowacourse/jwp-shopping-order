@@ -1,4 +1,4 @@
-package cart;
+package cart.ui.config;
 
 import cart.repository.MemberRepository;
 import cart.ui.config.MemberArgumentResolver;

@@ -1,6 +1,6 @@
 package cart.integration;
 
-import cart.ui.advcie.ErrorType;
+import cart.ui.advice.ErrorType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

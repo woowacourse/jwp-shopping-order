@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/coupons")
 public class CouponApiController {
@@ -22,7 +24,7 @@ public class CouponApiController {
     public ResponseEntity<Void> issueCoupon(
             Member member,
             @PathVariable Long couponId,
-            @RequestBody MemberCouponRequest request
+            @RequestBody @Valid MemberCouponRequest request
     ) {
         couponService.issueCouponToMemberByCouponId(couponId, request, member);
 

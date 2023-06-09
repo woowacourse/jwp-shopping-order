@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<Void> order(
-            @RequestBody OrderRequest request,
+            @RequestBody @Valid OrderRequest request,
             Member member
     ) {
         Long orderId = orderService.createOrder(member, request);

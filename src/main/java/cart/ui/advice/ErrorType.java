@@ -1,4 +1,4 @@
-package cart.ui.advcie;
+package cart.ui.advice;
 
 import cart.exception.*;
 import org.springframework.http.HttpStatus;
