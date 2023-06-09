@@ -1,3 +1,5 @@
+application-private.properties
+
 README.md
 .gradle
 build/
@@ -35,3 +37,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+application-private.properties

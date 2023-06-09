@@ -1,0 +1,120 @@
+## Product API
+
+### 이리내 추가 요청
+
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "이리내",
+  "price": 10000000,
+  "imageUrl": "#"
+}
+
+### 전체 상품 조회 요청
+
+GET http://localhost:8080/products
+Content-Type: application/json
+
+### 특정 상품 조회 요청
+
+GET http://localhost:8080/products/1
+Content-Type: application/json
+
+### 주노 수정 요청 (가격 수정)
+
+PUT http://localhost:8080/products/6
+Content-Type: application/json
+
+{
+  "name": "주노",
+  "price": 150000,
+  "imageUrl": "#"
+}
+
+### 제리 삭제 요청
+
+DELETE http://localhost:8080/products/2
+Content-Type: application/json
+
+## Member API
+
+### 전체 멤버 조회
+
+GET http://localhost:8080/members
+Content-Type: application/json
+
+### 특정 멤버 조회
+
+GET http://localhost:8080/members/1
+Content-Type: application/json
+
+### 멤버 생성 (회원가입)
+
+POST http://localhost:8080/members/join
+Content-Type: application/json
+
+{
+  "email": "gitchan@gmail.com",
+  "password": "gitchan_coding"
+}
+
+### Cart Item API
+
+### 장바구니 아이템 목록 조회
+
+GET http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### 장바구니 아이템 추가
+
+POST http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "productId": 4,
+  "quantity": 3
+}
+
+### 장바구니 아이템 수량 변경
+
+PATCH http://localhost:8080/cart-items/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### 장바구니 내 아이템 구매
+
+POST http://localhost:8080/pay
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "cartItemIds": [
+    {
+      "cartItemId": 1
+    },
+    {
+      "cartItemId": 3
+    }
+  ],
+  "originalPrice": 52000,
+  "points": 100
+}
+
+### 멤버의 전체 주문목록 조회
+
+GET http://localhost:8080/members/orders
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+### 멤버의 주문 상세 조회
+
+GET http://localhost:8080/members/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+

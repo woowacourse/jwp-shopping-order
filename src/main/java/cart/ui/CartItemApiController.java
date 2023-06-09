@@ -1,14 +1,14 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemCreateRequest;
+import cart.dto.response.CartItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -28,14 +28,17 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<Void> addCartItems(Member member,
+                                             @Valid @RequestBody CartItemCreateRequest cartItemCreateRequest) {
+        Long cartItemId = cartItemService.add(member, cartItemCreateRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateCartItemQuantity(Member member,
+                                                       @PathVariable Long id,
+                                                       @Valid @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok().build();
