@@ -14,13 +14,13 @@ import java.util.List;
 import static cart.integration.apifixture.ApiFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class PointIntegrationTest extends IntegrationTest {
+public class OrderWithPointIntegrationTest extends IntegrationTest {
 
 
     private final Member member1 = new Member(1L, "a@a.com", "1234");
 
     @Test
-    @DisplayName("사용자의 장바구니의 상품을 주문하고 포인트를 조회한다.")
+    @DisplayName("포인트를 사용하여 주문 후, 사용자의 포인트를 조회한다.")
     void orderCartItemAndCheckPoint() {
         // given
         long productId = addProductAndGetId(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
@@ -38,7 +38,7 @@ public class PointIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("사용자의 장바구니의 상품을 주문하고 주문에 대한 포인트를 조회한다.")
+    @DisplayName("포인트를 사용하여 주문하고 해당 주문에 대한 포인트를 조회한다.")
     void orderCartItemAndCheckOrderPoint() {
         // given
         long productId = addProductAndGetId(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
@@ -60,7 +60,7 @@ public class PointIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("상품 구매 가격보다 더 많은 포인트를 사용할 때 오류가 난다.")
+    @DisplayName("주문 시 상품 구매 가격보다 더 많은 포인트를 사용할 때 오류가 난다.")
     void shouldThrowExceptionWhenUsedPointIsBiggerThanTotalPrice() {
         //given
         long productId = addProductAndGetId(new ProductRequest("치킨", 8000, "http://example.com/chicken.jpg"));
@@ -76,7 +76,7 @@ public class PointIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("보유한 포인트보다 많은 포인트를 사용할 때 오류가 난다")
+    @DisplayName("주문 시 보유한 포인트보다 많은 포인트를 사용할 때 오류가 난다")
     void shouldThrowExceptionWhenUsedPointIsBiggerThanHavingPoint() {
         //given
         long productId = addProductAndGetId(new ProductRequest("치킨", 12000, "http://example.com/chicken.jpg"));
@@ -92,7 +92,7 @@ public class PointIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("포인트를 마이너스로 사용하려 하면 오류가 난다.")
+    @DisplayName("주문시 포인트를 마이너스로 사용하려 하면 오류가 난다.")
     void shouldThrowExceptionWhenUsedMinusPoint() {
         //given
         long productId = addProductAndGetId(new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg"));
