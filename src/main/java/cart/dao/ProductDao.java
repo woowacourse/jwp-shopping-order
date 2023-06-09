@@ -1,6 +1,8 @@
 package cart.dao;
 
+import cart.dao.entity.ShippingDiscountPolicyEntity;
 import cart.domain.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -25,20 +28,25 @@ public class ProductDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<Product> getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        try {
+            Product product = jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+                String name = rs.getString("name");
+                Long price = rs.getLong("price");
+                String imageUrl = rs.getString("image_url");
+                return new Product(productId, name, price, imageUrl);
+            });
+            return Optional.ofNullable(product);
+        }catch (final EmptyResultDataAccessException exception){
+            return Optional.empty();
+        }
     }
 
     public Long createProduct(Product product) {
@@ -51,7 +59,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setLong(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
 
             return ps;
@@ -69,4 +77,5 @@ public class ProductDao {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
+
 }
