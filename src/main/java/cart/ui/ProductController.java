@@ -1,10 +1,12 @@
 package cart.ui;
 
+import cart.application.CartItemService;
 import cart.application.ProductService;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -12,12 +14,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-public class ProductApiController {
+public class ProductController {
 
     private final ProductService productService;
+    private final CartItemService cartItemService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductController(ProductService productService, CartItemService cartItemService) {
         this.productService = productService;
+        this.cartItemService = cartItemService;
     }
 
     @GetMapping
@@ -31,19 +35,24 @@ public class ProductApiController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
         Long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    @Transactional
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id,
+        @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        cartItemService.deleteByProduct(id);
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

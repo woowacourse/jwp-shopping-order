@@ -1,1 +1,0 @@
-# jwp-shopping-order

@@ -1,0 +1,59 @@
+name: build and push code
+on:
+  push:
+    branches: [ "step22" ]
+jobs:
+  git-push:
+    name: build and push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: temurin
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        run: |
+          chmod +x gradlew
+          ./gradlew bootJar
+      - name: show build directory
+        run: ls build/libs
+      - name: check git is already installed
+        run: |
+          git --version
+          mv build/libs/jwp-shopping-order.jar .
+          git add jwp-shopping-order.jar
+          git stash push
+
+      - name: Checkout deploy branch
+        uses: actions/checkout@v3
+        with:
+          clean: 'false'
+          ref: "deploy"
+      - name: print gitignore
+        run: cat .gitignore
+      - name: git stash pop
+        run: |
+          git stash pop
+          git status
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v4.4.0
+        with:
+          add: 'build/libs'
+          ref: "deploy"
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: git status
+        run: |
+          ls
+          git status
+      - name: Push commit
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          branch: "deploy"
+          directory: "build/libs"
+          force: true
