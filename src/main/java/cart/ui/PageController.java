@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+
     private final ProductService productService;
     private final MemberDao memberDao;
 

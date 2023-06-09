@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.request;
 
 public class ProductRequest {
+
     private String name;
     private int price;
     private String imageUrl;

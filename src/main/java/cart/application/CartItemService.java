@@ -4,9 +4,10 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
+import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -28,7 +30,15 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+
+        CartItem initCartItem = CartItem.createInitCartItem(member, productDao.getProductById(cartItemRequest.getProductId()));
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        boolean isSameCartItem = cartItems.stream()
+                .anyMatch(cartItem -> cartItem.checkSameCartItem(initCartItem));
+        if (isSameCartItem) {
+            throw new CartItemException.SameCartItem(initCartItem);
+        }
+        return cartItemDao.save(initCartItem);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
