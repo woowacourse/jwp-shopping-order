@@ -51,6 +51,18 @@ public class ControllerExceptionHandler {
     );
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ExceptionResponse> handleDomainException(
+      final IllegalArgumentException exception
+  ) {
+    infoLogging(exception);
+
+    return new ResponseEntity<>(new ExceptionResponse(
+        exception.getMessage()),
+        HttpStatus.BAD_REQUEST
+    );
+  }
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ExceptionResponse> handleUnexpectedException(Exception exception) {
     errorLogging(exception);
