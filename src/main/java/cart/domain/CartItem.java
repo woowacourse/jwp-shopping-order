@@ -1,35 +1,26 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
-
-import java.util.Objects;
-
 public class CartItem {
-    private Long id;
-    private int quantity;
+
+    public static final int INITIAL_QUANTITY = 1;
+    private final Long id;
     private final Product product;
-    private final Member member;
+    private final int quantity;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-    }
-
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(final Long id, final Product product, final int quantity) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
-        this.member = member;
+    }
+
+    public CartItem(final Product product) {
+        this(null, product, INITIAL_QUANTITY);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Member getMember() {
-        return member;
-    }
 
     public Product getProduct() {
         return product;
@@ -39,13 +30,7 @@ public class CartItem {
         return quantity;
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    public CartItem changeQuantity(final int quantity) {
+        return new CartItem(id, product, quantity);
     }
 }

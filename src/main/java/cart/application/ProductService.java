@@ -1,44 +1,58 @@
 package cart.application;
 
+import cart.dao.entity.ProductEntity;
+import cart.domain.Money;
 import cart.domain.Product;
-import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import org.springframework.stereotype.Service;
-
+import cart.exception.ProductException;
+import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        final List<Product> products = productRepository.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+    public ProductResponse getProductById(final Long productId) {
+        final Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException.IllegalId(productId));
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+    public Long createProduct(final ProductRequest productRequest) {
+        final ProductEntity product = new ProductEntity(productRequest.getName(), new Money(productRequest.getPrice()),
+                productRequest.getImageUrl());
+        return productRepository.add(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+    public void updateProduct(final Long productId, final ProductRequest productRequest) {
+        final ProductEntity product = new ProductEntity(
+                productId,
+                productRequest.getName(),
+                new Money(productRequest.getPrice()),
+                productRequest.getImageUrl());
+        productRepository.update(product);
     }
 
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    public void deleteProduct(final Long productId) {
+        productRepository.remove(productId);
+    }
+
+
+    public Product checkId(final long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductException.IllegalId(id));
     }
 }

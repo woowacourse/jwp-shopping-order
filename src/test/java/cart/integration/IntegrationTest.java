@@ -1,6 +1,6 @@
 package cart.integration;
 
-import io.restassured.RestAssured;
+import io.restassured.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
