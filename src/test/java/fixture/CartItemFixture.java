@@ -2,8 +2,8 @@ package fixture;
 
 import static fixture.MemberFixture.유저_1;
 import static fixture.MemberFixture.유저_2;
-import static fixture.ProductFixture.상품_치킨;
 import static fixture.ProductFixture.상품_샐러드;
+import static fixture.ProductFixture.상품_치킨;
 import static fixture.ProductFixture.상품_피자;
 
 import cart.domain.CartItem;

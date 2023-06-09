@@ -1,7 +1,7 @@
 package cart.repository;
 
-import static fixture.CartItemFixture.장바구니_유저_1_치킨_2개;
 import static fixture.CartItemFixture.장바구니_유저_1_샐러드_4개;
+import static fixture.CartItemFixture.장바구니_유저_1_치킨_2개;
 import static fixture.CartItemFixture.장바구니_유저_2_피자_5개;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import anotation.RepositoryTest;
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
-import cart.exception.CartNotFoundException;
 import cart.exception.DeleteFailException;
 import fixture.MemberFixture;
 import java.util.List;

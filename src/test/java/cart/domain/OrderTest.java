@@ -1,8 +1,8 @@
 package cart.domain;
 
+import static fixture.CouponFixture.빈_쿠폰;
 import static fixture.CouponFixture.정액_할인_쿠폰;
 import static fixture.CouponFixture.할인율_쿠폰;
-import static fixture.CouponFixture.빈_쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;

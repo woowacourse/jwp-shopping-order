@@ -1,7 +1,7 @@
 package cart.service;
 
-import static fixture.CartItemFixture.장바구니_유저_1_치킨_2개;
 import static fixture.CartItemFixture.장바구니_유저_1_샐러드_4개;
+import static fixture.CartItemFixture.장바구니_유저_1_치킨_2개;
 import static fixture.MemberCouponFixture.쿠폰_유저_1_정액_할인_쿠폰;
 import static fixture.MemberFixture.유저_1;
 import static fixture.OrderFixture.주문_유저_1_정액_할인_쿠폰_치킨_2개_샐러드_2개_피자_2개;

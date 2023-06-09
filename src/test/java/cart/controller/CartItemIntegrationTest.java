@@ -1,5 +1,8 @@
 package cart.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.controller.request.CartItemQuantityUpdateRequestDto;
 import cart.controller.request.CartItemRequestDto;
 import cart.controller.request.ProductRequestDto;
@@ -8,6 +11,8 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class CartItemIntegrationTest extends IntegrationTest {
 

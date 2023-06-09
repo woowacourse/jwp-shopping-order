@@ -3,9 +3,9 @@ package cart.service;
 import static fixture.CouponFixture.정액_할인_쿠폰;
 import static fixture.MemberCouponFixture.쿠폰_유저_2_정액_할인_쿠폰;
 import static fixture.MemberCouponFixture.쿠폰_유저_2_할인율_쿠폰;
+import static fixture.MemberFixture.아무것도_가지지_않은_유저;
 import static fixture.MemberFixture.유저_1;
 import static fixture.MemberFixture.유저_2;
-import static fixture.MemberFixture.아무것도_가지지_않은_유저;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 

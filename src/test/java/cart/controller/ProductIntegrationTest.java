@@ -1,13 +1,13 @@
 package cart.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.controller.request.ProductRequestDto;
 import cart.controller.response.ProductResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ProductIntegrationTest extends IntegrationTest {
 
