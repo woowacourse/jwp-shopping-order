@@ -11,6 +11,8 @@ public class Order {
 
   private final Member member;
 
+  private final OrderedItems orderedItems;
+
   private final Money deliveryFee;
 
   private final Coupon coupon;
@@ -22,7 +24,8 @@ public class Order {
   public Order(
       final Long id, final Member member,
       final Money deliveryFee, final Coupon coupon,
-      final OrderStatus orderStatus, final ZonedDateTime createdAt
+      final OrderStatus orderStatus, final ZonedDateTime createdAt,
+      final OrderedItems orderedItems
   ) {
     this.id = id;
     this.member = member;
@@ -30,18 +33,21 @@ public class Order {
     this.coupon = coupon;
     this.orderStatus = orderStatus;
     this.createdAt = createdAt;
+    this.orderedItems = orderedItems;
   }
 
   public Order(
       final Member member,
       final Money deliveryFee,
-      final Coupon coupon
+      final Coupon coupon,
+      final OrderedItems orderedItems
   ) {
     this.member = member;
     this.deliveryFee = deliveryFee;
     this.coupon = coupon;
     this.createdAt = ZonedDateTime.now();
     this.orderStatus = OrderStatus.COMPLETE;
+    this.orderedItems = orderedItems;
   }
 
   public boolean isNotMyOrder(final Member member) {

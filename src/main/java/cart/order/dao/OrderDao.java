@@ -8,6 +8,7 @@ import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderStatus;
+import cart.order.domain.OrderedItems;
 import cart.order.exception.enum_exception.OrderException;
 import cart.order.exception.enum_exception.OrderExceptionType;
 import cart.value_object.Money;
@@ -28,17 +29,16 @@ import org.springframework.stereotype.Repository;
 public class OrderDao {
 
   private final JdbcTemplate jdbcTemplate;
-
   private final SimpleJdbcInsert simpleJdbcInsert;
-
   private final MemberDao memberDao;
-
   private final CouponDao couponDao;
+  private final OrderItemDao orderItemDao;
 
   public OrderDao(
       final JdbcTemplate jdbcTemplate,
       final MemberDao memberDao,
-      final CouponDao couponDao
+      final CouponDao couponDao,
+      final OrderItemDao orderItemDao
   ) {
     this.jdbcTemplate = jdbcTemplate;
     this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -46,6 +46,7 @@ public class OrderDao {
         .usingGeneratedKeyColumns("id");
     this.memberDao = memberDao;
     this.couponDao = couponDao;
+    this.orderItemDao = orderItemDao;
   }
 
   public Long save(final OrderEntity orderEntity) {
@@ -72,10 +73,12 @@ public class OrderDao {
       final Instant instant = createdAt.toInstant();
       final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
       final String orderStatus = rs.getString("order_status");
+      final OrderedItems orderedItems = new OrderedItems(orderItemDao.findByOrderId(id));
       return new Order(
           id, member,
           new Money(deliveryFee), coupon,
-          OrderStatus.findOrderStatus(orderStatus), zonedDateTime
+          OrderStatus.findOrderStatus(orderStatus), zonedDateTime,
+          orderedItems
       );
     };
   }

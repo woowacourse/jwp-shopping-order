@@ -16,8 +16,10 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
+import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
 import cart.order.exception.NotFoundOrderException;
+import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -37,18 +39,18 @@ class OrderDaoTest {
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
-
   private OrderDao orderDao;
-
   private MemberDao memberDao;
   private CouponDao couponDao;
+  private OrderItemDao orderItemDao;
 
   @BeforeEach
   void setUp() {
     memberDao = mock(MemberDao.class);
     couponDao = mock(CouponDao.class);
+    orderItemDao = mock(OrderItemDao.class);
 
-    orderDao = new OrderDao(jdbcTemplate, memberDao, couponDao);
+    orderDao = new OrderDao(jdbcTemplate, memberDao, couponDao, orderItemDao);
   }
 
   @Test
@@ -82,12 +84,20 @@ class OrderDaoTest {
 
     final Member member = new Member(1L, "email", "password");
     final Coupon coupon = new EmptyCoupon();
+    final List<OrderItem> orderItems = List.of(
+        new OrderItem(1L, "orderItem1", new Money(10000), "imageUrl1", 1),
+        new OrderItem(2L, "orderItem2", new Money(10000), "imageUrl2", 1),
+        new OrderItem(3L, "orderItem3", new Money(10000), "imageUrl3", 1)
+    );
 
     when(memberDao.getMemberById(anyLong()))
         .thenReturn(member);
 
     when(couponDao.findById(anyLong()))
         .thenReturn(Optional.of(coupon));
+
+    when(orderItemDao.findByOrderId(anyLong()))
+        .thenReturn(orderItems);
 
     //when
     final List<Order> orders = orderDao.findByMemberId(memberId);
@@ -101,9 +111,17 @@ class OrderDaoTest {
   void test_findByOrderId() throws Exception {
     //given
     final long orderId = 1L;
+    final List<OrderItem> orderItems = List.of(
+        new OrderItem(1L, "orderItem1", new Money(10000), "imageUrl1", 1),
+        new OrderItem(2L, "orderItem2", new Money(10000), "imageUrl2", 1),
+        new OrderItem(3L, "orderItem3", new Money(10000), "imageUrl3", 1)
+    );
 
     when(couponDao.findById(anyLong()))
         .thenReturn(Optional.of(new EmptyCoupon()));
+
+    when(orderItemDao.findByOrderId(anyLong()))
+        .thenReturn(orderItems);
 
     //when
     final Order order = orderDao.findByOrderId(orderId);

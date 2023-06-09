@@ -68,7 +68,9 @@ class OrderItemDaoTest {
     final Order order = new Order(
         1L, member,
         new Money(100), new EmptyCoupon(),
-        OrderStatus.CANCEL, ZonedDateTime.now());
+        OrderStatus.CANCEL, ZonedDateTime.now(),
+        null
+    );
 
     //when
     final List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
