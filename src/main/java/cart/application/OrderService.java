@@ -83,7 +83,7 @@ public class OrderService {
         return OrderDetailResponse.from(order);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void cancelOrder(final Long orderId, final Member member) {
         Order order = orderRepository.findById(orderId);
 
