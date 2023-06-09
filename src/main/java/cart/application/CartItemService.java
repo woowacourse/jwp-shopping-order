@@ -4,13 +4,12 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
@@ -22,13 +21,13 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
+    public List<CartItemDto> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream().map(CartItemDto::of).collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(member, productDao.findById(cartItemRequest.getProductId())));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
@@ -49,5 +48,11 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public void removeByIds(Member member, List<Long> cartItemIds) {
+        for (Long cartItemId : cartItemIds) {
+            remove(member, cartItemId);
+        }
     }
 }

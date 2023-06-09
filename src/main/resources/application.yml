@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    active:
+
+  thymeleaf:
+    cache: false
+
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  springdoc:
+    packages-to-scan: cart
+    default-consumes-media-type: application/json;charset=UTF-8
+    default-produces-media-type: application/json;charset=UTF-8
+    swagger-ui:
+      path: cart.html
+      tags-sorter: alpha
+      operations-sorter: alpha
+    api-docs:
+      path: /cart-api-docs
+      groups:
+        enabled: true
+    cache:
+      disabled: true

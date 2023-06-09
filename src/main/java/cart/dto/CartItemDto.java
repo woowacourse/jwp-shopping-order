@@ -1,20 +1,23 @@
 package cart.dto;
 
 import cart.domain.CartItem;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-public class CartItemResponse {
+@Schema(implementation = CartItemDto.class)
+public class CartItemDto {
+
     private Long id;
     private int quantity;
     private ProductResponse product;
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
+    private CartItemDto(Long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
-        return new CartItemResponse(
+    public static CartItemDto of(CartItem cartItem) {
+        return new CartItemDto(
                 cartItem.getId(),
                 cartItem.getQuantity(),
                 ProductResponse.of(cartItem.getProduct())

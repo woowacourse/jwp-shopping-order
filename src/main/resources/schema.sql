@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS member_coupon;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS coupon;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -19,3 +27,39 @@ CREATE TABLE cart_item (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+CREATE TABLE orders (
+    id             BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id      BIGINT    NOT NULL,
+    actual_price   INT       NOT NULL,
+    original_price INT       NOT NULL,
+    delivery_fee   INT       NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE order_item (
+    id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id      BIGINT       NOT NULL,
+    product_id    BIGINT       NOT NULL,
+    product_name  VARCHAR(255) NOT NULL,
+    product_image_url VARCHAR(255) NOT NULL,
+    product_price INT          NOT NULL,
+    quantity      INT          NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders (id)
+);
+
+CREATE TABLE coupon (
+    id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name          VARCHAR(255) NOT NULL,
+    type          VARCHAR(255) NOT NULL,
+    amount        INT          NOT NULL
+);
+
+CREATE TABLE member_coupon (
+    id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id     BIGINT       NOT NULL,
+    coupon_id     BIGINT       NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
+);
+
