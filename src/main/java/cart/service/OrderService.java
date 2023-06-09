@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -94,27 +95,11 @@ public class OrderService {
     public List<OrderResponse> findAll(Long id) {
         List<Order> orders = shoppingOrderDao.findAll(id);
 
-        List<Order> groupedOrders = groupOrderList(orders);
-        groupedOrders.forEach(Order::calculateSavedPoint);
-        return groupedOrders.stream()
+        Orders groupedOrders = Orders.of(orders);
+        groupedOrders.calculateSavedPoint();
+
+        return groupedOrders.getOrders().stream()
                 .map(OrderResponse::of)
-                .collect(Collectors.toList());
-    }
-
-    private List<Order> groupOrderList(List<Order> orders) {
-        Map<List<Object>, List<Order>> groupedOrders = orders.stream()
-                .collect(Collectors.groupingBy(order -> Arrays.asList(order.getId(), order.getMember(), order.getOrderedAt(), order.getUsedPoint())));
-
-        return groupedOrders.values().stream()
-                .map(group -> {
-                    Order firstOrder = group.get(0);
-                    OrderedItems mergedItems = group.stream()
-                            .map(Order::getOrderedItems)
-                            .reduce(new OrderedItems(new ArrayList<>()), OrderedItems::merge);
-
-                    return new Order(firstOrder.getId(), firstOrder.getMember(), firstOrder.getOrderedAt(), firstOrder.getUsedPoint(), mergedItems);
-                })
-                .sorted(Comparator.comparing(Order::getId))
                 .collect(Collectors.toList());
     }
 
