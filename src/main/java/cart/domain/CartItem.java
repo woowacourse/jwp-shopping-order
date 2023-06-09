@@ -1,26 +1,41 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
-
+import cart.exception.ExceptionType;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
-    private final Product product;
-    private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
+    private final Long id;
+    private final Member member;
+    private final Item item;
+
+    public CartItem(Product product, Member member) {
+        this(null, member, new Item(product));
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
+        this(id, member, new Item(product, quantity));
+    }
+
+    public CartItem(Long id, Member member, Item item) {
         this.id = id;
-        this.quantity = quantity;
-        this.product = product;
         this.member = member;
+        this.item = item;
+    }
+
+    public void validateOwner(Member member) {
+        if (!this.member.equals(member)) {
+            throw new CartItemException(ExceptionType.NO_AUTHORITY_CART_ITEM);
+        }
+    }
+
+    public void changeQuantity(int quantity) {
+        item.changeQuantity(quantity);
+    }
+
+    public Money calculateCartPrice() {
+        return item.calculateItemPrice();
     }
 
     public Long getId() {
@@ -32,20 +47,31 @@ public class CartItem {
     }
 
     public Product getProduct() {
-        return product;
+        return item.getProduct();
     }
 
     public int getQuantity() {
-        return quantity;
+        return item.getQuantity();
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+    public Item getItem() {
+        return item;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
