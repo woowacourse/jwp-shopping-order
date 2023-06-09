@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL
+      username: sa
+  sql:
+    init:
+      data-locations: classpath:/data.sql
+      schema-locations: classpath:/schema.sql
+  h2:
+    console:
+      enabled: true

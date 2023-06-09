@@ -1,0 +1,14 @@
+= jwp-shopping-orders API Docs
+
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+include::{snippets}/create-product/http-request.adoc[]
+include::{snippets}/create-product/http-response.adoc[]
+include::{snippets}/create-product/httpie-request.adoc[]
+include::{snippets}/create-product/request-body.adoc[]
+include::{snippets}/create-product/response-body.adoc[]
