@@ -8,7 +8,7 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
-import cart.order.exception.CanNotSearchNotMyOrderException;
+import cart.order.exception.OrderExceptionType;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +50,7 @@ class OrderQueryServiceTest {
 
     //when & then
     assertThatThrownBy(() -> orderQueryService.searchOrder(member, 4L))
-        .isInstanceOf(CanNotSearchNotMyOrderException.class);
+        .hasMessage(OrderExceptionType.CAN_NOT_SEARCH_NOT_MY_ORDER.errorMessage());
   }
 
   @Test

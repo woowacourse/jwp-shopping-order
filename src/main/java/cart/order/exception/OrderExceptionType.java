@@ -1,4 +1,4 @@
-package cart.order.exception.enum_exception;
+package cart.order.exception;
 
 import cart.exception.enum_exception.CustomExceptionType;
 import org.springframework.http.HttpStatus;

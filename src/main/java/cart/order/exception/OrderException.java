@@ -1,4 +1,4 @@
-package cart.order.exception.enum_exception;
+package cart.order.exception;
 
 import cart.exception.enum_exception.CustomException;
 import cart.exception.enum_exception.CustomExceptionType;

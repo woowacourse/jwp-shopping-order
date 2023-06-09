@@ -18,7 +18,8 @@ import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
-import cart.order.exception.NotFoundOrderException;
+import cart.order.exception.OrderException;
+import cart.order.exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -141,7 +142,8 @@ class OrderDaoTest {
 
     //then
     assertThatThrownBy(() -> orderDao.findByOrderId(orderId))
-        .isInstanceOf(NotFoundOrderException.class);
+        .isInstanceOf(OrderException.class)
+        .hasMessage(OrderExceptionType.CAN_NOT_FOUND_ORDER.errorMessage());
   }
 
   @Test

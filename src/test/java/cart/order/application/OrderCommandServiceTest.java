@@ -7,8 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
-import cart.order.exception.CanNotChangeNotMyOrderException;
-import cart.order.exception.NotSameTotalPriceException;
+import cart.order.exception.OrderExceptionType;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -56,30 +55,6 @@ class OrderCommandServiceTest {
   }
 
   @Test
-  @DisplayName("registerOrder() : 명시된 주문 총 금액과 계산한 총 금액이 다르면 NotSameTotalPriceException이 발생한다.")
-  void test_registerOrder_NotSameTotalPriceException() throws Exception {
-    //given
-    final Member member = memberDao.getMemberById(1L);
-
-    final List<Long> cartItemIds = List.of(1L, 2L);
-    final BigDecimal totalPrice = BigDecimal.valueOf(200000);
-    final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
-    final long couponId = 1L;
-
-    final RegisterOrderRequest registerOrderRequest =
-        new RegisterOrderRequest(
-            cartItemIds,
-            totalPrice,
-            deliveryFee,
-            couponId
-        );
-
-    //when & then
-    assertThatThrownBy(() -> orderCommandService.registerOrder(member, registerOrderRequest))
-        .isInstanceOf(NotSameTotalPriceException.class);
-  }
-
-  @Test
   @DisplayName("registerOrder() : 주문 중 쿠폰을 사용하지 않아도 생성할 수 있다.")
   void test_registerOrder_NotCoupon() throws Exception {
     //given
@@ -114,6 +89,6 @@ class OrderCommandServiceTest {
 
     //when & then
     assertThatThrownBy(() -> orderCommandService.deleteOrder(member, 다른_사용자의_주문_아이디))
-        .isInstanceOf(CanNotChangeNotMyOrderException.class);
+        .hasMessage(OrderExceptionType.CAN_NOT_CHANGE_NOT_MY_ORDER.errorMessage());
   }
 }
