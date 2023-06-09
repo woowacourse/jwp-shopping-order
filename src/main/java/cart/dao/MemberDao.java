@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -19,35 +19,25 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
+    public Optional<Member> getMemberById(Long id) {
+        String sql = "SELECT * FROM members WHERE id = ?";
         List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return members.isEmpty() ? Optional.empty() : Optional.of(members.get(0));
     }
 
-    public Member getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
+    public Optional<Member> getMemberByEmail(String email) {
+        String sql = "SELECT * FROM members WHERE email = ?";
         List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return members.isEmpty() ? Optional.empty() : Optional.of(members.get(0));
     }
 
     public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
+        String sql = "INSERT INTO members (email, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
-
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public List<Member> getAllMembers() {
-        String sql = "SELECT * from member";
+        String sql = "SELECT * from members";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 

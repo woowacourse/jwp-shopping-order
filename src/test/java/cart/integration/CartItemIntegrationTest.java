@@ -36,12 +36,15 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
+        databaseSetting.clearDatabase();
+        databaseSetting.createTables();
+        databaseSetting.addMembers();
 
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.getMemberById(1L).get();
+        member2 = memberDao.getMemberById(2L).get();
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
@@ -193,7 +196,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
+    public static ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM products";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
@@ -31,8 +32,22 @@ public class ProductDao {
         });
     }
 
+    public List<Product> getProductsByIds(List<Long> ids) {
+        String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String sql = "SELECT * FROM products " +
+                "WHERE id IN (" + placeholders + ")";
+
+        return jdbcTemplate.query(sql, ids.toArray(), (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(productId, name, price, imageUrl);
+        });
+    }
+
     public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT * FROM products WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
@@ -46,7 +61,7 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -61,12 +76,12 @@ public class ProductDao {
     }
 
     public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        String sql = "DELETE FROM products WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
 }

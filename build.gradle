@@ -19,8 +19,14 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
     runtimeOnly 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    maxHeapSize = "1024m"
 }
