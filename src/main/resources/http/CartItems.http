@@ -1,0 +1,31 @@
+### 장바구니 전체 조회
+GET http://localhost:8080/cart-items
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json
+
+### 장바구니 아이템 추가
+POST http://localhost:8080/cart-items
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "productId": 1
+}
+
+### 장바구니 아이템 수량 변경
+PATCH http://localhost:8080/cart-items/1
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### 장바구니 아이템 삭제
+DELETE http://localhost:8080/cart-items/1
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+
+### 상품 아이디로 장바구니 아이템 조회
+GET http://localhost:8080/cart-items/products/1
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json

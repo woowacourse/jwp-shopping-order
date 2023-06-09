@@ -8,6 +8,9 @@ public class ProductResponse {
     private int price;
     private String imageUrl;
 
+    public ProductResponse() {
+    }
+
     private ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
