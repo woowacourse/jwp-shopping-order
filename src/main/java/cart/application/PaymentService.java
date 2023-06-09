@@ -3,10 +3,7 @@ package cart.application;
 import cart.dao.*;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.domain.point.MemberPoints;
-import cart.domain.point.Point;
-import cart.domain.point.SavePointPolicy;
-import cart.domain.point.UsedPoint;
+import cart.domain.point.*;
 import cart.domain.purchaseorder.PurchaseOrder;
 import cart.domain.purchaseorder.PurchaseOrderInfo;
 import cart.domain.purchaseorder.PurchaseOrderItem;
@@ -82,7 +79,7 @@ public class PaymentService {
         MemberPoints memberPoints = new MemberPoints(member, memberRewardPointDao.getAllByMemberId(member.getId()));
         List<Point> pointsSnapshot = getPointSnapshot(memberPoints.getPoints());
 
-        List<UsedPoint> usedPoints = memberPoints.usedPoint(purchaseOrderRequest.getUsedPoint());
+        List<UsedPoint> usedPoints = PointPolicy.usedPoint(memberPoints, purchaseOrderRequest.getUsedPoint());
         updateChangePoints(memberPoints.getPoints(), pointsSnapshot);
         return usedPoints;
     }

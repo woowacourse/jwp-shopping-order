@@ -42,7 +42,7 @@ class MemberPointsTest {
         int usedPoint = 300;
 
         // when
-        List<UsedPoint> usedPoints = memberPoints.usedPoint(usedPoint);
+        List<UsedPoint> usedPoints = PointPolicy.usedPoint(memberPoints, usedPoint);
 
         // then
         assertAll(
@@ -70,7 +70,7 @@ class MemberPointsTest {
         int usedPoint = 400;
 
         // when
-        List<UsedPoint> usedPoints = memberPoints.usedPoint(usedPoint);
+        List<UsedPoint> usedPoints = PointPolicy.usedPoint(memberPoints, usedPoint);
 
         // then
         assertAll(
