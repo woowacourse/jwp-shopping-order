@@ -1,23 +1,23 @@
 package cart.dao;
 
 import cart.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ProductDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public List<Product> getAllProducts() {
@@ -29,6 +29,19 @@ public class ProductDao {
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         });
+    }
+
+    public List<Product> getAllProductsPagination(Long limit, Long scrollCount) {
+        String sql = "SELECT * FROM product LIMIT ? OFFSET ?";
+        String offset = Long.toString(scrollCount * limit);
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(productId, name, price, imageUrl);
+        }, limit, offset);
     }
 
     public Product getProductById(Long productId) {
@@ -69,4 +82,5 @@ public class ProductDao {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
+
 }

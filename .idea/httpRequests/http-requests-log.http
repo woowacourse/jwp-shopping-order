@@ -1,0 +1,370 @@
+GET http://localhost:8080/orders
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-08T212310.200.json
+
+###
+
+GET http://HTTP/1.1%20201
+Location: /orders/5
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 08 Jun 2023 12:19:54 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "id": 5,
+  "orderProducts": [
+    {
+      "productResponseDto": {
+        "id": 1,
+        "name": "치킨",
+        "price": 10000,
+        "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
+      },
+      "quantity": 2
+    },
+    {
+      "productResponseDto": {
+        "id": 2,
+        "name": "샐러드",
+        "price": 20000,
+        "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
+      },
+      "quantity": 4
+    }
+  ],
+  "timestamp": "2023-06-08T21:19:54.661423",
+  "originPrice": 100000,
+  "discountPrice": 0,
+  "totalPrice": 100000
+}
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-08T211954.201.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-08T211937.500.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-08T211928.500.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ],
+  "couponId": 1
+}
+
+<> 2023-06-08T211908.201.json
+
+###
+
+GET http://localhost:8080/orders
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-08T211824.200.json
+
+###
+
+GET http://localhost:8080/orders/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-08T211806.200.json
+
+###
+
+POST http://localhost:8080/coupons/1/issue
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-08T194518.201.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-05T000519.403.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-05T000515.201.json
+
+###
+
+GET http://localhost:8080/products?limit=2&scroll-count=1
+Accept: application/json
+
+<> 2023-06-05T000358.200.json
+
+###
+
+GET http://localhost:8080/products?limit=2&scroll-count=1
+Accept: application/json
+
+<> 2023-06-04T235856.200.json
+
+###
+
+GET http://localhost:8080/products?limit=2&scroll-count=0
+Accept: application/json
+
+<> 2023-06-04T235842.200.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-04T235627.201.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-04T235532.500.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+
+<> 2023-06-04T235359.500.json
+
+###
+
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "cartItemIds": [
+    1,
+    2
+  ],
+  "couponId": 1
+}
+
+<> 2023-06-04T235302.201.json
+
+###
+
+GET http://localhost:8080/orders
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235233.200.json
+
+###
+
+GET http://localhost:8080/orders/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235203.200.json
+
+###
+
+GET http://localhost:8080/order/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235157.404.json
+
+###
+
+GET http://localhost:8080/order/1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235152.404.json
+
+###
+
+POST http://localhost:8080/coupons/issue
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235130.201.json
+
+###
+
+GET http://localhost:8080/coupons
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235101.200.json
+
+###
+
+GET http://localhost:8080/coupons/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235037.200.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235028.404.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T235025.404.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T233648.200.json
+
+###
+
+GET http://localhost:8080/coupon/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T232858.200.json
+
+###
+
+GET http://localhost:8080/coupon/discount?total-price=10000&coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+<> 2023-06-04T232747.400.json
+
+###
+
+POST http://localhost:8080/cart-items
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+###
+
+POST http://localhost:8080/cart-items
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+<> 2023-06-04T232243.500.json
+
+###
+

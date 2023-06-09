@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 
 public class CartItemException extends RuntimeException {
+
     public CartItemException(String message) {
         super(message);
     }
@@ -13,4 +14,5 @@ public class CartItemException extends RuntimeException {
             super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
         }
     }
+
 }

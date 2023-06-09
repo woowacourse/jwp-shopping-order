@@ -1,0 +1,58 @@
+### 쿠폰할인 적용
+GET http://localhost:8080/coupons/discount?origin-price=10000&member-coupon-id=1
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+### response
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 04 Jun 2023 14:50:37 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "discountPrice": -5000,
+  "totalPrice": 5000
+}
+
+### 멤버의 쿠폰 전체 조회하기
+GET http://localhost:8080/coupons
+Accept: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+### response
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 04 Jun 2023 14:51:00 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "memberCouponId": 1,
+    "name": "정액 할인 쿠폰"
+  },
+  {
+    "memberCouponId": 2,
+    "name": "할인율 쿠폰"
+  }
+]
+
+### 멤버의 쿠폰 발급받기(테스트 용)
+POST http://localhost:8080/coupons/1/issue
+Authorization: basic YUBhLmNvbToxMjM0
+
+### response
+HTTP/1.1 201
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 08 Jun 2023 10:45:18 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "memberCouponId": 5,
+  "name": "정액 할인 쿠폰"
+}
