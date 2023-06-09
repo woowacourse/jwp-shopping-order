@@ -123,13 +123,16 @@ class CartItemDaoTest {
     @DisplayName("memberId와 productId로 장바구니에 담긴 상품을 삭제할 수 있다.")
     void testDeleteByMemberIdAndProductId() {
         // given
-        final CartItemEntity cartItem = CartItemEntity.of(1L, memberId, productId1, 1);
-        cartItemDao.create(cartItem);
+        final CartItemEntity cartItem1 = CartItemEntity.of(1L, memberId, productId1, 1);
+        final CartItemEntity cartItem2 = CartItemEntity.of(1L, memberId, productId2, 2);
+        cartItemDao.create(cartItem1);
+        cartItemDao.create(cartItem2);
 
         // when
-        cartItemDao.deleteByMemberIdAndProductId(memberId, productId1);
+        cartItemDao.deleteAllByMemberIdAndProductId(memberId, List.of(productId1, productId2));
 
         // then
         assertThat(cartItemDao.findByMemberIdAndProductId(memberId, productId1).isPresent()).isFalse();
+        assertThat(cartItemDao.findByMemberIdAndProductId(memberId, productId2).isPresent()).isFalse();
     }
 }

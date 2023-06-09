@@ -83,9 +83,20 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteByMemberIdAndProductId(final Long memberId, final Long productId) {
+    public void deleteAllByMemberIdAndProductId(final Long memberId, final List<Long> productIds) {
         final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, memberId);
+                ps.setLong(2, productIds.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return productIds.size();
+            }
+        });
     }
 
     public void deleteAll(final List<CartItemEntity> cartItems) {

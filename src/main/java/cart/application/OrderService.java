@@ -44,9 +44,10 @@ public class OrderService {
         final Order order = orderRepository.create(
                 new Order(orderItems, coupon, Amount.of(orderRequest.getTotalProductAmount()),
                         Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
-        for (OrderItem orderItem : orderItems) {
-            cartItemRepository.deleteByMemberIdAndProductId(member.getId(), orderItem.getProduct().getId());
-        }
+        final List<Long> productIds = orderItems.stream()
+                .map(it -> it.getProduct().getId())
+                .collect(Collectors.toList());
+        cartItemRepository.deleteAllByMemberIdAndProductId(member.getId(), productIds);
         final int discountedProductAmount = order.discountProductAmount().getValue();
         useCoupon(member, coupon, orderRequest.getCouponId());
         return new OrderDetailResponse(order.getId(), orderRequest.getTotalProductAmount(),

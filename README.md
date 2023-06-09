@@ -326,4 +326,4 @@ HTTP/1.1 204 No Content
 - [x] CartItemService의 add 메서드 → save 메서드 명 변경
 - [x] 사용 가능한 쿠폰을 구하는 로직을 Service → Coupon으로 이동
 - [x] 빈 Coupon에 대한 정적 팩터리 메서드 추가
-- [ ] sql IN 구문을 활용하여 해당하는 데이터를 한 번에 삭제하도록 수정
+- [ ] batchUpdate를 사용하여 해당하는 데이터를 한 번에 삭제하도록 수정
