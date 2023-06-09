@@ -1,6 +1,7 @@
 package cart.domain;
 
 public class Product {
+
     private Long id;
     private String name;
     private int price;
@@ -17,6 +18,10 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public boolean hasPrice(final int price) {
+        return this.price == price;
     }
 
     public Long getId() {
