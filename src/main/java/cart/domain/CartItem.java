@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
+import cart.domain.value.Price;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
@@ -21,6 +23,25 @@ public class CartItem {
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public CartItem(Long id, int quantity, Product product) {
+        this.id = id;
+        this.quantity = quantity;
+        this.product = product;
+        this.member = null;
+    }
+
+    public Price applyCoupon(Coupon coupon) {
+        return product.applyCoupon(coupon).multiply(quantity);
+    }
+
+    public Price getPrice() {
+        return product.getPrice().multiply(quantity);
+    }
+
+    public Price getDiscountedPrice() {
+        return product.getDiscountedPrice().multiply(quantity);
     }
 
     public Long getId() {

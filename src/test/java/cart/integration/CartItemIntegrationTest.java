@@ -2,9 +2,9 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.dto.cartitem.CartItemRequest;
+import cart.dto.cartitem.CartItemResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
