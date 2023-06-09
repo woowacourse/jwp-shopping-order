@@ -48,7 +48,6 @@ public class OrderRepository {
         return savedOrderId;
     }
 
-    // TODO: 5/31/23 주문 가져오는데 진짜 큰일을 함 / 지연로딩이 필요한가?
     public List<Order> findAllByMember(final Member member) {
         List<OrderEntity> allOrderEntities = orderDao.findByMemberId(member.getId());
 
