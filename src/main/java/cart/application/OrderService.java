@@ -11,7 +11,6 @@ import cart.domain.DiscountCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItems;
-import cart.domain.Product;
 import cart.dto.OrderAddRequest;
 import cart.dto.OrderItemRequest;
 import java.util.ArrayList;
@@ -57,11 +56,17 @@ public class OrderService {
     }
     
     private List<CartItem> findRequestCartItems(Member member, List<OrderItemRequest> requests) {
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         List<CartItem> itemsToOrder = new ArrayList<>();
-        for (OrderItemRequest request : requests) {
-            Product product = productDao.getProductById(request.getId());
-            int quantity = request.getQuantity();
-            itemsToOrder.add(new CartItem(null, quantity, product, member));
+        for(OrderItemRequest request : requests) {
+            Long cartItemId = request.getId();
+            Integer quantity = request.getQuantity();
+            CartItem cartItemToOrder = cartItems.stream()
+                    .filter(cartItem -> cartItem.getId().equals(cartItemId)
+                            && cartItem.getQuantity() == quantity)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("장바구니에 상품이 존재하지 않습니다."));
+            itemsToOrder.add(cartItemToOrder);
         }
         return itemsToOrder;
     }
