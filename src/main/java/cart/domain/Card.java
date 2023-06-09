@@ -1,5 +1,5 @@
 package cart.domain;
 
 public interface Card {
-    boolean isValid();
+    boolean isInValid();
 }

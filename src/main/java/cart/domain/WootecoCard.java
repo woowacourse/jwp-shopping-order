@@ -10,7 +10,7 @@ public class WootecoCard implements Card {
     }
 
     @Override
-    public boolean isValid() {
-        return true;
+    public boolean isInValid() {
+        return false;
     }
 }

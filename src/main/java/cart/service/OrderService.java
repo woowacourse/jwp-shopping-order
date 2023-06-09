@@ -33,21 +33,38 @@ public class OrderService {
     }
 
     public Long createOrder(Member member, OrderRequest orderRequest) {
-        Card card = new WootecoCard(orderRequest.getCardNumber(), orderRequest.getCvc());
-        if (!card.isValid()) {
-            throw new InvalidCardException("카드 정보가 유효하지 않습니다");
-        }
-        Order order = new Order(member, LocalDateTime.now(), new Point(orderRequest.getPoint()));
-        Long orderId = shoppingOrderDao.save(order);
-        List<Long> cartItemIds = orderRequest.getCartItemIds();
-        CartItems cartItems = getCartItems(cartItemIds);
-        cartItems.checkOwner(member);
+        validateCard(orderRequest);
+
+        Long orderId = saveOrder(member, orderRequest);
+
+        CartItems cartItems = getCartItems(member, orderRequest);
+
         saveOrderItems(orderId, cartItems);
+
         long totalOrderPrice = cartItems.calculateTotalPrice();
         updateMemberPoints(member, orderRequest, totalOrderPrice);
-        cartItemIds.forEach(cartItemDao::deleteById);
 
         return orderId;
+    }
+
+    private void validateCard(OrderRequest orderRequest) {
+        Card card = new WootecoCard(orderRequest.getCardNumber(), orderRequest.getCvc());
+        if (card.isInValid()) {
+            throw new InvalidCardException("카드 정보가 유효하지 않습니다");
+        }
+    }
+
+    private Long saveOrder(Member member, OrderRequest orderRequest) {
+        Order order = new Order(member, LocalDateTime.now(), new Point(orderRequest.getPoint()));
+        return shoppingOrderDao.save(order);
+    }
+
+    private CartItems getCartItems(Member member, OrderRequest orderRequest) {
+        List<Long> cartItemIds = orderRequest.getCartItemIds();
+        CartItems cartItems = findCartItems(cartItemIds);
+        cartItems.checkOwner(member);
+        cartItemIds.forEach(cartItemDao::deleteById);
+        return cartItems;
     }
 
     private void updateMemberPoints(Member member, OrderRequest orderRequest, long totalOrderPrice) {
@@ -65,10 +82,10 @@ public class OrderService {
         });
     }
 
-    @Transactional(readOnly = true)
-    private CartItems getCartItems(List<Long> cartItemIds) {
+    private CartItems findCartItems(List<Long> cartItemIds) {
         List<CartItem> cartItems = cartItemIds.stream()
-                .map(cartItemId -> cartItemDao.findById(cartItemId).orElseThrow(() -> new CartItemException("장바구니 목록에서 조회할 수 없습니다")))
+                .map(cartItemId -> cartItemDao.findById(cartItemId).orElseThrow(()
+                        -> new CartItemException(cartItemId + "를 장바구니 목록에서 조회할 수 없습니다")))
                 .collect(Collectors.toList());
         return new CartItems(cartItems);
     }
@@ -79,10 +96,9 @@ public class OrderService {
 
         List<Order> groupedOrders = groupOrderList(orders);
         groupedOrders.forEach(Order::calculateSavedPoint);
-        List<OrderResponse> orderResponses = groupedOrders.stream()
+        return groupedOrders.stream()
                 .map(OrderResponse::of)
                 .collect(Collectors.toList());
-        return orderResponses;
     }
 
     private List<Order> groupOrderList(List<Order> orders) {
