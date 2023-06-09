@@ -30,7 +30,6 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
     
-    
     public Long save(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         
@@ -45,7 +44,6 @@ public class OrderDao {
             ps.setInt(4, order.getDeliveryFee());
             ps.setInt(5, order.getTotalPrice());
             ps.setObject(6, order.getCreatedAt(), Types.TIMESTAMP);
-            //todo : 자바 객체 뭐로 해야하는지 고민하기
             return ps;
         }, keyHolder);
         
