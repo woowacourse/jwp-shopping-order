@@ -1,0 +1,9 @@
+TRUNCATE TABLE product;
+TRUNCATE TABLE member;
+TRUNCATE TABLE cart_item;
+TRUNCATE TABLE shopping_order;
+TRUNCATE TABLE ordered_item;
+TRUNCATE TABLE coupon;
+TRUNCATE TABLE member_coupon;
+TRUNCATE TABLE point_history;
+TRUNCATE TABLE ordered_coupon;
