@@ -1,0 +1,44 @@
+### 장바구니 아이템 추가1
+POST {{baseUrl}}/cart-items
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "productId": 1
+}
+
+### 장바구니 아이템 추가2
+POST {{baseUrl}}/cart-items
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "productId": 2
+}
+
+### 장바구니 아이템 추가3
+POST {{baseUrl}}/cart-items
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "productId": 3
+}
+
+### 장바구니 아이템 목록 조회
+GET {{baseUrl}}/cart-items
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+### 장바구니 아이템 수량 변경
+PATCH {{baseUrl}}/cart-items/1
+Authorization: Basic {{credentials}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### 장바구니 아이템 삭제
+DELETE {{baseUrl}}/cart-items/3
+Authorization: Basic {{credentials}}
