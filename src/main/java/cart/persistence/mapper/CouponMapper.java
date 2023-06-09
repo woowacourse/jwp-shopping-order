@@ -53,11 +53,11 @@ public enum CouponMapper {
                 .orElseThrow(() -> new IllegalArgumentException("요청한 할인 타입이 존재하지 않습니다."));
     }
 
-    public boolean isSameName(String typeName) {
+    private boolean isSameName(String typeName) {
         return this.typeName.equals(typeName);
     }
 
-    public Coupon map(CouponEntity couponEntity) {
+    private Coupon map(CouponEntity couponEntity) {
         return mapper.apply(couponEntity);
     }
 }
