@@ -1,7 +1,7 @@
 package cart.domain.order;
 
-import cart.domain.member.Member;
 import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
 import cart.exception.OrderException;
 
 import java.util.ArrayList;

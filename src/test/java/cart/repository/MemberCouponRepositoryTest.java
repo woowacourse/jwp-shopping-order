@@ -5,25 +5,16 @@ import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.MemberCouponEntity;
-import cart.dao.entity.MemberEntity;
-import cart.domain.coupon.Coupon;
 import cart.domain.coupon.EmptyMemberCoupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.coupon.UsedMemberCoupon;
-import cart.domain.member.Member;
 import cart.exception.MemberCouponException;
-import cart.fixture.CouponFixture;
-import cart.fixture.MemberFixture;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

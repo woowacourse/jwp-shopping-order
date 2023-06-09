@@ -1,26 +1,17 @@
 package cart.application;
 
-import cart.application.LoginService;
-import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
-import cart.exception.MemberException;
-import cart.fixture.MemberFixture;
 import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.charset.StandardCharsets;
 
 import static cart.fixture.MemberFixture.라잇;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

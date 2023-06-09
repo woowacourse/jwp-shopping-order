@@ -1,31 +1,19 @@
 package cart.application;
 
-import cart.application.CouponService;
-import cart.domain.cart.CartItem;
-import cart.domain.cart.CartItems;
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.MemberCoupon;
-import cart.domain.member.Member;
+import cart.dto.request.MemberCouponRequest;
 import cart.dto.response.AllCouponResponse;
 import cart.dto.response.AllOrderCouponResponse;
-import cart.dto.request.MemberCouponRequest;
-import cart.fixture.CartItemFixture;
 import cart.fixture.CouponFixture;
-import cart.fixture.MemberFixture;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static cart.fixture.CartItemFixture.장바구니1;

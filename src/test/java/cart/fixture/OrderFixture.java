@@ -7,7 +7,6 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.ShippingFee;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderFixture {

@@ -7,13 +7,12 @@ import cart.domain.member.Password;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class CartItemTest {
     private CartItem cartItem;

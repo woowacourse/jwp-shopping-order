@@ -1,22 +1,15 @@
 package cart.application;
 
-import cart.application.ProductService;
 import cart.domain.product.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
-import cart.fixture.ProductFixture;
 import cart.repository.ProductRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static cart.fixture.ProductFixture.지구;

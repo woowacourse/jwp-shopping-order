@@ -1,4 +1,5 @@
-INSERT INTO product (name, price, image_url);sdfjlskdaf
+INSERT INTO product (name, price, image_url);
+sdfjlskdaf
 VALUES ('지구', 1000, 'https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg');
 INSERT INTO product (name, price, image_url)
 VALUES ('화성', 200000, 'https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg');

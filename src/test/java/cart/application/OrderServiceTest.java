@@ -6,19 +6,14 @@ import cart.dto.request.OrderCartItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.AllOrderResponse;
 import cart.dto.response.OrderDetailResponse;
-import cart.fixture.OrderFixture;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
