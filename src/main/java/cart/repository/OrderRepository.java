@@ -36,47 +36,84 @@ public class OrderRepository {
     }
 
     public Long save(final Order order) {
-        OrderEntity orderEntity = OrderEntity.from(order);
-        Long savedOrderId = orderDao.save(orderEntity);
+        Long savedOrderId = saveOrder(order);
 
-        List<OrderItemEntity> orderItemEntities = order.getOrderItems()
-                .stream()
-                .map(orderItem -> OrderItemEntity.of(orderItem, savedOrderId))
-                .collect(Collectors.toList());
+        List<OrderItemEntity> orderItemEntities = convertOrderItemEntities(order, savedOrderId);
 
         orderItemDao.saveAll(orderItemEntities);
+
         return savedOrderId;
     }
 
     public List<Order> findAllByMember(final Member member) {
         List<OrderEntity> allOrderEntities = orderDao.findByMemberId(member.getId());
 
-        List<Long> orderIds = allOrderEntities.stream()
-                .map(OrderEntity::getId)
-                .collect(Collectors.toList());
+        List<Long> orderIds = convertOrderIds(allOrderEntities);
         Map<Long, List<OrderItem>> orderItemByOrderId = getOrderItemByOrderId(allOrderEntities, orderIds);
         Map<Long, MemberCoupon> couponById = findMemberCouponByOrderEntitiesAndMember(allOrderEntities, member);
 
+        return convertOrders(member, allOrderEntities, orderItemByOrderId, couponById);
+    }
+
+    public Order findById(final Long id) {
+        OrderEntity orderEntity = findOrderEntity(id);
+        List<OrderItemEntity> orderItemEntities = orderItemDao.finByOrderId(orderEntity.getId());
+        MemberEntity memberEntity = findMemberEntity(orderEntity);
+        Member member = memberEntity.toMember();
+
+        MemberCoupon memberCoupon = findMemberCoupon(orderEntity, member);
+
+        List<OrderItem> orderItems = convertOrderItems(orderItemEntities);
+        return Order.of(orderEntity.getId(), orderItems, member, memberCoupon);
+    }
+
+    public void delete(final Order order) {
+        Long id = order.getId();
+        orderItemDao.deleteByOrderId(id);
+        orderDao.deleteById(id);
+    }
+
+    private List<OrderItem> convertOrderItems(final List<OrderItemEntity> orderItemEntities) {
+        return orderItemEntities.stream()
+                .map(OrderItemEntity::toOrderItem)
+                .collect(Collectors.toList());
+    }
+
+    private List<Order> convertOrders(final Member member, final List<OrderEntity> allOrderEntities, final Map<Long, List<OrderItem>> orderItemByOrderId, final Map<Long, MemberCoupon> couponById) {
         return allOrderEntities.stream()
                 .map(orderEntity -> orderEntity.toOrder(member, orderItemByOrderId, couponById))
                 .collect(Collectors.toList());
     }
 
-    public Order findById(final Long id) {
-        OrderEntity orderEntity = orderDao.findById(id)
-                .orElseThrow(() -> new OrderException.NoExist("해당 주문이 존재하지 않습니다."));
-        List<OrderItemEntity> orderItemEntities = orderItemDao.finByOrderId(orderEntity.getId());
+    private MemberEntity findMemberEntity(final OrderEntity orderEntity) {
         MemberEntity memberEntity = memberDao.findById(orderEntity.getMemberId())
                 .orElseThrow(() -> new MemberException.NoExist("멤버가 존재하지 않습니다."));
-        Member member = memberEntity.toMember();
+        return memberEntity;
+    }
 
+    private OrderEntity findOrderEntity(final Long id) {
+        OrderEntity orderEntity = orderDao.findById(id)
+                .orElseThrow(() -> new OrderException.NoExist("해당 주문이 존재하지 않습니다."));
+        return orderEntity;
+    }
 
-        MemberCoupon memberCoupon = findMemberCoupon(orderEntity, member);
-
-        List<OrderItem> orderItems = orderItemEntities.stream()
-                .map(OrderItemEntity::toOrderItem)
+    private List<Long> convertOrderIds(final List<OrderEntity> allOrderEntities) {
+        List<Long> orderIds = allOrderEntities.stream()
+                .map(OrderEntity::getId)
                 .collect(Collectors.toList());
-        return Order.of(orderEntity.getId(), orderItems, member, memberCoupon);
+        return orderIds;
+    }
+
+    private List<OrderItemEntity> convertOrderItemEntities(final Order order, final Long savedOrderId) {
+        return order.getOrderItems()
+                .stream()
+                .map(orderItem -> OrderItemEntity.of(orderItem, savedOrderId))
+                .collect(Collectors.toList());
+    }
+
+    private Long saveOrder(final Order order) {
+        OrderEntity orderEntity = OrderEntity.from(order);
+        return orderDao.save(orderEntity);
     }
 
     private MemberCoupon findMemberCoupon(final OrderEntity orderEntity, final Member member) {
@@ -91,19 +128,12 @@ public class OrderRepository {
         return memberCouponEntity.toMemberCoupon(coupon, member);
     }
 
-    public void delete(final Order order) {
-        Long id = order.getId();
-        orderItemDao.deleteByOrderId(id);
-        orderDao.deleteById(id);
-    }
-
     private Map<Long, MemberCoupon> findMemberCouponByOrderEntitiesAndMember(final List<OrderEntity> orderEntities, final Member member) {
         List<Long> memberCouponIds = orderEntities.stream()
                 .map(OrderEntity::getMemberCouponId)
                 .collect(Collectors.toList());
 
         List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByIds(memberCouponIds);
-
         List<Long> couponIds = memberCouponEntities.stream()
                 .map(MemberCouponEntity::getCouponId)
                 .collect(Collectors.toList());
