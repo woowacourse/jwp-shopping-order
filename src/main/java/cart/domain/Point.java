@@ -6,8 +6,13 @@ import java.util.Objects;
 
 public class Point {
     private static final String UNIT = "원";
+    private static final long DEFALUT_POINT = 0L;
 
     private final Long value;
+
+    public Point() {
+        this.value = DEFALUT_POINT;
+    }
 
     public Point(Long value) {
         validatePoint(value);

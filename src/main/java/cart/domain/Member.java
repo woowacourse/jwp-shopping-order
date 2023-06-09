@@ -14,7 +14,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.point = new Point(0L);
+        this.point = new Point();
     }
 
     public Member(Long id, String email, String password, Point point) {
