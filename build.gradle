@@ -14,9 +14,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
+
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+    // mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     runtimeOnly 'com.h2database:h2'
 }
