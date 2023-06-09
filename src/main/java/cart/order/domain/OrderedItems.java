@@ -1,7 +1,5 @@
 package cart.order.domain;
 
-import cart.order.exception.enum_exception.OrderException;
-import cart.order.exception.enum_exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class OrderedItems {
 
   private static void validateSameTotalPrice(final Money targetTotalPrice, final Money totalPrice) {
     if (totalPrice.isNotSame(targetTotalPrice)) {
-      throw new OrderException(OrderExceptionType.NOT_SAME_TOTAL_PRICE);
+      throw new IllegalArgumentException("주문된 총액이 올바르지 않습니다.");
     }
   }
 

@@ -2,8 +2,6 @@ package cart.order.domain;
 
 import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
-import cart.order.exception.enum_exception.OrderException;
-import cart.order.exception.enum_exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.time.ZonedDateTime;
 
@@ -57,7 +55,7 @@ public class Order {
       final OrderedItems orderedItems
   ) {
     if (coupon.isExceedDiscountFrom(orderedItems.calculateAllItemPrice())) {
-      throw new OrderException(OrderExceptionType.CAN_NOT_DISCOUNT_PRICE_MORE_THEN_TOTAL_PRICE);
+      throw new IllegalArgumentException("쿠폰 가격이 전체 가격보다 높으면 사용할 수 없습니다.");
     }
   }
 
