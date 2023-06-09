@@ -1,0 +1,13 @@
+set
+FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE cart_item;
+TRUNCATE TABLE order_product;
+TRUNCATE TABLE purchase_order;
+TRUNCATE TABLE member_coupon;
+TRUNCATE TABLE coupon;
+TRUNCATE TABLE product;
+TRUNCATE TABLE member;
+
+set
+FOREIGN_KEY_CHECKS = 1;
