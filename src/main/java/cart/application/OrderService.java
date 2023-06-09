@@ -46,7 +46,7 @@ public class OrderService {
         // TODO order가 MemberCoupon을 가지게 변경
         Order order = new Order(totalPrice, discountPrice, orderProducts, usedCoupon, member);
         validateUsableCoupon(usedCoupon, order);
-        deleteOrderedItemsInCartById(orderRequest.getSelectCartIds());
+        cartItemRepository.deleteByIds(orderRequest.getSelectCartIds());
         return orderRepository.add(order);
     }
 
@@ -66,11 +66,6 @@ public class OrderService {
         int discountPrice = discountAction.discount(totalPrice);
         validatePaymentAmount(discountPrice);
         return discountPrice;
-    }
-
-    private void deleteOrderedItemsInCartById(List<Long> cartIds) {
-        cartIds.stream()
-                .forEach(cartItemRepository::deleteById);
     }
 
     private void validatePaymentAmount(int price) {

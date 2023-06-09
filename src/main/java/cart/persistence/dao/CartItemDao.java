@@ -4,6 +4,8 @@ import cart.persistence.entity.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -16,10 +18,12 @@ import java.util.Optional;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingColumns("quantity", "product_id", "member_id")
@@ -51,6 +55,13 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByIds(List<Long> cartIds) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:cartIds)";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("cartIds", cartIds);
+
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     public void updateQuantity(CartItemEntity cartItem) {

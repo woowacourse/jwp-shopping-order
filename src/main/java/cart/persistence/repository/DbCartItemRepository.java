@@ -1,6 +1,7 @@
 package cart.persistence.repository;
 
 import cart.domain.cartItem.CartItem;
+import cart.domain.cartItem.CartItemRepository;
 import cart.exception.NoSuchCartItemException;
 import cart.exception.NoSuchMemberException;
 import cart.exception.NoSuchProductException;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class DbCartItemRepository implements cart.domain.cartItem.CartItemRepository {
+public class DbCartItemRepository implements CartItemRepository {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final MemberDao memberDao;
@@ -56,6 +57,11 @@ public class DbCartItemRepository implements cart.domain.cartItem.CartItemReposi
     @Override
     public void deleteById(Long id) {
         cartItemDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteByIds(List<Long> cartIds) {
+        cartItemDao.deleteByIds(cartIds);
     }
 
     @Override

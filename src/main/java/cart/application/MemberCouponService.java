@@ -53,8 +53,4 @@ public class MemberCouponService {
                 .map(MemberCouponResponse::from)
                 .collect(Collectors.toList());
     }
-
-    public void deleteById(Long id) {
-        memberCouponRepository.delete(id);
-    }
 }
