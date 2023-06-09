@@ -9,6 +9,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import anotation.RepositoryTest;
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
+import cart.exception.CartNotFoundException;
+import cart.exception.DeleteFailException;
 import fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +53,7 @@ class CartItemRepositoryTest {
         List<Long> removeCartItemIds = List.of(100L, 101L, 102L);
 
         assertThatThrownBy(() -> cartItemRepository.deleteCartItems(removeCartItemIds))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(DeleteFailException.class);
     }
 
 }

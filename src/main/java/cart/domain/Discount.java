@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.IllegalDiscountException;
+
 public class Discount {
 
     private final Integer originPrice;
@@ -22,7 +24,7 @@ public class Discount {
 
     private static void validate(Integer originPrice, Integer priceAfterDiscount) {
         if (originPrice < priceAfterDiscount) {
-            throw new IllegalArgumentException("할인 정책으로 금액을 추가할 수 없습니다.");
+            throw new IllegalDiscountException("할인 정책으로 금액을 추가할 수 없습니다.");
         }
     }
 

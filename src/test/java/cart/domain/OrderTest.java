@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
+import cart.exception.ForbiddenException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +56,7 @@ class OrderTest {
         List<CartItem> cartItems = List.of(cartItem);
 
         assertThatThrownBy(() -> Order.of(illegalMember, 빈_쿠폰, cartItems))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ForbiddenException.class);
     }
 
 }

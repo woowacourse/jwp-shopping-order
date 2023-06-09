@@ -7,6 +7,8 @@ import cart.dao.dto.MemberCouponDto;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.exception.CouponNotFoundException;
+import cart.exception.DeleteFailException;
 import cart.repository.convertor.CouponConvertor;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class CouponRepository {
 
     public MemberCoupon saveCoupon(Member member, Long couponId) {
         CouponDto couponDto = couponDao.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 쿠폰이 존재하지 않습니다."));
+                .orElseThrow(() -> new CouponNotFoundException("해당하는 쿠폰이 존재하지 않습니다."));
 
         return saveMemberCoupon(member, couponDto);
     }
@@ -53,7 +55,7 @@ public class CouponRepository {
         for (MemberCouponDto memberCouponDto : memberCouponDtos) {
             Long couponId = memberCouponDto.getCouponId();
             CouponDto couponDto = couponDao.findById(couponId)
-                    .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
+                    .orElseThrow(() -> new CouponNotFoundException(COUPON_NOT_EXISTS_MESSAGE));
             Coupon coupon = CouponConvertor.dtoToDomain(couponDto);
             memberCoupons.add(new MemberCoupon(memberCouponDto.getId(), member, coupon));
         }
@@ -69,12 +71,12 @@ public class CouponRepository {
 
     private MemberCouponDto findMemberCouponByMemberCouponId(final Long memberCouponId, final Long memberId) {
         return memberCouponDao.findByIdAndMemberId(memberCouponId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
+                .orElseThrow(() -> new CouponNotFoundException(COUPON_NOT_EXISTS_MESSAGE));
     }
 
     private CouponDto findCouponByCouponId(final Long couponId) {
         return couponDao.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
+                .orElseThrow(() -> new CouponNotFoundException(COUPON_NOT_EXISTS_MESSAGE));
     }
 
     public void deleteMemberCouponById(final Optional<Long> couponId) {
@@ -85,7 +87,7 @@ public class CouponRepository {
         int removeCount = memberCouponDao.deleteById(memberCouponId);
 
         if (removeCount == 0) {
-            throw new IllegalArgumentException("쿠폰이 삭제되지 않았습니다.");
+            throw new DeleteFailException("쿠폰이 삭제되지 않았습니다.");
         }
     }
 

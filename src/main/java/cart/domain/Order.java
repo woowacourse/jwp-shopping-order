@@ -2,6 +2,7 @@ package cart.domain;
 
 import static java.util.stream.Collectors.toList;
 
+import cart.exception.ForbiddenException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class Order {
     private static void validateSameMember(final Member member,
                                            final List<CartItem> cartItems) {
         if (isCartItemsNotMatchMember(member, cartItems)) {
-            throw new IllegalArgumentException("장바구니 품목을 담은 멤버와 주문 멤버가 동일하지 않습니다.");
+            throw new ForbiddenException("장바구니 품목을 담은 멤버와 주문 멤버가 동일하지 않습니다.");
         }
     }
 

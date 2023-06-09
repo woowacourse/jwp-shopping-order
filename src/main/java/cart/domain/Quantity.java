@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.NumberRangeException;
 import java.util.Objects;
 
 public class Quantity {
@@ -17,7 +18,7 @@ public class Quantity {
 
     private static void validate(final int value) {
         if (value < 0) {
-            throw new IllegalArgumentException("수량은 0 미만으로 떨어질 수 없습니다.");
+            throw new NumberRangeException("수량은 0 미만으로 떨어질 수 없습니다.");
         }
     }
 

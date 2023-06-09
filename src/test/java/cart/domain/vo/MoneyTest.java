@@ -4,6 +4,8 @@ import static cart.domain.vo.Money.from;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.exception.NumberRangeException;
+import groovy.lang.NumberRange;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +26,7 @@ class MoneyTest {
     @DisplayName("Money 생성 (실패)")
     void createMoney_fail() {
         assertThatThrownBy(() -> Money.from(-1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NumberRangeException.class);
     }
 
 }

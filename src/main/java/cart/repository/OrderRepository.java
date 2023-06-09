@@ -8,12 +8,12 @@ import cart.dao.ProductDao;
 import cart.dao.dto.CouponDto;
 import cart.dao.dto.OrderDto;
 import cart.dao.dto.OrderProductDto;
-import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import cart.domain.Quantity;
+import cart.exception.ForbiddenException;
 import cart.repository.convertor.CouponConvertor;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -105,7 +105,7 @@ public class OrderRepository {
 
     public Order findOrderById(Member member, Long orderId) {
         OrderDto orderDto = orderDao.findByIdAndMemberId(orderId, member.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 고객의 주문이 아닙니다."));
+                .orElseThrow(() -> new ForbiddenException("해당 고객의 주문이 아닙니다."));
         List<OrderProduct> orderProductsByOrderDto = createOrderProductsFromOrderDto(orderDto);
         return new Order(
                 orderId,

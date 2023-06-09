@@ -15,6 +15,7 @@ import cart.dao.MemberCouponDao;
 import cart.dao.dto.MemberCouponDto;
 import cart.domain.Coupon;
 import cart.domain.MemberCoupon;
+import cart.exception.CouponNotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -64,7 +65,7 @@ class CouponRepositoryTest {
     @DisplayName("Member Coupon Id 와 Member Id 에 해당하는 Coupon 을 가져온다. (성공)")
     void findByCouponByMemberCouponId_fail() {
         assertThatThrownBy(() -> couponRepository.findCouponByMemberAndMemberCouponId(유저_2, 쿠폰_유저_1_정액_할인_쿠폰.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CouponNotFoundException.class);
     }
 
     @Test

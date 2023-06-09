@@ -1,5 +1,7 @@
 package cart.domain.vo;
 
+import cart.exception.NumberRangeException;
+
 public class Money {
 
     private static final int MONEY_LOWER_BOUND_EXCLUSIVE = 0;
@@ -17,9 +19,10 @@ public class Money {
 
     private static void validateNumber(int value) {
         if (value < MONEY_LOWER_BOUND_EXCLUSIVE) {
-            throw new IllegalArgumentException("가격이 음수일 수 없습니다.");
+            throw new NumberRangeException("가격이 음수일 수 없습니다.");
         }
     }
+
     public Integer getValue() {
         return value;
     }

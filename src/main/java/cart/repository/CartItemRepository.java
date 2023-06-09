@@ -2,6 +2,8 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
+import cart.exception.CartNotFoundException;
+import cart.exception.DeleteFailException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -25,7 +27,7 @@ public class CartItemRepository {
         CartItem cartItem = cartItemDao.findById(id);
 
         if (cartItem == null) {
-            throw new IllegalArgumentException("찾는 장바구니가 없습니다.");
+            throw new CartNotFoundException("찾는 장바구니가 없습니다.");
         }
 
         return cartItem;
@@ -41,7 +43,7 @@ public class CartItemRepository {
         int deleteCount = cartItemDao.deleteById(cartItemId);
 
         if (deleteCount == 0) {
-            throw new IllegalArgumentException("장바구니가 삭제되지 않았습니다.");
+            throw new DeleteFailException("장바구니가 삭제되지 않았습니다.");
         }
     }
 
