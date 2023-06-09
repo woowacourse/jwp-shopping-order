@@ -1,15 +1,16 @@
 package cart.dao;
 
-import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
+import cart.domain.Product;
 
 @Repository
 public class ProductDao {
@@ -20,7 +21,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
@@ -31,9 +32,9 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Product findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, new Object[] {productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -41,13 +42,13 @@ public class ProductDao {
         });
     }
 
-    public Long createProduct(Product product) {
+    public Long save(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
+                "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
@@ -60,12 +61,12 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void update(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public void delete(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
