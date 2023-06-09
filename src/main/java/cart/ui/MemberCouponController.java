@@ -4,6 +4,7 @@ import cart.application.MemberCouponService;
 import cart.domain.member.Member;
 import cart.dto.MemberCouponRequest;
 import cart.dto.MemberCouponResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,8 @@ public class MemberCouponController {
 
     @PostMapping
     public ResponseEntity<Void> addMemberCoupon(Member member, @RequestBody MemberCouponRequest memberCouponRequest) {
-        Long id = memberCouponService.add(member, memberCouponRequest);
-        return ResponseEntity.created(URI.create("/users/coupons/" + id)).build();
+        memberCouponService.add(member, memberCouponRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
