@@ -1,0 +1,3 @@
+### 사용자의 쿠폰 목록 조회
+GET http://localhost:8080/coupons
+Authorization: Basic YUBhLmNvbToxMjM0
