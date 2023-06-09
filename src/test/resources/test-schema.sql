@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS `cart_item`;
+DROP TABLE IF EXISTS `order_coupon`;
+DROP TABLE IF EXISTS `order_item`;
+DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `member_coupon`;
+DROP TABLE IF EXISTS `coupon`;
+DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `product`;
+
 CREATE TABLE IF NOT EXISTS `product`
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,

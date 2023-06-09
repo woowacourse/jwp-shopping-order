@@ -1,6 +1,10 @@
-package cart.dto;
+package cart.dto.cartItem;
+
+import javax.validation.constraints.NotNull;
 
 public class CartItemRequest {
+
+    @NotNull
     private Long productId;
 
     public CartItemRequest() {

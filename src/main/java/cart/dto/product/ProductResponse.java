@@ -1,24 +1,24 @@
-package cart.domain;
+package cart.dto.product;
+
+import cart.domain.Product;
 
 import java.util.Objects;
 
-public class Product {
+public class ProductResponse {
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
 
-    public Product(String name, int price, String imageUrl) {
+    private ProductResponse(Long id, String name, int price, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public static ProductResponse of(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {
@@ -45,8 +45,8 @@ public class Product {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Product product = (Product) o;
-        return price == product.price && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(imageUrl, product.imageUrl);
+        ProductResponse that = (ProductResponse) o;
+        return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "ProductResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +

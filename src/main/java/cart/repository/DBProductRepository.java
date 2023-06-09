@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.repository;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,14 +12,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class ProductDao {
+public class DBProductRepository implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public DBProductRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -31,6 +32,7 @@ public class ProductDao {
         });
     }
 
+    @Override
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
@@ -41,6 +43,7 @@ public class ProductDao {
         });
     }
 
+    @Override
     public Long createProduct(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -60,11 +63,13 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    @Override
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
+    @Override
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
