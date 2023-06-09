@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -14,12 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+    private final MemberDao memberDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+    public CartItemService(ProductDao productDao, CartItemDao cartItemDao, MemberDao memberDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
+        this.memberDao = memberDao;
     }
 
     public List<CartItemResponse> findByMember(Member member) {
@@ -28,7 +32,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId()), cartItemRequest.getQuantity()));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
