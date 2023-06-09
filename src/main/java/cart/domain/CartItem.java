@@ -41,11 +41,15 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException.IllegalMemberException(this, member);
         }
     }
 
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Money getTotalPrice() {
+        return Money.from(product.getPrice()).multiply(this.quantity);
     }
 }
