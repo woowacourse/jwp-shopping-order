@@ -1,7 +1,7 @@
 package cart.exception;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.member.Member;
+import cart.domain.cartitem.CartItem;
 
 public class CartItemException extends RuntimeException {
     public CartItemException(String message) {
