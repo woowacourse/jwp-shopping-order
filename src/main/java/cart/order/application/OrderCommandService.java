@@ -3,10 +3,10 @@ package cart.order.application;
 import cart.cart_item.application.CartItemService;
 import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.cart_item.domain.CartItem;
+import cart.coupon.application.CouponCommandService;
+import cart.coupon.application.CouponQueryService;
 import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
-import cart.member_coupon.application.MemberCouponCommandService;
-import cart.member_coupon.application.MemberCouponQueryService;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.mapper.OrderItemMapper;
 import cart.order.application.mapper.OrderMapper;
@@ -32,20 +32,20 @@ public class OrderCommandService {
   private final OrderDao orderDao;
   private final OrderItemDao orderItemDao;
   private final CartItemService cartItemService;
-  private final MemberCouponCommandService memberCouponCommandService;
-  private final MemberCouponQueryService memberCouponQueryService;
+  private final CouponCommandService couponCommandService;
+  private final CouponQueryService couponQueryService;
 
   public OrderCommandService(
       final OrderDao orderDao, final OrderItemDao orderItemDao,
       final CartItemService cartItemService,
-      final MemberCouponCommandService memberCouponCommandService,
-      final MemberCouponQueryService memberCouponQueryService
+      final CouponCommandService couponCommandService,
+      final CouponQueryService couponQueryService
   ) {
     this.orderDao = orderDao;
     this.orderItemDao = orderItemDao;
     this.cartItemService = cartItemService;
-    this.memberCouponCommandService = memberCouponCommandService;
-    this.memberCouponQueryService = memberCouponQueryService;
+    this.couponCommandService = couponCommandService;
+    this.couponQueryService = couponQueryService;
   }
 
   public Long registerOrder(final Member member, final RegisterOrderRequest registerOrderRequest) {
@@ -57,7 +57,7 @@ public class OrderCommandService {
         new Money(registerOrderRequest.getTotalPrice())
     );
 
-    final Coupon coupon = memberCouponQueryService.searchCouponOwnedByMember(
+    final Coupon coupon = couponQueryService.searchCouponOwnedByMember(
         member,
         registerOrderRequest.getCouponId()
     );
@@ -70,18 +70,10 @@ public class OrderCommandService {
     );
 
     if (order.hasCoupon()) {
-      memberCouponCommandService.updateUsedCoupon(coupon, member);
+      couponCommandService.updateUsedCoupon(coupon, member);
     }
 
     return saveOrder(member, order, orderedItems);
-  }
-
-  private Long saveOrder(final Member member, final Order order, final OrderedItems orderedItems) {
-    final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, order);
-    final Long savedOrderId = orderDao.save(orderEntity);
-    orderItemDao.save(OrderItemMapper.mapToOrderItemEntities(orderedItems, savedOrderId));
-
-    return savedOrderId;
   }
 
   private List<CartItem> removeCartItemsFromOrder(
@@ -95,6 +87,14 @@ public class OrderCommandService {
     );
     cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
     return cartItems;
+  }
+
+  private Long saveOrder(final Member member, final Order order, final OrderedItems orderedItems) {
+    final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, order);
+    final Long savedOrderId = orderDao.save(orderEntity);
+    orderItemDao.save(OrderItemMapper.mapToOrderItemEntities(orderedItems, savedOrderId));
+
+    return savedOrderId;
   }
 
   public void deleteOrder(final Member member, final Long orderId) {
@@ -123,7 +123,7 @@ public class OrderCommandService {
     validateOrderOwner(order, member);
 
     if (order.hasCoupon()) {
-      memberCouponCommandService.updateUsedCoupon(order.getCoupon(), member);
+      couponCommandService.updateUsedCoupon(order.getCoupon(), member);
     }
   }
 }

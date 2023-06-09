@@ -1,13 +1,13 @@
-package cart.member_coupon.application;
+package cart.coupon.application;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import cart.coupon.dao.MemberCouponDao;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.FixDiscountCoupon;
+import cart.coupon.domain.MemberCoupon;
+import cart.coupon.domain.UsedStatus;
 import cart.member.domain.Member;
-import cart.member_coupon.dao.MemberCouponDao;
-import cart.member_coupon.domain.MemberCoupon;
-import cart.member_coupon.domain.UsedStatus;
 import cart.value_object.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemberCouponCommandServiceTest {
+class CouponCommandServiceTest {
 
   @Autowired
-  private MemberCouponCommandService memberCouponCommandService;
+  private CouponCommandService couponCommandService;
 
   @Autowired
   private MemberCouponDao memberCouponDao;
@@ -45,7 +45,7 @@ class MemberCouponCommandServiceTest {
     final UsedStatus beforeUsedStatus = memberCoupon.getUsedStatus();
 
     //when
-    memberCouponCommandService.updateUsedCoupon(coupon, member);
+    couponCommandService.updateUsedCoupon(coupon, member);
 
     //then
     final MemberCoupon afterUpdateMemberCoupon = memberCouponDao.findByMemberAndCouponId(

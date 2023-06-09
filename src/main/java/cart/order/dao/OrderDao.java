@@ -69,7 +69,7 @@ public class OrderDao {
       final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
       final Long couponId = rs.getLong("coupon_id");
       final Coupon coupon = couponDao.findById(couponId)
-          .orElseThrow(() -> new CouponException(CouponExceptionType.NOT_FOUNT_COUPON));
+          .orElseThrow(() -> new CouponException(CouponExceptionType.NOT_FOUND_COUPON));
       final Timestamp createdAt = rs.getTimestamp("created_at");
       final Instant instant = createdAt.toInstant();
       final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());

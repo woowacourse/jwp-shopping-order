@@ -1,4 +1,4 @@
-package cart.member_coupon.domain;
+package cart.coupon.domain;
 
 import java.util.Arrays;
 

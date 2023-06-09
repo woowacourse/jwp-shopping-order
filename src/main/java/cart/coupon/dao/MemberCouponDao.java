@@ -1,13 +1,12 @@
-package cart.member_coupon.dao;
+package cart.coupon.dao;
 
-import cart.coupon.dao.CouponDao;
 import cart.coupon.domain.Coupon;
 import cart.coupon.exception.CouponException;
 import cart.coupon.exception.CouponExceptionType;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
-import cart.member_coupon.domain.MemberCoupon;
-import cart.member_coupon.domain.UsedStatus;
+import cart.coupon.domain.MemberCoupon;
+import cart.coupon.domain.UsedStatus;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -49,7 +48,7 @@ public class MemberCouponDao {
       final Member member = memberDao.getMemberById(savedMemberId);
       final long savedCouponId = rs.getLong("coupon_id");
       final Coupon coupon = couponDao.findById(savedCouponId)
-          .orElseThrow(() -> new CouponException(CouponExceptionType.NOT_FOUNT_COUPON));
+          .orElseThrow(() -> new CouponException(CouponExceptionType.NOT_FOUND_COUPON));
       final String usedYn = rs.getString("used_yn");
       return new MemberCoupon(member, coupon, UsedStatus.mapToUsedStatus(usedYn));
     };

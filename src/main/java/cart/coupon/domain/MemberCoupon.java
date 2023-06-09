@@ -1,6 +1,5 @@
-package cart.member_coupon.domain;
+package cart.coupon.domain;
 
-import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 
 public class MemberCoupon {

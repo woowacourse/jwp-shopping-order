@@ -1,4 +1,4 @@
-package cart.member_coupon.dao;
+package cart.coupon.dao;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,14 +7,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cart.coupon.dao.CouponDao;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.EmptyCoupon;
 import cart.coupon.domain.FixDiscountCoupon;
+import cart.coupon.domain.MemberCoupon;
+import cart.coupon.domain.UsedStatus;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
-import cart.member_coupon.domain.MemberCoupon;
-import cart.member_coupon.domain.UsedStatus;
 import cart.value_object.Money;
 import java.util.List;
 import java.util.Optional;
