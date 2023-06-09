@@ -1,11 +1,37 @@
-INSERT INTO product (name, price, image_url) VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
-INSERT INTO product (name, price, image_url) VALUES ('샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
-INSERT INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
+insert IGNORE  into member values (1, 'a@a.com', '1234');
+insert IGNORE into member values (2, 'b@b.com', '1234');
 
-INSERT INTO member (email, password) VALUES ('a@a.com', '1234');
-INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
+insert IGNORE into coupon VALUES (1, '1000원 할인 쿠폰', 'PRICE', 1000);
+insert IGNORE into coupon VALUES (2, '2000원 할인 쿠폰', 'PRICE', 2000);
+insert IGNORE into coupon VALUES (3, '10% 할인 쿠폰', 'RATE', 10);
+insert IGNORE into coupon VALUES (4, '20% 할인 쿠폰', 'RATE', 20);
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
+insert IGNORE into member_coupon values (1, false, 1, 1);
+insert IGNORE into member_coupon values (2, false, 1, 1);
+insert IGNORE into member_coupon values (3, false, 1, 1);
+insert IGNORE into member_coupon values (4, false, 1, 1);
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+insert IGNORE into member_coupon values (5, false, 1, 2);
+insert IGNORE into member_coupon values (6, false, 1, 2);
+insert IGNORE into member_coupon values (7, false, 1, 2);
+insert IGNORE into member_coupon values (8, false, 1, 2);
+
+insert IGNORE into member_coupon values (9, false, 1, 3);
+insert IGNORE into member_coupon values (10, false, 1, 3);
+insert IGNORE into member_coupon values (11, false, 1, 3);
+insert IGNORE into member_coupon values (12, false, 1, 3);
+
+insert IGNORE into member_coupon values (13, false, 2, 1);
+insert IGNORE into member_coupon values (14, false, 2, 1);
+insert IGNORE into member_coupon values (15, false, 2, 1);
+insert IGNORE into member_coupon values (16, false, 2, 1);
+
+insert IGNORE into member_coupon values (17, false, 2, 2);
+insert IGNORE into member_coupon values (18, false, 2, 2);
+insert IGNORE into member_coupon values (19, false, 2, 2);
+insert IGNORE into member_coupon values (20, false, 2, 2);
+
+insert IGNORE into member_coupon values (21, false, 2, 3);
+insert IGNORE into member_coupon values (22, false, 2, 3);
+insert IGNORE into member_coupon values (23, false, 2, 3);
+insert IGNORE into member_coupon values (24, false, 2, 3);

@@ -1,0 +1,64 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+
+== Product
+
+=== Product 생성
+
+==== HTTP request
+
+include::{snippets}/product-create/http-request.adoc[]
+include::{snippets}/product-create/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-create/http-response.adoc[]
+
+=== Product 단일 조회
+
+==== HTTP request
+
+include::{snippets}/product-getById/http-request.adoc[]
+include::{snippets}/product-getById/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-getById/http-response.adoc[]
+include::{snippets}/product-getById/response-fields.adoc[]
+
+
+=== Product 전체 조회
+
+==== HTTP request
+
+include::{snippets}/product-getAll/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-getAll/http-response.adoc[]
+include::{snippets}/product-getAll/response-fields.adoc[]
+
+=== Product 수정
+
+==== HTTP request
+
+include::{snippets}/product-update/http-request.adoc[]
+include::{snippets}/product-update/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-update/http-response.adoc[]
+
+=== Product 삭제
+
+==== HTTP request
+
+include::{snippets}/product-delete/http-request.adoc[]
+include::{snippets}/product-delete/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-delete/http-response.adoc[]

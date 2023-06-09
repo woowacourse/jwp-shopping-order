@@ -1,23 +1,42 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
+import static java.util.stream.Collectors.joining;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+
+import cart.dto.response.ErrorResponse;
+import cart.exception.ApplicationException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ErrorResponse> handlerAuthenticationException(ApplicationException exception) {
+        log(exception);
+        return ResponseEntity.status(exception.status()).body(new ErrorResponse(exception));
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
+        String exceptionMessage = exception.getBindingResult().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(joining(System.lineSeparator()));
+        return ResponseEntity.status(UNPROCESSABLE_ENTITY)
+                .body(new ErrorResponse(UNPROCESSABLE_ENTITY, exceptionMessage));
     }
 
+    private void log(ApplicationException e) {
+        logger.error(e.toString());
+        logger.error(e.getStackTrace());
+    }
 }

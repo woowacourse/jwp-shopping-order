@@ -1,9 +1,13 @@
-package cart.dto;
+package cart.dto.request;
+
+import javax.validation.constraints.NotNull;
 
 public class CartItemRequest {
+
+    @NotNull(message = "상품 아이디를 입력해주세요.")
     private Long productId;
 
-    public CartItemRequest() {
+    private CartItemRequest() {
     }
 
     public CartItemRequest(Long productId) {
