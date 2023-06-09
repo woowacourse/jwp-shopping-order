@@ -2,7 +2,8 @@ package cart.member_coupon.dao;
 
 import cart.coupon.dao.CouponDao;
 import cart.coupon.domain.Coupon;
-import cart.coupon.exception.NotFoundCouponException;
+import cart.coupon.exception.CouponException;
+import cart.coupon.exception.CouponExceptionType;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member_coupon.domain.MemberCoupon;
@@ -48,7 +49,7 @@ public class MemberCouponDao {
       final Member member = memberDao.getMemberById(savedMemberId);
       final long savedCouponId = rs.getLong("coupon_id");
       final Coupon coupon = couponDao.findById(savedCouponId)
-          .orElseThrow(() -> new NotFoundCouponException("해당 쿠폰은 존재하지 않습니다"));
+          .orElseThrow(() -> new CouponException(CouponExceptionType.NOT_FOUNT_COUPON));
       final String usedYn = rs.getString("used_yn");
       return new MemberCoupon(member, coupon, UsedStatus.mapToUsedStatus(usedYn));
     };

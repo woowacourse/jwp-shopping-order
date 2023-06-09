@@ -2,7 +2,8 @@ package cart.order.dao;
 
 import cart.coupon.dao.CouponDao;
 import cart.coupon.domain.Coupon;
-import cart.coupon.exception.NotFoundCouponException;
+import cart.coupon.exception.CouponException;
+import cart.coupon.exception.CouponExceptionType;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
@@ -68,7 +69,7 @@ public class OrderDao {
       final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
       final Long couponId = rs.getLong("coupon_id");
       final Coupon coupon = couponDao.findById(couponId)
-          .orElseThrow(() -> new NotFoundCouponException("해당 쿠폰은 존재하지 않습니다"));
+          .orElseThrow(() -> new CouponException(CouponExceptionType.NOT_FOUNT_COUPON));
       final Timestamp createdAt = rs.getTimestamp("created_at");
       final Instant instant = createdAt.toInstant();
       final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
