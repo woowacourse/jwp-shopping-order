@@ -24,6 +24,8 @@ public class CouponFixtures {
             new Coupon(4L, "새쿠폰", 5000, 0,
                     LocalDateTime.of(2023, 12, 31, 23, 59, 59));
 
+    public static final Coupon BONUS_COUPON =
+            new Coupon(null, "5천원 할인 쿠폰", 5000, 0, LocalDateTime.now().plusDays(7));
 
     public static final CouponResponse COUPON1_RESPONSE = CouponResponse.of(COUPON1);
     public static final CouponResponse COUPON2_RESPONSE = CouponResponse.of(COUPON2);
