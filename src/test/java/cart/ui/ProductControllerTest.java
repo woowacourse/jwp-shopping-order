@@ -27,7 +27,7 @@ class ProductControllerTest {
     public void validatePathVariable() throws Exception {
         String invalidId = null;
 
-        mockMvc.perform(get("/products/{id}", invalidId))  // "/your-endpoint/{id}"를 실제 엔드포인트로 교체해주세요.
+        mockMvc.perform(get("/products/{id}", invalidId))
                 .andExpect(status().isNotFound());
     }
 }
