@@ -2,9 +2,6 @@ package cart.order.dao;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import cart.coupon.domain.EmptyCoupon;
 import cart.member.domain.Member;
@@ -35,13 +32,9 @@ class OrderItemDaoTest {
 
   private OrderItemDao orderItemDao;
 
-  private OrderDao orderDao;
-
   @BeforeEach
   void setUp() {
-    orderDao = mock(OrderDao.class);
-
-    orderItemDao = new OrderItemDao(jdbcTemplate, orderDao);
+    orderItemDao = new OrderItemDao(jdbcTemplate);
   }
 
   @Test
@@ -76,9 +69,6 @@ class OrderItemDaoTest {
         1L, member,
         new Money(100), new EmptyCoupon(),
         OrderStatus.CANCEL, ZonedDateTime.now());
-
-    when(orderDao.findByOrderId(anyLong()))
-        .thenReturn(order);
 
     //when
     final List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);

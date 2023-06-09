@@ -1,6 +1,5 @@
 package cart.order.dao;
 
-import cart.order.domain.Order;
 import cart.order.dao.entity.OrderItemEntity;
 import cart.order.domain.OrderItem;
 import cart.value_object.Money;
@@ -19,15 +18,13 @@ public class OrderItemDao {
   private final JdbcTemplate jdbcTemplate;
   private final SimpleJdbcInsert simpleJdbcInsert;
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-  private final OrderDao orderDao;
 
-  public OrderItemDao(final JdbcTemplate jdbcTemplate, final OrderDao orderDao) {
+  public OrderItemDao(final JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
     this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
         .withTableName("ORDER_ITEM")
         .usingGeneratedKeyColumns("id");
     this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-    this.orderDao = orderDao;
   }
 
   public void save(final List<OrderItemEntity> orderItemEntities) {
@@ -39,12 +36,11 @@ public class OrderItemDao {
 
     return jdbcTemplate.query(sql, (rs, rowNum) -> {
       final long id = rs.getLong("id");
-      final Order order = orderDao.findByOrderId(orderId);
       final String name = rs.getString("name");
       final BigDecimal price = rs.getBigDecimal("price");
       final String imageUrl = rs.getString("image_url");
       final int quantity = rs.getInt("quantity");
-      return new OrderItem(id, order, name, new Money(price), imageUrl, quantity);
+      return new OrderItem(id, name, new Money(price), imageUrl, quantity);
     }, orderId);
   }
 
