@@ -5,12 +5,14 @@ import cart.dto.PointResponse;
 import cart.dto.SavingPointResponse;
 import cart.service.PointService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
 
+@Validated
 @RestController
 public class PointController {
     private final PointService pointService;

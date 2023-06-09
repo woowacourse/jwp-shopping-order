@@ -6,6 +6,7 @@ import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.service.CartItemService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/cart-items")
 public class CartItemController {
