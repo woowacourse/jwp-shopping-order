@@ -1,0 +1,4 @@
+[submodule "src/main/resources/jwp-shopping-order-secure"]
+	path = src/main/resources/jwp-shopping-order-secure
+	url = https://github.com/splitCoding/jwp-shopping-order-secure
+  branch = main

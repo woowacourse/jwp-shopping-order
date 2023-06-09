@@ -1,24 +1,24 @@
 package cart.integration;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getProducts() {
         var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products")
-                .then()
-                .extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/products")
+            .then()
+            .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -28,12 +28,12 @@ public class ProductIntegrationTest extends IntegrationTest {
         var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
         var response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(product)
-                .when()
-                .post("/products")
-                .then()
-                .extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(product)
+            .when()
+            .post("/products")
+            .then()
+            .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -44,24 +44,24 @@ public class ProductIntegrationTest extends IntegrationTest {
 
         // create product
         var location =
-                given()
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
+            given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(product)
+                .when()
+                .post("/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
 
         // get product
         var responseProduct = given().log().all()
-                .when()
-                .get(location)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .jsonPath()
-                .getObject(".", ProductResponse.class);
+            .when()
+            .get(location)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getObject(".", ProductResponse.class);
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");

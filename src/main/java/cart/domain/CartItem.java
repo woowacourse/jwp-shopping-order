@@ -1,10 +1,10 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
-
 import java.util.Objects;
 
 public class CartItem {
+
     private Long id;
     private int quantity;
     private final Product product;
@@ -46,6 +46,29 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("장바구니에 담은 상품의 갯수는 1이상이여야 합니다.");
+        }
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CartItem cartItem = (CartItem) o;
+        if (Objects.isNull(id) || Objects.isNull(cartItem.id)) {
+            return false;
+        }
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
