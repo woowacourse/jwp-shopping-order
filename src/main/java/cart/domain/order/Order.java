@@ -36,11 +36,10 @@ public class Order {
         OrderProducts orderProducts = OrderProducts.of(cartItems);
         Price totalPriceOfOrderProducts = new Price(orderProducts.calculateTotalPrice());
         Payment payment = Payment.of(totalPriceOfOrderProducts, new DeliveryFee(deliveryFee), new Point(usedPoint));
-        member.pay(payment);
         return new Order(member, orderProducts, payment);
     }
 
-    public static Order orderProductsAndUpdatePayment(long id, Member member, OrderProducts orderProducts, Payment payment, LocalDateTime createdAt) {
+    public static Order of(long id, Member member, OrderProducts orderProducts, Payment payment, LocalDateTime createdAt) {
         return new Order(id, member, orderProducts, payment, createdAt);
     }
 

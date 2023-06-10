@@ -29,6 +29,7 @@ public class OrderService {
     public long orderProducts(Member member, OrderProductsRequest orderProductsRequest) {
         List<CartItem> cartItems = cartItemRepository.findCartItemsByIds(orderProductsRequest.getCartIds());
         Order order = Order.orderProductsAndUpdatePayment(member, cartItems, orderProductsRequest.getPoint(), orderProductsRequest.getDeliveryFee());
+        member.pay(order.getPayment());
         // 장바구니에서 삭제
         cartItems.forEach(cartItem -> cartItemRepository.deleteById(cartItem.getId()));
         // 주문 목록에 저장

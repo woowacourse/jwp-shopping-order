@@ -78,7 +78,7 @@ public class OrderRepository {
                 .orElseThrow(OrderProductException.NotFound::new);
         OrderProducts orderProducts = toOrderProducts(orderId, orderProductEntities);
         Payment payment = Payment.of(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-        return Order.orderProductsAndUpdatePayment(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
+        return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }
 
     private static OrderProducts toOrderProducts(long orderId, List<OrderProductEntity> orderProductEntities) {
