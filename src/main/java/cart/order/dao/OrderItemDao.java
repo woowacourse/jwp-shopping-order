@@ -29,10 +29,6 @@ public class OrderItemDao {
     this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
   }
 
-  public void save(final List<OrderItemEntity> orderItemEntities) {
-    simpleJdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(orderItemEntities));
-  }
-
   public void save(final Order order) {
     final List<OrderItemEntity> orderItemEntities = OrderItemEntity.makeOrderItemEntities(order);
     simpleJdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(orderItemEntities));

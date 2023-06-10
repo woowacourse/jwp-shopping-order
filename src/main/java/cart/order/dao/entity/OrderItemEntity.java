@@ -7,32 +7,23 @@ import java.util.stream.Collectors;
 
 public class OrderItemEntity {
 
-  private final Long id;
+  private Long id;
   private final Long orderId;
   private final String name;
   private final BigDecimal price;
   private final String imageUrl;
   private final int quantity;
 
-  public OrderItemEntity(
-      final Long id, final Long orderId,
-      final String name, final BigDecimal price,
-      final String imageUrl, final int quantity
+  private OrderItemEntity(
+      final Long orderId, final String name,
+      final BigDecimal price, final String imageUrl,
+      final int quantity
   ) {
-    this.id = id;
     this.orderId = orderId;
     this.name = name;
     this.price = price;
     this.imageUrl = imageUrl;
     this.quantity = quantity;
-  }
-
-  public OrderItemEntity(
-      final Long orderId, final String name,
-      final BigDecimal price, final String imageUrl,
-      final int quantity
-  ) {
-    this(null, orderId, name, price, imageUrl, quantity);
   }
 
   public static List<OrderItemEntity> makeOrderItemEntities(final Order order) {

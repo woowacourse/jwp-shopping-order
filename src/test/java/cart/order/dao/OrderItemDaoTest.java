@@ -5,12 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.EmptyCoupon;
-import cart.order.dao.entity.OrderItemEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderedItems;
 import cart.value_object.Money;
-import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,24 +34,26 @@ class OrderItemDaoTest {
   }
 
   @Test
-  @DisplayName("batchSave() : 주문된 상품들을 한번에 저장할 수 있다.")
+  @DisplayName("save() : 주문된 상품들을 한번에 저장할 수 있다.")
   void test_batchSave() throws Exception {
     //given
-    final String imageUrl = "imageUrl";
-    final String itemName = "itemName";
-    final BigDecimal price = BigDecimal.valueOf(1000);
-    final int quantity = 4;
+    final long orderId = 1L;
+    final Coupon coupon = new EmptyCoupon();
+    final OrderedItems orderedItems = OrderedItems.createdFromLookUp(List.of(
+        new OrderItem(1L, "orderItem1", new Money(10000), "imageUrl1", 1),
+        new OrderItem(2L, "orderItem2", new Money(10000), "imageUrl2", 1),
+        new OrderItem(3L, "orderItem3", new Money(10000), "imageUrl3", 1)
+    ));
 
-    final OrderItemEntity orderItemEntity1 = new OrderItemEntity(3L, itemName, price, imageUrl,
-        quantity);
-
-    final OrderItemEntity orderItemEntity2 = new OrderItemEntity(3L, "itemName2",
-        BigDecimal.valueOf(2000), "imageUrl2", 5);
-
-    final List<OrderItemEntity> orderItemEntities = List.of(orderItemEntity1, orderItemEntity2);
+    final Order order = new Order(
+        orderId, null,
+        null, coupon,
+        null, null,
+        orderedItems
+    );
 
     //when & then
-    assertDoesNotThrow(() -> orderItemDao.save(orderItemEntities));
+    assertDoesNotThrow(() -> orderItemDao.save(order));
   }
 
   @Test
