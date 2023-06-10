@@ -1,0 +1,22 @@
+[[Product-API]]
+== Product API
+
+[[Product-생성]]
+=== Product 생성
+operation::product-api-controller-test/create-product[snippets='http-request,request-fields,http-response,response-headers']
+
+[[Product-전체-조회]]
+=== Product 전체 조회
+operation::product-api-controller-test/get-all-products[snippets='http-request,http-response,response-fields-beneath-[]']
+
+[[Product-단건-조회]]
+=== Product 단건 조회
+operation::product-api-controller-test/get-product-by-id[snippets='http-request,http-response,path-parameters,response-fields']
+
+[[Product-수정]]
+=== Product 수정
+operation::product-api-controller-test/update-product[snippets='http-request,http-response,path-parameters,request-fields']
+
+[[Product-삭제]]
+=== Product 삭제
+operation::product-api-controller-test/delete-product[snippets='http-request,http-response,path-parameters']

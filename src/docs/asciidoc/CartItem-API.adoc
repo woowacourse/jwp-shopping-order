@@ -1,0 +1,18 @@
+[[CartItem-API]]
+== CartItem API
+
+[[CartItem-추가]]
+=== CartItem 추가
+operation::cart-item-api-controller-test/add-cart-item[snippets='http-request,request-headers,request-fields,http-response,response-headers,request-fields']
+
+[[CartItem-Member-기준-조회]]
+=== CartItem Member 기준 조회
+operation::cart-item-api-controller-test/show-cart-items[snippets='http-request,request-headers,http-response,response-fields-beneath-[]']
+
+[[CartItem-개수-수정]]
+=== CartItem 개수 수정
+operation::cart-item-api-controller-test/update-cart-item-quantity[snippets='http-request,request-headers,http-response,path-parameters,request-fields']
+
+[[CartItem-삭제]]
+=== CartItem 삭제
+operation::cart-item-api-controller-test/delete-cart-item[snippets='http-request,request-headers,http-response,path-parameters']

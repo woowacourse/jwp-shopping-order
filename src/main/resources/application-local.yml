@@ -1,0 +1,11 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/shopping?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: root
+  thymeleaf:
+    cache: false

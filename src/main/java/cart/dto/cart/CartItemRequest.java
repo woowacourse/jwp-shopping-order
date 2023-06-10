@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.cart;
 
 public class CartItemRequest {
     private Long productId;

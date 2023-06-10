@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: prod-format
+  datasource:
+    url: jdbc:mysql://${DB_SERVER_IP}:3306/${DATABASE}?serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${username}
+    password: ${password}
+    driver-class-name: com.mysql.cj.jdbc.Driver

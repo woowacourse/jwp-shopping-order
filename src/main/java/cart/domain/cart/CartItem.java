@@ -1,7 +1,8 @@
-package cart.domain;
+package cart.domain.cart;
 
+import cart.domain.Member;
+import cart.domain.Product;
 import cart.exception.CartItemException;
-
 import java.util.Objects;
 
 public class CartItem {
@@ -48,4 +49,15 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
+    }
+
 }
