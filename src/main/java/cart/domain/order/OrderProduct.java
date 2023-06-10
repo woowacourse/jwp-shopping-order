@@ -22,6 +22,20 @@ public class OrderProduct {
         this.totalPrice = totalPrice;
     }
 
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", orderId=" + orderId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }
@@ -52,20 +66,6 @@ public class OrderProduct {
 
     public int getTotalPrice() {
         return totalPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderProduct{" +
-                "id=" + id +
-                ", productId=" + productId +
-                ", orderId=" + orderId +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", quantity=" + quantity +
-                ", totalPrice=" + totalPrice +
-                '}';
     }
 
     public static class Builder {

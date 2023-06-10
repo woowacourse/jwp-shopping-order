@@ -43,14 +43,6 @@ public class OrderProducts {
                 .orElse(DEFAULT_PAYMENT);
     }
 
-    public List<OrderProduct> getOrderProducts() {
-        return orderProducts;
-    }
-
-    public long getOrderId() {
-        return orderId;
-    }
-
     @Override
     public String toString() {
         return "OrderProducts{" +
@@ -58,5 +50,13 @@ public class OrderProducts {
                 ", orderProducts=" + orderProducts +
                 ", totalPrice=" + calculateTotalPrice() +
                 '}';
+    }
+
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public long getOrderId() {
+        return orderId;
     }
 }

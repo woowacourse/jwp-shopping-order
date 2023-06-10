@@ -24,6 +24,33 @@ public class OrderProductEntity {
         this.totalPrice = totalPrice;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderProductEntity that = (OrderProductEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderProductEntity{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,33 +81,6 @@ public class OrderProductEntity {
 
     public int getTotalPrice() {
         return totalPrice;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderProductEntity that = (OrderProductEntity) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderProductEntity{" +
-                "id=" + id +
-                ", orderId=" + orderId +
-                ", productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", productPrice=" + productPrice +
-                ", productImageUrl='" + productImageUrl + '\'' +
-                ", quantity=" + quantity +
-                ", totalPrice=" + totalPrice +
-                '}';
     }
 
     public static class Builder {

@@ -21,6 +21,14 @@ public class OrderProductsRequest {
         this.deliveryFee = deliveryFee;
     }
 
+    @Override
+    public String toString() {
+        return "OrderProductsRequest{" +
+                "cartIds=" + cartIds +
+                ", point=" + point +
+                '}';
+    }
+
     public List<Long> getCartIds() {
         return cartIds;
     }
@@ -31,13 +39,5 @@ public class OrderProductsRequest {
 
     public int getDeliveryFee() {
         return deliveryFee;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderProductsRequest{" +
-                "cartIds=" + cartIds +
-                ", point=" + point +
-                '}';
     }
 }

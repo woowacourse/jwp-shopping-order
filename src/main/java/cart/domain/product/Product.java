@@ -50,6 +50,16 @@ public class Product {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,15 +74,5 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
     }
 }

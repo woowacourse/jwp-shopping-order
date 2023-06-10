@@ -66,6 +66,16 @@ public class CartItem {
         return product.getPrice() * quantity;
     }
 
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }
@@ -80,15 +90,5 @@ public class CartItem {
 
     public Member getMember() {
         return member;
-    }
-
-    @Override
-    public String toString() {
-        return "CartItem{" +
-                "id=" + id +
-                ", quantity=" + quantity +
-                ", product=" + product +
-                ", member=" + member +
-                '}';
     }
 }

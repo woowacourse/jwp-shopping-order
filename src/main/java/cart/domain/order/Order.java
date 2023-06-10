@@ -47,6 +47,10 @@ public class Order {
         return payment.getUsedPointValue();
     }
 
+    public int getTotalPriceValue() {
+        return payment.getTotalPriceValue();
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -56,10 +60,6 @@ public class Order {
                 ", payment=" + payment +
                 ", createdAt=" + createdAt +
                 '}';
-    }
-
-    public int getTotalPriceValue() {
-        return payment.getTotalPriceValue();
     }
 
     public Point getUsedPoint() {

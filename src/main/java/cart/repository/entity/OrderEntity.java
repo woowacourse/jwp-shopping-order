@@ -11,6 +11,14 @@ public class OrderEntity {
     private final int usedPoint;
     private final LocalDateTime createdAt;
 
+    public OrderEntity(Long id, long memberId, int totalPayment, int usedPoint, LocalDateTime createdAt) {
+        this.id = id;
+        this.memberId = memberId;
+        this.totalPayment = totalPayment;
+        this.usedPoint = usedPoint;
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -22,14 +30,6 @@ public class OrderEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public OrderEntity(Long id, long memberId, int totalPayment, int usedPoint, LocalDateTime createdAt) {
-        this.id = id;
-        this.memberId = memberId;
-        this.totalPayment = totalPayment;
-        this.usedPoint = usedPoint;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
