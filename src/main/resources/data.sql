@@ -1,11 +1,34 @@
-INSERT INTO product (name, price, image_url) VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
-INSERT INTO product (name, price, image_url) VALUES ('샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
-INSERT INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
-
-INSERT INTO member (email, password) VALUES ('a@a.com', '1234');
-INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
-
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('호랑이', 1000000, 'https://t3.ftcdn.net/jpg/02/65/13/64/240_F_265136456_5ybCld832gy6iVYfwVvSlGCd36zDgAKc.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('백여우', 700000, 'https://t3.ftcdn.net/jpg/03/26/64/48/240_F_326644821_8l0j8F5Ff2biHPh7s7ZHepgHLMFLySRx.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('판다', 650000, 'https://t3.ftcdn.net/jpg/03/42/43/62/240_F_342436282_trgH0jljVlB6EWxZlAE85OBwQqquDIix.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('참새', 5980, 'https://t3.ftcdn.net/jpg/04/17/19/08/240_F_417190850_hyj154RlSqPMVOIGSZrJREnsizM4nmeL.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('라쿤', 421500, 'https://t4.ftcdn.net/jpg/01/80/34/23/240_F_180342367_Q2R70BqnFC6j3rUudofrsSO1Lt46GFLX.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('영양', 321000, 'https://t3.ftcdn.net/jpg/04/03/41/36/240_F_403413652_Up2pPicmVNknJaIdskQAtag8Xt0SUICp.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('나무늘보', 333000, 'https://t4.ftcdn.net/jpg/03/02/56/13/240_F_302561349_ViivbxK0bDbFQXfKTKH4A6VJYcjpqOKC.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('늑대', 555000, 'https://t4.ftcdn.net/jpg/03/26/63/55/240_F_326635556_ZcV78WAlixThtNH8l23S3Y2GdNFJyOJO.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('곰', 999000, 'https://t4.ftcdn.net/jpg/02/92/61/81/240_F_292618109_uv5TRyXW0LpWuHlYYSc0VZr4uPOhX95I.jpg');
+INSERT IGNORE INTO product (name, price, image_url) VALUES ('코뿔소', 880000, 'https://t3.ftcdn.net/jpg/02/74/27/24/240_F_274272449_2exHNG25y6vX2lroW13Fk0AFB7hInSGf.jpg');
+INSERT IGNORE INTO member (email, password) VALUES ('a@a.com', '1234');
+INSERT IGNORE INTO member (email, password) VALUES ('b@b.com', '1234');
+INSERT IGNORE INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
+INSERT IGNORE INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
+INSERT IGNORE INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+INSERT IGNORE INTO coupon (name, discount_type, amount) VALUES ('오픈 기념 쿠폰', 'rate', 10);
+INSERT IGNORE INTO coupon (name, discount_type, amount) VALUES ('오픈 기념 쿠폰', 'price', 1000);
+INSERT IGNORE INTO coupon (name, discount_type, amount) VALUES ('회원 가입 쿠폰', 'rate', 20);
+INSERT IGNORE INTO coupon (name, discount_type, amount) VALUES ('회원 가입 쿠폰', 'price', 2000);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 2);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 3);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 1);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 4);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 2);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 3);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 1);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 4);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 2);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 3);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 1);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 4);

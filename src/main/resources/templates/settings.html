@@ -24,10 +24,12 @@
                 <div class="cart-item-name" th:text="${member.email}"></div>
                 <div class="cart-item-price" th:text="${member.password}"></div>
                 <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+                <button type="submit" id="coupon-btn" class="coupon-btn" th:onclick="generateCoupon([[${member}]])">쿠폰 발급</button>
             </div>
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/settings.js}"> </script>
 </body>
 </html>

@@ -1,9 +1,13 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartItem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,9 +20,11 @@ import java.util.Objects;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = namedJdbcTemplate;
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -37,7 +43,7 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return CartItem.createFromExisting(cartItemId, quantity, product, member);
         });
     }
 
@@ -66,7 +72,24 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
+        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, rowMapper());
+        return cartItems.isEmpty() ? null : cartItems.get(0);
+    }
+
+    public List<CartItem> findByIds(List<Long> ids) {
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id IN (:ids)";
+
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+
+        return namedJdbcTemplate.query(sql, parameters, rowMapper());
+    }
+
+    private RowMapper<CartItem> rowMapper() {
+        return (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Long productId = rs.getLong("id");
@@ -77,15 +100,15 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+            return CartItem.createFromExisting(cartItemId, quantity, product, member);
+        };
     }
 
+    public void deleteAll(List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
 
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        namedJdbcTemplate.update(sql, parameters);
     }
 
     public void deleteById(Long id) {

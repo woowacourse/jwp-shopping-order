@@ -1,11 +1,18 @@
 package cart.exception;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.cartItem.CartItem;
+import cart.domain.member.Member;
+import org.springframework.http.HttpStatus;
 
-public class CartItemException extends RuntimeException {
+public class CartItemException extends ApplicationException {
+
     public CartItemException(String message) {
         super(message);
+    }
+
+    @Override
+    public HttpStatus status() {
+        return HttpStatus.FORBIDDEN;
     }
 
     public static class IllegalMember extends CartItemException {

@@ -1,13 +1,11 @@
 package cart;
 
+import cart.integration.IntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class JwpCartApplicationTests {
+class JwpCartApplicationTests extends IntegrationTest {
 
     @Test
     void contextLoads() {
     }
-
 }
