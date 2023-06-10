@@ -10,7 +10,6 @@ import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.mapper.OrderItemMapper;
 import cart.order.dao.OrderDao;
-import cart.order.dao.OrderItemDao;
 import cart.order.domain.Order;
 import cart.order.domain.OrderStatus;
 import cart.order.domain.OrderedItems;
@@ -26,19 +25,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderCommandService {
 
   private final OrderDao orderDao;
-  private final OrderItemDao orderItemDao;
   private final CartItemService cartItemService;
   private final CouponCommandService couponCommandService;
   private final CouponQueryService couponQueryService;
 
   public OrderCommandService(
-      final OrderDao orderDao, final OrderItemDao orderItemDao,
+      final OrderDao orderDao,
       final CartItemService cartItemService,
       final CouponCommandService couponCommandService,
       final CouponQueryService couponQueryService
   ) {
     this.orderDao = orderDao;
-    this.orderItemDao = orderItemDao;
     this.cartItemService = cartItemService;
     this.couponCommandService = couponCommandService;
     this.couponQueryService = couponQueryService;
