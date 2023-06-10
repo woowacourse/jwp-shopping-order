@@ -23,6 +23,6 @@ public class OrderedItems {
     }
 
     public List<OrderedItem> getOrderedItems() {
-        return orderedItems;
+        return List.copyOf(orderedItems);
     }
 }

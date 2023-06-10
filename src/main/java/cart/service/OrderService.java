@@ -36,14 +36,14 @@ public class OrderService {
     public Long createOrder(Member member, OrderRequest orderRequest) {
         validateCard(orderRequest);
 
-        Long orderId = saveOrder(member, orderRequest);
-
         CartItems cartItems = getCartItems(member, orderRequest);
+        OrderedItems orderedItems = getOrderedItems(cartItems);
 
-        saveOrderItems(orderId, cartItems);
+        Integer totalPrice = orderedItems.calculateTotalPrice();
 
-        long totalOrderPrice = cartItems.calculateTotalPrice();
-        updateMemberPoints(member, orderRequest, totalOrderPrice);
+        Long orderId = saveOrder(member, orderRequest);
+        saveOrderItems(orderId, orderedItems);
+        updateMemberPoints(member, orderRequest, totalPrice);
 
         return orderId;
     }
@@ -55,11 +55,6 @@ public class OrderService {
         }
     }
 
-    private Long saveOrder(Member member, OrderRequest orderRequest) {
-        Order order = new Order(member, LocalDateTime.now(), new Point(orderRequest.getPoint()));
-        return shoppingOrderDao.save(order);
-    }
-
     private CartItems getCartItems(Member member, OrderRequest orderRequest) {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         CartItems cartItems = findCartItems(cartItemIds);
@@ -68,19 +63,31 @@ public class OrderService {
         return cartItems;
     }
 
+    private OrderedItems getOrderedItems(CartItems cartItems) {
+        List<OrderedItem> orderedItems = cartItems.getCartItems().stream()
+                .map(cartItem -> new OrderedItem(cartItem.getId(), cartItem.getProduct(), cartItem.getQuantity()))
+                .collect(Collectors.toList());
+        return new OrderedItems(orderedItems);
+    }
+
+    private Long saveOrder(Member member, OrderRequest orderRequest) {
+        Order order = new Order(member, LocalDateTime.now(), new Point(orderRequest.getPoint()));
+        return shoppingOrderDao.save(order);
+    }
+
+    private void saveOrderItems(Long orderId, OrderedItems orderedItems) {
+        orderedItems.getOrderedItems().forEach(orderedItem -> {
+            Integer quantity = orderedItem.getQuantity();
+            Product product = orderedItem.getProduct();
+            orderedItemDao.save(product.getId(), orderId, quantity);
+        });
+    }
+
     private void updateMemberPoints(Member member, OrderRequest orderRequest, long totalOrderPrice) {
         Point currentPoint = member.getPoint();
         Point savingPoint = PointEarningPolicy.calculateSavingPoints(totalOrderPrice - orderRequest.getPoint());
         Point updated = new Point(currentPoint.getValue() - orderRequest.getPoint() + savingPoint.getValue());
         memberDao.updatePoints(updated.getValue(), member);
-    }
-
-    private void saveOrderItems(Long orderId, CartItems cartItems) {
-        cartItems.getCartItems().forEach(cartItem -> {
-            Integer quantity = cartItem.getQuantity();
-            Product product = cartItem.getProduct();
-            orderedItemDao.save(product.getId(), orderId, quantity);
-        });
     }
 
     private CartItems findCartItems(List<Long> cartItemIds) {

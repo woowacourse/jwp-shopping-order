@@ -12,13 +12,7 @@ public class CartItems {
     public void checkOwner(Member member) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
-
-    public Integer calculateTotalPrice() {
-        return cartItems.stream()
-                .mapToInt(CartItem::calculateTotalPrice)
-                .sum();
-    }
-
+    
     public List<CartItem> getCartItems() {
         return cartItems;
     }
