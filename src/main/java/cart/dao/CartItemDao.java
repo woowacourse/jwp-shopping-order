@@ -3,15 +3,17 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class CartItemDao {
@@ -41,7 +43,7 @@ public class CartItemDao {
         });
     }
 
-    public Long save(CartItem cartItem) {
+    public CartItem save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -57,7 +59,8 @@ public class CartItemDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        Long cartItemId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new CartItem(cartItemId, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
     public CartItem findById(Long id) {
@@ -96,6 +99,27 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+    
+    public void deleteAll(Long memberId, List<CartItem> updatedCartItem) {
+        List<CartItem> savedCartItem = findByMemberId(memberId);
+        List<CartItem> cartItemsToRemove = savedCartItem.stream()
+                .filter(cartItem -> !updatedCartItem.contains(cartItem))
+                .collect(Collectors.toList());
+        
+        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id =?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                CartItem cartItem = cartItemsToRemove.get(i);
+                ps.setLong(1, cartItem.getMember().getId());
+                ps.setLong(2, cartItem.getProduct().getId());
+            }
+            @Override
+            public int getBatchSize() {
+                return cartItemsToRemove.size();
+            }
+        });
     }
 }
 

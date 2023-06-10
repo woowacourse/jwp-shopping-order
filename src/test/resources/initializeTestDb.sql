@@ -1,3 +1,13 @@
+--ALTER TABLE cart_item DROP CONSTRAINT CONSTRAINT_B48;
+--ALTER TABLE cart_item DROP CONSTRAINT CONSTRAINT_B4;
+--ALTER TABLE orders DROP CONSTRAINT CONSTRAINT_8B7;
+DROP TABLE cart_item;
+DROP TABLE order_items;
+DROP TABLE orders;
+DROP TABLE product;
+DROP TABLE member;
+
+
 CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -45,3 +55,13 @@ CREATE TABLE IF NOT EXISTS order_items
     product_quantity  INTEGER      NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
 );
+
+
+INSERT INTO member (email, password) VALUES ('user1@ddd.com', '1234');
+INSERT INTO member (email, password) VALUES ('user2@ddd.com', '1234');
+INSERT INTO product (name, price, image_url) VALUES ('1번 상품', 1000 , '1번 상품url');
+INSERT INTO product (name, price, image_url) VALUES ('2번 상품', 2000 , '2번 상품url');
+INSERT INTO product (name, price, image_url) VALUES ('3번 상품', 1000 , '3번 상품url');
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 3);
