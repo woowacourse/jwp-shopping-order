@@ -9,10 +9,8 @@ import cart.coupon.domain.Coupon;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.mapper.OrderItemMapper;
-import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
 import cart.order.dao.OrderItemDao;
-import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
@@ -73,7 +71,7 @@ public class OrderCommandService {
       couponCommandService.updateUsedCoupon(coupon, member);
     }
 
-    return saveOrder(member, order, orderedItems);
+    return orderDao.save(order);
   }
 
   private List<CartItem> removeCartItemsFromOrder(
@@ -87,14 +85,6 @@ public class OrderCommandService {
     );
     cartItemService.removeBatch(member, new RemoveCartItemRequest(cartItemIds));
     return cartItems;
-  }
-
-  private Long saveOrder(final Member member, final Order order, final OrderedItems orderedItems) {
-    final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, order);
-    final Long savedOrderId = orderDao.save(orderEntity);
-    orderItemDao.save(OrderItemMapper.mapToOrderItemEntities(orderedItems, savedOrderId));
-
-    return savedOrderId;
   }
 
   public void deleteOrder(final Member member, final Long orderId) {

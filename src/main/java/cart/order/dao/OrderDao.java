@@ -50,9 +50,15 @@ public class OrderDao {
     this.orderItemDao = orderItemDao;
   }
 
-  public Long save(final OrderEntity orderEntity) {
-    return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(orderEntity))
+  public Long save(final Order order) {
+    final OrderEntity orderEntity = OrderEntity.from(order);
+    final long savedOrderId = simpleJdbcInsert
+        .executeAndReturnKey(new BeanPropertySqlParameterSource(orderEntity))
         .longValue();
+    order.setId(savedOrderId);
+
+    orderItemDao.save(order);
+    return savedOrderId;
   }
 
   public List<Order> findByMemberId(final long memberId) {

@@ -1,5 +1,6 @@
 package cart.order.dao.entity;
 
+import cart.order.domain.Order;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -12,20 +13,7 @@ public class OrderEntity {
   private String orderStatus;
   private ZonedDateTime createdAt;
 
-  public OrderEntity(
-      final Long id, final Long memberId,
-      final BigDecimal deliveryFee, final Long couponId,
-      final String orderStatus, final ZonedDateTime createdAt
-  ) {
-    this.id = id;
-    this.memberId = memberId;
-    this.deliveryFee = deliveryFee;
-    this.couponId = couponId;
-    this.orderStatus = orderStatus;
-    this.createdAt = createdAt;
-  }
-
-  public OrderEntity(
+  private OrderEntity(
       final Long memberId, final BigDecimal deliveryFee,
       final Long couponId, final String orderStatus,
       final ZonedDateTime createdAt
@@ -35,6 +23,16 @@ public class OrderEntity {
     this.couponId = couponId;
     this.orderStatus = orderStatus;
     this.createdAt = createdAt;
+  }
+
+  public static OrderEntity from(final Order order) {
+    return new OrderEntity(
+        order.getMember().getId(),
+        order.getDeliveryFee().getValue(),
+        order.getCoupon().getId(),
+        order.getOrderStatus().getValue(),
+        order.getCreatedAt()
+    );
   }
 
   public Long getId() {

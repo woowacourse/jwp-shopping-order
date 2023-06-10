@@ -1,6 +1,7 @@
 package cart.order.dao;
 
 import cart.order.dao.entity.OrderItemEntity;
+import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
 import cart.value_object.Money;
 import java.math.BigDecimal;
@@ -28,6 +29,11 @@ public class OrderItemDao {
   }
 
   public void save(final List<OrderItemEntity> orderItemEntities) {
+    simpleJdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(orderItemEntities));
+  }
+
+  public void save(final Order order) {
+    final List<OrderItemEntity> orderItemEntities = OrderItemEntity.makeOrderItemEntities(order);
     simpleJdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(orderItemEntities));
   }
 

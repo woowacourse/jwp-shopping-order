@@ -1,6 +1,9 @@
 package cart.order.dao.entity;
 
+import cart.order.domain.Order;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderItemEntity {
 
@@ -30,6 +33,19 @@ public class OrderItemEntity {
       final int quantity
   ) {
     this(null, orderId, name, price, imageUrl, quantity);
+  }
+
+  public static List<OrderItemEntity> makeOrderItemEntities(final Order order) {
+    return order.getOrderedItems().getOrderItems()
+        .stream()
+        .map(it -> new OrderItemEntity(
+            order.getId(),
+            it.getName(),
+            it.getPrice().getValue(),
+            it.getImageUrl(),
+            it.getQuantity()
+        ))
+        .collect(Collectors.toList());
   }
 
   public Long getId() {

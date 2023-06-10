@@ -14,15 +14,12 @@ import cart.coupon.domain.Coupon;
 import cart.coupon.domain.EmptyCoupon;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
-import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
-import cart.order.domain.OrderStatus;
+import cart.order.domain.OrderedItems;
 import cart.order.exception.OrderException;
 import cart.order.exception.OrderExceptionType;
 import cart.value_object.Money;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,20 +55,24 @@ class OrderDaoTest {
   @DisplayName("save() : 주문 시 사용하는 쿠폰이 없어도 제대로 주문이 저장될 수 있다.")
   void test_save() throws Exception {
     //given
-    final long memberId = 1L;
-    final BigDecimal deliveryFee = BigDecimal.ONE;
-    final Long couponId = null;
-    final String orderStatus = OrderStatus.COMPLETE.getValue();
-    final ZonedDateTime createdAt = ZonedDateTime.now();
+    final Member member = new Member(1L, "email", "password");
+    final Coupon coupon = new EmptyCoupon();
+    final OrderedItems orderedItems = OrderedItems.createdFromLookUp(List.of(
+        new OrderItem(1L, "orderItem1", new Money(10000), "imageUrl1", 1),
+        new OrderItem(2L, "orderItem2", new Money(10000), "imageUrl2", 1),
+        new OrderItem(3L, "orderItem3", new Money(10000), "imageUrl3", 1)
+    ));
+    final Money deliveryFee = new Money(3000);
 
-    final OrderEntity orderEntity = new OrderEntity(
-        memberId, deliveryFee,
-        couponId, orderStatus,
-        createdAt
+    final Order order = new Order(
+        member,
+        deliveryFee,
+        coupon,
+        orderedItems
     );
 
     //when
-    final Long savedId = orderDao.save(orderEntity);
+    final Long savedId = orderDao.save(order);
 
     //then
     assertNotNull(savedId);
@@ -83,7 +84,7 @@ class OrderDaoTest {
     //given
     final long memberId = 1L;
 
-    final Member member = new Member(1L, "email", "password");
+    final Member member = new Member(memberId, "email", "password");
     final Coupon coupon = new EmptyCoupon();
     final List<OrderItem> orderItems = List.of(
         new OrderItem(1L, "orderItem1", new Money(10000), "imageUrl1", 1),

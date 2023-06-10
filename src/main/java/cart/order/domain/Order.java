@@ -75,6 +75,10 @@ public class Order {
     return coupon.isExisted();
   }
 
+  public void setId(final Long id) {
+    this.id = id;
+  }
+
   public Long getId() {
     return id;
   }
@@ -97,5 +101,9 @@ public class Order {
 
   public OrderedItems getOrderedItems() {
     return orderedItems;
+  }
+
+  public Member getMember() {
+    return member;
   }
 }

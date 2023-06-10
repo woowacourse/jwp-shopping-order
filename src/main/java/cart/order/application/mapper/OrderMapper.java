@@ -1,30 +1,15 @@
 package cart.order.application.mapper;
 
 import cart.coupon.application.dto.CouponResponse;
-import cart.member.domain.Member;
 import cart.order.application.dto.OrderItemResponse;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
-import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import java.util.List;
 
 public class OrderMapper {
 
   private OrderMapper() {
-  }
-
-  public static OrderEntity mapToOrderEntity(
-      final Member member,
-      final Order order
-  ) {
-    return new OrderEntity(
-        member.getId(),
-        order.getDeliveryFee().getValue(),
-        order.getCoupon().getId(),
-        order.getOrderStatus().getValue(),
-        order.getCreatedAt()
-    );
   }
 
   public static OrderResponse mapToOrderResponse(
