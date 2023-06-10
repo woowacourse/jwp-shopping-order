@@ -28,7 +28,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     private static final String DOCUMENT_IDENTIFIER = "{method-name}";
 
     Product 상품_계란_등록() {
-        final Long 상품_계란_식별자값 = productRepository.createProduct(계란);
+        final Long 상품_계란_식별자값 = jdbcProductRepository.createProduct(계란);
         return new Product(상품_계란_식별자값, 계란.getName(), 계란.getPrice(), 계란.getImageUrl());
     }
 

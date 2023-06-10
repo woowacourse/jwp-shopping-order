@@ -16,11 +16,11 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    private final OrderRepository orderRepository;
-    private final CartItemRepository cartItemRepository;
-    private final MemberRepository memberRepository;
+    private final JdbcOrderRepository orderRepository;
+    private final JdbcCartItemRepository cartItemRepository;
+    private final JdbcMemberRepository memberRepository;
 
-    public OrderService(OrderRepository orderRepository, CartItemRepository cartItemRepository, MemberRepository memberRepository) {
+    public OrderService(JdbcOrderRepository orderRepository, JdbcCartItemRepository cartItemRepository, JdbcMemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
         this.memberRepository = memberRepository;

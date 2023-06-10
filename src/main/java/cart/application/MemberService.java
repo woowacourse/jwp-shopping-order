@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    private final JdbcMemberRepository memberRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(JdbcMemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

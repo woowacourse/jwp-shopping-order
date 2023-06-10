@@ -10,9 +10,6 @@ import cart.domain.order.OrderProducts;
 import cart.domain.payment.Payment;
 import cart.exception.OrderException;
 import cart.exception.OrderProductException;
-import cart.repository.dao.OrderDao;
-import cart.repository.entity.OrderEntity;
-import cart.repository.entity.OrderProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,14 +18,15 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 @Repository
-public class OrderRepository {
+public class JdbcOrderRepository implements OrderRepository {
 
     private final OrderDao orderDao;
 
-    public OrderRepository(OrderDao orderDao) {
+    public JdbcOrderRepository(OrderDao orderDao) {
         this.orderDao = orderDao;
     }
 
+    @Override
     public long createOrder(Order order) {
         OrderProducts orderProducts = new OrderProducts(order.getOrderProducts());
         OrderEntity orderEntity = toOrderEntity(order);
@@ -65,6 +63,7 @@ public class OrderRepository {
     }
 
     // 사용자별 주문 내역
+    @Override
     public List<Order> findOrderProductsByMemberId(Member member) {
         List<Long> orderIds = orderDao.getOrderIdsByMemberId(member.getId())
                 .orElseThrow(OrderProductException.NotFound::new);
@@ -73,6 +72,7 @@ public class OrderRepository {
                 .collect(toList());
     }
 
+    @Override
     public Order findOrderById(Member member, long orderId) {
         OrderEntity orderEntity = orderDao.getOrderById(orderId)
                 .orElseThrow(OrderException.NotFound::new);

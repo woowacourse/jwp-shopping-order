@@ -6,36 +6,37 @@ import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
-import cart.repository.dao.CartItemDao;
-import cart.repository.entity.CartItemEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class CartItemRepository {
+public class JdbcCartItemRepository implements CartItemRepository {
 
     private final CartItemDao cartItemDao;
-    private final ProductRepository productRepository;
-    private final MemberRepository memberRepository;
+    private final JdbcProductRepository productRepository;
+    private final JdbcMemberRepository memberRepository;
 
-    public CartItemRepository(CartItemDao cartItemDao, ProductRepository productRepository, MemberRepository memberRepository) {
+    public JdbcCartItemRepository(CartItemDao cartItemDao, JdbcProductRepository productRepository, JdbcMemberRepository memberRepository) {
         this.cartItemDao = cartItemDao;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
     }
 
+    @Override
     public void deleteById(long cartItemId) {
         cartItemDao.deleteById(cartItemId);
     }
 
+    @Override
     public List<CartItem> findCartItemsByIds(List<Long> cartIds) {
         return cartIds.stream()
                 .map(this::findCartItemById)
                 .collect(Collectors.toList());
     }
 
+    @Override
     public CartItem findCartItemById(long cartId) {
         CartItemEntity cartItemEntity = cartItemDao.findById(cartId)
                 .orElseThrow(CartItemException.CartItemNotExists::new);
@@ -44,6 +45,7 @@ public class CartItemRepository {
         return new CartItem(cartId, cartItemEntity.getQuantity(), product, member);
     }
 
+    @Override
     public List<CartItem> findCartItemByMemberId(long memberId) {
         Member member = memberRepository.getMemberById(memberId);
         List<CartItemEntity> cartItems = cartItemDao.findByMemberId(memberId);
@@ -54,6 +56,7 @@ public class CartItemRepository {
                 }).collect(Collectors.toList());
     }
 
+    @Override
     public long save(CartItem cartItem) {
         CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
         return cartItemDao.save(cartItemEntity);
@@ -68,6 +71,7 @@ public class CartItemRepository {
                 .build();
     }
 
+    @Override
     public void updateQuantity(CartItem cartItem) {
         cartItemDao.updateQuantity(cartItem);
     }

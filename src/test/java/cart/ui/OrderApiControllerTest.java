@@ -6,7 +6,6 @@ import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.order.OrderProductsRequest;
-import cart.repository.entity.OrderEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +33,7 @@ public class OrderApiControllerTest extends ControllerTestConfig {
     private CartItem cartItem2;
 
     Product 상품_계란_등록() {
-        final Long 상품_계란_식별자값 = productRepository.createProduct(계란);
+        final Long 상품_계란_식별자값 = jdbcProductRepository.createProduct(계란);
         return new Product(상품_계란_식별자값, 계란.getName(), 계란.getPrice(), 계란.getImageUrl());
     }
 
@@ -127,7 +126,7 @@ public class OrderApiControllerTest extends ControllerTestConfig {
         Integer totalPrice = orderProductsRequest.getCartIds()
                 .stream()
                 .map(cartId -> {
-                    CartItem cartItem = cartItemRepository.findCartItemById(cartId);
+                    CartItem cartItem = jdbcCartItemRepository.findCartItemById(cartId);
                     return cartItem.getProduct().getPrice() * cartItem.getQuantity();
                 }).reduce(Integer::sum)
                 .get();

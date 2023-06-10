@@ -4,22 +4,21 @@ import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
-import cart.repository.dao.ProductDao;
-import cart.repository.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class ProductRepository {
+public class JdbcProductRepository implements ProductRepository {
 
     private final ProductDao productDao;
 
-    public ProductRepository(ProductDao productDao) {
+    public JdbcProductRepository(ProductDao productDao) {
         this.productDao = productDao;
     }
 
+    @Override
     public Product getProductById(long productId) {
         ProductEntity productEntity = productDao.getProductById(productId)
                 .orElseThrow(CartItemException.NotFound::new);
@@ -31,6 +30,7 @@ public class ProductRepository {
         );
     }
 
+    @Override
     public List<Product> getAllProducts() {
         List<ProductEntity> productEntities = productDao.getAllProducts();
         return productEntities.stream()
@@ -42,6 +42,7 @@ public class ProductRepository {
                 ).collect(Collectors.toList());
     }
 
+    @Override
     public long createProduct(Product product) {
         ProductEntity productEntity = new ProductEntity.Builder()
                 .name(product.getName())
@@ -51,6 +52,7 @@ public class ProductRepository {
         return productDao.createProduct(productEntity);
     }
 
+    @Override
     public void updateProduct(long productId, Product product) {
         ProductEntity productEntity = new ProductEntity.Builder()
                 .id(productId)
@@ -61,6 +63,7 @@ public class ProductRepository {
         productDao.updateProduct(productEntity);
     }
 
+    @Override
     public void deleteProduct(long productId) {
         productDao.deleteProduct(productId);
     }

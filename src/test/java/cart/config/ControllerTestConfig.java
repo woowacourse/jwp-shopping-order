@@ -46,9 +46,9 @@ public abstract class ControllerTestConfig {
     protected ProductDao productDao;
     protected CartItemDao cartItemDao;
     protected OrderDao orderDao;
-    protected CartItemRepository cartItemRepository;
-    protected ProductRepository productRepository;
-    protected MemberRepository memberRepository;
+    protected JdbcCartItemRepository jdbcCartItemRepository;
+    protected JdbcProductRepository jdbcProductRepository;
+    protected JdbcMemberRepository jdbcMemberRepository;
     protected RequestSpecification spec;
 
     @BeforeEach
@@ -56,9 +56,9 @@ public abstract class ControllerTestConfig {
         memberDao = new MemberDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         cartItemDao = new CartItemDao(jdbcTemplate);
-        productRepository = new ProductRepository(productDao);
-        memberRepository = new MemberRepository(memberDao);
-        cartItemRepository = new CartItemRepository(cartItemDao, productRepository, memberRepository);
+        jdbcProductRepository = new JdbcProductRepository(productDao);
+        jdbcMemberRepository = new JdbcMemberRepository(memberDao);
+        jdbcCartItemRepository = new JdbcCartItemRepository(cartItemDao, jdbcProductRepository, jdbcMemberRepository);
         orderDao = new OrderDao(jdbcTemplate);
 
         RestAssured.port = port;

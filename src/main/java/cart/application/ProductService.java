@@ -12,9 +12,9 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final JdbcProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(JdbcProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

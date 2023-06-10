@@ -8,8 +8,6 @@ import cart.domain.repository.JdbcMemberRepository;
 import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
-import cart.repository.CartItemRepository;
-import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,10 +31,10 @@ public class OrderIntegrationTest extends IntegrationTest {
     private static final int DELIVERY_FEE = 3_000;
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private JdbcCartItemRepository jdbcCartItemRepository;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JdbcMemberRepository jdbcMemberRepository;
 
     private static final int USED_POINT = 100;
 
@@ -49,10 +47,10 @@ public class OrderIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        member = memberRepository.getMemberById(1L);
+        member = jdbcMemberRepository.getMemberById(1L);
 
-        cartItem1 = cartItemRepository.findCartItemById(1L);
-        cartItem2 = cartItemRepository.findCartItemById(2L);
+        cartItem1 = jdbcCartItemRepository.findCartItemById(1L);
+        cartItem2 = jdbcCartItemRepository.findCartItemById(2L);
 
         orderItems = List.of(1L, 2L);
     }

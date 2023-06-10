@@ -3,7 +3,6 @@ package cart.ui.api;
 import cart.domain.member.Member;
 import cart.domain.repository.JdbcMemberRepository;
 import cart.exception.AuthenticationException;
-import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -14,9 +13,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberRepository memberRepository;
+    private final JdbcMemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberRepository memberRepository) {
+    public MemberArgumentResolver(JdbcMemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

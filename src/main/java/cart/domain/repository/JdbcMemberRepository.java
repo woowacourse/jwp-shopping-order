@@ -7,16 +7,14 @@ import cart.domain.vo.Cash;
 import cart.domain.vo.Point;
 import cart.exception.AuthenticationException;
 import cart.exception.MemberException;
-import cart.repository.dao.MemberDao;
-import cart.repository.entity.MemberEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MemberRepository {
+public class JdbcMemberRepository implements MemberRepository {
 
     private final MemberDao memberDao;
 
-    public MemberRepository(MemberDao memberDao) {
+    public JdbcMemberRepository(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
@@ -24,16 +22,19 @@ public class MemberRepository {
         memberDao.updatePoint(memberId, updatePoint);
     }
 
+    @Override
     public Member getMemberById(long memberId) {
         MemberEntity memberEntity = memberDao.getMemberById(memberId)
                 .orElseThrow(MemberException.InvalidIdByNull::new);
         return toMember(memberEntity);
     }
 
+    @Override
     public void updateMoney(long memberId, int money) {
         memberDao.updateMoney(memberId, money);
     }
 
+    @Override
     public Member getMemberByEmail(String email) {
         MemberEntity memberEntity = memberDao.getMemberByEmail(email)
                 .orElseThrow(() -> new AuthenticationException("등록되지 않은 사용자 이메일(" + email + ")입니다."));

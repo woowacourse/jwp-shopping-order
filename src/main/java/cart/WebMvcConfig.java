@@ -12,9 +12,9 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final MemberRepository memberRepository;
+    private final JdbcMemberRepository memberRepository;
 
-    public WebMvcConfig(MemberRepository memberRepository) {
+    public WebMvcConfig(JdbcMemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
