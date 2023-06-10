@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.DuplicateCartItemException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
+        if (cartItemDao.findByMemberId(member.getId())
+                .stream()
+                .anyMatch(cartItem -> cartItem.hasSameProduct(cartItemRequest.getProductId()))) {
+            throw new DuplicateCartItemException("이미 장바구니 내에 존재하는 상품입니다");
+        }
+
         return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
     }
 

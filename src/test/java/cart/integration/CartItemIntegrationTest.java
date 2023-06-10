@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartItemIntegrationTest extends IntegrationTest {
+class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
@@ -37,8 +37,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 10.0, true));
+        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 10.0, true));
 
         member = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);
@@ -56,11 +56,22 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf", 0L);
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("사용자가 장바구니에 중복된 상품을 담으려고 하는 경우 실패한다.")
+    @Test
+    void addDuplicateCartItem() {
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        requestAddCartItem(member, cartItemRequest);
+
+        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
@@ -95,7 +106,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
+        assertThat(selectedCartItemResponse).isPresent();
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 
@@ -115,7 +126,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isEmpty();
     }
 
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
@@ -145,7 +156,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isEmpty();
     }
 
     private Long createProduct(ProductRequest productRequest) {

@@ -6,17 +6,17 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private Long quantity;
     private final Product product;
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
+        this.quantity = 1L;
         this.member = member;
         this.product = product;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, Long quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -35,7 +35,7 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
@@ -45,7 +45,23 @@ public class CartItem {
         }
     }
 
+    public boolean hasSameProduct(Long productId) {
+        return Objects.equals(product.getId(), productId);
+    }
+
     public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = (long) quantity;
+    }
+
+    public int getTotalPrice() {
+        return product.getPrice() * quantity.intValue();
+    }
+
+    public double getAddedPoint() {
+        return product.getPrice() * quantity * (product.getPointRatio() / 100);
+    }
+
+    public boolean isPointAvailable() {
+        return product.getPointAvailable();
     }
 }
