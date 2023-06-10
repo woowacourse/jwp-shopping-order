@@ -67,29 +67,17 @@ public class Member {
         availableMoney = availableMoney.consume(payment.getUserPayment());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public void checkPassword(String password) {
         if (!this.password.equals(password)) {
             throw new AuthenticationException("잘못된 사용자입니다.");
         }
     }
 
-    public int getAvailablePoint() {
+    public int getAvailablePointValue() {
         return availablePoint.getPoint();
     }
 
-    public int getAvailableMoney() {
+    public int getAvailableMoneyValue() {
         return availableMoney.getCash();
     }
 
@@ -101,5 +89,17 @@ public class Member {
                 ", password='" + password + '\'' +
                 ", point=" + availablePoint +
                 '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

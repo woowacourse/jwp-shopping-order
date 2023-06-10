@@ -57,8 +57,8 @@ public class MemberDao {
         Map<String, Object> params = new HashMap<>();
         params.put("email", member.getEmail());
         params.put("password", member.getPassword());
-        params.put("point", member.getAvailablePoint());
-        params.put("money", member.getAvailableMoney());
+        params.put("point", member.getAvailablePointValue());
+        params.put("money", member.getAvailableMoneyValue());
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 

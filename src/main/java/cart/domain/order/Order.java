@@ -43,8 +43,23 @@ public class Order {
         return new Order(id, member, orderProducts, payment, createdAt);
     }
 
-    public int getTotalPrice() {
-        return payment.getTotalPrice();
+    public int getUsedPointValue() {
+        return payment.getUsedPointValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", member=" + member +
+                ", orderProducts=" + orderProducts +
+                ", payment=" + payment +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
+    public int getTotalPriceValue() {
+        return payment.getTotalPriceValue();
     }
 
     public Point getUsedPoint() {
@@ -73,16 +88,5 @@ public class Order {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", member=" + member +
-                ", orderProducts=" + orderProducts +
-                ", payment=" + payment +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }

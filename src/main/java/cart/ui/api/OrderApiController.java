@@ -51,8 +51,7 @@ public class OrderApiController {
                 order.getId(),
                 toOrderProductResponse(order.getOrderProducts()),
                 order.getUserPayment(),
-                // TODO : 디미터의 법칙 지켜보기
-                order.getPayment().getUsedPoint().getPoint(),
+                order.getUsedPointValue(),
                 order.getCreatedAt()
         );
     }

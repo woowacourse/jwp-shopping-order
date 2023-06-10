@@ -24,8 +24,8 @@ public class MemberApiController {
         MemberResponse memberResponse = new MemberResponse(
                 findMember.getId(),
                 findMember.getEmail(),
-                findMember.getAvailableMoney(),
-                findMember.getAvailablePoint()
+                findMember.getAvailableMoneyValue(),
+                findMember.getAvailablePointValue()
         );
         return ResponseEntity.ok(memberResponse);
     }

@@ -35,8 +35,8 @@ public class OrderService {
         // 주문 목록에 저장
         long orderId = orderRepository.createOrder(order);
         // 포인트, 결제 내용 정보 저장
-        memberRepository.updatePoint(member.getId(), member.getAvailablePoint());
-        memberRepository.updateMoney(member.getId(), member.getAvailableMoney());
+        memberRepository.updatePoint(member.getId(), member.getAvailablePointValue());
+        memberRepository.updateMoney(member.getId(), member.getAvailableMoneyValue());
         return orderId;
     }
 

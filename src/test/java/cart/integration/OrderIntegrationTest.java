@@ -92,7 +92,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     void 주문_요청시_포인트가_사용자의_소유_포인트보다_많은_경우_실패한다() {
-        int illegalUsedPoint = member.getAvailablePoint() + 100;
+        int illegalUsedPoint = member.getAvailablePointValue() + 100;
 
         ExtractableResponse<Response> response = requestPostOrderProducts(member, orderItems, illegalUsedPoint);
 

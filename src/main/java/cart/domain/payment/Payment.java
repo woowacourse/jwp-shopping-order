@@ -9,24 +9,32 @@ import java.util.Objects;
 
 public class Payment {
 
-    private final int totalPrice;
+    private final Price totalPrice;
     private final Point usedPoint;
     private final Cash userPayment;
 
-    private Payment(int totalPrice, Point usedPoint, Cash userPayment) {
+    private Payment(Price totalPrice, Point usedPoint, Cash userPayment) {
         this.totalPrice = totalPrice;
         this.usedPoint = usedPoint;
         this.userPayment = userPayment;
     }
 
     public static Payment of(Price totalPriceOfAllProducts, DeliveryFee deliveryFee, Point usedPoint) {
-        int totalPrice = totalPriceOfAllProducts.getPrice() + deliveryFee.getDeliveryFee();
-        Cash cash = new Cash(totalPrice - usedPoint.getPoint());
+        Price totalPrice = new Price(totalPriceOfAllProducts.getPrice() + deliveryFee.getDeliveryFee());
+        Cash cash = new Cash(totalPrice.getPrice() - usedPoint.getPoint());
         return new Payment(totalPrice, usedPoint, cash);
     }
 
     public static Payment of(int totalPayment, int usedPoint) {
-        return new Payment(totalPayment, new Point(usedPoint), new Cash(totalPayment - usedPoint));
+        return new Payment(new Price(totalPayment), new Point(usedPoint), new Cash(totalPayment - usedPoint));
+    }
+
+    public int getTotalPriceValue() {
+        return totalPrice.getPrice();
+    }
+
+    public int getUsedPointValue() {
+        return usedPoint.getPoint();
     }
 
     @Override
@@ -48,9 +56,5 @@ public class Payment {
 
     public Cash getUserPayment() {
         return userPayment;
-    }
-
-    public int getTotalPrice() {
-        return totalPrice;
     }
 }
