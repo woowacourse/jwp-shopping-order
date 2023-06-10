@@ -2,6 +2,8 @@ package cart.domain;
 
 import cart.exception.CartItemException;
 
+import java.util.Objects;
+
 public class CartItem {
     private static final int INITIAL_QUANTITY = 1;
 
@@ -26,13 +28,13 @@ public class CartItem {
 
 
     public void checkOwner(Member member) {
-        if (!this.member.equals(member)) {
+        if (this.member.isNotSameMember(member)) {
             throw new CartItemException.IllegalMember(this, member);
         }
     }
 
-    public long calculateTotalPrice() {
-        return quantity.getValue() * product.getPrice().getValue();
+    public Integer calculateTotalPrice() {
+        return quantity.getValue() * product.getPrice();
     }
 
     public CartItem changeQuantity(Quantity quantity) {
@@ -53,5 +55,18 @@ public class CartItem {
 
     public Integer getQuantity() {
         return quantity.getValue();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

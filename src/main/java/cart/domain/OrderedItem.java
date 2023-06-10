@@ -11,8 +11,8 @@ public class OrderedItem {
         this.quantity = quantity;
     }
 
-    public long calculateTotalPrice() {
-        return quantity * product.getPrice().getValue();
+    public Integer calculateTotalPrice() {
+        return quantity * product.getPrice();
     }
 
     public Long getId() {

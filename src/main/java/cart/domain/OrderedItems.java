@@ -16,9 +16,9 @@ public class OrderedItems {
         return new OrderedItems(mergedList);
     }
 
-    public long calculateTotalPrice() {
-        return (long) orderedItems.stream()
-                .mapToLong(OrderedItem::calculateTotalPrice)
+    public Integer calculateTotalPrice() {
+        return orderedItems.stream()
+                .mapToInt(OrderedItem::calculateTotalPrice)
                 .sum();
     }
 

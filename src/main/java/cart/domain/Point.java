@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class Point {
     private static final String UNIT = "원";
-    private static final long DEFALUT_POINT = 0L;
+    private static final long DEFAULT_POINT = 0L;
 
     private final Long value;
 
     public Point() {
-        this.value = DEFALUT_POINT;
+        this(DEFAULT_POINT);
     }
 
     public Point(Long value) {

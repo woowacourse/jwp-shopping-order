@@ -46,7 +46,7 @@ public class ProductDao {
     public Long createProduct(Product product) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", product.getName());
-        params.put("price", product.getPrice().getValue());
+        params.put("price", product.getPrice());
         params.put("image_url", product.getImageUrl());
 
         return insertAction.executeAndReturnKey(params).longValue();

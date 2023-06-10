@@ -28,8 +28,8 @@ public class Product {
         return name;
     }
 
-    public Price getPrice() {
-        return price;
+    public Integer getPrice() {
+        return this.price.getValue();
     }
 
     public String getImageUrl() {

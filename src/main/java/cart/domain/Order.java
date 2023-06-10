@@ -1,9 +1,7 @@
 package cart.domain;
 
-import cart.exception.OrderException;
-
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class Order {
     private final Long id;
@@ -19,7 +17,7 @@ public class Order {
         this.member = member;
         this.orderedAt = orderedAt;
         this.usedPoint = usedPoint;
-        this.orderedItems = null;
+        this.orderedItems = new OrderedItems(new ArrayList<>());
     }
 
     public Order(Long id, Member member, LocalDateTime orderedAt, Point usedPoint, OrderedItems orderedItems) {
@@ -30,14 +28,8 @@ public class Order {
         this.orderedItems = orderedItems;
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new OrderException.IllegalMember(this, member);
-        }
-    }
-
     public void calculateSavedPoint() {
-        long totalPrice = orderedItems.calculateTotalPrice();
+        Integer totalPrice = orderedItems.calculateTotalPrice();
         this.savedPoint = PointEarningPolicy.calculateSavingPoints(totalPrice - usedPoint.getValue());
     }
 

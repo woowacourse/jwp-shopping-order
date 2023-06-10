@@ -13,9 +13,9 @@ public class CartItems {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
-    public long calculateTotalPrice() {
-        return (long) cartItems.stream()
-                .mapToLong(CartItem::calculateTotalPrice)
+    public Integer calculateTotalPrice() {
+        return cartItems.stream()
+                .mapToInt(CartItem::calculateTotalPrice)
                 .sum();
     }
 

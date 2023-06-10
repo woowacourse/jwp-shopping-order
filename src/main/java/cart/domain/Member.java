@@ -24,6 +24,10 @@ public class Member {
         this.point = point;
     }
 
+    public boolean isNotSameMember(Member other) {
+        return !this.equals(other);
+    }
+
     public Long getId() {
         return id;
     }

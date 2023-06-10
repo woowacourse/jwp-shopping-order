@@ -5,9 +5,6 @@ public class Price {
 
     private Integer value;
 
-    public Price() {
-    }
-
     public Price(Integer value) {
         this.value = value;
     }
