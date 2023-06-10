@@ -1,0 +1,17 @@
+### 장바구니에 담긴 상품을 주문한다
+POST http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0=
+Content-Type: application/json
+
+{
+  "cartItemIds": [1, 2],
+  "couponIds": [9]
+}
+
+### 회원의 모든 주문 정보를 조회한다
+GET http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0=
+
+### 회원의 특정 주문 정보를 조회한다
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0=
