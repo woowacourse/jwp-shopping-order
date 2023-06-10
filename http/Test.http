@@ -1,0 +1,37 @@
+
+### 주문 확인 테스트
+GET {{apiAddress}}/cart-items/checkout?ids=1,2
+Authorization: Basic {{basicToken}}
+
+### 주문 테스트 1
+POST {{apiAddress}}/orders
+Authorization: Basic {{basicToken}}
+Content-Type: application/json
+
+{
+  "usedPoints": 0,
+  "cartItemIds": [
+    1
+  ]
+}
+
+### 주문 테스트 2
+POST {{apiAddress}}/orders
+Authorization: Basic {{basicToken}}
+Content-Type: application/json
+
+{
+  "usedPoints": 1000,
+  "cartItemIds": [
+    2
+  ]
+}
+
+
+### 주문 건별 확인 테스트
+GET {{apiAddress}}/orders/2
+Authorization: Basic {{basicToken}}
+
+### 주문 목록 확인 테스트
+GET {{apiAddress}}/orders/
+Authorization: Basic {{basicToken}}
