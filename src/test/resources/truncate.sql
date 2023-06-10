@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS order_info;
+
 CREATE TABLE IF NOT EXISTS product (
     id              BIGINT          PRIMARY KEY AUTO_INCREMENT,
     name            VARCHAR(255)    NOT NULL,
@@ -5,14 +11,14 @@ CREATE TABLE IF NOT EXISTS product (
     image_url       VARCHAR(255)    NOT NULL,
     point_ratio     DOUBLE          NOT NULL,
     point_available BOOLEAN
-);
+    );
 
 CREATE TABLE IF NOT EXISTS member (
     id              BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email           VARCHAR(255)    NOT NULL UNIQUE,
     password        VARCHAR(255)    NOT NULL,
     point           BIGINT          NOT NULL
-);
+    );
 
 CREATE TABLE IF NOT EXISTS cart_item (
     id              BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
