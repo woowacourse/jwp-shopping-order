@@ -1,7 +1,7 @@
-package cart.repository.dao;
+package cart.dao;
 
-import cart.repository.entity.OrderEntity;
-import cart.repository.entity.OrderProductEntity;
+import cart.dao.entity.OrderEntity;
+import cart.dao.entity.OrderProductEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

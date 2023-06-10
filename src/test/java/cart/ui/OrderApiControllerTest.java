@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.config.ControllerTestConfig;
+import cart.dao.entity.OrderEntity;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;

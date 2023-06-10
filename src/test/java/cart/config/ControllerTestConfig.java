@@ -1,12 +1,12 @@
 package cart.config;
 
-import cart.repository.CartItemRepository;
-import cart.repository.MemberRepository;
-import cart.repository.ProductRepository;
-import cart.repository.dao.CartItemDao;
-import cart.repository.dao.MemberDao;
-import cart.repository.dao.OrderDao;
-import cart.repository.dao.ProductDao;
+import cart.dao.CartItemDao;
+import cart.dao.MemberDao;
+import cart.dao.OrderDao;
+import cart.dao.ProductDao;
+import cart.domain.repository.JdbcCartItemRepository;
+import cart.domain.repository.JdbcMemberRepository;
+import cart.domain.repository.JdbcProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;

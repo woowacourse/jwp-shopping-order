@@ -3,6 +3,8 @@ package cart.application;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.domain.repository.JdbcCartItemRepository;
+import cart.domain.repository.JdbcProductRepository;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.repository.CartItemRepository;

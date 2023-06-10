@@ -1,5 +1,7 @@
-package cart.repository;
+package cart.domain.repository;
 
+import cart.dao.ProductDao;
+import cart.dao.entity.ProductEntity;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
 import cart.repository.dao.ProductDao;

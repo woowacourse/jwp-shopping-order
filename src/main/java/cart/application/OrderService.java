@@ -3,10 +3,10 @@ package cart.application;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
+import cart.domain.repository.JdbcCartItemRepository;
+import cart.domain.repository.JdbcMemberRepository;
+import cart.domain.repository.JdbcOrderRepository;
 import cart.dto.order.OrderProductsRequest;
-import cart.repository.CartItemRepository;
-import cart.repository.MemberRepository;
-import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

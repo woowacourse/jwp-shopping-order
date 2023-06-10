@@ -1,5 +1,6 @@
-package cart.repository.dao;
+package cart.dao;
 
+import cart.dao.entity.MemberEntity;
 import cart.domain.member.Member;
 import cart.repository.entity.MemberEntity;
 import org.springframework.dao.EmptyResultDataAccessException;

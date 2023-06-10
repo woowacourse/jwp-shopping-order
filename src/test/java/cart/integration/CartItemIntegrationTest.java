@@ -1,6 +1,7 @@
 package cart.integration;
 
 import cart.domain.member.Member;
+import cart.domain.repository.JdbcMemberRepository;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;

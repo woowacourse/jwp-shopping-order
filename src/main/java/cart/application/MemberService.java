@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.domain.member.Member;
-import cart.repository.MemberRepository;
+import cart.domain.repository.JdbcMemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

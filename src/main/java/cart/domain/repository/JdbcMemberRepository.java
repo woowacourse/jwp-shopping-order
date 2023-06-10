@@ -1,5 +1,7 @@
-package cart.repository;
+package cart.domain.repository;
 
+import cart.dao.MemberDao;
+import cart.dao.entity.MemberEntity;
 import cart.domain.member.Member;
 import cart.domain.vo.Cash;
 import cart.domain.vo.Point;
