@@ -3,9 +3,9 @@ package cart.application;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.domain.repository.JdbcCartItemRepository;
-import cart.domain.repository.JdbcMemberRepository;
-import cart.domain.repository.JdbcOrderRepository;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.MemberRepository;
+import cart.domain.repository.OrderRepository;
 import cart.dto.order.OrderProductsRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +16,11 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    private final JdbcOrderRepository orderRepository;
-    private final JdbcCartItemRepository cartItemRepository;
-    private final JdbcMemberRepository memberRepository;
+    private final OrderRepository orderRepository;
+    private final CartItemRepository cartItemRepository;
+    private final MemberRepository memberRepository;
 
-    public OrderService(JdbcOrderRepository orderRepository, JdbcCartItemRepository cartItemRepository, JdbcMemberRepository memberRepository) {
+    public OrderService(OrderRepository orderRepository, CartItemRepository cartItemRepository, MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
         this.memberRepository = memberRepository;

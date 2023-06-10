@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class JdbcCartItemRepository implements CartItemRepository {
 
     private final CartItemDao cartItemDao;
-    private final JdbcProductRepository productRepository;
-    private final JdbcMemberRepository memberRepository;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public JdbcCartItemRepository(CartItemDao cartItemDao, JdbcProductRepository productRepository, JdbcMemberRepository memberRepository) {
+    public JdbcCartItemRepository(CartItemDao cartItemDao, ProductRepository productRepository, MemberRepository memberRepository) {
         this.cartItemDao = cartItemDao;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;

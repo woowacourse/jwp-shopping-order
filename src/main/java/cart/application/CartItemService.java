@@ -3,8 +3,8 @@ package cart.application;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.domain.repository.JdbcCartItemRepository;
-import cart.domain.repository.JdbcProductRepository;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.ProductRepository;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import java.util.List;
 @Service
 public class CartItemService {
 
-    private final JdbcProductRepository productRepository;
-    private final JdbcCartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public CartItemService(JdbcProductRepository productRepository, JdbcCartItemRepository cartItemRepository) {
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
     }

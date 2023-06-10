@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.domain.member.Member;
-import cart.domain.repository.JdbcMemberRepository;
+import cart.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberService {
 
-    private final JdbcMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    public MemberService(JdbcMemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

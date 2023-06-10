@@ -18,6 +18,7 @@ public class JdbcMemberRepository implements MemberRepository {
         this.memberDao = memberDao;
     }
 
+    @Override
     public void updatePoint(long memberId, int updatePoint) {
         memberDao.updatePoint(memberId, updatePoint);
     }

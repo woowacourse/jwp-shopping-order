@@ -8,5 +8,7 @@ public interface MemberRepository {
 
     void updateMoney(long memberId, int money);
 
+    void updatePoint(long memberId, int updatePoint);
+
     Member getMemberByEmail(String email);
 }

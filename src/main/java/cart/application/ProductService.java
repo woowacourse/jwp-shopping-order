@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.domain.product.Product;
-import cart.domain.repository.JdbcProductRepository;
+import cart.domain.repository.ProductRepository;
 import cart.dto.product.ProductRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +12,9 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final JdbcProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public ProductService(JdbcProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
