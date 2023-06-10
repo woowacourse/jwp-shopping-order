@@ -6,6 +6,7 @@ import cart.order.domain.OrderItem;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,11 +51,16 @@ public class OrderItemDao {
     }, orderId);
   }
 
-  public void deleteBatch(final List<Long> orderItemIds) {
+  public void deleteBatch(final Order order) {
     final String sql = "DELETE FROM ORDER_ITEM OI WHERE OI.id IN (:ids)";
 
+    final List<Long> deletedOrderItemIds = findByOrderId(order.getId())
+        .stream()
+        .map(OrderItem::getId)
+        .collect(Collectors.toList());
+
     final MapSqlParameterSource parameterSource =
-        new MapSqlParameterSource().addValue("ids", orderItemIds);
+        new MapSqlParameterSource().addValue("ids", deletedOrderItemIds);
 
     namedParameterJdbcTemplate.update(sql, parameterSource);
   }

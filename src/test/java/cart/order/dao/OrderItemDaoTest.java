@@ -3,11 +3,15 @@ package cart.order.dao;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.coupon.domain.Coupon;
+import cart.coupon.domain.EmptyCoupon;
 import cart.order.dao.entity.OrderItemEntity;
+import cart.order.domain.Order;
 import cart.order.domain.OrderItem;
+import cart.order.domain.OrderedItems;
+import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,17 +70,26 @@ class OrderItemDaoTest {
   }
 
   @Test
-  @DisplayName("deleteBatch() : 여러 id를 통해서 orderItem 을 삭제할 수 있다.")
+  @DisplayName("deleteBatch() : 주문에 포함된 orderItem 을 삭제할 수 있다.")
   void test_deleteBatch() throws Exception {
     //given
     final long orderId = 1L;
-    final List<Long> 삭제할_주문아이템_아이디 = orderItemDao.findByOrderId(orderId)
-        .stream()
-        .map(OrderItem::getId)
-        .collect(Collectors.toList());
+    final Coupon coupon = new EmptyCoupon();
+    final OrderedItems orderedItems = OrderedItems.createdFromLookUp(List.of(
+        new OrderItem(1L, "orderItem1", new Money(10000), "imageUrl1", 1),
+        new OrderItem(2L, "orderItem2", new Money(10000), "imageUrl2", 1),
+        new OrderItem(3L, "orderItem3", new Money(10000), "imageUrl3", 1)
+    ));
+
+    final Order order = new Order(
+        orderId, null,
+        null, coupon,
+        null, null,
+        orderedItems
+    );
 
     //when
-    orderItemDao.deleteBatch(삭제할_주문아이템_아이디);
+    orderItemDao.deleteBatch(order);
 
     //then
     final List<OrderItem> deletedOrderItems = orderItemDao.findByOrderId(orderId);

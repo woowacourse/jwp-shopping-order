@@ -102,10 +102,11 @@ public class OrderDao {
     }
   }
 
-  public void deleteByOrderId(final Long orderId) {
-    final String sql = "DELETE FROM ORDERS O WHERE O.id = ?";
+  public void deleteByOrder(final Order order) {
+    orderItemDao.deleteBatch(order);
 
-    jdbcTemplate.update(sql, orderId);
+    final String sql = "DELETE FROM ORDERS O WHERE O.id = ?";
+    jdbcTemplate.update(sql, order.getId());
   }
 
   public void updateByOrderId(final Long orderId, final String orderStatus) {

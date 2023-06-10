@@ -12,14 +12,12 @@ import cart.order.application.mapper.OrderItemMapper;
 import cart.order.dao.OrderDao;
 import cart.order.dao.OrderItemDao;
 import cart.order.domain.Order;
-import cart.order.domain.OrderItem;
 import cart.order.domain.OrderStatus;
 import cart.order.domain.OrderedItems;
 import cart.order.exception.OrderException;
 import cart.order.exception.OrderExceptionType;
 import cart.value_object.Money;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,13 +89,7 @@ public class OrderCommandService {
     final Order order = orderDao.findByOrderId(orderId);
     validateOrderOwner(order, member);
 
-    final List<Long> deletedOrderItemIds = orderItemDao.findByOrderId(orderId)
-        .stream()
-        .map(OrderItem::getId)
-        .collect(Collectors.toList());
-
-    orderItemDao.deleteBatch(deletedOrderItemIds);
-    orderDao.deleteByOrderId(orderId);
+    orderDao.deleteByOrder(order);
   }
 
   private void validateOrderOwner(final Order order, final Member member) {
