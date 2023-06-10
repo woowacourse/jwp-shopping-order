@@ -1,44 +1,60 @@
 package cart.application;
 
+import cart.dao.dto.PageInfo;
 import cart.domain.Product;
-import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import org.springframework.stereotype.Service;
-
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
+import cart.dto.product.ProductsResponse;
+import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
+    public ProductsResponse getProducts(int size, int page) {
+        PageInfo pageInfo = productRepository.findPageInfo(size, page);
+        List<Product> products = productRepository.findProductsByPage(size, page);
+        return ProductsResponse.of(products, pageInfo);
+    }
+
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        List<Product> allProducts = productRepository.getAllProducts();
+        return allProducts.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+        Product product = productRepository.findProductById(productId);
+        return ProductResponse.from(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
+                productRequest.getImageUrl());
+
+        return productRepository.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        Product product = new Product(productId, productRequest.getName(), productRequest.getPrice(),
+                productRequest.getImageUrl());
+
+        productRepository.updateProduct(productId, product);
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productRepository.deleteProduct(productId);
     }
 }
