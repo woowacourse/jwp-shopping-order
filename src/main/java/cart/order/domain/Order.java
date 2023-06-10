@@ -17,7 +17,7 @@ public class Order {
 
   private final Coupon coupon;
 
-  private final OrderStatus orderStatus;
+  private OrderStatus orderStatus;
 
   private final ZonedDateTime createdAt;
 
@@ -73,6 +73,10 @@ public class Order {
 
   public boolean hasCoupon() {
     return coupon.isExisted();
+  }
+
+  public void cancel() {
+    orderStatus = OrderStatus.CANCEL;
   }
 
   public void setId(final Long id) {

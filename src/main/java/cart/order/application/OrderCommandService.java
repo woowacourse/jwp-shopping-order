@@ -11,7 +11,6 @@ import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.application.mapper.OrderItemMapper;
 import cart.order.dao.OrderDao;
 import cart.order.domain.Order;
-import cart.order.domain.OrderStatus;
 import cart.order.domain.OrderedItems;
 import cart.order.exception.OrderException;
 import cart.order.exception.OrderExceptionType;
@@ -96,10 +95,11 @@ public class OrderCommandService {
   }
 
   public void updateToOrderCancel(final Member member, final Long orderId) {
-    orderDao.updateByOrderId(orderId, OrderStatus.CANCEL.getValue());
-
     final Order order = orderDao.findByOrderId(orderId);
     validateOrderOwner(order, member);
+
+    order.cancel();
+    orderDao.update(order);
 
     if (order.hasCoupon()) {
       couponCommandService.updateUsedCoupon(order.getCoupon(), member);
