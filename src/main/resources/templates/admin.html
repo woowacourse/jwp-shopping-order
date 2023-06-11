@@ -29,33 +29,33 @@
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price}"></td>
-                <td>
-                    <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
-                </td>
-                <td>
-                    <button th:onclick="showEditModal([[${product}]])">수정</button>
-                    <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
-                </td>
-            </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td>
+                <img style="max-width: 100px;" th:attr="src=@{|${product.imageUrl}|}">
+            </td>
+            <td>
+                <button th:onclick="showEditModal([[${product}]])">수정</button>
+                <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 
-    <div id="modal" class="modal" data-form-type="add">
+    <div class="modal" data-form-type="add" id="modal">
         <div class="modal-content">
             <span class="close" onclick="hideAddModal()">&times;</span>
             <form id="form">
                 <label for="name">상품명</label><br>
-                <input type="text" id="name" name="name" required><br>
+                <input id="name" name="name" required type="text"><br>
 
                 <label for="price">가격</label><br>
-                <input type="number" id="price" name="price" required><br>
+                <input id="price" name="price" required type="number"><br>
 
                 <label for="image-url">이미지 URL</label><br>
-                <input type="text" id="image-url" name="imageUrl" required><br>
+                <input id="image-url" name="imageUrl" required type="text"><br>
 
                 <button type="submit">Submit</button>
             </form>
@@ -63,7 +63,6 @@
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"> </script>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
-
