@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") @NotNull Long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") @Min(value = 1, message = "ID는 1 이상의 정수로 입력해주세요") Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
@@ -41,13 +41,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable("id") @NotNull Long id, @RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable("id") @Min(value = 1, message = "ID는 1 이상의 정수로 입력해주세요") Long id,
+                                              @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") @NotNull Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") @Min(value = 1, message = "ID는 1 이상의 정수로 입력해주세요") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
