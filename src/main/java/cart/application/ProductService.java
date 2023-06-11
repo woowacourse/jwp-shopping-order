@@ -1,14 +1,16 @@
 package cart.application;
 
-import cart.domain.Product;
 import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.domain.Product;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -18,11 +20,13 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.of(product);
@@ -30,7 +34,7 @@ public class ProductService {
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {

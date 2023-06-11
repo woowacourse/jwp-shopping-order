@@ -1,7 +1,10 @@
 package cart.ui;
 
+import cart.dto.ExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.PointException;
+import cart.exception.PurchaseOrderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,13 +14,32 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(new ExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                             .body(new ExceptionResponse(exception.getMessage()));
     }
 
+    @ExceptionHandler({PointException.class, PurchaseOrderException.class})
+    public ResponseEntity<ExceptionResponse> handlerDomainException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(new ExceptionResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(new ExceptionResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handlerException(Exception exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(new ExceptionResponse(exception.getMessage()));
+    }
 }
