@@ -38,7 +38,6 @@ public class JdbcCartItemRepository implements CartItemRepository {
     public Optional<List<CartItem>> findCartItemsByIds(List<Long> cartIds) {
         try {
             List<CartItem> cartItems = cartIds.stream()
-                    // TODO : map 내부에서 너무 많은 일이 일어나고 있다.
                     .map(cartId -> findCartItemById(cartId).orElseThrow(CartItemException.NotFound::new))
                     .collect(toList());
             return Optional.of(cartItems);
