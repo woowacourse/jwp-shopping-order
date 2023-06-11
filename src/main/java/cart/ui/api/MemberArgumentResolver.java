@@ -2,7 +2,7 @@ package cart.ui.api;
 
 import cart.domain.member.Member;
 import cart.domain.repository.JdbcMemberRepository;
-import cart.exception.AuthenticationException;
+import cart.exception.MemberException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -27,27 +27,14 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            throw new AuthenticationException("현재 입력된 사용자 정보가 없습니다.");
-        }
 
         String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다.");
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+        String decodedString = new String(Base64.decodeBase64(authHeader[1]));
 
         String[] credentials = decodedString.split(":");
         String email = credentials[0];
-        String password = credentials[1];
 
-        // 본인 여부 확인
-        Member member = memberRepository.getMemberByEmail(email)
-                .orElseThrow(() -> new AuthenticationException("등록되지 않은 사용자 이메일(" + email + ")입니다."));
-        member.checkPassword(password);
-
-        return member;
+        return memberRepository.getMemberByEmail(email)
+                .orElseThrow(MemberException.InvalidEmail::new);
     }
 }

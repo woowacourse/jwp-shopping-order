@@ -1,10 +1,12 @@
 package cart;
 
 import cart.domain.repository.JdbcMemberRepository;
+import cart.ui.api.LoginInterceptor;
 import cart.ui.api.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -16,6 +18,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     public WebMvcConfig(JdbcMemberRepository memberRepository) {
         this.memberRepository = memberRepository;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginInterceptor(memberRepository))
+                .addPathPatterns(List.of("/cart-items/**", "/orders/**"));
     }
 
     @Override
