@@ -1,16 +1,22 @@
 package cart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import cart.application.dto.CartItemResponse;
+import cart.application.dto.PatchCartItemQuantityUpdateRequest;
+import cart.application.dto.PostCartItemRequest;
+import cart.application.event.CartItemDeleteEvent;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import cart.domain.Product;
+import cart.domain.QuantityAndProduct;
 
 @Service
 public class CartItemService {
@@ -27,11 +33,11 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    public Long add(Member member, PostCartItemRequest postCartItemRequest) {
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(postCartItemRequest.getProductId())));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(Member member, Long id, PatchCartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
@@ -49,5 +55,16 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    @EventListener
+    @Transactional
+    public void removeAllWithOutCheckingOwner(CartItemDeleteEvent event) {
+        long memberId = event.getMemberId();
+        List<QuantityAndProduct> quantityAndProducts = event.getQuantityAndProducts();
+        for (QuantityAndProduct quantityAndProduct : quantityAndProducts) {
+            Product product = quantityAndProduct.getProduct();
+            cartItemDao.delete(memberId, product.getId());
+        }
     }
 }
