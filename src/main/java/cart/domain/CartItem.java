@@ -5,22 +5,40 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
+    private static final int INITIAL_QUANTITY = 1;
+
+    private final Long id;
+    private final Quantity quantity;
     private final Product product;
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
+        this.id = null;
+        this.quantity = new Quantity(INITIAL_QUANTITY);
         this.member = member;
         this.product = product;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, Quantity quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+
+    public void checkOwner(Member member) {
+        if (this.member.isNotSameMember(member)) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public Integer calculateTotalPrice() {
+        return quantity.getValue() * product.getPrice();
+    }
+
+    public CartItem changeQuantity(Quantity quantity) {
+        return new CartItem(id, quantity, product, member);
     }
 
     public Long getId() {
@@ -35,17 +53,20 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public Integer getQuantity() {
+        return quantity.getValue();
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

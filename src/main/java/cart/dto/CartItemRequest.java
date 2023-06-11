@@ -1,12 +1,17 @@
 package cart.dto;
 
-public class CartItemRequest {
-    private Long productId;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-    public CartItemRequest() {
+public class CartItemRequest {
+    @NotNull
+    @Min(value = 0, message = "{value} 이상의 값을 입력해주세요")
+    private long productId;
+
+    private CartItemRequest() {
     }
 
-    public CartItemRequest(Long productId) {
+    public CartItemRequest(long productId) {
         this.productId = productId;
     }
 

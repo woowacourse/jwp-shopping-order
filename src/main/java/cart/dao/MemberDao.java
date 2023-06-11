@@ -1,34 +1,50 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.domain.Point;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
-
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Member> memberRowMapper = (rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        Point point = new Point(rs.getLong("point"));
+        return new Member(id, email, password, point);
+    };
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    public Optional<Member> getMemberById(Long id) {
+        String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
     }
 
-    public Member getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    public Optional<Member> getMemberByEmail(String email) {
+        String sql = "SELECT id, email, password, point FROM member WHERE email = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, email));
+    }
+
+    public Optional<Member> findByOrderId(Long id) {
+        String sql = "SELECT m.id, m.email, m.password, m.point " +
+                "FROM member m " +
+                "JOIN shopping_order so ON m.id = so.member_id " +
+                "WHERE so.id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
+    }
+
+    public List<Member> getAllMembers() {
+        String sql = "SELECT id, email, password, point from member";
+        return jdbcTemplate.query(sql, memberRowMapper);
     }
 
     public void addMember(Member member) {
@@ -46,16 +62,13 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
-        String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, new MemberRowMapper());
+    public void updatePoints(Long point, Member member) {
+        String sql = "UPDATE member SET point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, point, member.getId());
     }
 
-    private static class MemberRowMapper implements RowMapper<Member> {
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
-        }
+    public Point findPoints(Member member) {
+        String sql = "SELECT point FROM member WHERE id = ?";
+        return new Point(jdbcTemplate.queryForObject(sql, Long.class, member.getId()));
     }
 }
-
