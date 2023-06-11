@@ -10,9 +10,11 @@ import cart.domain.order.OrderProducts;
 import cart.domain.payment.Payment;
 import cart.exception.OrderException;
 import cart.exception.OrderProductException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -35,7 +37,7 @@ public class JdbcOrderRepository implements OrderRepository {
         return orderId;
     }
 
-    private static OrderEntity toOrderEntity(Order order) {
+    private OrderEntity toOrderEntity(Order order) {
         return new OrderEntity.Builder()
                 .memberId(order.getMember().getId())
                 .totalPayment(order.getTotalPriceValue())
@@ -50,7 +52,7 @@ public class JdbcOrderRepository implements OrderRepository {
                 .forEach(orderDao::insertOrderItems);
     }
 
-    private static OrderProductEntity toOrderItemEntity(long orderId, OrderProduct orderProduct) {
+    private OrderProductEntity toOrderItemEntity(long orderId, OrderProduct orderProduct) {
         return new OrderProductEntity.Builder()
                 .productId(orderProduct.getProductId())
                 .orderId(orderId)
@@ -64,23 +66,33 @@ public class JdbcOrderRepository implements OrderRepository {
 
     // 사용자별 주문 내역
     @Override
-    public List<Order> findOrderProductsByMemberId(Member member) {
-        List<Long> orderIds = orderDao.getOrderIdsByMemberId(member.getId())
-                .orElseThrow(OrderProductException.NotFound::new);
-        return orderIds.stream()
-                .map(orderId -> findOrderById(member, orderId))
-                .collect(toList());
+    public Optional<List<Order>> findOrderProductsByMemberId(Member member) {
+        try {
+            List<Long> orderIds = orderDao.getOrderIdsByMemberId(member.getId())
+                    .orElseThrow(OrderProductException.NotFound::new);
+            List<Order> orders = orderIds.stream()
+                    .map(orderId -> findOrderById(member, orderId).orElseThrow(OrderException.NotFound::new))
+                    .collect(toList());
+            return Optional.of(orders);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Order findOrderById(Member member, long orderId) {
-        OrderEntity orderEntity = orderDao.getOrderById(orderId)
-                .orElseThrow(OrderException.NotFound::new);
-        List<OrderProductEntity> orderProductEntities = orderDao.getOrderProductsByOrderId(orderId)
-                .orElseThrow(OrderProductException.NotFound::new);
-        OrderProducts orderProducts = toOrderProducts(orderId, orderProductEntities);
-        Payment payment = Payment.of(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-        return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
+    public Optional<Order> findOrderById(Member member, long orderId) {
+        try {
+            OrderEntity orderEntity = orderDao.getOrderById(orderId)
+                    .orElseThrow(OrderException.NotFound::new);
+            List<OrderProductEntity> orderProductEntities = orderDao.getOrderProductsByOrderId(orderId)
+                    .orElseThrow(OrderProductException.NotFound::new);
+            OrderProducts orderProducts = toOrderProducts(orderId, orderProductEntities);
+            Payment payment = Payment.of(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
+            Order order = Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
+            return Optional.of(order);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     private static OrderProducts toOrderProducts(long orderId, List<OrderProductEntity> orderProductEntities) {

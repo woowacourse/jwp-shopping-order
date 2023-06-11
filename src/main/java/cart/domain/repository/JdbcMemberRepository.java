@@ -5,9 +5,10 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.member.Member;
 import cart.domain.vo.Cash;
 import cart.domain.vo.Point;
-import cart.exception.AuthenticationException;
-import cart.exception.MemberException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class JdbcMemberRepository implements MemberRepository {
@@ -24,10 +25,13 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member getMemberById(long memberId) {
-        MemberEntity memberEntity = memberDao.getMemberById(memberId)
-                .orElseThrow(MemberException.InvalidIdByNull::new);
-        return toMember(memberEntity);
+    public Optional<Member> getMemberById(long memberId) {
+        try {
+            MemberEntity memberEntity = memberDao.getMemberById(memberId);
+            return Optional.of(toMember(memberEntity));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -36,10 +40,13 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member getMemberByEmail(String email) {
-        MemberEntity memberEntity = memberDao.getMemberByEmail(email)
-                .orElseThrow(() -> new AuthenticationException("등록되지 않은 사용자 이메일(" + email + ")입니다."));
-        return toMember(memberEntity);
+    public Optional<Member> getMemberByEmail(String email) {
+        try {
+            MemberEntity memberEntity = memberDao.getMemberByEmail(email);
+            return Optional.of(toMember(memberEntity));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     private Member toMember(MemberEntity memberEntity) {

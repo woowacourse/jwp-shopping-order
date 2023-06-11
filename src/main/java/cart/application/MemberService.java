@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.domain.member.Member;
 import cart.domain.repository.MemberRepository;
+import cart.exception.MemberException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public class MemberService {
     }
 
     public Member findMember(Member member) {
-        return memberRepository.getMemberById(member.getId());
+        return memberRepository.getMemberById(member.getId())
+                .orElseThrow(MemberException.InvalidIdByNull::new);
     }
 }

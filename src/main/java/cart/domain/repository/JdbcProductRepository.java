@@ -4,9 +4,11 @@ import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -19,27 +21,37 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product getProductById(long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId)
-                .orElseThrow(CartItemException.NotFound::new);
-        return new Product(
-                productEntity.getId(),
-                productEntity.getName(),
-                productEntity.getPrice(),
-                productEntity.getImageUrl()
-        );
+    public Optional<Product> getProductById(long productId) {
+        try {
+            ProductEntity productEntity = productDao.getProductById(productId)
+                    .orElseThrow(CartItemException.NotFound::new);
+            Product product = new Product(
+                    productEntity.getId(),
+                    productEntity.getName(),
+                    productEntity.getPrice(),
+                    productEntity.getImageUrl()
+            );
+            return Optional.of(product);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities = productDao.getAllProducts();
-        return productEntities.stream()
-                .map(productEntity -> new Product(
-                        productEntity.getId(),
-                        productEntity.getName(),
-                        productEntity.getPrice(),
-                        productEntity.getImageUrl())
-                ).collect(Collectors.toList());
+    public Optional<List<Product>> getAllProducts() {
+        try {
+            List<ProductEntity> productEntities = productDao.getAllProducts();
+            List<Product> products = productEntities.stream()
+                    .map(productEntity -> new Product(
+                            productEntity.getId(),
+                            productEntity.getName(),
+                            productEntity.getPrice(),
+                            productEntity.getImageUrl())
+                    ).collect(Collectors.toList());
+            return Optional.of(products);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override

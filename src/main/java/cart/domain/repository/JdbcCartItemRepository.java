@@ -6,10 +6,15 @@ import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
+import cart.exception.MemberException;
+import cart.exception.ProductException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class JdbcCartItemRepository implements CartItemRepository {
@@ -30,30 +35,43 @@ public class JdbcCartItemRepository implements CartItemRepository {
     }
 
     @Override
-    public List<CartItem> findCartItemsByIds(List<Long> cartIds) {
-        return cartIds.stream()
-                .map(this::findCartItemById)
-                .collect(Collectors.toList());
+    public Optional<List<CartItem>> findCartItemsByIds(List<Long> cartIds) {
+        try {
+            List<CartItem> cartItems = cartIds.stream()
+                    // TODO : map 내부에서 너무 많은 일이 일어나고 있다.
+                    .map(cartId -> findCartItemById(cartId).orElseThrow(CartItemException.NotFound::new))
+                    .collect(toList());
+            return Optional.of(cartItems);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public CartItem findCartItemById(long cartId) {
-        CartItemEntity cartItemEntity = cartItemDao.findById(cartId)
-                .orElseThrow(CartItemException.CartItemNotExists::new);
-        Product product = productRepository.getProductById(cartItemEntity.getProductId());
-        Member member = memberRepository.getMemberById(cartItemEntity.getMemberId());
-        return new CartItem(cartId, cartItemEntity.getQuantity(), product, member);
+    public Optional<CartItem> findCartItemById(long cartId) {
+        CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
+        Product product = productRepository.getProductById(cartItemEntity.getProductId())
+                .orElseThrow(ProductException.NotFound::new);
+        Member member = memberRepository.getMemberById(cartItemEntity.getMemberId())
+                .orElseThrow();
+        return Optional.of(new CartItem(cartId, cartItemEntity.getQuantity(), product, member));
     }
 
     @Override
-    public List<CartItem> findCartItemByMemberId(long memberId) {
-        Member member = memberRepository.getMemberById(memberId);
-        List<CartItemEntity> cartItems = cartItemDao.findByMemberId(memberId);
-        return cartItems.stream()
-                .map(cartItemEntity -> {
-                    Product product = productRepository.getProductById(cartItemEntity.getProductId());
-                    return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), product, member);
-                }).collect(Collectors.toList());
+    public Optional<List<CartItem>> findCartItemByMemberId(long memberId) {
+        try {
+            Member member = memberRepository.getMemberById(memberId).orElseThrow(MemberException.InvalidIdByNull::new);
+            List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
+            List<CartItem> cartItems = cartItemEntities.stream()
+                    .map(cartItemEntity -> {
+                        Product product = productRepository.getProductById(cartItemEntity.getProductId())
+                                .orElseThrow(ProductException.NotFound::new);
+                        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), product, member);
+                    }).collect(toList());
+            return Optional.of(cartItems);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override

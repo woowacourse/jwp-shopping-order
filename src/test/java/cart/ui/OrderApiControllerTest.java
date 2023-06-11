@@ -6,6 +6,7 @@ import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.order.OrderProductsRequest;
+import cart.exception.CartItemException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -126,7 +127,7 @@ public class OrderApiControllerTest extends ControllerTestConfig {
         Integer totalPrice = orderProductsRequest.getCartIds()
                 .stream()
                 .map(cartId -> {
-                    CartItem cartItem = jdbcCartItemRepository.findCartItemById(cartId);
+                    CartItem cartItem = jdbcCartItemRepository.findCartItemById(cartId).orElseThrow(CartItemException.NotFound::new);
                     return cartItem.getProduct().getPrice() * cartItem.getQuantity();
                 }).reduce(Integer::sum)
                 .get();

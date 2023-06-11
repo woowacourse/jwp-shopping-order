@@ -7,6 +7,7 @@ import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.ProductRepository;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
+import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,16 +26,19 @@ public class CartItemService {
     }
 
     public List<CartItem> findByMember(Member member) {
-        return cartItemRepository.findCartItemByMemberId(member.getId());
+        return cartItemRepository.findCartItemByMemberId(member.getId())
+                .orElseThrow(CartItemException.NotFound::new);
     }
 
     public long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productRepository.getProductById(cartItemRequest.getProductId());
+        Product product = productRepository.getProductById(cartItemRequest.getProductId())
+                .orElseThrow(CartItemException.ProductNotFound::new);
         return cartItemRepository.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long cartItemId, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemRepository.findCartItemById(cartItemId);
+        CartItem cartItem = cartItemRepository.findCartItemById(cartItemId)
+                .orElseThrow(CartItemException.CartItemNotExists::new);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -47,7 +51,8 @@ public class CartItemService {
     }
 
     public void remove(Member member, long cartItemId) {
-        CartItem cartItem = cartItemRepository.findCartItemById(cartItemId);
+        CartItem cartItem = cartItemRepository.findCartItemById(cartItemId)
+                .orElseThrow(CartItemException.NotFound::new);
         cartItem.checkOwner(member);
         cartItemRepository.deleteById(cartItemId);
     }

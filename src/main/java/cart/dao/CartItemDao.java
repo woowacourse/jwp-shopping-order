@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.dao.entity.CartItemEntity;
 import cart.domain.carts.CartItem;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class CartItemDao {
@@ -57,13 +55,9 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Optional<CartItemEntity> findById(long cartItemId) {
-        try {
-            String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE id = ?";
-            return Optional.of(jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, cartItemId));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+    public CartItemEntity findById(long cartItemId) {
+        String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, cartItemId);
     }
 
     public void deleteById(Long id) {

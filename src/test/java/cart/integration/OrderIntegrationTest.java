@@ -8,6 +8,7 @@ import cart.domain.repository.JdbcMemberRepository;
 import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
+import cart.exception.MemberException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,10 +48,10 @@ public class OrderIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        member = jdbcMemberRepository.getMemberById(1L);
+        member = jdbcMemberRepository.getMemberById(1L).orElseThrow(MemberException.InvalidIdByNull::new);
 
-        cartItem1 = jdbcCartItemRepository.findCartItemById(1L);
-        cartItem2 = jdbcCartItemRepository.findCartItemById(2L);
+        cartItem1 = jdbcCartItemRepository.findCartItemById(1L).orElseThrow(MemberException.InvalidIdByNull::new);
+        cartItem2 = jdbcCartItemRepository.findCartItemById(2L).orElseThrow(MemberException.InvalidIdByNull::new);
 
         orderItems = List.of(1L, 2L);
     }

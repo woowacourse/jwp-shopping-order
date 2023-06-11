@@ -2,13 +2,15 @@ package cart.domain.repository;
 
 import cart.domain.member.Member;
 
+import java.util.Optional;
+
 public interface MemberRepository {
 
-    Member getMemberById(long memberId);
+    Optional<Member> getMemberById(long memberId);
 
     void updateMoney(long memberId, int money);
 
     void updatePoint(long memberId, int updatePoint);
 
-    Member getMemberByEmail(String email);
+    Optional<Member> getMemberByEmail(String email);
 }

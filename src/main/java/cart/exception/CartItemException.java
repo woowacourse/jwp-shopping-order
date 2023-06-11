@@ -54,4 +54,11 @@ public class CartItemException extends RuntimeException {
             super("상품 가격은 최소 " + MINIMUM_PRICE + "부터여야 합니다.");
         }
     }
+
+    public static class ProductNotFound extends CartItemException {
+
+        public ProductNotFound() {
+            super("장바구니에 담긴 상품이 삭제되었습니다.");
+        }
+    }
 }

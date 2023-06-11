@@ -4,12 +4,13 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository {
 
     long createOrder(Order order);
 
-    List<Order> findOrderProductsByMemberId(Member member);
+    Optional<List<Order>> findOrderProductsByMemberId(Member member);
 
-    Order findOrderById(Member member, long orderId);
+    Optional<Order> findOrderById(Member member, long orderId);
 }

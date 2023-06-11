@@ -44,7 +44,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberRepository.getMemberByEmail(email);
+        Member member = memberRepository.getMemberByEmail(email)
+                .orElseThrow(() -> new AuthenticationException("등록되지 않은 사용자 이메일(" + email + ")입니다."));
         member.checkPassword(password);
 
         return member;

@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.dao.entity.MemberEntity;
 import cart.domain.member.Member;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -35,22 +33,14 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Optional<MemberEntity> getMemberById(long id) {
-        try {
-            String sql = "SELECT * FROM member WHERE id = ?";
-            return Optional.of(jdbcTemplate.queryForObject(sql, memberEntityRowMapper, id));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+    public MemberEntity getMemberById(long id) {
+        String sql = "SELECT * FROM member WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, id);
     }
 
-    public Optional<MemberEntity> getMemberByEmail(String email) {
-        try {
-            String sql = "SELECT * FROM member WHERE email = ?";
-            return Optional.of(jdbcTemplate.queryForObject(sql, memberEntityRowMapper, email));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+    public MemberEntity getMemberByEmail(String email) {
+        String sql = "SELECT * FROM member WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, email);
     }
 
     public long addMember(Member member) {
@@ -62,13 +52,9 @@ public class MemberDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Optional<List<MemberEntity>> getAllMembers() {
-        try {
-            String sql = "SELECT * from member";
-            return Optional.of(jdbcTemplate.query(sql, memberEntityRowMapper));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+    public List<MemberEntity> getAllMembers() {
+        String sql = "SELECT * from member";
+        return jdbcTemplate.query(sql, memberEntityRowMapper);
     }
 
     public void updatePoint(long memberId, int updatePoint) {

@@ -3,12 +3,13 @@ package cart.domain.repository;
 import cart.domain.product.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository {
 
-    Product getProductById(long productId);
+    Optional<Product> getProductById(long productId);
 
-    List<Product> getAllProducts();
+    Optional<List<Product>> getAllProducts();
 
     long createProduct(Product product);
 

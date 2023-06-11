@@ -3,16 +3,17 @@ package cart.domain.repository;
 import cart.domain.carts.CartItem;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CartItemRepository {
 
     void deleteById(long cartItemId);
 
-    List<CartItem> findCartItemsByIds(List<Long> cartIds);
+    Optional<List<CartItem>> findCartItemsByIds(List<Long> cartIds);
 
-    CartItem findCartItemById(long cartId);
+    Optional<CartItem> findCartItemById(long cartId);
 
-    List<CartItem> findCartItemByMemberId(long memberId);
+    Optional<List<CartItem>> findCartItemByMemberId(long memberId);
 
     long save(CartItem cartItem);
 

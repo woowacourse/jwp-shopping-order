@@ -6,6 +6,7 @@ import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
 import cart.dto.product.ProductRequest;
+import cart.exception.MemberException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,8 +41,8 @@ class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "https://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "https://example.com/pizza.jpg"));
 
-        member = jdbcMemberRepository.getMemberById(1L);
-        member2 = jdbcMemberRepository.getMemberById(2L);
+        member = jdbcMemberRepository.getMemberById(1L).orElseThrow(MemberException.InvalidIdByNull::new);
+        member2 = jdbcMemberRepository.getMemberById(2L).orElseThrow(MemberException.InvalidIdByNull::new);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

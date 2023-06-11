@@ -3,9 +3,11 @@ package cart.application;
 import cart.domain.product.Product;
 import cart.domain.repository.ProductRepository;
 import cart.dto.product.ProductRequest;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -19,11 +21,13 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.getAllProducts();
+        return productRepository.getAllProducts()
+                .orElse(new ArrayList<>());
     }
 
     public Product getProductById(Long productId) {
-        return productRepository.getProductById(productId);
+        return productRepository.getProductById(productId)
+                .orElseThrow(ProductException.NotFound::new);
     }
 
     public Long createProduct(ProductRequest productRequest) {
