@@ -1,17 +1,18 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.Product;
 
 @Repository
 public class CartItemDao {
@@ -37,7 +38,7 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, member, product, quantity);
         });
     }
 
@@ -60,6 +61,12 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public CartItem findByProductId(Long productId) {
+        String sql = "SELECT id from cart_item where product_id = ?";
+        Long cartItemId = jdbcTemplate.queryForObject(sql, Long.class, productId);
+        return findById(cartItemId);
+    }
+
     public CartItem findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
@@ -77,7 +84,7 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, member, product, quantity);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
@@ -91,6 +98,11 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAllBy(Long memberId) {
+        String sql = "DELETE FROM cart_item WHERE member_id = ?";
+        jdbcTemplate.update(sql, memberId);
     }
 
     public void updateQuantity(CartItem cartItem) {

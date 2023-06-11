@@ -1,15 +1,16 @@
 package cart.dao;
 
-import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
+import cart.domain.Product;
 
 @Repository
 public class ProductDao {
@@ -51,7 +52,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setInt(2, product.getPrice().getValue());
             ps.setString(3, product.getImageUrl());
 
             return ps;
@@ -62,7 +63,7 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice().getValue(), product.getImageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {
