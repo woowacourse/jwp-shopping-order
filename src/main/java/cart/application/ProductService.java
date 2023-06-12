@@ -1,44 +1,46 @@
 package cart.application;
 
-import cart.domain.Product;
-import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.domain.product.Product;
+import cart.domain.repository.ProductRepository;
+import cart.dto.product.ProductRequest;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    public List<Product> getAllProducts() {
+        return productRepository.getAllProducts()
+                .orElse(new ArrayList<>());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+    public Product getProductById(Long productId) {
+        return productRepository.getProductById(productId)
+                .orElseThrow(ProductException.NotFound::new);
     }
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productRepository.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        productRepository.updateProduct(productId, product);
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productRepository.deleteProduct(productId);
     }
 }

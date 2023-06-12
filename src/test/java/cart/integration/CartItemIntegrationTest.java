@@ -1,11 +1,12 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.domain.member.Member;
+import cart.domain.repository.JdbcMemberRepository;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
+import cart.dto.product.ProductRequest;
+import cart.exception.MemberException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartItemIntegrationTest extends IntegrationTest {
+class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private JdbcMemberRepository jdbcMemberRepository;
 
     private Long productId;
     private Long productId2;
@@ -37,11 +38,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequest("치킨", 10_000, "https://example.com/chicken.jpg"));
+        productId2 = createProduct(new ProductRequest("피자", 15_000, "https://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = jdbcMemberRepository.getMemberById(1L).orElseThrow(MemberException.InvalidIdByNull::new);
+        member2 = jdbcMemberRepository.getMemberById(2L).orElseThrow(MemberException.InvalidIdByNull::new);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
@@ -155,6 +156,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .when()
                 .post("/products")
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
 
